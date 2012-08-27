@@ -6,6 +6,8 @@
 
 // Imported from other .cpp files
 void Host_Map_f (void);
+void Host_BackgroundMap_f (void);
+void Host_Changelevel_f (void);
 
 //-----------------------------------------------------------------------------
 // Purpose: For each map, stores when the map last changed on disk and whether
@@ -566,6 +568,35 @@ static int Host_DemoMap_f_CompletionFunc( char const *partial, char commands[ CO
 	return _Host_Map_f_CompletionFunc( cmdname, partial, commands );
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *partial - 
+//			context - 
+//			longest - 
+//			maxcommands - 
+//			**commands - 
+// Output : int
+//-----------------------------------------------------------------------------
+static int Host_Changelevel_f_CompletionFunc( char const *partial, char commands[ COMMAND_COMPLETION_MAXITEMS ][ COMMAND_COMPLETION_ITEM_LENGTH ] )
+{
+	char const *cmdname = "changelevel ";
+	return _Host_Map_f_CompletionFunc( cmdname, partial, commands );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *partial - 
+//			context - 
+//			longest - 
+//			maxcommands - 
+//			**commands - 
+// Output : int
+//-----------------------------------------------------------------------------
+static int Host_BackgroundMap_f_CompletionFunc( char const *partial, char commands[ COMMAND_COMPLETION_MAXITEMS ][ COMMAND_COMPLETION_ITEM_LENGTH ] )
+{
+	char const *cmdname = "map_background ";
+	return _Host_Map_f_CompletionFunc( cmdname, partial, commands );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: do a dir of the maps dir
@@ -625,4 +656,6 @@ static ConCommand demomap("demomap", Host_DemoMap_f, "demomap mapname demoname: 
 #ifndef BENCHMARK
 static ConCommand maps("maps", Host_Maps_f, "Displays list of maps." );
 static ConCommand map("map", Host_Map_f, "Start playing on specified map.", 0, Host_Map_f_CompletionFunc );
+static ConCommand map_background("map_background", Host_BackgroundMap_f, "Start showing background map.", 0, Host_BackgroundMap_f_CompletionFunc );
+static ConCommand changelevel("changelevel", Host_Changelevel_f, "Changes map to another.", 0, Host_Changelevel_f_CompletionFunc );
 #endif

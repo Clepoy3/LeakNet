@@ -413,10 +413,17 @@ void CTaskbar::UpdateGameMenus()
 	const char *lvl = engine->GetLevelName();
 	if (lvl && *lvl)
 	{
-		isInGame = true;
-		if (engine->GetMaxClients() > 1)
+		if( !engine->IsBackGroundMap( ) )
 		{
-			isMulti = true;
+			isInGame = true;
+			if (engine->GetMaxClients() > 1)
+			{
+				isMulti = true;
+			}
+		}
+		else
+		{
+			isInGame = false;
 		}
 	}
 

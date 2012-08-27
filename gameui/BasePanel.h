@@ -38,6 +38,7 @@ public:
 
 private:
 	void DrawBackgroundImage();
+	void DrawLoadingImage();
 
 	EBackgroundState m_eBackgroundState;
 	

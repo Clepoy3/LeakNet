@@ -2037,7 +2037,7 @@ void Host_Changelevel( bool loadfromsavedgame, const char *mapname, const char *
 		saverestore->Finish( pSaveData );
 
 		g_ServerGlobalVariables.curtime = sv.gettime();
-		serverGameDLL->LevelInit( level, CM_EntityString(), oldlevel, startspot, true );
+		serverGameDLL->LevelInit( level, CM_EntityString(), oldlevel, startspot, true, false );
 		sv.paused = true;		// pause until all clients connect
 		sv.loadgame = true;
 	}
@@ -2045,7 +2045,7 @@ void Host_Changelevel( bool loadfromsavedgame, const char *mapname, const char *
 #endif
 	{
 		g_ServerGlobalVariables.curtime = sv.gettime();
-		serverGameDLL->LevelInit( level, CM_EntityString(), NULL, NULL, false );
+		serverGameDLL->LevelInit( level, CM_EntityString(), NULL, NULL, false, false );
 	}
 
 	SV_ActivateServer();
@@ -2094,6 +2094,9 @@ SERVER TRANSITIONS
 
 ===============================================================================
 */
+
+static ConVar map_bgtest( "map_bgtest", "0", 0, "Set to 1 to load up background maps only." );
+
 bool Host_NewGame( char *mapName, bool loadGame )
 {
 	extern char	*CM_EntityString( void );
@@ -2122,7 +2125,10 @@ bool Host_NewGame( char *mapName, bool loadGame )
 	// make sure the time is set
 	g_ServerGlobalVariables.curtime = sv.gettime();
 
-	serverGameDLL->LevelInit( mapName, CM_EntityString(), NULL, NULL, loadGame );
+	if ( map_bgtest.GetInt() )
+		serverGameDLL->LevelInit( mapName, CM_EntityString(), NULL, NULL, false, true );
+	else
+		serverGameDLL->LevelInit( mapName, CM_EntityString(), NULL, NULL, loadGame, false );
 
 	if ( loadGame )
 	{

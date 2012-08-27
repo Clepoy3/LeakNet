@@ -254,7 +254,7 @@ public:
 	virtual void			DLLShutdown( void );
 	virtual bool			GameInit( void );
 	virtual void			GameShutdown( void );
-	virtual bool			LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame );
+	virtual bool			LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background );
 	virtual void			ServerActivate( edict_t *pEdictList, int edictCount, int clientMax );
 	virtual void			LevelShutdown( void );
 	virtual void			GameFrame( bool simulating );
@@ -437,7 +437,7 @@ void BeginRestoreEntities()
 
 
 // Called any time a new level is started (after GameInit() also on level transitions within a game)
-bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame )
+bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background )
 {
 	ResetWindspeed();
 
@@ -468,7 +468,10 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	}
 	else
 	{
-		gpGlobals->eLoadType = MapLoad_NewGame;
+		if ( background )
+			gpGlobals->eLoadType = MapLoad_Background;
+		else
+			gpGlobals->eLoadType = MapLoad_NewGame;
 
 		// This calls serversystem::LevelInitPreEntityAllSystems()
 		MapEntity_ParseAllEntities( pMapEntities );

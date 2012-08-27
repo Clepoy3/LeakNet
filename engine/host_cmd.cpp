@@ -48,6 +48,8 @@ void VideoMode_ChangeFullscreenMode( bool fullscreen );
 extern qboolean	g_bInEditMode;
 #endif
 
+extern bool	m_bBackGroundMap;
+
 extern qboolean allow_cheats;
 extern ConVar	pausable;
 
@@ -389,6 +391,22 @@ command from the console.  Active clients are kicked off.
 */
 void Host_Map_f (void)
 {
+	m_bBackGroundMap = false;
+	Host_Map_Helper( false );
+}
+
+/*
+======================
+Host_BackgroundMap_f
+
+handle a 
+map_background <servername>
+command from the console.  Active clients are kicked off.
+======================
+*/
+void Host_BackgroundMap_f (void)
+{
+	m_bBackGroundMap = true;
 	Host_Map_Helper( false );
 }
 
@@ -1579,7 +1597,7 @@ static ConCommand mat_showtextures("mat_showtextures", Host_ShowTextures_f);
 static ConCommand restart("restart", Host_Restart_f);
 static ConCommand disconnect("disconnect", Host_Disconnect_f);
 static ConCommand reload("reload", Host_Reload_f);
-static ConCommand changelevel("changelevel", Host_Changelevel_f);
+//static ConCommand changelevel("changelevel", Host_Changelevel_f);
 static ConCommand changelevel2("changelevel2", Host_Changelevel2_f);
 static ConCommand version("version", Host_Version_f);
 static ConCommand say("say", Host_Say_f);

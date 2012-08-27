@@ -39,6 +39,7 @@ private:
 	COutputEvent m_OnNewGame;
 	COutputEvent m_OnLoadGame;
 	COutputEvent m_OnMapTransition;
+	COutputEvent m_OnBackgroundMap;
 
 	string_t m_globalstate;
 };
@@ -55,6 +56,7 @@ BEGIN_DATADESC( CLogicAuto )
 	DEFINE_OUTPUT(CLogicAuto, m_OnNewGame, "OnNewGame"),
 	DEFINE_OUTPUT(CLogicAuto, m_OnLoadGame, "OnLoadGame"),
 	DEFINE_OUTPUT(CLogicAuto, m_OnMapTransition, "OnMapTransition"),
+	DEFINE_OUTPUT(CLogicAuto, m_OnBackgroundMap, "OnBackgroundMap"),
 
 END_DATADESC()
 
@@ -89,6 +91,10 @@ void CLogicAuto::Think(void)
 		else if (gpGlobals->eLoadType == MapLoad_LoadGame)
 		{
 			m_OnLoadGame.FireOutput(NULL, this);
+		}
+		else if (gpGlobals->eLoadType == MapLoad_Background)
+		{
+			m_OnBackgroundMap.FireOutput(NULL, this);
 		}
 
 		m_OnMapSpawn.FireOutput(NULL, this);

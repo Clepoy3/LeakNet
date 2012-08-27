@@ -772,7 +772,10 @@ int CGameUI::ActivateGameUI()
 	g_pTaskbar->SetVisible(true);
 
 	// pause the game
-	engine->ClientCmd("setpause");
+	if( !engine->IsBackGroundMap( ) )
+		engine->ClientCmd("setpause");
+	else
+		engine->ClientCmd("unpause");
 
 	// notify taskbar
 	if (g_pTaskbar)
@@ -805,6 +808,9 @@ int CGameUI::ActivateDemoUI()
 //-----------------------------------------------------------------------------
 void CGameUI::HideGameUI()
 {
+	if( engine->IsBackGroundMap( ) )
+		return;
+	
 //	TRACE_FUNCTION("CGameUI::HideGameUI");
 	// we can't hide the UI if we're not in a level
 	const char *levelName = engine->GetLevelName();

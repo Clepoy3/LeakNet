@@ -88,6 +88,12 @@ extern bool scr_drawloading;
 static CSysModule		*g_ClientDLLModule = NULL;
 static ConVar vcollide_axes( "vcollide_axes", "0" );
 
+bool m_bBackGroundMap = false;
+
+CON_COMMAND( startupmenu, "Use background menu" )
+{
+	m_bBackGroundMap = true;
+}
 
 void AddIntersectingLeafSurfaces( mleaf_t *pLeaf, GetIntersectingSurfaces_Struct *pStruct )
 {
@@ -971,6 +977,11 @@ class CEngineClient : public IVEngineClient
 	virtual void		SaveFreeMemory( void *pSaveMem )
 	{
 		::SaveFreeMemory( pSaveMem );
+	}
+	
+	virtual bool IsBackGroundMap ( void )
+	{
+		return m_bBackGroundMap;
 	}
 };
 

@@ -74,7 +74,7 @@ void CBasePanel::PaintBackground()
 		break;
 
 	case BACKGROUND_LOADING:
-		DrawBackgroundImage();
+		DrawLoadingImage();
 		break;
 
 	case BACKGROUND_DESKTOPIMAGE:
@@ -184,6 +184,66 @@ void CBasePanel::DrawBackgroundImage()
 			surface()->DrawSetTexture(bimage.imageID);
 			surface()->DrawTexturedRect(0, 0, wide, tall);
 
+		/*	xpos += bimage.width;
+		}
+		ypos += m_ImageID[y][0].height;
+	}
+	*/
+}
+void CBasePanel::DrawLoadingImage()
+{
+//	int xpos, ypos;
+	int wide, tall;
+
+	GetSize(wide, tall);
+
+	// work out scaling factors
+	int swide, stall;
+	surface()->GetScreenSize(swide, stall);
+	float xScale, yScale;
+//	xScale = swide / 800.0f;
+//	yScale = stall / 600.0f;
+	xScale = 1.0f;
+	yScale = 1.0f;
+/*
+	// iterate and draw all the background pieces
+	ypos = 0;
+	for (int y = 0; y < BACKGROUND_ROWS; y++)
+	{
+		xpos = 0;
+		for (int x = 0; x < BACKGROUND_COLUMNS; x++)
+		{
+			bimage_t &bimage = m_ImageID[y][x];
+
+			int dx = (int)ceil(xpos * xScale);
+			int dy = (int)ceil(ypos * yScale);
+			int dw = (int)ceil((xpos + bimage.width) * xScale);
+			int dt = (int)ceil((ypos + bimage.height) * yScale);
+
+			if (x == 0)
+			{
+				dx = 0;
+			}
+			if (y == 0)
+			{
+				dy = 0;
+			}
+
+  */
+			bimage_t &bimage = m_ImageID[0][0];
+
+			char filename[512];
+			sprintf(filename, "console/console_background_loading" );
+			//bimage_t &bimage = m_ImageID[0][0];
+			bimage.imageID = surface()->CreateNewTextureID();
+			surface()->DrawSetTextureFile(bimage.imageID, filename, false, false);
+			surface()->DrawGetTextureSize(bimage.imageID, bimage.width, bimage.height);
+			// draw the color image only if the mono image isn't yet fully opaque
+			surface()->DrawSetColor(255, 255, 255, 255);
+			surface()->DrawSetTexture(bimage.imageID);
+			surface()->DrawTexturedRect(0, 0, wide, tall);
+
+			Msg( "Loading image drawn...\n" );
 		/*	xpos += bimage.width;
 		}
 		ypos += m_ImageID[y][0].height;

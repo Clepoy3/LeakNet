@@ -106,6 +106,7 @@ int VGui_ActivateGameUI();
 void ClearIOStates( void );
 
 extern IMatSystemSurface *g_pMatSystemSurface;
+extern bool	m_bBackGroundMap;
 
 //-----------------------------------------------------------------------------
 // Purpose: singleton accessor
@@ -458,6 +459,8 @@ void CBaseUI::CallEngineSurfaceProc(void *hwnd, unsigned int msg, unsigned int w
 //-----------------------------------------------------------------------------
 void CBaseUI::HideGameUI()
 {
+	if( m_bBackGroundMap )
+		return;
 
 	staticGameUIFuncs->HideGameUI();
 //	staticGameConsole->Hide();

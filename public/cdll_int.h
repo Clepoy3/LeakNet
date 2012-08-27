@@ -314,6 +314,8 @@ public:
 	virtual void		SaveFreeMemory( void *pSaveMem ) = 0;
 	// GR - returns the HDR support status
 	virtual bool        SupportsHDR() = 0;
+	
+	virtual bool		IsBackGroundMap ( void ) = 0;
 };
 
 

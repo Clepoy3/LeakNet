@@ -238,7 +238,7 @@ public:
 	virtual bool			GameInit( void ) = 0;
 
 	// Called any time a new level is started (after GameInit() also on level transitions within a game)
-	virtual bool			LevelInit( char const *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame ) = 0;
+	virtual bool			LevelInit( char const *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background ) = 0;
 
 	// The server is about to activate
 	virtual void			ServerActivate( edict_t *pEdictList, int edictCount, int clientMax ) = 0;
