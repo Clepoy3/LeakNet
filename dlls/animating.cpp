@@ -1893,7 +1893,7 @@ bool CBaseAnimating::LookupHitbox( const char *szName, int& outSet, int& outBox 
 			if( !pBox )
 				continue;
 			
-			const char* szBoxName = pBox->pszHitboxName(pHdr);
+			const char* szBoxName = pBox->pszHitboxName(/*pHdr*/);
 			if( Q_stricmp( szBoxName, szName ) == 0 )
 			{
 				outSet = set;

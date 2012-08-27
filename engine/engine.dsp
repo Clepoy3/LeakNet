@@ -982,6 +982,10 @@ SOURCE=..\Public\crtmemdebug.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSharedModelCache.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CSpatialPartition.cpp
 # End Source File
 # Begin Source File
@@ -2529,6 +2533,10 @@ SOURCE=.\conproc.h
 # Begin Source File
 
 SOURCE=.\CONSOLE.H
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSharedModelCache.h
 # End Source File
 # Begin Source File
 

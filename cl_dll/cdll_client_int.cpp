@@ -58,6 +58,7 @@
 #include "saverestore.h"
 #include "physics_saverestore.h"
 #include "igameevents.h"
+#include "engine/ISharedModelCache.h"
 
 extern ConVar	cl_predict;
 
@@ -88,6 +89,7 @@ ISharedGameRules *sharedgamerules = NULL;
 IEngineTrace *enginetrace = NULL;
 IGameUIFuncs *gameuifuncs = NULL;
 IGameEventManager *gameeventmanager = NULL;
+ISharedModelCache *g_pSharedModelCache = NULL;
 
 // String tables
 TABLEID g_StringTableEffectDispatch = INVALID_STRING_TABLE;
@@ -295,7 +297,8 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		!(filesystem = (IFileSystem *)appSystemFactory(FILESYSTEM_INTERFACE_VERSION, NULL)) ||
 		!(random = (IUniformRandomStream *)appSystemFactory(VENGINE_CLIENT_RANDOM_INTERFACE_VERSION, NULL)) ||
 		!(gameuifuncs = (IGameUIFuncs * )appSystemFactory( VENGINE_GAMEUIFUNCS_VERSION, NULL )) ||
-		!(gameeventmanager = (IGameEventManager *)appSystemFactory(INTERFACEVERSION_GAMEEVENTSMANAGER,NULL))
+		!(gameeventmanager = (IGameEventManager *)appSystemFactory(INTERFACEVERSION_GAMEEVENTSMANAGER,NULL)) ||
+		!(g_pSharedModelCache = (ISharedModelCache*)appSystemFactory(SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL))
 		)
 	{
 		return false;
@@ -330,6 +333,8 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	g_pMatSystemSurface = (IMatSystemSurface*)vgui::surface()->QueryInterface( MAT_SYSTEM_SURFACE_INTERFACE_VERSION ); 
 	if (!g_pMatSystemSurface)
 		return false;
+
+	g_pSharedModelCache->InitFileSystem( filesystem );
 
 	// Add the client systems.	
 	

@@ -699,7 +699,7 @@ bool StudioModel::LoadModel(const char *modelname)
 		return false;
 	}
 
-	Studio_ConvertStudioHdrToNewVersion( phdr );
+//	Studio_ConvertStudioHdrToNewVersion( phdr );
 	if (phdr->version != STUDIO_VERSION)
 	{
 		delete [] buffer;

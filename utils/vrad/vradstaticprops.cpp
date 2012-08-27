@@ -344,7 +344,7 @@ bool LoadStudioModel( char const* pModelName, CUtlBuffer& buf )
 	}
 
 	studiohdr_t* pHdr = (studiohdr_t*)buf.PeekGet();
-	Studio_ConvertStudioHdrToNewVersion( pHdr );
+//	Studio_ConvertStudioHdrToNewVersion( pHdr );
 	if (pHdr->version != STUDIO_VERSION)
 	{
 		Warning("Error! Invalid model version \"%s\"\n", pFileName );

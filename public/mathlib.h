@@ -1188,4 +1188,44 @@ void TransformAABB( const matrix3x4_t &in1, const Vector &vecMinsIn, const Vecto
 // Uses the inverse transform of in1
 void ITransformAABB( const matrix3x4_t &in1, const Vector &vecMinsIn, const Vector &vecMaxsIn, Vector &vecMinsOut, Vector &vecMaxsOut );
 
+//-----------------------------------------------------------------------------
+// Transform a plane
+//-----------------------------------------------------------------------------
+inline void MatrixTransformPlane( const matrix3x4_t &src, const cplane_t &inPlane, cplane_t &outPlane )
+{
+	// What we want to do is the following:
+	// 1) transform the normal into the new space.
+	// 2) Determine a point on the old plane given by plane dist * plane normal
+	// 3) Transform that point into the new space
+	// 4) Plane dist = DotProduct( new normal, new point )
+
+	// An optimized version, which works if the plane is orthogonal.
+	// 1) Transform the normal into the new space
+	// 2) Realize that transforming the old plane point into the new space
+	// is given by [ d * n'x + Tx, d * n'y + Ty, d * n'z + Tz ]
+	// where d = old plane dist, n' = transformed normal, Tn = translational component of transform
+	// 3) Compute the new plane dist using the dot product of the normal result of #2
+
+	// For a correct result, this should be an inverse-transpose matrix
+	// but that only matters if there are nonuniform scale or skew factors in this matrix.
+	VectorRotate( inPlane.normal, src, outPlane.normal );
+	outPlane.dist = inPlane.dist * DotProduct( outPlane.normal, outPlane.normal );
+	outPlane.dist += outPlane.normal.x * src[0][3] + outPlane.normal.y * src[1][3] + outPlane.normal.z * src[2][3];
+}
+
+inline void MatrixITransformPlane( const matrix3x4_t &src, const cplane_t &inPlane, cplane_t &outPlane )
+{
+	// The trick here is that Tn = translational component of transform,
+	// but for an inverse transform, Tn = - R^-1 * T
+	Vector vecTranslation;
+	MatrixGetColumn( src, 3, vecTranslation );
+
+	Vector vecInvTranslation;
+	VectorIRotate( vecTranslation, src, vecInvTranslation );
+
+	VectorIRotate( inPlane.normal, src, outPlane.normal );
+	outPlane.dist = inPlane.dist * DotProduct( outPlane.normal, outPlane.normal );
+	outPlane.dist -= outPlane.normal.x * vecInvTranslation[0] + outPlane.normal.y * vecInvTranslation[1] + outPlane.normal.z * vecInvTranslation[2];
+}
+
 #endif			// MATHLIB_H

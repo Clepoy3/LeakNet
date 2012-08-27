@@ -73,7 +73,7 @@ int main( int argc, char **argv )
 
 	studiohdr_t *pStudioHdr = ( studiohdr_t * )malloc( len );
 	fread( pStudioHdr, 1, len, fp );
-	Studio_ConvertStudioHdrToNewVersion( pStudioHdr );
+//	Studio_ConvertStudioHdrToNewVersion( pStudioHdr );
 	if( pStudioHdr->version != STUDIO_VERSION )
 	{
 		fprintf( stderr, "Wrong version (%d != %d)\n", ( int )pStudioHdr->version, ( int )STUDIO_VERSION );

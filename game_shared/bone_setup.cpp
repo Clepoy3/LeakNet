@@ -1,31 +1,111 @@
+//====== Copyright © 2008-2009, Axel Project Team, all rights reserved ======//
+//
+// Purpose: Bone setup file 
+//
+//===========================================================================//
 
 #include "tier0/dbg.h"
 #include "mathlib.h"
 #include "bone_setup.h"
 #include <string.h>
-
 #include "collisionutils.h"
 #include "vstdlib/random.h"
 #include "tier0/vprof.h"
+#include "engine/ISharedModelCache.h"
 
-void BuildBoneChain(
-	const studiohdr_t *pStudioHdr,
-	matrix3x4_t &rootxform,
-	Vector pos[], 
-	Quaternion q[], 
-	int	iBone,
-	matrix3x4_t *pBoneToWorld );
+#include "tier0/memdbgon.h"
+
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
+void BuildBoneChain(const studiohdr_t *pStudioHdr, matrix3x4_t &rootxform, Vector pos[], Quaternion q[], int iBone, matrix3x4_t *pBoneToWorld );
+
+//-----------------------------------------------------------------------------
+// Purpose: returns a model animation from the sequence group and returns a
+//          usable animation description
+//-----------------------------------------------------------------------------
+static mstudioanimdesc_t *GetAnimDesc( const studiohdr_t *pStudioHdr, const mstudioseqdesc_t *pSeqDesc, int index1=0, int index2=0 )
+{
+#if STUDIO_VERSION >= 37
+	// ========================================================================
+	// NOTE: Older code available http://pastebin.com/f10885875 for reference
+	// ========================================================================
+
+	// TODO: Idealistically we should be pre-loading shared models when the
+	//       model is loaded to prevent potential "hitches" upon GetAnimDesc
+
+	// Get the animation group
+	int iAnimGroup = pSeqDesc->pAnimValue(index1, index2);
+	Assert(iAnimGroup >= 0 && iAnimGroup < pStudioHdr->numanimgroup);
+	
+	// Get the sequence group, ensure that it's lower than numseqgroups
+	int iSeqGroup = pStudioHdr->pAnimGroup(iAnimGroup)->group;
+	Assert(iSeqGroup < pStudioHdr->numseqgroups);
+	
+	// Get the animation index
+	int iAnimIndex = pStudioHdr->pAnimGroup(iAnimGroup)->index;
+	
+	// Simply pAnimdesc the current model
+	if(iSeqGroup == 0)
+		return pStudioHdr->pAnimdesc(iAnimIndex);
+	
+	// Get the sequence group
+	mstudioseqgroup_t* pSeqGroup = pStudioHdr->pSeqgroup(iSeqGroup);
+	Assert(pSeqGroup);
+
+	// We only support "shared_animation" multiple sequence groups
+	//
+	// NOTE: in some models pszName() and pszLabel() are the same string
+	//       only male_01.mdl is known to have "shared_animation" as its
+	//       pszLabel()
+	if(pSeqGroup->szlabelindex != pSeqGroup->sznameindex)
+	{
+		if(Q_strcmp(pSeqGroup->pszLabel(), "shared_animation"))
+		{
+			Warning("Invalid non-zero sequence group label: \"%s\", only \"shared_animation\" is supported.\n");
+			return pStudioHdr->pAnimdesc(0); // Fall back to Jesus-pose
+		}
+	}
+	
+	// This happens when we've tried to load the model, but it doesn't exist or
+	// is invalid
+	if(pSeqGroup->cache == Cache_Invalid)
+		return pStudioHdr->pAnimdesc(0); // Fall back to Jesus-pose
+	
+	// Have we already loaded the shared model?
+	if(pSeqGroup->cache)
+		return g_pSharedModelCache->GetSharedModel(pSeqGroup->cache)->pAnimdesc(iAnimIndex);
+	
+	// If we've reached this, the cache MUST need loading
+	Assert(pSeqGroup->cache == Cache_NeedsLoading);
+	
+	// Attempt to load the shared model
+	pSeqGroup->cache = g_pSharedModelCache->Load(pSeqGroup->pszName());
+	
+	// Check we loaded the shared model successfully
+	if(pSeqGroup->cache == Cache_Invalid)
+	{
+		Warning("Failed to load shared model (%s) of model (%s)\n", pSeqGroup->pszName(), pStudioHdr->name);
+		return pStudioHdr->pAnimdesc(0); // Fall back to Jesus-pose
+	}
+
+	return g_pSharedModelCache->GetSharedModel(pSeqGroup->cache)->pAnimdesc(iAnimIndex);
+#else
+	// No shared animations in STUDIO_VERSION < 37
+	return pStudioHdr->pAnimdesc(pSeqDesc->anim[index1][index2]);
+#endif
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: return a sub frame rotation for a single bone
 //-----------------------------------------------------------------------------
 void CalcBoneQuaternion( const studiohdr_t *pStudioHdr, int frame, float s, 
-						const mstudiobone_t *pbone, const mstudioanim_t *panim, Quaternion &q )
+			 const mstudiobone_t *pbone, const mstudioanim_t *panim, Quaternion &q )
 {
 
-	int					j, k;
-	Quaternion			q1, q2;
-	RadianEuler			angle1(0,0,0), angle2(0,0,0);
+	int			j, k;
+	Quaternion		q1, q2;
+	RadianEuler		angle1(0,0,0), angle2(0,0,0);
 	mstudioanimvalue_t	*panimvalue;
 
 	if (!(panim->flags & STUDIO_ROT_ANIMATED))
@@ -101,6 +181,8 @@ void CalcBoneQuaternion( const studiohdr_t *pStudioHdr, int frame, float s,
 		AngleQuaternion( angle1, q );
 	}
 
+	Assert( q.IsValid() );
+
 	// align to unified bone
 	if (!(panim->flags & STUDIO_DELTA) && (pbone->flags & BONE_FIXED_ALIGNMENT))
 	{
@@ -130,7 +212,7 @@ static mstudiobonecontroller_t* FindController( const studiohdr_t *pStudioHdr, i
 void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s, 
 	const mstudiobone_t *pbone, const mstudioanim_t *panim, Vector &pos	)
 {
-	int					j, k;
+	int			j, k;
 	mstudioanimvalue_t	*panimvalue;
 
 	if (!(panim->flags & STUDIO_POS_ANIMATED))
@@ -145,11 +227,7 @@ void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s,
 		if (panim->u.offset[j] != 0)
 		{
 			panimvalue = panim->pAnimvalue( j );
-			/*
-			if (i == 0 && j == 0)
-				Con_DPrintf("%d  %d:%d  %f\n", frame, panimvalue->num.valid, panimvalue->num.total, s );
-			*/
-			
+		
 			k = frame;
 			// DEBUG
 			if (panimvalue->num.total < panimvalue->num.valid)
@@ -190,21 +268,23 @@ void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s,
 			}
 		}
 	}
+
+	Assert( pos.IsValid() );
 }
 
 
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-static void CalcRotations( const studiohdr_t *pStudioHdr,	Vector *pos, Quaternion *q, 
-	const mstudioseqdesc_t *pseqdesc,
-	const mstudioanimdesc_t *panimdesc, float cycle, int boneMask )
+static void CalcRotations( 	const studiohdr_t *pStudioHdr,	Vector *pos, Quaternion *q, 
+				const mstudioseqdesc_t *pseqdesc,
+				const mstudioanimdesc_t *panimdesc, float cycle, int boneMask )
 {
-	int					i;
-	mstudiobone_t *pbone = pStudioHdr->pBone( 0 );
+	int		i;
+	mstudiobone_t 	*pbone = pStudioHdr->pBone( 0 );
 
-	int					iFrame;
-	float				s;
+	int	iFrame;
+	float	s;
 
 	float fFrame = cycle * (panimdesc->numframes - 1);
 
@@ -226,7 +306,7 @@ static void CalcRotations( const studiohdr_t *pStudioHdr,	Vector *pos, Quaternio
 // qt = ( s * p ) * q
 void QuaternionSM( float s, const Quaternion &p, const Quaternion &q, Quaternion &qt )
 {
-	Quaternion		p1, q1;
+	Quaternion	p1, q1;
 
 	QuaternionScale( p, s, p1 );
 	QuaternionMult( p1, q, q1 );
@@ -277,8 +357,8 @@ void SlerpBones(
 	float s,
 	int boneMask )
 {
-	int			i;
-	Quaternion		q3, q4;
+	int		i;
+	Quaternion	q3, q4;
 	float		s1, s2;
 
 	if (s <= 0.0f) 
@@ -287,7 +367,7 @@ void SlerpBones(
 	}
 	else if (s > 1.0f)
 	{
-		s = 1.0f;		
+		s = 1.0f;
 	}
 
 	if (pseqdesc->flags & STUDIO_DELTA)
@@ -375,8 +455,8 @@ void BlendBones(
 	float s,
 	int boneMask )
 {
-	int			i;
-	Quaternion		q3;
+	int		i;
+	Quaternion	q3;
 
 	if (s <= 0)
 	{
@@ -460,8 +540,8 @@ void Studio_LocalPoseParameter( const studiohdr_t *pStudioHdr, const float poseP
 
 	if (pSeqDesc->posekeyindex == 0)
 	{
-		float flLocalStart	= (pSeqDesc->paramstart[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
-		float flLocalEnd	= (pSeqDesc->paramend[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
+		float flLocalStart = (pSeqDesc->paramstart[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
+		float flLocalEnd   = (pSeqDesc->paramend[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
 
 		// convert into local range
 		flSetting = (flValue - flLocalStart) / (flLocalEnd - flLocalStart);
@@ -536,9 +616,11 @@ void InitPose(
 
 		pos[i] = Vector( pbone->value[0], pbone->value[1], pbone->value[2] );
 
-		AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code after this line" );
+#if STUDIO_VERSION == 37
+		q[i] = pbone->quat;
+#else
 		// FIXME!!!
-		if ( pbone->quat.w == 0.0)
+		if ( pbone->quat.w == 0.0 )
 		{
 			AngleQuaternion( RadianEuler( pbone->value[3], pbone->value[4], pbone->value[5] ), q[i] );
 			QuaternionAlign( pbone->qAlignment, q[i], q[i] );
@@ -547,6 +629,7 @@ void InitPose(
 		{
 			q[i] = pbone->quat;
 		}
+#endif
 	}
 }
 	
@@ -579,10 +662,10 @@ bool CalcPoseSingle(
 
 	pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
-	int i0 = 0, i1 = 0;
-	float s0 = 0, s1 = 0;
-	mstudioanimdesc_t		*panim0;
-	mstudioanimdesc_t		*panim1;
+	int 	i0 = 0, i1 = 0;
+	float 	s0 = 0, s1 = 0;
+	mstudioanimdesc_t	*panim0;
+	mstudioanimdesc_t	*panim1;
 
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 0, s0, i0 );
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 1, s1, i1 );
@@ -596,7 +679,7 @@ bool CalcPoseSingle(
 		}
 		else
 		{
-			cycle = max( 0.0, min( cycle, 0.9999 ) );
+			cycle = clamp( cycle, 0.0f, 1.0f );
 		}
 	}
 
@@ -604,13 +687,14 @@ bool CalcPoseSingle(
 	{
 		if (pseqdesc->groupsize[0] == 1)
 		{
-			panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[0][0]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, 0, 0 );
+
 			CalcRotations( pStudioHdr, pos, q, pseqdesc, panim0, cycle, boneMask);
 		}
 		else
 		{
-			panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1  ]);
-			panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1  ]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
 
 			// remove "zero" positional blends
 			if ((panim0->flags & STUDIO_ALLZEROS) && (s0 < 0.001))
@@ -632,8 +716,8 @@ bool CalcPoseSingle(
 	{
 		if (pseqdesc->groupsize[0] == 1)
 		{
-			panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1  ]);
-			panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1+1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
 
 			CalcRotations( pStudioHdr, pos,  q,  pseqdesc, panim0, cycle, boneMask );
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim1, cycle, boneMask );
@@ -642,16 +726,16 @@ bool CalcPoseSingle(
 		}
 		else
 		{
-			panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1]);
-			panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
 
 			CalcRotations( pStudioHdr, pos,  q,  pseqdesc, panim0, cycle, boneMask );
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim1, cycle, boneMask );
-
+			
 			BlendBones( pStudioHdr, q, pos, pseqdesc, q2, pos2, s0, boneMask );
 			
-			panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1+1]);
-			panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1+1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1+1 );
 
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim0, cycle, boneMask );
 			CalcRotations( pStudioHdr, pos3, q3, pseqdesc, panim1, cycle, boneMask );
@@ -748,7 +832,7 @@ void CalcPose(
 	float flWeight
 	)
 {
-	mstudioseqdesc_t	*pseqdesc = pStudioHdr->pSeqdesc( sequence );
+	mstudioseqdesc_t  *pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
 	Assert( flWeight >= 0.0f && flWeight <= 1.0f );
 	// This shouldn't be necessary, but the Assert should help us catch whoever is screwing this up
@@ -769,7 +853,7 @@ void CalcPose(
 		seq_ik.AddSequenceLocks( pseqdesc, pos, q );
 	}
 
-	AddSequenceLayers( 	pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
+	AddSequenceLayers( pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
 
 	if (pseqdesc->numiklocks)
 	{
@@ -801,7 +885,10 @@ void AccumulatePose(
 	// This shouldn't be necessary, but the Assert should help us catch whoever is screwing this up
 	flWeight = clamp( flWeight, 0.0f, 1.0f );
 
-	mstudioseqdesc_t	*pseqdesc = pStudioHdr->pSeqdesc( sequence );
+	if ( sequence < 0 )
+		return;
+
+	mstudioseqdesc_t  *pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
 	if (!CalcPoseSingle( pStudioHdr, pos2, q2, sequence, cycle, poseParameter, boneMask ))
 	{
@@ -812,7 +899,8 @@ void AccumulatePose(
 	CIKContext seq_ik;
 	if (pseqdesc->numiklocks)
 	{
-		seq_ik.Init( pStudioHdr, QAngle( 0, 0, 0 ), Vector( 0, 0, 0 ), 0.0 );  // local space relative so absolute position doesn't mater
+		// local space relative so absolute position doesn't mater
+		seq_ik.Init( pStudioHdr, QAngle( 0, 0, 0 ), Vector( 0, 0, 0 ), 0.0 );
 		seq_ik.AddSequenceLocks( pseqdesc, pos, q );
 	}
 
@@ -823,7 +911,7 @@ void AccumulatePose(
 
 	SlerpBones( pStudioHdr, q, pos, pseqdesc, q2, pos2, flWeight, boneMask );
 
-	AddSequenceLayers( 	pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
+	AddSequenceLayers( pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
 
 	if (pseqdesc->numiklocks)
 	{
@@ -844,8 +932,8 @@ void CalcBoneAdj(
 	int boneMask
 	)
 {
-	int					i, j, k;
-	float				value;
+	int			i, j, k;
+	float			value;
 	mstudiobonecontroller_t *pbonecontroller;
 	Vector p0;
 	RadianEuler a0;
@@ -912,9 +1000,11 @@ void CalcBoneDerivatives( Vector &velocity, AngularImpulse &angVel, const matrix
 	MatrixAngles( prev, startAngles, startPosition );
 	MatrixAngles( current, endAngles, endPosition );
 
-	velocity = (endPosition - startPosition) * scale;
+	velocity.x = (endPosition.x - startPosition.x) * scale;
+	velocity.y = (endPosition.y - startPosition.y) * scale;
+	velocity.z = (endPosition.z - startPosition.z) * scale;
 	RotationDeltaAxisAngle( startAngles, endAngles, deltaAxis, deltaAngle );
-	angVel = deltaAxis * (deltaAngle * scale);
+	VectorScale( deltaAxis, (deltaAngle * scale), angVel );
 }
 
 void CalcBoneVelocityFromDerivative( const QAngle &vecAngles, Vector &velocity, AngularImpulse &angVel, const matrix3x4_t &current )
@@ -940,7 +1030,7 @@ public:
 // Author: Ken Perlin
 //
 // Given a two link joint from [0,0,0] to end effector position P,
-// let link lengths be a and b, and let norm |P| = c.  Clearly a+b >= c.
+// let link lengths be a and b, and let norm |P| = c.  Clearly a+b <= c.
 //
 // Problem: find a "knee" position Q such that |Q| = a and |P-Q| = b.
 //
@@ -959,7 +1049,7 @@ public:
 //    e = sqrt(a2-d2)
 
    static float findD(float a, float b, float c) {
-      return max(0, min(a, (c + (a*a-b*b)/c) / 2));
+      return (c + (a*a-b*b)/c) / 2;
    }
    static float findE(float a, float d) { return sqrt(a*a-d*d); } 
 
@@ -976,11 +1066,12 @@ public:
       float R[3];
       defineM(P,D);
       rot(Minv,P,R);
-      float d = findD(A,B,length(R));
+	  float r = length(R);
+      float d = findD(A,B,r);
       float e = findE(A,d);
       float S[3] = {d,e,0};
       rot(Mfwd,S,Q);
-      return d > 0 && d < A;
+      return d > (r - B) && d < A;
    }
 
 // If "knee" position Q needs to be as close as possible to some point D,
@@ -1496,14 +1587,12 @@ bool CIKContext::Estimate(
 
 					deltaPos.Init();
 
-					AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code after this line" );
 					// hack in the contact point if the model hasn't been rebuilt
 					float contact = pRule->contact;
 					if (contact == 0.0 && pRule->peak != 0.0)
 					{
 						contact = pRule->peak;
 					}
-					AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code before this line" );
 
 					float flCheck = flCycle;
 					if (flCheck < pRule->start)
@@ -2020,7 +2109,7 @@ void CalcAutoplaySequences(
 {
 	ASSERT_NO_REENTRY();
 	
-	int			i;
+	int	i;
 
 	if ( pIKContext )
 	{
@@ -2064,13 +2153,13 @@ void Studio_BuildMatrices(
 {
 	int i, j;
 
-	int					chain[MAXSTUDIOBONES];
-	int					chainlength = 0;
+	int	chain[MAXSTUDIOBONES];
+	int	chainlength = 0;
 
 	if (iBone < -1 || iBone >= pStudioHdr->numbones)
 		iBone = 0;
 
-	mstudiobone_t *pbones		= pStudioHdr->pBone( 0 );
+	mstudiobone_t *pbones	= pStudioHdr->pBone( 0 );
 
 	// build list of what bones to use
 	if (iBone == -1)
@@ -2242,8 +2331,8 @@ void DoQuatInterpBone(
 	matrix3x4_t *bonetoworld
 	)
 {
-	matrix3x4_t			bonematrix;
-	Vector				control;
+	matrix3x4_t	bonematrix;
+	Vector		control;
 
 	mstudioquatinterpbone_t *pProc = (mstudioquatinterpbone_t *)pbones[ibone].pProcedure( );
 	if (pProc && pbones[pProc->control].parent != -1)
@@ -2266,6 +2355,7 @@ void DoQuatInterpBone(
 		{
 			float dot = fabs( QuaternionDotProduct( pProc->pTrigger( i )->trigger, src ) );
 			// FIXME: a fast acos should be acceptable
+			dot = clamp( dot, -1, 1 );
 			weight[i] = 1 - (2 * acos( dot ) * pProc->pTrigger( i )->inv_tolerance );
 			weight[i] = max( 0, weight[i] );
 			scale += weight[i];
@@ -2317,7 +2407,7 @@ bool CalcProceduralBone(
 	matrix3x4_t *bonetoworld
 	)
 {
-	mstudiobone_t		*pbones = pStudioHdr->pBone( 0 );
+	mstudiobone_t	*pbones = pStudioHdr->pBone( 0 );
 
 	if ( pbones[iBone].flags & BONE_ALWAYS_PROCEDURAL )
 	{
@@ -2470,7 +2560,7 @@ float Studio_GetPoseParameter( const studiohdr_t *pStudioHdr, int iParameter, fl
 //
 struct bonecache_t
 {
-	int				bone;
+	int			bone;
 	matrix3x4_t		matrix;
 	bonecache_t		*pnext;
 };
@@ -2478,11 +2568,11 @@ struct bonecache_t
 struct studiocache_t
 {
 	studiohdr_t		*pStudioHdr;
-	int				sequence;
+	int			sequence;
 	float			animtime;
 	QAngle			angles;
 	Vector			origin;
-	int				boneMask;
+	int			boneMask;
 	bonecache_t		*bones;	// points to a linked list of matrix transforms for each bone
 	
 	// FIXME:  Cache controllers and poseparameters, too???
@@ -2715,9 +2805,9 @@ void Studio_InvalidateBoneCache( studiocache_t *pcache )
 	g_StudioBoneCache.BoneCacheFree( pcache );
 }
 
-
+#ifdef _MSC_VER
 #pragma warning (disable : 4701)
-
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -2725,22 +2815,31 @@ void Studio_InvalidateBoneCache( studiocache_t *pcache )
 static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& matrix, trace_t &tr )
 {
 	// scale by current t so hits shorten the ray and increase the likelihood of early outs
-	Vector delta2 = (0.5f * tr.fraction) * ray.m_Delta;
+	Vector delta2;
+	VectorScale( ray.m_Delta, (0.5f * tr.fraction), delta2 );
 
 	// OPTIMIZE: Store this in the box instead of computing it here
 	// compute center in local space
-	Vector boxextents = (pbox->bbmin + pbox->bbmax) * 0.5; 
+	Vector boxextents;
+	boxextents.x = (pbox->bbmin.x + pbox->bbmax.x) * 0.5; 
+	boxextents.y = (pbox->bbmin.y + pbox->bbmax.y) * 0.5; 
+	boxextents.z = (pbox->bbmin.z + pbox->bbmax.z) * 0.5; 
 	Vector boxCenter;
 	// transform to world space
 	VectorTransform( boxextents, matrix, boxCenter );
 	// calc extents from local center
-	boxextents = pbox->bbmax - boxextents;
+	boxextents.x = pbox->bbmax.x - boxextents.x;
+	boxextents.y = pbox->bbmax.y - boxextents.y;
+	boxextents.z = pbox->bbmax.z - boxextents.z;
 	// OPTIMIZE: This is optimized for world space.  If the transform is fast enough, it may make more
 	// sense to just xform and call UTIL_ClipToBox() instead.  MEASURE THIS.
 
 	// save the extents of the ray along 
 	Vector extent, uextent;
-	Vector segmentCenter = ray.m_Start + delta2 - boxCenter;
+	Vector segmentCenter;
+	segmentCenter.x = ray.m_Start.x + delta2.x - boxCenter.x;
+	segmentCenter.y = ray.m_Start.y + delta2.y - boxCenter.y;
+	segmentCenter.z = ray.m_Start.z + delta2.z - boxCenter.z;
 
 	extent.Init();
 
@@ -2758,7 +2857,8 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 
 	// now check cross axes for separation
 	float tmp, cextent;
-	Vector cross = delta2.Cross( segmentCenter );
+	Vector cross;
+	CrossProduct( delta2, segmentCenter, cross );
 	cextent = cross.x * matrix[0][0] + cross.y * matrix[1][0] + cross.z * matrix[2][0];
 	cextent = fabsf(cextent);
 	tmp = boxextents[1]*uextent[2] + boxextents[2]*uextent[1];
@@ -2783,20 +2883,78 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 	VectorITransform( ray.m_Start, matrix, start );
 	// extent is delta2 in bone space, recompute delta in bone space
 	VectorScale( extent, 2, extent );
-	int hitside;
+
 	// delta was prescaled by the current t, so no need to see if this intersection
 	// is closer
-	bool startsolid;
-	float fraction;
-	if ( !IntersectRayWithBox( start, extent, pbox->bbmin, pbox->bbmax, 0, fraction, hitside, startsolid ) )
+	trace_t boxTrace;
+	if ( !IntersectRayWithBox( start, extent, pbox->bbmin, pbox->bbmax, 0.0f, &boxTrace ) )
 		return -1;
-	Assert( IsFinite(fraction) );
-	tr.fraction *= fraction;
-	tr.startsolid = startsolid;
+	Assert( IsFinite(boxTrace.fraction) );
+	tr.fraction *= boxTrace.fraction;
+	tr.startsolid = boxTrace.startsolid;
+	int hitside = boxTrace.plane.type;
+	if ( boxTrace.plane.normal[hitside] >= 0 )
+	{
+		hitside += 3;
+	}
 	return hitside;
 }
 
+#ifdef _MSC_VER
 #pragma warning (default : 4701)
+#endif
+
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+bool SweepBoxToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_t *set, 
+				   matrix3x4_t **hitboxbones, int fContentsMask, trace_t &tr )
+{
+	tr.fraction = 1.0;
+	tr.startsolid = false;
+
+	// OPTIMIZE: Partition these?
+	Ray_t clippedRay = ray;
+	int hitbox = -1;
+	for ( int i = 0; i < set->numhitboxes; i++ )
+	{
+		mstudiobbox_t *pbox = set->pHitbox(i);
+
+		// Filter based on contents mask
+		int fBoneContents = pStudioHdr->pBone( pbox->bone )->contents;
+		if ( ( fBoneContents & fContentsMask ) == 0 )
+			continue;
+		
+		trace_t obbTrace;
+		if ( IntersectRayWithOBB( clippedRay, *hitboxbones[pbox->bone], pbox->bbmin, pbox->bbmax, 0.0f, &obbTrace ) )
+		{
+			tr.startpos = obbTrace.startpos;
+			tr.endpos = obbTrace.endpos;
+			tr.plane = obbTrace.plane;
+			tr.startsolid = obbTrace.startsolid;
+			tr.allsolid = obbTrace.allsolid;
+
+			// This logic here is to shorten the ray each time to get more early outs
+			tr.fraction *= obbTrace.fraction;
+			clippedRay.m_Delta *= obbTrace.fraction;
+			hitbox = i;
+			if (tr.startsolid)
+				break;
+		}
+	}
+
+	if ( hitbox >= 0 )
+	{
+		tr.hitgroup = set->pHitbox(hitbox)->group;
+		tr.hitbox = hitbox;
+		tr.contents = pStudioHdr->pBone( set->pHitbox(hitbox)->bone )->contents | CONTENTS_HITBOX;
+		tr.physicsbone = pStudioHdr->pBone( set->pHitbox(hitbox)->bone )->physicsbone;
+		Assert( tr.physicsbone >= 0 );
+		return true;
+	}
+	return false;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -2805,6 +2963,11 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 bool TraceToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_t *set, 
 				   matrix3x4_t **hitboxbones, int fContentsMask, trace_t &tr )
 {
+	if ( !ray.m_IsRay )
+	{
+		return SweepBoxToStudio( ray, pStudioHdr, set, hitboxbones, fContentsMask, tr );
+	}
+
 	tr.fraction = 1.0;
 	tr.startsolid = false;
 
@@ -2821,7 +2984,7 @@ bool TraceToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_
 		int fBoneContents = pStudioHdr->pBone( pbox->bone )->contents;
 		if ( ( fBoneContents & fContentsMask ) == 0 )
 			continue;
-		
+
 		// columns are axes of the bones in world space, translation is in world space
 		matrix3x4_t& matrix = *hitboxbones[i];
 
@@ -2881,22 +3044,22 @@ void Studio_SeqAnims( const studiohdr_t *pStudioHdr, int iSequence, const float 
 
 	int i0 = 0, i1 = 0;
 	float s0 = 0, s1 = 0;
-	
+
 	mstudioseqdesc_t *pseqdesc = pStudioHdr->pSeqdesc( iSequence );
 
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 0, s0, i0 );
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 1, s1, i1 );
 
-	panim[0] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0  ][i1  ] );
+	panim[0] = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
 	weight[0] = (1 - s0) * (1 - s1);
 
-	panim[1] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0+1][i1  ] );
+	panim[1] = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
 	weight[1] = (s0) * (1 - s1);
 
-	panim[2] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0  ][i1+1] );
+	panim[2] = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
 	weight[2] = (1 - s0) * (s1);
 
-	panim[3] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0+1][i1+1] );
+	panim[3] = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1+1 );
 	weight[3] = (s0) * (s1);
 
 	Assert( weight[0] >= 0.0f && weight[1] >= 0.0f && weight[2] >= 0.0f && weight[3] >= 0.0f );
@@ -2924,8 +3087,9 @@ int Studio_MaxFrame( const studiohdr_t *pStudioHdr, int iSequence, const float p
 
 	if ( maxFrame > 1 )
 		maxFrame -= 1;
-	
-	return maxFrame;
+
+	// FIXME: why does the weights sometimes not exactly add it 1.0 and this sometimes rounds down?
+	return static_cast<int>(maxFrame + 0.01);
 }
 
 
@@ -3026,7 +3190,7 @@ bool Studio_AnimPosition( mstudioanimdesc_t *panim, float flCycle, Vector &vecPo
 	}
 	else if (flCycle < 0.0)
 	{
-		iLoops = (int)flCycle - 1;
+		iLoops = (int)flCycle - 1; // next statement to be executed
 	}
 	flCycle = flCycle - iLoops;
 
@@ -3176,7 +3340,7 @@ bool Studio_SeqMovement( const studiohdr_t *pStudioHdr, int iSequence, float flC
 	float	weight[4];
 
 	Studio_SeqAnims( pStudioHdr, iSequence, poseParameter, panim, weight );
-	
+
 	deltaPos.Init( );
 	deltaAngles.Init( );
 
@@ -3273,7 +3437,7 @@ int Studio_FindAttachment( const studiohdr_t *pStudioHdr, const char *pAttachmen
 		// Extract the bone index from the name
 		for (int i = 0; i < pStudioHdr->numattachments; i++)
 		{
-			if (!stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName( ))) 
+			if (!Q_stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName()))
 			{
 				return i;
 			}
@@ -3321,7 +3485,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName )
 	mstudiobone_t *pbones = pStudioHdr->pBone( 0 );
 	for ( int i = 0; i < pStudioHdr->numbones; i++ )
 	{
-		if (!stricmp(pName,pbones[i].pszName( ))) 
+		if (!Q_stricmp(pName,pbones[i].pszName()))
 			return i;
 	}
 

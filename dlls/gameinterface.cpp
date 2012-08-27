@@ -56,6 +56,7 @@
 #include "mapentities.h"
 #include "igameevents.h"
 #include "eventlog.h"
+#include "engine/ISharedModelCache.h"
 
 // Engine interfaces.
 IVEngineServer	*engine = NULL;
@@ -70,6 +71,7 @@ ISpatialPartition *partition = NULL;
 IVModelInfo *modelinfo = NULL;
 IEngineTrace *enginetrace = NULL;
 IGameEventManager *gameeventmanager = NULL;
+ISharedModelCache *g_pSharedModelCache = NULL;
 
 void SceneManager_ClientActive( CBasePlayer *player );
 
@@ -297,7 +299,8 @@ bool CServerGameDLL::DLLInit(CreateInterfaceFn engineFactory,
 		!(modelinfo = (IVModelInfo *)engineFactory(VMODELINFO_SERVER_INTERFACE_VERSION, NULL)) ||
 		!(enginetrace = (IEngineTrace *)engineFactory(INTERFACEVERSION_ENGINETRACE_SERVER,NULL)) ||
 		!(filesystem = (IFileSystem *)fileSystemFactory(FILESYSTEM_INTERFACE_VERSION,NULL)) ||
-		!(gameeventmanager = (IGameEventManager *)engineFactory(INTERFACEVERSION_GAMEEVENTSMANAGER,NULL))
+		!(gameeventmanager = (IGameEventManager *)engineFactory(INTERFACEVERSION_GAMEEVENTSMANAGER,NULL)) ||
+		!(g_pSharedModelCache = (ISharedModelCache*)engineFactory(SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL))
 	)
 	{
 		return false;
@@ -338,6 +341,8 @@ bool CServerGameDLL::DLLInit(CreateInterfaceFn engineFactory,
 
 	// load used game events  
 	gameeventmanager->LoadEventsFromFile("resource/gameevents.res");
+
+	g_pSharedModelCache->InitFileSystem( filesystem );
 
 	return true;
 }

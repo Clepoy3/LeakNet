@@ -24,6 +24,8 @@ class Vector2D;
 class Vector4D;
 struct cplane_t;
 class QAngle;
+class CBaseTrace;
+struct matrix3x4_t;
 
 //-----------------------------------------------------------------------------
 //
@@ -96,6 +98,42 @@ float IntersectRayWithAAPlane( const Vector& vecStart, const Vector& vecEnd, int
 //			startsolid is true if the ray started inside the box
 //-----------------------------------------------------------------------------
 bool IntersectRayWithBox( const Vector &rayStart, const Vector &rayDelta, const Vector &boxMins, const Vector &boxMaxs, float epsilon, float &t, int &hitside, bool &startsolid );
+bool IntersectRayWithBox( const Vector &rayStart, const Vector &rayDelta, const Vector &boxMins, const Vector &boxMaxs, float epsilon, CBaseTrace *pTrace );
+bool IntersectRayWithBox( const Ray_t &ray, const Vector &boxMins, const Vector &boxMaxs, float epsilon, CBaseTrace *pTrace );
+
+struct BoxTraceInfo_t
+{
+	float t1;
+	float t2;
+	int	hitside;
+	bool startsolid;
+};
+
+bool IntersectRayWithBox( const Vector &vecRayStart, const Vector &vecRayDelta, const Vector &boxMins, const Vector &boxMaxs, float flTolerance, BoxTraceInfo_t *pTrace );
+
+//-----------------------------------------------------------------------------
+// IntersectRayWithOBB
+//
+// Purpose: Computes the intersection of a ray with a oriented box (OBB)
+// Output : Returns true if there is an intersection + trace information
+//-----------------------------------------------------------------------------
+bool IntersectRayWithOBB( const Vector &vecRayStart, const Vector &vecRayDelta, 
+	const matrix3x4_t &matOBBToWorld, const Vector &vecOBBMins, const Vector &vecOBBMaxs, 
+	float flTolerance, CBaseTrace *pTrace );
+
+bool IntersectRayWithOBB( const Vector &vecRayOrigin, const Vector &vecRayDelta, 
+	const Vector &vecBoxOrigin, const QAngle &angBoxRotation,
+	const Vector &vecOBBMins, const Vector &vecOBBMaxs, float flTolerance, CBaseTrace *pTrace );
+
+bool IntersectRayWithOBB( const Ray_t &ray, const Vector &vecBoxOrigin, const QAngle &angBoxRotation,
+	const Vector &vecOBBMins, const Vector &vecOBBMaxs, float flTolerance, CBaseTrace *pTrace );
+
+bool IntersectRayWithOBB( const Ray_t &ray, const matrix3x4_t &matOBBToWorld,
+	const Vector &vecOBBMins, const Vector &vecOBBMaxs, float flTolerance, CBaseTrace *pTrace );
+
+bool IntersectRayWithOBB( const Vector &vecRayStart, const Vector &vecRayDelta, 
+	const matrix3x4_t &matOBBToWorld, const Vector &vecOBBMins, const Vector &vecOBBMaxs, 
+	float flTolerance, BoxTraceInfo_t *pTrace );
 
 //-----------------------------------------------------------------------------
 // 
