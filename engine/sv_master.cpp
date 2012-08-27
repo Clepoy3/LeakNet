@@ -93,15 +93,13 @@ CMaster::~CMaster( void )
 //-----------------------------------------------------------------------------
 void CMaster::SendHeartbeat ( adrlist_t *p )
 {
-// TODO REENABLE BEFORE SHIPPING
-#if 0
 	static char	string[2048];    // Buffer for sending heartbeat
 	int			active;          // Number of active client connections
 	char        szGD[ MAX_OSPATH ];
 
 
-	if ( gfUseLANAuthentication )  // No HB on lan games
-		return;
+//	if ( gfUseLANAuthentication )  // No HB on lan games
+//		return;
 
 	if ( !p )
 		return;
@@ -130,7 +128,6 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 		1, active, PROTOCOL_VERSION, szGD );
 
 	NET_SendPacket (NS_SERVER, strlen(string), string,  p->adr );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -138,13 +135,11 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 //-----------------------------------------------------------------------------
 void CMaster::CheckHeartbeat (void)
 {
-// TODO REENABLE BEFORE SHIPPING
-#if 0
 	unsigned char c;    // Buffer for sending heartbeat
 	adrlist_t *p;
 
 	if ( m_bNoMasters ||      // We are ignoring heartbeats
-	    gfUseLANAuthentication || // No HB on lan games
+	//    gfUseLANAuthentication || // No HB on lan games
 		sv_lan.GetInt() ||           // Lan servers don't heartbeat
 		(svs.maxclients <= 1) ||  // not a multiplayer server.
 		!sv.active )			  // only heartbeat if a server is running.
@@ -180,7 +175,6 @@ void CMaster::CheckHeartbeat (void)
 		// Send to master asking for a challenge #
 		NET_SendPacket (NS_SERVER, 1, &c, p->adr);
 	}
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -195,7 +189,7 @@ void CMaster::ShutdownConnection( void )
 		return;
 
 	if ( m_bNoMasters ||      // We are ignoring heartbeats
-	    gfUseLANAuthentication || // No HB on lan games
+	//    gfUseLANAuthentication || // No HB on lan games
 		sv_lan.GetInt() ||           // Lan servers don't heartbeat
 		(svs.maxclients <= 1) )   // not a multiplayer server.
 		return;
@@ -288,7 +282,7 @@ void CMaster::InitConnection( void )
 	static qboolean bInitialized = false;
 
 	if ( m_bNoMasters ||      // We are ignoring heartbeats
-	     gfUseLANAuthentication || // No HB on lan games
+	//     gfUseLANAuthentication || // No HB on lan games
 		 sv_lan.GetInt() ||           // Lan servers don't heartbeat
 		 (svs.maxclients <= 1) )
 	{

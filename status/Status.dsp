@@ -226,6 +226,17 @@ SOURCE=..\public\interface.h
 # Begin Source File
 
 SOURCE=..\public\KeyValues.cpp
+
+!IF  "$(CFG)" == "Status - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "Status - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "Status - Win32 Profile"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 

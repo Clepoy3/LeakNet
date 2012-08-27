@@ -241,7 +241,7 @@ void CEmailManager::NotifyEmailSent( int item )
 void CEmailManager::LoadFromFile()
 {
 	m_Items.RemoveAll();
-
+/*
 	KeyValues *email = new KeyValues( "StatusEmails" );
 	if ( !email )
 		return;
@@ -258,7 +258,7 @@ void CEmailManager::LoadFromFile()
 
 		kv = kv->GetNextKey();
 	}
-	email->deleteThis();
+	email->deleteThis();*/
 }
 
 void CEmailManager::SaveToFile()
@@ -268,7 +268,7 @@ void CEmailManager::SaveToFile()
 		g_pFullFileSystem->RemoveFile( STATUSEMAILS_FILE_BACKUP, "GAME" );
 		g_pFullFileSystem->RenameFile( STATUSEMAILS_FILE, STATUSEMAILS_FILE_BACKUP, "GAME" );
 	}
-
+/*
 	KeyValues *email = new KeyValues( "StatusEmails" );
 	if ( !email )
 		return;
@@ -287,7 +287,7 @@ void CEmailManager::SaveToFile()
 
 	email->SaveToFile( g_pFileSystem, STATUSEMAILS_FILE );
 
-	email->deleteThis();
+	email->deleteThis();*/
 }
 
 static CEmailManager g_EmailManager;

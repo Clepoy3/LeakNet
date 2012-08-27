@@ -18,10 +18,10 @@
 #endif
 
 
-#include "basetypes.h"
-#include "mempool.h"
-#include "utlvector.h"
-#include "tier0/dbg.h"
+#include "../public/basetypes.h"
+#include "../public/mempool.h"
+#include "../public/utlvector.h"
+#include "../public/tier0/dbg.h"
 
 
 // This is the maximum amount of data a PackedEntity can have. Having a limit allows us

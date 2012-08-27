@@ -24,7 +24,7 @@ static double		curtime = 0.0;
 static double		lastcurtime = 0.0;
 static int			lowshift;
 
-int CURRENT_PROTOCOL = PROTOCOL_VERSION;
+int CURRENT_PROTOCOL_M = PROTOCOL_VERSION;
 
 #define LOAD_MIN		2000
 #define SV_PER_PKT ( 1500 / 6 )
@@ -440,7 +440,7 @@ void CHLMasterDlg::Peer_GetHeartbeat2( void )
 	strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
-	if ( !islan && !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL ) && ( protocol != 1 ) ) 
+	if ( !islan && !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL_M ) && ( protocol != 1 ) ) 
 	{
 		return;
 	}
@@ -1168,9 +1168,9 @@ BOOL CHLMasterDlg::OnInitDialog()
 	char szText[256];
 
 #if defined( _STEAM_HLMASTER )
-	sprintf(szText, "Steam HLMaster %i/HL:%s/CS:%s/TFC:%s/DMC:%s/DOD:%s/Ricochet:%s/OpFor:%s", CURRENT_PROTOCOL, m_szHLVersion, m_szCSVersion, m_szTFCVersion, m_szDMCVersion, m_szDODVersion, m_szRicochetVersion, m_szOpForVersion );
+	sprintf(szText, "Steam HLMaster %i/HL:%s/CS:%s/TFC:%s/DMC:%s/DOD:%s/Ricochet:%s/OpFor:%s", CURRENT_PROTOCOL_M, m_szHLVersion, m_szCSVersion, m_szTFCVersion, m_szDMCVersion, m_szDODVersion, m_szRicochetVersion, m_szOpForVersion );
 #else
-	sprintf(szText, "HL Master %s - %i/HL:%s/CS:%s ("__DATE__")", AdrToString(net_local_adr ), CURRENT_PROTOCOL, m_szHLVersion, m_szCSVersion );	
+	sprintf(szText, "HL Master %s - %i/HL:%s/CS:%s ("__DATE__")", AdrToString(net_local_adr ), CURRENT_PROTOCOL_M, m_szHLVersion, m_szCSVersion );	
 #endif
 
 	SetWindowText(szText);
@@ -1634,7 +1634,7 @@ void CHLMasterDlg::Packet_Heartbeat (void)
 
 	info = MSG_ReadString();
 
-	if ( !m_bAllowOldProtocols && ( nprotocol != CURRENT_PROTOCOL ) )
+	if ( !m_bAllowOldProtocols && ( nprotocol != CURRENT_PROTOCOL_M ) )
 	{
 		RejectConnection(&packet_from, "Outdated protocol.");
 		return;
@@ -1802,7 +1802,7 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 	strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
-	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL ) && ( protocol != 1 ) )
+	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL_M ) && ( protocol != 1 ) )
 	{
 		RejectConnection(&packet_from, "Outdated protocol.");
 
@@ -2539,9 +2539,9 @@ void CHLMasterDlg::PacketCommand (void)
 	switch (packet_data[0])
 	{
 // obseleted by S2M_HEARTBEAT2
-//	case S2M_HEARTBEAT:
-//		Packet_Heartbeat ();
-//		break;
+	case S2M_HEARTBEAT:
+		Packet_Heartbeat ();
+		break;
 	case S2M_HEARTBEAT2:
 		Packet_Heartbeat2 ();
 		break;
@@ -3876,10 +3876,10 @@ void CHLMasterDlg::ParseVersion( void )
 	// Get the protocol version
 	if ( strlen(token.token) > 0 )
 	{
-		CURRENT_PROTOCOL = atoi( token.token );
-		if ( CURRENT_PROTOCOL <= 0 )
+		CURRENT_PROTOCOL_M = atoi( token.token );
+		if ( CURRENT_PROTOCOL_M <= 0 )
 		{
-			CURRENT_PROTOCOL = PROTOCOL_VERSION;
+			CURRENT_PROTOCOL_M = PROTOCOL_VERSION;
 		}
 	}
 

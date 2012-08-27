@@ -38,7 +38,8 @@ inline touchlink_t *AllocTouchLink( void )
 	}
 	else
 	{
-		Error( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
+	//	Error( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
+		Warning( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
 	}
 
 	return link;
