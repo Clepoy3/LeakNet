@@ -140,7 +140,7 @@ static command_t clcommands[] =
 	"notarget",
 	"fly",
 	"name",
-	"noclip",
+//	"noclip",
 	"tell",
 	"color",
 	"pause",

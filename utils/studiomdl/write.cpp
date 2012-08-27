@@ -408,9 +408,13 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 			for (k = 0; k < MAXSTUDIOBLENDS; k++)
 			{
 				if (g_sequence[i].panim[j][k])
-					pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
+				{
+				//	pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
+				}
 				else
-					pseqdesc->anim[j][k] = 0; // !!! bad
+				{
+				//	pseqdesc->anim[j][k] = 0; // !!! bad
+				}
 			}
 		}
 
