@@ -29,7 +29,7 @@
 #include "tier0/memdbgon.h"
 
 // Note, this must match engine version from host_cmd.h
-#define	SAVEGAME_VERSION	0x0071		// Version 0.71
+#define	SAVEGAME_VERSION	0x0073		// Version 0.73
 
 using namespace vgui;
 
