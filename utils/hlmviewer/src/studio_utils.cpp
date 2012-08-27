@@ -27,6 +27,7 @@
 #include "IStudioRender.h"
 #include "materialsystem/IMaterialSystemHardwareConfig.h"
 #include "MDLViewer.h"
+#include "engine/ISharedModelCache.h"
 
 extern IMaterialSystem *g_pMaterialSystem;
 extern IMaterialSystemHardwareConfig *g_pMaterialSystemHardwareConfig;
@@ -34,6 +35,7 @@ extern char g_appTitle[];
 IStudioRender	*StudioModel::m_pStudioRender;
 Vector		    *StudioModel::m_AmbientLightColors;
 Vector		    *StudioModel::m_TotalLightColors;
+ISharedModelCache *g_pSharedModelCache = NULL;
 
 #pragma warning( disable : 4244 ) // double to float
 

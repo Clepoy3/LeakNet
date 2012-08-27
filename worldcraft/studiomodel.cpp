@@ -24,6 +24,7 @@
 #include "GlobalFunctions.h"
 #include "UtlMemory.h"
 #include "materialsystem/IMaterialSystemHardwareConfig.h"
+#include "engine/ISharedModelCache.h"
 
 #pragma warning(disable : 4244) // double to float
 
@@ -34,6 +35,7 @@ float			g_shadelight;					// direct world light
 Vector			g_lightcolor;
 
 IStudioRender	*StudioModel::m_pStudioRender = NULL;
+ISharedModelCache *g_pSharedModelCache = NULL;
 
 //-----------------------------------------------------------------------------
 // Model meshes themselves are cached to avoid redundancy. There should never be
