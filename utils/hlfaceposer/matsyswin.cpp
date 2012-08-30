@@ -61,14 +61,17 @@
 #include "choreowidgetdrawhelper.h"
 #include "faceposer_models.h"
 #include "vstdlib/icommandline.h"
+#include "engine/ISharedModelCache.h"
 
-IFileSystem *filesystem = NULL;
+//IFileSystem *filesystem = NULL;
+//ISharedModelCache *g_pSharedModelCache = NULL;
 
 extern char g_appTitle[];
 
 // hack - this should go somewhere else.
 CreateInterfaceFn g_MaterialSystemClientFactory = NULL;
 CreateInterfaceFn g_MaterialSystemFactory = NULL;
+CreateInterfaceFn g_pFileSystemFactory = NULL;
 
 // FIXME: move all this to mxMatSysWin
 
@@ -164,8 +167,15 @@ MatSysWindow::MatSysWindow (mxWindow *parent, int x, int y, int w, int h, const 
 		Error( "Can't load MaterialSystem.dll\n" );
 	}
 
-	Con_Printf( "Getting materialsystem factory\n" );
+	Con_Printf( "Getting filesystem factory\n" );
+	g_pFileSystemFactory = Sys_GetFactory( "filesystem_stdio" );
+    if( !g_pFileSystemFactory )
+    {
+        assert( 0 );
+        return;
+    }
 
+	Con_Printf( "Getting materialsystem factory\n" );
 	g_MaterialSystemFactory = Sys_GetFactory( "MaterialSystem.dll" );
 	if ( g_MaterialSystemFactory )
 	{
@@ -211,6 +221,24 @@ MatSysWindow::MatSysWindow (mxWindow *parent, int x, int y, int w, int h, const 
 
 	g_pMaterialSystem->AddReleaseFunc( ReleaseMaterialSystemObjects );
 	g_pMaterialSystem->AddRestoreFunc( RestoreMaterialSystemObjects );
+
+	filesystem = ( IFileSystem * )g_pFileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
+    Assert( filesystem );
+    if( !filesystem )
+    {
+        assert( 0 ); // garymcthack
+        return;
+    }
+
+	Con_Printf( "Getting v37 model support\n" );
+	g_pSharedModelCache = ( ISharedModelCache * )g_MaterialSystemFactory( SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL );
+//  Assert( g_pSharedModelCache );
+    if (!g_pSharedModelCache)
+    {
+    //    assert( 0 ); // garymcthack
+        return;
+    }
+    g_pSharedModelCache->InitFileSystem(filesystem);
 
 	Con_Printf( "Calling UpdateConfig\n" );
 

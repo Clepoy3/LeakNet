@@ -27,6 +27,7 @@
 #include "IStudioRender.h"
 #include "materialsystem/IMaterialSystemHardwareConfig.h"
 #include "MDLViewer.h"
+#include "FileSystem.h"
 #include "engine/ISharedModelCache.h"
 
 extern IMaterialSystem *g_pMaterialSystem;
@@ -35,6 +36,7 @@ extern char g_appTitle[];
 IStudioRender	*StudioModel::m_pStudioRender;
 Vector		    *StudioModel::m_AmbientLightColors;
 Vector		    *StudioModel::m_TotalLightColors;
+IFileSystem *filesystem = NULL;
 ISharedModelCache *g_pSharedModelCache = NULL;
 
 #pragma warning( disable : 4244 ) // double to float
@@ -53,6 +55,8 @@ void StudioModel::Init()
 	// Load up the IStudioRender interface
 	extern CreateInterfaceFn g_MaterialSystemClientFactory;
 	extern CreateInterfaceFn g_MaterialSystemFactory;
+
+	static CreateInterfaceFn g_pFileSystemFactory = NULL;
 
 	CSysModule *studioRenderDLL = NULL;
 	char workingdir[ 256 ];
@@ -76,6 +80,13 @@ void StudioModel::Init()
 		assert( 0 ); // garymcthack
 		return;
 	}
+
+	g_pFileSystemFactory = Sys_GetFactory( "filesystem_stdio" );
+    if( !g_pFileSystemFactory )
+    {
+        return;
+    }
+
 	m_pStudioRender = ( IStudioRender * )studioRenderFactory( STUDIO_RENDER_INTERFACE_VERSION, NULL );
 	if (!m_pStudioRender)
 	{
@@ -96,6 +107,23 @@ void StudioModel::Init()
 			g_viewerSettings.renderMode == RM_SMOOTHSHADED, 
 			g_viewerSettings.renderMode == RM_WIREFRAME, 
 			g_viewerSettings.showNormals ); // garymcthack - should really only do this once a frame and at init time.
+
+	filesystem = ( IFileSystem * )g_pFileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
+    Assert( filesystem );
+    if( !filesystem )
+    {
+        assert( 0 ); // garymcthack
+        return;
+    }
+
+	g_pSharedModelCache = ( ISharedModelCache * )studioRenderFactory( SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL );
+//  Assert( g_pSharedModelCache );
+    if (!g_pSharedModelCache)
+    {
+        assert( 0 ); // garymcthack
+        return;
+    }
+    g_pSharedModelCache->InitFileSystem(filesystem);
 }
 
 void StudioModel::Shutdown( void )

@@ -637,7 +637,7 @@ void CTaskbar::ApplySchemeSettings(IScheme *pScheme)
 void CTaskbar::AddTask(VPANEL panel)
 {
 	//!! tasks disabled
-	return;
+//	return;
 
 	CTaskButton *task = FindTask(panel);
 	if (task)

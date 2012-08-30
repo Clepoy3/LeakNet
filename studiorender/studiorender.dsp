@@ -118,6 +118,10 @@ SOURCE="$(InputPath)"
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\engine\CSharedModelCache.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CStudioRender.cpp
 # End Source File
 # Begin Source File
@@ -199,6 +203,10 @@ SOURCE=..\Public\cmodel.h
 # Begin Source File
 
 SOURCE=..\Public\convar.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\engine\CSharedModelCache.h
 # End Source File
 # Begin Source File
 

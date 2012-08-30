@@ -24,6 +24,7 @@
 #include "GlobalFunctions.h"
 #include "UtlMemory.h"
 #include "materialsystem/IMaterialSystemHardwareConfig.h"
+#include "FileSystem.h"
 #include "engine/ISharedModelCache.h"
 
 #pragma warning(disable : 4244) // double to float
@@ -35,6 +36,7 @@ float			g_shadelight;					// direct world light
 Vector			g_lightcolor;
 
 IStudioRender	*StudioModel::m_pStudioRender = NULL;
+IFileSystem *filesystem = NULL;
 ISharedModelCache *g_pSharedModelCache = NULL;
 
 //-----------------------------------------------------------------------------
@@ -242,6 +244,8 @@ bool StudioModel::Initialize()
 	extern CreateInterfaceFn g_MaterialSystemClientFactory;
 	extern CreateInterfaceFn g_MaterialSystemFactory;
 
+	static CreateInterfaceFn g_pFileSystemFactory = NULL;
+
 	if (( !g_MaterialSystemFactory ) || ( !g_MaterialSystemClientFactory ))
 	{
 		// Don't report this, it should have been reported earlier.
@@ -263,6 +267,12 @@ bool StudioModel::Initialize()
 		return false;
 	}
 
+	g_pFileSystemFactory = Sys_GetFactory( "filesystem_stdio" );
+    if( !g_pFileSystemFactory )
+    {
+        return false;
+    }
+
 	m_pStudioRender = ( IStudioRender * )studioRenderFactory( STUDIO_RENDER_INTERFACE_VERSION, NULL );
 	if (!m_pStudioRender)
 	{
@@ -276,6 +286,23 @@ bool StudioModel::Initialize()
 		m_pStudioRender = NULL;
 	}
 	UpdateStudioRenderConfig( false, false );
+
+	filesystem = ( IFileSystem * )g_pFileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
+    Assert( filesystem );
+    if( !filesystem )
+    {
+        Msg( mwWarning, "No fs" );
+        return false;
+    }
+
+	g_pSharedModelCache = ( ISharedModelCache * )studioRenderFactory( SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL );
+//    Assert( g_pSharedModelCache );
+    if (!g_pSharedModelCache)
+    {
+        Msg( mwWarning, "WTF?" );
+        return false;
+    }
+    g_pSharedModelCache->InitFileSystem(filesystem);
 
 	return true;
 }
