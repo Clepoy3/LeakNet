@@ -176,6 +176,8 @@ void CPlayerMove::FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *mo
 
 	// Convert final pitch to body pitch
 	float pitch = move->m_vecAngles[ PITCH ];
+//	float yaw = move->m_vecAngles[ YAW ];
+//	float roll = move->m_vecAngles[ ROLL ];
 	if ( pitch > 180.0f )
 	{
 		pitch -= 360.0f;
@@ -183,12 +185,32 @@ void CPlayerMove::FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *mo
 	pitch = clamp( pitch, -90, 90 );
 
 	move->m_vecAngles[ PITCH ] = 0.0f;
+//	move->m_vecAngles[ PITCH ] = pitch; // VXP: For old PLAYER.MDL
 
+/*
 	int pitch_param = player->LookupPoseParameter( "body_pitch" );
 	if ( pitch_param >= 0 )
-	{
 		player->SetPoseParameter( pitch_param, pitch );
-	}
+*/
+
+	SetBodyPitch( player, "move_yaw", 0 );
+	SetBodyPitch( player, "body_trans_Y", 0 );
+	SetBodyPitch( player, "body_trans_X", 0 );
+	SetBodyPitch( player, "body_lift", 0 );
+//	SetBodyPitch( player, "body_yaw", yaw );
+	SetBodyPitch( player, "body_yaw", 0 );
+	SetBodyPitch( player, "body_pitch", pitch );
+//	SetBodyPitch( player, "body_roll", roll );
+	SetBodyPitch( player, "body_roll", 0 );
+	SetBodyPitch( player, "spine_yaw", 0 );
+	SetBodyPitch( player, "spine_pitch", 0 );
+	SetBodyPitch( player, "spine_roll", 0 );
+	SetBodyPitch( player, "neck_trans", 0 );
+	SetBodyPitch( player, "head_yaw", 0 );
+	SetBodyPitch( player, "head_pitch", 0 );
+	SetBodyPitch( player, "head_roll", 0 );
+	SetBodyPitch( player, "aim_pitch", 0 );
+	SetBodyPitch( player, "aim_yaw", 0 );
 
 	player->SetLocalAngles( move->m_vecAngles );
 
@@ -353,3 +375,11 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 	player->m_nTickBase++;
 }
 
+void CPlayerMove::SetBodyPitch( CBasePlayer *player, const char *poseParam, float flPitch )
+{
+	int lookup = player->LookupPoseParameter( poseParam );
+	if ( lookup >= 0 )
+	{
+		player->SetPoseParameter( lookup, flPitch );
+	}
+}

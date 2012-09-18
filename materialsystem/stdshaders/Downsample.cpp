@@ -70,8 +70,8 @@ BEGIN_VS_SHADER( Downsample, "Help for Downsample" )
 			pShaderAPI->SetVertexShaderConstant( 93, v, 1 );
 
 			// Setup luminance threshold (all values are scaled down by max luminance)
-//			v[0] = 1.0f / MAX_HDR_OVERBRIGHT;
-			v[0] = 0.0f;
+			v[0] = 1.0f / MAX_HDR_OVERBRIGHT;
+//			v[0] = 0.0f;
 			pShaderAPI->SetPixelShaderConstant( 0, v, 1 );
 		}
 		Draw();

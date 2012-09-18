@@ -2030,6 +2030,18 @@ void C_BaseEntity::CreateLightEffects( void )
 {
 	dlight_t *dl;
 
+	trace_t	tr;
+	Vector	muzzlePos = EyePosition();
+
+	Vector	forward;
+	Vector	right;
+	Vector	up;
+	GetVectors( &forward, &right, &up );
+
+	Vector	endPos = muzzlePos + ( forward * MAX_TRACE_LENGTH );
+
+	UTIL_TraceLine( muzzlePos, endPos, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
+
 	// Is this for player flashlights only, if so move to linkplayers?
 	if ( index == render->GetViewEntity() )
 		return;
@@ -2046,7 +2058,9 @@ void C_BaseEntity::CreateLightEffects( void )
 	if (m_fEffects & EF_DIMLIGHT)
 	{			
 		dl = effects->CL_AllocDlight ( index );
-		dl->origin = GetAbsOrigin();
+	//	dl->origin = GetAbsOrigin();
+		Vector	laserPos = tr.endpos + ( tr.plane.normal * 2.0f );
+		dl->origin = laserPos;
 		dl->color.r = dl->color.g = dl->color.b = 100;
 		dl->radius = random->RandomFloat(200,231);
 		dl->die = gpGlobals->curtime + 0.001;

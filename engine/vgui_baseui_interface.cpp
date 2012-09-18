@@ -165,7 +165,8 @@ void CBaseUI::Initialize( CreateInterfaceFn *factories, int count )
 	//-----------------------------------------------------------------------------
 	// load the GameUI dll
 	char szDllName[512];
-	_snprintf(szDllName, sizeof(szDllName), "bin\\gameui.dll" );
+//	_snprintf(szDllName, sizeof(szDllName), "bin\\gameui.dll" );
+	_snprintf(szDllName, sizeof(szDllName), "..\\bin\\gameui.dll" );
 	COM_ExpandFilename(szDllName);
 	COM_FixSlashes(szDllName);
 
@@ -180,7 +181,8 @@ void CBaseUI::Initialize( CreateInterfaceFn *factories, int count )
 
 	if( !gameUIFactory )
 	{
-		Sys_Error( "Could not load: %s\n", szDllName );
+	//	Sys_Error( "Could not load: %s\n", szDllName );
+		Sys_Error( "Could not load GameUI\n" );
 	}
 	
 	m_FactoryList[ m_iNumFactories ] = gameUIFactory;

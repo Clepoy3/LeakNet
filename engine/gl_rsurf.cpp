@@ -463,7 +463,6 @@ void Shader_DrawSurfaceDynamic( int surfID )
 // Purpose: This draws a single surface using its static mesh
 //-----------------------------------------------------------------------------
 
-/*
 // NOTE: Since a static vb/dynamic ib IMesh doesn't buffer, we shouldn't use this
 // since it causes a lock and drawindexedprimitive per surface! (gary)
 void Shader_DrawSurfaceStatic( int surfID )
@@ -498,7 +497,6 @@ void Shader_DrawSurfaceStatic( int surfID )
 	meshBuilder.End();
 	pMesh->Draw();
 }
-*/
 
 
 //-----------------------------------------------------------------------------

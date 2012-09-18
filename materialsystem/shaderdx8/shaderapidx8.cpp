@@ -2004,15 +2004,6 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 		ReacquireResources();
 
 	AllocFrameSyncObjects();
-
-#if 0
-	// create a surface to copy the backbuffer into.
-	D3DSURFACE_DESC backbufferDesc;
-	m_pBackBufferSurface->GetDesc( &backbufferDesc );
-	HRESULT hr = m_pD3DDevice->CreateTexture( backbufferDesc.Width, backbufferDesc.Height,
-		1, 0, backbufferDesc.Format, D3DPOOL_DEFAULT, &m_pFBTexture );
-	Assert( !FAILED( hr ) );
-#endif
 	
 	RECORD_COMMAND( DX8_BEGIN_SCENE, 0 );
 
@@ -2500,7 +2491,7 @@ void CShaderAPIDX8::ReadDXSupportLevels()
 		info.m_bFastZReject = pGroup->GetInt( "FastZReject", 0 ) != 0;
 		info.m_bFastClipping = pGroup->GetInt( "FastClip", 0 ) != 0;
 		info.m_nCreateQuery = pGroup->GetInt( "CreateQuery", -1 ) != 0;
-		info.m_bNeedsATICentroidHack = pGroup->GetInt( "CentroidHack", 0 ) != 0;
+	//	info.m_bNeedsATICentroidHack = pGroup->GetInt( "CentroidHack", 0 ) != 0;
 
 		m_DeviceSupportLevels.AddToTail( info );
 	}
@@ -2655,17 +2646,17 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_SupportsVertexShaders = ((caps.VertexShaderVersion >> 8) & 0xFF) >= 1;
 	m_Caps.m_SupportsPixelShaders = ((caps.PixelShaderVersion >> 8) & 0xFF) >= 1;
 
-#ifdef DX8_COMPATABILITY_MODE
-	m_Caps.m_SupportsPixelShaders_1_4 = false;
-	m_Caps.m_SupportsPixelShaders_2_0 = false;
-	m_Caps.m_SupportsVertexShaders_2_0 = false;
-	m_Caps.m_SupportsMipmappedCubemaps = false;
-#else
+//#ifdef DX8_COMPATABILITY_MODE
+//	m_Caps.m_SupportsPixelShaders_1_4 = false;
+//	m_Caps.m_SupportsPixelShaders_2_0 = false;
+//	m_Caps.m_SupportsVertexShaders_2_0 = false;
+//	m_Caps.m_SupportsMipmappedCubemaps = false;
+//#else
 	m_Caps.m_SupportsPixelShaders_1_4 = (caps.PixelShaderVersion & 0xffff) >= 0x0104;
 	m_Caps.m_SupportsPixelShaders_2_0 = (caps.PixelShaderVersion & 0xffff) >= 0x0200;
 	m_Caps.m_SupportsVertexShaders_2_0 = ( caps.VertexShaderVersion & 0xffff ) >= 0x0200;
 	m_Caps.m_SupportsMipmappedCubemaps = ( caps.TextureCaps & D3DPTEXTURECAPS_MIPCUBEMAP ) ? true : false;
-#endif
+//#endif
 	if ( D3DSupportsCompressedTextures() )
 		m_Caps.m_SupportsCompressedTextures = COMPRESSED_TEXTURES_ON;
 	else
@@ -2681,11 +2672,11 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
 	// NOTE: Initting more constants than we are ever going to use may cause the 
 	// driver to try to keep track of them.. I'm forcing this to 96 so that this doesn't happen.
-#if 0
+//#if 0
 	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
-#else
-	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
-#endif
+//#else
+//	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
+//#endif
 
 	if( m_Caps.m_SupportsPixelShaders )
 	{
@@ -3227,8 +3218,8 @@ bool CShaderAPIDX8::ReadPixelsFromFrontBuffer() const
 bool CShaderAPIDX8::PreferDynamicTextures() const
 {
 	// For now, disable this feature.
-	return false;
-//	return m_Caps.m_PreferDynamicTextures;
+//	return false;
+	return m_Caps.m_PreferDynamicTextures;
 }
 
 bool CShaderAPIDX8::HasProjectedBumpEnv() const

@@ -76,6 +76,10 @@ static ConVar dsp_explosion_effect_duration( "dsp_explosion_effect_duration", "4
 #define SLOWFREEZE_DURATION	2
 #define SLOWFREEZE_DAMAGE	1.0
 
+//#define ARBITRARY_RUN_SPEED		75.0f
+//#define ARBITRARY_RUN_SPEED		250.0f
+#define ARBITRARY_RUN_SPEED		150.0f
+
 
 extern bool		g_fDrawLines;
 int				gEvilImpulse101;
@@ -1290,8 +1294,7 @@ void CBasePlayer::Event_Dying()
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	BaseClass::Event_Dying();
 }
-
-
+/*
 // Set the activity based on an event or current state
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
@@ -1311,23 +1314,22 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	Activity idealActivity = ACT_WALK;// TEMP!!!!!
 
 	// This could stand to be redone. Why is playerAnim abstracted from activity? (sjb)
-	if (playerAnim == PLAYER_JUMP)
+	switch( playerAnim )
 	{
+	default:
+	case PLAYER_JUMP:
 		idealActivity = ACT_HOP;
-	}
-	else if (playerAnim == PLAYER_SUPERJUMP)
-	{
+		break;
+	case PLAYER_SUPERJUMP:
 		idealActivity = ACT_LEAP;
-	}
-	else if (playerAnim == PLAYER_DIE)
-	{
+		break;
+	case PLAYER_DIE:
 		if ( m_lifeState == LIFE_ALIVE )
 		{
 			idealActivity = GetDeathActivity();
 		}
-	}
-	else if (playerAnim == PLAYER_ATTACK1)
-	{
+		break;
+	case PLAYER_ATTACK1:
 		if ( m_Activity == ACT_HOVER	|| 
 			 m_Activity == ACT_SWIM		||
 			 m_Activity == ACT_HOP		||
@@ -1340,9 +1342,9 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			idealActivity = ACT_RANGE_ATTACK1;
 		}
-	}
-	else if (playerAnim == PLAYER_IDLE || playerAnim == PLAYER_WALK)
-	{
+		break;
+	case PLAYER_IDLE:
+	case PLAYER_WALK:
 		if ( !( GetFlags() & FL_ONGROUND ) && (m_Activity == ACT_HOP || m_Activity == ACT_LEAP) )	// Still jumping
 		{
 			idealActivity = m_Activity;
@@ -1358,11 +1360,12 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			idealActivity = ACT_WALK;
 		}
+		break;
 	}
-
 	
-	if (idealActivity == ACT_RANGE_ATTACK1)
+	switch( idealActivity )
 	{
+	case ACT_RANGE_ATTACK1:
 		if ( GetFlags() & FL_DUCKING )	// crouching
 		{
 			Q_strncpy( szAnim, "crouch_shoot_" ,sizeof(szAnim));
@@ -1388,9 +1391,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 
 		SetActivity( idealActivity );
 		ResetSequence( animDesired );
-	}
-	else if (idealActivity == ACT_WALK)
-	{
+	case ACT_WALK:
 		if (GetActivity() != ACT_RANGE_ATTACK1 || IsActivityFinished())
 		{
 			if ( GetFlags() & FL_DUCKING )	// crouching
@@ -1411,9 +1412,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			animDesired = GetSequence();
 		}
-	}
-	else
-	{
+	default:
 		if ( GetActivity() == idealActivity)
 			return;
 	
@@ -1439,7 +1438,118 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	ResetSequence( animDesired );
 	m_flCycle		= 0;
 }
+*/
+void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
+{
+	Activity idealActivity = GetActivity();
+	int animDesired = GetSequence();
+	ResetSequence( animDesired );
 
+	// Figure out stuff about the current state.
+	float speed;
+	speed = GetAbsVelocity().Length2D();
+	bool isMoving = ( speed != 0.0f ) ? true : false;
+	bool isDucked = ( GetFlags() & FL_DUCKING ) ? true : false;
+	bool isStillJumping = !( GetFlags() & FL_ONGROUND ) && ( GetActivity() == ACT_HOP );
+	bool isStillReloading = ( GetActivity() == ACT_CLIMB_UP ) ? true : false;
+	bool isRunning = false;
+
+	if ( speed > ARBITRARY_RUN_SPEED )
+	{
+	//	Msg( "RUUUUUUUN!!!, %f\n", speed );
+		isRunning = true;
+	}
+	else
+	{
+	//	Msg( "STOOOOOOOP!!!, %f\n", speed );
+		isRunning = false;
+	}
+
+	// Now figure out what to do based on the current state and the new state.
+	switch ( playerAnim )
+	{
+	default:
+	case PLAYER_RELOAD:
+		idealActivity = ACT_RANGE_ATTACK1;
+		break;
+	case PLAYER_ATTACK1:
+		idealActivity = ACT_RANGE_ATTACK1;
+		break;
+	case PLAYER_IDLE:
+	case PLAYER_WALK:
+		// Are we still jumping?
+		// If so, keep playing the jump animation.
+		if ( !isStillJumping || !isStillReloading )
+		{
+			idealActivity = ACT_WALK;
+
+			if ( isDucked )
+			{
+			//	idealActivity = !isMoving ? ACT_CROUCHIDLE : ACT_RUN_CROUCH;
+				if ( isMoving )
+				{
+					if ( !isRunning )
+						idealActivity = ACT_WALK_CROUCH;
+					else
+						idealActivity = ACT_RUN_CROUCH;
+				}
+				else
+				{
+					idealActivity = ACT_CROUCHIDLE;
+				}
+			}
+			else
+			{
+				if ( isRunning )
+				{
+					if ( speed > ARBITRARY_RUN_SPEED + 50 )
+						idealActivity = ACT_RUN_RIFLE;
+					else
+						idealActivity = ACT_RUN;
+				}
+				else
+				{
+					idealActivity = isMoving ? ACT_WALK : ACT_IDLE;
+				}
+			}
+
+			// Allow body yaw to override for standing and turning in place
+		//	idealActivity = m_PlayerAnimState.BodyYawTranslateActivity( idealActivity );
+		}
+		break;
+
+	case PLAYER_JUMP:
+		idealActivity = ACT_HOP;
+		break;
+
+	case PLAYER_DIE:
+		// Uses Ragdoll now???
+		idealActivity = ACT_DIESIMPLE;
+		break;
+
+	// FIXME:  Use overlays for reload, start/leave aiming, attacking
+	case PLAYER_START_AIMING:
+		idealActivity = ACT_WALK_AIM;
+		break;
+	case PLAYER_LEAVE_AIMING:
+		idealActivity = ACT_WALK;
+		break;
+	}
+
+	// No change requested?
+	if ( ( GetActivity() == idealActivity ) && ( GetSequence() != -1 ) )
+		return;
+
+	animDesired = SelectWeightedSequence( idealActivity );
+
+	SetActivity( idealActivity );
+
+	// Already using the desired animation?
+	if ( GetSequence() == animDesired )
+		return;
+
+	ResetSequence( animDesired );
+}
 
 /*
 ===========
@@ -1681,6 +1791,9 @@ void CBasePlayer::PlayerDeathThink(void)
 		// go to dead camera. 
 		StartDeathCam();
 	}
+
+	if ( FlashlightIsOn() )
+		FlashlightTurnOff(); // VXP: I putted it here for some time.
 	
 // wait for any button down,  or mp_forcerespawn is set and the respawn time is up
 	if (!fAnyButtonDown 

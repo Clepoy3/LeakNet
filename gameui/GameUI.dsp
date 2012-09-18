@@ -61,28 +61,10 @@ InputPath=.\Release\GameUI.dll
 InputName=GameUI
 SOURCE="$(InputPath)"
 
-BuildCmds= \
-	if exist $(ProjDir)\..\..\tf2\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\tf2\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\tf2\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\hl2\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\hl2\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\hl2\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\hl1\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\cstrike\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
+"$(ProjDir)\..\..\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist $(ProjDir)\..\..\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\bin\$(InputName).dll 
+	copy $(InputPath) $(ProjDir)\..\..\bin\$(InputName).dll 
 	
-
-"$(ProjDir)\..\..\tf2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\hl2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\hl1\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\cstrike\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "GameUI - Win32 Debug"
@@ -117,28 +99,10 @@ InputPath=.\Debug\GameUI.dll
 InputName=GameUI
 SOURCE="$(InputPath)"
 
-BuildCmds= \
-	if exist $(ProjDir)\..\..\tf2\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\tf2\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\tf2\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\hl2\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\hl2\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\hl2\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\hl1\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
-	if exist $(ProjDir)\..\..\cstrike\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
-	copy $(InputPath) $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
+"$(ProjDir)\..\..\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist $(ProjDir)\..\..\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\bin\$(InputName).dll 
+	copy $(InputPath) $(ProjDir)\..\..\bin\$(InputName).dll 
 	
-
-"$(ProjDir)\..\..\tf2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\hl2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\hl1\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
-
-"$(ProjDir)\..\..\cstrike\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-   $(BuildCmds)
 # End Custom Build
 
 !ENDIF 

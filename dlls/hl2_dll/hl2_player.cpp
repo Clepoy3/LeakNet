@@ -466,7 +466,8 @@ void CHL2_Player::Touch( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 void CHL2_Player::Spawn(void)
 {
-	SetModel( "models/player.mdl" );
+//	SetModel( "models/player.mdl" );
+	SetModel( "models/humans/male_01.mdl" );
     g_ulModelIndexPlayer = GetModelIndex();
 
 	BaseClass::Spawn();

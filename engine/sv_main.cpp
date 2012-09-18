@@ -4026,7 +4026,8 @@ void SV_CreateBaseline (void)
 		char const* pModelString;
 		if (entnum > 0 && entnum <= svs.maxclients)
 		{
-			pModelString = "models/player.mdl";
+		//	pModelString = "models/player.mdl";
+			pModelString = "models/humans/male_01.mdl";
 		}
 		else
 		{

@@ -52,6 +52,8 @@ protected:
 	void			RunPreThink( CBasePlayer *player );
 	void			RunThink (CBasePlayer *ent, double frametime );
 	void			RunPostThink( CBasePlayer *player );
+	
+	void			SetBodyPitch( CBasePlayer *player, const char *poseParam, float flPitch );
 };
 
 

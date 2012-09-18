@@ -1927,6 +1927,6 @@ bool CBaseCombatCharacter::ShouldShootMissTarget( CBaseCombatCharacter *pAttacke
 //-----------------------------------------------------------------------------
 void CBaseCombatCharacter::InputKilledNPC( inputdata_t &inputdata )
 {
-	OnKilledNPC( inputdata.pActivator->MyCombatCharacterPointer() );
+	OnKilledNPC( inputdata.pActivator->MyCombatCharacterPointer() ); // VXP: BUG when destroy the crate
 }
 

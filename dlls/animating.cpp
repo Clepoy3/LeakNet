@@ -283,7 +283,7 @@ float CBaseAnimating::GetSequenceMoveDist( int iSequence )
 {
 	Vector				vecReturn;
 	
-	Assert( GetModelPtr() );
+//	Assert( GetModelPtr() ); // VXP
 	::GetSequenceLinearMotion( GetModelPtr(), iSequence, GetPoseParameterArray(), &vecReturn );
 
 	return vecReturn.Length();
@@ -540,7 +540,7 @@ void CBaseAnimating::DispatchAnimEvents ( CBaseAnimating *eventHandler )
 
 	if ( !pstudiohdr )
 	{
-		Assert(!"CBaseAnimating::DispatchAnimEvents: model missing");
+	//	Assert(!"CBaseAnimating::DispatchAnimEvents: model missing"); // VXP
 		return;
 	}
 

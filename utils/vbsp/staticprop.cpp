@@ -338,7 +338,7 @@ static bool TestLeafAgainstCollide( int depth, int* pNodeList,
 	CPhysConvex* pPhysConvex = s_pPhysCollision->ConvexFromPlanes( pPlanes, depth, 0.0f );
 
 	// This should never happen, but if it does, return no collision
-	assert( pPhysConvex );
+	assert( pPhysConvex ); // VXP: FIX ME!
 	if (!pPhysConvex)
 		return false;
 

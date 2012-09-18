@@ -56,7 +56,8 @@ IMPLEMENT_ACTTABLE(CWeaponMolotov);
 
 void CWeaponMolotov::Precache( void )
 {
-	engine->PrecacheModel("models/props_junk/w_garb_beerbottle.mdl");	//<<TEMP>> need real model
+//	engine->PrecacheModel("models/props_junk/w_garb_beerbottle.mdl");	//<<TEMP>> need real model
+	engine->PrecacheModel("models/Weapons/w_molotov.mdl");
 	BaseClass::Precache();
 }
 

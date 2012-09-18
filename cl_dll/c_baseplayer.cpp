@@ -337,7 +337,8 @@ void C_BasePlayer::Spawn( void )
 	// dont let uninitialized value here hurt the player
 	m_Local.m_flFallVelocity = 0;
 
-    SetModel( "models/player.mdl" );
+//	SetModel( "models/player.mdl" );
+	SetModel( "models/humans/male_01.mdl" );
 	SetSequence( SelectWeightedSequence( ACT_IDLE ) );
 
 	if ( GetFlags() & FL_DUCKING ) 
@@ -1356,15 +1357,15 @@ void C_BasePlayer::LeaveVehicle( void )
 
 float C_BasePlayer::GetMinFOV()	const
 {
-	if ( engine->GetMaxClients() == 1 )
-	{
+//	if ( engine->GetMaxClients() == 1 )
+//	{
 		// Let them do whatever they want, more or less, in single player
 		return 5;
-	}
-	else
-	{
-		return 75;
-	}
+//	}
+//	else
+//	{
+//		return 75;
+//	}
 }
 
 //-----------------------------------------------------------------------------

@@ -16,10 +16,12 @@ goto build_release
 
 :build_release
 
-%MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Release" %build_target%
+rem %MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Release" %build_target%
+%MSDEV% "ivp/ivp_workspaces_src/win32/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Release" %build_target%
 if errorlevel 1 set BUILD_ERROR=1
 
-%MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Release" %build_target%
+rem %MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Release" %build_target%
+%MSDEV% "ivp/ivp_workspaces_src/win32/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Release" %build_target%
 if errorlevel 1 set BUILD_ERROR=1
 
 goto done
@@ -27,10 +29,12 @@ goto done
 
 :build_debug
 
-%MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Debug" %build_target%
+rem %MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Debug" %build_target%
+%MSDEV% "ivp/ivp_workspaces_src/win32/ivp_physics_lib.dsp" %CONFIG%"ivp_physics.lib - Win32 Debug" %build_target%
 if errorlevel 1 set BUILD_ERROR=1
 
-%MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Debug" %build_target%
+rem %MSDEV% "ivp/ivp_workspaces_internal/project_files/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Debug" %build_target%
+%MSDEV% "ivp/ivp_workspaces_src/win32/ivp_compactbuilder_lib.dsp" %CONFIG%"ivp_compactbuilder.lib - Win32 Debug" %build_target%
 if errorlevel 1 set BUILD_ERROR=1
 
 goto done
