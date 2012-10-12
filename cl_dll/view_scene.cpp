@@ -1181,11 +1181,11 @@ void CViewRender::ViewDrawScene( bool drawSkybox, const CViewSetup &view, bool b
 
 	g_ParticleMgr.IncrementFrameCode();
 
-#if !defined( TF2_CLIENT_DLL )
+//#if !defined( TF2_CLIENT_DLL )
 	WaterDrawWorldAndEntities( drawSkybox, view );
-#else
-	DrawWorldAndEntities( drawSkybox, view );
-#endif
+//#else
+//	DrawWorldAndEntities( drawSkybox, view );
+//#endif
 
 	// Disable fog for the rest of the stuff
 	DisableFog();

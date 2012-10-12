@@ -63,7 +63,7 @@ HALF4 main( PS_INPUT i ) : COLOR
 	float2 vRefractTexCoordNoWarp = i.vRefractXYW.xy * ooW;
 	float2 vRefractTexCoord = tangentSpaceNormal.xy;
 	HALF scale = vNormalSample.a * g_RefractScale;
-	vRefractTexCoord *= scale;
+	vRefractTexCoord = vRefractTexCoord * scale;
 	vRefractTexCoord += vRefractTexCoordNoWarp;
 
 #if (BLUR==1)  // use polyphase magic to convert 9 lookups into 4
@@ -138,8 +138,8 @@ HALF4 main( PS_INPUT i ) : COLOR
 	specularLighting *= g_EnvmapTint;
 	HALF3 specularLightingSquared = specularLighting * specularLighting;
 	specularLighting = lerp( specularLighting, specularLightingSquared, g_EnvmapContrast );
-//	HALF3 greyScale = dot( specularLighting, HALF3( /*1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f*/0.299f, 0.587f, 0.114f ) );
-	HALF3 greyScale = dot( specularLighting, HALF3( 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f ) );
+//	HALF3 greyScale = dot( specularLighting, HALF3( 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f ) );
+	HALF3 greyScale = dot( specularLighting, HALF3( 0.299f, 0.587f, 0.114f ) );
 	specularLighting = lerp( greyScale, specularLighting, g_EnvmapSaturation );
 	result += specularLighting;
 #endif

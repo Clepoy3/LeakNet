@@ -10,6 +10,4 @@
 // IMPORTANT: Keep the same value as in materialsystem_global.h
 #define MAX_HDR_OVERBRIGHT 16.0f
 
-#define GAMMA_FOG_COLOR 29
-#define TONE_MAPPING_GAMMA_SCALE_PSH_CONSTANT 30
-#define TONE_MAPPING_LINEAR_SCALE_PSH_CONSTANT 31
+

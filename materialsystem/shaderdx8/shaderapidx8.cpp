@@ -2004,6 +2004,15 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 		ReacquireResources();
 
 	AllocFrameSyncObjects();
+
+#if 0
+	// create a surface to copy the backbuffer into.
+	D3DSURFACE_DESC backbufferDesc;
+	m_pBackBufferSurface->GetDesc( &backbufferDesc );
+	HRESULT hr = m_pD3DDevice->CreateTexture( backbufferDesc.Width, backbufferDesc.Height,
+		1, 0, backbufferDesc.Format, D3DPOOL_DEFAULT, &m_pFBTexture );
+	Assert( !FAILED( hr ) );
+#endif
 	
 	RECORD_COMMAND( DX8_BEGIN_SCENE, 0 );
 
@@ -2266,6 +2275,21 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 	SendIPCMessage( true );
 
 	IDirect3DDevice *pD3DDevice = NULL;
+
+	// raynorpat: Look for 'NVIDIA PerfHUD' adapter
+	// If it is present, override default settings
+	for (UINT Adapter = 0; Adapter<m_pD3D->GetAdapterCount(); Adapter++)
+	{
+		D3DADAPTER_IDENTIFIER9 Identifier;
+		HRESULT Res = m_pD3D->GetAdapterIdentifier(Adapter, 0, &Identifier);
+		if (strstr(Identifier.Description,"PerfHUD") != 0)
+		{
+			m_DisplayAdapter = Adapter;
+			m_DeviceType = D3DDEVTYPE_REF;
+			break;
+		}
+	}
+
 	hr = m_pD3D->CreateDevice( m_DisplayAdapter, m_DeviceType,
 		m_HWnd, deviceCreationFlags, &m_PresentParameters, &pD3DDevice );
 
@@ -2491,7 +2515,7 @@ void CShaderAPIDX8::ReadDXSupportLevels()
 		info.m_bFastZReject = pGroup->GetInt( "FastZReject", 0 ) != 0;
 		info.m_bFastClipping = pGroup->GetInt( "FastClip", 0 ) != 0;
 		info.m_nCreateQuery = pGroup->GetInt( "CreateQuery", -1 ) != 0;
-	//	info.m_bNeedsATICentroidHack = pGroup->GetInt( "CentroidHack", 0 ) != 0;
+		info.m_bNeedsATICentroidHack = pGroup->GetInt( "CentroidHack", 0 ) != 0;
 
 		m_DeviceSupportLevels.AddToTail( info );
 	}

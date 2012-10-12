@@ -1294,12 +1294,14 @@ void CBasePlayer::Event_Dying()
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	BaseClass::Event_Dying();
 }
-/*
+
 // Set the activity based on an event or current state
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
+//	ResetSequence( GetActivity() );
 	int animDesired;
 	char szAnim[64];
+//	char szAnim[64];
 
 	float speed;
 
@@ -1314,27 +1316,29 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	Activity idealActivity = ACT_WALK;// TEMP!!!!!
 
 	// This could stand to be redone. Why is playerAnim abstracted from activity? (sjb)
-	switch( playerAnim )
+	if (playerAnim == PLAYER_JUMP)
 	{
-	default:
-	case PLAYER_JUMP:
 		idealActivity = ACT_HOP;
-		break;
-	case PLAYER_SUPERJUMP:
+	}
+	else if (playerAnim == PLAYER_SUPERJUMP)
+	{
 		idealActivity = ACT_LEAP;
-		break;
-	case PLAYER_DIE:
+	}
+	else if (playerAnim == PLAYER_DIE)
+	{
 		if ( m_lifeState == LIFE_ALIVE )
 		{
 			idealActivity = GetDeathActivity();
 		}
-		break;
-	case PLAYER_ATTACK1:
+	}
+	else if (playerAnim == PLAYER_ATTACK1)
+	{
 		if ( m_Activity == ACT_HOVER	|| 
 			 m_Activity == ACT_SWIM		||
 			 m_Activity == ACT_HOP		||
 			 m_Activity == ACT_LEAP		||
-			 m_Activity == ACT_DIESIMPLE )
+		//	 m_Activity == ACT_DIESIMPLE )
+			 m_Activity == GetDeathActivity() )
 		{
 			idealActivity = m_Activity;
 		}
@@ -1342,9 +1346,9 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			idealActivity = ACT_RANGE_ATTACK1;
 		}
-		break;
-	case PLAYER_IDLE:
-	case PLAYER_WALK:
+	}
+	else if (playerAnim == PLAYER_IDLE || playerAnim == PLAYER_WALK)
+	{
 		if ( !( GetFlags() & FL_ONGROUND ) && (m_Activity == ACT_HOP || m_Activity == ACT_LEAP) )	// Still jumping
 		{
 			idealActivity = m_Activity;
@@ -1360,22 +1364,35 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			idealActivity = ACT_WALK;
 		}
-		break;
 	}
+
 	
-	switch( idealActivity )
+	if (idealActivity == ACT_RANGE_ATTACK1)
 	{
-	case ACT_RANGE_ATTACK1:
 		if ( GetFlags() & FL_DUCKING )	// crouching
 		{
 			Q_strncpy( szAnim, "crouch_shoot_" ,sizeof(szAnim));
 		}
 		else
 		{
-			Q_strncpy( szAnim, "ref_shoot_" ,sizeof(szAnim));
+			Q_strncpy( szAnim, "shoot_" ,sizeof(szAnim));
 		}
-		strcat( szAnim, m_szAnimExtension );
-		animDesired = LookupSequence( szAnim );
+	//	strcat( szAnim, m_szAnimExtension );
+		strcat( szAnim, "smg1" );
+	//	animDesired = LookupSequence( szAnim );
+	//	Msg( "AnimExtension: %s\n", m_szAnimExtension );
+		if ( !strcmp( m_szAnimExtension, "Grenade" ) )
+		{
+		//	Msg( "'Grenade' animation!\n" );
+			animDesired = LookupSequence( "throw1" );
+		}
+		else
+		{
+		//	Msg( "Other animation!\n" );
+			animDesired = LookupSequence( szAnim );
+		}
+	//	animDesired = LookupSequence( ( GetFlags() & FL_DUCKING ) ? "1" : "2" );
+
 		if (animDesired == -1)
 			animDesired = 0;
 
@@ -1391,19 +1408,29 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 
 		SetActivity( idealActivity );
 		ResetSequence( animDesired );
-	case ACT_WALK:
+	}
+	else if (idealActivity == ACT_WALK)
+	{
 		if (GetActivity() != ACT_RANGE_ATTACK1 || IsActivityFinished())
 		{
 			if ( GetFlags() & FL_DUCKING )	// crouching
 			{
-				Q_strncpy( szAnim, "crouch_aim_" ,sizeof(szAnim));
+			//	Q_strncpy( szAnim, "crouch_aim_" ,sizeof(szAnim));
+			//	animDesired = LookupSequence( "Stand_to_crouch" );
 			}
 			else
 			{
-				Q_strncpy( szAnim, "ref_aim_" ,sizeof(szAnim));
+			//	Q_strncpy( szAnim, "ref_aim_" ,sizeof(szAnim));
+			//	Q_strncpy( szAnim, "" ,sizeof(szAnim));
+			//	animDesired = LookupSequence( "Crouch_to_stand" );
 			}
-			strcat( szAnim, m_szAnimExtension );
+		//	strcat( szAnim, m_szAnimExtension );
+			strcat( szAnim, "Idle_SMG1_Aim" );
 			animDesired = LookupSequence( szAnim );
+		//	Msg( "AnimExtension: %s\n", m_szAnimExtension );
+		//	if ( m_szAnimExtension == "smg2" )
+		//		animDesired = LookupSequence( ( GetFlags() & FL_DUCKING ) ? "crouch_aim_smg1" : "Idle_SMG1_Aim" );
+			
 			if (animDesired == -1)
 				animDesired = 0;
 			SetActivity( ACT_WALK );
@@ -1412,7 +1439,9 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		{
 			animDesired = GetSequence();
 		}
-	default:
+	}
+	else
+	{
 		if ( GetActivity() == idealActivity)
 			return;
 	
@@ -1433,12 +1462,14 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	if (GetSequence() == animDesired)
 		return;
 
-	//Msg( "Set animation to %d\n", animDesired );
+//	Msg( "Set animation to %d\n", animDesired );
 	// Reset to first frame of desired animation
 	ResetSequence( animDesired );
 	m_flCycle		= 0;
 }
-*/
+
+
+/*
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
 	Activity idealActivity = GetActivity();
@@ -1470,7 +1501,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	{
 	default:
 	case PLAYER_RELOAD:
-		idealActivity = ACT_RANGE_ATTACK1;
+		idealActivity = ACT_RELOAD;
 		break;
 	case PLAYER_ATTACK1:
 		idealActivity = ACT_RANGE_ATTACK1;
@@ -1524,7 +1555,11 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 
 	case PLAYER_DIE:
 		// Uses Ragdoll now???
-		idealActivity = ACT_DIESIMPLE;
+	//	idealActivity = ACT_DIESIMPLE;
+		if ( m_lifeState == LIFE_ALIVE )
+		{
+			idealActivity = GetDeathActivity();
+		}
 		break;
 
 	// FIXME:  Use overlays for reload, start/leave aiming, attacking
@@ -1550,7 +1585,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 
 	ResetSequence( animDesired );
 }
-
+*/
 /*
 ===========
 WaterMove
@@ -1748,6 +1783,9 @@ void CBasePlayer::PlayerDeathThink(void)
 		// we aren't calling into any of their code anymore through the player pointer.
 		PackDeadPlayerItems();
 	}
+	
+	if ( FlashlightIsOn() )
+		FlashlightTurnOff(); // VXP: I putted it here for some time.
 
 	if (GetModelIndex() && (!IsSequenceFinished()) && (m_lifeState == LIFE_DYING))
 	{

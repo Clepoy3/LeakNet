@@ -56,6 +56,7 @@ BEGIN_VS_SHADER( Bloom, "Help for Bloom" )
 		{
 			BindTexture( SHADER_TEXTURE_STAGE0, FBTEXTURE, -1 );
 			BindTexture( SHADER_TEXTURE_STAGE1, BLURTEXTURE, -1 );
+
 		}
 		Draw();
 	}

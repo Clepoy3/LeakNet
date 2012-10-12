@@ -928,7 +928,9 @@ void CTransitionTable::ApplyTransition( TransitionList_t& list, int snapshot )
 	// State blocks bypass the code that sets the board state
 	if ( !m_bUsingStateBlocks )
 	{
-		Assert( !memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) );
+	//	Assert( !memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) );
+		if ( memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) )
+			Msg( "CTransitionTable::ApplyTransition: !m_bUsingStateBlocks\n" );
 	}
 #endif
 }
