@@ -9,8 +9,8 @@
 #define BUDDYSECTIONHEADER_H
 #pragma once
 
-#include <VGUI_Label.h>
-#include <VGUI_Color.h>
+#include <vgui_controls/Label.h>
+#include <Color.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -24,7 +24,7 @@ public:
 	virtual void Paint(void);
 
 private:
-	vgui::Color m_SectionDividerColor;
+	Color m_SectionDividerColor;
 };
 
 

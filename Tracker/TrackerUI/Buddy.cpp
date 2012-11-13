@@ -15,12 +15,12 @@
 #include "TrackerDialog.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_KeyValues.h>
+#include <KeyValues.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
                                                                                                                                              
 using namespace vgui;
 

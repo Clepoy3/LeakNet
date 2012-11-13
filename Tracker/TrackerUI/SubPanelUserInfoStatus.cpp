@@ -13,8 +13,8 @@
 #include "TrackerDialog.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 
@@ -22,7 +22,7 @@ using namespace vgui;
 // Purpose: Constructor
 // Input  : userID - 
 //-----------------------------------------------------------------------------
-CSubPanelUserInfoStatus::CSubPanelUserInfoStatus(int userID)
+CSubPanelUserInfoStatus::CSubPanelUserInfoStatus(int userID) : PropertyPage(NULL, "SubPanelUserInfoStatus")
 {
 	m_iUserID = userID;
 

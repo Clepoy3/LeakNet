@@ -9,9 +9,9 @@
 #include "SubPanelError.h"
 #include "Tracker.h"
 
-#include <VGUI_KeyValues.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_WizardPanel.h>
+#include <KeyValues.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 
@@ -70,16 +70,16 @@ bool CSubPanelCreateUser2::OnNextButton()
 
 	char buf[256];
 
-	m_pUserNameEdit->GetText(0, buf, 255);
+	m_pUserNameEdit->GetText(buf, 255);
 	dat->SetString("username", buf);
 
-	m_pFirstNameEdit->GetText(0, buf, 255);
+	m_pFirstNameEdit->GetText(buf, 255);
 	dat->SetString("firstname", buf);
 
-	m_pLastNameEdit->GetText(0, buf, 255);
+	m_pLastNameEdit->GetText(buf, 255);
 	dat->SetString("lastname", buf);
 
-	m_pPasswordEdit->GetText(0, buf, 255);
+	m_pPasswordEdit->GetText(buf, 255);
 	dat->SetString("password", buf);
 
 	return true;
@@ -95,13 +95,13 @@ bool CSubPanelCreateUser2::VerifyEntriesAreValid()
 	char buf[256], buf2[256];
 
 	// check user name
-	m_pUserNameEdit->GetText(0, buf, 255);
+	m_pUserNameEdit->GetText(buf, 255);
 	if (strlen(buf) < 4)
 		return false;
 
 	// check passwords are the same
-	m_pPasswordEdit->GetText(0, buf, 255);
-	m_pPasswordRepeatEdit->GetText(0, buf2, 255);
+	m_pPasswordEdit->GetText(buf, 255);
+	m_pPasswordRepeatEdit->GetText(buf2, 255);
 	if (strlen(buf) < 3 || strcmp(buf, buf2))
 		return false;
 
@@ -131,7 +131,7 @@ WizardSubPanel *CSubPanelCreateUser2::GetNextSubPanel()
 		char buf[256], buf2[256];
 
 		// check user name
-		m_pUserNameEdit->GetText(0, buf, 255);
+		m_pUserNameEdit->GetText(buf, 255);
 		if (strlen(buf) < 3)
 		{
 			GetWizardPanel()->SetTitle("#TrackerUI_Friends_InvalidUserNameTitle", true);
@@ -146,8 +146,8 @@ WizardSubPanel *CSubPanelCreateUser2::GetNextSubPanel()
 		}
 
 		// check passwords are the same
-		m_pPasswordEdit->GetText(0, buf, 255);
-		m_pPasswordRepeatEdit->GetText(0, buf2, 255);
+		m_pPasswordEdit->GetText(buf, 255);
+		m_pPasswordRepeatEdit->GetText(buf2, 255);
 		if (strlen(buf) < 6)
 		{
 			GetWizardPanel()->SetTitle("#TrackerUI_Friends_InvalidPasswordTitle", true);

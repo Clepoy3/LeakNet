@@ -12,7 +12,7 @@
 #define ONLINESTATUSSELECTCOMBOBOX_H
 #pragma once
 
-#include <VGUI_LabelComboBox.h>
+#include <vgui_controls/LabelComboBox.h>
 
 using namespace vgui;
 

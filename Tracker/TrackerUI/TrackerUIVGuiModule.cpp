@@ -6,11 +6,11 @@
 
 #include "IVGuiModule.h"
 
-#include <VGUI.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_IVGui.h>
+#include <VGUI/VGUI.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
+#include <KeyValues.h>
+#include <VGUI/IVGui.h>
 
 #include "Tracker.h"
 
@@ -40,7 +40,10 @@ public:
 
 	virtual bool IsValid();
 	virtual void Shutdown();
-	virtual vgui::VPanel *GetPanel();
+//	virtual vgui::VPanel *GetPanel();
+	virtual vgui::VPANEL GetPanel();
+
+	virtual void SetParent(vgui::VPANEL parent);
 };
 
 EXPOSE_SINGLE_INTERFACE(CTrackerUIVGuiModule, IVGuiModule, "VGuiModuleTracker001");
@@ -67,7 +70,7 @@ bool CTrackerUIVGuiModule::Initialize(CreateInterfaceFn *factories, int factoryC
 	Tracker_SetStandaloneMode(true);
 
 	// load the vgui interfaces
-	if ( vgui::VGui_InitInterfacesList(factories, factoryCount) )
+	if ( vgui::VGui_InitInterfacesList("TrackerUI", factories, factoryCount) )
 	{
 		// load localization file
 		vgui::localize()->AddFile(vgui::filesystem(), "friends/trackerui_english.txt");	
@@ -173,7 +176,7 @@ void CTrackerUIVGuiModule::Shutdown()
 //-----------------------------------------------------------------------------
 // Purpose: returns a handle to the main panel
 //-----------------------------------------------------------------------------
-vgui::VPanel *CTrackerUIVGuiModule::GetPanel()
+vgui::VPANEL CTrackerUIVGuiModule::GetPanel()
 {
 	return CTrackerDialog::GetInstance() ? CTrackerDialog::GetInstance()->GetVPanel() : NULL;
 }
@@ -184,4 +187,15 @@ vgui::VPanel *CTrackerUIVGuiModule::GetPanel()
 IRunGameEngine *Tracker_GetRunGameEngineInterface()
 {
 	return g_pRunGameEngine;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: returns a handle to the main panel
+//-----------------------------------------------------------------------------
+void CTrackerUIVGuiModule::SetParent(vgui::VPANEL parent)
+{
+	if (CTrackerDialog::GetInstance())
+	{
+		CTrackerDialog::GetInstance()->SetParent(parent);
+	}
 }

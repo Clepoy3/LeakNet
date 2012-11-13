@@ -12,14 +12,14 @@
 #include "TrackerProtocol.h"
 #include "Tracker.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_ProgressBar.h>
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/ProgressBar.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 

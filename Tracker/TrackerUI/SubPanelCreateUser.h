@@ -9,7 +9,7 @@
 #define SUBPANELCREATEUSER_H
 #pragma once
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Wizard pane that collects the details needed for creating a new user

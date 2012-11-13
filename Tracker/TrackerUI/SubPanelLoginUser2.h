@@ -9,7 +9,7 @@
 #define SUBPANELLOGINUSER2_H
 #pragma once
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 namespace vgui
 {
@@ -36,7 +36,7 @@ public:
 	virtual void OnTimeout();
 
 	// network message handler
-	virtual void OnUserValid(vgui::KeyValues *params);
+	virtual void OnUserValid(KeyValues *params);
 
 	DECLARE_PANELMAP();
 

@@ -12,10 +12,10 @@
 #define DIALOGLOGINUSER_H
 #pragma once
 
-#include <VGUI_Panel.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/Panel.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/WizardPanel.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Login user dialog

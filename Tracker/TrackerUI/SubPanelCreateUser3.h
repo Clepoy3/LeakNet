@@ -9,7 +9,7 @@
 #define SUBPANELCREATEUSER3_H
 #pragma once
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 namespace vgui
 {
@@ -40,8 +40,8 @@ protected:
 	virtual void OnTimeout();
 
 	// networking callback interface
-	virtual void OnUserCreated(vgui::KeyValues *data);
-	virtual void OnUserCreateDenied(vgui::KeyValues *data);
+	virtual void OnUserCreated(KeyValues *data);
+	virtual void OnUserCreateDenied(KeyValues *data);
 
 	DECLARE_PANELMAP();
 
@@ -51,7 +51,7 @@ private:
 	vgui::ProgressBar *m_pProgressBar;
 	vgui::Label *m_pLabel;
 	vgui::Label *m_pProgressLabel;
-	vgui::KeyValues *m_pFinishedMessage;
+	KeyValues *m_pFinishedMessage;
 };
 
 #endif // SUBPANELCREATEUSER3_H

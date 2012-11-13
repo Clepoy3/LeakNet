@@ -11,14 +11,14 @@
 #include "TrackerDialog.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_KeyValues.h>
+#include <KeyValues.h>
 
 using namespace vgui;
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsPersonal::CSubPanelOptionsPersonal()
+CSubPanelOptionsPersonal::CSubPanelOptionsPersonal() : PropertyPage(NULL, "SubPanelOptionsPersonal")
 {
 	LoadControlSettings("Friends/SubPanelOptionsPersonal.res");
 }
@@ -35,7 +35,7 @@ CSubPanelOptionsPersonal::~CSubPanelOptionsPersonal()
 //-----------------------------------------------------------------------------
 void CSubPanelOptionsPersonal::OnResetData()
 {
-	vgui::KeyValues *docData = GetDoc()->Data()->FindKey("User", true);
+	KeyValues *docData = GetDoc()->Data()->FindKey("User", true);
 
 	SetControlString("UserNameEdit", docData->GetString("UserName", ""));
 	SetControlString("FirstNameEdit", docData->GetString("FirstName", ""));

@@ -11,11 +11,11 @@
 #include "IRunGameEngine.h"
 #include "TrackerDialog.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/MessageBox.h>
+#include <KeyValues.h>
 
 using namespace vgui;
 
@@ -92,7 +92,7 @@ public:
 		{
 			// we're not running in steam, look in the directory below us
 			// Run the game
-			strcpy(path, "..\\hl.exe");
+			strcpy(path, "..\\hl2.exe");
 			success = ::_spawnl(_P_NOWAIT, path, path, " -console", commandLineParams, NULL);
 		}
 
@@ -132,6 +132,22 @@ public:
 	{
 		return NULL;
 	}
+
+	virtual int GetPlayerCount()
+	{
+		return 0;
+	}
+	
+	virtual unsigned int GetPlayerUserID(int playerIndex)
+	{
+		return 0;
+	}
+	
+	virtual const char *GetPlayerName(int userID)
+	{
+		return 0;
+	}
+
 
 };
 

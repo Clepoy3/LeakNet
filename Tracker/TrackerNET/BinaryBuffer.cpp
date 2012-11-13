@@ -10,7 +10,7 @@
 
 #include "BinaryBuffer.h"
 #include "BufferAllocator.h"
-#include "..\common\MemPool.h"
+#include "..\public\MemPool.h"
 #include "Threads.h"
 
 #include <assert.h>

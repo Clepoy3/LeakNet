@@ -8,7 +8,7 @@
 #include "SubPanelSelectLoginOption.h"
 #include "Tracker.h"
 
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 

@@ -11,13 +11,13 @@
 #include "TrackerDoc.h"
 #include "TrackerProtocol.h"
 
-#include <VGUI_WizardPanel.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_ListPanel.h>
+#include <vgui_controls/WizardPanel.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/ListPanel.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
 
 using namespace vgui;
 
@@ -107,7 +107,7 @@ void CSubPanelFindBuddyResults::OnFriendFound(KeyValues *friendData)
 	}
 
 	// add the friend to drop down list
-	m_pTable->AddItem(friendData->MakeCopy());
+	m_pTable->AddItem(friendData->MakeCopy(), NULL, false, false);
 
 	m_iFound++;
 	m_pInfoText->SetText("#TrackerUI_SelectFriendFromList");
@@ -174,7 +174,7 @@ void CSubPanelFindBuddyResults::PerformLayout()
 bool CSubPanelFindBuddyResults::OnNextButton()
 {
 	// don't advance unless there is a row selected
-	if (!m_pTable->GetNumSelectedRows())
+	if (!m_pTable->GetSelectedItemsCount())
 		return false;
 
 	// write the data to the doc
@@ -183,9 +183,9 @@ bool CSubPanelFindBuddyResults::OnNextButton()
 	users->Clear();
 
 	// walk through
-	for (int i = 0; i < m_pTable->GetNumSelectedRows(); i++)
+	for (int i = 0; i < m_pTable->GetSelectedItemsCount(); i++)
 	{
-		int row = m_pTable->GetSelectedRow(i);
+		int row = m_pTable->GetSelectedItem(i);
 
 		KeyValues *user = m_pTable->GetItem(row);
 		KeyValues *dest = users->CreateNewKey();

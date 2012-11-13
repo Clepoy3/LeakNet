@@ -9,11 +9,11 @@
 #include "SubPanelCreateUser.h"
 #include "Tracker.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
+#include <KeyValues.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 
@@ -65,10 +65,10 @@ bool CSubPanelLoginUser::OnNextButton()
 	KeyValues *doc = GetWizardData();
 
 	char buf[256];
-	m_pEmailEdit->GetText(0, buf, 255);
+	m_pEmailEdit->GetText(buf, 255);
 	doc->SetString("email", buf);
 
-	m_pPassword->GetText(0, buf, 255);
+	m_pPassword->GetText(buf, 255);
 	doc->SetString("password", buf);
 
 	return true;
@@ -84,12 +84,12 @@ bool CSubPanelLoginUser::VerifyEntriesAreValid()
 	char buf[256];
 
 	// make sure the email address is valid
-	m_pEmailEdit->GetText(0, buf, 255);
+	m_pEmailEdit->GetText(buf, 255);
 	if (!CSubPanelCreateUser::IsEmailAddressValid(buf))
 		return false;
 
 	// make sure some password is typed in
-	m_pPassword->GetText(0, buf, 255);
+	m_pPassword->GetText(buf, 255);
 	if (strlen(buf) < 1)
 		return false;
 

@@ -14,7 +14,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsSounds::CSubPanelOptionsSounds()
+CSubPanelOptionsSounds::CSubPanelOptionsSounds() : PropertyPage(NULL, "SubPanelOptionsSounds")
 {
 	LoadControlSettings("Friends/SubPanelOptionsSounds.res");
 }

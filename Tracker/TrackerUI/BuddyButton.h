@@ -20,8 +20,8 @@
 #define BUDDYBUTTON_H
 #pragma once
 
-#include <VGUI_MenuButton.h>
-#include <VGUI_Color.h>
+#include <vgui_controls/MenuButton.h>
+#include <Color.h>
 
 class KeyValues;
 
@@ -96,20 +96,20 @@ private:
 	// drag/drop support
 	bool m_bDragging;
 
-	class vgui::KeyValues *m_pBuddyData;
+	class KeyValues *m_pBuddyData;
 
 	vgui::IImage *_statusImage;
 	vgui::TextImage *_nameText;
 	vgui::TextImage *_statusText;
 
-	vgui::Color m_FgColor1;
-	vgui::Color m_FgColor2;
-	vgui::Color m_BgColor;
-	vgui::Color m_ArmedFgColor1;
-	vgui::Color m_ArmedFgColor2;
-	vgui::Color m_ArmedBgColor;
-	vgui::Color m_GameColor;
-	vgui::Color m_GameNameColor;
+	Color m_FgColor1;
+	Color m_FgColor2;
+	Color m_BgColor;
+	Color m_ArmedFgColor1;
+	Color m_ArmedFgColor2;
+	Color m_ArmedBgColor;
+	Color m_GameColor;
+	Color m_GameNameColor;
 
 	typedef vgui::MenuButton BaseClass;
 };

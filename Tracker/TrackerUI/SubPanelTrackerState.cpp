@@ -7,11 +7,11 @@
 
 #include "SubPanelTrackerState.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
 
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
 
 #include "TrackerDoc.h"
 #include "ServerSession.h"
@@ -28,7 +28,7 @@ CSubPanelTrackerState::CSubPanelTrackerState(Panel *parent, const char *panelNam
 {
 	m_pMessage = new TextEntry(this, "Message");
 	m_pMessage->SetMultiline(true);
-	m_pMessage->SetRichEdit(true);
+//	m_pMessage->SetRichEdit(true);
 	m_pSignInButton = new Button(this, "SigninButton", "");
 }
 
@@ -103,11 +103,11 @@ void CSubPanelTrackerState::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
 
-	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
-	SetBorder(scheme()->GetBorder(GetScheme(), "ButtonDepressedBorder"));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
+	SetBorder(pScheme->GetBorder("ButtonDepressedBorder"));
 
 	// force the message box to have no border
 	m_pMessage->InvalidateLayout(true);
 	m_pMessage->SetBorder(NULL);
-	m_pMessage->SetFgColor(GetSchemeColor("LabelDimText"));
+	m_pMessage->SetFgColor(GetSchemeColor("LabelDimText", pScheme));
 }

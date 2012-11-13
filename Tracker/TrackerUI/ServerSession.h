@@ -12,8 +12,9 @@
 #define SERVERSESSION_H
 #pragma once
 
-#include <VGUI.h>
-#include <VGUI_PHandle.h>
+#include <VGUI/VGUI.h>
+#include <KeyValues.h>
+#include <vgui_controls/PHandle.h>
 
 #include "../TrackerNET/TrackerNET_Interface.h"
 class CNetAddress;
@@ -26,14 +27,14 @@ namespace vgui
 class Panel;
 };
 
-using vgui::KeyValues;
+//using KeyValues;
 
 #include "UtlVector.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles Client<->server network communications
 //-----------------------------------------------------------------------------
-class CServerSession
+class CServerSession //: KeyValues
 {
 public:
 	CServerSession();

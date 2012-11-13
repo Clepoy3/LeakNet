@@ -10,8 +10,8 @@
 
 #include "DialogFindBuddy.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 #include "SubPanelFindBuddy.h"
 #include "SubPanelFindBuddyResults.h"

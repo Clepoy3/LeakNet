@@ -8,10 +8,10 @@
 #include "SubPanelFindBuddy.h"
 #include "Tracker.h"
 
-#include <VGUI_RadioButton.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/TextEntry.h>
+#include <KeyValues.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 
@@ -94,19 +94,19 @@ bool CSubPanelFindBuddy::OnNextButton()
 
 	KeyValues *doc = GetWizardData();
 
-	m_pEmailEdit->GetText(0, buf, 255);
+	m_pEmailEdit->GetText(buf, 255);
 	StripWildcards(buf);
 	doc->SetString("Email", buf);
 	
-	m_pUserNameEdit->GetText(0, buf, 255);
+	m_pUserNameEdit->GetText(buf, 255);
 	StripWildcards(buf);
 	doc->SetString("UserName", buf);
 	
-	m_pFirstNameEdit->GetText(0, buf, 255);
+	m_pFirstNameEdit->GetText(buf, 255);
 	StripWildcards(buf);
 	doc->SetString("FirstName", buf);
 	
-	m_pLastNameEdit->GetText(0, buf, 255);
+	m_pLastNameEdit->GetText(buf, 255);
 	StripWildcards(buf);
 	doc->SetString("LastName", buf);
 
@@ -145,28 +145,28 @@ void CSubPanelFindBuddy::OnTextChanged()
 
 	// Activate the next button if any one of the name fields has data in it
 	char buf[256];
-	m_pEmailEdit->GetText(0, buf, 255);
+	m_pEmailEdit->GetText(buf, 255);
 	if (strlen(buf) > 0)
 	{
 		nextActive = true;
 	}
 	else
 	{
-		m_pUserNameEdit->GetText(0, buf, 255);
+		m_pUserNameEdit->GetText(buf, 255);
 		if (strlen(buf) > 0)
 		{
 			nextActive = true;
 		}
 		else
 		{
-			m_pFirstNameEdit->GetText(0, buf, 255);
+			m_pFirstNameEdit->GetText(buf, 255);
 			if (strlen(buf) > 0)
 			{
 				nextActive = true;
 			}
 			else
 			{
-				m_pLastNameEdit->GetText(0, buf, 255);
+				m_pLastNameEdit->GetText(buf, 255);
 				if (strlen(buf) > 0)
 				{
 					nextActive = true;

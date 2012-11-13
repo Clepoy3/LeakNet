@@ -7,9 +7,9 @@
 
 #include "BuddySectionHeader.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 
@@ -30,10 +30,10 @@ CBuddySectionHeader::CBuddySectionHeader(vgui::Panel *parent, const char *text) 
 void CBuddySectionHeader::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	Label::ApplySchemeSettings(pScheme);
-	SetFgColor(GetSchemeColor("SectionTextColor"));
-	m_SectionDividerColor = GetSchemeColor("SectionDividerColor");
-	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
-	SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "DefaultVerySmall"));
+	SetFgColor(GetSchemeColor("SectionTextColor", pScheme));
+	m_SectionDividerColor = GetSchemeColor("SectionDividerColor", pScheme);
+	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
+	SetFont(pScheme->GetFont("DefaultVerySmall", IsProportional())); // VXP: TEST
 }
 
 //-----------------------------------------------------------------------------

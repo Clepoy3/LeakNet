@@ -13,7 +13,7 @@
 #define FD_SETSIZE 1024
 
 #include "Sockets.h"
-#include "random.h"
+#include "GameUI/random.h"
 #include "winlite.h"
 
 #include <winsock.h>

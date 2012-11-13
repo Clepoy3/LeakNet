@@ -6,6 +6,7 @@
 //=============================================================================
 
 #include "Tracker.h"
+#include "VGUI/ISystem.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -30,8 +31,8 @@ void Tracker_SetStandaloneMode(bool mode)
 	g_bStandaloneMode = mode;
 }
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Log-writing function for debugging purposes

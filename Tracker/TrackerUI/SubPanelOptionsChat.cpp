@@ -15,7 +15,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsChat::CSubPanelOptionsChat()
+CSubPanelOptionsChat::CSubPanelOptionsChat() : PropertyPage(NULL, "SubPanelOptionsChat")
 {
 	LoadControlSettings("Friends/SubPanelOptionsChat.res");
 }

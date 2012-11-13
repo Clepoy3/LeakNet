@@ -9,8 +9,8 @@
 //=============================================================================
 
 
-#include <VGUI_KeyValues.h>
-#include <VGUI_WizardSubPanel.h>
+#include <KeyValues.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 #include "DialogLoginUser.h"
 #include "TrackerDialog.h"

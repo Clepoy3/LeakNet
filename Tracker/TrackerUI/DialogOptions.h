@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_PropertyDialog.h>
+#include <vgui_controls/PropertyDialog.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Preferences dialog

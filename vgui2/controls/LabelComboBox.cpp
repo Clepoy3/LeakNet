@@ -201,7 +201,13 @@ void LabelComboBox::HideMenu()
   	m_pButton->HideMenu();
 }
 
-
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+bool LabelComboBox::CanBeDefaultButton(void)
+{
+    return false;
+}
 
 
 

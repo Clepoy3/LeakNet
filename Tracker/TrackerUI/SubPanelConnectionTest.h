@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Panel for option choosing

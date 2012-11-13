@@ -9,7 +9,7 @@
 #define DIALOGCHAT_H
 #pragma once
 
-#include <VGUI_Frame.h>
+#include <vgui_controls/Frame.h>
 #include <time.h>
 
 namespace vgui
@@ -19,6 +19,7 @@ class Label;
 class Button;
 class MenuButton;
 class TextImage;
+class RichText;
 enum KeyCode;
 };
 
@@ -39,7 +40,7 @@ public:
 	void Update(bool minimized);
 
 	void AddMessageToHistory(bool self, const char *userName, const char *text);
-	void AddTextToHistory(vgui::Color textColor, const char *text);
+	void AddTextToHistory(Color textColor, const char *text);
 
 	void PlayNewMessageSound();
 
@@ -53,11 +54,11 @@ public:
 	int  GetChatID();
 
 	// network messages
-	virtual void OnChatUserLeave(vgui::KeyValues *msg);
-	virtual void OnMessage(vgui::KeyValues *msg);
-	virtual void OnMessageFailed(vgui::KeyValues *msg);
+	virtual void OnChatUserLeave(KeyValues *msg);
+	virtual void OnMessage(KeyValues *msg);
+	virtual void OnMessageFailed(KeyValues *msg);
 	virtual void OnInvited();
-	virtual void OnTypingMessage(vgui::KeyValues *params);
+	virtual void OnTypingMessage(KeyValues *params);
 
 	void LoadChat(int buddyID); // load chat into dialog
 
@@ -69,22 +70,22 @@ private:
 	virtual void OnTextClicked(const char *text);
 	virtual void OnInviteUser(int userID);
 	virtual void OnFriendsStatusChanged();
-	virtual void OnDragDrop(vgui::KeyValues *data);
+	virtual void OnDragDrop(KeyValues *data);
 	virtual void OnCheckRemoteTypingTimeout();
 
 	// Dialog overrides
 	virtual void PerformLayout();
 	virtual void OnClose();
 	virtual void ApplySchemeSettings(vgui::IScheme *pScheme);
-	virtual bool RequestInfo(vgui::KeyValues *outputData);
+	virtual bool RequestInfo(KeyValues *outputData);
 
 	// multi-user chat
-	vgui::KeyValues *GetChatData(int friendID);
+	KeyValues *GetChatData(int friendID);
 
 	void AddUserToChat(int userID, bool bPrintMessage);
-	void SendMessageToAllUsers(int msgID, vgui::KeyValues *msg);
+	void SendMessageToAllUsers(int msgID, KeyValues *msg);
 	void SendTextToAllUsers(const char *text);
-	void OnChatAddUser(vgui::KeyValues *msg);
+	void OnChatAddUser(KeyValues *msg);
 
 	DECLARE_PANELMAP();
 
@@ -95,17 +96,18 @@ private:
 	vgui::Label  *m_pNameLabel;
 	vgui::Label  *m_pMessageState;
 	vgui::TextEntry *m_pTextEntry;
-	vgui::TextEntry *m_pChatHistory;
+//	vgui::TextEntry *m_pChatHistory;
+	vgui::RichText *m_pChatHistory;
 	CButtonInvite *m_pInviteButton;
 	CSubPanelBuddyList *m_pBuddyList;
 
 	vgui::TextImage *m_pStatusImage;
 
-	vgui::Color m_ChatTextColor;
-	vgui::Color m_ChatSelfTextColor;
-	vgui::Color m_ChatSeperatorTextColor;
-	vgui::Color m_URLTextColor;
-	vgui::Color m_StatusColor;
+	Color m_ChatTextColor;
+	Color m_ChatSelfTextColor;
+	Color m_ChatSeperatorTextColor;
+	Color m_URLTextColor;
+	Color m_StatusColor;
 
 	vgui::Dar<int> m_ChatUsers;
 

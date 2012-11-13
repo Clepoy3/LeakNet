@@ -9,7 +9,7 @@
 #define SUBPANELFINDBUDDYRESULTS_H
 #pragma once
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 namespace vgui
 {
@@ -35,7 +35,7 @@ public:
 	DECLARE_PANELMAP();
 	
 private:
-	virtual void OnFriendFound(vgui::KeyValues *friendData);
+	virtual void OnFriendFound(KeyValues *friendData);
 	virtual void OnNoFriends(int attemptID);
 	
 	virtual void OnRowSelected(int startIndex, int endIndex);

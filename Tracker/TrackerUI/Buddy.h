@@ -9,9 +9,9 @@
 #define BUDDY_H
 #pragma once
 
-#include <VGUI.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_PHandle.h>
+#include <VGUI/VGUI.h>
+#include <KeyValues.h>
+#include <vgui_controls/PHandle.h>
 
 #include "ServerBrowser/IServerBrowser.h"
 
@@ -26,14 +26,14 @@ class CDialogUserInfo;
 class CBuddy
 {
 public:
-	CBuddy(unsigned int userID, vgui::KeyValues *data);
+	CBuddy(unsigned int userID, KeyValues *data);
 	~CBuddy();
 
 	unsigned int BuddyID();
 	const char *UserName();
 	const char *DisplayName();
-	vgui::KeyValues *MessageList();
-	vgui::KeyValues *Data() { if (this) return m_pData; return 0; }	// returns a pointer to the raw string data of a buddy
+	KeyValues *MessageList();
+	KeyValues *Data() { if (this) return m_pData; return 0; }	// returns a pointer to the raw string data of a buddy
 
 	void UpdateStatus(int newStatus, unsigned int sessionID, unsigned int serverID, unsigned int *IP, unsigned int *port, unsigned int *gameIP, unsigned int *gamePort, const char *gameType);
 	void RefreshGameInfoDialog();
@@ -78,7 +78,7 @@ private:
 
 	bool m_bSendViaServer;	// indicates that messages to this user should be sent via the main tracker server
 	
-	vgui::KeyValues *m_pData;
+	KeyValues *m_pData;
 	vgui::DHANDLE<CDialogChat> m_hChatDialog;
 	vgui::DHANDLE<CDialogAuthRequest> m_hAuthRequestDialog;
 	vgui::DHANDLE<CDialogUserInfo> m_hUserInfoDialog;

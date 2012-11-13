@@ -9,8 +9,8 @@
 #define SUBPANELSELECTLOGINOPTION_H
 #pragma once
 
-#include <VGUI_RadioButton.h>
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 namespace vgui
 {

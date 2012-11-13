@@ -5,11 +5,12 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_Controls.h>
-#include <VGUI_Cursor.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_MouseCode.h>
+#include <vgui_controls/BuildGroup.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/Cursor.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/MouseCode.h>
 
 #include "PanelValveLogo.h"
 #include "Tracker.h"
@@ -48,7 +49,7 @@ void CPanelValveLogo::OnMousePressed(MouseCode code)
 //-----------------------------------------------------------------------------
 void CPanelValveLogo::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
-	SetImage(scheme()->GetImage(scheme()->GetDefaultScheme(), "Resource/valve_logo"));
+	SetImage(scheme()->GetImage("Resource/valve_logo", false));
 	SetCursor(dc_hand);
 
 	ImagePanel::ApplySchemeSettings(pScheme);

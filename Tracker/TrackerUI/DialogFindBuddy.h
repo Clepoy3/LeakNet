@@ -20,7 +20,7 @@
 #define DIALOGFINDBUDDY_H
 #pragma once
 
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/WizardPanel.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Wizard for searching for a buddy

@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_ScrollBar.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/ScrollBar.h>
 
 #include "Buddy.h"
 #include "BuddyButton.h"
@@ -213,7 +213,7 @@ void CSubPanelBuddyList::PerformLayout()
 			{
 				buddyData = GetDoc()->GetBuddy(buddy->GetBuddyID())->Data();
 
-				if (Tracker_GetRunGameEngineInterface()->GetUserName(buddy->GetBuddyID()))
+				if (Tracker_GetRunGameEngineInterface()->GetPlayerName(buddy->GetBuddyID()))
 				{
 					currentgameBuddies.PutElement(buddy);
 					continue;
@@ -379,7 +379,7 @@ void CSubPanelBuddyList::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	// set background color
-	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
 }
 
 

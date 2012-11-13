@@ -20,18 +20,18 @@
 #include "ServerSession.h"
 #include "DialogRemoveUser.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IInput.h>
-#include <VGUI_IPanel.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IInput.h>
+#include <VGUI/IPanel.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
 
-#include <VGUI_Cursor.h>
-#include <VGUI_Menu.h>
-#include <VGUI_MouseCode.h>
-#include <VGUI_TextImage.h>
+#include <VGUI/Cursor.h>
+#include <vgui_controls/Menu.h>
+#include <VGUI/MouseCode.h>
+#include <vgui_controls/TextImage.h>
 
 using namespace vgui;
 
@@ -241,7 +241,7 @@ void CBuddyButton::PerformLayout(void)
 		// check to see if we're in the same game
 		bool bInSameGame = false;
 		// get the buddies name from the game
-		const char *ingameName = Tracker_GetRunGameEngineInterface()->GetUserName(m_iBuddyID);
+		const char *ingameName = Tracker_GetRunGameEngineInterface()->GetPlayerName(m_iBuddyID);
 		if (ingameName)
 		{
 			bInSameGame = true;
@@ -302,11 +302,11 @@ void CBuddyButton::PerformLayout(void)
 
 	char buf[128];
 	sprintf(buf, "friends/icon_%s", status);
-	_statusImage = scheme()->GetImage(GetScheme(), buf);
+	_statusImage = scheme()->GetImage(buf, false);
 	
 	if (!_statusImage)
 	{
-		_statusImage = scheme()->GetImage(GetScheme(), "resource/icon_blank");
+		_statusImage = scheme()->GetImage("resource/icon_blank", false);
 	}
 
 	SetImageAtIndex(0, _statusImage, m_iImageOffset);
@@ -378,20 +378,20 @@ void CBuddyButton::ApplySchemeSettings(vgui::IScheme *pScheme)
 	SetImageAtIndex(0, NULL, 0);
 
 	// get buddybutton specific settings
-	m_ArmedFgColor1 = GetSchemeColor("BuddyButton/ArmedFgColor1");
-	m_ArmedFgColor2 = GetSchemeColor("BuddyButton/ArmedFgColor2");
-	m_ArmedBgColor = GetSchemeColor("BuddyButton/ArmedBgColor");
+	m_ArmedFgColor1 = GetSchemeColor("BuddyButton/ArmedFgColor1", pScheme);
+	m_ArmedFgColor2 = GetSchemeColor("BuddyButton/ArmedFgColor2", pScheme);
+	m_ArmedBgColor = GetSchemeColor("BuddyButton/ArmedBgColor", pScheme);
 
 	SetArmedColor(m_ArmedFgColor2, m_ArmedBgColor);
 	SetDepressedColor(m_ArmedFgColor2, m_ArmedBgColor);
 
-	m_FgColor1 = GetSchemeColor("BuddyButton/FgColor1");
-	m_FgColor2 = GetSchemeColor("BuddyButton/FgColor2");
+	m_FgColor1 = GetSchemeColor("BuddyButton/FgColor1", pScheme);
+	m_FgColor2 = GetSchemeColor("BuddyButton/FgColor2", pScheme);
 
-	m_BgColor = GetSchemeColor("BuddyListBgColor", GetBgColor());
+	m_BgColor = GetSchemeColor("BuddyListBgColor", pScheme);
 
-	m_GameColor = GetSchemeColor("StatusSelectFgColor2");
-	m_GameNameColor = GetSchemeColor("BaseBrightText");
+	m_GameColor = GetSchemeColor("StatusSelectFgColor2", pScheme);
+	m_GameNameColor = GetSchemeColor("BaseBrightText", pScheme);
 }
 
 //-----------------------------------------------------------------------------
@@ -564,7 +564,8 @@ void CBuddyButton::OnCursorMoved(int x, int y)
 	if (m_bDragging)
 	{
 		// get the panel the mouse is over
-		VPanel *mouseOver = input()->GetMouseOver();
+	//	VPanel *mouseOver = input()->GetMouseOver();
+		vgui::VPANEL mouseOver = input()->GetMouseOver();
 		if (mouseOver != GetVPanel())
 		{
 			bool bAccept = false;
@@ -573,7 +574,8 @@ void CBuddyButton::OnCursorMoved(int x, int y)
 				// check to see if the panel has drag/drop support
 				KeyValues *keyVal = new KeyValues("DragDrop", "type", "TrackerFriend");
 				keyVal->SetInt("friendID", m_iBuddyID);
-				if (ipanel()->Client(mouseOver)->RequestInfo(keyVal))
+			//	if (ipanel()->Client(mouseOver)->RequestInfo(keyVal))
+				if (ipanel()->RequestInfo(mouseOver, keyVal))
 				{
 					// info request was successful, set the cursor to acceptable
 					bAccept = true;
@@ -619,10 +621,12 @@ void CBuddyButton::OnMouseReleased(vgui::MouseCode code)
 	if (m_bDragging)
 	{
 		// make sure we're over a valid panel
-		VPanel *imouseOver = input()->GetMouseOver();
+	//	VPanel *imouseOver = input()->GetMouseOver();
+		vgui::VPANEL imouseOver = input()->GetMouseOver();
 		if (imouseOver)
 		{
-			Panel *mouseOver = ipanel()->Client(imouseOver)->GetPanel();
+		//	Panel *mouseOver = ipanel()->Client(imouseOver)->GetPanel();
+			Panel *mouseOver = ipanel()->GetPanel(imouseOver, "imouseover"); // VXP: TEST
 			KeyValues *keyVal = new KeyValues("DragDrop", "type", "TrackerFriend");
 			keyVal->SetInt("friendID", m_iBuddyID);
 

@@ -32,20 +32,21 @@
 #include "SubPanelTrackerState.h"
 #include "FileSystem.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_IInput.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_Menu.h>
-#include <VGUI_MenuItem.h>
-#include <VGUI_MenuButton.h>
-#include <VGUI_MessageBox.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
+#include <VGUI/IInput.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/Menu.h>
+#include <vgui_controls/MenuItem.h>
+#include <vgui_controls/MenuButton.h>
+#include <vgui_controls/MessageBox.h>
 #include "FileSystem.h"
 
+#include <KeyValues.h>
 
 
 using namespace vgui;
@@ -587,7 +588,8 @@ void CTrackerDialog::OnOnlineStatusChanged(int newStatus)
 	{
 		Menu *subMenu =  m_pTrackerMenu->GetMenuItem(0)->GetMenu();
 		assert(subMenu);
-		for (int i = 0; i < subMenu->GetNumberOfMenuItems(); i++)
+	//	for (int i = 0; i < subMenu->GetNumberOfMenuItems(); i++)
+		for (int i = 0; i < subMenu->GetItemCount(); i++)
 		{
 			subMenu->GetMenuItem(i)->SetChecked(false);
 		}
@@ -1229,7 +1231,7 @@ void CTrackerDialog::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
 
-	m_pBuddyListPanel->SetBorder(scheme()->GetBorder(GetScheme(), "ButtonDepressedBorder"));
+	m_pBuddyListPanel->SetBorder(pScheme->GetBorder("ButtonDepressedBorder"));
 }
 
 //-----------------------------------------------------------------------------

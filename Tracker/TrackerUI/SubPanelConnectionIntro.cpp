@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/WizardPanel.h>
 
 #include "SubPanelConnectionIntro.h"
 

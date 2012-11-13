@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_WizardPanel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/WizardPanel.h>
+#include <KeyValues.h>
 
 #include "SubPanelConnectionTest.h"
 #include "ServerSession.h"

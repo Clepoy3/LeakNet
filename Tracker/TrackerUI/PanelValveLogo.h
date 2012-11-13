@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_ImagePanel.h>
+#include <vgui_controls/ImagePanel.h>
 
 class KeyValues;
 

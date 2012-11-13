@@ -14,10 +14,10 @@
 
 #include <stdio.h>
 
-#include <VGUI_Color.h>
-#include <VGUI_Dar.h>
-#include <VGUI_Frame.h>
-#include <VGUI_PHandle.h>
+#include <Color.h>
+#include <VGUI/Dar.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/PHandle.h>
 
 class KeyValues;
 
@@ -87,16 +87,16 @@ private:
 	void OnUserCreateFinished(int userid, const char *password);
 	void OnUserCreateCancel();
 	void OnUserChangeStatus(int status);
-	void OnReceivedMessage(vgui::KeyValues *data);
-	void OnReceivedGameInfo(vgui::KeyValues *data);
-	void OnReceivedFriendInfo(vgui::KeyValues *data);
-	void OnReceivedUserBlock(vgui::KeyValues *data);
+	void OnReceivedMessage(KeyValues *data);
+	void OnReceivedGameInfo(KeyValues *data);
+	void OnReceivedFriendInfo(KeyValues *data);
+	void OnReceivedUserBlock(KeyValues *data);
 	void OnLoginOK();
 	void OnLoginFail(int reason);
 	void OnQuit();
 	void OnSaveUserData();
-	void OnAddedToChat(vgui::KeyValues *msg);
-	void OnSystemMessage(vgui::KeyValues *msg);
+	void OnAddedToChat(KeyValues *msg);
+	void OnSystemMessage(KeyValues *msg);
 
 	// in game handling
 	void OnActiveGameName(const char *gameName);

@@ -9,7 +9,7 @@
 #define SUBPANELLOGINUSER_H
 #pragma once
 
-#include <VGUI_WizardSubPanel.h>
+#include <vgui_controls/WizardSubPanel.h>
 
 namespace vgui
 {

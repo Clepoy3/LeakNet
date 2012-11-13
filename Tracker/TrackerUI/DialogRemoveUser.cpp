@@ -11,9 +11,9 @@
 #include "TrackerDialog.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_Label.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
 
 using namespace vgui;
 

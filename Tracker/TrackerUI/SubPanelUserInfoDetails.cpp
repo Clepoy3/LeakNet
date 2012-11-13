@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelUserInfoDetails::CSubPanelUserInfoDetails(int userID)
+CSubPanelUserInfoDetails::CSubPanelUserInfoDetails(int userID) : PropertyPage(NULL, "SubPanelUserInfoDetails")
 {
 	m_iUserID = userID;
 	LoadControlSettings("Friends/SubPanelUserInfoDetails.res");

@@ -11,8 +11,8 @@
 #pragma once
 #endif
 
-#include <VGUI_Panel.h>
-#include <VGUI_PHandle.h>
+#include <vgui_controls/Panel.h>
+#include <vgui_controls/PHandle.h>
 
 class CBuddyButton;
 class CBuddySectionHeader;

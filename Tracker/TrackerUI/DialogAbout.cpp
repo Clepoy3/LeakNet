@@ -8,10 +8,10 @@
 #include "DialogAbout.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <vgui_controls/TextEntry.h>
 
 #include <stdio.h>
 
@@ -25,7 +25,7 @@ CDialogAbout::CDialogAbout() : Frame(NULL, "DialogAbout")
 	m_pClose = new Button(this, "CloseButton", "#TrackerUI_Close");
 	m_pText = new TextEntry(this, "AboutText");
 
-	m_pText->SetRichEdit(true);
+//	m_pText->SetRichEdit(true);
 	m_pText->SetMultiline(true);
 	m_pText->SetVerticalScrollbar(true);
 
@@ -66,7 +66,7 @@ void CDialogAbout::PerformLayout()
 
 	m_pText->SetText("");
 
-	m_pText->DoInsertString("Friends - Copyright © 2001 Valve LLC\n\nInstalled version: ");
+	m_pText->InsertString("Friends - Copyright © 2001 Valve LLC\n\nInstalled version: ");
 
 	char versionString[32];
 	if (!system()->GetRegistryString("HKEY_CURRENT_USER\\Software\\Valve\\Tracker\\Version", versionString, sizeof(versionString)))
@@ -74,20 +74,20 @@ void CDialogAbout::PerformLayout()
 		strcpy(versionString, "<unknown>");
 	}
 
-	m_pText->DoInsertString(versionString);
+	m_pText->InsertString(versionString);
 
-	m_pText->DoInsertString("\nBuild number: ");
+	m_pText->InsertString("\nBuild number: ");
 
 	char buildString[32];
 	extern int build_number( void );
 	sprintf(buildString, "%d", build_number());
 
-	m_pText->DoInsertString(buildString);
-	m_pText->DoInsertString("\n\n");
+	m_pText->InsertString(buildString);
+	m_pText->InsertString("\n\n");
 
 	// beta
-	m_pText->DoInsertString("This software is BETA and is not for public release.\n");
-	m_pText->DoInsertString("Please report any bugs or issues to:\n  trackerbugs@valvesoftware.com\n");
+	m_pText->InsertString("This software is BETA and is not for public release.\n");
+	m_pText->InsertString("Please report any bugs or issues to:\n  trackerbugs@valvesoftware.com\n");
 }
 
 //-----------------------------------------------------------------------------

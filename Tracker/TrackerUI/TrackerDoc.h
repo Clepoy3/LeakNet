@@ -12,8 +12,8 @@
 #define TRACKERDOC_H
 #pragma once
 
-#include <VGUI.h>
-#include <VGUI_KeyValues.h>
+#include <VGUI/VGUI.h>
+#include <KeyValues.h>
 
 #include "UtlRBTree.h"
 
@@ -34,7 +34,7 @@ public:
 	~CTrackerDoc();
 
 	// gets the base data registry
-	vgui::KeyValues *Data() { return m_pDataRegistry; }
+	KeyValues *Data() { return m_pDataRegistry; }
 
 	// current user
 	unsigned int GetUserID();
@@ -42,7 +42,7 @@ public:
 
 	// buddies
 	CBuddy *GetBuddy(unsigned int buddyID);				// returns a buddy from the "User/Buddies/" registry
-	void AddNewBuddy(vgui::KeyValues *buddyData);		// adds a new buddy to the permenant buddy registry
+	void AddNewBuddy(KeyValues *buddyData);		// adds a new buddy to the permenant buddy registry
 	void ClearBuddyStatus();					// moves all the buddies offline
 	void UpdateBuddyStatus(unsigned int buddyID, int status, unsigned int sessionID, unsigned int serverID, unsigned int *IP, unsigned int *port, unsigned int *gameIP, unsigned int *gamePort, const char *gameType);
 	void RemoveBuddy(unsigned int userID);
@@ -50,8 +50,8 @@ public:
 	int GetBuddyByIndex(int index);		// index is in the range [0, GetNumberOfBuddies).  Used to walk buddy list.
 
 	// messages
-	vgui::KeyValues *GetFirstMessage(int buddyID);
-	void MoveMessageToHistory(int buddyID, vgui::KeyValues *message);
+	KeyValues *GetFirstMessage(int buddyID);
+	void MoveMessageToHistory(int buddyID, KeyValues *message);
 	
 	// data serialization
 	bool SaveAppData();
@@ -60,8 +60,8 @@ public:
 	bool SaveUserData();
 
 	// conversion functions for converting messages & files to data registries
-	void WriteOut(vgui::KeyValues *dat, class ISendMessage *outFile);
-	void ReadIn(vgui::KeyValues *dat, class IReceiveMessage *inFile);
+	void WriteOut(KeyValues *dat, class ISendMessage *outFile);
+	void ReadIn(KeyValues *dat, class IReceiveMessage *inFile);
 
 	// windows
 	void SaveDialogState(vgui::Panel *dialog, const char *dialogName, unsigned int buddyID = 0);
@@ -69,12 +69,12 @@ public:
 	void ShutdownAllDialogs();
 
 private:
-	vgui::KeyValues *m_pDataRegistry;
+	KeyValues *m_pDataRegistry;
 
 	// cached registry pointers
-	vgui::KeyValues *m_pUserData;
-	vgui::KeyValues *m_pAppData;
-	vgui::KeyValues *m_pBuddyData;
+	KeyValues *m_pUserData;
+	KeyValues *m_pAppData;
+	KeyValues *m_pBuddyData;
 
 	// buddies
 	struct BuddyMapItem_t

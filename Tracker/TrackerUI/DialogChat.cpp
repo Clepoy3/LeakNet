@@ -8,7 +8,7 @@
 #include "Buddy.h"
 #include "DialogChat.h"
 #include "OnlineStatus.h"
-#include "Random.h"
+#include "GameUI/Random.h"
 #include "ServerSession.h"
 #include "SubPanelBuddyList.h"
 #include "Tracker.h"
@@ -16,21 +16,23 @@
 #include "TrackerDoc.h"
 #include "TrackerProtocol.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_KeyCode.h>
-#include <VGUI_Menu.h>
-#include <VGUI_MenuButton.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_TextImage.h>
-#include <VGUI_IPanel.h>
+#include <vgui_controls/Button.h>
+#include <VGUI/KeyCode.h>
+#include <vgui_controls/Menu.h>
+#include <vgui_controls/MenuButton.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/TextImage.h>
+#include <VGUI/IPanel.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_IInput.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_ISystem.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IInput.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/ISystem.h>
 
-#include <VGUI_ILocalize.h>
+#include <VGUI/ILocalize.h>
+
+#include <vgui_controls/RichText.h>
 
 #include <ctype.h>
 #include <stdio.h>
@@ -67,7 +69,7 @@ public:
 	{
 		MenuButton::ApplySchemeSettings(pScheme);
 		
-		m_pDropdownText->SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "Marlett"));
+		m_pDropdownText->SetFont(pScheme->GetFont("Marlett"));
 		m_pDropdownText->SetColor(GetFgColor());
 	}
 	
@@ -79,7 +81,7 @@ public:
 		}
 		
 		// recalculate the items to show in the menu
-		menu->ClearMenu();
+		menu->DeleteAllItems();
 		
 		// temporary buffer, for sorting
 		Dar<int> friendDar;
@@ -146,7 +148,7 @@ public:
 		if (!m_pMenu)
 			return 0;
 		OnShowMenu(m_pMenu);
-		return m_pMenu->GetNumberOfCurrentlyVisibleItems();
+		return m_pMenu->GetCurrentlyVisibleItemsCount();
 	}
 	
 	void SetEnabled(bool state)
@@ -183,7 +185,8 @@ CDialogChat::CDialogChat(int userID) : Frame(NULL, "ChatDialog")
 	m_pNameLabel = new Label(this, "NameLabel", "");
 	m_pMessageState = new Label(this, "MessageState", "");
 	m_pTextEntry = new TextEntry(this, "TextEntry");
-	m_pChatHistory = new TextEntry(this, "ChatHistory");
+//	m_pChatHistory = new TextEntry(this, "ChatHistory");
+	m_pChatHistory = new RichText(this, "ChatHistory");
 	m_pInviteButton = new CButtonInvite(this, "InviteButton", this);
 	m_pBuddyList = NULL;	// buddylist is created when used
 	m_bPostMessageRecievedTime = false;
@@ -197,15 +200,15 @@ CDialogChat::CDialogChat(int userID) : Frame(NULL, "ChatDialog")
 	}
 	
 	m_pTextEntry->SetMultiline(true);
-	m_pTextEntry->setMaximumCharCount(500);
-	m_pChatHistory->SetMultiline(true);
-	m_pChatHistory->SetEditable(false);
-	m_pChatHistory->SetRichEdit(true);
+	m_pTextEntry->SetMaximumCharCount(500);
+//	m_pChatHistory->SetMultiline(true);
+//	m_pChatHistory->SetEditable(false);
+//	m_pChatHistory->SetRichEdit(true);
 	m_pChatHistory->SetVerticalScrollbar(true);
 	m_pChatHistory->SetEnabled(false);
 	
 	m_pSendButton->SetCommand(new KeyValues("SendMessage"));
-	m_pMessageState->SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "DefaultSmall"));
+//	m_pMessageState->SetFont(scheme()->GetFont("DefaultSmall"));
 	
 	SetSize(400, 300);
 	
@@ -403,7 +406,7 @@ void CDialogChat::AddUserToChat(int userID, bool bPrintMessage)
 // Purpose: Called when a user has been added into the chat
 // Input  : *msg - 
 //-----------------------------------------------------------------------------
-void CDialogChat::OnChatAddUser(vgui::KeyValues *msg)
+void CDialogChat::OnChatAddUser(KeyValues *msg)
 {
 	if (!m_bMultiUserChat)
 	{
@@ -686,7 +689,7 @@ void CDialogChat::OnTextChanged(Panel *panel)
 		bool oldState = m_pSendButton->IsEnabled();
 		
 		char text[256];
-		m_pTextEntry->GetText(0, text, sizeof(text)-1);
+		m_pTextEntry->GetText(text, sizeof(text)-1);
 		if (strlen(text) > 0)
 		{
 			m_pSendButton->SetEnabled(true);
@@ -715,11 +718,16 @@ void CDialogChat::Open(bool minimized)
 {
 	Activate();
 	m_iMessageNumber=0;
-	SetFgColor(GetSchemeColor("WindowFgColor"));
-	m_ChatTextColor = GetSchemeColor("Chat/TextColor");
-	m_ChatSelfTextColor = GetSchemeColor("Chat/SelfTextColor");
-	m_ChatSeperatorTextColor = GetSchemeColor("Chat/SeperatorTextColor");
-	m_URLTextColor = GetSchemeColor("URLTextColor");
+//	SetFgColor(GetSchemeColor("WindowFgColor"));
+//	m_ChatTextColor = GetSchemeColor("Chat/TextColor");
+//	m_ChatSelfTextColor = GetSchemeColor("Chat/SelfTextColor");
+//	m_ChatSeperatorTextColor = GetSchemeColor("Chat/SeperatorTextColor");
+//	m_URLTextColor = GetSchemeColor("URLTextColor");
+	SetFgColor(Color(255, 0, 0));
+	m_ChatTextColor = Color(0, 255, 0);
+	m_ChatSelfTextColor = Color(0, 0, 255);
+	m_ChatSeperatorTextColor = Color(255, 255, 0);
+	m_URLTextColor = Color(0, 255, 255);
 	
 	SetVisible(minimized);
 	m_pTextEntry->RequestFocus();
@@ -792,7 +800,7 @@ void CDialogChat::Update(bool minimized)
 		GetDoc()->MoveMessageToHistory(m_iFriendID, msg);
 		
 		// play the message sound if the chat window doesn't have focus, or it is not visible, or it's parent is not visible
-		VPanel *focus = input()->GetFocus();
+		VPANEL focus = input()->GetFocus();
 		if (!(focus && ipanel()->HasParent(focus, this->GetVPanel())) || (!IsVisible()) || (GetParent() && !GetParent()->IsVisible()))
 		{
 			PlayNewMessageSound();
@@ -826,7 +834,7 @@ void CDialogChat::Update(bool minimized)
 void CDialogChat::OnSendMessage()
 {
 	char buf[512];
-	m_pTextEntry->GetText(0, buf, 511);
+	m_pTextEntry->GetText(buf, 511);
 	if (!buf[0])
 		return;
 	
@@ -835,27 +843,28 @@ void CDialogChat::OnSendMessage()
 	{
 		// print an error
 		// move to the end of the history
-		m_pChatHistory->DoGotoTextEnd();
+		m_pChatHistory->GotoTextEnd();
 		
 		// add text
-		m_pChatHistory->DoInsertString("\n");
-		m_pChatHistory->DoInsertIndentChange(2);
-		m_pChatHistory->DoInsertColorChange(m_pChatHistory->GetFgColor());
-		m_pChatHistory->DoInsertString("#TrackerUI_Offline_MessageNotDelivered");
+		m_pChatHistory->InsertString("\n");
+		m_pChatHistory->InsertIndentChange(2);
+		m_pChatHistory->InsertColorChange(m_pChatHistory->GetFgColor());
+		m_pChatHistory->InsertString("#TrackerUI_Offline_MessageNotDelivered");
 	}
 	// make sure the target user is still online
 	else if (!m_bMultiUserChat && GetDoc()->GetBuddy(m_iFriendID)->Data()->GetInt("Status") <= COnlineStatus::OFFLINE)
 	{
 		// print an error
 		// move to the end of the history
-		m_pChatHistory->DoGotoTextEnd();
+		m_pChatHistory->GotoTextEnd();
 		
 		// add text
-		m_pChatHistory->DoInsertString("\n");
-		m_pChatHistory->DoInsertIndentChange(2);
-		m_pChatHistory->DoInsertColorChange(GetSchemeColor("BrightBaseText", Color(255, 255, 255, 0)));
-		m_pChatHistory->DoInsertString(GetDoc()->GetBuddy(m_iFriendID)->DisplayName());
-		m_pChatHistory->DoInsertString(" has gone offline.\nMessage could not be delivered.\n");
+		m_pChatHistory->InsertString("\n");
+		m_pChatHistory->InsertIndentChange(2);
+	//	m_pChatHistory->InsertColorChange(GetSchemeColor("BrightBaseText", Color(255, 255, 255, 0)));
+		m_pChatHistory->InsertColorChange(Color(255, 255, 255, 0));
+		m_pChatHistory->InsertString(GetDoc()->GetBuddy(m_iFriendID)->DisplayName());
+		m_pChatHistory->InsertString(" has gone offline.\nMessage could not be delivered.\n");
 
 //tagES
 //		wchar_t unicode[256], unicodeName[64];
@@ -945,14 +954,14 @@ void CDialogChat::SendTextToAllUsers(const char *text)
 void CDialogChat::AddMessageToHistory(bool self, const char *userName, const char *text)
 {
 	// move to the end of the history
-	m_pChatHistory->DoGotoTextEnd();
+	m_pChatHistory->GotoTextEnd();
 	
 	// add text
-	m_pChatHistory->DoInsertColorChange(m_ChatSeperatorTextColor);
-	m_pChatHistory->DoInsertString(userName);
-	m_pChatHistory->DoInsertString(" says:");
-	m_pChatHistory->DoInsertChar('\n');
-	m_pChatHistory->DoInsertIndentChange(12);
+	m_pChatHistory->InsertColorChange(m_ChatSeperatorTextColor);
+	m_pChatHistory->InsertString(userName);
+	m_pChatHistory->InsertString(" says:");
+	m_pChatHistory->InsertChar('\n');
+	m_pChatHistory->InsertIndentChange(12);
 	
 	Color currentColor;
 	
@@ -965,7 +974,7 @@ void CDialogChat::AddMessageToHistory(bool self, const char *userName, const cha
 		currentColor = m_ChatTextColor;
 	}
 	
-	m_pChatHistory->DoInsertColorChange(currentColor);
+	m_pChatHistory->InsertColorChange(currentColor);
 	
 	// parse out the string for URL's
 	int len = strlen(text), pos = 0;
@@ -977,21 +986,21 @@ void CDialogChat::AddMessageToHistory(bool self, const char *userName, const cha
 		
 		if (clickable)
 		{
-			m_pChatHistory->DoInsertClickableTextStart();
-			m_pChatHistory->DoInsertColorChange(m_URLTextColor);
+			m_pChatHistory->InsertClickableTextStart();
+			m_pChatHistory->InsertColorChange(m_URLTextColor);
 		}
 		
-		m_pChatHistory->DoInsertString(resultBuf);
+		m_pChatHistory->InsertString(resultBuf);
 		
 		if (clickable)
 		{
-			m_pChatHistory->DoInsertColorChange(currentColor);
-			m_pChatHistory->DoInsertClickableTextEnd();
+			m_pChatHistory->InsertColorChange(currentColor);
+			m_pChatHistory->InsertClickableTextEnd();
 		}
 	}
 	
-	m_pChatHistory->DoInsertIndentChange(0);
-	m_pChatHistory->DoInsertChar('\n');
+	m_pChatHistory->InsertIndentChange(0);
+	m_pChatHistory->InsertChar('\n');
 	
 	// log the chat
 	KeyValues *data;
@@ -1016,11 +1025,11 @@ void CDialogChat::AddMessageToHistory(bool self, const char *userName, const cha
 void CDialogChat::AddTextToHistory(Color textColor, const char *text)
 {
 	// move to the end of the history
-	m_pChatHistory->DoGotoTextEnd();
+	m_pChatHistory->GotoTextEnd();
 	
 	// add text
-	m_pChatHistory->DoInsertColorChange(textColor);
-	m_pChatHistory->DoInsertString(text);
+	m_pChatHistory->InsertColorChange(textColor);
+	m_pChatHistory->InsertString(text);
 }
 
 //-----------------------------------------------------------------------------
@@ -1158,15 +1167,16 @@ void CDialogChat::OnClose()
 void CDialogChat::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
-	SetFgColor(GetSchemeColor("WindowFgColor"));
-	m_StatusColor = GetSchemeColor("StatusSelectFgColor2");
+	SetFgColor(GetSchemeColor("WindowFgColor", pScheme));
+	m_StatusColor = GetSchemeColor("StatusSelectFgColor2", pScheme);
 	
 	// force the chat history scheme settings to be loaded, so we can stomp them
 	m_pChatHistory->InvalidateLayout(true);
 	
 	// non-standard text border
-	m_pChatHistory->SetBorder(scheme()->GetBorder(GetScheme(), "BaseBorder"));
-	m_pChatHistory->SetDisabledBgColor(GetSchemeColor("ChatBgColor", GetSchemeColor("WindowDisabledBgColor")));
+	m_pChatHistory->SetBorder(pScheme->GetBorder("BaseBorder"));
+//	m_pChatHistory->SetDisabledBgColor(GetSchemeColor("ChatBgColor", GetSchemeColor("WindowDisabledBgColor")));
+//	m_pChatHistory->_disabledFgColor = GetSchemeColor("ChatBgColor", GetSchemeColor("WindowDisabledBgColor"));
 }
 
 //-----------------------------------------------------------------------------
@@ -1261,7 +1271,7 @@ bool CDialogChat::RequestInfo(KeyValues *outputData)
 // Purpose: 
 // Input  : *data - 
 //-----------------------------------------------------------------------------
-void CDialogChat::OnDragDrop(vgui::KeyValues *data)
+void CDialogChat::OnDragDrop(KeyValues *data)
 {
 	if (!stricmp(data->GetString("type"), "TrackerFriend"))
 	{		
@@ -1275,13 +1285,13 @@ void CDialogChat::OnDragDrop(vgui::KeyValues *data)
 	}
 	else if (!stricmp(data->GetString("type"), "Files"))
 	{
-		m_pTextEntry->DoGotoTextEnd();
-		m_pTextEntry->DoInsertString(data->GetString("list/0"));
+		m_pTextEntry->GotoTextEnd();
+		m_pTextEntry->InsertString(data->GetString("list/0"));
 	}
 	else if (!stricmp(data->GetString("type"), "Text"))
 	{
-		m_pTextEntry->DoGotoTextEnd();
-		m_pTextEntry->DoInsertString(data->GetString("text"));
+		m_pTextEntry->GotoTextEnd();
+		m_pTextEntry->InsertString(data->GetString("text"));
 	}
 }
 

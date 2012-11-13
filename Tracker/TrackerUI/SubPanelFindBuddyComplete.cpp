@@ -12,9 +12,9 @@
 #include "TrackerDialog.h"
 #include "Tracker.h"
 
-#include <VGUI_Label.h>
-#include <VGUI_WizardPanel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/WizardPanel.h>
+#include <KeyValues.h>
 
 #include <stdio.h>
 

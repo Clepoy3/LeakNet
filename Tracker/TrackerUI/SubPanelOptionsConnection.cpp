@@ -7,9 +7,9 @@
 
 #include "SubPanelOptionsConnection.h"
 
-#include <VGUI_ComboBox.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
 
 #include <stdio.h>
 
@@ -37,13 +37,13 @@ speeditem_t g_Speeds[] =
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsConnection::CSubPanelOptionsConnection()
+CSubPanelOptionsConnection::CSubPanelOptionsConnection() : PropertyPage(NULL, "SubPanelOptionsConnection")
 {
 	m_pInternetSpeed = new ComboBox(this, "InternetSpeed", ARRAYSIZE(g_Speeds), false);
 
 	for (int i = 0; i < ARRAYSIZE(g_Speeds); i++)
 	{
-		m_pInternetSpeed->AddItem(g_Speeds[i].description);
+		m_pInternetSpeed->AddItem(g_Speeds[i].description, NULL);
 	}
 
 	LoadControlSettings("Friends/SubPanelOptionsConnection.res");
@@ -88,7 +88,7 @@ void CSubPanelOptionsConnection::OnApplyChanges()
 	int speed = 7500;
 	// get the speed from the list and set it in the registry
 	char text[256];
-	m_pInternetSpeed->GetText(0, text, sizeof(text)-1);
+	m_pInternetSpeed->GetText(text, sizeof(text)-1);
 	for (int i = 0; i < ARRAYSIZE(g_Speeds); i++)
 	{
 		if (!stricmp(text, g_Speeds[i].description))

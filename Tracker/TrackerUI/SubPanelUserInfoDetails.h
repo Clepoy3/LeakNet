@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_PropertyPage.h>
+#include <vgui_controls/PropertyPage.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Details information about the user (name, email, etc)

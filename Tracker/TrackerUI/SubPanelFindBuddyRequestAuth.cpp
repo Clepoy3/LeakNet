@@ -8,10 +8,10 @@
 #include "SubPanelFindBuddyRequestAuth.h"
 #include "Tracker.h"
 
-#include <VGUI_WizardPanel.h>
-#include <VGUI_Label.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_RadioButton.h>
+#include <vgui_controls/WizardPanel.h>
+#include <vgui_controls/Label.h>
+#include <KeyValues.h>
+#include <vgui_controls/RadioButton.h>
 
 #include <stdio.h>
 

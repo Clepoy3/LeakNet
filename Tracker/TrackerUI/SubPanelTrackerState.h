@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_EditablePanel.h>
+#include <vgui_controls/EditablePanel.h>
 
 namespace vgui
 {

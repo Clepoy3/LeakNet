@@ -15,8 +15,8 @@
 #include "TrackerDoc.h"
 #include "TrackerProtocol.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/TextEntry.h>
 
 #include <stdio.h>
 

@@ -137,7 +137,7 @@ SOURCE=..\common\IceKey.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\common\Info.cpp
+SOURCE=..\..\common\Info_key.cpp
 # End Source File
 # Begin Source File
 
@@ -157,7 +157,7 @@ SOURCE=.\PanelValveLogo.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\common\Random.cpp
+SOURCE=..\..\common\gameui\Random.cpp
 # End Source File
 # Begin Source File
 
@@ -221,7 +221,7 @@ SOURCE=.\DialogAbout.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\common\info.h
+SOURCE=..\..\common\info_key.h
 # End Source File
 # Begin Source File
 
@@ -510,7 +510,99 @@ SOURCE=..\..\Platform\icon1.ico
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\vgui2\bin\vgui_controls.lib
+SOURCE=..\..\lib\public\vgui_controls.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\unitlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vstdlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\tier0.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\shaderlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\trktooln.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vgui_surfacelib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vtf.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\appframework.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\expdlln.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\game_controls.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\nvtristrip.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\ivp_physics.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\mss32.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\mxtk.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\s3tc.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\Steam.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\vtuneapi.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\havana_constraints.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\havok_mopp.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\hk_base.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\hk_math.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\common\ivp_compactbuilder.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\vmpi\vmpi.lib
 # End Source File
 # End Target
 # End Project

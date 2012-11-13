@@ -13,12 +13,12 @@
 #include "Tracker.h"
 #include "TrackerProtocol.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_Label.h>
-#include <VGUI_RadioButton.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/RadioButton.h>
 
 #include <stdio.h>
 

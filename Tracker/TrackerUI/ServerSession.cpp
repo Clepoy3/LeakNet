@@ -12,7 +12,7 @@
 
 // common files
 #include "proto_oob.h"
-#include "random.h"
+#include "GameUI/random.h"
 
 #include "Buddy.h"
 #include "interface.h"
@@ -30,12 +30,12 @@
 #include <string.h>
 #include <time.h>
 
-#include <VGUI_KeyValues.h>
-#include <VGUI_Panel.h>
+#include <KeyValues.h>
+#include <vgui_controls/Panel.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
 #include "FileSystem.h"
 
 #ifndef min
@@ -101,7 +101,7 @@ CServerSession::CServerSession()
 	// load the server info file
 
 	KeyValues *masterServers = ::GetDoc()->Data()->FindKey("MasterServers", true);
-	masterServers->LoadFromFile(filesystem(), "Friends/servers.dat", "PLATFORM");
+	masterServers->LoadFromFile(filesystem(), "Friends/servers.vdf", "PLATFORM");
 
 	// iterate through the servers adding them to the list
 	for (KeyValues *kv = masterServers->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
@@ -117,7 +117,8 @@ CServerSession::CServerSession()
 	// make sure we have at least one server
 	if (m_ServerList.Size() < 1)
 	{
-		m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
+	//	m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
+		m_ServerList.AddToTail(m_pNet->GetNetAddress("127.0.0.1:1200"));
 	}
 	
 	// check to see if we have a server saved
@@ -1068,15 +1069,15 @@ void CServerSession::SendTextMessageToUser(unsigned int targetID, const char *te
 	}
 	
 	// see how it should be sent
-//	if (buddy->SendViaServer())
+	if (buddy->SendViaServer())
 	{
 		// send the message via the server
 		SendRoutedUserMessage(targetID, TCL_MESSAGE, msgBuffer);
 	}
-//	else
-//	{
-//		SendUserMessage(targetID, TCL_MESSAGE, msgBuffer);
-//	}
+	else
+	{
+		SendUserMessage(targetID, TCL_MESSAGE, msgBuffer);
+	}
 }
 
 //-----------------------------------------------------------------------------

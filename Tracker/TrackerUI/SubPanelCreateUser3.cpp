@@ -12,13 +12,13 @@
 #include "TrackerDoc.h"
 #include "TrackerProtocol.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_Label.h>
-#include <VGUI_ProgressBar.h>
-#include <VGUI_WizardPanel.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ILocalize.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/ProgressBar.h>
+#include <vgui_controls/WizardPanel.h>
 
 using namespace vgui;
 
@@ -134,7 +134,7 @@ WizardSubPanel *CSubPanelCreateUser3::GetPrevSubPanel()
 // Input  : *replyMsg - 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-void CSubPanelCreateUser3::OnUserCreated(vgui::KeyValues *data)
+void CSubPanelCreateUser3::OnUserCreated(KeyValues *data)
 {
 	m_pProgressLabel->SetText("#TrackerUI_UserCreateComplete");
 	m_pProgressBar->SetProgress(1.0f);
@@ -190,7 +190,7 @@ void CSubPanelCreateUser3::OnUserCreated(vgui::KeyValues *data)
 // Purpose: 
 // Input  : *data - 
 //-----------------------------------------------------------------------------
-void CSubPanelCreateUser3::OnUserCreateDenied(vgui::KeyValues *data)
+void CSubPanelCreateUser3::OnUserCreateDenied(KeyValues *data)
 {
 	GetWizardPanel()->SetPrevButtonEnabled(true);
 	GetWizardPanel()->ResetKeyFocus();

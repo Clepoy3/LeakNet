@@ -5,13 +5,15 @@
 // $NoKeywords: $
 //=============================================================================
 
+#include <vgui_controls/BuildGroup.h>
 #include "OnlineStatus.h"
 #include "OnlineStatusSelectComboBox.h"
 #include "TrackerDoc.h"
 #include "ServerSession.h"
 
-#include <VGUI_TextImage.h>
-#include <VGUI_IScheme.h>
+#include <vgui_controls/TextImage.h>
+#include <vgui_controls/LabelComboBox.h>
+#include <VGUI/IScheme.h>
 
 #include <stdio.h>
 
@@ -47,15 +49,15 @@ COnlineStatusSelectComboBox::~COnlineStatusSelectComboBox()
 void COnlineStatusSelectComboBox::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	Button::ApplySchemeSettings(pScheme);
-	SetFgColor(GetSchemeColor("StatusSelectFgColor"));
-	_statusText->SetColor(GetSchemeColor("StatusSelectFgColor2"));
+	SetFgColor(GetSchemeColor("StatusSelectFgColor", pScheme));
+	_statusText->SetColor(GetSchemeColor("StatusSelectFgColor2", pScheme));
 
-	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
 
 	SetDefaultColor(GetFgColor(), GetBgColor());
 
-	SetArmedColor(GetSchemeColor("ButtonArmedFgColor", GetFgColor()), GetBgColor());
-	SetDepressedColor(GetSchemeColor("ButtonDepressedFgColor", GetFgColor()), GetBgColor());
+	SetArmedColor(GetSchemeColor("ButtonArmedFgColor", pScheme), GetBgColor());
+	SetDepressedColor(GetSchemeColor("ButtonDepressedFgColor", pScheme), GetBgColor());
 }
 
 //-----------------------------------------------------------------------------
@@ -74,11 +76,11 @@ void COnlineStatusSelectComboBox::PerformLayout()
 	// load in the appropriate icon.
 	char buf[128];
 	sprintf(buf, "friends/icon_%s", COnlineStatus::IDToString(ServerSession().GetStatus()));
-	_statusImage = scheme()->GetImage(scheme()->GetDefaultScheme(), buf);
+	_statusImage = scheme()->GetImage(buf, false);
 
 	if (!_statusImage)
 	{
-		_statusImage = scheme()->GetImage(scheme()->GetDefaultScheme(), "resource/icon_blank");
+		_statusImage = scheme()->GetImage("resource/icon_blank", false);
 	}
 
 	if (_statusImage)

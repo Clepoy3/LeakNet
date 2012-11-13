@@ -13,7 +13,7 @@
 #include "Tracker.h"
 #include "TrackerDoc.h"
 
-#include <VGUI_PropertySheet.h>
+#include <vgui_controls/PropertySheet.h>
 
 using namespace vgui;
 
