@@ -118,7 +118,7 @@ CServerSession::CServerSession()
 	if (m_ServerList.Size() < 1)
 	{
 	//	m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
-		m_ServerList.AddToTail(m_pNet->GetNetAddress("127.0.0.1:1200"));
+		m_ServerList.AddToTail(m_pNet->GetNetAddress("192.168.1.100:1200"));
 	}
 	
 	// check to see if we have a server saved

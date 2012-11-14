@@ -56,10 +56,10 @@ CSubPanelFindBuddyResults::~CSubPanelFindBuddyResults()
 //-----------------------------------------------------------------------------
 WizardSubPanel *CSubPanelFindBuddyResults::GetNextSubPanel()
 {
-//	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyRequestAuth"));
+	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyRequestAuth"));
 
 	// just skip the request auth dialog for now
-	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyComplete"));
+//	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyComplete"));
 }
 
 //-----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ WizardSubPanel *CSubPanelFindBuddyResults::GetNextSubPanel()
 //-----------------------------------------------------------------------------
 void CSubPanelFindBuddyResults::OnDisplayAsNext()
 {
-	GetWizardPanel()->SetNextButtonEnabled(false);
+	GetWizardPanel()->SetNextButtonEnabled(true); // VXP: FIX THIS
 
 	GetWizardPanel()->SetTitle("#TrackerUI_FriendsSearchingTitle", false);
 
