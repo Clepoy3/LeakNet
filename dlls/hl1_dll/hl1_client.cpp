@@ -97,6 +97,9 @@ CBaseEntity* FindEntity( edict_t *pEdict, char *classname)
 void ClientGamePrecache( void )
 {
 	engine->PrecacheModel("models/player.mdl");
+	engine->PrecacheModel("models/player/combine_soldier.mdl"); // VXP: TEMP
+	engine->PrecacheModel("models/player/gordon.mdl"); // VXP: TEMP
+	engine->PrecacheModel("models/player/police.mdl"); // VXP: TEMP
 	engine->PrecacheModel( "models/gibs/metalgibs.mdl");
 	engine->PrecacheModel( "models/gibs/agibs.mdl" );
 }

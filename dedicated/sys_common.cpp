@@ -278,6 +278,8 @@ void ProcessConsoleInput( void )
 		{
 			char szBuf[ 256 ];
 			sprintf( szBuf, "%s\n", s );
+		//	Q_snprintf( szBuf, "%s\n", s );
+		//	Q_snprintf( szBuf, sizeof( szBuf ), "%s\n", s );
 			engine->AddConsoleText ( szBuf );
 		}
 	} while (s);

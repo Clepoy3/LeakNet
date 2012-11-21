@@ -66,7 +66,8 @@ const char *CModInfo::GetStartMap()
 //-----------------------------------------------------------------------------
 const char *CModInfo::GetTrainMap()
 {
-	return m_pModData->GetString("trainmap", "t0a0");
+//	return m_pModData->GetString("trainmap", "t0a0");
+	return m_pModData->GetString("trainmap", "bump_test");
 }
 
 //-----------------------------------------------------------------------------

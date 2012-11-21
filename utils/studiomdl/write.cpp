@@ -403,18 +403,22 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 		pseqdesc->numblends		= g_sequence[i].numblends;
 		pseqdesc->groupsize[0]	= g_sequence[i].groupsize[0];
 		pseqdesc->groupsize[1]	= g_sequence[i].groupsize[1];
-/*
+		/*
 		for (j = 0; j < MAXSTUDIOBLENDS; j++)
 		{
 			for (k = 0; k < MAXSTUDIOBLENDS; k++)
 			{
 				if (g_sequence[i].panim[j][k])
-					pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
+				{
+				//	pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
+				}
 				else
-					pseqdesc->anim[j][k] = 0; // !!! bad
+				{
+				//	pseqdesc->anim[j][k] = 0; // !!! bad
+				}
 			}
 		}
-*/
+		*/
 		pseqdesc->paramindex[0]	= g_sequence[i].paramindex[0];
 		pseqdesc->paramstart[0] = g_sequence[i].paramstart[0];
 		pseqdesc->paramend[0]	= g_sequence[i].paramend[0];
@@ -581,28 +585,11 @@ static byte *WriteAnimations( byte *pData, byte *pStart, int group, studiohdr_t 
 
 	// save animations
 	panimdesc = (mstudioanimdesc_t *)pData;
-	panimgroup = (mstudioanimgroup_t *)pData;
-	pbonedesc = (mstudiobonedesc_t *)pData;
 	if( phdr )
 	{
-		printf("!!!!!WRITING ANIMATIONS!!!!!\n");
 		phdr->numanim = g_numani;
 		phdr->animdescindex = (pData - pStart);
-		
-		phdr->numanimgroup = 1;
-		phdr->animgroupindex = (pData - pStart);
-		
-		phdr->numbonedesc = 1;
-		phdr->bonedescindex = (pData - pStart);
 	}
-	
-	// Remember start spot
-	mstudioanimgroup_t *hitboxset = (mstudioanimgroup_t *)pData;
-	phdr->index = ( pData - pStart );
-
-	pData += phdr->group * sizeof( mstudioanimgroup_t );
-	ALIGN4( pData );
-	
 	pData += g_numani * sizeof( *panimdesc );
 	ALIGN4( pData );
 
@@ -1607,6 +1594,5 @@ void WriteFile (void)
 	LoadMaterials( phdr );
 	OptimizedModel::WriteOptimizedFiles( phdr, g_bodypart );
 }
-
 
 

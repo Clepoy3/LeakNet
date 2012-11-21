@@ -664,7 +664,7 @@ void CTrackerDialog::OnSystemMessage(KeyValues *msg)
 	// play the message sound, if they have it enabled
 	if (GetDoc()->Data()->GetInt("User/Sounds/Message", 1))
 	{
-		surface()->PlaySound("Friends\\Message.wav");
+		surface()->PlaySound("..\\..\\Platform\\Friends\\Message.wav");
 	}
 
 	// display the message in a message box

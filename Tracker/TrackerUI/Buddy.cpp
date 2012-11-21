@@ -139,7 +139,8 @@ void CBuddy::UpdateStatus(int status, unsigned int sessionID, unsigned int serve
 		// play the sound if the doc says to
 		if (Data()->GetInt("SoundIngame") || GetDoc()->Data()->GetInt("User/Sounds/Ingame", 1))
 		{
-			surface()->PlaySound("Friends\\friend_join.wav");
+		//	surface()->PlaySound("Friends\\friend_join.wav");
+			surface()->PlaySound("..\\..\\Platform\\Friends\\friend_join.wav");
 			m_iNextPlayTime = system()->GetTimeMillis() + 5000;
 		}
 	}
@@ -151,7 +152,8 @@ void CBuddy::UpdateStatus(int status, unsigned int sessionID, unsigned int serve
 			// play the sound if the doc says to
 			if (Data()->GetInt("SoundOnline") || GetDoc()->Data()->GetInt("User/Sounds/Online", 0))
 			{
-				surface()->PlaySound("Friends\\friend_online.wav");
+			//	surface()->PlaySound("Friends\\friend_online.wav");
+				surface()->PlaySound("..\\..\\Platform\\Friends\\friend_online.wav");
 				m_iNextPlayTime = system()->GetTimeMillis() + 5000;
 			}
 
@@ -339,7 +341,7 @@ void CBuddy::OpenAuthRequestDialog(bool minimized)
 		// play a sound
 		if (GetDoc()->Data()->GetInt("User/Sounds/Message", 1))
 		{
-			surface()->PlaySound("Friends\\Message.wav");
+			surface()->PlaySound("..\\..\\Platform\\Friends\\Message.wav");
 		}
 
 		m_hAuthRequestDialog = dialog;

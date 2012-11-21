@@ -38,6 +38,8 @@ bool	VGui_IsShiftKeyDown( void );
 
 int		VGui_NeedSteamPassword(char *szAccountName, char *szUserName);
 void	VGui_NotifyOfServerConnect(const char *game, int IP, int port);
+void	VGui_NotifyOfServerLoading(); // VXP
+void	VGui_NotifyOfServerProgress( float progress, const char *statusText ); // VXP
 void	VGui_NotifyOfServerDisconnect( void );
 void	VGui_HideGameUI( void );
 int		VGui_GameUIKeyPressed( void );

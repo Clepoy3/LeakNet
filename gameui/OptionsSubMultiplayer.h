@@ -20,6 +20,7 @@ class CCvarToggleCheckButton;
 class CCvarTextEntry;
 class CCvarSlider;
 class CMultiplayerAdvancedDialog;
+class CLoadingDialog;
 
 //-----------------------------------------------------------------------------
 // Purpose: multiplayer options property page
@@ -50,24 +51,27 @@ private:
 	void RemapLogo();
 
 	void OnTextChanged(vgui::Panel *panel);
-	void OnSliderMoved(KeyValues *data);
+//	void OnSliderMoved(KeyValues *data);
 	void OnApplyButtonEnable();
-
+/*
 	void RemapPalette(char *filename, int topcolor, int bottomcolor);
 	void RemapLogoPalette(char *filename, int r, int g, int b);
 
 	void ColorForName(char const *pszColorName, int &r, int &g, int &b);
-
-	CBitmapImagePanel *m_pModelImage;
+*/
+//	CBitmapImagePanel *m_pModelImage;
+	vgui::ImagePanel *m_pModelImage;
 	CLabeledCommandComboBox *m_pModelList;
+	char m_ModelName[32];
 
 	CBitmapImagePanel *m_pLogoImage;
 	CLabeledCommandComboBox *m_pLogoList;
     char m_LogoName[32];
 
-	CLabeledCommandComboBox	*m_pColorList;
+//	CLabeledCommandComboBox	*m_pColorList;
 
     CCvarTextEntry *m_pNameTextEntry;
+/*
     CCvarSlider *m_pPrimaryColorSlider;
     CCvarSlider *m_pSecondaryColorSlider;
 	CCvarToggleCheckButton *m_pHighQualityModelCheckBox;
@@ -78,8 +82,9 @@ private:
 	int	m_nLogoR;
 	int	m_nLogoG;
 	int	m_nLogoB;
-
+*/
 	vgui::DHANDLE<CMultiplayerAdvancedDialog> m_hMultiplayerAdvancedDialog;
+	vgui::DHANDLE<CLoadingDialog> m_hLoadingDialog; // VXP
 };
 
 #endif // OPTIONSSUBMULTIPLAYER_H

@@ -1294,14 +1294,13 @@ void CBasePlayer::Event_Dying()
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	BaseClass::Event_Dying();
 }
-
+/*
 // Set the activity based on an event or current state
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
 //	ResetSequence( GetActivity() );
 	int animDesired;
 	char szAnim[64];
-//	char szAnim[64];
 
 	float speed;
 
@@ -1467,9 +1466,28 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	ResetSequence( animDesired );
 	m_flCycle		= 0;
 }
-
-
+*/
 /*
+void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
+{
+	int animDesired = GetSequence();
+	Activity currAct = GetActivity();
+	Activity idealActivity = ACT_IDLE;
+//	CBaseCombatWeapon *weapon = GetActiveWeapon();
+//	Msg( weapon->GetClassname() );
+	if ( ( GetActivity() == idealActivity ) && ( GetSequence() != -1 ) )
+		return;
+	
+	animDesired = SelectWeightedSequence( idealActivity );
+	SetActivity( idealActivity );
+	
+	if ( GetSequence() == animDesired )
+		return;
+		
+	ResetSequence( animDesired );
+}
+*/
+
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
 	Activity idealActivity = GetActivity();
@@ -1482,7 +1500,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	bool isMoving = ( speed != 0.0f ) ? true : false;
 	bool isDucked = ( GetFlags() & FL_DUCKING ) ? true : false;
 	bool isStillJumping = !( GetFlags() & FL_ONGROUND ) && ( GetActivity() == ACT_HOP );
-	bool isStillReloading = ( GetActivity() == ACT_CLIMB_UP ) ? true : false;
+	bool isStillReloading = ( GetActivity() == ACT_RELOAD ) ? true : false;
 	bool isRunning = false;
 
 	if ( speed > ARBITRARY_RUN_SPEED )
@@ -1507,6 +1525,8 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		idealActivity = ACT_RANGE_ATTACK1;
 		break;
 	case PLAYER_IDLE:
+		idealActivity = ACT_IDLE;
+		break;
 	case PLAYER_WALK:
 		// Are we still jumping?
 		// If so, keep playing the jump animation.
@@ -1585,7 +1605,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 
 	ResetSequence( animDesired );
 }
-*/
+
 /*
 ===========
 WaterMove
@@ -4555,6 +4575,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		EquipSuit();
 
 		// Give the player everything!
+		/*
 		GiveAmmo( 255,	"SmallRound");
 		GiveAmmo( 255,	"MediumRound");
 		GiveAmmo( 255,	"LargeRound");
@@ -4573,6 +4594,66 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveNamedItem( "weapon_gauss" );
 		GiveNamedItem( "weapon_physcannon" );
 		GiveNamedItem( "weapon_rpg" );
+		*/
+
+		GiveAmmo( 255,    "FlareRound");
+        GiveAmmo( 255,    "SniperRound");
+        GiveAmmo( 255,    "SniperPenetratedRound");
+        GiveAmmo( 255,    "Slam");
+        GiveAmmo( 255,    "Tripwire");
+        GiveAmmo( 255,    "Molotov");
+        GiveAmmo( 255,    "Brickbat");
+        GiveAmmo( 255,    "Rock");
+        GiveAmmo( 255,    "Thumper");
+        GiveAmmo( 255,    "Gravity");
+        GiveAmmo( 255,    "Extinguisher");
+        GiveAmmo( 255,    "Battery");
+        GiveAmmo( 255,    "Hopwire");
+        GiveAmmo( 255,    "CombineCannon");
+        GiveAmmo( 255,    "SmallRound");
+        GiveAmmo( 255,    "MediumRound");
+        GiveAmmo( 255,    "LargeRound");
+        GiveAmmo( 255,    "Buckshot");
+        GiveAmmo( 255,    "AR2_Grenade");
+        GiveAmmo( 255,    "ML_Grenade");
+        GiveAmmo( 255,    "Grenade");
+        GiveAmmo( 255,    "GaussEnergy");
+
+        GiveNamedItem( "weapon_alyxgun" );
+        GiveNamedItem( "weapon_ar1" );
+        GiveNamedItem( "weapon_binoculars" );
+        GiveNamedItem( "weapon_brickbat" );
+        GiveNamedItem( "weapon_bugbait" );
+        GiveNamedItem( "weapon_cguard" );
+    //    GiveNamedItem( "weapon_cubemap" );
+        GiveNamedItem( "weapon_extinguisher" );
+        GiveNamedItem( "weapon_flaregun" );
+        GiveNamedItem( "weapon_hmg1" );
+        GiveNamedItem( "weapon_hopwire" );
+        GiveNamedItem( "weapon_iceaxe" );
+        GiveNamedItem( "weapon_immolator" );
+        GiveNamedItem( "weapon_irifle" );
+        GiveNamedItem( "weapon_manhack" );
+        GiveNamedItem( "weapon_ml" );
+        GiveNamedItem( "weapon_molotov" );
+        GiveNamedItem( "weapon_physgun" );
+        GiveNamedItem( "weapon_rollerwand" );
+        GiveNamedItem( "weapon_slam" );
+        GiveNamedItem( "weapon_smg2" );
+        GiveNamedItem( "weapon_sniperrifle" );
+        GiveNamedItem( "weapon_stickylauncher" );
+        GiveNamedItem( "weapon_stunstick" );
+        GiveNamedItem( "weapon_thumper" );
+        GiveNamedItem( "weapon_frag" );
+        GiveNamedItem( "weapon_crowbar" );
+        GiveNamedItem( "weapon_pistol" );
+        GiveNamedItem( "weapon_ar2" );
+        GiveNamedItem( "weapon_shotgun" );
+        GiveNamedItem( "weapon_smg1" );
+        GiveNamedItem( "weapon_gauss" );
+        GiveNamedItem( "weapon_physcannon" );
+        GiveNamedItem( "weapon_rpg" );
+
 		if ( GetHealth() < 100 )
 		{
 			TakeHealth( 25, DMG_GENERIC );

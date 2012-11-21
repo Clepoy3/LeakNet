@@ -55,7 +55,7 @@ private:
 	void		RevertVidSettings();
 	void		ApplyVidSettings(bool bForceRefresh);
 
-    void        SetCurrentRendererComboItem();
+//    void        SetCurrentRendererComboItem();
     void        SetCurrentResolutionComboItem();
 
 	void		OnButtonChecked(KeyValues *data);
@@ -64,7 +64,7 @@ private:
 	void		PrepareResolutionList( void );
 
 	vgui::ComboBox *m_pMode;
-	vgui::ComboBox *m_pRenderer;
+//	vgui::ComboBox *m_pRenderer;
 	vgui::ComboBox *m_pColorDepth;
 	vgui::CheckButton *m_pWindowed;
 	vgui::ComboBox *m_pAspectRatio;
@@ -72,10 +72,10 @@ private:
 	CCvarSlider		*m_pBrightnessSlider;
 	CCvarSlider		*m_pGammaSlider;
 
-    char            m_pszRenderNames[3][32];
+//    char            m_pszRenderNames[3][32];
 	char            m_pszAspectName[2][32];
 
-    int             m_iStartRenderer;
+//    int             m_iStartRenderer;
     int             m_iStartResolution;
 	bool			m_bStartWidescreen;
 

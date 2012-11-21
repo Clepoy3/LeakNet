@@ -61,7 +61,7 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	}
 
 	PrepareResolutionList();
-
+/*
     // load up the renderer display names
     unicodeText = localize()->Find("#GameUI_Software");
     localize()->ConvertUnicodeToANSI(unicodeText, m_pszRenderNames[0], 32);
@@ -76,12 +76,12 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
     {
         m_pRenderer->AddItem( m_pszRenderNames[i], NULL );
     }
-
+*/
 	m_pColorDepth = new ComboBox( this, "ColorDepth", 2, false );
 	m_pColorDepth->AddItem("Medium (16 bit)", NULL);
 	m_pColorDepth->AddItem("Highest (32 bit)", NULL);
 
-    SetCurrentRendererComboItem();
+//    SetCurrentRendererComboItem();
 
 	m_pWindowed = new vgui::CheckButton( this, "Windowed", "#GameUI_Windowed" );
 	m_pWindowed->SetSelected( m_CurrentSettings.windowed ? true : false);
@@ -158,13 +158,14 @@ void COptionsSubVideo::OnResetData()
 	m_pGammaSlider->Reset();
     m_pWindowed->SetSelected(m_CurrentSettings.windowed);
 
-    SetCurrentRendererComboItem();
+//    SetCurrentRendererComboItem();
     SetCurrentResolutionComboItem();
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+/*
 void COptionsSubVideo::SetCurrentRendererComboItem()
 {
 	if ( !stricmp( m_CurrentSettings.renderer, "software" ) )
@@ -186,6 +187,7 @@ void COptionsSubVideo::SetCurrentRendererComboItem()
 	}
     m_pRenderer->ActivateItemByRow( m_iStartRenderer );
 }
+*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -285,7 +287,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 			m_CurrentSettings.bpp = 16;
 		}
 	}
-
+/*
 	if ( m_pRenderer )
 	{
 		char sz[ 256 ];
@@ -304,7 +306,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 			strcpy( m_CurrentSettings.renderer, "d3d" );
 		}
 	}
-
+*/
 	if ( m_pWindowed )
 	{
 		bool checked = m_pWindowed->IsSelected();
@@ -324,8 +326,8 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 	engine->ClientCmd( szCmd );
 
 	// Set renderer
-	sprintf( szCmd, "_setrenderer %s %s\n", p->renderer, p->windowed ? "windowed" : "fullscreen" ); // GoldSrc string
-	//sprintf( szCmd, "_setrenderer %s\n", /*p->renderer, */p->windowed ? "windowed" : "fullscreen" ); // SRC string
+//	sprintf( szCmd, "_setrenderer %s %s\n", p->renderer, p->windowed ? "windowed" : "fullscreen" ); // GoldSrc string
+	sprintf( szCmd, "_setrenderer %s\n", /*p->renderer, */p->windowed ? "windowed" : "fullscreen" ); // SRC string
 
 	engine->ClientCmd( szCmd );
 
@@ -365,6 +367,7 @@ void COptionsSubVideo::OnTextChanged(Panel *pPanel, const char *pszText)
             OnDataChanged();
         }
     }
+	/*
     else if (pPanel == m_pRenderer)
     {
         if (strcmp(pszText, m_pszRenderNames[m_iStartRenderer]))
@@ -372,6 +375,7 @@ void COptionsSubVideo::OnTextChanged(Panel *pPanel, const char *pszText)
             OnDataChanged();
         }
     }
+	*/
 	else if (pPanel == m_pAspectRatio )
     {
 		if ( strcmp(pszText, m_pszAspectName[m_bStartWidescreen] ) )

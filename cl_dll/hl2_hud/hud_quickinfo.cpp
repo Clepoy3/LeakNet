@@ -25,7 +25,8 @@
 
 #define	HEALTH_WARNING_THRESHOLD	25
 
-static ConVar	hud_quickinfo( "hud_quickinfo", "0", FCVAR_ARCHIVE );
+//static ConVar	hud_quickinfo( "hud_quickinfo", "0", FCVAR_ARCHIVE );
+static ConVar	hud_quickinfo( "hud_quickinfo", "1", FCVAR_ARCHIVE );
 
 /*
 ==================================================

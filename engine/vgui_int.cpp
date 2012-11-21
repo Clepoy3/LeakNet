@@ -722,6 +722,24 @@ void VGui_NotifyOfServerConnect(const char *game, int IP, int port)
 	staticGameUIFuncs->ConnectToServer(game, IP, port);
 }
 
+
+void VGui_NotifyOfServerProgress( float progress, const char *statusText )
+{
+	if (!staticGameUIFuncs)
+		return;
+
+	staticGameUIFuncs->UpdateProgressBar(progress, statusText);
+}
+
+
+void VGui_NotifyOfServerLoading()
+{
+	if (!staticGameUIFuncs)
+		return;
+
+	staticGameUIFuncs->LoadingStarted("loading", "Test"); // VXP
+}
+
 void VGui_NotifyOfServerDisconnect()
 {
 	if (!staticGameUIFuncs)

@@ -9,6 +9,7 @@
 
 #include "OptionsSubMultiplayer.h"
 #include "MultiplayerAdvancedDialog.h"
+#include "LoadingDialog.h"
 #include <stdio.h>
 
 #include <vgui_controls/Button.h>
@@ -29,6 +30,7 @@
 #include "FileSystem.h"
 #include "EngineInterface.h"
 #include "BitmapImagePanel.h"
+#include <vgui_controls/ImagePanel.h>
 #include "UtlBuffer.h"
 #include "ModInfo.h"
 
@@ -81,7 +83,7 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 
 	new Label( this, "NameLabel", "#GameUI_PlayerName" );
 	m_pNameTextEntry = new CCvarTextEntry( this, "NameEntry", "name" );
-
+/*
 	m_pPrimaryColorSlider = new CCvarSlider( this, "Primary Color Slider", "#GameUI_PrimaryColor",
 		0.0f, 255.0f, "topcolor" );
 
@@ -89,17 +91,18 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 		0.0f, 255.0f, "bottomcolor" );
 
 	m_pHighQualityModelCheckBox = new CCvarToggleCheckButton( this, "High Quality Models", "#GameUI_HighModels", "cl_himodels" );
-
+*/
 	m_pModelList = new CLabeledCommandComboBox( this, "Player model" );
+	m_ModelName[0] = 0;
 	InitModelList( m_pModelList );
 
 	m_pLogoList = new CLabeledCommandComboBox( this, "SpraypaintList" );
     m_LogoName[0] = 0;
 	InitLogoList( m_pLogoList );
-
+/*
 	m_pColorList = new CLabeledCommandComboBox( this, "SpraypaintColor" );
 
-//	char const *currentcolor = engine->pfnGetCvarString( "cl_logocolor" );
+	char const *currentcolor = engine->pfnGetCvarString( "cl_logocolor" );
 	char const *currentcolor = NULL;
 	ConVar *var = (ConVar *)cvar->FindVar( "cl_logocolor" );
 	if ( var )
@@ -121,20 +124,21 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 	}
 	m_pColorList->SetInitialItem( selected );
 	m_pColorList->AddActionSignalTarget( this );
-
-	m_pModelImage = new CBitmapImagePanel( this, "ModelImage", NULL );
+*/
+//	m_pModelImage = new CBitmapImagePanel( this, "ModelImage", NULL );
+	m_pModelImage = new ImagePanel( this, "ModelImage" );
 	m_pModelImage->AddActionSignalTarget( this );
 
 	m_pLogoImage = new CBitmapImagePanel( this, "LogoImage", NULL );
 	m_pLogoImage->AddActionSignalTarget( this );
-
+/*
 	m_nTopColor = DEFAULT_SUIT_HUE;
 	m_nBottomColor = DEFAULT_PLATE_HUE;
 	
 	m_nLogoR = 255;
 	m_nLogoG = 255;
 	m_nLogoB = 255;
-
+*/
 	LoadControlSettings("Resource/OptionsSubMultiplayer.res");
 	
 	// turn off model selection stuff if the mod specifies "nomodels" in the liblist.gam file
@@ -146,12 +150,17 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 		{
 			m_pModelImage->SetVisible( false );
 		}
+		
+		if ( m_pLogoImage )
+		{
+			m_pLogoImage->SetVisible( false );
+		}
 
 		if ( m_pModelList )
 		{
 			m_pModelList->SetVisible( false );
 		}
-
+/*
 		if ( m_pPrimaryColorSlider )
 		{
 			m_pPrimaryColorSlider->SetVisible( false );
@@ -161,7 +170,7 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 		{
 			m_pSecondaryColorSlider->SetVisible( false );
 		}
-
+*/
 		// #GameUI_PlayerModel (from "Resource/OptionsSubMultiplayer.res")
 		pTempPanel = FindChildByName( "Label1" );
 
@@ -178,7 +187,7 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 			pTempPanel->SetVisible( false );
 		}
 	}
-
+/*
 	// turn off the himodel stuff if the mod specifies "nohimodel" in the liblist.gam file
 	if ( ModInfo().NoHiModel() )
 	{
@@ -187,6 +196,7 @@ COptionsSubMultiplayer::COptionsSubMultiplayer(vgui::Panel *parent) : vgui::Prop
 			m_pHighQualityModelCheckBox->SetVisible( false );
 		}
 	}
+*/
 }
 
 //-----------------------------------------------------------------------------
@@ -202,12 +212,17 @@ COptionsSubMultiplayer::~COptionsSubMultiplayer()
 void COptionsSubMultiplayer::OnCommand( const char *command )
 {
 	if ( !stricmp( command, "Advanced" ) )
-	{
+	{/*
 		if (!m_hMultiplayerAdvancedDialog.Get())
 		{
 			m_hMultiplayerAdvancedDialog = new CMultiplayerAdvancedDialog(this);
 		}
-		m_hMultiplayerAdvancedDialog->Activate();
+		m_hMultiplayerAdvancedDialog->Activate();*/
+		if (!m_hLoadingDialog.Get())
+		{
+			m_hLoadingDialog = new CLoadingDialog(this);
+		}
+		m_hLoadingDialog->Activate();
 	}
 
 	BaseClass::OnCommand( command );
@@ -270,9 +285,17 @@ void COptionsSubMultiplayer::InitLogoList( CLabeledCommandComboBox *cb )
 	FileFindHandle_t fh;
 	char directory[ 512 ];
 
-	sprintf( directory, "logos/*.bmp" );
+//	sprintf( directory, "logos/*.bmp" );
+	sprintf( directory, "materials/VGUI/logos/*.vtf" );
+	
+	ConVar *cl_logofile = (ConVar *)cvar->FindVar( "cl_logofile" );
+	if ( !cl_logofile )
+		return;
+	
+	const char *logofile = cl_logofile->GetString();
 
 	char const *fn = filesystem()->FindFirst( directory, &fh );
+	int i = 0, initialItem = 0; 
 	bool AddedItem = false;
 
 	while ( fn )
@@ -287,10 +310,17 @@ void COptionsSubMultiplayer::InitLogoList( CLabeledCommandComboBox *cb )
 			{
 				filename[ strlen( filename ) - 4 ] = 0;
 			}
+			
+			// check to see if this is the one we have set
+			if (!Q_stricmp(filename, logofile))
+			{
+				initialItem = i;
+			}
 
 			cb->AddItem( filename, "" );
 			AddedItem = true;
 		}
+		i++;
 		fn = filesystem()->FindNext( fh );
 	}
 
@@ -299,7 +329,8 @@ void COptionsSubMultiplayer::InitLogoList( CLabeledCommandComboBox *cb )
 	// FIXME:  Retrieve from somewhere
 	if ( AddedItem )
 	{
-		cb->ActivateItem( 0 );
+	//	cb->ActivateItem( 0 );
+		cb->ActivateItem( initialItem );
 	}
 }
 
@@ -310,7 +341,7 @@ void COptionsSubMultiplayer::InitLogoList( CLabeledCommandComboBox *cb )
 void COptionsSubMultiplayer::InitModelList( CLabeledCommandComboBox *cb )
 {
 	// cleanup old remap files
-	filesystem()->RemoveFile( "models/player/remapped.bmp", NULL );
+//	filesystem()->RemoveFile( "models/player/remapped.bmp", NULL );
 
 	// Find out images
 	FileFindHandle_t fh;
@@ -346,6 +377,7 @@ void COptionsSubMultiplayer::InitModelList( CLabeledCommandComboBox *cb )
 		{
 			char modelname[ 256 ];
 			_snprintf( modelname, sizeof( modelname ), "%s", fn );
+		//	_snprintf( modelname, sizeof( modelname ), "models/player/%s.mdl", fn );
 
 			char *spot = strstr( modelname, ".mdl" );
 			if ( spot )
@@ -355,8 +387,11 @@ void COptionsSubMultiplayer::InitModelList( CLabeledCommandComboBox *cb )
 
 			_snprintf( cmdstring, sizeof( cmdstring ), "model %s\n", modelname );
 
-
-			if ( !stricmp( currentmodel, modelname ) )
+			char testmodel[ 256 ];
+			_snprintf( testmodel, sizeof( testmodel ), "models/player/%s.mdl", modelname );
+		//	Msg( "currentmodel: %s, modelname: %s, testmodel: %s\n", currentmodel, modelname, testmodel );
+		//	if ( !stricmp( currentmodel, modelname ) )
+			if ( !stricmp( currentmodel, testmodel ) )
 			{
 				selected = c;
 			}
@@ -385,8 +420,9 @@ void COptionsSubMultiplayer::RemapLogo()
 		return;
 
 	char texture[ 256 ];
-	sprintf( texture, "logos/remapped" );
-
+//	sprintf( texture, "logos/remapped" );
+	sprintf( texture, "VGUI/logos/%s", logoname );
+/*
 	int r, g, b;
 	const char *colorname = m_pColorList->GetActiveItemCommand();
 	if ( !colorname || !colorname[ 0 ] )
@@ -395,7 +431,7 @@ void COptionsSubMultiplayer::RemapLogo()
 
 	ColorForName( colorname, r, g, b );
 	RemapLogoPalette( logoname, r, g, b );
-
+*/
 	m_pLogoImage->setTexture( texture );
 }
 
@@ -411,11 +447,14 @@ void COptionsSubMultiplayer::RemapModel()
 		return;
 
 	char texture[ 256 ];
-	sprintf( texture, "models/player/remapped" );
+//	sprintf( texture, "models/player/remapped" );
+//	sprintf( texture, "VGUI/playermodels/%s", modelname );
+	sprintf( texture, "playermodels/%s", modelname );
 
-	RemapPalette( modelname, m_nTopColor, m_nBottomColor );
+//	RemapPalette( modelname, m_nTopColor, m_nBottomColor );
 
-	m_pModelImage->setTexture( texture );
+//	m_pModelImage->setTexture( texture );
+	m_pModelImage->SetImage( scheme()->GetImage( texture, false ) );
 }
 
 
@@ -436,14 +475,15 @@ void COptionsSubMultiplayer::OnTextChanged(vgui::Panel *panel)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+/*
 void COptionsSubMultiplayer::OnSliderMoved(KeyValues *data)
 {
-    m_nTopColor = (int) m_pPrimaryColorSlider->GetSliderValue();
-    m_nBottomColor = (int) m_pSecondaryColorSlider->GetSliderValue();
+//    m_nTopColor = (int) m_pPrimaryColorSlider->GetSliderValue();
+//    m_nBottomColor = (int) m_pSecondaryColorSlider->GetSliderValue();
 
 	RemapModel();
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -459,12 +499,12 @@ void COptionsSubMultiplayer::OnApplyButtonEnable()
 MessageMapItem_t COptionsSubMultiplayer::m_MessageMap[] =
 {
 	MAP_MESSAGE_PTR( COptionsSubMultiplayer, "TextChanged", OnTextChanged, "panel" ),
-	MAP_MESSAGE_PARAMS( COptionsSubMultiplayer, "SliderMoved", OnSliderMoved ),
+//	MAP_MESSAGE_PARAMS( COptionsSubMultiplayer, "SliderMoved", OnSliderMoved ),
 	MAP_MESSAGE( COptionsSubMultiplayer, "ControlModified", OnApplyButtonEnable ),
 };
 IMPLEMENT_PANELMAP( COptionsSubMultiplayer, BaseClass );
 
-
+/*
 //#include <windows.h>
 
 #define DIB_HEADER_MARKER   ((WORD) ('M' << 8) | 'B')
@@ -673,11 +713,11 @@ void COptionsSubMultiplayer::RemapLogoPalette( char *filename, int r, int g, int
 
 			lpbmi = (LPBITMAPINFO)pDIB;
 
-			/* get pointer to BITMAPCOREINFO (old 1.x) */
+			// get pointer to BITMAPCOREINFO (old 1.x)
 			lpbmc = (LPBITMAPCOREINFO)pDIB;
 
 
-			/* is this a Win 3.0 DIB? */
+			// is this a Win 3.0 DIB?
 			bool bWinStyleDIB = true; // IS_WIN30_DIB(lpbi);
 
 			float f = 0;
@@ -719,6 +759,7 @@ void COptionsSubMultiplayer::RemapLogoPalette( char *filename, int r, int g, int
 		filesystem()->Close( file );
 	}
 }
+*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -732,29 +773,34 @@ void COptionsSubMultiplayer::OnResetData()
 //-----------------------------------------------------------------------------
 void COptionsSubMultiplayer::OnApplyChanges()
 {
-	m_pPrimaryColorSlider->ApplyChanges();
-	m_pSecondaryColorSlider->ApplyChanges();
+//	m_pPrimaryColorSlider->ApplyChanges();
+//	m_pSecondaryColorSlider->ApplyChanges();
 	m_pModelList->ApplyChanges();
+	m_pModelList->GetText(m_ModelName, sizeof(m_ModelName));
 	m_pLogoList->ApplyChanges();
     m_pLogoList->GetText(m_LogoName, sizeof(m_LogoName));
-	m_pColorList->ApplyChanges();	
-	m_pHighQualityModelCheckBox->ApplyChanges();
+//	m_pColorList->ApplyChanges();	
+//	m_pHighQualityModelCheckBox->ApplyChanges();
 	m_pNameTextEntry->ApplyChanges();
-
+/*
 	// hack, get command and skip over cvarname
 	const char *colorname = m_pColorList->GetActiveItemCommand();
 	if ( !colorname || !colorname[ 0 ] )
 		return;
 	colorname += strlen("cl_logocolor ");
-
+*/
 	// save the logo name
 	char cmd[512];
 	_snprintf(cmd, sizeof(cmd) - 1, "cl_logofile %s\n", m_LogoName);
 	engine->ClientCmd(cmd);
-
+	
+	// save the model name
+	_snprintf(cmd, sizeof(cmd) - 1, "model models/player/%s.mdl\n", m_ModelName);
+	engine->ClientCmd(cmd);
+/*
 	int r, g, b;
 	ColorForName( colorname, r, g, b );
-	
+
 	// Create a pldecal.wad file from the logo/remapped
 	char infile[ 256 ];
 	FileHandle_t file;
@@ -783,10 +829,10 @@ void COptionsSubMultiplayer::OnApplyChanges()
 		GlobalUnlock( (HGLOBAL)hDIB );
 
 		// Create .wad from the raw data
-		UpdateLogoWAD( (void *)hDIB, r, g, b );
+	//	UpdateLogoWAD( (void *)hDIB, r, g, b );
 
 		GlobalFree( (HGLOBAL)hDIB );
 	}
-
 	filesystem()->Close( file );
+*/
 }

@@ -48,6 +48,7 @@ public:
 	virtual void LoadingStarted(const char *resourceType, const char *resourceName) = 0;
 	virtual void LoadingFinished(const char *resourceType, const char *resourceName) = 0;
 
+	virtual bool UpdateProgressBar(int progress, const char *statusText) = 0;
 	virtual void StartProgressBar(const char *progressType, int numProgressPoints) = 0;
 	virtual int	 ContinueProgressBar(int progressPoint, float progressFraction) = 0;
 	virtual void StopProgressBar(bool bError, const char *failureReasonIfAny, const char *extendedReason) = 0;

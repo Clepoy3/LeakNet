@@ -78,6 +78,10 @@
 #include "staticpropmgr.h"
 #include "gameeventmanager.h"
 
+#include <GameUI/IGameUI.h>
+#include <BaseUI/IBaseUI.h>
+#include <GameUI/IGameConsole.h>
+
 
 int host_frameticks = 0;
 int host_tickcount = 0;
@@ -189,6 +193,8 @@ extern qboolean gfBackground;
 extern	int giActive;
 extern qboolean	g_bInEditMode;
 
+extern IGameUI *staticGameUIFuncs; // VXP
+
 static bool host_checkheap = false;
 
 CCommonHostState host_state;
@@ -264,6 +270,10 @@ void Host_EndGame (char *message, ...)
 	va_end (argptr);
 	Con_Printf ("Host_EndGame: %s\n",string);
 
+	// VXP: Loading screen
+	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+
 #ifndef SWDS
 	scr_disabled_for_loading = true;
 #endif
@@ -322,6 +332,10 @@ void Host_Error (char *error, ...)
 		Sys_Error ("Host_Error: recursively entered");
 	}
 	inerror = true;
+
+	// VXP: Loading screen
+	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
 
 #ifndef SWDS
 	CL_WriteMessageHistory();

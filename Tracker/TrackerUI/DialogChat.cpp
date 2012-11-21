@@ -761,7 +761,7 @@ void CDialogChat::PlayNewMessageSound()
 	// play a sound
 	if (GetDoc()->Data()->GetInt("User/Sounds/Message", 1))
 	{
-		surface()->PlaySound("Friends\\Message.wav");
+		surface()->PlaySound("..\\..\\Platform\\Friends\\Message.wav");
 	}
 }
 

@@ -72,7 +72,7 @@ static CMaster g_MasterServer;
 IMaster *master = (IMaster *)&g_MasterServer;
 
 #define	HEARTBEAT_SECONDS	300
-#define MASTER_PARSE_FILE "woncomm.lst"
+#define MASTER_PARSE_FILE "scripts/woncomm.lst"
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -124,6 +124,7 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 	COM_FileBase( com_gamedir, szGD );
 
 	// Send to master
+	Msg("CHALLENGE: %i", p->heartbeatchallenge);
 	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
 		1, active, PROTOCOL_VERSION, szGD );
 

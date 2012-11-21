@@ -42,6 +42,8 @@ extern ConVar sensitivity;
 
 ConVar zoom_sensitivity_ratio( "zoom_sensitivity_ratio", "1.0", 0, "Additional mouse sensitivity scale factor applied when FOV is zoomed in." );
 
+ConVar	plmodel( "model", "", FCVAR_ARCHIVE | FCVAR_USERINFO, "Current model name" );
+
 extern void RecvProxy_FOV( const CRecvProxyData *pData, void *pStruct, void *pOut );
 
 // -------------------------------------------------------------------------------- //
@@ -338,7 +340,8 @@ void C_BasePlayer::Spawn( void )
 	m_Local.m_flFallVelocity = 0;
 
 //	SetModel( "models/player.mdl" );
-	SetModel( "models/humans/male_01.mdl" );
+//	SetModel( "models/humans/male_01.mdl" );
+	SetModel( plmodel.GetString() );
 	SetSequence( SelectWeightedSequence( ACT_IDLE ) );
 
 	if ( GetFlags() & FL_DUCKING ) 

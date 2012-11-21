@@ -99,8 +99,9 @@ void CPlayerListDialog::Activate()
 		const char *playerName = engine->PlayerInfo_ValueForKey(i, "name");
 		data->SetString("Name", playerName);
 		data->SetString("TID", idString);
-		const char *userName = g_pFriendsUser->GetUserName(userID);
-		data->SetString("TName", userName);
+	//	const char *userName = g_pFriendsUser->GetUserName(userID);
+	//	data->SetString("TName", userName);
+		data->SetString("TName", "InDev");
 		data->SetInt("index", i);
 
 		// add to the list

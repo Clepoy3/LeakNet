@@ -913,9 +913,11 @@ void CGameUI::RunFrame()
 //-----------------------------------------------------------------------------
 void CGameUI::ConnectToServer(const char *game, int IP, int port)
 {
-
-	//engine->pfnClientCmd("mp3 stop\n");
-	// SRC version
+//	Msg( "CGameUI::ConnectToServer\n" );
+	LoadingFinished( "Shit", "Happens" );
+	StopProgressBar( false, "Shit eater", "You are" );
+//	engine->pfnClientCmd("mp3 stop\n");
+//	SRC version
 //	engine->ClientCmd("stop\n");
 	baseuifuncs->HideGameUI();
 
@@ -948,6 +950,12 @@ void CGameUI::DisconnectFromServer()
 //-----------------------------------------------------------------------------
 void CGameUI::LoadingStarted(const char *resourceType, const char *resourceName)
 {
+//	Msg( "CGameUI::LoadingStarted\n" );
+	if (!g_hLoadingDialog.Get())
+	{
+		g_hLoadingDialog = new CLoadingDialog(staticPanel);
+	}
+	g_hLoadingDialog->Activate();
 	g_VModuleLoader.PostMessageToAllModules(new KeyValues("LoadingStarted", "type", resourceType, "name", resourceName));
 
 	if (!stricmp(resourceType, "transition"))
@@ -959,6 +967,13 @@ void CGameUI::LoadingStarted(const char *resourceType, const char *resourceName)
 	{
 		staticPanel->SetBackgroundRenderState(CBasePanel::BACKGROUND_LOADING);
 	}
+	StartProgressBar( "Loading", 100 );
+	/*
+	StartProgressBar( "Loading", 100 );
+	ContinueProgressBar( 10, 0.0f );
+	SetProgressBarStatusText( "Test" );
+	SetSecondaryProgressBarText( "Test2" );
+	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -966,6 +981,7 @@ void CGameUI::LoadingStarted(const char *resourceType, const char *resourceName)
 //-----------------------------------------------------------------------------
 void CGameUI::LoadingFinished(const char *resourceType, const char *resourceName)
 {
+//	Msg( "CGameUI::LoadingFinished\n" );
 	// notify all the modules
 	g_VModuleLoader.PostMessageToAllModules(new KeyValues("LoadingFinished", "type", resourceType, "name", resourceName));
 
@@ -974,6 +990,28 @@ void CGameUI::LoadingFinished(const char *resourceType, const char *resourceName
 
 	// hide the UI
 	baseuifuncs->HideGameUI();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Updates progress bar
+// Output : Returns true if screen should be redrawn
+//-----------------------------------------------------------------------------
+bool CGameUI::UpdateProgressBar(int progress, const char *statusText)
+{
+	// if either the progress bar or the status text changes, redraw the screen
+	bool bRedraw = false;
+
+	if ( ContinueProgressBar( progress, 0.0f ) )
+	{
+		bRedraw = true;
+	}
+		
+	if ( SetProgressBarStatusText( statusText ) )
+	{
+		bRedraw = true;
+	}
+
+	return bRedraw;
 }
 
 //-----------------------------------------------------------------------------

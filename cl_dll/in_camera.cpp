@@ -430,7 +430,7 @@ void CInput::CAM_ToThirdPerson(void)
 	if ( engine->GetMaxClients() > 1 )
 	{
 		// no thirdperson in multiplayer.
-		return;
+		//return;
 	}
 #endif
 

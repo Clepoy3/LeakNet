@@ -472,6 +472,7 @@ Received connection initiation response from server, set up connection
 */
 void CL_ConnectClient( void )
 {
+//	Msg( "CL_ConnectClient\n" );
 	// Already connected?
 	if ( cls.state == ca_connected )
 	{
@@ -598,6 +599,7 @@ void CL_ConnectionlessPacket (void)
 	case S2C_CONNECTION:
 		if ( cls.state == ca_connecting )
 		{
+			VGui_NotifyOfServerLoading(); // VXP
 			CL_ConnectClient();
 		}
 		break;
@@ -1069,7 +1071,8 @@ char *CL_GetCDKeyHash( void )
 void CL_CheckLogoFile( char *protinfo, int length )
 {
 	char logotexture[ 512 ];
-	Q_snprintf( logotexture, sizeof( logotexture ), "materials/decals/%s.vtf", cl_logofile.GetString() );
+//	Q_snprintf( logotexture, sizeof( logotexture ), "materials/decals/%s.vtf", cl_logofile.GetString() );
+	Q_snprintf( logotexture, sizeof( logotexture ), "materials/VGUI/logos/%s.vtf", cl_logofile.GetString() );
 	if ( !g_pFileSystem->FileExists( logotexture ) )
 		return;
 
@@ -1311,6 +1314,8 @@ void CL_Connect_f (void)
 	// Store off the last address we tried to get to
 	strcpy ( cls.retry_address, cls.servername );
 
+	VGui_NotifyOfServerProgress( 50, "LOL" ); // VXP
+
 	// For the check for resend timer to fire a connection / getchallenge request.
 	cls.state = ca_connecting;
 	// Force connection request to fire.
@@ -1403,11 +1408,13 @@ void CL_SignonReply (void)
 			cls.netchan.message.WriteByte (clc_stringcmd);
 			Q_snprintf ( str, sizeof( str ), "spawn %i", cl.servercount );
 			cls.netchan.message.WriteString (str);
+			VGui_NotifyOfServerProgress( 10, "case 1" );
 		}
 		break;
 		
 	case 2:	
 		{
+			VGui_NotifyOfServerProgress( 15, "case 1" );
 			cls.netchan.message.WriteByte (clc_stringcmd);
 			Q_snprintf( str, sizeof( str ), "begin %i", cl.servercount );
 			cls.netchan.message.WriteString ( str );
@@ -1423,6 +1430,7 @@ void CL_SignonReply (void)
 		
 	case 3:
 		{
+			VGui_NotifyOfServerProgress( 75, "case 1" );
 			SpatialPartition()->SuppressLists( PARTITION_ALL_CLIENT_EDICTS, false );
 
 			// This has to happen here, in phase 3, because it is in this phase

@@ -222,6 +222,7 @@ void CSys::Printf(char *fmt, ...)
 
 	va_start (argptr, fmt);
 	vsprintf (szText, fmt, argptr);
+//	Q_vsnprintf (szText, sizeof( szText ), fmt, argptr);
 	va_end (argptr);
 
 	// Get Current text and append it.
@@ -232,6 +233,7 @@ void CSys::Printf(char *fmt, ...)
 // Purpose: 
 // Output : char *
 //-----------------------------------------------------------------------------
+/*
 char *CSys::ConsoleInput (void)
 {
 	INPUT_RECORD	recs[1024];
@@ -299,6 +301,84 @@ char *CSys::ConsoleInput (void)
 
 				}
 			}
+		}
+	}
+
+	return NULL;
+}
+*/
+
+char *CSys::ConsoleInput (void)
+{
+	while ( 1 )
+	{
+		INPUT_RECORD	recs[1024];
+		unsigned long	dummy;
+		unsigned long	numread, numevents;
+		if( !g_pVCR->Hook_GetNumberOfConsoleInputEvents( hinput, &numevents ) )
+			return NULL;
+
+		if (numevents <= 0)
+			break;
+
+		if ( !g_pVCR->Hook_ReadConsoleInput(hinput, recs, 1, &numread) )
+			return NULL;
+
+		if (numread == 0)
+			return NULL;
+			
+		for ( int i=0; i < (int)numread; i++ )
+		{
+			INPUT_RECORD *pRec = &recs[i];
+			if ( pRec->EventType != KEY_EVENT )
+				continue;
+
+		//	if ( recs[0].EventType == KEY_EVENT )
+		//	{
+			//	if ( !recs[0].Event.KeyEvent.bKeyDown )
+				if ( pRec->Event.KeyEvent.bKeyDown )
+				{
+				//	ch = recs[0].Event.KeyEvent.uChar.AsciiChar;
+					char	ch;
+				//	int		nLen;
+					ch = pRec->Event.KeyEvent.uChar.AsciiChar;
+					switch (ch)
+					{
+						case '\r':
+							WriteFile(houtput, "\r\n", 2, &dummy, NULL);	
+							if (console_textlen)
+							{
+								console_text[console_textlen] = 0;
+								console_textlen = 0;
+								return console_text;
+							}
+							break;
+
+						case '\b':
+							if (console_textlen)
+							{
+								console_textlen--;
+								WriteFile(houtput, "\b \b", 3, &dummy, NULL);	
+							}
+							break;
+
+						default:
+						//	if (ch >= ' ')
+							if ( ( ch >= ' ') && ( ch <= '~' ) )	// dont' accept nonprintable chars
+							{
+								if (console_textlen < sizeof(console_text)-2)
+								{
+									WriteFile(houtput, &ch, 1, &dummy, NULL);	
+									console_text[console_textlen] = ch;
+									console_textlen++;
+								}
+							}
+
+							break;
+
+					}
+				}
+		//	}
 		}
 	}
 

@@ -587,7 +587,9 @@ void Panel::SetParent(VPANEL newParent)
 //-----------------------------------------------------------------------------
 void Panel::OnChildAdded(VPANEL child)
 {
-	Assert( !m_bInPerformLayout );
+//	Assert( !m_bInPerformLayout );
+	if ( m_bInPerformLayout )
+		Warning( "Panel::OnChildAdded: Performed Layout!\n" );
 }
 
 //-----------------------------------------------------------------------------

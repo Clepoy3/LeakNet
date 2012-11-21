@@ -47,6 +47,8 @@ public:
 	void LoadingStarted(const char *resourceType, const char *resourceName);
 	void LoadingFinished(const char *resourceType, const char *resourceName);
 
+	// progress
+	virtual bool UpdateProgressBar(int progress, const char *statusText);
 	virtual void StartProgressBar(const char *progressType, int progressSteps);
 	virtual int	 ContinueProgressBar(int progressPoint, float progressFraction);
 	virtual void StopProgressBar(bool bError, const char *failureReason, const char *extendedReason = NULL);
