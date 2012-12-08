@@ -38,7 +38,8 @@ COptionsSubAudio::COptionsSubAudio(vgui::Panel *parent) : PropertyPage(parent, N
 		0.0f, 1.0f, "volume");
 
 	m_pHEVSlider = new CCvarSlider( this, "Suit Slider", "#GameUI_HEVSuitVolume",
-		0.0f, 2.0f, "suitvolume");
+	//	0.0f, 2.0f, "suitvolume");
+		0.0f, 1.0f, "suitvolume");
 
 //	m_pMP3Slider = new CCvarSlider( this, "MP3 Volume", "#GameUI_MP3Volume",
 //		0.0f, 1.0f, "mp3volume" );

@@ -6,12 +6,17 @@
 //=============================================================================
 #include "cbase.h"
 #include "c_basehlplayer.h"
+#include "view.h"
+#include "IClientVehicle.h"
 
 extern ConVar default_fov;
 extern ConVar sensitivity;
 extern ConVar zoom_sensitivity_ratio;
 
+int m_iIDEntIndex = 0;
+
 IMPLEMENT_CLIENTCLASS_DT(C_BaseHLPlayer, DT_HL2_Player, CHL2_Player)
+	RecvPropInt( RECVINFO( m_iIDEntIndex )),
 	RecvPropDataTable(RECVINFO_DT(m_HL2Local),0, &REFERENCE_RECV_TABLE(DT_HL2Local), DataTableRecvProxy_StaticDataTable),
 END_RECV_TABLE()
 
@@ -86,7 +91,7 @@ void C_BaseHLPlayer::OnDataChanged( DataUpdateType_t updateType )
 	{
 		SetNextClientThink( CLIENT_THINK_ALWAYS );
 	}
-
+	UpdateIDTarget();
 	BaseClass::OnDataChanged( updateType );
 }
 
@@ -185,3 +190,66 @@ int C_BaseHLPlayer::DrawModel( int flags )
 
 	return iret;
 }
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+int C_BaseHLPlayer::GetIDTarget( void ) const
+{
+	return m_iIDEntIndex;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update this client's target entity
+//-----------------------------------------------------------------------------
+void C_BaseHLPlayer::UpdateIDTarget( void )
+{
+	if ( !IsLocalPlayer() )
+		return;
+
+	// If the server's forcing us to a specific ID target, use it instead
+	/*
+	if ( m_TFLocal.m_iIDEntIndex )
+	{
+		m_iIDEntIndex = m_TFLocal.m_iIDEntIndex;
+		return;
+	}
+	*/
+
+	// Clear old target and find a new one
+	m_iIDEntIndex = 0;
+
+	trace_t tr;
+	Vector vecStart, vecEnd;
+	VectorMA( MainViewOrigin(), 1500, MainViewForward(), vecEnd );
+	VectorMA( MainViewOrigin(), 48,   MainViewForward(), vecStart );
+	UTIL_TraceLine( vecStart, vecEnd, MASK_SOLID, NULL, COLLISION_GROUP_NONE, &tr );
+	if ( tr.DidHitNonWorldEntity() )
+	{
+		C_BaseEntity *pEntity = tr.m_pEnt;
+		IClientVehicle *vehicle = GetVehicle();
+		C_BaseEntity *pVehicleEntity = vehicle ? vehicle->GetVehicleEnt() : NULL;
+
+		if ( pEntity && (pEntity != this) && (pEntity != pVehicleEntity) )
+		{
+			// Make sure it's not an object
+		//	if ( !dynamic_cast<C_BaseObject*>( pEntity ) )
+			{
+				m_iIDEntIndex = pEntity->entindex();
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+/*
+void C_BaseHLPlayer::SetIDEnt( C_BaseEntity *pEntity )
+{
+	if ( pEntity )
+		m_TFLocal.m_iIDEntIndex = pEntity->entindex();
+	else
+		m_TFLocal.m_iIDEntIndex = 0;
+}
+*/

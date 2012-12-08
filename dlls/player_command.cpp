@@ -193,24 +193,24 @@ void CPlayerMove::FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *mo
 		player->SetPoseParameter( pitch_param, pitch );
 */
 
-	SetBodyPitch( player, "move_yaw", 0 );
-	SetBodyPitch( player, "body_trans_Y", 0 );
-	SetBodyPitch( player, "body_trans_X", 0 );
-	SetBodyPitch( player, "body_lift", 0 );
-//	SetBodyPitch( player, "body_yaw", yaw );
-	SetBodyPitch( player, "body_yaw", 0 );
-	SetBodyPitch( player, "body_pitch", pitch );
-//	SetBodyPitch( player, "body_roll", roll );
-	SetBodyPitch( player, "body_roll", 0 );
-	SetBodyPitch( player, "spine_yaw", 0 );
-	SetBodyPitch( player, "spine_pitch", 0 );
-	SetBodyPitch( player, "spine_roll", 0 );
-	SetBodyPitch( player, "neck_trans", 0 );
-	SetBodyPitch( player, "head_yaw", 0 );
-	SetBodyPitch( player, "head_pitch", 0 );
-	SetBodyPitch( player, "head_roll", 0 );
-	SetBodyPitch( player, "aim_pitch", 0 );
-	SetBodyPitch( player, "aim_yaw", 0 );
+	SetBodyPP( player, "move_yaw", 0 );
+	SetBodyPP( player, "body_trans_Y", 0 );
+	SetBodyPP( player, "body_trans_X", 0 );
+	SetBodyPP( player, "body_lift", 0 );
+//	SetBodyPP( player, "body_yaw", yaw );
+	SetBodyPP( player, "body_yaw", 0 );
+	SetBodyPP( player, "body_pitch", 0 );
+//	SetBodyPP( player, "body_roll", roll );
+	SetBodyPP( player, "body_roll", 0 );
+	SetBodyPP( player, "spine_yaw", 0 );
+	SetBodyPP( player, "spine_pitch", 0 );
+	SetBodyPP( player, "spine_roll", 0 );
+	SetBodyPP( player, "neck_trans", 0 );
+	SetBodyPP( player, "head_yaw", 0 );
+	SetBodyPP( player, "head_pitch", pitch );
+	SetBodyPP( player, "head_roll", 0 );
+	SetBodyPP( player, "aim_pitch", 0 );
+	SetBodyPP( player, "aim_yaw", 0 );
 
 	player->SetLocalAngles( move->m_vecAngles );
 
@@ -375,11 +375,11 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 	player->m_nTickBase++;
 }
 
-void CPlayerMove::SetBodyPitch( CBasePlayer *player, const char *poseParam, float flPitch )
+void CPlayerMove::SetBodyPP( CBasePlayer *player, const char *poseParam, float flParam )
 {
 	int lookup = player->LookupPoseParameter( poseParam );
 	if ( lookup >= 0 )
 	{
-		player->SetPoseParameter( lookup, flPitch );
+		player->SetPoseParameter( lookup, flParam );
 	}
 }

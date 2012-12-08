@@ -1776,6 +1776,9 @@ float CBasePlayer::GetWaterJumpTime() const
 void CBasePlayer::PlayerDeathThink(void)
 {
 	float flForward;
+	
+	if ( FlashlightIsOn() )
+		FlashlightTurnOff(); // VXP: I putted it here for some time.
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
@@ -1803,9 +1806,6 @@ void CBasePlayer::PlayerDeathThink(void)
 		// we aren't calling into any of their code anymore through the player pointer.
 		PackDeadPlayerItems();
 	}
-	
-	if ( FlashlightIsOn() )
-		FlashlightTurnOff(); // VXP: I putted it here for some time.
 
 	if (GetModelIndex() && (!IsSequenceFinished()) && (m_lifeState == LIFE_DYING))
 	{
@@ -1849,9 +1849,6 @@ void CBasePlayer::PlayerDeathThink(void)
 		// go to dead camera. 
 		StartDeathCam();
 	}
-
-	if ( FlashlightIsOn() )
-		FlashlightTurnOff(); // VXP: I putted it here for some time.
 	
 // wait for any button down,  or mp_forcerespawn is set and the respawn time is up
 	if (!fAnyButtonDown 
@@ -4790,11 +4787,18 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		break;
 	case	203:// remove creature.
 		pEntity = FindEntityForward( this );
-		if ( pEntity )
+		if ( pEntity && !pEntity->IsPlayer() )
 		{
-			UTIL_Remove( pEntity );
-//			if ( pEntity->m_takedamage )
-//				pEntity->SetThink(SUB_Remove);
+			if ( !pEntity->IsPlayer() )
+			{
+				UTIL_Remove( pEntity );
+//				if ( pEntity->m_takedamage )
+//					pEntity->SetThink(SUB_Remove);
+			}
+			else
+			{
+				Warning( "Cannot remove object.\n" );
+			}
 		}
 		break;
 	}

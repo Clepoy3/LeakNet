@@ -41,8 +41,19 @@ public:
 	bool				IsSprinting( void ) { return false; }
 
 	virtual int			DrawModel( int flags );
+	
+	// ID Target
+//	void				SetIDEnt( C_BaseEntity *pEntity );
+	int					GetIDTarget( void ) const;
+	void				UpdateIDTarget( void );
 public:
 
+	// Return this client's C_BaseHLPlayer pointer
+	static C_BaseHLPlayer* GetLocalPlayer( void )
+	{
+		return ( static_cast< C_BaseHLPlayer * >( C_BasePlayer::GetLocalPlayer() ) );
+	}
+	
 	C_HL2PlayerLocalData		m_HL2Local;
 
 
@@ -53,6 +64,9 @@ private:
 	float				m_flZoomEnd;
 	float				m_flZoomRate;
 	float				m_flZoomStartTime;
+	
+	// ID Target
+	int					m_iIDEntIndex;
 };
 
 

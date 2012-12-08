@@ -133,6 +133,8 @@ protected:
 	float m_flIntermissionEndTime;
 	bool m_iEndIntermissionButtonHit;
 	void SendMOTDToClient( edict_t *client );
+	
+	void InitDefaultAIRelationships( void );
 
 #endif
 };
