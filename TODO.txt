@@ -1,0 +1,51 @@
+луч физгана в 0 (иногда, ничего не делал - исправилось...)
+Вьюмодели других игроков иногда в 0
+Увеличить огонь от молотова
+hopwire в воде
+Взрывы hopwire'а не работают
+огнетушитель взаимодействует с ак47 (когда первый игрок тушит и если второй игрок выбрал ак47, то у второго игрока идет струя из калаша)
+	- проблема в аттачменте muzzle, он одинаково называется у обоих моделей
+штуки sticky launcher'а двигаются вместе с огнетушителем
+пулемет: должен быть точным первый выстрел, добавить shake экрана
+игрок заспаунился - темный экран
+у снайперки всегда виден прицел
+Проблема мертвых регдоллов
+Проблема исчезнувших физбоксов игроков после убийства (посмотреть в коде тф2/ксс)
+Проблема оружия - не может убить игроков (посмотреть в коде тф2/ксс)
+Иногда disconnect вызывает вылет на GetIDTarget
+changelevel вызывает вылет игры у игроков (иногда?)
+Исправить струю огнетушителя
+
+Переделать группы оружия
+Исправить ускорение стенкой
+
+Win8: при quit вылетает с ошибкой
+	  при изменении видеонастроек вылетает с ошибкой - 
+		[Window Title]
+		hl2.exe
+
+		[Main Instruction]
+		Программа "hl2.exe" не работает
+
+		[Content]
+		Возникшая проблема привела к прекращению работы программы. Windows закроет эту программу, а если есть известный способ устранения проблемы, уведомит вас об этом.
+
+		[Закрыть программу]
+	  
+Beta Tester Log:
+material "models/weapons/w_physics//w_physics_sheet" not found
+material "models/weapons/w_physics//w_physics_sheet2" not found
+material "models/weapons/w_physics//phy" not found
+material "sprites/w_icons4b" not found
+--- Missing Vgui material sprites/w_icons4b
+"materials/models/weapons/v_sniper/receiver_normal.vtf": can't be found on disk
+Binding uncached material "sprites/heatwave", artificially incrementing refcount
+Missing wav file 'items/gunpickup2.wav'
+
+Bad sequence (58 out of 1 max) in GetSequenceLinearMotion() for model 'error.mdl'!
+
+SoundCreate выдает ошибки mempool
+Предикт оружия работает, но присылаются выстрелы других игроков+
+flares не проходят сквозь решетки
+огонь не дамажит игрока
+Ихтиозавр не дамажит (и ещё глаза крутятся)

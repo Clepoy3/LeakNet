@@ -271,8 +271,8 @@ void Host_EndGame (char *message, ...)
 	Con_Printf ("Host_EndGame: %s\n",string);
 
 	// VXP: Loading screen
-	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
-	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+//	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+//	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
 
 #ifndef SWDS
 	scr_disabled_for_loading = true;
@@ -312,6 +312,9 @@ void Host_EndGame (char *message, ...)
 		}
 	}
 
+	// VXP: Loading screen
+	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
 }
 
 /*

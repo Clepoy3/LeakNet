@@ -27,7 +27,7 @@
 IPredictionSystem *IPredictionSystem::g_pPredictionSystems = NULL;
 
 ConVar	cl_predict			( "cl_predict","1", 0, "Perform client side prediction." );
-ConVar	cl_predictweapons	( "cl_predictweapons","1", 0, "Perform client side prediction of weapon effects." );
+ConVar	cl_predictweapons	( "cl_predictweapons","0", 0, "Perform client side prediction of weapon effects." );
 ConVar	cl_lagcompensation	( "cl_lagcompensation","0", 0, "Perform server side lag compensation of weapon firing events." );
 ConVar	cl_showerror		( "cl_showerror", "0", 0, "Show prediction errors, 2 for above plus detailed field deltas." );
 static ConVar	cl_smooth			( "cl_smooth", "1", 0, "Smooth view/eye origin after prediction errors" );

@@ -166,9 +166,11 @@ void CGrenade_Molotov::Detonate( void )
 			offset = 128;
 
 		//Get our scale based on distance
-		float scale	 = 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) );
+	//	float scale	 = 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) );
+	//	float scale	 = ( 3.0f + ( 0.75f * ( 3.0f - ( offset / 128.0f ) ) ) ) * 10; // VXP: Cool
+		float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 100; // VXP: Best formula EVER!
 		float growth = 0.1f + ( 0.75f * ( offset / 128.0f ) );
-
+		Msg( "Scale for %f offset is: %f\n", offset, scale );
 		if( firetrace.fraction != 1.0 )
 		{
 			FireSystem_StartFire( firetrace.endpos, scale, growth, 30.0f, (SF_FIRE_START_ON|SF_FIRE_SMOKELESS|SF_FIRE_NO_GLOW), (CBaseEntity*) this, FIRE_NATURAL );

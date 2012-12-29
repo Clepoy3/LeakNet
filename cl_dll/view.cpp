@@ -727,10 +727,10 @@ void CViewRender::SetUpOverView()
 // Purpose: Render current view into specified rectangle
 // Input  : *rect - 
 //-----------------------------------------------------------------------------
+float screenaspect;
+bool tempSCR = false;
 void CViewRender::Render( vrect_t *rect )
 {
-	float screenaspect;
-
 	Assert(s_TestOrigin == m_View.origin);
 	Assert(s_TestAngles == m_View.angles);
 
@@ -777,6 +777,41 @@ void CViewRender::Render( vrect_t *rect )
 	m_View.width			= vr.width;
 	m_View.height			= vr.height;
 
+	
+	if (!tempSCR)
+	{
+		char *scraspStr = "";
+		screenaspect = ( float )vr.width / ( float )vr.height;
+		if( screenaspect == ( 4.0f / 3.0f ) )
+		{
+			r_anamorphic.SetValue(0);
+			scraspStr = "4:3";
+		}
+		else if( screenaspect == ( 5.0f / 4.0f ) )
+		{
+			r_anamorphic.SetValue(0);
+			scraspStr = "5:4";
+		}
+		else if( screenaspect == ( 16.0f / 9.0f ) )
+		{
+			r_anamorphic.SetValue(1);
+			scraspStr = "16:9";
+		}
+		else if( screenaspect == ( 16.0f / 10.0f ) )
+		{
+			r_anamorphic.SetValue(2);
+			scraspStr = "16:10";
+		}
+		else
+		{
+			r_anamorphic.SetValue(0);
+			scraspStr = "unknown!";
+		}
+
+		tempSCR = true;
+		Msg( "Your screen aspect setted to %s\n", scraspStr );
+	}
+/*
 	screenaspect = ( float )vr.width / ( float )vr.height;
 	if( screenaspect == ( 4.0f / 3.0f ) )
 		r_anamorphic.SetValue(0);
@@ -788,7 +823,7 @@ void CViewRender::Render( vrect_t *rect )
 		r_anamorphic.SetValue(2);
 	else
 		r_anamorphic.SetValue(0);
-
+*/
 	// Determine if we should draw view model ( client mode override )
 	drawViewModel = g_pClientMode->ShouldDrawViewModel();
 

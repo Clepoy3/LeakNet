@@ -25,6 +25,8 @@ void UnloadEntityDLLs( void );
 // Since we call exit() from inside those, some destructors need to be safe and not crash.
 bool IsInErrorExit();
 
+void Sys_ShowProgressTicks(char* specialProgressMsg);
+
 #endif
 
 

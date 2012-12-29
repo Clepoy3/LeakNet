@@ -494,6 +494,39 @@ void R_BuildCubemapSamples( int numIterations )
 			{
 				Warning( "Cube map buffer size %d x %d is bigger than screen!\nRun at a higher resolution! or reduce your cubemap resolution (needs 4X)\n", screenBufSize, screenBufSize );
 				// BUGBUG: We'll leak DLLs/handles if we break out here, but this should be infrequent.
+				// re-enable the mouse.
+				if( cl_mouseenable )
+				{
+					cl_mouseenable->SetValue( 1 );
+				}
+				if( r_shadows )
+				{
+					r_shadows->SetValue( saveShadows );
+				}
+				if( bSaveMatSpecular )
+				{
+					mat_specular.SetValue( "1" );
+				}
+				else
+				{
+					mat_specular.SetValue( "0" );
+				}
+				if( mat_bloom )
+				{
+					mat_bloom->SetValue( saveBloom );
+				}
+
+				if( r_drawtranslucentworld )
+				{
+					r_drawtranslucentworld->SetValue( bSaveDrawTranslucentWorld );
+				}
+				if( r_drawtranslucentrenderables )
+				{
+					r_drawtranslucentrenderables->SetValue( bSaveDrawTranslucentRenderables );
+				}
+
+				building_cubemaps.SetValue( 0 );
+				UpdateMaterialSystemConfig();
 				return;
 			}
 		}

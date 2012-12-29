@@ -767,9 +767,9 @@ void CNPC_AntlionGrub::StopLoopingSounds()
 	CSoundEnvelopeController::GetController().SoundDestroy( m_pMovementSound );
 	CSoundEnvelopeController::GetController().SoundDestroy( m_pVoiceSound );
 	CSoundEnvelopeController::GetController().SoundDestroy( m_pHealSound );
-	m_pMovementSound = NULL;
+/*	m_pMovementSound = NULL;
 	m_pVoiceSound = NULL;
-	m_pHealSound = NULL;
+	m_pHealSound = NULL;*/
 }
 
 //-----------------------------------------------------------------------------

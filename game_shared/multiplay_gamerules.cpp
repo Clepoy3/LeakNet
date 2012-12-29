@@ -864,7 +864,8 @@ END_NETWORK_TABLE()
 	{
 		char szNextMap[32];
 		char szFirstMapInList[32];
-		Q_strncpy( szFirstMapInList, "hldm1" ,sizeof(szFirstMapInList));  // the absolute default level is hldm1
+	//	Q_strncpy( szFirstMapInList, "hldm1" ,sizeof(szFirstMapInList));  // the absolute default level is hldm1
+		Q_strncpy( szFirstMapInList, "testroom_commander" ,sizeof(szFirstMapInList));  // the absolute default level is testroom_commander
 
 		// find the map to change to
 
