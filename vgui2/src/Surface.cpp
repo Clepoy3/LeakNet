@@ -319,7 +319,7 @@ static HICON staticDefaultCursor[20];
 static WNDCLASS staticWndclass = { NULL };
 static ATOM staticWndclassAtom = 0;
 static bool staticStaticDataInitialized = false;
-static staticSurfaceAvailable;
+static bool staticSurfaceAvailable;
 
 // these functions defined below
 LRESULT CALLBACK staticProc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam);

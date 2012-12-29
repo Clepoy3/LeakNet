@@ -59,6 +59,8 @@
 #include "vstdlib/icommandline.h"
 #include "enginebugreporter.h"
 
+#include "sys_dll.h"
+
 void R_UnloadSkys( void );
 void CL_ResetEntityBits( void );
 void COM_CopyFile (char *netpath, char *cachepath);
@@ -478,6 +480,8 @@ void CL_ConnectClient( void )
 	{
 		return;
 	}
+
+	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
 
 	// Initiate the network channel
 	Netchan_Setup (NS_CLIENT, &cls.netchan, net_from );
@@ -1314,7 +1318,7 @@ void CL_Connect_f (void)
 	// Store off the last address we tried to get to
 	strcpy ( cls.retry_address, cls.servername );
 
-	VGui_NotifyOfServerProgress( 50, "LOL" ); // VXP
+	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
 
 	// For the check for resend timer to fire a connection / getchallenge request.
 	cls.state = ca_connecting;
@@ -1401,6 +1405,22 @@ void CL_SignonReply (void)
 
 //	Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
 
+	/*
+	"LoadingProgress_SpawningServer"	"Starting local game server..." - 2 L
+	"LoadingProgress_LoadMap"			"Loading world..." - 45 (4 L)
+	"LoadingProgress_PrecacheWorld"		"Initializing world..." - 23 L
+	"LoadingProgress_LoadResources"		"Loading resources..." - 34 L
+	"LoadingProgress_SignonLocal"		"Initializing resources..." - 73 L
+	"LoadingProgress_SignonDataLocal"	"Initializing game data..." - 91 L
+
+	"LoadingProgress_BeginConnect"		"Establishing connection to server..." - 5
+	"LoadingProgress_Connecting"		"Connecting to server..." - 10
+	"LoadingProgress_ProcessServerInfo"	"Retrieving server info..." - 20
+	"LoadingProgress_SendClientInfo"	"Sending client info..." - 80
+	"LoadingProgress_SignonData"		"Retrieving game data..." - 85
+	"LoadingProgress_Changelevel"		"Server is changing level..." - 1
+	*/
+
 	switch (cls.signon)
 	{
 	case 1:
@@ -1408,13 +1428,14 @@ void CL_SignonReply (void)
 			cls.netchan.message.WriteByte (clc_stringcmd);
 			Q_snprintf ( str, sizeof( str ), "spawn %i", cl.servercount );
 			cls.netchan.message.WriteString (str);
-			VGui_NotifyOfServerProgress( 10, "case 1" );
+			VGui_NotifyOfServerProgress( 15, "Retrieving server info..." );
+			Sys_ShowProgressTicks("");
 		}
 		break;
 		
 	case 2:	
 		{
-			VGui_NotifyOfServerProgress( 15, "case 1" );
+			VGui_NotifyOfServerProgress( 23, "Initializing world..." );
 			cls.netchan.message.WriteByte (clc_stringcmd);
 			Q_snprintf( str, sizeof( str ), "begin %i", cl.servercount );
 			cls.netchan.message.WriteString ( str );
@@ -1430,7 +1451,7 @@ void CL_SignonReply (void)
 		
 	case 3:
 		{
-			VGui_NotifyOfServerProgress( 75, "case 1" );
+			VGui_NotifyOfServerProgress( 80, "Sending client info..." );
 			SpatialPartition()->SuppressLists( PARTITION_ALL_CLIENT_EDICTS, false );
 
 			// This has to happen here, in phase 3, because it is in this phase

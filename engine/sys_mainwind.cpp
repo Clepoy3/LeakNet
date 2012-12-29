@@ -746,6 +746,7 @@ static LONG WINAPI HLEngineWindowProc (
 
 #define DEFAULT_EXE_ICON		101
 
+HWND hwndEXT;
 bool CGame::CreateGameWindow( void )
 {
 #ifndef SWDS
@@ -804,6 +805,8 @@ bool CGame::CreateGameWindow( void )
 	// Create the window
 	HWND hwnd = CreateWindow( CLASSNAME, "Half-Life", style, 
 		0, 0, w, h, NULL, NULL, m_hInstance, NULL );
+
+	hwndEXT = hwnd;
 
 	g_Game.SetMainWindow( hwnd );
 
