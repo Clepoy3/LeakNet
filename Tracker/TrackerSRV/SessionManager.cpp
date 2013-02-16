@@ -11,7 +11,7 @@
 #include "SessionManager.h"
 #include "UserSession.h"
 #include "TrackerDatabaseManager.h"
-#include "Random.h"
+#include "GameUI/Random.h"
 #include "TrackerProtocol.h"
 #include "UtlMsgBuffer.h"
 

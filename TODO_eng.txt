@@ -1,0 +1,9 @@
+Physics gun's beam from 0,0,0
+Other player's weapon viewmodels in 0,0,0 (sometimes)
+Increase molotov's fire - DONE
+hopwire lags in water (sometimes)
+Hopwire's explosions is not work
+Extinguisher interacts with ak-47 (when the first player extinguish and the second player choosed ak-47, then the second player has spray from the muzzle attachment)
+	- I think, problem in attachment, because it's named identically
+	- it's harder... Local and Abs values
+Sticky bombs (from sticky launcher weapon)

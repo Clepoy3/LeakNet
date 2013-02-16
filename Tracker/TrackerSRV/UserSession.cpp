@@ -9,7 +9,7 @@
 //=============================================================================
 
 #include "UserSession.h"
-#include "Random.h"
+#include "GameUI/Random.h"
 #include "SessionManager.h"
 #include "TrackerDatabaseManager.h"
 #include "../public/ITrackerUserDatabase.h"

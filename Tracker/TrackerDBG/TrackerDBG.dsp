@@ -135,5 +135,9 @@ SOURCE=..\..\public\interface.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
+# Begin Source File
+
+SOURCE=..\..\lib\public\vstdlib.lib
+# End Source File
 # End Target
 # End Project

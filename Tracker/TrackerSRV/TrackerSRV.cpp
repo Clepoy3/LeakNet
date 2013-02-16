@@ -19,7 +19,7 @@
 #include "../TrackerNET/NetAddress.h"
 
 #include "interface.h"
-#include "Random.h"
+#include "GameUI/Random.h"
 
 #include "DebugTimer.h"
 
