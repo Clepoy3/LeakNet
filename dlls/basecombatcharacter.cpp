@@ -1552,7 +1552,7 @@ Relationship_t *CBaseCombatCharacter::FindEntityRelationship( CBaseEntity *pTarg
 		}
 	}
 
-	if (pTarget->Classify() != CLASS_NONE)
+	if (pTarget->Classify() != CLASS_NONE) // VXP: BUG
 	{
 		// Then check for relationship with this edict's class
 		for (i=0;i<m_Relationship.Count();i++) 

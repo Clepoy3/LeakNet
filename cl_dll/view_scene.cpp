@@ -312,6 +312,10 @@ bool CViewRender::ShouldDrawBrushModels( void )
 
 void SortEntities( CRenderList::CEntry *pEntities, int nEntities )
 {
+	// Don't sort if we only have 1 entity
+	if ( nEntities <= 1 )
+		return;
+
 	float dists[CRenderList::MAX_GROUP_ENTITIES];
 
 	const Vector &vecRenderOrigin = CurrentViewOrigin();

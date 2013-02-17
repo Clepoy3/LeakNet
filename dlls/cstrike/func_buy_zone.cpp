@@ -27,6 +27,7 @@ public:
 
 
 LINK_ENTITY_TO_CLASS( func_buy_zone, CBuyZone );
+LINK_ENTITY_TO_CLASS( func_buyzone, CBuyZone ); // VXP: New format
 
 BEGIN_DATADESC( CBuyZone )
 	DEFINE_FUNCTION( CBuyZone, BuyZoneTouch )

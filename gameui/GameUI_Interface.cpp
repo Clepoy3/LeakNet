@@ -500,7 +500,7 @@ void CGameUI::Start(struct cl_enginefuncs_s *engineFuncs, int interfaceVersion, 
 	g_pTaskbar->SetVisible(false);
 
 // FOR SRC
-//	vgui::surface()->SetWorkspaceInsets( 0, 0, 0, g_pTaskbar->GetTall() );
+	vgui::surface()->SetWorkspaceInsets( 0, 0, 0, g_pTaskbar->GetTall() ); // VXP: Test
 
 	// Start loading tracker
 	if (m_szPlatformDir[0] != 0)
@@ -564,6 +564,7 @@ void CGameUI::Start(struct cl_enginefuncs_s *engineFuncs, int interfaceVersion, 
 
 	// SRC version
 	//engine->ClientCmd("loop media/gamestartup.mp3\n");
+//	engine->ClientCmd("play media/gamestartup\n"); // VXP: Also this way too
 
 }
 
@@ -913,6 +914,7 @@ void CGameUI::RunFrame()
 //-----------------------------------------------------------------------------
 void CGameUI::ConnectToServer(const char *game, int IP, int port)
 {
+//	engine->ClientCmd("stop\n"); // VXP: Stop playing background music
 //	Msg( "CGameUI::ConnectToServer\n" );
 	LoadingFinished( "Shit", "Happens" );
 	StopProgressBar( false, "Shit eater", "You are" );

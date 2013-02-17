@@ -34,7 +34,7 @@ private:
 	typedef vgui::PropertyDialog BaseClass;
 
 	CCreateMultiplayerGameServerPage *m_pServerPage;
-	CCreateMultiplayerGameBotPage *m_pBotPage;
+//	CCreateMultiplayerGameBotPage *m_pBotPage;
 
 	// for loading/saving bot config
 	KeyValues *m_pBotSavedData;

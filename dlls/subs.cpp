@@ -61,6 +61,11 @@ END_DATADESC()
 // These are the new entry points to entities. 
 LINK_ENTITY_TO_CLASS(info_player_deathmatch,CBaseDMStart);
 LINK_ENTITY_TO_CLASS(info_player_start,CPointEntity);
+
+// VXP: For CS:S tests
+LINK_ENTITY_TO_CLASS(info_player_counterterrorist,CPointEntity);
+LINK_ENTITY_TO_CLASS(info_player_terrorist,CPointEntity);
+
 LINK_ENTITY_TO_CLASS(info_landmark,CPointEntity);
 
 bool CBaseDMStart::IsTriggered( CBaseEntity *pEntity )

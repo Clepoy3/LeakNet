@@ -332,8 +332,11 @@ void CMatSystemTexture::SetTextureRGBA( const char* rgba,int wide,int tall )
 	if ( !IsProcedural() )
 		return;
 
-	Assert( wide == m_iWide );
-	Assert( tall == m_iTall );
+//	m_iWide = wide;
+//	m_iTall = tall;
+// VXP: Need to fix this!
+//	Assert( wide == m_iWide );
+//	Assert( tall == m_iTall );
 
 	// Just replace the whole thing
 	SetSubTextureRGBA( 0, 0, (const unsigned char *)rgba, wide, tall );

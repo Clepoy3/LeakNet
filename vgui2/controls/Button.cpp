@@ -608,6 +608,11 @@ void Button::FireActionSignal()
 	// message-based action signal
 	if (_actionMessage)
 	{
+		if (!Q_stricmp(_actionMessage->GetName(), "command"))
+		{
+			// VXP: Here we can open urls in browser
+		//	system()->ShellExecute("open", _actionMessage->GetString("command", "      ") + 4);
+		}
 		PostActionSignal(_actionMessage->MakeCopy());
 	}
 }

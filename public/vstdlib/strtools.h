@@ -129,4 +129,7 @@ VSTDLIB_INTERFACE int Q_vsnprintf( char *pDest, int maxLen, char const *pFormat,
 
 VSTDLIB_INTERFACE char *Q_pretifymem( float value, int digitsafterdecimal = 2, bool usebinaryonek = false );
 
+// Returns true if the path is an absolute path.
+VSTDLIB_INTERFACE bool Q_IsAbsolutePath( const char *pPath );
+
 #endif	// VSTDLIB_STRTOOLS_H

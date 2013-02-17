@@ -676,6 +676,7 @@ qboolean CL_CheckCRCs( const char *pszMap )
 		}
 
 		Host_Error( "Disconnected" );
+		// VXP: Here we have not downloaded map or something else...
 		return false;
 	}
 

@@ -5,14 +5,15 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include "../common/MessageDescription.h"
+//#include "../common/MessageDescription.h"
+#include "../common/MasterMsgHandler.h"
 #include "../TrackerNET/Threads.h"
 #include "../TrackerNET/TrackerNET_Interface.h"
 #include "../common/TrackerMessageFlags.h"
 
 #include "LoadTestApp.h"
 #include "User.h"
-#include "Random.h"
+#include "GameUI/Random.h"
 
 #include <stdio.h>
 #include <string.h>

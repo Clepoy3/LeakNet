@@ -1018,9 +1018,9 @@ void HtmlWindow::OnSize(int x,int y,int w_in,int h_in)
 	int panel_x,panel_y;
 	// find out where the panel is, in screen space
 #if defined ( GAMEUI_EXPORTS )
-	vgui2::ipanel()->GetAbsPos(m_vcontext,panel_x, panel_y);
+	vgui::ipanel()->GetAbsPos(m_vcontext,panel_x, panel_y);
 #else
-	((vgui2::VPanel *)m_vcontext)->GetAbsPos(panel_x, panel_y);
+	((vgui::VPanel *)m_vcontext)->GetAbsPos(panel_x, panel_y);
 #endif
 
 	// move the hidden IE container window to the top corner of the real panel
@@ -1327,9 +1327,9 @@ void HtmlWindow::OnMouse(vgui::MouseCode code,MOUSE_STATE s,int x,int y)
 	int pos_x,pos_y;
 	// find out where the panel is, in screen space
 #if defined ( GAMEUI_EXPORTS )
-	vgui2::ipanel()->GetAbsPos(m_vcontext, pos_x, pos_y);
+	vgui::ipanel()->GetAbsPos(m_vcontext, pos_x, pos_y);
 #else
-	((vgui2::VPanel *)m_vcontext)->GetAbsPos(pos_x, pos_y);
+	((vgui::VPanel *)m_vcontext)->GetAbsPos(pos_x, pos_y);
 #endif
 
 	// move the hidden IE container window to the top corner of the real panel

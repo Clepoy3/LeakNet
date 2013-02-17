@@ -7,7 +7,6 @@
 
 #include "cbase.h"
 
-#if 0
 #include "ai_basenpc.h"
 #include "basecombatweapon.h"	// For SpawnBlood
 #include "soundent.h"
@@ -55,6 +54,10 @@ BEGIN_DATADESC( CPlayer_Manhack )
 
 	// Function Pointers
 	DEFINE_FUNCTION( CPlayer_Manhack, FlyThink ),
+	
+	// Inputs
+	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_VOID, "Activate", InputActivate ),
+	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_VOID, "Deactivate", InputDeactivate ),
 
 END_DATADESC()
 
@@ -87,7 +90,8 @@ void CPlayer_Manhack::Precache( void )
 void CPlayer_Manhack::Spawn( void )
 {
 	Precache();
-	m_flFriction = 0.55; // deading the bounce a bit
+//	m_flFriction = 0.55; // deading the bounce a bit
+	SetFriction( 0.55 ); // deading the bounce a bit
 	
 	SetModel( "models/manhack.mdl" );
 	UTIL_SetSize(this, PMANHACK_HULL_MINS, PMANHACK_HULL_MAXS);
@@ -154,7 +158,8 @@ void CPlayer_Manhack::InputDeactivate( inputdata_t &inputdata )
 
 	// Remove manhack blade weapon from player's inventory
 	CBaseEntity* pBlade = (CBaseEntity*)(pPlayer->GetActiveWeapon());
-	pPlayer->Weapon_Drop( GetActiveWeapon() );
+//	pPlayer->Weapon_Drop( GetActiveWeapon() );
+	pPlayer->Weapon_Drop( GetActiveWeapon(), NULL, NULL );
 	if (m_pSaveWeapon)
 	{
 		pPlayer->Weapon_Switch( m_pSaveWeapon );
@@ -246,9 +251,11 @@ void CPlayer_Manhack::CheckBladeTrace(trace_t &tr)
 
 	Assert( pPlayer );
 
-	if (tr.u.ent)
+//	if (tr.u.ent)
+	if (tr.m_pEnt)
 	{
-		pHitEntity = CBaseEntity::Instance( tr.u.ent );
+	//	pHitEntity = CBaseEntity::Instance( tr.u.ent );
+		pHitEntity = CBaseEntity::Instance( engine->PEntityOfEntIndex( tr.GetEntityIndex() ) );
 
 		// Did I hit an entity that isn't a player?
 		if (pHitEntity && pHitEntity->Classify()!=CLASS_PLAYER)
@@ -268,7 +275,8 @@ void CPlayer_Manhack::CheckBladeTrace(trace_t &tr)
 			// Spawn some extra blood in front of player to see
 			Vector vPlayerFacing;
 			pPlayer->EyeVectors( &vPlayerFacing );
-			Vector vBloodPos = pPlayer->Center() + vPlayerFacing*30;
+		//	Vector vBloodPos = pPlayer->Center() + vPlayerFacing*30;
+			Vector vBloodPos = pPlayer->WorldSpaceCenter() + vPlayerFacing*30;
 			SpawnBlood(vBloodPos, pBCC->BloodColor(), 1.0);
 
 			CPASAttenuationFilter filter( pPlayer, "Player_Manhack.GrindFlesh" );
@@ -401,4 +409,3 @@ void CPlayer_Manhack::FlyThink()
 		pPhysObj->AddVelocity(&vSubtract,NULL);
 	}
 }
-#endif

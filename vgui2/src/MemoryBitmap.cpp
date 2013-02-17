@@ -110,7 +110,7 @@ void MemoryBitmap::Paint()
 		return;
 
 	//MIKETODO: procedural textures
-	return;
+//	return;
 
 	// if we don't have an _id then lets make one
 	if (!_id)
@@ -153,14 +153,14 @@ void MemoryBitmap::ForceUpload(unsigned char *texture,int wide, int tall)
 		return;
 	
 	//MIKETODO: procedural textures
-	return;
+//	return;
 
 	if (!_id)
 	{
 		_id = surface()->CreateNewTextureID( true );
 	}
-/*	drawSetTextureRGBA(IE->textureID,static_cast<const char *>(lpvBits), w, h);
-*/
+//	drawSetTextureRGBA(IE->textureID,static_cast<const char *>(lpvBits), _w, _h);
+
 	surface()->DrawSetTextureRGBA(_id, _texture, _w, _h, false, true);
 	_uploaded = true;
 

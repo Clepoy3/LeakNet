@@ -57,8 +57,8 @@ CCreateMultiplayerGameDialog::CCreateMultiplayerGameDialog(vgui::Panel *parent) 
 	}
 	// add a page of advanced bot controls
 	// NOTE: These controls will use the bot keys to initialize their values
-	m_pBotPage = new CCreateMultiplayerGameBotPage( this, "BotPage", m_pBotSavedData );
-	AddPage( m_pBotPage, "CPU Player Options" );
+//	m_pBotPage = new CCreateMultiplayerGameBotPage( this, "BotPage", m_pBotSavedData );
+//	AddPage( m_pBotPage, "CPU Player Options" );
 
 //	int botDiff = (int)(engine->pfnGetCvarFloat( "bot_difficulty" ));
 	ConVar const *var = cvar->FindVar( "bot_difficulty" );
@@ -190,7 +190,7 @@ void CCreateMultiplayerGameDialog::OnOK()
 
 		// update keys
 		m_pBotSavedData->SetInt( "bot_difficulty", (int)botSkill );
-		m_pBotPage->UpdateKeys( m_pBotSavedData );
+	//	m_pBotPage->UpdateKeys( m_pBotSavedData );
 
 		// if don't want bots (difficulty == -1), override and set the quota to zero
 		if (m_pBotSavedData->GetInt( "bot_difficulty" ) < 0)

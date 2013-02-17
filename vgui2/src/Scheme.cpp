@@ -289,8 +289,7 @@ HScheme CSchemeManager::LoadSchemeFromFile(const char *fileName, const char *tag
 //-----------------------------------------------------------------------------
 void CScheme::LoadFromFile( const char *inFilename, const char *inTag, KeyValues *inKeys )
 {
-
-	strncpy(fileName, inFilename, sizeof(fileName) );
+	Q_strncpy( fileName, inFilename, sizeof(fileName) );
 	fileName[ sizeof(fileName) - 1 ] = '\0';
 	
 	data = inKeys;
@@ -303,12 +302,12 @@ void CScheme::LoadFromFile( const char *inFilename, const char *inTag, KeyValues
 
 	if ( inTag )
 	{
-		strncpy( tag, inTag, sizeof( tag ) );
+		Q_strncpy( tag, inTag, sizeof( tag ) );
 	}
 	else
 	{
 		Assert( "You need to name the scheme!" );
-		strcpy( tag, "default" );
+		Q_strcpy( tag, "default" );
 	}
 
 	// need to copy tag before loading fonts
@@ -322,23 +321,23 @@ void CScheme::LoadFromFile( const char *inFilename, const char *inTag, KeyValues
 //-----------------------------------------------------------------------------
 void CScheme::LoadFonts()
 {
-
+	KeyValues *kv;
 	// add our custom fonts
-	{for (KeyValues *kv = data->FindKey("CustomFontFiles", true)->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
+	for (kv = data->FindKey("CustomFontFiles", true)->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
 	{
 		const char *fontFile = kv->GetString();
 		if (fontFile && *fontFile)
 		{
 			surface()->AddCustomFontFile(fontFile);
 		}
-	}}
+	}
 
 
 	// get our current resolution
 	int screenWide, screenTall;
 	surface()->GetScreenSize(screenWide, screenTall);
 
-	for (KeyValues *kv = data->FindKey("Fonts", true)->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
+	for (kv = data->FindKey("Fonts", true)->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
 	{
 		for ( int i = 0; i < 2; i++ )
 		{

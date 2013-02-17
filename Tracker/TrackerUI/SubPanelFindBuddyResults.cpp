@@ -56,10 +56,10 @@ CSubPanelFindBuddyResults::~CSubPanelFindBuddyResults()
 //-----------------------------------------------------------------------------
 WizardSubPanel *CSubPanelFindBuddyResults::GetNextSubPanel()
 {
-	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyRequestAuth"));
+//	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyRequestAuth"));
 
 	// just skip the request auth dialog for now
-//	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyComplete"));
+	return dynamic_cast<WizardSubPanel *>(GetWizardPanel()->FindChildByName("SubPanelFindBuddyComplete"));
 }
 
 //-----------------------------------------------------------------------------

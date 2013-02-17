@@ -2126,7 +2126,6 @@ bool CCSPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot 
 CBaseEntity* CCSPlayer::EntSelectSpawnPoint()
 {
 	CBaseEntity *pSpot;
-
 	/* MIKETODO: VIP
 		// VIP spawn point *************
 		if ( ( g_pGameRules->IsDeathmatch() ) && ( ((CBasePlayer*)pPlayer)->m_bIsVIP == TRUE) )
@@ -2149,8 +2148,12 @@ CBaseEntity* CCSPlayer::EntSelectSpawnPoint()
 	if ( GetTeamNumber() == TEAM_CT )
 	{
 		pSpot = g_pLastCTSpawn;
-		if ( SelectSpawnSpot( "info_player_start", pSpot ) )
+	//	if ( SelectSpawnSpot( "info_player_start", pSpot ) )
+		if ( SelectSpawnSpot( "info_player_start", pSpot ) || SelectSpawnSpot( "info_player_counterterrorist", pSpot ) )
+		{
+			Msg( "Spawned as counter terrorist\n" );
 			goto ReturnSpot;
+		}
 	}
 
 	/*********************************************************/
@@ -2158,8 +2161,24 @@ CBaseEntity* CCSPlayer::EntSelectSpawnPoint()
 	else if ( GetTeamNumber() == TEAM_TERRORIST )
 	{
 		pSpot = g_pLastTerroristSpawn;
-		if ( SelectSpawnSpot( "info_player_deathmatch", pSpot ) )
+	//	if ( SelectSpawnSpot( "info_player_deathmatch", pSpot ) )
+		if ( SelectSpawnSpot( "info_player_deathmatch", pSpot ) || SelectSpawnSpot( "info_player_terrorist", pSpot ) )
+		{
+			Msg( "Spawned as counter terrorist\n" );
 			goto ReturnSpot;
+		}
+	}
+	else if ( GetTeamNumber() == TEAM_SPECTATOR )
+	{
+		Msg( "Spawned as spectator\n" );
+	}
+	else if ( GetTeamNumber() == TEAM_UNASSIGNED )
+	{
+		Msg( "Spawned as unassigned\n" );
+	}
+	else
+	{
+		Msg( "Spawned as UNKNOWN SHIT!\n" );
 	}
 
 
@@ -2167,6 +2186,9 @@ CBaseEntity* CCSPlayer::EntSelectSpawnPoint()
 	if ( !gpGlobals->startspot || !strlen(STRING(gpGlobals->startspot)))
 	{
 		pSpot = gEntList.FindEntityByClassname(NULL, "info_player_deathmatch");
+		if( !pSpot )
+			pSpot = gEntList.FindEntityByClassname(NULL, "info_player_terrorist"); // VXP: New maps from released CS:S
+		
 		if ( pSpot )
 			goto ReturnSpot;
 	}
@@ -2180,7 +2202,7 @@ CBaseEntity* CCSPlayer::EntSelectSpawnPoint()
 ReturnSpot:
 	if ( !pSpot )
 	{
-		Warning( "PutClientInServer: no info_player_start on level" );
+		Warning( "PutClientInServer: no info_player_start on level\n" );
 		return CBaseEntity::Instance( INDEXENT(0) );
 	}
 

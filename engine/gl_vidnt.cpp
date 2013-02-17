@@ -89,7 +89,18 @@ void VID_TakeSnapshotRect( const char *pFilename, int x, int y, int w, int h, in
 
 	assert( w == h ); // garymcthack - this only works for square images
 
-	if( !ImageLoader::ResampleRGBA8888( pImage, pImage1, w, h, resampleWidth, resampleHeight, 1.0f, 1.0f ) )
+//	if( !ImageLoader::ResampleRGBA8888( pImage, pImage1, w, h, resampleWidth, resampleHeight, 1.0f, 1.0f ) )
+	ImageLoader::ResampleInfo_t info;
+	info.m_pSrc = pImage;
+	info.m_pDest = pImage1;
+	info.m_nSrcWidth = w;
+	info.m_nSrcHeight = h;
+	info.m_nDestWidth = resampleWidth;
+	info.m_nDestHeight = resampleHeight;
+	info.m_flSrcGamma = 1.0f;
+	info.m_flDestGamma = 1.0f;
+
+	if( !ImageLoader::ResampleRGBA8888( info ) )
 	{
 		Sys_Error( "Can't resample\n" );
 	}

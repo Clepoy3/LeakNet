@@ -13,10 +13,15 @@
 #include "studio.h"
 #include "bone_setup.h"
 #include "engine/ivmodelinfo.h"
+//#include "view.h"
+
+#include "iefx.h"
+#include "dlight.h"
 #include "view.h"
+#include "clientsideeffects.h"
 
 
-#define	PARTICLE_FIRE 0
+#define	PARTICLE_FIRE 1
 
 CLIENTEFFECT_REGISTER_BEGIN( SmokeStackMaterials )
 	CLIENTEFFECT_MATERIAL( "particle/SmokeStack" )
@@ -338,7 +343,6 @@ void C_FireSmoke::Simulate( void )
 void C_FireSmoke::AddFlames( void )
 {
 #if PARTICLE_FIRE
-
 	if ( ( gpGlobals->frametime != 0.0f ) && ( m_flScaleRegister > 0.0f ) )
 	{
 
@@ -384,16 +388,25 @@ void C_FireSmoke::AddFlames( void )
 				
 				float speedScale = ((GetAbsOrigin()+offset)-GetAbsOrigin()).Length2D() / (32.0f*m_flScaleRegister);
 				sParticle->m_vecVelocity	= Vector( Helper_RandomFloat( -32.0f, 32.0f ), Helper_RandomFloat( -32.0f, 32.0f ), Helper_RandomFloat( 32.0f, 128.0f )*speedScale );
+				
+				dlight_t *dl = effects->CL_AllocDlight( index );
+				dl->origin	= GetAbsOrigin();
+			//	.Init( 0.4f, 0.2f, 0.05f )
+				int mul = 100;
+				dl->color.r = 1.02 * mul;
+				dl->color.g = 0.51 * mul;
+				dl->color.b = 0.1275 * mul;
+			//	dl->radius	= m_flScaleRegister * random->RandomFloat( 100.0f, 105.0f );
+				dl->radius	= scalar * random->RandomFloat( 25.0f, 27.0f );
+				dl->die		= gpGlobals->curtime;
 			}
 		}
 
-		pEmitter->Release();
+	//	pEmitter->Release();
 	}
 
 #endif
-
-//#if !PARTICLE_FIRE
-
+#if !PARTICLE_FIRE
 	float alpha	= 1.0f;
 
 	//Update the child flame alpha
@@ -408,8 +421,7 @@ void C_FireSmoke::AddFlames( void )
 		}
 	}
 
-//#endif
-
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -463,16 +475,18 @@ bool C_FireSmoke::ShouldDraw()
 //-----------------------------------------------------------------------------
 void C_FireSmoke::Start( void )
 {
+#if !PARTICLE_FIRE
 	// Setup the render handles for stuff we want in the client leaf list.
 	int i;
 	for ( i = 0; i < NUM_CHILD_FLAMES; i++ )
 	{
 		m_entFlames[i].SetupEntityRenderHandle( RENDER_GROUP_TRANSLUCENT_ENTITY );
 	}
-
+#endif
 	//Various setup info
 	m_tParticleSpawn.Init( 10.0f );
 
+#if !PARTICLE_FIRE
 	QAngle	offset;
 	model_t	*pModel; 
 	int		maxFrames;
@@ -513,7 +527,7 @@ void C_FireSmoke::Start( void )
 			m_entFlameScales[i] = 1.0f - ( ( (float) i / (float) NUM_CHILD_FLAMES ) );
 		}
 	}
-
+#endif
 	//Only make the glow if we've requested it
 	if ( m_nFlags & bitsFIRESMOKE_GLOW )
 	{
@@ -564,6 +578,7 @@ void C_FireSmoke::RemoveClientOnly(void)
 //-----------------------------------------------------------------------------
 void C_FireSmoke::UpdateAnimation( void )
 {
+#if !PARTICLE_FIRE
 	int		numFrames;
 	float	frametime	= Helper_GetFrameTime();
 
@@ -578,6 +593,7 @@ void C_FireSmoke::UpdateAnimation( void )
 			m_entFlames[i].m_flFrame = m_entFlames[i].m_flFrame - (int)(m_entFlames[i].m_flFrame);
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -585,6 +601,7 @@ void C_FireSmoke::UpdateAnimation( void )
 //-----------------------------------------------------------------------------
 void C_FireSmoke::UpdateFlames( void )
 {
+#if !PARTICLE_FIRE
 	for ( int i = 0; i < NUM_CHILD_FLAMES; i++ )
 	{
 		float	newScale = m_flScaleRegister * m_entFlameScales[i];
@@ -610,6 +627,7 @@ void C_FireSmoke::UpdateFlames( void )
 			m_entFlames[i].SetLocalOrigin( offset );
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

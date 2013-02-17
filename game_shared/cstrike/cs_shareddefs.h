@@ -30,6 +30,7 @@
 
 
 // CS Team IDs.
+// VXP: When decrease those values by 1, scoreboard and buy zones are working normal
 #define TEAM_TERRORIST	3
 #define TEAM_CT			4
 #define TEAM_MAXCOUNT	4	// update this if we ever add teams (unlikely)

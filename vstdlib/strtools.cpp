@@ -622,3 +622,9 @@ char *Q_pretifymem( float value, int digitsafterdecimal /*= 2*/, bool usebinaryo
 
 	return out;
 }
+
+// small helper function shared by lots of modules
+bool Q_IsAbsolutePath( const char *pStr )
+{
+	return ( pStr[0] && pStr[1] == ':' ) || pStr[0] == '/' || pStr[0] == '\\';
+}

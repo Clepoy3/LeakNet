@@ -22,7 +22,8 @@
 
 
 #define BLINK_INTERVAL 2.0
-#define PLANTED_C4_MODEL "models/battery.mdl"
+//#define PLANTED_C4_MODEL "models/battery.mdl"
+#define PLANTED_C4_MODEL "models/weapons/w_c4.mdl"
 
 int g_sModelIndexC4Glow = -1;
 

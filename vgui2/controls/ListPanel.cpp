@@ -567,7 +567,7 @@ void ListPanel::AddColumnHeader(int index, const char *columnName, const char *c
 	column.m_pSortFunc = NULL;
 	
 	// Set the SortedTree less than func to the generic RBTreeLessThanFunc
-	m_ColumnsData[columnDataIndex].m_SortedTree.SetLessFunc((bool (__cdecl *)(const struct vgui2::ListPanel::IndexItem_t &,const struct vgui2::ListPanel::IndexItem_t &))RBTreeLessFunc);
+	m_ColumnsData[columnDataIndex].m_SortedTree.SetLessFunc((bool (__cdecl *)(const struct vgui::ListPanel::IndexItem_t &, const struct vgui::ListPanel::IndexItem_t &))RBTreeLessFunc);
 
 	// go through all the headers and make sure their Command has the right column ID
 	ResetColumnHeaderCommands();

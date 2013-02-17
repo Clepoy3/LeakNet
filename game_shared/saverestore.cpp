@@ -628,6 +628,7 @@ bool CSave::ShouldSaveField( const void *pData, typedescription_t *pField )
 		{
 			if ( (pField->fieldSizeInBytes != pField->fieldSize * gSizes[pField->fieldType]) )
 			{
+				// VXP: Maybe, multiplayer crashes because of this...
 				Warning("WARNING! Field %s is using the wrong FIELD_ type!\nFix this or you'll see a crash.\n", pField->fieldName );
 				Assert( 0 );
 			}

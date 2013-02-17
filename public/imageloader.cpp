@@ -1,15 +1,10 @@
-//=========== (C) Copyright 1999 Valve, L.L.C. All rights reserved. ===========
-//
-// The copyright to the contents herein is the property of Valve, L.L.C.
-// The contents may be used and/or copied only with the written permission of
-// Valve, L.L.C., or in accordance with the terms and conditions stipulated in
-// the agreement/contract under which the contents have been supplied.
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $Header: $
 // $NoKeywords: $
-//=============================================================================
+//=============================================================================//
 
 #ifdef _WIN32
 #include <windows.h>
@@ -19,14 +14,16 @@
 #include "tier0/dbg.h"
 #include <malloc.h>
 #include <memory.h>
+//#include "nvtc.h"
 #include "s3_intrf.h"
 #include "mathlib.h"
 #include "vector.h"
+//#include "tier1/utlmemory.h"
 #include "utlmemory.h"
-#include "tier0/memdbgon.h"
+#include "vstdlib/strtools.h"
 
-// Define this in your project settings if you want higher-quality/slower downsampling.
-//#ifdef IMAGELOADER_NICE_FILTER
+// Should be last include
+#include "tier0/memdbgon.h"
 
 
 //-----------------------------------------------------------------------------
@@ -39,31 +36,33 @@ typedef void (*GenMipMapLevelFunc_t )( unsigned char *src, unsigned char *dst, i
 
 static ImageFormatInfo_t g_ImageFormatInfo[] =
 {
-	{ "IMAGE_FORMAT_RGBA8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_RGBA8888,
-	{ "IMAGE_FORMAT_ABGR8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_ABGR8888, 
-	{ "IMAGE_FORMAT_RGB888",	3, 8, 8, 8, 0, false }, // IMAGE_FORMAT_RGB888,
-	{ "IMAGE_FORMAT_BGR888",	3, 8, 8, 8, 0, false }, // IMAGE_FORMAT_BGR888,
-	{ "IMAGE_FORMAT_RGB565",	2, 5, 6, 5, 0, false }, // IMAGE_FORMAT_RGB565, 
-	{ "IMAGE_FORMAT_I8",		1, 0, 0, 0, 0, false }, // IMAGE_FORMAT_I8,
-	{ "IMAGE_FORMAT_IA88",		2, 0, 0, 0, 8, false }, // IMAGE_FORMAT_IA88
-	{ "IMAGE_FORMAT_P8",		1, 0, 0, 0, 0, false }, // IMAGE_FORMAT_P8
-	{ "IMAGE_FORMAT_A8",		1, 0, 0, 0, 8, false }, // IMAGE_FORMAT_A8
-	{ "IMAGE_FORMAT_RGB888_BLUESCREEN", 3, 8, 8, 8, 0, false },	// IMAGE_FORMAT_RGB888_BLUESCREEN
-	{ "IMAGE_FORMAT_BGR888_BLUESCREEN", 3, 8, 8, 8, 0, false },	// IMAGE_FORMAT_BGR888_BLUESCREEN
-	{ "IMAGE_FORMAT_ARGB8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_ARGB8888
-	{ "IMAGE_FORMAT_BGRA8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_BGRA8888
-	{ "IMAGE_FORMAT_DXT1",		0, 0, 0, 0, 0, true }, // IMAGE_FORMAT_DXT1
-	{ "IMAGE_FORMAT_DXT3",		0, 0, 0, 0, 8, true }, // IMAGE_FORMAT_DXT3
-	{ "IMAGE_FORMAT_DXT5",		0, 0, 0, 0, 8, true }, // IMAGE_FORMAT_DXT5
-	{ "IMAGE_FORMAT_BGRX8888",	4, 8, 8, 8, 0, false }, // IMAGE_FORMAT_BGRX8888
-	{ "IMAGE_FORMAT_BGR565",	2, 5, 6, 5, 0, false }, // IMAGE_FORMAT_BGR565
-	{ "IMAGE_FORMAT_BGRX5551",	2, 5, 5, 5, 0, false }, // IMAGE_FORMAT_BGRX5551
-	{ "IMAGE_FORMAT_BGRA4444",	2, 4, 4, 4, 4, false },	 // IMAGE_FORMAT_BGRA4444
-	{ "IMAGE_FORMAT_DXT1_ONEBITALPHA",		0, 0, 0, 0, 0, true }, // IMAGE_FORMAT_DXT1_ONEBITALPHA
-	{ "IMAGE_FORMAT_BGRA5551",	2, 5, 5, 5, 1, false }, // IMAGE_FORMAT_BGRA5551
-	{ "IMAGE_FORMAT_UV88",	    2, 8, 8, 0, 0, false }, // IMAGE_FORMAT_UV88
-	{ "IMAGE_FORMAT_UVWQ8888",	    4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_UV88
-	{ "IMAGE_FORMAT_RGBA16161616F",	    8, 16, 16, 16, 16, false }, // IMAGE_FORMAT_UV88
+	{ "RGBA8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_RGBA8888,
+	{ "ABGR8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_ABGR8888, 
+	{ "RGB888",	3, 8, 8, 8, 0, false }, // IMAGE_FORMAT_RGB888,
+	{ "BGR888",	3, 8, 8, 8, 0, false }, // IMAGE_FORMAT_BGR888,
+	{ "RGB565",	2, 5, 6, 5, 0, false }, // IMAGE_FORMAT_RGB565, 
+	{ "I8",		1, 0, 0, 0, 0, false }, // IMAGE_FORMAT_I8,
+	{ "IA88",		2, 0, 0, 0, 8, false }, // IMAGE_FORMAT_IA88
+	{ "P8",		1, 0, 0, 0, 0, false }, // IMAGE_FORMAT_P8
+	{ "A8",		1, 0, 0, 0, 8, false }, // IMAGE_FORMAT_A8
+	{ "RGB888_BLUESCREEN", 3, 8, 8, 8, 0, false },	// IMAGE_FORMAT_RGB888_BLUESCREEN
+	{ "BGR888_BLUESCREEN", 3, 8, 8, 8, 0, false },	// IMAGE_FORMAT_BGR888_BLUESCREEN
+	{ "ARGB8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_ARGB8888
+	{ "BGRA8888",	4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_BGRA8888
+	{ "DXT1",		0, 0, 0, 0, 0, true }, // IMAGE_FORMAT_DXT1
+	{ "DXT3",		0, 0, 0, 0, 8, true }, // IMAGE_FORMAT_DXT3
+	{ "DXT5",		0, 0, 0, 0, 8, true }, // IMAGE_FORMAT_DXT5
+	{ "BGRX8888",	4, 8, 8, 8, 0, false }, // IMAGE_FORMAT_BGRX8888
+	{ "BGR565",	2, 5, 6, 5, 0, false }, // IMAGE_FORMAT_BGR565
+	{ "BGRX5551",	2, 5, 5, 5, 0, false }, // IMAGE_FORMAT_BGRX5551
+	{ "BGRA4444",	2, 4, 4, 4, 4, false },	 // IMAGE_FORMAT_BGRA4444
+	{ "DXT1_ONEBITALPHA",		0, 0, 0, 0, 0, true }, // IMAGE_FORMAT_DXT1_ONEBITALPHA
+	{ "BGRA5551",	2, 5, 5, 5, 1, false }, // IMAGE_FORMAT_BGRA5551
+	{ "UV88",	    2, 8, 8, 0, 0, false }, // IMAGE_FORMAT_UV88
+	{ "UVWQ8888",	    4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_UVWQ8899
+	{ "RGBA16161616F",	    8, 16, 16, 16, 16, false }, // IMAGE_FORMAT_RGBA16161616F
+	{ "RGBA16161616",	    8, 16, 16, 16, 16, false }, // IMAGE_FORMAT_RGBA16161616
+	{ "IMAGE_FORMAT_UVLX8888",	    4, 8, 8, 8, 8, false }, // IMAGE_FORMAT_UVLX8899
 };
 
 
@@ -91,6 +90,7 @@ static void RGBA8888ToBGRA5551( unsigned char *src, unsigned char *dst, int numP
 static void RGBA8888ToBGRA4444( unsigned char *src, unsigned char *dst, int numPixels );
 static void RGBA8888ToUV88( unsigned char *src, unsigned char *dst, int numPixels );
 static void RGBA8888ToUVWQ8888( unsigned char *src, unsigned char *dst, int numPixels );
+static void RGBA8888ToUVLX8888( unsigned char *src, unsigned char *dst, int numPixels );
 //static void RGBA8888ToRGBA16161616F( unsigned char *src, unsigned char *dst, int numPixels );
 
 static void ABGR8888ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
@@ -112,6 +112,7 @@ static void BGRA5551ToRGBA8888( unsigned char *src, unsigned char *dst, int numP
 static void BGRA4444ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
 static void UV88ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
 static void UVWQ8888ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
+static void UVLX8888ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
 //static void RGBA16161616FToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels );
 
 // Mipmap Generation functions
@@ -132,6 +133,7 @@ static void GenMipMapLevelBGRA5551( unsigned char *src, unsigned char *dst, int 
 static void GenMipMapLevelBGRA4444( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight );
 static void GenMipMapLevelUV88( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight );
 static void GenMipMapLevelUVWQ8888( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight );
+static void GenMipMapLevelUVLX8888( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight );
 //static void GenMipMapLevelRGBA16161616F( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight );
 
 
@@ -181,6 +183,8 @@ static UserFormatToRGBA8888Func_t GetUserFormatToRGBA8888Func_t( ImageFormat src
 		return UV88ToRGBA8888;
 	case IMAGE_FORMAT_UVWQ8888:
 		return UVWQ8888ToRGBA8888;
+	case IMAGE_FORMAT_UVLX8888:
+		return UVLX8888ToRGBA8888;
 	case IMAGE_FORMAT_RGBA16161616F:
 		return NULL;
 		//		return RGBA16161616FToRGBA8888;
@@ -235,6 +239,8 @@ static RGBA8888ToUserFormatFunc_t GetRGBA8888ToUserFormatFunc_t( ImageFormat dst
 		return RGBA8888ToUV88;
 	case IMAGE_FORMAT_UVWQ8888:
 		return RGBA8888ToUVWQ8888;
+	case IMAGE_FORMAT_UVLX8888:
+		return RGBA8888ToUVLX8888;
 	case IMAGE_FORMAT_RGBA16161616F:
 		return NULL;
 //		return RGBA8888ToRGBA16161616F;
@@ -285,6 +291,8 @@ GenMipMapLevelFunc_t GetGenMipMapLevelFunc( ImageFormat imageFormat )
 		return &GenMipMapLevelUV88;
 	case IMAGE_FORMAT_UVWQ8888:
 		return &GenMipMapLevelUVWQ8888;
+	case IMAGE_FORMAT_UVLX8888:
+		return &GenMipMapLevelUVLX8888;
 	case IMAGE_FORMAT_RGBA16161616F:
 		return NULL;
 //		return &GenMipMapLevelRGBA16161616F;
@@ -1164,7 +1172,7 @@ bool ConvertImageFormat( unsigned char *src, ImageFormat srcImageFormat,
 		descOut.dwSize = sizeof( descOut );
 		
 		// Encode the texture
-		S3TCencodeEx( &descIn, NULL, &descOut, dst, dwEncodeType, weight, NULL, 0, 0 );
+		S3TCencode( &descIn, NULL, &descOut, dst, dwEncodeType, weight );
 		return true;
 	}
 #endif
@@ -1406,7 +1414,7 @@ void GammaCorrectRGBA8888( unsigned char *src, unsigned char* dst, int width, in
 // Generate a NICE filter kernel
 //-----------------------------------------------------------------------------
 
-static void GenerateNiceFilter( float wratio, float hratio, int kernelDiameter, float* pKernel )
+static void GenerateNiceFilter( float wratio, float hratio, int kernelDiameter, float* pKernel, float *pInvKernel )
 {
 	// Compute a kernel...
 	int i, j;
@@ -1435,9 +1443,16 @@ static void GenerateNiceFilter( float wratio, float hratio, int kernelDiameter, 
 			else
 			{
 				float t = M_PI * d;
-				float sinc = sin( t ) / t;
-				float sinc3 = 3.0f * sin( t / 3.0f ) / t;
-				pKernel[i * kernelWidth + j] = sinc * sinc3;
+				if ( t != 0 )
+				{
+					float sinc = sin( t ) / t;
+					float sinc3 = 3.0f * sin( t / 3.0f ) / t;
+					pKernel[i * kernelWidth + j] = sinc * sinc3;
+				}
+				else
+				{
+					pKernel[i * kernelWidth + j] = 1.0f;
+				}
 				total += pKernel[i * kernelWidth + j];
 			}
 			x += dx;
@@ -1450,15 +1465,17 @@ static void GenerateNiceFilter( float wratio, float hratio, int kernelDiameter, 
 	{
 		for ( j = 0; j < kernelWidth; ++j )
 		{
-			pKernel[i * kernelWidth + j] /= total;
+			int nPixel = i * kernelWidth + j;
+			pKernel[nPixel] /= total;
+			pInvKernel[nPixel] = wratio * hratio * pKernel[nPixel]; 
 		}
 	} 
 }
 
+
 //-----------------------------------------------------------------------------
 // Resample an image
 //-----------------------------------------------------------------------------
-
 static inline unsigned char Clamp( float x )
 {
 	int idx = (int)(x + 0.5f);
@@ -1473,27 +1490,288 @@ inline bool IsPowerOfTwo( int x )
 }
 
 
-bool ResampleRGBA8888( unsigned char* src, unsigned char* dst, int srcWidth, int srcHeight,
-						int dstWidth, int dstHeight, float srcGamma, float dstGamma, 
-						float colorScale, bool bNormalMap )
+struct KernelInfo_t
+{
+	float *m_pKernel;
+	float *m_pInvKernel;
+	int m_nWidth;
+	int m_nHeight;
+	int m_nDiameter;
+};
+
+enum KernelType_t
+{
+	KERNEL_DEFAULT = 0,
+	KERNEL_NORMALMAP,
+	KERNEL_ALPHATEST,
+};
+
+typedef void (*ApplyKernelFunc_t)( const KernelInfo_t &kernel, const ResampleInfo_t &info, int wratio, int hratio, float* gammaToLinear, float *pAlphaResult );
+
+//-----------------------------------------------------------------------------
+// Apply Kernel to an image
+//-----------------------------------------------------------------------------
+template< int type, bool bNiceFilter >
+class CKernelWrapper
+{
+public:
+	static void ApplyKernel( const KernelInfo_t &kernel, const ResampleInfo_t &info, int wratio, int hratio, float* gammaToLinear, float *pAlphaResult )
+	{
+		float invDstGamma = 1.0f / info.m_flDestGamma;
+
+		// Apply the kernel to the image
+		int nInitialY = (hratio >> 1) - ((hratio * kernel.m_nDiameter) >> 1);
+		int nInitialX = (wratio >> 1) - ((wratio * kernel.m_nDiameter) >> 1);
+
+		float flAlphaThreshhold = (info.m_flAlphaThreshhold >= 0 ) ? 255.0f * info.m_flAlphaThreshhold : 255.0f * 0.4f;
+		for ( int i = 0; i < info.m_nDestHeight; ++i )
+		{
+			int startY = hratio * i + nInitialY;
+			int dstPixel = (i * info.m_nDestWidth) << 2;
+			for ( int j = 0; j < info.m_nDestWidth; ++j, dstPixel += 4 )
+			{
+				int startX = wratio * j + nInitialX;
+				float total[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+				for ( int k = 0, srcY = startY; k < kernel.m_nHeight; ++k, ++srcY )
+				{
+					int sy = srcY;
+					if ( info.m_nFlags & RESAMPLE_CLAMPT )
+					{
+						sy = clamp( sy, 0, info.m_nSrcHeight - 1 );
+					}
+					else
+					{
+						// This works since srcHeight is a power of two.
+						// Even for negative #s!
+						sy &= (info.m_nSrcHeight - 1);
+					}
+
+					sy *= info.m_nSrcWidth;
+
+					int kernelIdx;
+					if ( bNiceFilter )
+					{
+						kernelIdx = k * kernel.m_nWidth;
+					}
+					else
+					{
+						kernelIdx = 0;
+					}
+
+					for ( int l = 0, srcX = startX; l < kernel.m_nWidth; ++l, ++srcX, ++kernelIdx )
+					{
+						int sx = srcX;
+						if ( info.m_nFlags & RESAMPLE_CLAMPS )
+						{
+							sx = clamp( sx, 0, info.m_nSrcWidth - 1 );
+						}
+						else
+						{
+							// This works since srcHeight is a power of two.
+							// Even for negative #s!
+							sx &= (info.m_nSrcWidth - 1);
+						}
+						
+						int srcPixel = (sy + sx) << 2;
+
+						float flKernelFactor;
+						if ( bNiceFilter )
+						{
+							flKernelFactor = kernel.m_pKernel[kernelIdx];
+							if ( flKernelFactor == 0.0f )
+								continue;
+						}
+						else
+						{
+							flKernelFactor = kernel.m_pKernel[0];
+						}
+
+						if( type == KERNEL_NORMALMAP )
+						{
+							total[0] += flKernelFactor * info.m_pSrc[srcPixel + 0];
+							total[1] += flKernelFactor * info.m_pSrc[srcPixel + 1];
+							total[2] += flKernelFactor * info.m_pSrc[srcPixel + 2];
+							total[3] += flKernelFactor * info.m_pSrc[srcPixel + 3];
+						}
+						else if ( type == KERNEL_ALPHATEST )
+						{
+							total[0] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 0] ];
+							total[1] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 1] ];
+							total[2] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 2] ];
+							if ( info.m_pSrc[srcPixel + 3] > 192 )
+							{
+								total[3] += flKernelFactor * 255.0f;
+							}
+						}
+						else
+						{
+							total[0] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 0] ];
+							total[1] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 1] ];
+							total[2] += flKernelFactor * gammaToLinear[ info.m_pSrc[srcPixel + 2] ];
+							total[3] += flKernelFactor * info.m_pSrc[srcPixel + 3];
+						}
+					}
+				}
+
+				// NOTE: Can't use a table here, we lose too many bits
+				if( type == KERNEL_NORMALMAP )
+				{
+					info.m_pDest[ dstPixel + 0 ] = 127.0f + ( info.m_flColorScale * ( total[0] - 127.0f ) );
+					info.m_pDest[ dstPixel + 1 ] = 127.0f + ( info.m_flColorScale * ( total[1] - 127.0f ) );
+					info.m_pDest[ dstPixel + 2 ] = 127.0f + ( info.m_flColorScale * ( total[2] - 127.0f ) );
+					info.m_pDest[ dstPixel + 3 ] = Clamp(total[3]);
+				}
+				else if ( type == KERNEL_ALPHATEST )
+				{
+					// If there's more than 40% coverage, then keep the pixel (renormalize the color based on coverage)
+					float flFactor = info.m_flColorScale / 255.0f;
+					float flAlpha = ( total[3] >= flAlphaThreshhold ) ? 255 : 0; 
+
+					info.m_pDest[ dstPixel + 0 ] = (total[0] > 0) ? Clamp( 255.0f * pow( total[0] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 1 ] = (total[1] > 0) ? Clamp( 255.0f * pow( total[1] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 2 ] = (total[2] > 0) ? Clamp( 255.0f * pow( total[2] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 3 ] = Clamp( flAlpha );
+
+					for ( int k = 0, srcY = startY; k < kernel.m_nHeight; ++k, ++srcY )
+					{
+						// This works since srcHeight is a power of two.
+						// Even for negative #s!
+						int sy = srcY & (info.m_nSrcHeight - 1);
+						sy *= info.m_nSrcWidth;
+
+						int kernelIdx;
+						if ( bNiceFilter )
+						{
+							kernelIdx = k * kernel.m_nWidth;
+						}
+						else
+						{
+							kernelIdx = 0;
+						}
+
+						for ( int l = 0, srcX = startX; l < kernel.m_nWidth; ++l, ++srcX, ++kernelIdx )
+						{
+							int sx = srcX & (info.m_nSrcWidth - 1);					
+							int srcPixel = sy + sx;
+
+							float flKernelFactor;
+							if ( bNiceFilter )
+							{
+								flKernelFactor = kernel.m_pInvKernel[kernelIdx];
+							}
+							else
+							{
+								flKernelFactor = kernel.m_pInvKernel[0];
+							}
+
+							pAlphaResult[srcPixel] += flKernelFactor * flAlpha;
+						}
+					}
+				}
+				else
+				{
+					float flFactor = info.m_flColorScale / 255.0f;
+
+					info.m_pDest[ dstPixel + 0 ] = (total[0] > 0) ? Clamp( 255.0f * pow( total[0] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 1 ] = (total[1] > 0) ? Clamp( 255.0f * pow( total[1] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 2 ] = (total[2] > 0) ? Clamp( 255.0f * pow( total[2] * flFactor, invDstGamma ) ) : 0;
+					info.m_pDest[ dstPixel + 3 ] = Clamp( total[3] );
+				}
+			}
+		}
+
+		if ( type == KERNEL_ALPHATEST )
+		{
+			// Find the delta between the alpha + source image
+			int i;
+			for ( i = 0; i < info.m_nSrcHeight; ++i )
+			{
+				int dstPixel = i * info.m_nSrcWidth;
+				for ( int j = 0; j < info.m_nSrcWidth; ++j, ++dstPixel )
+				{
+					pAlphaResult[dstPixel] = fabs( pAlphaResult[dstPixel] - info.m_pSrc[dstPixel * 4 + 3] );
+				}
+			}
+
+			int nInitialY = 0;
+			int nInitialX = 0;
+			float flAlphaThreshhold = (info.m_flAlphaHiFreqThreshhold >= 0 ) ? 255.0f * info.m_flAlphaHiFreqThreshhold : 255.0f * 0.4f;
+			for ( i = 0; i < info.m_nDestHeight; ++i )
+			{
+				int startY = hratio * i + nInitialY;
+				int dstPixel = (i * info.m_nDestWidth) << 2;
+				for ( int j = 0; j < info.m_nDestWidth; ++j, dstPixel += 4 )
+				{
+					if ( info.m_pDest[ dstPixel + 3 ] == 255 )
+						continue;
+
+					int startX = wratio * j + nInitialX;
+					float flAlphaDelta = 0.0f;
+					for ( int k = 0, srcY = startY; k < hratio; ++k, ++srcY )
+					{
+						// This works since srcHeight is a power of two.
+						// Even for negative #s!
+						int sy = srcY & (info.m_nSrcHeight - 1);
+						sy *= info.m_nSrcWidth;
+						for ( int l = 0, srcX = startX; l < wratio; ++l, ++srcX )
+						{
+							int sx = srcX & (info.m_nSrcWidth - 1);					
+							int srcPixel = sy + sx;
+							flAlphaDelta += pAlphaResult[srcPixel];
+						}
+					}
+
+					flAlphaDelta /= (hratio * wratio);
+					if ( flAlphaDelta > flAlphaThreshhold )
+					{
+						info.m_pDest[ dstPixel + 3 ] = 255.0f;
+					}
+				}
+			}
+		}
+	}
+};
+
+typedef CKernelWrapper< KERNEL_DEFAULT, false >		ApplyKernelDefault_t;
+typedef CKernelWrapper< KERNEL_NORMALMAP, false >	ApplyKernelNormalmap_t;
+typedef CKernelWrapper< KERNEL_ALPHATEST, false >	ApplyKernelAlphatest_t;
+typedef CKernelWrapper< KERNEL_DEFAULT, true >		ApplyKernelDefaultNice_t;
+typedef CKernelWrapper< KERNEL_NORMALMAP, true >	ApplyKernelNormalmapNice_t;
+typedef CKernelWrapper< KERNEL_ALPHATEST, true >	ApplyKernelAlphatestNice_t;
+
+static ApplyKernelFunc_t g_KernelFunc[] =
+{
+	ApplyKernelDefault_t::ApplyKernel,
+	ApplyKernelNormalmap_t::ApplyKernel,
+	ApplyKernelAlphatest_t::ApplyKernel,
+};
+
+static ApplyKernelFunc_t g_KernelFuncNice[] =
+{
+	ApplyKernelDefaultNice_t::ApplyKernel,
+	ApplyKernelNormalmapNice_t::ApplyKernel,
+	ApplyKernelAlphatestNice_t::ApplyKernel,
+};
+
+bool ResampleRGBA8888( const ResampleInfo_t& info )
 {
 	// No resampling needed, just gamma correction
-	if (srcWidth == dstWidth && srcHeight == dstHeight )
+	if ( info.m_nSrcWidth == info.m_nDestWidth && info.m_nSrcHeight == info.m_nDestHeight )
 	{
 		// Here, we need to gamma convert the source image..
-		GammaCorrectRGBA8888( src, dst, srcWidth, srcHeight, srcGamma, dstGamma );
+		GammaCorrectRGBA8888( info.m_pSrc, info.m_pDest, info.m_nSrcWidth, info.m_nSrcHeight, info.m_flSrcGamma, info.m_flDestGamma );
 		return true;
 	}
 
 	// fixme: has to be power of two for now.
-	if( !IsPowerOfTwo(srcWidth) || !IsPowerOfTwo(srcHeight) ||
-		!IsPowerOfTwo(dstWidth) || !IsPowerOfTwo(dstHeight) )
+	if( !IsPowerOfTwo(info.m_nSrcWidth) || !IsPowerOfTwo(info.m_nSrcHeight) ||
+		!IsPowerOfTwo(info.m_nDestWidth) || !IsPowerOfTwo(info.m_nDestHeight) )
 	{
 		return false;
 	}
 
 	// fixme: can only downsample for now.
-	if( (srcWidth < dstWidth) || (srcHeight < dstHeight) )
+	if( (info.m_nSrcWidth < info.m_nDestWidth) || (info.m_nSrcHeight < info.m_nDestHeight) )
 	{
 		return false;
 	}
@@ -1502,145 +1780,124 @@ bool ResampleRGBA8888( unsigned char* src, unsigned char* dst, int srcWidth, int
 	static float gammaToLinear[256];
 	static float lastSrcGamma = -1;
 
-	if (lastSrcGamma != srcGamma)
+	if (lastSrcGamma != info.m_flSrcGamma)
 	{
-		ConstructFloatGammaTable( gammaToLinear, srcGamma, 1.0f );
-		lastSrcGamma = srcGamma;
+		ConstructFloatGammaTable( gammaToLinear, info.m_flSrcGamma, 1.0f );
+		lastSrcGamma =  info.m_flSrcGamma;
 	}
 
-	int wratio = srcWidth / dstWidth;
-	int hratio = srcHeight / dstHeight;
+	int wratio = info.m_nSrcWidth / info.m_nDestWidth;
+	int hratio = info.m_nSrcHeight / info.m_nDestHeight;
 	
-	int i, j;
+	KernelInfo_t kernel;
 
-#ifdef IMAGELOADER_NICE_FILTER
-	// Kernel size is measured in dst pixels
-	int kernelDiameter = 6;
-
-	// Compute a kernel...
-	int kernelWidth = kernelDiameter * wratio;
-	int kernelHeight = kernelDiameter * hratio;
-
-	// Cache the filter....
-	float* pKernel;
 	float* pTempMemory = 0;
+	float* pTempInvMemory = 0;
 	static float* kernelCache[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int power = -1;
-
-	if (wratio == hratio)
+	static float* pInvKernelCache[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	float pKernelMem[1];
+	float pInvKernelMem[1];
+	if ( info.m_nFlags & RESAMPLE_NICE_FILTER )
 	{
-		power = 0;
-		int tempWidth = wratio;
-		while (tempWidth > 1)
+		// Kernel size is measured in dst pixels
+		kernel.m_nDiameter = 6;
+
+		// Compute a kernel...
+		kernel.m_nWidth = kernel.m_nDiameter * wratio;
+		kernel.m_nHeight = kernel.m_nDiameter * hratio;
+
+		// Cache the filter....
+		int power = -1;
+
+		if (wratio == hratio)
 		{
-			++power;
-			tempWidth >>= 1;
+			power = 0;
+			int tempWidth = wratio;
+			while (tempWidth > 1)
+			{
+				++power;
+				tempWidth >>= 1;
+			}
+
+			// Don't cache anything bigger than 512x512
+			if (power >= 10)
+			{
+				power = -1;
+			}
 		}
 
-		// Don't cache anything bigger than 512x512
-		if (power >= 10)
-			power = -1;
-	}
-
-	if (power >= 0)
-	{
-		if (!kernelCache[power])
+		if (power >= 0)
 		{
-			kernelCache[power] = new float[kernelWidth * kernelHeight];
-			GenerateNiceFilter( wratio, hratio, kernelDiameter, kernelCache[power] ); 
-		}
+			if (!kernelCache[power])
+			{
+				kernelCache[power] = new float[kernel.m_nWidth * kernel.m_nHeight];
+				pInvKernelCache[power] = new float[kernel.m_nWidth * kernel.m_nHeight];
+				GenerateNiceFilter( wratio, hratio, kernel.m_nDiameter, kernelCache[power], pInvKernelCache[power] ); 
+			}
 
-		pKernel = kernelCache[power];
+			kernel.m_pKernel = kernelCache[power];
+			kernel.m_pInvKernel = pInvKernelCache[power];
+		}
+		else
+		{
+			// Don't cache non-square kernels
+			pTempMemory = new float[kernel.m_nWidth * kernel.m_nHeight];
+			pTempInvMemory = new float[kernel.m_nWidth * kernel.m_nHeight];
+			GenerateNiceFilter( wratio, hratio, kernel.m_nDiameter, pTempMemory, pTempInvMemory ); 
+			kernel.m_pKernel = pTempMemory;
+			kernel.m_pInvKernel = pTempInvMemory;
+		}
 	}
 	else
 	{
-		// Don't cache non-square kernels
-		pTempMemory = new float[kernelWidth * kernelHeight];
-		GenerateNiceFilter( wratio, hratio, kernelDiameter, pTempMemory ); 
-		pKernel = pTempMemory;
+		// Compute a kernel...
+		kernel.m_nWidth = wratio;
+		kernel.m_nHeight = hratio;
+
+		kernel.m_nDiameter = 1;
+
+		// Simple implementation of a box filter that doesn't block the stack!
+		pKernelMem[0] = 1.0f / (float)(kernel.m_nWidth * kernel.m_nHeight);
+		pInvKernelMem[0] = 1.0f;
+		kernel.m_pKernel = pKernelMem;
+		kernel.m_pInvKernel = pInvKernelMem;
 	}
 
-#else
-	// Compute a kernel...
-	int kernelWidth = wratio;
-	int kernelHeight = hratio;
-
-	int kernelDiameter = 1;
-
-	// Simple implementation of a box filter that doesn't block the stack!
-	float pKernel[1];
-	pKernel[0] = 1.0f / (float)(kernelWidth * kernelHeight);
-#endif
-
-	float invDstGamma = 1.0f / dstGamma;
-
-	// Apply the kernel to the image
-	for ( i = 0; i < dstHeight; ++i )
+	float *pAlphaResult = NULL;
+	KernelType_t type;
+	if ( info.m_nFlags & RESAMPLE_NORMALMAP )
 	{
-		for ( j = 0; j < dstWidth; ++j )
+		type = KERNEL_NORMALMAP;
+	}
+	else if ( info.m_nFlags & RESAMPLE_ALPHATEST )
+	{
+		int nSize = info.m_nSrcHeight * info.m_nSrcWidth * sizeof(float);
+		pAlphaResult = (float*)malloc( nSize );
+		memset( pAlphaResult, 0, nSize );
+		type = KERNEL_ALPHATEST;
+	}
+	else
+	{
+		type = KERNEL_DEFAULT;
+	}
+
+	if ( info.m_nFlags & RESAMPLE_NICE_FILTER )
+	{	
+		g_KernelFuncNice[type]( kernel, info, wratio, hratio, gammaToLinear, pAlphaResult );
+		if (pTempMemory)
 		{
-			int dstPixel = (i * dstWidth + j) * 4;
-
-			int srcY = hratio * i + (hratio >> 1) - ((hratio * kernelDiameter) >> 1);
-			float total[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-			for (int k = 0; k < kernelHeight; ++k, ++srcY )
-			{
-				// This works since srcHeight is a power of two.
-				// Even for negative #s!
-				int sy = srcY & (srcHeight - 1);
-				int srcX = wratio * j + (wratio >> 1) - ((wratio * kernelDiameter) >> 1);
-
-				for (int l = 0; l < kernelWidth; ++l, ++srcX )
-				{
-					int sx = srcX & (srcWidth - 1);					
-					int srcPixel = (sy * srcWidth + sx) * 4;
-
-#ifdef IMAGELOADER_NICE_FILTER
-					int kernelIdx = k * kernelWidth + l;
-#else
-					int kernelIdx = 0;
-#endif
-					// conditional in the inner loop?!?!?! Mmmm, branch prediction.
-					if( bNormalMap )
-					{
-						total[0] += pKernel[kernelIdx] * src[srcPixel + 0];
-						total[1] += pKernel[kernelIdx] * src[srcPixel + 1];
-						total[2] += pKernel[kernelIdx] * src[srcPixel + 2];
-						total[3] += pKernel[kernelIdx] * src[srcPixel + 3];
-					}
-					else
-					{
-						total[0] += pKernel[kernelIdx] * gammaToLinear[ src[srcPixel + 0] ];
-						total[1] += pKernel[kernelIdx] * gammaToLinear[ src[srcPixel + 1] ];
-						total[2] += pKernel[kernelIdx] * gammaToLinear[ src[srcPixel + 2] ];
-						total[3] += pKernel[kernelIdx] * src[srcPixel + 3];
-					}
-				}
-			}
-
-			// conditional in the inner loop?!?!?! Mmmm, branch prediction.
-			if( bNormalMap )
-			{
-				dst[ dstPixel + 0 ] = 127.0f + ( colorScale * ( total[0] - 127.0f ) );
-				dst[ dstPixel + 1 ] = 127.0f + ( colorScale * ( total[1] - 127.0f ) );
-				dst[ dstPixel + 2 ] = 127.0f + ( colorScale * ( total[2] - 127.0f ) );
-				dst[ dstPixel + 3 ] = Clamp(total[3]);
-			}
-			else
-			{
-				// NOTE: Can't use a table here, we lose too many bits
-				dst[ dstPixel + 0 ] = Clamp( 255.0f * pow( total[0] * colorScale / 255.0f, invDstGamma ) );
-				dst[ dstPixel + 1 ] = Clamp( 255.0f * pow( total[1] * colorScale / 255.0f, invDstGamma ) );
-				dst[ dstPixel + 2 ] = Clamp( 255.0f * pow( total[2] * colorScale / 255.0f, invDstGamma ) );
-				dst[ dstPixel + 3 ] = Clamp(total[3]);
-			}
+			delete[] pTempMemory;
 		}
 	}
+	else
+	{
+		g_KernelFunc[type]( kernel, info, wratio, hratio, gammaToLinear, pAlphaResult );
+	}
 
-#ifdef IMAGELOADER_NICE_FILTER
-	if (pTempMemory)
-		delete[] pTempMemory;
-#endif
+	if ( pAlphaResult )
+	{
+		free( pAlphaResult );
+	}
 
 	return true;
 }
@@ -1663,8 +1920,17 @@ void GenerateMipmapLevels( unsigned char* pSrc, unsigned char* pDst, int width,
 	while( true )
 	{
 		// This generates a mipmap in RGBA8888, linear space
-		ResampleRGBA8888( pSrc, tmpImage.Base(), 
-			width, height, dstWidth, dstHeight, srcGamma, dstGamma );
+		ResampleInfo_t info;
+		info.m_pSrc = pSrc;
+		info.m_pDest = tmpImage.Base();
+		info.m_nSrcWidth = width;
+		info.m_nSrcHeight = height;
+		info.m_nDestWidth = dstWidth;
+		info.m_nDestHeight = dstHeight;
+		info.m_flSrcGamma = srcGamma;
+		info.m_flDestGamma = dstGamma;
+
+		ResampleRGBA8888( info );
 
 		// each mipmap level needs to be color converted separately
 		ConvertImageFormat( tmpImage.Base(), IMAGE_FORMAT_RGBA8888,
@@ -1757,8 +2023,25 @@ void ImageLoader::ConvertNormalMapRGBA8888ToDUDVMapUVWQ8888( unsigned char *src,
 	{
 		dst[0] = ( char )( ( ( int )src[0] ) - 127 );
 		dst[1] = ( char )( ( ( int )src[1] ) - 127 );
-		dst[2] = ( char )127;
-		dst[3] = ( char )src[3]; // FIXME: not sure if this is signed properly if we ever use this.
+		dst[2] = ( char )( ( ( int )src[2] ) - 127 );
+		dst[3] = ( char )( ( ( int )src[3] ) - 127 );
+	}
+}
+
+void ImageLoader::ConvertNormalMapRGBA8888ToDUDVMapUVLX8888( unsigned char *src, int width, int height,
+										                     unsigned char *dst_ )
+{
+	unsigned char *lastPixel = src + width * height * 4;
+	char *dst = ( char * )dst_; // NOTE: this is signed!!!!
+
+	for( ; src < lastPixel; src += 4, dst += 4 )
+	{
+		dst[0] = ( char )( ( ( int )src[0] ) - 127 );
+		dst[1] = ( char )( ( ( int )src[1] ) - 127 );
+
+		unsigned char *pUDst = (unsigned char *)dst;
+		pUDst[2] = src[3];
+		pUDst[3] = 0xFF;
 	}
 }
 
@@ -1906,6 +2189,38 @@ bool FlipImageHorizontally( unsigned char *src, unsigned char *dst,
 	}
 #undef SRC
 #undef DST
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Image rotation
+//-----------------------------------------------------------------------------
+
+bool SwapAxes( unsigned char *src, 
+			  int widthHeight, ImageFormat imageFormat )
+{
+#define SRC(x,y) src[((x)+(y)*widthHeight)*sizeInBytes]
+	if( IsCompressed( imageFormat ) )
+	{
+		return false;
+	}
+
+	int x, y;
+
+	unsigned char tmp[4];
+	int sizeInBytes = SizeInBytes( imageFormat );
+	Assert( sizeInBytes <= 4 && sizeInBytes > 0 );
+
+	for( y = 0; y < widthHeight; y++ )
+	{
+		for( x = 0; x < y; x++ )
+		{
+			memcpy( tmp, &SRC( x, y ), sizeInBytes );
+			memcpy( &SRC( x, y ), &SRC( y, x ), sizeInBytes );
+			memcpy( &SRC( y, x ), tmp, sizeInBytes );
+		}
+	}
+#undef SRC
 	return true;
 }
 
@@ -2141,6 +2456,11 @@ void RGBA8888ToUV88( unsigned char *src, unsigned char *dst, int numPixels )
 }
 
 void RGBA8888ToUVWQ8888( unsigned char *src, unsigned char *dst, int numPixels )
+{
+	RGBA8888ToRGBA8888( src, dst, numPixels );
+}
+
+void RGBA8888ToUVLX8888( unsigned char *src, unsigned char *dst, int numPixels )
 {
 	RGBA8888ToRGBA8888( src, dst, numPixels );
 }
@@ -2407,6 +2727,11 @@ void UV88ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels )
 }
 
 void UVWQ8888ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels )
+{
+	RGBA8888ToRGBA8888( src, dst, numPixels );
+}
+
+void UVLX8888ToRGBA8888( unsigned char *src, unsigned char *dst, int numPixels )
 {
 	RGBA8888ToRGBA8888( src, dst, numPixels );
 }
@@ -2714,6 +3039,11 @@ void GenMipMapLevelUV88( unsigned char *src, unsigned char *dst, int srcWidth, i
 }
 
 void GenMipMapLevelUVWQ8888( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight )
+{
+	GenMipMapLevelRGBA8888( src, dst, srcWidth, srcHeight, dstWidth, dstHeight );
+}
+
+void GenMipMapLevelUVLX8888( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight, int dstWidth, int dstHeight )
 {
 	GenMipMapLevelRGBA8888( src, dst, srcWidth, srcHeight, dstWidth, dstHeight );
 }

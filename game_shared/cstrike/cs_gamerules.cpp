@@ -1908,10 +1908,12 @@ ConVar ammo_flashbang_max( "ammo_flashbang_max", "1", FCVAR_REPLICATED );
 
 			ent = NULL;
 
-			while ( ent = gEntList.FindEntityByClassname( ent, "info_player_deathmatch" ) )
+		//	while ( ent = gEntList.FindEntityByClassname( ent, "info_player_deathmatch" ) )
+			while ( ent = gEntList.FindEntityByClassname( ent, "info_player_terrorist" ) )
 				m_iSpawnPointCount_Terrorist++;
 
-			while ( ent = gEntList.FindEntityByClassname( ent, "info_player_start" ) )
+		//	while ( ent = gEntList.FindEntityByClassname( ent, "info_player_start" ) )
+			while ( ent = gEntList.FindEntityByClassname( ent, "info_player_counterterrorist" ) )
 				m_iSpawnPointCount_CT++;
 
 
