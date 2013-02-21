@@ -4258,7 +4258,8 @@ void CMapDoc::OnFileRunmap(void)
 	// Copy MAP file to BSP directory in game for compilation.
 	cmd.iSpecialCmd = CCCopyFile;
 	strcpy(cmd.szRun, "Copy File");
-	sprintf(cmd.szParms, "$path\\$file.map $bspdir\\$file.map");
+//	sprintf(cmd.szParms, "$path\\$file.map $bspdir\\$file.map");
+	sprintf(cmd.szParms, "$path\\$file.vmf $bspdir\\$file.vmf");
 	cmds.Add(cmd);
 	cmd.iSpecialCmd = 0;
 

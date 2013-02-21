@@ -126,12 +126,12 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 	// Send to master
 	Msg("CHALLENGE: %i", p->heartbeatchallenge);
 	// VXP: Old protocol
-//	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
-//		1, active, PROTOCOL_VERSION, szGD );
+	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
+		1, active, PROTOCOL_VERSION, szGD );
 	
 	// VXP: New protocol
-	Q_snprintf (string, sizeof( string ), "%c\\protocol\\%i\\challenge\\%i\\players\\%i\\max\\%i\\bots\\%i\\dedicated\\%i\\password\\%i\\secure\\%i\\gamedir\\%s\\map\\%s\\os\\%s\\lan\\%i\\proxy\\%i\\proxytarget\\%i\\proxyaddress\\%s\\version\\%s", S2M_HEARTBEAT2, PROTOCOL_VERSION, p->heartbeatchallenge, active, 100, 0, 1, 0, 0, szGD, "MAP", "w",
-		0, 0, 0, "", "hl2" );
+//	Q_snprintf (string, sizeof( string ), "%c\\protocol\\%i\\challenge\\%i\\players\\%i\\max\\%i\\bots\\%i\\dedicated\\%i\\password\\%i\\secure\\%i\\gamedir\\%s\\map\\%s\\os\\%s\\lan\\%i\\proxy\\%i\\proxytarget\\%i\\proxyaddress\\%s\\version\\%s", S2M_HEARTBEAT2, PROTOCOL_VERSION, p->heartbeatchallenge, active, 100, 0, 1, 0, 0, szGD, "MAP", "w",
+//		0, 0, 0, "", "hl2" );
 	
 
 	NET_SendPacket (NS_SERVER, strlen(string), string,  p->adr );
