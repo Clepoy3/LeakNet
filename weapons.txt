@@ -1,0 +1,51 @@
+weapon_irifle - weapon_binoculars (4, 1)
+weapon_physgun - weapon_brickbat - weapon_extinguisher (4, 4)
+weapon_smg2 - weapon_hmg1 (2, 4)
+weapon_stickylauncher - weapon_ar2 - weapon_sniperrifle - weapon_ml (2, 2)
+weapon_shotgun - weapon_ar1 (2, 1)
+weapon_gauss - weapon_manhack (4, 0)
+weapon_physcannon - weapon_flaregun (4, 2)
+weapon_rpg - weapon_bugbait (3, 3)
+
+max 9
+
+
+
+
+0		1		2		3		4		5		6		7
+
+crowbar		pistol		algn/cbmp/smg1	frag		gauss/manhack	0		0		0
+iceaxe		1		ar1/shotgun	slam		bnclrs/irifle	1		1		1
+2		2		ar2/ml/snprr/sl	molotov		flrgun/pcannon	2		2		2
+stunstick	3		cguard/hmg1	bugbait/rpg	3		3		3		3
+4		4		smg2		4		brckbt/extngr/pg4		4		4
+5		5		5		hopwire		thumper		5		5		5
+6		6		6		rollerwand	6		6		6		6
+7		7		7		7		7		7		7		7
+8		8		8		8		8		8		8		8
+9		9		immolator	9		9		9		9		9
+
+algn - alyx gun
+cbmp - cubemap
+snprr - sniper rifle
+sl - sticky launcher
+bnclrs - binoculars
+flrgun - flare gun
+pcannon - physcannon
+brckbt - brickbat
+extngr - extinguisher
+pg - physgun
+
+
+0		1		2		3		4		5		6		7?
+
+crowbar		pistol		smg1		frag		gauss		brckbt		cbmp		0?
+iceaxe		algn		ar1		slam		manhack		extngr		1		1?
+2		2		ar2		molotov		bnclrs		pg		2		2?
+stunstick	3		shotgun		bugbait		irifle		thumper		3		3?
+4		4		snprr		rpg		flrgun		rollerwand	4		4?
+5		5		sl		hopwire		pcannon		immolator	5		5?
+6		6		cguard		6		6		6		6		6?
+7		7		hmg1		ml		7		7		7		7?
+8		8		smg2		8		8		8		8		8?
+9		9		9		9		9		9		9		9?

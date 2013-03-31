@@ -3145,7 +3145,7 @@ void CModelLoader::Studio_LoadStaticMeshes( model_t* mod )
 		bool retVal;
 
 		// Load the vtx file into a temp buffer that'll go away after we leave this scope.
-		Assert( Cache_Check( &mod->cache ) );
+		Assert( Cache_Check( &mod->cache ) ); // VXP: When game is runned and WC starts
 		studiohdr_t *pStudioHdr = ( studiohdr_t * )modelloader->GetExtraData( mod );
 		retVal = Mod_LoadStudioModelVtxFileIntoTempBuffer( mod, tmpVtxMem );
 		if( !retVal )

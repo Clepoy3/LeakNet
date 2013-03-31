@@ -470,7 +470,7 @@ void CHL2_Player::Spawn(void)
 {
 //	SetModel( "models/player.mdl" );
 //	SetModel( "models/humans/male_01.mdl" );
-	SetModel( model.GetString() );
+	SetModel( (Q_strcmp ("", model.GetString()) != 0) ? model.GetString() : "models/player.mdl" );
     g_ulModelIndexPlayer = GetModelIndex();
 
 	BaseClass::Spawn();

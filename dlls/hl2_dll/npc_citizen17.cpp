@@ -298,15 +298,18 @@ void CNPC_Citizen::LocateEnemySound()
 
 	if( flZDiff < -128 )
 	{
-		EmitSound( "NPC_Citizen.UpThere" );
+	//	EmitSound( "NPC_Citizen.UpThere" );
+		EmitSound( "npc_citizen.upthere01" );
 	}
 	else if( flZDiff > 128 )
 	{
-		EmitSound( "NPC_Citizen.DownThere" );
+	//	EmitSound( "NPC_Citizen.DownThere" );
+		EmitSound( "npc_citizen.downthere01" );
 	}
 	else
 	{
-		EmitSound( "NPC_Citizen.OverHere" );
+	//	EmitSound( "NPC_Citizen.OverHere" );
+		EmitSound( "npc_citizen.overhere01" );
 	}
 //#endif
 }

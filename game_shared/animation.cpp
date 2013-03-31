@@ -270,7 +270,7 @@ void GetSequenceLinearMotion( studiohdr_t *pstudiohdr, int iSequence, const floa
 {
 	if (! pstudiohdr)
 	{
-		Msg( "Bad pstudiohdr in GetSequenceLinearMotion()!\n" );
+	//	Msg( "Bad pstudiohdr in GetSequenceLinearMotion()!\n" ); // VXP: SHUT UP BITCH!!!
 		return;
 	}
 

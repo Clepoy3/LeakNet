@@ -1860,7 +1860,8 @@ void CBasePlayer::PlayerDeathThink(void)
 
 	//Msg( "Respawn\n");
 
-	respawn( this, !IsObserver() );// don't copy a corpse if we're in deathcam.
+//	respawn( this, !IsObserver() );// don't copy a corpse if we're in deathcam.
+	respawn( this, false );
 	SetNextThink( TICK_NEVER_THINK );
 }
 
@@ -3718,6 +3719,7 @@ void CBasePlayer::Spawn( void )
 	m_ArmorValue		= 0;
 	m_takedamage		= DAMAGE_YES;
 	SetSolid( SOLID_BBOX );
+	RemoveSolidFlags( FSOLID_NOT_SOLID ); // VXP: Fix for not solid player on the second respawn
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetMoveType( MOVETYPE_WALK );
 	m_iMaxHealth		= m_iHealth;
@@ -4616,10 +4618,10 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
         GiveAmmo( 255,    "Grenade");
         GiveAmmo( 255,    "GaussEnergy");
 
-        GiveNamedItem( "weapon_alyxgun" );
+	//	GiveNamedItem( "weapon_alyxgun" );
         GiveNamedItem( "weapon_ar1" );
         GiveNamedItem( "weapon_binoculars" );
-        GiveNamedItem( "weapon_brickbat" );
+	//	GiveNamedItem( "weapon_brickbat" );
         GiveNamedItem( "weapon_bugbait" );
         GiveNamedItem( "weapon_cguard" );
     //    GiveNamedItem( "weapon_cubemap" );
@@ -4631,7 +4633,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
         GiveNamedItem( "weapon_immolator" );
         GiveNamedItem( "weapon_irifle" );
         GiveNamedItem( "weapon_manhack" );
-        GiveNamedItem( "weapon_ml" );
+    //	GiveNamedItem( "weapon_ml" );
         GiveNamedItem( "weapon_molotov" );
         GiveNamedItem( "weapon_physgun" );
         GiveNamedItem( "weapon_rollerwand" );

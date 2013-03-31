@@ -277,7 +277,9 @@ const Vector& CCollisionProperty::WorldAlignMaxs( ) const
 
 const Vector& CCollisionProperty::EntitySpaceMins( ) const
 {
-	Assert( IsBoundsDefinedInEntitySpace() );
+//	Assert( IsBoundsDefinedInEntitySpace() );
+	if( !IsBoundsDefinedInEntitySpace() )
+		DevMsg( "Bounds not defined in entity space! (EntitySpaceMins())\n" );
 
 	// FIXME! Not changing behavior at first
 	return m_vecMins.Get();
@@ -285,7 +287,9 @@ const Vector& CCollisionProperty::EntitySpaceMins( ) const
 
 const Vector& CCollisionProperty::EntitySpaceMaxs( ) const
 {
-	Assert( IsBoundsDefinedInEntitySpace() );
+//	Assert( IsBoundsDefinedInEntitySpace() );
+	if( !IsBoundsDefinedInEntitySpace() )
+		DevMsg( "Bounds not defined in entity space! (EntitySpaceMaxs())\n" );
 
 	// FIXME! Not changing behavior at first
 	return m_vecMaxs.Get();

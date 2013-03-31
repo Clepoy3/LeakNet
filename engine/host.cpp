@@ -490,8 +490,14 @@ void Host_WriteConfiguration( char const *filename )
 		f = g_pFileSystem->Open( filename, "w");
 		if (!f)
 		{
-			Con_Printf( "Couldn't write %s\n", filename );
-			return;
+			// VXP: Little hack
+			g_pFileSystem->CreateDirHierarchy( "cfg", NULL );
+			f = g_pFileSystem->Open( filename, "w");
+			if (!f)
+			{
+				Con_Printf( "Couldn't write %s\n", filename );
+				return;
+			}
 		}
 		
 		// Always throw away all keys that are left over.

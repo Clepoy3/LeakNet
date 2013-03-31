@@ -74,7 +74,8 @@ void CVGuiSystemModuleLoader::InitializeAllModules(CreateInterfaceFn *factorylis
 	{
 		if (!m_Modules[i].moduleInterface->Initialize(factorylist, factorycount))
 		{
-			vgui::ivgui()->DPrintf2("Platform Error: module failed to initialize\n");
+		//	vgui::ivgui()->DPrintf2("Platform Error: module failed to initialize\n");
+			Error("Platform Error: module failed to initialize\n");
 		}
 	}
 
@@ -90,7 +91,8 @@ void CVGuiSystemModuleLoader::InitializeAllModules(CreateInterfaceFn *factorylis
 	{
 		if (!m_Modules[i].moduleInterface->PostInitialize(moduleFactories, m_Modules.Size()))
 		{
-			vgui::ivgui()->DPrintf2("Platform Error: module failed to initialize\n");
+		//	vgui::ivgui()->DPrintf2("Platform Error: module failed to initialize\n");
+			Error("Platform Error: module failed to initialize\n");
 		}
 		
 #ifdef GAMEUI_EXPORTS
@@ -112,7 +114,10 @@ void CVGuiSystemModuleLoader::LoadPlatformModules(CreateInterfaceFn *factorylist
 	// load platform menu
 	KeyValues *kv = new KeyValues("Platform");
 	if (!kv->LoadFromFile(vgui::filesystem(), "resource/PlatformMenu.vdf", "PLATFORM"))
+	{
+		kv->deleteThis();
 		return;
+	}
 
 	// walk the platform menu loading all the interfaces
 	KeyValues *menuKeys = kv->FindKey("Menu", true);
@@ -130,7 +135,8 @@ void CVGuiSystemModuleLoader::LoadPlatformModules(CreateInterfaceFn *factorylist
 		char szDir[512];
 		if (!vgui::filesystem()->GetLocalPath(dllPath, szDir))
 		{
-			vgui::ivgui()->DPrintf2("Platform Error: couldn't find %s, not loading\n", it->GetString("dll"));
+		//	vgui::ivgui()->DPrintf2("Platform Error: couldn't find %s, not loading\n", it->GetString("dll"));
+			Error("Platform Error: couldn't find %s, not loading\n", it->GetString("dll"));
 			continue;
 		}
 
@@ -138,7 +144,8 @@ void CVGuiSystemModuleLoader::LoadPlatformModules(CreateInterfaceFn *factorylist
 		CSysModule *mod = Sys_LoadModule(szDir);
 		if (!mod)
 		{
-			vgui::ivgui()->DPrintf2("Platform Error: bad module '%s', not loading\n", it->GetString("dll"));
+		//	vgui::ivgui()->DPrintf2("Platform Error: bad module '%s', not loading\n", it->GetString("dll"));
+			Error("Platform Error: bad module '%s', not loading\n", it->GetString("dll"));
 			continue;
 		}
 
@@ -146,7 +153,8 @@ void CVGuiSystemModuleLoader::LoadPlatformModules(CreateInterfaceFn *factorylist
 		IVGuiModule *moduleInterface = (IVGuiModule *)Sys_GetFactory(mod)(it->GetString("interface"), NULL);
 		if (!moduleInterface)
 		{
-			vgui::ivgui()->DPrintf2("Platform Error: module version ('%s, %s) invalid, not loading\n", it->GetString("dll"), it->GetString("interface"));
+		//	vgui::ivgui()->DPrintf2("Platform Error: module version ('%s, %s) invalid, not loading\n", it->GetString("dll"), it->GetString("interface"));
+			Warning("Platform Error: module version ('%s, %s) invalid, not loading\n", it->GetString("dll"), it->GetString("interface"));
 			continue;
 		}
 
@@ -218,12 +226,15 @@ void CVGuiSystemModuleLoader::ShutdownPlatformModules()
 	DeactivatePlatformModules();
 
 	// give all the modules notice of quit
-	for (int i = 0; i < m_Modules.Size(); i++)
+	int i;
+//	for (i = 0; i < m_Modules.Size(); i++)
+	for ( i = 0; i < m_Modules.Count(); i++ )
 	{
 		vgui::ivgui()->PostMessage(m_Modules[i].moduleInterface->GetPanel(), new KeyValues("Command", "command", "Quit"), NULL);
 	}
 
-	for (i = 0; i < m_Modules.Size(); i++)
+//	for (i = 0; i < m_Modules.Size(); i++)
+	for ( i = 0; i < m_Modules.Count(); i++ )
 	{
 		m_Modules[i].moduleInterface->Shutdown();
 	}
@@ -236,7 +247,8 @@ void CVGuiSystemModuleLoader::ShutdownPlatformModules()
 //-----------------------------------------------------------------------------
 void CVGuiSystemModuleLoader::DeactivatePlatformModules()
 {
-	for (int i = 0; i < m_Modules.Size(); i++)
+//	for (int i = 0; i < m_Modules.Size(); i++)
+	for (int i = 0; i < m_Modules.Count(); i++)
 	{
 		m_Modules[i].moduleInterface->Deactivate();
 	}
@@ -247,7 +259,8 @@ void CVGuiSystemModuleLoader::DeactivatePlatformModules()
 //-----------------------------------------------------------------------------
 void CVGuiSystemModuleLoader::ReactivatePlatformModules()
 {
-	for (int i = 0; i < m_Modules.Size(); i++)
+//	for (int i = 0; i < m_Modules.Size(); i++)
+	for (int i = 0; i < m_Modules.Count(); i++)
 	{
 		m_Modules[i].moduleInterface->Reactivate();
 	}
@@ -278,7 +291,8 @@ void CVGuiSystemModuleLoader::RunFrame()
 //-----------------------------------------------------------------------------
 int CVGuiSystemModuleLoader::GetModuleCount()
 {
-	return m_Modules.Size();
+//	return m_Modules.Size();
+	return m_Modules.Count();
 }
 
 //-----------------------------------------------------------------------------
@@ -361,7 +375,8 @@ CreateInterfaceFn CVGuiSystemModuleLoader::GetModuleFactory(int moduleIndex)
 //-----------------------------------------------------------------------------
 void CVGuiSystemModuleLoader::PostMessageToAllModules(KeyValues *message)
 {
-	for (int i = 0; i < m_Modules.Size(); i++)
+//	for (int i = 0; i < m_Modules.Size(); i++)
+	for (int i = 0; i < m_Modules.Count(); i++)
 	{
 		vgui::ivgui()->PostMessage(m_Modules[i].moduleInterface->GetPanel(), message->MakeCopy(), NULL);
 	}

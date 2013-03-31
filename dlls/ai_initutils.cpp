@@ -47,7 +47,7 @@ CAI_TestHull*	CAI_TestHull::pTestHull			= NULL;
 void CAI_TestHull::Precache()
 {
 	BaseClass::Precache();
-//	engine->PrecacheModel( "models/player.mdl" );
+	engine->PrecacheModel( "models/player.mdl" );
 	engine->PrecacheModel( "models/humans/male_01.mdl" );
 }
 

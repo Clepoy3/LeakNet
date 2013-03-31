@@ -742,7 +742,10 @@ static bool LoadThisDll( char *szDllFilename )
 	if ((pDLL = FileSystem_LoadModule(szDllFilename)) == NULL)
 	{
 		Con_Printf("Failed to load %s\n", szDllFilename);
-		goto IgnoreThisDLL;
+	//	goto IgnoreThisDLL;
+		// VXP: Hack
+		if ((pDLL = FileSystem_LoadModule("hl2\\bin\\server.dll")) == NULL)
+			goto IgnoreThisDLL;
 	}
 
 	// Load interface factory and any interfaces exported by the game .dll

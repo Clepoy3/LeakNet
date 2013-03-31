@@ -4031,7 +4031,7 @@ void SV_CreateBaseline (void)
 		{
 		//	pModelString = "models/player.mdl";
 		//	pModelString = "models/humans/male_01.mdl";
-			pModelString = cl_model.GetString();
+			pModelString = (Q_strcmp ("", cl_model.GetString()) != 0) ? cl_model.GetString() : "player.mdl";
 		}
 		else
 		{
