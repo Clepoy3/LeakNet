@@ -188,6 +188,7 @@ void CWeaponExtinguisher::StopJet( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+bool isNeedAnim = false;
 void CWeaponExtinguisher::ItemPostFrame( void )
 {	
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
@@ -199,14 +200,24 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 	if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
 	{
 		StopJet();
+		
+		isNeedAnim = false;
+		SendWeaponAnim( ACT_VM_IDLE );
+		
 		return;
 	}
 	
 	//See if we should try and extinguish fires
 	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
+		if( !isNeedAnim )
+		{
+			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+		//	WeaponSound( SINGLE_NPC );
+			isNeedAnim = true;
+		}
 		//Drain ammo
-		if ( m_flNextPrimaryAttack < gpGlobals->curtime  )
+		if ( m_flNextPrimaryAttack < gpGlobals->curtime )
 		{
 			pOwner->RemoveAmmo( 1, m_iSecondaryAmmoType );
 			m_flNextPrimaryAttack = gpGlobals->curtime + EXTINGUISHER_AMMO_RATE;
@@ -216,6 +227,10 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 		if ( pOwner->GetAmmoCount(m_iSecondaryAmmoType) <= 0 )
 		{
 			StopJet();
+			
+			isNeedAnim = false;
+			SendWeaponAnim( ACT_VM_IDLE );
+			
 			return;
 		}
 
@@ -230,6 +245,8 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 		vMuzzlePos	= pOwner->Weapon_ShootPosition( );
 		
 		//FIXME: Need to get the exact same muzzle point!
+
+		// VXP: Make sounds and spray here
 
 		//FIXME: This needs to be adjusted so the server collision matches the visuals on the client
 		vMuzzlePos	+= vForward * 15.0f;
@@ -264,6 +281,10 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 	else
 	{
 		StopJet();
+		
+		isNeedAnim = false;
+		SendWeaponAnim( ACT_VM_IDLE );
+	//	WeaponSound( EMPTY );
 	}
 }
 

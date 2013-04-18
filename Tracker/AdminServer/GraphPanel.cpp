@@ -10,23 +10,24 @@
 #include "GraphPanel.h"
 
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_RadioButton.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_PropertySheet.h>
-#include <VGUI_CheckButton.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/PropertySheet.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui/point.h>
 
-#include <VGUI_ILocalize.h>
+#include <VGUI/ILocalize.h>
 
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 

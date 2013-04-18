@@ -8,15 +8,15 @@
 #include <stdio.h>
 #include "DialogAddBan.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_MessageBox.h>
+#include <vgui_controls/Button.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/MessageBox.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 
@@ -101,7 +101,7 @@ void CDialogAddBan::OnCommand(const char *command)
 	{
 		KeyValues *msg = new KeyValues("AddBanValue");
 		char buf[64];
-		m_pTimeTextEntry->GetText(0,buf,64);
+		m_pTimeTextEntry->GetText(buf,64);
 		float time;
 		sscanf(buf,"%f",&time);
 		if(time<0) 
@@ -113,7 +113,7 @@ void CDialogAddBan::OnCommand(const char *command)
 		else
 		{
 			msg->SetString("time", buf );
-			m_pIDTextEntry->GetText(0, buf, sizeof(buf)-1);
+			m_pIDTextEntry->GetText(buf, sizeof(buf)-1);
 			msg->SetString("id", buf);
 			msg->SetString("type",m_cType);
 			msg->SetInt("ipcheck",IsIPCheck());

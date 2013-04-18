@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include "DialogKickPlayer.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 

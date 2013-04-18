@@ -14,16 +14,16 @@
 #include "ServerList.h"
 #include "DialogServerPassword.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_RadioButton.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/RadioButton.h>
 
 #include <stdio.h>
 

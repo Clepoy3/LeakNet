@@ -37,8 +37,8 @@ public:
 	~CFavoriteGames();
 
 	// favorites list, loads/saves into keyvalues
-	void LoadFavoritesList(vgui::KeyValues *favoritesData,bool loadrcon);
-	void SaveFavoritesList(vgui::KeyValues *favoritesData,bool savercon);
+	void LoadFavoritesList(KeyValues *favoritesData,bool loadrcon);
+	void SaveFavoritesList(KeyValues *favoritesData,bool savercon);
 
 	// property page handlers
 //	virtual void OnPageShow();

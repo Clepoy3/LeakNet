@@ -8,14 +8,14 @@
 #include <stdio.h>
 #include "DialogCvarChange.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_IInput.h>
+#include <vgui_controls/Button.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <VGUI/IInput.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 
@@ -112,7 +112,7 @@ void CDialogCvarChange::OnCommand(const char *command)
 		m_pCvarLabel->GetText(buf,64);
 
 		msg->SetString("player", buf );
-		m_pCvarEntry->GetText(0, buf, sizeof(buf)-1);
+		m_pCvarEntry->GetText(buf, sizeof(buf)-1);
 		msg->SetString("value", buf);
 		msg->SetString("type",m_cType);
 

@@ -11,11 +11,12 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
+#include <vgui_controls/Frame.h>
 #include "ServerList.h"
 #include "IServerRefreshResponse.h"
 #include "server.h"
 #include "IGameList.h"
+#include <vgui_controls/ListPanel.h>
 
 namespace vgui
 {

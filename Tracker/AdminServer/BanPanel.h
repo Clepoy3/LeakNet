@@ -11,11 +11,11 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_PropertyPage.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/ListPanel.h>
+#include <KeyValues.h>
+#include <vgui_controls/PropertyPage.h>
 
 #include "BanContextMenu.h"
 
@@ -57,10 +57,12 @@ public:
 	virtual int GetSelectedRow(int selectionIndex);
 	virtual void DeleteAllItems(); // clears and deletes all the memory used by the data items
 
-	virtual int AddItem(vgui::KeyValues *data, unsigned int userData = 0 ); // Takes a copy of the data for use in the table. Returns the index the item is at.
+	virtual int AddItem(KeyValues *data, unsigned int userData = 0 ); // Takes a copy of the data for use in the table. Returns the index the item is at.
 	virtual void SortList( void );
-	virtual vgui::ListPanel::DATAITEM *GetDataItem( int itemIndex );
-	virtual vgui::KeyValues *GetItem(int itemIndex); // returns pointer to data the row holds
+//	virtual vgui::ListPanel::DATAITEM *GetDataItem( int itemIndex );
+//	virtual vgui::ListPanel::ListPanelItem *GetDataItem( int itemIndex );
+	virtual vgui::ListPanelItem *GetDataItem( int itemIndex );
+	virtual KeyValues *GetItem(int itemIndex); // returns pointer to data the row holds
 
 
 	//property page handlers
@@ -76,7 +78,7 @@ private:
 
 	// msg handlers
 	void OnOpenContextMenu(int row);
-	void OnEffectPlayer(vgui::KeyValues *data);
+	void OnEffectPlayer(KeyValues *data);
 
 	// an inner class
 	class BanListPanel: public vgui::ListPanel

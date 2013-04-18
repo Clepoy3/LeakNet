@@ -10,20 +10,20 @@
 #include "MOTDPanel.h"
 
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_RadioButton.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_PropertySheet.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/PropertySheet.h>
 
 using namespace vgui;
 //-----------------------------------------------------------------------------
@@ -39,9 +39,9 @@ CMOTDPanel::CMOTDPanel(vgui::Panel *parent, const char *name) : PropertyPage(par
 	m_pMOTDPanel->SetEnabled(true);
 	m_pMOTDPanel->SetEditable(true);
 	m_pMOTDPanel->SetVerticalScrollbar(true);
-	m_pMOTDPanel->SetRichEdit(false);
+//	m_pMOTDPanel->SetRichEdit(false);
 	m_pMOTDPanel->SetCatchEnterKey(true);
-	m_pMOTDPanel->setMaximumCharCount(1024);
+	m_pMOTDPanel->SetMaximumCharCount(1024);
 	
 	m_pSendMOTDButton = new Button(this, "SendMOTD", "&Send");
 	m_pSendMOTDButton->SetCommand(new KeyValues("SendMOTD"));
@@ -94,7 +94,7 @@ void CMOTDPanel::DoInsertString(const char *str)
 		char *fix = const_cast<char *>(str);
 		fix[1024]='\0';
 	}
-	m_pMOTDPanel->DoInsertString(str);
+	m_pMOTDPanel->InsertString(str);
 }
 
 //-----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ void CMOTDPanel::OnSendMOTD()
 		char chat_text[2048];
 
 		_snprintf(chat_text,512,"motd_write ");
-		m_pMOTDPanel->GetText(0,chat_text+11,2048-11);
+		m_pMOTDPanel->GetText(chat_text+11,2048-11);
 		if(strlen("motd_write ")!=strlen(chat_text)) // check there is something in the text panel
 		{
 			unsigned int i=0;

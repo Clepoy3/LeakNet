@@ -7,11 +7,11 @@
 
 #include "RulesContextMenu.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IInput.h>
-#include <VGUI_IPanel.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IInput.h>
+#include <VGUI/IPanel.h>
+#include <VGUI/ISurface.h>
+#include <KeyValues.h>
 
 using namespace vgui;
 
@@ -35,7 +35,7 @@ CRulesContextMenu::~CRulesContextMenu()
 //-----------------------------------------------------------------------------
 void CRulesContextMenu::ShowMenu(Panel *target, unsigned int cvarID)
 {
-	ClearMenu();
+	DeleteAllItems();
 		
 	AddMenuItem("cvar", "&Change Value", new KeyValues("cvar", "cvarID", cvarID), CRulesContextMenu::parent);
 

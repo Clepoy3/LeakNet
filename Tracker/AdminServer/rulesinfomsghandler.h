@@ -16,10 +16,10 @@
 
 class CRulesInfo;
 
-#include <VGUI_PropertyPage.h>
-#include <VGUI_Frame.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/PropertyPage.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/ListPanel.h>
+#include <KeyValues.h>
 
 
 //-----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ public:
 private:
 	// the parent class that we push info back to
 	CRulesInfo *m_pRulesInfo;
-	CUtlVector<vgui::KeyValues *> *m_vRules;
+	CUtlVector<KeyValues *> *m_vRules;
 };
 
 

@@ -11,20 +11,20 @@
 #include "PlayerContextMenu.h"
 
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_RadioButton.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_PropertySheet.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/PropertySheet.h>
 
 using namespace vgui;
 //-----------------------------------------------------------------------------
@@ -137,9 +137,9 @@ void CBanPanel::OnCommand(const char *command)
 			PostMessage(m_pParent->GetVPanel(),new KeyValues("addban", "banID",0));
 	}
 
-	if( m_pBanListPanel->GetNumSelectedRows())  // if a user is selected
+	if( m_pBanListPanel->GetSelectedItemsCount())  // if a user is selected
 	{
-		int playerID = m_pBanListPanel->GetDataItem(m_pBanListPanel->GetSelectedRow(0))->userData;
+		int playerID = m_pBanListPanel->GetItemUserData(m_pBanListPanel->GetSelectedItem(0));
 		if (!stricmp(command, "removeban"))
 		{
 			PostMessage(m_pParent->GetVPanel(),new KeyValues("removeban", "playerID",playerID));
@@ -154,7 +154,7 @@ void CBanPanel::OnCommand(const char *command)
 
 
 
-void CBanPanel::OnEffectPlayer(vgui::KeyValues *data)
+void CBanPanel::OnEffectPlayer(KeyValues *data)
 {
 	// you MUST make a copy, if you use the original you get a horrid crash
 	KeyValues *kv=data->MakeCopy();
@@ -167,12 +167,12 @@ void CBanPanel::OnEffectPlayer(vgui::KeyValues *data)
 void CBanPanel::OnOpenContextMenu(int row)
 {
 	if (m_pBanListPanel->IsVisible() && m_pBanListPanel->IsCursorOver()
-		&& m_pBanListPanel->GetNumSelectedRows())
+		&& m_pBanListPanel->GetSelectedItemsCount())
 	// show the ban changing menu IF its the visible panel and the cursor is
 	// over it 
 	{
 	
-		unsigned int banID =m_pBanListPanel->GetSelectedRow(0);
+		unsigned int banID =m_pBanListPanel->GetSelectedItem(0);
 			
 		// activate context menu
 		m_pBanContextMenu->ShowMenu(this, banID);
@@ -206,12 +206,12 @@ void CBanPanel::SetSortColumn(int column)
 
 int CBanPanel::GetNumSelectedRows()
 {
-	return m_pBanListPanel->GetNumSelectedRows();
+	return m_pBanListPanel->GetSelectedItemsCount();
 }
 
 int CBanPanel::GetSelectedRow(int selectionIndex)
 {
-	return m_pBanListPanel->GetSelectedRow(selectionIndex);
+	return m_pBanListPanel->GetSelectedItem(selectionIndex);
 }
 
 void CBanPanel::DeleteAllItems()
@@ -219,9 +219,9 @@ void CBanPanel::DeleteAllItems()
 	m_pBanListPanel->DeleteAllItems();
 }
 
-int CBanPanel:: AddItem(KeyValues *data, unsigned int userData  )
+int CBanPanel:: AddItem( KeyValues *data, unsigned int userData )
 {
-	return m_pBanListPanel->AddItem(data,userData);
+	return m_pBanListPanel->AddItem(data, userData, false, false);
 }
 
 void CBanPanel::SortList( void )
@@ -229,9 +229,9 @@ void CBanPanel::SortList( void )
 	m_pBanListPanel->SortList();
 }
 
-vgui::ListPanel::DATAITEM *CBanPanel::GetDataItem( int itemIndex )
+vgui::ListPanelItem *CBanPanel::GetDataItem( int itemIndex )
 {
-	return m_pBanListPanel->GetDataItem(itemIndex);
+	return m_pBanListPanel->GetItemData(itemIndex);
 }
 
 KeyValues *CBanPanel::GetItem(int itemIndex)

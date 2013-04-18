@@ -7,12 +7,12 @@
 
 #include "ServerContextMenu.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IInput.h>
-#include <VGUI_IPanel.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_PropertySheet.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IInput.h>
+#include <VGUI/IPanel.h>
+#include <VGUI/ISurface.h>
+#include <KeyValues.h>
+#include <vgui_controls/PropertySheet.h>
 #include <stdio.h>
 
 
@@ -21,7 +21,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CServerContextMenu::CServerContextMenu(CServerPage *parent) : Menu(parent, "ServerContextMenu")
+CServerContextMenu::CServerContextMenu(VInternetDlg *parent) : Menu(parent, "ServerContextMenu")
 {
 	CServerContextMenu::parent=parent;
 }
@@ -38,7 +38,7 @@ CServerContextMenu::~CServerContextMenu()
 //-----------------------------------------------------------------------------
 void CServerContextMenu::ShowMenu(Panel *target, unsigned int serverID, bool showConnect, bool showRefresh, bool showAddToFavorites,bool manage)
 {
-	ClearMenu();
+	DeleteAllItems();
 
 
 	// by default show the menu

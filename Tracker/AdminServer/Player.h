@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_ListPanel.h>
+#include <vgui_controls/ListPanel.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Data describing a single player

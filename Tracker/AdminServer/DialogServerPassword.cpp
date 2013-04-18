@@ -7,13 +7,13 @@
 
 #include "DialogServerPassword.h"
 
-#include <VGUI_Button.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 using namespace vgui;
 
@@ -73,7 +73,7 @@ void CDialogServerPassword::OnCommand(const char *command)
 	{
 		KeyValues *msg = new KeyValues("JoinServerWithPassword");
 		char buf[64];
-		m_pPasswordEntry->GetText(0, buf, sizeof(buf)-1);
+		m_pPasswordEntry->GetText(buf, sizeof(buf)-1);
 		msg->SetString("password", buf);
 		msg->SetInt("serverID", m_iServerID);
 		PostActionSignal(msg);

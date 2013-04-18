@@ -17,10 +17,10 @@
 class CSocket;
 class IResponse;
 
-#include <VGUI_PropertyPage.h>
-#include <VGUI_Frame.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/PropertyPage.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/ListPanel.h>
+#include <KeyValues.h>
 
 
 class CRulesInfo 
@@ -41,9 +41,9 @@ public:
 	void RunFrame();
 	bool Refreshed();
 
-	void UpdateServer(netadr_t *adr, CUtlVector<vgui::KeyValues *> *Rules);
+	void UpdateServer(netadr_t *adr, CUtlVector<KeyValues *> *Rules);
 	
-	CUtlVector<vgui::KeyValues *> *Rules();
+	CUtlVector<KeyValues *> *Rules();
 
 	int serverID;
 	int received;
@@ -59,7 +59,7 @@ private:
 	float m_fSendTime;
 	bool m_bRefreshed;
 
-	CUtlVector<vgui::KeyValues *> *m_vRules;
+	CUtlVector<KeyValues *> *m_vRules;
 
 };
 

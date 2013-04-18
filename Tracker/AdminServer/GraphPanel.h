@@ -11,13 +11,14 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_PropertyPage.h>
-#include <VGUI_Image.h>
-#include <VGUI_ImagePanel.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/ListPanel.h>
+#include <KeyValues.h>
+#include <vgui_controls/PropertyPage.h>
+#include <vgui_controls/Image.h>
+#include <vgui_controls/ImagePanel.h>
+#include <vgui/point.h>
 
 class KeyValues;
 
@@ -34,6 +35,7 @@ class ComboBox;
 class Panel;
 class PropertySheet;
 class CheckButton;
+class Point;
 };
 
 #include "point.h"

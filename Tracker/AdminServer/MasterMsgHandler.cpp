@@ -10,8 +10,8 @@
 #include "IGameList.h"
 #include "serverpage.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IVGui.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -37,7 +37,7 @@ bool CMasterMsgHandler::Process( netadr_t *from, CMsgBuffer *msg )
 
 	// Remainder of message length is 6 byte IP addresses
 	int nNumAddresses =  msg->GetCurSize() - msg->GetReadCount();
-	assert( !( nNumAddresses % 6 ) );
+	Assert( !( nNumAddresses % 6 ) );
 	// Each address is 6 bytes long
 	nNumAddresses /= 6;
 
@@ -52,7 +52,7 @@ bool CMasterMsgHandler::Process( netadr_t *from, CMsgBuffer *msg )
 		server.port = msg->ReadShort();
 		server.port = (server.port & 0xff) << 8 | (server.port & 0xff00) >> 8; // roll your own ntohs
 		server.received = 0;
-		server.listEntry = NULL;
+	//	server.listEntry = NULL; // VXP: Shit!
 		server.doNotRefresh = false;
 		server.hadSuccessfulResponse = false;
 		server.map[0] = 0;

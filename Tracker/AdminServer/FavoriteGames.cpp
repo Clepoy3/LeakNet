@@ -18,15 +18,15 @@
 #include "FileSystem.h"
 #include "UtlBuffer.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_ImagePanel.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_Button.h>
+#include <vgui_controls/Controls.h>
+#include <KeyValues.h>
+#include <vgui_controls/ListPanel.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/ImagePanel.h>
+#include <VGUI/ISystem.h>
+#include <vgui_controls/MessageBox.h>
+#include <vgui_controls/Button.h>
 
 using namespace vgui;
 

@@ -10,8 +10,8 @@
 #include "IGameList.h"
 #include "Server.h"
 
-#include <VGUI_MessageBox.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/MessageBox.h>
+#include <KeyValues.h>
 
 using namespace vgui;
 

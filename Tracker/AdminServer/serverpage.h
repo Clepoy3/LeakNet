@@ -21,9 +21,9 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_PHandle.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/PHandle.h>
 
 #include "UtlVector.h"
 #include "netadr.h"
@@ -137,7 +137,7 @@ private:
 	
 
 	// password entry dialog for new servers
-	void OnPlayerDialog(vgui::KeyValues *data);
+	void OnPlayerDialog(KeyValues *data);
 	void OnDeleteServer(int chosenPanel);
 
 	// load/saves filter settings from disk
@@ -170,7 +170,7 @@ private:
 	CFavoriteGames *m_pFavoriteGames;
 	CGamePanelInfo *m_pGamePanelInfo;
 
-	vgui::KeyValues *m_pSavedData;
+	KeyValues *m_pSavedData;
 
 	bool m_bAutoRefresh;
 	bool m_bSaveRcon;

@@ -10,17 +10,17 @@
 #include "util.h"
 #include "serverpage.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_ImagePanel.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_MenuButton.h>
-#include <VGUI_Menu.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_MouseCode.h>
+#include <vgui_controls/Controls.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/ImagePanel.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/IVGui.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/MenuButton.h>
+#include <vgui_controls/Menu.h>
+#include <KeyValues.h>
+#include <VGUI/MouseCode.h>
 
 #include <stdio.h>
 
@@ -40,7 +40,7 @@ CBaseGamesPage::CBaseGamesPage(vgui::Panel *parent, const char *name) : Frame(pa
 
 	// load the password icon
 	m_pPasswordIcon = new ImagePanel(NULL, NULL);
-	m_pPasswordIcon->SetImage(scheme()->GetImage(scheme()->GetDefaultScheme(), "server/icon_password"));
+	m_pPasswordIcon->SetImage(scheme()->GetImage("server/icon_password", false));
 
 	// Init UI
 //	m_pConnect = new Button(this, "ConnectButton", "Connect");
@@ -125,7 +125,7 @@ void CBaseGamesPage::OnTick()
 void CBaseGamesPage::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
-	m_pGameList->SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "DefaultSmall"));
+	m_pGameList->SetFont(pScheme->GetFont("DefaultSmall", false));
 }
 
 //-----------------------------------------------------------------------------
@@ -142,18 +142,21 @@ serveritem_t &CBaseGamesPage::GetServer(unsigned int serverID)
 //-----------------------------------------------------------------------------
 void CBaseGamesPage::SetRefreshing(bool state)
 {
-	if(!CServerPage::GetInstance())
+//	if(!CServerPage::GetInstance())
+	if(!VInternetDlg::GetInstance())
 	{
 		return;
 	}
 
 	if (state)
 	{
-		CServerPage::GetInstance()->UpdateStatusText("Refreshing server list...");
+	//	CServerPage::GetInstance()->UpdateStatusText("Refreshing server list...");
+		VInternetDlg::GetInstance()->UpdateStatusText("Refreshing server list...");
 	}
 	else
 	{
-		CServerPage::GetInstance()->UpdateStatusText("");
+	//	CServerPage::GetInstance()->UpdateStatusText("");
+		VInternetDlg::GetInstance()->UpdateStatusText("");
 	}
 
 //	m_pRefreshMenu->FindChildByName("Refresh")->SetVisible(!state);
@@ -190,7 +193,8 @@ void CBaseGamesPage::OnCommand(const char *command)
 	}
 	else if (!stricmp(command, "config"))
 	{
-		CServerPage::GetInstance()->ConfigPanel();
+	//	CServerPage::GetInstance()->ConfigPanel();
+		VInternetDlg::GetInstance()->ConfigPanel();
 	}
 	else
 	{
@@ -219,10 +223,12 @@ void CBaseGamesPage::OnButtonToggled(Panel *panel, int state)
 
 void CBaseGamesPage::OnManage()
 {
-	if (m_pGameList->GetNumSelectedRows())
+//	if (m_pGameList->GetNumSelectedRows())
+	if (m_pGameList->GetSelectedItemsCount())
 	{
 		// get the server
-		unsigned int serverID = m_pGameList->GetDataItem(m_pGameList->GetSelectedRow(0))->userData;
+	//	unsigned int serverID = m_pGameList->GetDataItem(m_pGameList->GetSelectedRow(0))->userData;
+		unsigned int serverID = m_pGameList->GetItemUserData(m_pGameList->GetSelectedItem(0));
 
 
 		PostMessage(m_pParent->GetVPanel(),  new KeyValues("Manage", "serverID", serverID));
