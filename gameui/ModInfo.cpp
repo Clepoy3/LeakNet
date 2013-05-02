@@ -104,7 +104,8 @@ bool CModInfo::NoHiModel()
 //-----------------------------------------------------------------------------
 const char *CModInfo::GetGameDescription()
 {
-	return m_pModData->GetString("game", "Half-Life");
+//	Msg( "%s\n", m_pModData->GetString("game", "") );
+	return m_pModData->GetString("game", "");
 }
 
 //-----------------------------------------------------------------------------

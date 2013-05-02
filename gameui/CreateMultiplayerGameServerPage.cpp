@@ -89,7 +89,7 @@ CCreateMultiplayerGameServerPage::~CCreateMultiplayerGameServerPage()
 //-----------------------------------------------------------------------------
 void CCreateMultiplayerGameServerPage::OnApplyChanges()
 {
-	strncpy(m_szHostName, GetControlString("ServerNameEdit", "Half-Life"), DATA_STR_LENGTH);
+	strncpy(m_szHostName, GetControlString("ServerNameEdit", "Half-Life"), DATA_STR_LENGTH); // VXP: Make this gets from liblist.gam
 	strncpy(m_szPassword, GetControlString("PasswordEdit", ""), DATA_STR_LENGTH);
 	m_iMaxPlayers = atoi(GetControlString("MaxPlayersEdit", "8"));
 

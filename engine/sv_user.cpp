@@ -137,7 +137,7 @@ static command_t clcommands[] =
 {
 	"status",
 	"god",
-	"notarget",
+//	"notarget",
 	"fly",
 	"name",
 //	"noclip",
