@@ -313,7 +313,7 @@ void CBaseDoor::Activate( void )
 			if ( error )
 			{
 				// UNDONE: This should probably fixup m_vecPosition1 & m_vecPosition2
-				Warning("Door group %s has misaligned origin!\n", STRING(GetEntityName()) );
+				Warning("Door group %s has misaligned origin!\n", STRING(GetEntityName()) ); // VXP: Happened on d1_town_05 on begin
 			}
 		}
 	}

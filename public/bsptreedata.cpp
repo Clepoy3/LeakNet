@@ -327,7 +327,7 @@ bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pE
 		idx = m_LeafElements.Next(idx);
 	}
 
-	Assert( CountElementsInLeaf(leaf) == nCount );
+	Assert( CountElementsInLeaf(leaf) == nCount ); // VXP: Happened on d1_town_05
 
 	return true;
 }

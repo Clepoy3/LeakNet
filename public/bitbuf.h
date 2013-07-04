@@ -528,7 +528,7 @@ inline void bf_read::SetOverflowFlag()
 {
 	if ( m_bAssertOnOverflow )
 	{
-		Assert( false );
+		Assert( false ); // VXP: THis will assert when wrong characters is received by masterserver
 	}
 
 	m_bOverflow = true;

@@ -1924,7 +1924,8 @@ void SV_ConnectClient ()
 	// Display debug message.
 	if ( host_client->netchan.remote_address.type != NA_LOOPBACK  )
 	{
-		Con_DPrintf ("Client %s connected\nAdr: %s\n", name, NET_AdrToString(host_client->netchan.remote_address ) );
+	//	Con_DPrintf ("Client %s connected\nAdr: %s\n", name, NET_AdrToString(host_client->netchan.remote_address ) );
+		Con_DPrintf ("Client %s connected, adr: %s\n", name, NET_AdrToString(host_client->netchan.remote_address ) );
 	}
 
 	// Set up client structure.
@@ -4031,7 +4032,7 @@ void SV_CreateBaseline (void)
 		{
 		//	pModelString = "models/player.mdl";
 		//	pModelString = "models/humans/male_01.mdl";
-			pModelString = (Q_strcmp ("", cl_model.GetString()) != 0) ? cl_model.GetString() : "player.mdl";
+			pModelString = (Q_strcmp(cl_model.GetString(), "") == 0) ? "player.mdl" : cl_model.GetString();
 		}
 		else
 		{

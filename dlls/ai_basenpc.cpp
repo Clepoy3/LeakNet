@@ -753,7 +753,7 @@ bool CAI_BaseNPC::PlayerInSpread( const Vector &sourcePos, const Vector &targetP
 
 		if ( !ignoreHatedPlayers || IRelationType( pPlayer ) != D_HT )
 		{
-			Vector toPlayer   = pPlayer->WorldSpaceCenter() - sourcePos;
+			Vector toPlayer   = pPlayer->WorldSpaceCenter() - sourcePos; // VXP: Happens sometimes when multiplayer
 			float  distPlayer = VectorNormalize(toPlayer);
 			float  dotProduct = DotProduct(toTarget,toPlayer);
 			if (dotProduct > flSpread)

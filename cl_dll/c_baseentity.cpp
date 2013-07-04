@@ -2061,6 +2061,7 @@ void C_BaseEntity::CreateLightEffects( void )
 	//	dl->origin = GetAbsOrigin();
 		Vector	laserPos = tr.endpos + ( tr.plane.normal * 2.0f );
 		dl->origin = laserPos;
+	//	dl->origin = EyeDirection3D();
 		dl->color.r = dl->color.g = dl->color.b = 100;
 		dl->radius = random->RandomFloat(200,231);
 		dl->die = gpGlobals->curtime + 0.001;

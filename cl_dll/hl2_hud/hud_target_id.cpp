@@ -98,7 +98,10 @@ void CTargetID::Paint()
 {
 	// No id if still choosing class
 //	if ( C_BaseTFPlayer::GetLocalPlayer()->GetClass() == TFCLASS_UNDECIDED )
-	if ( hud_showplayerinfo.GetInt() != 1 )
+	if( hud_showplayerinfo.GetInt() != 1 )
+		return;
+	
+	if( !C_BaseHLPlayer::GetLocalPlayer() ) // VXP: Hope, this prevent crashes on "disconnect"
 		return;
 
 	// Get our target's ent index

@@ -2444,16 +2444,19 @@ void CBasePlayer::AdjustPlayerTimeBase( int simulation_ticks )
 	}
 	else
 	{
+		// VXP: class CPlayerState here
 		// See if we are too fast
 		if ( estimated_end_time > too_fast_limit )
 		{
-			Msg( "client too fast by %f msec\n", 1000.0f * ( estimated_end_time - end_of_frame ) );
+		//	Msg( "client too fast by %f msec\n", 1000.0f * ( estimated_end_time - end_of_frame ) );
+			Msg( "client %s too fast by %f msec\n", PlayerData()->netname, 1000.0f * ( estimated_end_time - end_of_frame ) );
 			m_nTickBase = end_of_frame_ticks - simulation_ticks + 1;
 		}
 		// Or to slow
 		else if ( estimated_end_time < too_slow_limit )
 		{
-			Msg( "client too slow by %f msec\n", 1000.0f * ( end_of_frame - estimated_end_time ) );
+		//	Msg( "client too slow by %f msec\n", 1000.0f * ( end_of_frame - estimated_end_time ) );
+			Msg( "client %s too slow by %f msec\n", PlayerData()->netname, 1000.0f * ( end_of_frame - estimated_end_time ) );
 			m_nTickBase = end_of_frame_ticks - simulation_ticks + 1;
 		}
 	}

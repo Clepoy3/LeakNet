@@ -534,6 +534,8 @@ END_NETWORK_TABLE()
 		CBaseEntity *pKiller = info.GetAttacker();
 		CBasePlayer *pScorer = GetDeathScorer( pKiller, pInflictor );
 
+		// VXP: Self kill - not "CustomKill"
+
 		// Custom kill type?
 		if ( info.GetCustomKill() )
 		{
@@ -554,10 +556,16 @@ END_NETWORK_TABLE()
 				{
 					if ( pInflictor == pScorer )
 					{
+						// VXP: Self kill
 						// If the inflictor is the killer,  then it must be their current weapon doing the damage
 						if ( pScorer->GetActiveWeapon() )
 						{
-							killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName();
+						//	killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName(); // VXP: Not working for now...
+							killer_weapon_name = "god";
+						}
+						else
+						{
+							killer_weapon_name = "\bout weapons";
 						}
 					}
 					else

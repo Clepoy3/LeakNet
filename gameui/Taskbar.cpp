@@ -52,9 +52,10 @@ extern IBaseUI *baseuifuncs;
 #include <tier0/memdbgon.h>
 
 #define BLACK_BAR_SIZE	64
-#define BLACK_BAR_COLOR	Color(0, 0, 0, 128)
+// VXP: It's working now
+//#define BLACK_BAR_COLOR	Color(0, 0, 0, 128)
 //!! testing black bars being disabled
-// #define BLACK_BAR_COLOR	Color(0, 0, 0, 0)
+#define BLACK_BAR_COLOR	Color(0, 0, 0, 0)
 
 #define MENU_BUTTON_WIDE 240
 #define TASK_BUTTON_HEIGHT 24
@@ -594,15 +595,18 @@ void CTaskbar::PerformLayout()
 
 	//!! hack, check the cd key
 	// SRC: FIXME!!! (implement me!!)
+	/*
 	static int count = 2;
 	if (count-- == 0)
 	{
 		GameUI().ValidateCDKey();
 	}
+	*/
 
 	// position self along bottom of screen
 	SetPos(0, tall - BLACK_BAR_SIZE);
 	SetSize(wide, BLACK_BAR_SIZE);
+	SetBgColor(BLACK_BAR_COLOR);
 
 	// place menu buttons
 	m_pGameMenuButton->SetPos(m_iGameMenuInset, (BLACK_BAR_SIZE - m_iGameMenuInset) / 2);

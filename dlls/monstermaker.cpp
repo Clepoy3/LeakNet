@@ -357,7 +357,7 @@ void CBaseNPCMaker::DeathNotice( CBaseEntity *pVictim )
 	m_nLiveChildren--;
 
 	// If we're here, we're getting erroneous death messages from children we haven't created
-	assert( m_nLiveChildren >= 0 );
+	assert( m_nLiveChildren >= 0 ); // VXP: On d1_town_02 map when we jumping down the pit (3 times)
 
 	if ( m_nLiveChildren <= 0 )
 	{

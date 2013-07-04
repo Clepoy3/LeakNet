@@ -124,7 +124,7 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 	COM_FileBase( com_gamedir, szGD );
 
 	// Send to master
-	Msg("CHALLENGE: %i", p->heartbeatchallenge);
+	Msg( "challenge: %i, gamedir: %s\n", p->heartbeatchallenge, szGD );
 	// VXP: Old protocol
 	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
 		1, active, PROTOCOL_VERSION, szGD );

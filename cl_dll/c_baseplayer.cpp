@@ -341,7 +341,7 @@ void C_BasePlayer::Spawn( void )
 
 //	SetModel( "models/player.mdl" );
 //	SetModel( "models/humans/male_01.mdl" );
-	SetModel( (Q_strcmp ("", plmodel.GetString()) != 0) ? plmodel.GetString() : "models/player.mdl" );
+	SetModel( (Q_strcmp(plmodel.GetString(), "") == 0) ? "models/player.mdl" : plmodel.GetString() );
 	SetSequence( SelectWeightedSequence( ACT_IDLE ) );
 
 	if ( GetFlags() & FL_DUCKING ) 

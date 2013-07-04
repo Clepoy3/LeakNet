@@ -20,6 +20,9 @@ goto done
 @rem
 :build_ok
 
+rem NEED FOR MOD!
+copy ..\hl2\bin\client.dll ..\testmod\bin\
+copy ..\hl2\bin\server.dll ..\testmod\bin\
 echo .
 echo Build succeeded!
 echo .

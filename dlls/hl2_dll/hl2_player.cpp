@@ -470,7 +470,7 @@ void CHL2_Player::Spawn(void)
 {
 //	SetModel( "models/player.mdl" );
 //	SetModel( "models/humans/male_01.mdl" );
-	SetModel( (Q_strcmp ("", model.GetString()) != 0) ? model.GetString() : "models/player.mdl" );
+	SetModel( (Q_strcmp(model.GetString(), "") == 0) ? "models/player.mdl" : model.GetString() );
     g_ulModelIndexPlayer = GetModelIndex();
 
 	BaseClass::Spawn();
@@ -1426,7 +1426,8 @@ ConVar	sv_show_crosshair_target( "sv_show_crosshair_target", "0" );
 void CHL2_Player::UpdateWeaponPosture( void )
 {
 //FIXME: Reimplement this when movements blends are working again
-#if 0
+// VXP: Reimplemented
+//#if 0
 
 	//Setup our viewmodel's movement speed
 	CBaseViewModel *pVM = GetViewModel();
@@ -1439,7 +1440,7 @@ void CHL2_Player::UpdateWeaponPosture( void )
 		pVM->SetPoseParameter( "movement", moveBlend );
 	}
 
-#endif
+//#endif
 
 	//FIXME: Don't do this twice!
 	GetAutoaimVector( AUTOAIM_10DEGREES );

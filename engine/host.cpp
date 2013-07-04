@@ -279,14 +279,21 @@ void Host_EndGame (char *message, ...)
 #endif
 
 	oldn = cls.demonum;
-	
+
 	Host_Disconnect();
 
 	cls.demonum = oldn;
 
+	// VXP: Loading screen
+	VGui_ShowConsole(); // VXP: Fuck yeah, resisted!
+	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+//	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+	staticGameUIFuncs->StopProgressBar( true, "Disconnected", string );
+//	VGui_NotifyOfServerDisconnect();
+
 	if (cls.state == ca_dedicated)
 		Sys_Error ("Host_EndGame: %s\n",string);	// dedicated servers exit
-	
+
 	if (cls.demonum != -1)
 	{
 		oldn = cls.demonum;
@@ -313,8 +320,10 @@ void Host_EndGame (char *message, ...)
 	}
 
 	// VXP: Loading screen
-	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
-	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+//	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+//	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+//	staticGameUIFuncs->StopProgressBar( true, "Disconnected", string );
+//	VGui_NotifyOfServerDisconnect();
 }
 
 /*

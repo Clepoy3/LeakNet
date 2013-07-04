@@ -846,11 +846,30 @@ void CConPanel::PaintBackground()
 
 	int wide = GetWide();
 	char ver[ 100 ];
-	Q_snprintf(ver, sizeof( ver ), "Source Engine %i/%s (build %d - days until 9/30/03)", PROTOCOL_VERSION, gpszVersionString, build_number() );
+//	Q_snprintf(ver, sizeof( ver ), "Source Engine %i/%s (build %d - days until 9/30/03)", PROTOCOL_VERSION, gpszVersionString, build_number() );
+	Q_snprintf(ver, sizeof( ver ), "Source Engine %i (build %d)", PROTOCOL_VERSION,  build_number() );
 
 	vgui::surface()->DrawSetTextColor( Color( 255, 255, 255, 255 ) );
 	int x = wide - DrawTextLen( m_hFont, ver ) - 2;
 	DrawText( m_hFont, x, 0, ver );
+
+	int tall = vgui::surface()->GetFontTall( m_hFont );
+
+	// servername from ... typedef struct ... "} client_static_t;" (engine\client.h)
+	// levelname from ... "class CClientState" (engine\cl_main.h)
+	Q_snprintf(ver, sizeof( ver ), "Server '%s' Map '%s'", cls.servername, cl.levelname );
+	if ( Q_strcmp( cls.servername, "local" ) == 0 ) // VXP: If 'local'
+	{
+	//	Q_snprintf(ver, sizeof( ver ), "Map '%s'", cl.m_szLevelNameShort ); // VXP: From 2007
+		Q_snprintf(ver, sizeof( ver ), "Map '%s'", cl.levelname );
+	}
+	else
+	{
+	//	Q_snprintf(ver, sizeof( ver ), "Server '%s' Map '%s'", cl.m_NetChannel->GetRemoteAddress().ToString(), cl.m_szLevelNameShort ); // VXP: From 2007
+		Q_snprintf(ver, sizeof( ver ), "Server '%s' Map '%s'", cls.servername, cl.levelname );
+	}
+	x = wide - DrawTextLen( m_hFont, ver ) - 2;
+	DrawText( m_hFont, x, tall + 1, ver );
 }
 
 //-----------------------------------------------------------------------------

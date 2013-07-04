@@ -1497,6 +1497,7 @@ int NET_SendLong( netsrc_t sock, SOCKET s, const char FAR * buf, int len, int fl
 
 				SockadrToNetadr( (struct sockaddr *)to, &adr );
 
+				// VXP: Spamming in server console is so bad
 				Con_Printf( "Split packet %i/%i (size %i dest:  %s:%s)\n",
 					packetNumber, 
 					packetCount, 
