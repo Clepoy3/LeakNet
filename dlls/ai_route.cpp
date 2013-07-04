@@ -193,7 +193,7 @@ void CAI_Path::SetGoalPosition(const Vector &goalPos)
 	// Make sure goal position isn't set more than once
 	if (m_bGoalPosSet == true)
 	{
-		Msg( "GetCurWaypoint Goal Position Set Twice!\n");
+		Msg( "GetCurWaypoint Goal Position Set Twice! (SetGoalPosition)\n");
 	}
 #endif
 
@@ -212,7 +212,7 @@ void CAI_Path::SetLastNodeAsGoal(void)
 		// Make sure goal position isn't set more than once
 		if (m_bGoalPosSet == true)
 		{
-			Msg( "GetCurWaypoint Goal Position Set Twice!\n");
+			Msg( "GetCurWaypoint Goal Position Set Twice! (SetLastNodeAsGoal)\n");
 		}
 	#endif	
 	

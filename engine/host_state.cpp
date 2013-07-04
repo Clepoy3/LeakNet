@@ -468,7 +468,8 @@ static bool Host_ValidGame( void )
 	// No multi-client single player games
 	if ( svs.maxclients > 1 )
 	{
-		if ( deathmatch.GetInt() )
+	//	if ( deathmatch.GetInt() )
+		if ( deathmatch.GetInt() || coop.GetInt() ) // VXP: Fix for not changing levels in coop mode from console
 			return true;
 	}
 	else

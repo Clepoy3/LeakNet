@@ -127,13 +127,17 @@ inline CBaseEntity *CCollisionProperty::GetOuter()
 //-----------------------------------------------------------------------------
 inline const Vector& CCollisionProperty::WorldAlignSize( ) const
 {
-	Assert( !IsBoundsDefinedInEntitySpace() );
+//	Assert( !IsBoundsDefinedInEntitySpace() );
+	if( IsBoundsDefinedInEntitySpace() )
+		DevMsg( "Bounds not defined in entity space! (WorldAlignSize())\n" );
 	return m_vecSize;
 }
 
 inline const Vector& CCollisionProperty::EntitySpaceSize( ) const
 {
-	Assert( IsBoundsDefinedInEntitySpace() );
+//	Assert( IsBoundsDefinedInEntitySpace() );
+	if( !IsBoundsDefinedInEntitySpace() )
+		DevMsg( "Bounds not defined in entity space! (EntitySpaceSize())\n" );
 	return m_vecSize;
 }
 

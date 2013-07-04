@@ -1094,7 +1094,7 @@ void CChangeLevel::TouchChangeLevel( CBaseEntity *pOther )
 
 	if ( !pPlayer->IsInAVehicle() && pPlayer->GetMoveType() == MOVETYPE_NOCLIP )
 	{
-		DevMsg("In level transition: %s %s\n", st_szNextMap, st_szNextSpot );
+		DevMsg("In level transition: %s %s\n", st_szNextMap, st_szNextSpot ); // VXP: Changing level here
 		return;
 	}
 

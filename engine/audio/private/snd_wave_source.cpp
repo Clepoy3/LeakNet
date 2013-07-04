@@ -415,7 +415,7 @@ void CAudioSourceWave::ParseSamplerChunk( IterateRIFF &walk )
 #if _DEBUG
 	else
 	{
-		Msg("Unknown sampler chunk type %d\n", samplerChunk.Loops[0].dwType );
+		Msg("Unknown sampler chunk type %d\n", samplerChunk.Loops[0].dwType ); // VXP: Happens sometimes on client
 	}
 #endif
 }

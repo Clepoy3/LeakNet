@@ -4525,7 +4525,7 @@ bool CAI_BaseNPC::InitSquad( void )
 	{
 		if ( !m_SquadName )
 		{
-			Msg("WARNING: Found %s that isn't in a squad\n",GetClassname());
+			Msg("WARNING: Found %s that isn't in a squad\n",GetClassname()); // VXP: Need work with this
 		}
 		else
 		{

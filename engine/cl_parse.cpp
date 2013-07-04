@@ -786,7 +786,8 @@ void CL_CheckGameDirectory( char *gamedir )
 	if ( stricmp( szGD, gamedir ) )
 	{
 		// Changing game directories without restarting is not permitted any more
-		Error( "CL_CheckGameDirectory: game directories don't match (%s / %s)", szGD, gamedir );
+		Error( "CL_CheckGameDirectory: game directories don't match (%s / %s)", szGD, gamedir ); // VXP: This is temp
+	//	staticGameUIFuncs->StopProgressBar(true, "Disconnect", "Game does not match with server's")
 	}
 }
 

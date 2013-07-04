@@ -82,6 +82,19 @@ public:
 
 	bool		CreateConsoleWindow( void );
 	void		DestroyConsoleWindow( void );
+	
+	// VXP
+	void		PrintRaw( char * pszMsg, int nChars = 0 );
+	void		Echo( char * pszMsg, int nChars = 0 );
+	
+	int			ReceiveNewline( void );
+	void		ReceiveBackspace( void );
+	void		ReceiveTab( void );
+	void		ReceiveStandardChar( const char ch );
+	void		ReceiveUpArrow( void );
+	void		ReceiveDownArrow( void );
+	void		ReceiveLeftArrow( void );
+	void		ReceiveRightArrow( void );
 
 	void		ConsoleOutput ( char *string );
 	char		*ConsoleInput (void);
@@ -90,6 +103,28 @@ public:
 
 static CSys g_Sys;
 ISys *sys = &g_Sys;
+
+#define MAX_CONSOLE_TEXTLEN 256
+#define MAX_BUFFER_LINES	30
+
+char	m_szConsoleText[ MAX_CONSOLE_TEXTLEN ];						// console text buffer
+int		m_nConsoleTextLen = 0;											// console textbuffer length
+int		m_nCursorPosition = 0;											// position in the current input line
+
+// Saved input data when scrolling back through command history
+char	m_szSavedConsoleText[ MAX_CONSOLE_TEXTLEN ];				// console text buffer
+int		m_nSavedConsoleTextLen = 0;										// console textbuffer length
+
+char	m_aszLineBuffer[ MAX_BUFFER_LINES ][ MAX_CONSOLE_TEXTLEN ];	// command buffer last MAX_BUFFER_LINES commands
+int		m_nInputLine = 0;												// Current line being entered
+int		m_nBrowseLine = 0;												// current buffer line for up/down arrow
+int		m_nTotalLines = 0;	
+
+//memset( m_szConsoleText, 0, sizeof( m_szConsoleText ) );
+
+//memset( m_szSavedConsoleText, 0, sizeof( m_szSavedConsoleText ) );
+
+//memset( m_aszLineBuffer, 0, sizeof( m_aszLineBuffer ) );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -308,6 +343,243 @@ char *CSys::ConsoleInput (void)
 }
 */
 
+void CSys::PrintRaw( char * pszMsg, int nChars )
+{
+	unsigned long dummy;
+
+	if ( nChars == 0 )
+	{
+		WriteFile( houtput, pszMsg, strlen( pszMsg ), &dummy, NULL );
+	}
+	else
+	{
+		WriteFile( houtput, pszMsg, nChars, &dummy, NULL );
+	}
+}
+
+void CSys::Echo( char * pszMsg, int nChars )
+{
+	PrintRaw( pszMsg, nChars );
+}
+
+int CSys::ReceiveNewline( void )
+{
+	int nLen = 0;
+
+	Echo( "\n" );
+
+	if ( m_nConsoleTextLen )
+	{
+		nLen = m_nConsoleTextLen;
+
+		m_szConsoleText[ m_nConsoleTextLen ] = 0;
+		m_nConsoleTextLen = 0;
+		m_nCursorPosition = 0;
+
+		// cache line in buffer, but only if it's not a duplicate of the previous line
+		if ( ( m_nInputLine == 0 ) || ( strcmp( m_aszLineBuffer[ m_nInputLine - 1 ], m_szConsoleText ) ) )
+		{
+			strncpy( m_aszLineBuffer[ m_nInputLine ], m_szConsoleText, MAX_CONSOLE_TEXTLEN );
+			
+			m_nInputLine++;
+
+			if ( m_nInputLine > m_nTotalLines )
+				m_nTotalLines = m_nInputLine;
+
+			if ( m_nInputLine >= MAX_BUFFER_LINES )
+				m_nInputLine = 0;
+
+		}
+
+		m_nBrowseLine = m_nInputLine;
+	}
+
+	return nLen;
+}
+
+
+void CSys::ReceiveBackspace( void )
+{
+	int nCount;
+
+	if ( m_nCursorPosition == 0 )
+	{
+		return;
+	}
+
+	m_nConsoleTextLen--;
+	m_nCursorPosition--;
+
+	Echo( "\b" );
+
+	for ( nCount = m_nCursorPosition; nCount < m_nConsoleTextLen; nCount++ )
+	{
+		m_szConsoleText[ nCount ] = m_szConsoleText[ nCount + 1 ];
+		Echo( m_szConsoleText + nCount, 1 );
+	}
+
+	Echo( " " );
+
+	nCount = m_nConsoleTextLen;
+	while ( nCount >= m_nCursorPosition )
+	{
+		Echo( "\b" );
+		nCount--;
+	}
+
+	m_nBrowseLine = m_nInputLine;
+}
+
+void CSys::ReceiveStandardChar( const char ch )
+{
+	int nCount;
+
+	// If the line buffer is maxed out, ignore this char
+	if ( m_nConsoleTextLen >= ( sizeof( m_szConsoleText ) - 2 ) )
+	{
+		return;
+	}
+
+	nCount = m_nConsoleTextLen;
+	while ( nCount > m_nCursorPosition )
+	{
+		m_szConsoleText[ nCount ] = m_szConsoleText[ nCount - 1 ];
+		nCount--;
+	}
+
+	m_szConsoleText[ m_nCursorPosition ] = ch;
+
+	Echo( m_szConsoleText + m_nCursorPosition, m_nConsoleTextLen - m_nCursorPosition + 1 );
+
+	m_nConsoleTextLen++;
+	m_nCursorPosition++;
+
+	nCount = m_nConsoleTextLen;
+	while ( nCount > m_nCursorPosition )
+	{
+		Echo( "\b" );
+		nCount--;
+	}
+
+	m_nBrowseLine = m_nInputLine;
+}
+
+void CSys::ReceiveUpArrow( void )
+{
+	int nLastCommandInHistory;
+
+	nLastCommandInHistory = m_nInputLine + 1;
+	if ( nLastCommandInHistory > m_nTotalLines )
+	{
+		nLastCommandInHistory = 0;
+	}
+
+	if ( m_nBrowseLine == nLastCommandInHistory )
+	{
+		return;
+	}
+
+	if ( m_nBrowseLine == m_nInputLine )
+	{
+		if ( m_nConsoleTextLen > 0 )
+		{
+			// Save off current text
+			strncpy( m_szSavedConsoleText, m_szConsoleText, m_nConsoleTextLen );
+			// No terminator, it's a raw buffer we always know the length of
+		}
+
+		m_nSavedConsoleTextLen = m_nConsoleTextLen;
+	}
+
+	m_nBrowseLine--;
+	if ( m_nBrowseLine < 0 )
+	{
+		m_nBrowseLine = m_nTotalLines - 1;
+	}
+
+	while ( m_nConsoleTextLen-- )	// delete old line
+	{
+		Echo( "\b \b" );
+	}
+
+	// copy buffered line
+	Echo( m_aszLineBuffer[ m_nBrowseLine ] );
+
+	strncpy( m_szConsoleText, m_aszLineBuffer[ m_nBrowseLine ], MAX_CONSOLE_TEXTLEN );
+	m_nConsoleTextLen = strlen( m_aszLineBuffer[ m_nBrowseLine ] );
+
+	m_nCursorPosition = m_nConsoleTextLen;
+}
+
+
+void CSys::ReceiveDownArrow( void )
+{
+	if ( m_nBrowseLine == m_nInputLine )
+	{
+		return;
+	}
+
+	m_nBrowseLine++;
+	if ( m_nBrowseLine > m_nTotalLines )
+	{
+		m_nBrowseLine = 0;
+	}
+
+	while ( m_nConsoleTextLen-- )	// delete old line
+	{
+		Echo( "\b \b" );
+	}
+
+	if ( m_nBrowseLine == m_nInputLine )
+	{
+		if ( m_nSavedConsoleTextLen > 0 )
+		{
+			// Restore current text
+			strncpy( m_szConsoleText, m_szSavedConsoleText, m_nSavedConsoleTextLen );
+			// No terminator, it's a raw buffer we always know the length of
+
+			Echo( m_szConsoleText, m_nSavedConsoleTextLen );
+		}
+
+		m_nConsoleTextLen = m_nSavedConsoleTextLen;
+	}
+	else
+	{
+		// copy buffered line
+		Echo( m_aszLineBuffer[ m_nBrowseLine ] );
+
+		strncpy( m_szConsoleText, m_aszLineBuffer[ m_nBrowseLine ], MAX_CONSOLE_TEXTLEN );
+
+		m_nConsoleTextLen = strlen( m_aszLineBuffer[ m_nBrowseLine ] );
+	}
+
+	m_nCursorPosition = m_nConsoleTextLen;
+}
+
+
+void CSys::ReceiveLeftArrow( void )
+{
+	if ( m_nCursorPosition == 0 )
+	{
+		return;
+	}
+
+	Echo( "\b" );
+	m_nCursorPosition--;
+}
+
+
+void CSys::ReceiveRightArrow( void )
+{
+	if ( m_nCursorPosition == m_nConsoleTextLen )
+	{
+		return;
+	}
+
+	Echo( m_szConsoleText + m_nCursorPosition, 1 );
+	m_nCursorPosition++;
+}
+/*
 char *CSys::ConsoleInput (void)
 {
 	while ( 1 )
@@ -338,47 +610,159 @@ char *CSys::ConsoleInput (void)
 			//	if ( !recs[0].Event.KeyEvent.bKeyDown )
 				if ( pRec->Event.KeyEvent.bKeyDown )
 				{
-				//	ch = recs[0].Event.KeyEvent.uChar.AsciiChar;
-					char	ch;
-				//	int		nLen;
-					ch = pRec->Event.KeyEvent.uChar.AsciiChar;
-					switch (ch)
+					// check for cursor keys
+					if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_UP )
 					{
-						case '\r':
-							WriteFile(houtput, "\r\n", 2, &dummy, NULL);	
-							if (console_textlen)
-							{
-								console_text[console_textlen] = 0;
-								console_textlen = 0;
-								return console_text;
-							}
-							break;
-
-						case '\b':
-							if (console_textlen)
-							{
-								console_textlen--;
-								WriteFile(houtput, "\b \b", 3, &dummy, NULL);	
-							}
-							break;
-
-						default:
-						//	if (ch >= ' ')
-							if ( ( ch >= ' ') && ( ch <= '~' ) )	// dont' accept nonprintable chars
-							{
-								if (console_textlen < sizeof(console_text)-2)
+						ReceiveUpArrow();
+					}
+					else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_DOWN )
+					{
+						ReceiveDownArrow();
+					}
+					else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_LEFT )
+					{
+						ReceiveLeftArrow();
+					}
+					else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_RIGHT )
+					{
+						ReceiveRightArrow();
+					}
+					else
+					{
+					//	ch = recs[0].Event.KeyEvent.uChar.AsciiChar;
+						char	ch;
+					//	int		nLen;
+						ch = pRec->Event.KeyEvent.uChar.AsciiChar;
+						switch (ch)
+						{
+							case '\r':
+								WriteFile(houtput, "\r\n", 2, &dummy, NULL);	
+								if (console_textlen)
 								{
-									WriteFile(houtput, &ch, 1, &dummy, NULL);	
-									console_text[console_textlen] = ch;
-									console_textlen++;
+									console_text[console_textlen] = 0;
+									console_textlen = 0;
+									return console_text;
 								}
-							}
+								break;
 
-							break;
+							case '\b':
+								if (console_textlen)
+								{
+									console_textlen--;
+									WriteFile(houtput, "\b \b", 3, &dummy, NULL);	
+								}
+								break;
 
+							default:
+							//	if (ch >= ' ')
+								if ( ( ch >= ' ') && ( ch <= '~' ) )	// dont' accept nonprintable chars
+								{
+									if (console_textlen < sizeof(console_text)-2)
+									{
+										WriteFile(houtput, &ch, 1, &dummy, NULL);	
+										console_text[console_textlen] = ch;
+										console_textlen++;
+									}
+								}
+
+								break;
+
+						}
 					}
 				}
 		//	}
+		}
+	}
+
+	return NULL;
+}
+*/
+char * CSys::ConsoleInput( void )
+{
+	while ( 1 )
+	{
+		INPUT_RECORD	recs[ 1024 ];
+		unsigned long	numread;
+		unsigned long	numevents;
+
+		if ( !GetNumberOfConsoleInputEvents( hinput, &numevents ) )
+		{
+			Error("CTextConsoleWin32::GetLine: !GetNumberOfConsoleInputEvents");
+
+			return NULL;
+		}
+
+		if ( numevents <= 0 )
+			break;
+
+		if ( !ReadConsoleInput( hinput, recs, ARRAYSIZE( recs ), &numread ) )
+		{
+			Error("CTextConsoleWin32::GetLine: !ReadConsoleInput");
+
+			return NULL;
+		}
+
+		if ( numread == 0 )
+			return NULL;
+
+		for ( int i=0; i < (int)numread; i++ )
+		{
+			INPUT_RECORD *pRec = &recs[i];
+			if ( pRec->EventType != KEY_EVENT )
+				continue;
+
+			if ( pRec->Event.KeyEvent.bKeyDown )
+			{
+				// check for cursor keys
+				if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_UP )
+				{
+					ReceiveUpArrow();
+				}
+				else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_DOWN )
+				{
+					ReceiveDownArrow();
+				}
+				else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_LEFT )
+				{
+					ReceiveLeftArrow();
+				}
+				else if ( pRec->Event.KeyEvent.wVirtualKeyCode == VK_RIGHT )
+				{
+					ReceiveRightArrow();
+				}
+				else
+				{
+					char	ch;
+					int		nLen;
+
+					ch = pRec->Event.KeyEvent.uChar.AsciiChar;
+					switch ( ch )
+					{
+					case '\r':	// Enter
+						nLen = ReceiveNewline();
+						if ( nLen )
+						{
+							return m_szConsoleText;	
+						}
+						break;
+
+					case '\b':	// Backspace
+						ReceiveBackspace();
+						break;
+
+				//	case '\t':	// TAB
+				//		ReceiveTab();
+				//		break;
+
+					default:
+						if ( ( ch >= ' ') && ( ch <= '~' ) )	// dont' accept nonprintable chars
+						{
+							ReceiveStandardChar( ch );
+						}
+						break;
+					}
+				}
+			}
 		}
 	}
 

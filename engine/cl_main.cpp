@@ -2157,12 +2157,20 @@ void CL_Move( float accumulated_extra_samples )
 		{
 			con_nprint_t np;
 			np.time_to_live = 1.0;
-			np.index = 0;
+		//	np.index = 0;
+			np.index = 2;
 			np.fixed_width_font = false;
 			np.color[ 0 ] = 1.0;
 			np.color[ 1 ] = 0.2;
-			np.color[ 2 ] = 0.0;
+		//	np.color[ 2 ] = 0.0;
+			np.color[ 2 ] = 0.2;
+
+		//	float flTimeOut = realtime;
+		//	Assert( flTimeOut != -1.0f );
+		//	float flRemainingTime = flTimeOut - cls.netchan.last_received;
 			Con_NXPrintf( &np, "WARNING:  Connection Problem" );
+		//	np.index = 3;
+		//	Con_NXPrintf( &np, "Auto-disconnect in %.1f seconds", flRemainingTime );
 			cl.validsequence = 0;
 		}
 
