@@ -1289,6 +1289,16 @@ void TextEntry::OnKeyCodeTyped(KeyCode code)
 				Undo();
 				break;
 			}
+		case KEY_A:
+			{
+			//	_select[0] = 0;
+			//	_select[1] = m_TextStream.Count();
+			//	_cursorPos = _select[1]; // cursor at end of line
+			//	Repaint();
+			//	SelectAllOnFirstFocus( true );
+				SelectAllText( false );
+				break;
+			}
 		case KEY_RIGHT:
 			{
 				GotoWordRight();

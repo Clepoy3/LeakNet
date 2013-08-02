@@ -120,7 +120,7 @@ void PhysicsSplash( IPhysicsFluidController *pFluid, IPhysicsObject *pObject, CB
 		*/
 
 		//FIXME: This code will not work correctly given how the ragdoll/fluid collision is acting currently
-		return;
+	//	return; // VXP: We need that effect!
 	}
 
 	Vector vel;

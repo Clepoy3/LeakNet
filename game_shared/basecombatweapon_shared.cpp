@@ -1194,10 +1194,14 @@ bool CBaseCombatWeapon::DefaultReload( int iClipSize1, int iClipSize2, int iActi
 	if ( !bReload )
 		return false;
 
-#ifdef CLIENT_DLL
+//#ifdef CLIENT_DLL // VXP: Not playable on client
 	// Play reload
 	WeaponSound( RELOAD );
-#endif
+//#endif
+// VXP: For tests
+//#if !defined( CLIENT_DLL )
+//	CSoundEnt::InsertSound ( SOUND_COMBAT, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0 );
+//#endif
 	SendWeaponAnim( iActivity );
 
 	// Play the player's reload animation
@@ -1360,9 +1364,9 @@ void CBaseCombatWeapon::FinishReload( void )
 //-----------------------------------------------------------------------------
 void CBaseCombatWeapon::AbortReload( void )
 {
-#ifdef CLIENT_DLL
+//#ifdef CLIENT_DLL // VXP: Thought, need to disable too
 	StopWeaponSound( RELOAD ); 
-#endif
+//#endif
 	m_bInReload = false;
 }
 

@@ -290,7 +290,7 @@ int CNPC_Citizen::GetSoundInterests ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Citizen::LocateEnemySound()
 {
-//#if 0 // VXP
+#if 0 // VXP
 	if ( !GetEnemy() )
 		return;
 
@@ -299,19 +299,19 @@ void CNPC_Citizen::LocateEnemySound()
 	if( flZDiff < -128 )
 	{
 	//	EmitSound( "NPC_Citizen.UpThere" );
-		EmitSound( "npc_citizen.upthere01" );
+	//	EmitSound( "npc_citizen.upthere01" );
 	}
 	else if( flZDiff > 128 )
 	{
 	//	EmitSound( "NPC_Citizen.DownThere" );
-		EmitSound( "npc_citizen.downthere01" );
+	//	EmitSound( "npc_citizen.downthere01" );
 	}
 	else
 	{
 	//	EmitSound( "NPC_Citizen.OverHere" );
-		EmitSound( "npc_citizen.overhere01" );
+	//	EmitSound( "npc_citizen.overhere01" );
 	}
-//#endif
+#endif
 }
 
 //------------------------------------------------------------------------------

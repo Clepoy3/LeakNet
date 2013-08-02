@@ -73,13 +73,17 @@ bool CHealthKit::MyTouch( CBasePlayer *pPlayer )
 		CPASAttenuationFilter filter( pPlayer, "HealthKit.Touch" );
 		EmitSound( filter, pPlayer->entindex(), "HealthKit.Touch" );
 
-		if ( g_pGameRules->ItemShouldRespawn( this ) )
+		if ( gpGlobals->maxClients > 1 )
 		{
-			Respawn();
-		}
-		else
-		{
-			UTIL_Remove(this);	
+		//	if ( g_pGameRules->ItemShouldRespawn( this ) )
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_YES )
+			{
+				Respawn();
+			}
+			else
+			{
+				UTIL_Remove(this);	
+			}
 		}
 
 		return true;
@@ -123,14 +127,21 @@ public:
 
 			CPASAttenuationFilter filter( pPlayer, "HealthVial.Touch" );
 			EmitSound( filter, pPlayer->entindex(), "HealthVial.Touch" );
-
-			if ( g_pGameRules->ItemShouldRespawn( this ) )
+			if ( gpGlobals->maxClients > 1 )
 			{
-				Respawn();
+			//	if ( g_pGameRules->ItemShouldRespawn( this ) )
+				if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_YES )
+				{
+					Respawn();
+				}
+				else
+				{
+					UTIL_Remove(this);	
+				}
 			}
 			else
 			{
-				UTIL_Remove(this);	
+				UTIL_Remove(this);
 			}
 
 			return true;

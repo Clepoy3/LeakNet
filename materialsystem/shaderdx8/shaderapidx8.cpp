@@ -2275,21 +2275,6 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 	SendIPCMessage( true );
 
 	IDirect3DDevice *pD3DDevice = NULL;
-
-	// raynorpat: Look for 'NVIDIA PerfHUD' adapter
-	// If it is present, override default settings
-	for (UINT Adapter = 0; Adapter<m_pD3D->GetAdapterCount(); Adapter++)
-	{
-		D3DADAPTER_IDENTIFIER9 Identifier;
-		HRESULT Res = m_pD3D->GetAdapterIdentifier(Adapter, 0, &Identifier);
-		if (strstr(Identifier.Description,"PerfHUD") != 0)
-		{
-			m_DisplayAdapter = Adapter;
-			m_DeviceType = D3DDEVTYPE_REF;
-			break;
-		}
-	}
-
 	hr = m_pD3D->CreateDevice( m_DisplayAdapter, m_DeviceType,
 		m_HWnd, deviceCreationFlags, &m_PresentParameters, &pD3DDevice );
 
@@ -2670,17 +2655,17 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_SupportsVertexShaders = ((caps.VertexShaderVersion >> 8) & 0xFF) >= 1;
 	m_Caps.m_SupportsPixelShaders = ((caps.PixelShaderVersion >> 8) & 0xFF) >= 1;
 
-//#ifdef DX8_COMPATABILITY_MODE
-//	m_Caps.m_SupportsPixelShaders_1_4 = false;
-//	m_Caps.m_SupportsPixelShaders_2_0 = false;
-//	m_Caps.m_SupportsVertexShaders_2_0 = false;
-//	m_Caps.m_SupportsMipmappedCubemaps = false;
-//#else
+#ifdef DX8_COMPATABILITY_MODE
+	m_Caps.m_SupportsPixelShaders_1_4 = false;
+	m_Caps.m_SupportsPixelShaders_2_0 = false;
+	m_Caps.m_SupportsVertexShaders_2_0 = false;
+	m_Caps.m_SupportsMipmappedCubemaps = false;
+#else
 	m_Caps.m_SupportsPixelShaders_1_4 = (caps.PixelShaderVersion & 0xffff) >= 0x0104;
 	m_Caps.m_SupportsPixelShaders_2_0 = (caps.PixelShaderVersion & 0xffff) >= 0x0200;
 	m_Caps.m_SupportsVertexShaders_2_0 = ( caps.VertexShaderVersion & 0xffff ) >= 0x0200;
 	m_Caps.m_SupportsMipmappedCubemaps = ( caps.TextureCaps & D3DPTEXTURECAPS_MIPCUBEMAP ) ? true : false;
-//#endif
+#endif
 	if ( D3DSupportsCompressedTextures() )
 		m_Caps.m_SupportsCompressedTextures = COMPRESSED_TEXTURES_ON;
 	else
@@ -2696,11 +2681,11 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
 	// NOTE: Initting more constants than we are ever going to use may cause the 
 	// driver to try to keep track of them.. I'm forcing this to 96 so that this doesn't happen.
-//#if 0
+#if 0
 	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
-//#else
-//	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
-//#endif
+#else
+	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
+#endif
 
 	if( m_Caps.m_SupportsPixelShaders )
 	{
@@ -3242,8 +3227,8 @@ bool CShaderAPIDX8::ReadPixelsFromFrontBuffer() const
 bool CShaderAPIDX8::PreferDynamicTextures() const
 {
 	// For now, disable this feature.
-//	return false;
-	return m_Caps.m_PreferDynamicTextures;
+	return false;
+//	return m_Caps.m_PreferDynamicTextures;
 }
 
 bool CShaderAPIDX8::HasProjectedBumpEnv() const

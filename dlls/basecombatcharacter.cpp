@@ -1552,7 +1552,7 @@ Relationship_t *CBaseCombatCharacter::FindEntityRelationship( CBaseEntity *pTarg
 		}
 	}
 
-	if (pTarget->Classify() != CLASS_NONE) // VXP: BUG
+	if (pTarget->Classify() != CLASS_NONE) // VXP: BUG when NPC (for example, citizen) sees another NPC (combine) in multiplayer
 	{
 		// Then check for relationship with this edict's class
 		for (i=0;i<m_Relationship.Count();i++) 

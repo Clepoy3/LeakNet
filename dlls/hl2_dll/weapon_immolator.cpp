@@ -15,6 +15,7 @@
 #include "in_buttons.h"
 #include "ai_basenpc.h"
 #include "ai_memory.h"
+#include "beam_shared.h"
 
 
 #define MAX_BURN_RADIUS		256
@@ -256,11 +257,17 @@ void CWeaponImmolator::Update()
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
 	Vector vecSrc;
+	Vector vecStart;
 	Vector vecAiming;
+	QAngle dummy;
 
 	if( pOwner )
 	{
 		vecSrc	 = pOwner->Weapon_ShootPosition( );
+
+		CBaseViewModel *pViewModel = pOwner->GetViewModel();
+		pViewModel->GetAttachment( pViewModel->LookupAttachment( "muzzle" ), vecStart, dummy );
+
 		vecAiming = pOwner->GetAutoaimVector(AUTOAIM_2DEGREES);
 	}
 	else
@@ -270,6 +277,8 @@ void CWeaponImmolator::Update()
 		vecSrc = pOwner->Weapon_ShootPosition( );
 		vecAiming = m_vecImmolatorTarget - vecSrc;
 		VectorNormalize( vecAiming );
+
+		vecStart = vecSrc;
 	}
 
 	trace_t	tr;
@@ -277,6 +286,7 @@ void CWeaponImmolator::Update()
 
 	int brightness;
 	brightness = 255 * (m_flBurnRadius/MAX_BURN_RADIUS);
+/*
 	UTIL_Beam(  vecSrc,
 				tr.endpos,
 				m_beamIndex,
@@ -296,7 +306,18 @@ void CWeaponImmolator::Update()
 				brightness, // bright
 				100  // speed
 				);
-
+*/
+	CBeam *pBeam = CBeam::BeamCreate( "sprites/bluelaser1.vmt", 20 );
+	pBeam->PointEntInit( vecStart, this );
+	pBeam->SetAbsStartPos( tr.endpos );
+	pBeam->SetEndAttachment( 1 );
+	pBeam->SetScrollRate( 2.0f );		//framerate
+	pBeam->LiveForTime( 0.1f );			//life
+	pBeam->SetEndWidth( 1 );			// endwidth
+	pBeam->SetFadeLength( 0 );			// fadelength,
+	pBeam->SetNoise( 1 );				// noise
+	pBeam->SetColor( 0, 255, 0 );		// red, green, blue,
+	pBeam->SetBrightness( brightness );	// bright
 
 	if( tr.DidHitWorld() )
 	{

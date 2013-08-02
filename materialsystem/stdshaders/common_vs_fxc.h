@@ -346,10 +346,8 @@ float3 SpotLight( const float3 worldPos, const float3 worldNormal, int lightNum 
 	flDistanceAttenuation *= flLinearFactor;
 
 	// compute n dot l
-//	float nDotL = dot( worldNormal, lightDir );
-	float nDotL = dot( worldNormal, lightDir ) * 0.5 + 0.5;
-	nDotL = nDotL * nDotL;
-//	nDotL = max( cZero, nDotL );
+	float nDotL = dot( worldNormal, lightDir );
+	nDotL = max( cZero, nDotL );
 						 
 	// compute angular attenuation
 	float flCosTheta = dot( cLightInfo[lightNum].dir, -lightDir );
@@ -389,10 +387,8 @@ float3 PointLight( const float3 worldPos, const float3 worldNormal, int lightNum
 	flDistanceAtten *= flLinearFactor;
 
 	// Compute N dot L
-//	float NDotL = dot( worldNormal, lightDir );
-	float NDotL = dot( worldNormal, lightDir ) * 0.5 + 0.5;
-	NDotL = NDotL * NDotL;
-//	NDotL = max( cZero, NDotL );
+	float NDotL = dot( worldNormal, lightDir );
+	NDotL = max( cZero, NDotL );
 
 	return cLightInfo[lightNum].color * NDotL * flDistanceAtten;
 }
@@ -400,14 +396,13 @@ float3 PointLight( const float3 worldPos, const float3 worldNormal, int lightNum
 float3 DirectionalLight( const float3 worldNormal, int lightNum )
 {
 	// Compute N dot L
-//	float NDotL = dot( worldNormal, -cLightInfo[lightNum].dir );
-	float NDotL = dot( worldNormal, -cLightInfo[lightNum].dir ) * 0.5 + 0.5;
-	NDotL = NDotL * NDotL;
-//	NDotL = max( cZero, NDotL );
+	float NDotL = dot( worldNormal, -cLightInfo[lightNum].dir );
+	NDotL = max( cZero, NDotL );
 	return cLightInfo[lightNum].color * NDotL;
 }
 
-float3 DoLight( const float3 worldPos, const float3 worldNormal, int lightNum, int lightType )
+float3 DoLight( const float3 worldPos, const float3 worldNormal, 
+				int lightNum, int lightType )
 {
 	float3 color = 0.0f;
 	if( lightType == LIGHTTYPE_SPOT )
@@ -473,13 +468,6 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 	{
 		returnColor = float3( 0.0f, 0.0f, 0.0f );
 	}
-	else if( staticLightType == LIGHTTYPE_NONE && 
-			 ambientLightType == LIGHTTYPE_AMBIENT &&
-			 localLightType0 == LIGHTTYPE_NONE &&
-			 localLightType1 == LIGHTTYPE_NONE )
-	{
-		returnColor = AmbientLight( worldNormal );
-	}
 	else if( staticLightType == LIGHTTYPE_STATIC && 
 			 ambientLightType == LIGHTTYPE_NONE &&
 			 localLightType0 == LIGHTTYPE_NONE &&
@@ -487,8 +475,7 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 	{
 		// special case for static lighting only
 		// Don't need to bother converting to linear space in this case.
-	//	returnColor = staticLightingColor;
-		returnColor = GammaToLinear( staticLightingColor * cOverbright );
+		returnColor = staticLightingColor;
 	}
 	else
 	{
@@ -503,8 +490,7 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 		// for dx9, we don't need to scale back down to 0..1 for overbrighting.
 		// FIXME: But we're going to because there's some visual difference between dx8 + dx9 if we don't
 		// gotta look into that later.
-	//	returnColor = HuePreservingColorClamp( cOOOverbright * LinearToGamma( linearColor ) );
-		returnColor = linearColor;
+		returnColor = HuePreservingColorClamp( cOOOverbright * LinearToGamma( linearColor ) );
 	}
 
 	return returnColor;

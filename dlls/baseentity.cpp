@@ -1240,8 +1240,9 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( inputInfo.GetDamageForce() != vec3_origin && inputInfo.GetDamagePosition() != vec3_origin );
-		if ( (inputInfo.GetDamageForce() == vec3_origin) && (inputInfo.GetDamagePosition() == vec3_origin) )
-			Warning( "CBaseEntity::TakeDamage: hitting the assert!\n" );
+		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
+		if ( (inputInfo.GetDamageForce() == vec3_origin) || (inputInfo.GetDamagePosition() == vec3_origin) )
+			Warning( "TakeDamage: error with moving explosions!\n" );
 	}
 
 	// Make sure our damage filter allows the damage.
@@ -1327,7 +1328,10 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		// setup the damage force & position inside the CTakeDamageInfo (Utility functions for this are in
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
-		Assert( force != vec3_origin && offset != vec3_origin );
+	//	Assert( force != vec3_origin && offset != vec3_origin );
+		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
+		if ( (force == vec3_origin) || (offset == vec3_origin) )
+			Warning( "VPhysicsTakeDamage: error with moving explosions!\n" );
 
 		VPhysicsGetObject()->ApplyForceOffset( force, offset );
 	}

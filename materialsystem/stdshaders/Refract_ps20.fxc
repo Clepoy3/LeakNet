@@ -138,8 +138,7 @@ HALF4 main( PS_INPUT i ) : COLOR
 	specularLighting *= g_EnvmapTint;
 	HALF3 specularLightingSquared = specularLighting * specularLighting;
 	specularLighting = lerp( specularLighting, specularLightingSquared, g_EnvmapContrast );
-//	HALF3 greyScale = dot( specularLighting, HALF3( 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f ) );
-	HALF3 greyScale = dot( specularLighting, HALF3( 0.299f, 0.587f, 0.114f ) );
+	HALF3 greyScale = dot( specularLighting, HALF3( 1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f ) );
 	specularLighting = lerp( greyScale, specularLighting, g_EnvmapSaturation );
 	result += specularLighting;
 #endif

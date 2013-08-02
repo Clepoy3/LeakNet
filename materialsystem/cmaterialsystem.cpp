@@ -2743,7 +2743,7 @@ void CMaterialSystem::UpdateBumpedLightmapBitsDynamic( int lightmap,
 			if( bLumInAlpha )
 			{
 				// not implemented for HDR
-			//	Assert( 0 ); // VXP
+				Assert( 0 );
 				*pDst0++ = color[0][0]; *pDst0++ = color[0][1]; *pDst0++ = color[0][2]; *pDst0++ = lum;
 			}
 			else
@@ -2939,7 +2939,7 @@ void CMaterialSystem::UpdateLightmapBitsDynamic( int lightmap, float* pFloatImag
 	else
 	{
 		// not implemented for HDR
-	//	Assert( 0 ); // VXP
+		Assert( 0 );
 		// DX 9 lightmap support with HDR capability
 		pSrc = pFloatImage;
 		for( int t = 0; t < pLightmapSize[1]; ++t )

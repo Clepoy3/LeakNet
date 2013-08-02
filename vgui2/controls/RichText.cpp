@@ -1302,6 +1302,13 @@ void RichText::OnKeyCodeTyped(KeyCode code)
 				CopySelected();
 				break;
 			}
+		case KEY_A:
+			{
+				_select[0] = 0;
+				_select[1] = m_TextStream.Count();
+				_cursorPos = _select[1];
+				break;
+			}
 		case KEY_PAGEUP:
 		case KEY_HOME:
 			{

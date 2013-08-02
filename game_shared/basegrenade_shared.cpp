@@ -14,6 +14,7 @@
 
 #include "soundent.h"
 #include "entitylist.h"
+#include "te_effect_dispatch.h"
 
 #endif
 
@@ -172,6 +173,21 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	flRndSound = random->RandomFloat( 0 , 1 );
 
 	EmitSound( "BaseGrenade.Explode" );
+
+	// VXP: Need to make vectors above water
+	if( contents & MASK_WATER )
+	{
+		// VXP: TEST
+		CEffectData	data;
+		Vector normal = GetAbsOrigin();
+		Vector centerPoint = GetAbsOrigin();
+		data.m_vOrigin = centerPoint;
+		data.m_vNormal = normal;
+		VectorAngles( normal, data.m_vAngles );
+		data.m_flScale = 10;
+		DispatchEffect( "watersplash", data );
+		Msg( "Water level: %i\n", GetWaterLevel() );
+	}
 
 	SetThink( &CBaseGrenade::SUB_Remove );
 	SetTouch( NULL );
