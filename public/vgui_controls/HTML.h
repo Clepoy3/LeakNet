@@ -84,6 +84,7 @@ public:
 	// pass messages to the texture component to tell it about resizes
 	virtual void OnSizeChanged(int wide,int tall);
 	// for animation task
+	virtual void Think();
 	virtual void OnTick();
 
 	// pass mouse clicks through

@@ -6,8 +6,8 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_ComboBox.h>
-#include <VGUI_Label.h>
+#include <vgui_controls\ComboBox.h>
+#include <vgui_controls\Label.h>
 
 using namespace vgui;
 
@@ -39,9 +39,9 @@ SampleDropDowns::SampleDropDowns(Panel *parent, const char *name) : DemoPage(par
 	m_pNormal = new ComboBox(this, "Pills", 6, false);
 	m_pNormal->SetPos(90, 25);
 	m_pNormal->SetWide(80);
-	m_pNormal->AddItem("Red Pill");
-	m_pNormal->AddItem("Blue Pill");
-	m_pNormal->AddItem("ReallyLongName Pill");
+	m_pNormal->AddItem("Red Pill", NULL);
+	m_pNormal->AddItem("Blue Pill", NULL);
+	m_pNormal->AddItem("ReallyLongName Pill", NULL);
 	m_pNormal->ActivateItem(0);
 	m_pLabel1 = new Label (this, "WhichLabel", "Which");
 	m_pLabel1->SizeToContents();
@@ -50,14 +50,14 @@ SampleDropDowns::SampleDropDowns(Panel *parent, const char *name) : DemoPage(par
 	m_pNormalScroll = new ComboBox(this, "Moves", 6, false);
 	m_pNormalScroll->SetPos(243, 25);
 	m_pNormalScroll->SetWide(130);
-	m_pNormalScroll->AddItem("Freezes");
-	m_pNormalScroll->AddItem("Kipup");
-	m_pNormalScroll->AddItem("Donkey");
-	m_pNormalScroll->AddItem("Sidewinder");
-	m_pNormalScroll->AddItem("Handspin");
-	m_pNormalScroll->AddItem("Coffee Grinder");
-	m_pNormalScroll->AddItem("Headspin");
-	m_pNormalScroll->AddItem("The Worm");
+	m_pNormalScroll->AddItem("Freezes", NULL);
+	m_pNormalScroll->AddItem("Kipup", NULL);
+	m_pNormalScroll->AddItem("Donkey", NULL);
+	m_pNormalScroll->AddItem("Sidewinder", NULL);
+	m_pNormalScroll->AddItem("Handspin", NULL);
+	m_pNormalScroll->AddItem("Coffee Grinder", NULL);
+	m_pNormalScroll->AddItem("Headspin", NULL);
+	m_pNormalScroll->AddItem("The Worm", NULL);
 	m_pNormalScroll->ActivateItem(6);
 	m_pLabel2 = new Label (this, "MoveLabel", "Move");
 	m_pLabel2->SizeToContents();
@@ -66,8 +66,8 @@ SampleDropDowns::SampleDropDowns(Panel *parent, const char *name) : DemoPage(par
 	m_pNormal2 = new ComboBox(this, "Pills2", 6, false);
 	m_pNormal2->SetPos(90, 125);
 	m_pNormal2->SetWide(80);
-	m_pNormal2->AddItem("one");
-	m_pNormal2->AddItem("two");
+	m_pNormal2->AddItem("one", NULL);
+	m_pNormal2->AddItem("two", NULL);
 	m_pNormal2->ActivateItem(1);
 	m_pLabel3 = new Label (this, "ALabel", "Label on top");
 	m_pLabel3->SizeToContents();
@@ -76,8 +76,8 @@ SampleDropDowns::SampleDropDowns(Panel *parent, const char *name) : DemoPage(par
 	m_pNormal3 = new ComboBox(this, "Pills", 6, false);
 	m_pNormal3->SetPos(90, 200);
 	m_pNormal3->SetWide(80);
-	m_pNormal3->AddItem("one");
-	m_pNormal3->AddItem("two");
+	m_pNormal3->AddItem("one", NULL);
+	m_pNormal3->AddItem("two", NULL);
 	m_pNormal3->ActivateItem(0);
 	m_pNormal3->SetEnabled(false);
 	m_pLabel4 = new Label (this, "DLabel", "Disabled");

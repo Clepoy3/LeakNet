@@ -6,9 +6,9 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_TextImage.h>
+#include <vgui_controls\TextImage.h>
 
 
 using namespace vgui;
@@ -36,7 +36,7 @@ TextImageDemo::TextImageDemo(Panel *parent, const char *name) : DemoPage(parent,
 {
 
 	// Create a TextImage object that says "Text Image Text"
-	m_pTextImage = new TextImage("Text Image Text", GetScheme());
+	m_pTextImage = new TextImage("Text Image Text"/*, GetScheme()*/);
 
 	// Set the position
 	m_pTextImage->SetPos(100, 100);

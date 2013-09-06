@@ -360,6 +360,13 @@ void CSys::PrintRaw( char * pszMsg, int nChars )
 void CSys::Echo( char * pszMsg, int nChars )
 {
 	PrintRaw( pszMsg, nChars );
+/*
+	CONSOLE_CURSOR_INFO cinfo = {0};
+	GetConsoleCursorInfo(houtput, &cinfo);
+	cinfo.dwSize = 100;
+	cinfo.bVisible = true;
+	SetConsoleCursorInfo(houtput, &cinfo);
+*/
 }
 
 int CSys::ReceiveNewline( void )

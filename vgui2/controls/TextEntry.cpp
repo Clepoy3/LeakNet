@@ -3159,6 +3159,8 @@ void TextEntry::SetToFullHeight()
 //-----------------------------------------------------------------------------
 void TextEntry::SelectAllText(bool bResetCursorPos)
 {
+	_cursorPos = m_TextStream.Count(); // VXP: Hack
+
 	if ( bResetCursorPos )
 	{
 		_cursorPos = 0;

@@ -65,3 +65,5 @@ d1_town_06 -
 !! ERROR: bad input/output link:
 !! func_tracktrain(churchtram_tram,SetSpeed) doesn't match type from logic_relay(churchtram_down_relay)
 Serverbrowser: сделать в Game правильное отображение игры (в testmod вместо "Test Modification" отображается "Half-Life 2")
+
+Увеличить количество кэшируемых звуков (чтобы не надо было комментить eli_lab)

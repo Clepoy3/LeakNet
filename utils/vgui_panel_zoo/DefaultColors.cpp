@@ -6,12 +6,12 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
-#include <VGUI_Panel.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_Color.h>
+#include <VGUI\IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
+#include <vgui_controls\Panel.h>
+#include <VGUI\IScheme.h>
+#include <Color.h>
 #include <stdio.h>
 
 using namespace vgui;

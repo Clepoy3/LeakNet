@@ -6,12 +6,12 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ImagePanel.h>
-#include <VGUI_IImage.h>
+#include <vgui_controls\Controls.h>
+#include <VGUI\IScheme.h>
+#include <vgui_controls\ImagePanel.h>
+#include <VGUI\IImage.h>
 
 using namespace vgui;
 
@@ -62,7 +62,8 @@ void ImagePanelDemo::ApplySchemeSettings(IScheme *pScheme)
 	BaseClass::ApplySchemeSettings( pScheme );
 
 	// get an image
-	m_pImage = pScheme->GetImage("Resource/valve_logo");
+//	m_pImage = pScheme->GetImage("Resource/valve_logo");
+	m_pImage = scheme()->GetImage("Resource/valve_logo", false);
 
 	// now insert an image
 	m_pImagePanel->SetImage(m_pImage);

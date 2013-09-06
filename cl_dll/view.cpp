@@ -777,7 +777,6 @@ void CViewRender::Render( vrect_t *rect )
 	m_View.width			= vr.width;
 	m_View.height			= vr.height;
 
-	
 	if (!tempSCR)
 	{
 		char *scraspStr = "";

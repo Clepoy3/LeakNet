@@ -6,9 +6,9 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_HTML.h>
+#include <vgui_controls\HTML.h>
 
 
 using namespace vgui;
@@ -39,12 +39,14 @@ HTMLDemo::HTMLDemo(Panel *parent, const char *name) : DemoPage(parent, name)
 	m_pHTML->SetBounds(10, 10, 500, 300);
 	
 	// now open a URL
-	m_pHTML->OpenURL("http://www.valvesoftware.com");
+//	m_pHTML->OpenURL("http://www.valvesoftware.com");
+	m_pHTML->OpenURL("http://lnet.3owl.com");
 //	m_pHTML->OpenURL("file:///c:/temp/WebCap.plg");
 	// the URL can be any valid URL accepted by Internet Explorer, use file:///c:/... for local filesystem files :)
 	
 	// this call causes the control to repaint itself every 1000msec or so, to allow animated gifs to work
-	m_pHTML->StartAnimate(1000);
+//	m_pHTML->StartAnimate(1000);
+	m_pHTML->StartAnimate(1);
 }
 
 

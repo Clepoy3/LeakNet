@@ -24,7 +24,7 @@
 //#define	PARTICLE_FIRE 1
 
 ConVar fire_particlefire( "fire_particlefire", "0", FCVAR_ARCHIVE );
-ConVar fire_usedlight( "fire_usedlight", "0", FCVAR_ARCHIVE );
+ConVar fire_usedlight( "fire_dlightenable", "0", FCVAR_ARCHIVE );
 ConVar fire_dlightintensity( "fire_dlightintensity", "100", 0, "Intensity of dynamic light. Minimum value: 0, maximum value: 250, default value: 100" );
 ConVar fire_dlightscale( "fire_dlightscale", "32", 0, "Scale of dynamic light. Minimum value: 0, maximum value: 32, default value: 32" );
 
@@ -1120,6 +1120,7 @@ void C_EntityFlame::AttachToHitBoxes( void )
 			m_pFireSmoke[i]->m_nFlags |= bitsFIRESMOKE_SMOKE;
 		}
 
+		// VXP: Mess with this, change scale of fire on entities
 		m_pFireSmoke[i]->m_nFlameModelIndex	= modelinfo->GetModelIndex("sprites/fire1.vmt");
 		m_pFireSmoke[i]->m_flScale = 0;
 		m_pFireSmoke[i]->m_flStartScale = 0;

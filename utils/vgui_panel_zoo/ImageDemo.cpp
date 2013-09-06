@@ -7,10 +7,11 @@
 
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_IImage.h>
+#include <VGUI\IVGui.h>
+#include <vgui_controls\Controls.h>
+#include <VGUI\IScheme.h>
+//#include <VGUI\IImage.h>
+#include <vgui_controls\ImagePanel.h>
 
 using namespace vgui;
 
@@ -30,7 +31,8 @@ public:
 	virtual void Paint();
 	
 private:
-	IImage *m_pImage;
+//	IImage *m_pImage;
+	ImagePanel *m_pImage;
 };
 
 //-----------------------------------------------------------------------------
@@ -57,7 +59,11 @@ void ImageDemo::ApplySchemeSettings(IScheme *pScheme)
 	BaseClass::ApplySchemeSettings( pScheme );
 
 	// now insert an image
-	m_pImage = pScheme->GetImage("Resource/valve_logo");
+//	m_pImage = pScheme->GetImage("Resource/valve_logo");
+
+	// VXP: So, we don't have an IImage
+	m_pImage = new ImagePanel(this, "LevelPicBorder");
+	m_pImage->SetImage( scheme()->GetImage("Resource/valve_logo", false) );
 }
 
 //-----------------------------------------------------------------------------
@@ -67,8 +73,10 @@ void ImageDemo::ApplySchemeSettings(IScheme *pScheme)
 //-----------------------------------------------------------------------------
 void ImageDemo::Paint()
 {
-	m_pImage->SetPos(100, 100);
-	m_pImage->Paint();
+//	m_pImage->SetPos(100, 100);
+//	m_pImage->Paint();
+	m_pImage->SetSize(100, 100);
+	m_pImage->Repaint();
 }
 
 

@@ -6,9 +6,9 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_TextEntry.h>
+#include <vgui_controls\TextEntry.h>
 
 
 using namespace vgui;
@@ -57,7 +57,7 @@ TextEntryDemo::TextEntryDemo(Panel *parent, const char *name) : DemoPage(parent,
 	
 	// Insert text after you have set the starting 
 	// size and position of the window
-	m_pTextEntry->DoInsertString("Some starting text");
+	m_pTextEntry->InsertString("Some starting text");
 
 	// We want all the text in the window selected the 
 	// first time the user clicks in the window.
@@ -70,7 +70,7 @@ TextEntryDemo::TextEntryDemo(Panel *parent, const char *name) : DemoPage(parent,
 	// A non editable textentry filled with text to test elipses:
 	TextEntry *m_pTextEntry2 = new TextEntry(this, "ATextEntry");
 	m_pTextEntry2->SetBounds(100, 130, 200, tall);
-	m_pTextEntry2->DoInsertString("Some starting text longer than before for an elipsis");
+	m_pTextEntry2->InsertString("Some starting text longer than before for an elipsis");
 	m_pTextEntry2->SetHorizontalScrolling(false);
 }
 

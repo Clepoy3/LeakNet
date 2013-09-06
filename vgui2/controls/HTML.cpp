@@ -284,6 +284,19 @@ void HTML::OnSizeChanged(int wide,int tall)
 	Repaint();
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: used for the animation calls above, to repaint the screen
+//			periodically. ( NOT USED !!!)
+//-----------------------------------------------------------------------------
+void HTML::Think()
+{
+	if (IsVisible() && m_iAnimTime && system()->GetTimeMillis() >= m_iNextFrameTime)
+	{
+		m_iNextFrameTime = system()->GetTimeMillis() + 	m_iAnimTime;
+		m_bRegenerateHTMLBitmap = true;
+		Repaint();
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: used for the animation calls above, to repaint the screen

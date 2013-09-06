@@ -1,0 +1,2 @@
+call build_matsys_dependents debug
+pause

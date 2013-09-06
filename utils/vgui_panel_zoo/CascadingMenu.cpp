@@ -7,11 +7,11 @@
 
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_Menu.h>
-#include <VGUI_MenuButton.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
+#include <VGUI\IVGui.h>
+#include <vgui_controls\Menu.h>
+#include <vgui_controls\MenuButton.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
 
 
 

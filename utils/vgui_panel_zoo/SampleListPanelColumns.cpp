@@ -6,10 +6,10 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_Controls.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_ListPanel.h>
+#include <VGUI\IVGui.h>
+#include <vgui_controls\Controls.h>
+#include <KeyValues.h>
+#include <vgui_controls\ListPanel.h>
 
 
 using namespace vgui;
@@ -48,39 +48,39 @@ SampleListPanelColumns::SampleListPanelColumns(Panel *parent, const char *name) 
 	KeyValues *data = new KeyValues ("item");
 	data->SetString("Muppet", "Kermit");
 	data->SetString("Description", "The frog");
-	m_pListPanel->AddItem(data); 
+	m_pListPanel->AddItem(data, NULL, false, false); 
 
 	data->SetString("Muppet", "Miss Piggy");
 	data->SetString("Description", "The diva");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Scooter");
 	data->SetString("Description", "The man");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Statler");
 	data->SetString("Description", "Old guy");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Waldorf");
 	data->SetString("Description", "Old guy");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Gonzo");
 	data->SetString("Description", "The unknown");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Scooter");
 	data->SetString("Description", "The man");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Fozzie");
 	data->SetString("Description", "The bear");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 
 	data->SetString("Muppet", "Betty Lou");
 	data->SetString("Description", "[none]");
-	m_pListPanel->AddItem(data);
+	m_pListPanel->AddItem(data, NULL, false, false);
 }
 
 //-----------------------------------------------------------------------------

@@ -6,10 +6,10 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
-#include <VGUI_ToggleButton.h>
+#include <VGUI\IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
+#include <vgui_controls\ToggleButton.h>
 
 using namespace vgui;
 

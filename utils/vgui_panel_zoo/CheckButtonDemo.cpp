@@ -7,11 +7,11 @@
 
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
+#include <VGUI\IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
 
-#include <VGUI_CheckButton.h>
+#include <vgui_controls\CheckButton.h>
 
 
 using namespace vgui;

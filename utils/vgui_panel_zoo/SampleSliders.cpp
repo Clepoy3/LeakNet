@@ -6,11 +6,11 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
-#include <VGUI_Slider.h>
-#include <VGUI_Label.h>
+#include <VGUI\IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
+#include <vgui_controls\Slider.h>
+#include <vgui_controls\Label.h>
 
 
 using namespace vgui;

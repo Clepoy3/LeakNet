@@ -9,16 +9,16 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_Controls.h>
+#include <VGUI\IVGui.h>
+#include <vgui_controls\Controls.h>
 
-#include <VGUI_WizardPanel.h>
-#include <VGUI_WizardSubPanel.h>
-#include <VGUI_PHandle.h>
+#include <vgui_controls\WizardPanel.h>
+#include <vgui_controls\WizardSubPanel.h>
+#include <vgui_controls\PHandle.h>
 
-#include <VGUI_RadioButton.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_ISurface.h>
+#include <vgui_controls\RadioButton.h>
+#include <vgui_controls\TextEntry.h>
+#include <VGUI\ISurface.h>
 
 using namespace vgui;
 

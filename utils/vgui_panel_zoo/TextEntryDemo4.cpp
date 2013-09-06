@@ -6,11 +6,11 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_TextEntry.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_Controls.h>
+#include <vgui_controls\TextEntry.h>
+#include <VGUI\ISystem.h>
+#include <vgui_controls\Controls.h>
 #include <stdio.h>
 
 using namespace vgui;
@@ -63,11 +63,11 @@ TextEntryDemo4::TextEntryDemo4(Panel *parent, const char *name) : DemoPage(paren
 	m_pTextEntry->SetVerticalScrollbar(true);
 	
 	// Insert text after you have set the size and position of the window
-	m_pTextEntry->DoInsertString("Some starting text and a pile of text. ");
-	m_pTextEntry->DoInsertString("Some more text to make mutiple lines. ");
-	m_pTextEntry->DoInsertString("Even more scrumptious, chocolatey delicious text. ");
-	m_pTextEntry->DoInsertString("Enough text to get that scroll bar a-scrolling. ");
-	m_pTextEntry->DoInsertString("That's it a nice number of chars.\n");
+	m_pTextEntry->InsertString("Some starting text and a pile of text. ");
+	m_pTextEntry->InsertString("Some more text to make mutiple lines. ");
+	m_pTextEntry->InsertString("Even more scrumptious, chocolatey delicious text. ");
+	m_pTextEntry->InsertString("Enough text to get that scroll bar a-scrolling. ");
+	m_pTextEntry->InsertString("That's it a nice number of chars.\n");
 
 	// This Text window is not editable by the user. It will only display.
 	m_pTextEntry->SetEditable(false);
@@ -125,10 +125,10 @@ void TextEntryDemo4::OnTick()
 			// If you comment out this line and rerun you will see
 			// that if you click in the text window additional
 			// text will be added where you clicked.
-			m_pTextEntry->DoGotoTextEnd();
+			m_pTextEntry->GotoTextEnd();
 
 			// Add some text to the text entry window
-			m_pTextEntry->DoInsertString(buf);
+			m_pTextEntry->InsertString(buf);
 
 			// Timed out, make a new timeout time
 			m_iTimeoutTime = system()->GetTimeMillis() + TIMEOUT;

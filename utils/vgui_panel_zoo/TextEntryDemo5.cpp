@@ -6,10 +6,10 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_TextEntry.h>
-#include <VGUI_KeyCode.h>
+#include <vgui_controls\TextEntry.h>
+#include <VGUI\KeyCode.h>
 
 using namespace vgui;
 
@@ -51,11 +51,11 @@ TextEntryDemo5::TextEntryDemo5(Panel *parent, const char *name) : DemoPage(paren
 	m_pTextEntry->SetMultiline(true);
 	
 	// Insert text after you have set the size and position of the window
-	m_pTextEntry->DoInsertString("Some starting text and a pile of text. ");
-	m_pTextEntry->DoInsertString("Some more text to make mutiple lines. ");
-	m_pTextEntry->DoInsertString("Even more scrumptious, chocolatey delicious text. ");
-	m_pTextEntry->DoInsertString("Enough text to get that scroll bar a-scrolling. ");
-	m_pTextEntry->DoInsertString("That's it a nice number of chars.");
+	m_pTextEntry->InsertString("Some starting text and a pile of text. ");
+	m_pTextEntry->InsertString("Some more text to make mutiple lines. ");
+	m_pTextEntry->InsertString("Even more scrumptious, chocolatey delicious text. ");
+	m_pTextEntry->InsertString("Enough text to get that scroll bar a-scrolling. ");
+	m_pTextEntry->InsertString("That's it a nice number of chars.");
 }
 
 //-----------------------------------------------------------------------------

@@ -15,7 +15,7 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
+#include <vgui_controls\Frame.h>
 #include <UtlVector.h>
 
 namespace vgui

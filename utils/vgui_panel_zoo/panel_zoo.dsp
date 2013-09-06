@@ -364,5 +364,9 @@ SOURCE=..\..\lib\public\vstdlib.lib
 
 SOURCE=..\..\lib\public\tier0.lib
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vgui_surfacelib.lib
+# End Source File
 # End Target
 # End Project

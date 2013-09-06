@@ -6,11 +6,11 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Controls.h>
+#include <VGUI\IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls\Controls.h>
 
-#include <VGUI_TextEntry.h>
+#include <vgui_controls\TextEntry.h>
 
 
 using namespace vgui;
@@ -36,8 +36,9 @@ SampleEditFields::SampleEditFields(Panel *parent, const char *name) : DemoPage(p
 	int wide, tall;
 	m_pTextEntry->GetSize(wide, tall);
 	m_pTextEntry->SetBounds(150, 200, 150, tall);
-	m_pTextEntry->DoInsertString("with content");
+	m_pTextEntry->InsertString("with content");
 	m_pTextEntry->SetEnabled(false);
+	m_pTextEntry->SetEditable(false); // VXP
 
 	LoadControlSettings("Demo/SampleEditFields.res");
 

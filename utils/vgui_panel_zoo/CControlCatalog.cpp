@@ -12,14 +12,14 @@
 #include "CControlCatalog.h"
 #include "stdio.h"
 
-#include <VGUI_ISurface.h>
-#include <VGUI_Controls.h>
-#include <VGUI_KeyValues.h>
+#include <VGUI\ISurface.h>
+#include <vgui_controls\Controls.h>
+#include <KeyValues.h>
 
-#include <VGUI_Label.h>
-#include <VGUI_ComboBox.h>
+#include <vgui_controls\Label.h>
+#include <vgui_controls\ComboBox.h>
 
-#include <VGUI_IVGui.h> // for dprinf statements
+#include <VGUI\IVGui.h> // for dprinf statements
 
 #include "filesystem.h"
 
@@ -113,7 +113,7 @@ CControlCatalog::CControlCatalog(): Frame(NULL, "PanelZoo")
 	// These are the names of the panels in the panel list
 	for (int i = 0; i < m_PanelList.Size(); i++)
 	{
-		m_pSelectControl->AddItem(m_PanelList[i]->GetName());
+		m_pSelectControl->AddItem(m_PanelList[i]->GetName(), NULL);
 	}
 
 	m_pSelectControl->ActivateItem(0);
@@ -151,7 +151,7 @@ void CControlCatalog::OnClose()
 void CControlCatalog::OnTextChanged()
 {
 	char buf[40];
-	m_pSelectControl->GetText(0, buf, 40);
+	m_pSelectControl->GetText(buf, 40);
 
 	m_pPrevPanel->SetVisible(false);
 

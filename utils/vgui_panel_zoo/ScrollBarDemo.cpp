@@ -6,12 +6,12 @@
 //=============================================================================
 #include "DemoPage.h"
 
-#include <VGUI_IVGui.h>
+#include <VGUI\IVGui.h>
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ScrollBar.h>
-#include <VGUI_Label.h>
+#include <vgui_controls\Controls.h>
+#include <VGUI\IScheme.h>
+#include <vgui_controls\ScrollBar.h>
+#include <vgui_controls\Label.h>
 #include <stdio.h>
 
 using namespace vgui;

@@ -608,7 +608,11 @@ void Button::FireActionSignal()
 	// message-based action signal
 	if (_actionMessage)
 	{
-		if (!Q_stricmp(_actionMessage->GetName(), "command"))
+	//	if (!Q_stricmp(_actionMessage->GetName(), "command"))
+		if (!Q_stricmp(_actionMessage->GetName(), "command")
+		//	&& !Q_strnicmp(_actionMessage->GetString("command", ""), "url ", strlen("url "))
+		//	&& Q_strstr(_actionMessage->GetString("command", ""), "://")
+			)
 		{
 			// VXP: Here we can open urls in browser
 		//	system()->ShellExecute("open", _actionMessage->GetString("command", "      ") + 4);

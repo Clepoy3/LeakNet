@@ -11,6 +11,7 @@ HALF4 main( PS_INPUT i ) : COLOR
 {
 	HALF4 color = tex2D( BaseTextureSampler, i.baseTexCoord );
 //	return CompressHDR( DecompressHDR( color ) );
-	return color;
+//	return color;
+	return CompressHDRToTexture( DecompressHDRFromTexture( color ) );
 }
 

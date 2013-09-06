@@ -5,11 +5,11 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_PropertyPage.h>
+#include <vgui_controls\PropertyPage.h>
 #include "filesystem.h"
-#include <VGUI_Controls.h>
+#include <vgui_controls\Controls.h>
 
-#include <VGUI_IVGui.h> // for dprinf statements
+#include <VGUI\IVGui.h> // for dprinf statements
 
 using namespace vgui;
 
