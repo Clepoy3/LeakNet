@@ -2647,7 +2647,7 @@ void CBaseEntity::SetMoveType( MoveType_t val, MoveCollide_t moveCollide )
 			// you're changing away from MOVETYPE_VPHYSICS without making the object 
 			// shadow?  This isn't likely to work, assert.
 			// You probably meant to call VPhysicsInitShadow() instead of VPhysicsInitNormal()!
-			Assert( VPhysicsGetObject()->GetShadowController() );
+			Assert( VPhysicsGetObject()->GetShadowController() ); // VXP: Oops, error!
 		}
 	}
 #endif

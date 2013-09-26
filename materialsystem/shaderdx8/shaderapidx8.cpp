@@ -71,6 +71,8 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 // Define this if you want to use a stubbed d3d.
 //#define STUBD3D
 
+//#undef D3D_BUG_TRACKED_DOWN
+
 #ifdef STUBD3D
 #include "stubd3ddevice.h"
 #endif // STUBD3D
@@ -2675,10 +2677,14 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_nMaxAnisotropy = m_Caps.m_bSupportsAnisotropicFiltering ? caps.MaxAnisotropy : 0; 
 
 	m_Caps.m_SupportsCubeMaps = ( caps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP ) ? true : false;
-//	m_Caps.m_SupportsNonPow2Textures = ( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) ? true : false;
-//	m_Caps.m_SupportsNonPow2Textures = true;
-	// VXP: Right check - if two of this is false, then supports, if all is true - then not fully supports
-	m_Caps.m_SupportsNonPow2Textures = (( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) ? false : true) && (( caps.TextureCaps & D3DPTEXTURECAPS_POW2 ) ? false : true);
+	m_Caps.m_SupportsNonPow2Textures = ( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) ? true : false;
+	if( !( caps.TextureCaps & D3DPTEXTURECAPS_POW2 ) )
+		if( !( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) )
+			m_Caps.m_SupportsNonPow2Textures = true;
+		else
+			m_Caps.m_SupportsNonPow2Textures = false;
+	else
+		m_Caps.m_SupportsNonPow2Textures = false;
 
 	// garymcthack - debug runtime doesn't let you use more than 96 constants.
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
@@ -2883,6 +2889,7 @@ void CShaderAPIDX8::SpewDriverInfo() const
 
 	Warning("Shader API DX8 Driver Info:\n\nDriver : %s Version : %d\n", 
 		ident.Driver, ident.DriverVersion );
+	Warning("DirectX Version :  %i\n", m_Caps.m_DXSupportLevel );
 	Warning("Driver Description :  %s\n", ident.Description );
 	Warning("Chipset version %d %d %d %d\n\n", 
 		ident.VendorId, ident.DeviceId, ident.SubSysId, ident.Revision );
@@ -2890,8 +2897,62 @@ void CShaderAPIDX8::SpewDriverInfo() const
 	Warning("Display mode : %d x %d (%s)\n", 
 		m_Mode.m_Width, m_Mode.m_Height, ShaderUtil()->ImageFormatInfo(m_Mode.m_Format).m_pName );
 	Warning("Vertex Shader Version : %d.%d Pixel Shader Version : %d.%d\n",
-		(caps.VertexShaderVersion >> 8) && 0xFF, caps.VertexShaderVersion & 0xFF,
+	//	(caps.VertexShaderVersion >> 8) && 0xFF, caps.VertexShaderVersion & 0xFF,
+		(caps.VertexShaderVersion >> 8) & 0xFF, caps.VertexShaderVersion & 0xFF,
 		(caps.PixelShaderVersion >> 8) & 0xFF, caps.PixelShaderVersion & 0xFF);
+
+	Warning("\nDefault Caps :\n");
+	Warning("NumTextureUnits %d NumTextureStages %d\n",
+		m_Caps.m_NumTextureUnits,
+		m_Caps.m_NumTextureStages );
+	Warning("PreferDynamicTextures %s HasProjectedBumpEnv %s HasSetDeviceGammaRamp %s\n",
+		(m_Caps.m_PreferDynamicTextures) ? " Y " : " N ",
+		(m_Caps.m_HasProjectedBumpEnv) ? " Y " : " N ",
+		(m_Caps.m_HasSetDeviceGammaRamp) ? " Y " : " N " );
+	Warning("SupportsVertexShaders %s SupportsPixelShaders %s\n",
+		(m_Caps.m_SupportsVertexShaders) ? "Y" : " N ",
+		(m_Caps.m_SupportsPixelShaders) ? " Y " : " N " );
+	Warning("SupportsPixelShaders_1_4 %s SupportsPixelShaders_2_0 %s SupportsVertexShaders_2_0 %s SupportsMipmappedCubemaps %s\n",
+		(m_Caps.m_SupportsPixelShaders_1_4) ? " Y " : "N",
+		(m_Caps.m_SupportsPixelShaders_2_0) ? " Y " : "N",
+		(m_Caps.m_SupportsVertexShaders_2_0) ? " Y " : "N",
+		(m_Caps.m_SupportsMipmappedCubemaps) ? " Y " : " N " );
+	Warning("SupportsCompressedTextures %s SupportsAnisotropicFiltering %s MaxAnisotropy %d\n",
+		(m_Caps.m_SupportsCompressedTextures) ? " Y " : "N",
+		(m_Caps.m_bSupportsAnisotropicFiltering) ? " Y " : "N",
+		m_Caps.m_nMaxAnisotropy );
+	Warning("SupportsCubeMaps %s SupportsNonPow2Textures %s NumVertexShaderConstants %d NumPixelShaderConstants %d\n",
+		(m_Caps.m_SupportsCubeMaps) ? " Y " : "N",
+		(m_Caps.m_SupportsNonPow2Textures) ? " Y " : "N",
+		m_Caps.m_NumVertexShaderConstants,
+		m_Caps.m_NumPixelShaderConstants );
+	Warning("SupportsHardwareLighting %s MaxNumLights %d MaxTextureWidth %d MaxTextureHeight %d MaxTextureAspectRatio %d MaxPrimitiveCount %d MaxBlendMatrices %d MaxBlendMatrixIndices %d\n",
+		(m_Caps.m_SupportsHardwareLighting) ? " Y " : "N",
+		m_Caps.m_MaxNumLights,
+		m_Caps.m_MaxTextureWidth,
+		m_Caps.m_MaxTextureHeight,
+		m_Caps.m_MaxTextureAspectRatio,
+		m_Caps.m_MaxPrimitiveCount,
+		m_Caps.m_MaxBlendMatrices,
+		m_Caps.m_MaxBlendMatrixIndices );
+	Warning("MaxVertexShaderBlendMatrices %d FastZReject %s NeedsATICentroidHack %s SupportsMipmapping %s SupportsOverbright %s\n",
+		m_Caps.m_MaxVertexShaderBlendMatrices,
+		(m_Caps.m_bFastZReject) ? " Y " : "N",
+		(m_Caps.m_bNeedsATICentroidHack) ? " Y " : "N",
+		(m_Caps.m_SupportsMipmapping) ? " Y " : "N",
+		(m_Caps.m_SupportsOverbright) ? " Y " : "N" );
+	Warning("ZBiasSupported %s SlopeScaledDepthBiasSupported %s SupportsSpheremapping %s\n",
+		(m_Caps.m_ZBiasSupported) ? " Y " : "N",
+		(m_Caps.m_SlopeScaledDepthBiasSupported) ? " Y " : "N",
+		(m_Caps.m_bSupportsSpheremapping) ? " Y " : "N" );
+	Warning("MaxUserClipPlanes %d UseFastClipping %s\n",
+		m_Caps.m_MaxUserClipPlanes,
+		(m_Caps.m_UseFastClipping) ? " Y " : "N" );
+	Warning("SupportsSRGB %s SupportsFatTextures %s SupportsHDR %s\n",
+		(m_Caps.m_SupportsSRGB) ? " Y " : "N",
+		(m_Caps.m_SupportsFatTextures) ? " Y " : "N",
+		(m_Caps.m_SupportsHDR) ? " Y " : "N" );
+
 	Warning("\nDevice Caps :\n");
 	Warning("CANBLTSYSTONONLOCAL %s CANRENDERAFTERFLIP %s HWRASTERIZATION %s\n",
 		(caps.DevCaps & D3DDEVCAPS_CANBLTSYSTONONLOCAL) ? " Y " : " N ",
@@ -4031,7 +4092,7 @@ void CShaderAPIDX8::ReleaseResources()
 #endif
 	
 	// All meshes cleaned up?
-	Assert( MeshMgr()->BufferCount() == 0 );
+	Assert( MeshMgr()->BufferCount() == 0 ); // VXP: This appears when running hlmv when hl2.exe runned (for example)
 
 
 #ifdef _DEBUG

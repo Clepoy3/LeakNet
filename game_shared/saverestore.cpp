@@ -630,7 +630,7 @@ bool CSave::ShouldSaveField( const void *pData, typedescription_t *pField )
 			{
 				// VXP: Maybe, multiplayer crashes because of this...
 				Warning("WARNING! Field %s is using the wrong FIELD_ type!\nFix this or you'll see a crash.\n", pField->fieldName );
-				Assert( 0 );
+				Assert( 0 ); // VXP: When transition between canals maps (Field m_fCanThreatDisplay)
 			}
 
 			// old byte-by-byte null check

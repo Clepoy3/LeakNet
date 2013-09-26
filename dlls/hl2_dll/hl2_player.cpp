@@ -1426,8 +1426,7 @@ ConVar	sv_show_crosshair_target( "sv_show_crosshair_target", "0" );
 void CHL2_Player::UpdateWeaponPosture( void )
 {
 //FIXME: Reimplement this when movements blends are working again
-// VXP: Reimplemented
-//#if 0
+#if 0
 
 	//Setup our viewmodel's movement speed
 	CBaseViewModel *pVM = GetViewModel();
@@ -1440,7 +1439,7 @@ void CHL2_Player::UpdateWeaponPosture( void )
 		pVM->SetPoseParameter( "movement", moveBlend );
 	}
 
-//#endif
+#endif
 
 	//FIXME: Don't do this twice!
 	GetAutoaimVector( AUTOAIM_10DEGREES );

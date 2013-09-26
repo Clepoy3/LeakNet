@@ -163,7 +163,10 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 		return 1;
 	}
 	// Obey collision group rules
-	Assert(GameRules());
+//	Assert(GameRules());
+	if( !GameRules() )
+		return 0; // VXP: Yes, we can
+
 	if ( GameRules() )
 	{
 		if (!GameRules()->ShouldCollide( pEntity0->GetCollisionGroup(), pEntity1->GetCollisionGroup() ))
@@ -187,7 +190,7 @@ int CCollisionEvent::ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObje
 
 
 // This just encloses a change I (MikeD) made, in case it causes problems.
-#define DECAL_FIX
+#define DECAL_FIX // VXP: For test
 
 
 // A class that implements an IClientSystem for physics

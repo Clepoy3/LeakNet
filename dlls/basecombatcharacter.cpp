@@ -959,7 +959,9 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 		else
 		{
 			// If I have a hand, set the weapon position to my hand bone position.
-			int iBIndex = LookupBone( "ValveBiped.Weapon_bone" );
+		//	int iBIndex = LookupBone( "ValveBiped.Weapon_bone" );
+		//	int iBIndex = LookupBone( "ValveBiped.Bip01_R_Wrist" );
+			int iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger02" );
 			if ( iBIndex != -1)  
 			{
 				Vector origin;
@@ -1927,6 +1929,12 @@ bool CBaseCombatCharacter::ShouldShootMissTarget( CBaseCombatCharacter *pAttacke
 //-----------------------------------------------------------------------------
 void CBaseCombatCharacter::InputKilledNPC( inputdata_t &inputdata )
 {
-	OnKilledNPC( inputdata.pActivator->MyCombatCharacterPointer() ); // VXP: BUG when destroy the crate
+	if( !inputdata.pActivator )
+		return;
+
+	// VXP: BUG when destroy the crate (also, when headcrab did it on d1_canals_01)...
+	// Or when barnacle killed headcrab, don't know
+	// Also, I don't think, thatn inputdata is needed for this function below...
+	OnKilledNPC( (inputdata.pActivator->MyCombatCharacterPointer()) ? inputdata.pActivator->MyCombatCharacterPointer() : NULL );
 }
 

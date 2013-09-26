@@ -130,6 +130,7 @@ void ClientGamePrecache( void )
 	engine->PrecacheModel("models/player/combine_soldier.mdl");
 	engine->PrecacheModel("models/player/gordon.mdl");
 	engine->PrecacheModel("models/player/police.mdl");
+	engine->PrecacheModel("models/player/male_03.mdl");
 
 	engine->PrecacheModel( "models/gibs/metalgibs.mdl");
 	engine->PrecacheModel( "models/gibs/agibs.mdl" );

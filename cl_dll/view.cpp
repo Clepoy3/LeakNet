@@ -808,7 +808,7 @@ void CViewRender::Render( vrect_t *rect )
 		}
 
 		tempSCR = true;
-		Msg( "Your screen aspect setted to %s\n", scraspStr );
+		Msg( "Your screen aspect is: %s\n", scraspStr );
 	}
 /*
 	screenaspect = ( float )vr.width / ( float )vr.height;

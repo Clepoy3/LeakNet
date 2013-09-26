@@ -99,7 +99,8 @@ int ACT_SQUID_INSPECT_FLOOR;
 //---------------------------------------------------------
 BEGIN_DATADESC( CNPC_Bullsquid )
 
-	DEFINE_FIELD( CNPC_Bullsquid, m_fCanThreatDisplay,	FIELD_INTEGER ),
+//	DEFINE_FIELD( CNPC_Bullsquid, m_fCanThreatDisplay,	FIELD_INTEGER ),
+	DEFINE_FIELD( CNPC_Bullsquid, m_fCanThreatDisplay,	FIELD_BOOLEAN ), // VXP: Fix for CSave::ShouldSaveField
 	DEFINE_FIELD( CNPC_Bullsquid, m_flLastHurtTime,		FIELD_TIME ),
 	DEFINE_FIELD( CNPC_Bullsquid, m_flNextSpitTime,		FIELD_TIME ),
 //	DEFINE_FIELD( CNPC_Bullsquid, m_nSquidSpitSprite,	FIELD_INTEGER ),

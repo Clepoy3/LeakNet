@@ -52,7 +52,8 @@ void MaskExceptions (void);
 void	Shader_InitDedicated( void );
 void	Shader_Init( void );
 void	Shader_Shutdown( void );
-void	Shader_SetMode( void *mainWindow, bool windowed );
+//void	Shader_SetMode( void *mainWindow, bool windowed );
+void	Shader_SetMode( void *mainWindow, bool windowed, int nAntialias );
 
 extern int	gD3DMode;
 
@@ -239,7 +240,9 @@ bool RunListenServer( void *instance, char *basedir, CreateInterfaceFn launcherF
 
 	if ( videomode->Init( (void *)instance ) )
 	{
-		Shader_SetMode( game->GetMainWindow(), videomode->IsWindowedMode() );
+	//	Shader_SetMode( game->GetMainWindow(), videomode->IsWindowedMode() );
+	//	Shader_SetMode( game->GetMainWindow(), videomode->IsWindowedMode(), -1 );
+		Shader_SetMode( game->GetMainWindow(), videomode->IsWindowedMode(), registry->ReadInt( "ScreenAntialias", -1 ) );
 
 		// Initialize general game stuff and create the main window
 		if ( game->Init( ( void *)instance ) )

@@ -173,7 +173,8 @@ void Shader_ForceDXLevelDefaults( void )
 	}
 }
 
-void Shader_SetMode( void *mainWindow, bool windowed )
+//void Shader_SetMode( void *mainWindow, bool windowed )
+void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias )
 {
 	int modeFlags = 0;
 	if ( windowed )
@@ -189,9 +190,10 @@ void Shader_SetMode( void *mainWindow, bool windowed )
 	if ( CommandLine()->CheckParm( "-mat_quitafterpreload" ) )
 		modeFlags |= MATERIAL_VIDEO_MODE_QUIT_AFTER_PRELOAD;
 
-	int nAntialias = CommandLine()->ParmValue( "-mat_antialias", -1 );
+//	int nAntialias = CommandLine()->ParmValue( "-mat_antialias", -1 );
 	if ( nAntialias != -1 )
-		modeFlags |= MATERIAL_VIDEO_MODE_ANTIALIAS;
+		if( nAntialias == 2 || nAntialias == 4 || nAntialias == 8 )
+			modeFlags |= MATERIAL_VIDEO_MODE_ANTIALIAS;
 
 	MaterialVideoMode_t mode;
 	mode.m_Width = mode.m_Height = 0;

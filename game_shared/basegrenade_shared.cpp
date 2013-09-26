@@ -111,6 +111,9 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 {
 #if !defined( CLIENT_DLL )
 	float		flRndSound;// sound randomizer
+	
+	int isInWater = pTrace->plane.dist;
+	isInWater = -isInWater/3;
 
 	SetModelName( NULL_STRING );//invisible
 	AddSolidFlags( FSOLID_NOT_SOLID );
@@ -178,15 +181,28 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	if( contents & MASK_WATER )
 	{
 		// VXP: TEST
+		// NEED TO CHECK,
+		// when in small height of water... shit happens
 		CEffectData	data;
-		Vector normal = GetAbsOrigin();
-		Vector centerPoint = GetAbsOrigin();
+	//	trace_t		tr;
+	//	Vector		vecSpot;// trace starts here!
+	//	vecSpot = GetAbsOrigin() + Vector( 0 , 0 , 8 );
+	//	UTIL_TraceLine ( vecSpot, vecSpot + Vector( 0, 0, -40 ),  MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);
+	//	Vector orig = GetAbsOrigin();
+	//	Vector orig = tr.endpos;
+		Vector orig = GetAbsOrigin() + Vector( 0, 0, isInWater );
+		Vector normal = orig;
+		Vector centerPoint = orig;
 		data.m_vOrigin = centerPoint;
 		data.m_vNormal = normal;
 		VectorAngles( normal, data.m_vAngles );
-		data.m_flScale = 10;
+	//	data.m_flScale = 10;
+		float explScale = isInWater / (m_DmgRadius * .03) * 2;
+		data.m_flScale = explScale;
 		DispatchEffect( "watersplash", data );
-		Msg( "Water level: %i\n", GetWaterLevel() );
+	//	Msg( "Water level: %i\n", GetWaterLevel() );
+		DevMsg( "Water height: %i, Damage: %f\nForce: x: %f, y: %f, z: %f\n", isInWater, m_flDamage, GetBlastForce().x, GetBlastForce().y, GetBlastForce().z );
+		DevMsg( "Radius: %f, Final result: %f\n", m_DmgRadius * .03, explScale );
 	}
 
 	SetThink( &CBaseGrenade::SUB_Remove );

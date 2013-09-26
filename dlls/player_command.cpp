@@ -193,7 +193,11 @@ void CPlayerMove::FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *mo
 		player->SetPoseParameter( pitch_param, pitch );
 */
 
-	SetBodyPP( player, "move_yaw", 0 );
+//	SetBodyPP( player, "move_yaw", 0 );
+	float flMoveYaw = UTIL_VecToYaw( player->GetAbsVelocity() );
+	float flDiff = UTIL_AngleDiff( flMoveYaw, player->GetLocalAngles().y );
+//	DevMsg( "Diff: %f\n", flDiff );
+	SetBodyPP( player, "move_yaw", flDiff );
 	SetBodyPP( player, "body_trans_Y", 0 );
 	SetBodyPP( player, "body_trans_X", 0 );
 	SetBodyPP( player, "body_lift", 0 );

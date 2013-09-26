@@ -4,6 +4,8 @@
 #include "igameuifuncs.h"
 #include "modes.h"
 
+#include "iregistry.h"
+
 #include <vgui_controls/CheckButton.h>
 #include <vgui_controls/ComboBox.h>
 #include <KeyValues.h>
@@ -29,6 +31,8 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 {
 	memset( &m_OrigSettings, 0, sizeof( m_OrigSettings ) );
 	memset( &m_CurrentSettings, 0, sizeof( m_CurrentSettings ) );
+	
+	registry->Init();
 
 	m_pBrightnessSlider = new CCvarSlider( this, "Brightness", "#GameUI_Brightness",
 		0.0f, 2.0f, "brightness" );
@@ -77,14 +81,43 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
         m_pRenderer->AddItem( m_pszRenderNames[i], NULL );
     }
 */
+	strcpy( m_pszAnisoNames[0], "Off" );
+	strcpy( m_pszAnisoNames[1], "2x" );
+	strcpy( m_pszAnisoNames[2], "4x" );
+	strcpy( m_pszAnisoNames[3], "8x" );
+	strcpy( m_pszAnisoNames[4], "16x" );
+
+	m_pAniso = new ComboBox( this, "Anisotroping", 5, false ); // "#GameUI_Aniso"
+	int i;
+    for ( i = 0; i < 5; i++)
+    {
+        m_pAniso->AddItem( m_pszAnisoNames[i], NULL );
+    }
+
+	strcpy( m_pszAntialiasNames[0], "Off" );
+	strcpy( m_pszAntialiasNames[1], "2x" );
+	strcpy( m_pszAntialiasNames[2], "4x" );
+	strcpy( m_pszAntialiasNames[3], "8x" );
+
+	m_pAntialias = new ComboBox( this, "Antialiasing", 4, false ); // "#GameUI_Antialias"
+    for ( i = 0; i < 4; i++)
+    {
+        m_pAntialias->AddItem( m_pszAntialiasNames[i], NULL );
+    }
+
 	m_pColorDepth = new ComboBox( this, "ColorDepth", 2, false );
 	m_pColorDepth->AddItem("Medium (16 bit)", NULL);
 	m_pColorDepth->AddItem("Highest (32 bit)", NULL);
 
 //    SetCurrentRendererComboItem();
+	SetCurrentAnisoComboItem();
+	SetCurrentAntialiasComboItem();
 
 	m_pWindowed = new vgui::CheckButton( this, "Windowed", "#GameUI_Windowed" );
 	m_pWindowed->SetSelected( m_CurrentSettings.windowed ? true : false);
+
+	m_pWaterEntReflect = new vgui::CheckButton( this, "WaterEntReflect", "Water Entity Reflection" ); // VXP: #GameUI_WaterEntReflect
+	m_pWaterEntReflect->SetSelected( m_CurrentSettings.waterentreflect ? true : false);
 
 	LoadControlSettings("Resource\\OptionsSubVideo.res");
 }
@@ -143,6 +176,7 @@ void COptionsSubVideo::PrepareResolutionList( void )
 //-----------------------------------------------------------------------------
 COptionsSubVideo::~COptionsSubVideo()
 {
+	registry->Shutdown();
 }
 
 //-----------------------------------------------------------------------------
@@ -157,8 +191,11 @@ void COptionsSubVideo::OnResetData()
 	m_pBrightnessSlider->Reset();
 	m_pGammaSlider->Reset();
     m_pWindowed->SetSelected(m_CurrentSettings.windowed);
+	m_pWaterEntReflect->SetSelected(m_CurrentSettings.waterentreflect);
 
 //    SetCurrentRendererComboItem();
+	SetCurrentAnisoComboItem();
+	SetCurrentAntialiasComboItem();
     SetCurrentResolutionComboItem();
 }
 
@@ -188,6 +225,58 @@ void COptionsSubVideo::SetCurrentRendererComboItem()
     m_pRenderer->ActivateItemByRow( m_iStartRenderer );
 }
 */
+void COptionsSubVideo::SetCurrentAnisoComboItem()
+{
+	const char* item = "";
+	ConVar *var = (ConVar *)cvar->FindVar( "mat_forceaniso" );
+	if ( var )
+	{
+		item = var->GetString();
+	}
+
+	if( atof(item) <= 0 )
+	{
+		m_iStartAniso = 0;
+	}
+	else
+	{
+		for( int i = 0; i < 5; i++ )
+		{
+		//	if( strcmp( item, m_pszAnisoNames[i] ) == 0 )
+		//	Msg( "First: %i\n", strstr( m_pszAnisoNames[i], item ) );
+			if( strstr( m_pszAnisoNames[i], item ) > 0 )
+				m_iStartAniso = i;
+
+		}
+	}
+
+    m_pAniso->ActivateItemByRow( m_iStartAniso );
+}
+
+void COptionsSubVideo::SetCurrentAntialiasComboItem()
+{
+	const char* item = "";
+	char buffer[33];
+	item = itoa( registry->ReadInt( "ScreenAntialias", -1 ), buffer, 10 );
+
+	if( atof(item) < 2 )
+	{
+		m_iStartAntialias = 0;
+	}
+	else
+	{
+		for( int i = 0; i < 4; i++ )
+		{
+		//	if( strcmp( item, m_pszAnisoNames[i] ) == 0 )
+		//	Msg( "First: %i\n", strstr( m_pszAnisoNames[i], item ) );
+			if( strstr( m_pszAntialiasNames[i], item ) > 0 )
+				m_iStartAntialias = i;
+
+		}
+	}
+
+    m_pAntialias->ActivateItemByRow( m_iStartAntialias );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -251,6 +340,14 @@ void COptionsSubVideo::GetVidSettings()
 	gameuifuncs->GetCurrentRenderer( p->renderer, 128, &p->windowed );
 	strlwr( p->renderer );
 
+	ConVar *var1 = (ConVar *)cvar->FindVar( "mat_forceaniso" );
+	if( var1 )
+		strcpy( p->aniso, var1->GetString() );
+	p->antialias = registry->ReadInt( "ScreenAntialias", -1 );
+	ConVar *var2 = (ConVar *)cvar->FindVar( "r_WaterEntReflection" );
+	if( var2 )
+		p->waterentreflect = var2->GetInt();
+
 	m_CurrentSettings = m_OrigSettings;
 }
 
@@ -307,10 +404,72 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		}
 	}
 */
+//	Msg( "Before: %s\n", m_CurrentSettings.aniso );
+	if ( m_pAniso )
+	{
+		char sz[ 256 ];
+		m_pAniso->GetText(sz, sizeof(sz));
+
+		if ( !stricmp( sz, m_pszAnisoNames[0] ) )
+		{
+			strcpy( m_CurrentSettings.aniso, "0" );
+		}
+		else if ( !stricmp( sz, m_pszAnisoNames[1] ) )
+		{
+			strcpy( m_CurrentSettings.aniso, "2" );
+		}
+		else if ( !stricmp( sz, m_pszAnisoNames[2] ) )
+		{
+			strcpy( m_CurrentSettings.aniso, "4" );
+		}
+		else if ( !stricmp( sz, m_pszAnisoNames[3] ) )
+		{
+			strcpy( m_CurrentSettings.aniso, "8" );
+		}
+		else if ( !stricmp( sz, m_pszAnisoNames[4] ) )
+		{
+			strcpy( m_CurrentSettings.aniso, "16" );
+		}
+	}
+//	Msg( "After: %s\n", m_CurrentSettings.aniso );
+
+	if ( m_pAntialias )
+	{
+		char sz[ 256 ];
+		m_pAntialias->GetText(sz, sizeof(sz));
+
+		if ( !stricmp( sz, m_pszAntialiasNames[0] ) )
+		{
+			m_CurrentSettings.antialias = -1;
+		}
+		else if ( !stricmp( sz, m_pszAntialiasNames[1] ) )
+		{
+			m_CurrentSettings.antialias = 2;
+		}
+		else if ( !stricmp( sz, m_pszAntialiasNames[2] ) )
+		{
+			m_CurrentSettings.antialias = 4;
+		}
+		else if ( !stricmp( sz, m_pszAntialiasNames[3] ) )
+		{
+			m_CurrentSettings.antialias = 8;
+		}
+	}
+
 	if ( m_pWindowed )
 	{
 		bool checked = m_pWindowed->IsSelected();
 		m_CurrentSettings.windowed = checked ? 1 : 0;
+	}
+
+	if ( m_pWaterEntReflect )
+	{
+		char szCmd[ 256 ];
+		bool checked = m_pWaterEntReflect->IsSelected();
+
+		m_CurrentSettings.waterentreflect = checked ? 1 : 0;
+		sprintf( szCmd, "r_WaterEntReflection %i\n", m_CurrentSettings.waterentreflect );
+		engine->ClientCmd( szCmd );
 	}
 
 	if ( memcmp( &m_OrigSettings, &m_CurrentSettings, sizeof( CVidSettings ) ) == 0 && !bForceRefresh)
@@ -328,11 +487,23 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 	// Set renderer
 //	sprintf( szCmd, "_setrenderer %s %s\n", p->renderer, p->windowed ? "windowed" : "fullscreen" ); // GoldSrc string
 	sprintf( szCmd, "_setrenderer %s\n", /*p->renderer, */p->windowed ? "windowed" : "fullscreen" ); // SRC string
-
+	engine->ClientCmd( szCmd );
+	
+	sprintf( szCmd, "mat_forceaniso %s\n", p->aniso );
 	engine->ClientCmd( szCmd );
 
+	registry->WriteInt( "ScreenAntialias", p->antialias );
+
 	// Force restart of entire engine
-	engine->ClientCmd( "_restart\n" );
+//	engine->ClientCmd( "_restart\n" );
+	if( m_CurrentSettings.w != m_OrigSettings.w ||
+		m_CurrentSettings.h != m_OrigSettings.h ||
+		m_CurrentSettings.bpp != m_OrigSettings.bpp ||
+		m_CurrentSettings.windowed != m_OrigSettings.windowed ||
+		m_CurrentSettings.antialias != m_OrigSettings.antialias )
+	{
+		engine->ClientCmd( "_restart\n" );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -346,6 +517,14 @@ void COptionsSubVideo::OnButtonChecked(KeyValues *data)
 	if (pPanel == m_pWindowed)
 	{
 		if (state != m_CurrentSettings.windowed)
+		{
+            OnDataChanged();
+		}
+	}
+
+	if (pPanel == m_pWaterEntReflect)
+	{
+		if (state != m_CurrentSettings.waterentreflect)
 		{
             OnDataChanged();
 		}
@@ -376,6 +555,20 @@ void COptionsSubVideo::OnTextChanged(Panel *pPanel, const char *pszText)
         }
     }
 	*/
+	else if (pPanel == m_pAniso)
+    {
+        if (strcmp(pszText, m_pszAnisoNames[m_iStartAniso]))
+        {
+            OnDataChanged();
+        }
+    }
+	else if (pPanel == m_pAntialias)
+    {
+        if (strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
+        {
+            OnDataChanged();
+        }
+    }
 	else if (pPanel == m_pAspectRatio )
     {
 		if ( strcmp(pszText, m_pszAspectName[m_bStartWidescreen] ) )

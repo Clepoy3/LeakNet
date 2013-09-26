@@ -480,7 +480,25 @@ void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 	m_iState = WEAPON_NOT_CARRIED;
 	m_fEffects &= ~EF_NODRAW;
 	UTIL_Relink( this );
-	FallInit();
+//	FallInit();
+
+	// VXP: From FallInit function
+	// Maybe, when the weapon is under npc's dead body, VCollide msg will appears
+	SetModel( GetWorldModel() );
+	VPhysicsDestroyObject();
+	if ( !VPhysicsInitNormal( SOLID_BSP, FSOLID_TRIGGER, false ) )
+	{
+		SetMoveType( MOVETYPE_FLYGRAVITY );
+		SetSolid( SOLID_BSP );
+		AddSolidFlags( FSOLID_NOT_SOLID );
+		AddSolidFlags( FSOLID_TRIGGER );
+		Relink();
+	}
+	SetPickupTouch();
+	SetThink( &CBaseCombatWeapon::FallThink );
+	SetNextThink( gpGlobals->curtime + 0.1f );
+	// VXP: End
+
 	RemoveFlag( FL_ONGROUND );
 	SetThink( &CBaseCombatWeapon::SetPickupTouch );
 	SetTouch(NULL);

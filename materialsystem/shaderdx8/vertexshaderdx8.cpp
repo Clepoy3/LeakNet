@@ -795,7 +795,7 @@ PixelShader_t CShaderDictionary::CreatePixelShader( char const* pFileName, int n
 			{
 				// Set shader to ugly green for invalid shader...
 				shader = s_pIllegalMaterialPS;
-				Assert( 0 );
+			//	Assert( 0 );
 			}
 		}
 	}

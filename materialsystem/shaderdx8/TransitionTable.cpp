@@ -930,7 +930,7 @@ void CTransitionTable::ApplyTransition( TransitionList_t& list, int snapshot )
 	{
 	//	Assert( !memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) );
 		if( memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) )
-			Warning( "CTransitionTable::ApplyTransition: assert!" );
+			Warning( "CTransitionTable::ApplyTransition: assert!\n" );
 	}
 #endif
 }

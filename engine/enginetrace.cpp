@@ -921,7 +921,9 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 	Vector vecOffset, vecEndTest;
 	VectorAdd( ray.m_Start, ray.m_StartOffset, vecOffset );
 	VectorMA( vecOffset, pTrace->fractionleftsolid, ray.m_Delta, vecEndTest );
-	Assert( VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) );
+//	Assert( VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) );
+	if( !VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) )
+		Warning( "CEngineTrace::TraceRay: Vectors are not equal!\n" );
 	VectorMA( vecOffset, pTrace->fraction, ray.m_Delta, vecEndTest );
 	Assert( VectorsAreEqual( vecEndTest, pTrace->endpos, 0.1f ) );
 //	Assert( !ray.m_IsRay || pTrace->allsolid || pTrace->fraction >= pTrace->fractionleftsolid );

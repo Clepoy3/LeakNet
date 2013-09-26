@@ -743,7 +743,7 @@ static bool LoadThisDll( char *szDllFilename )
 	{
 		Con_Printf("Failed to load %s\n", szDllFilename);
 	//	goto IgnoreThisDLL;
-		// VXP: Hack
+		// VXP: Hack, if mod doesn't have own server.dll, we need to use hl2's server.dll instead
 		if ((pDLL = FileSystem_LoadModule("hl2\\bin\\server.dll")) == NULL)
 			goto IgnoreThisDLL;
 	}
@@ -920,7 +920,7 @@ void LoadEntityDLLs( char *szBaseDir )
 			DLL_SetModKey( &gmodinfo, szKey, szValue );
 			Msg( "ModKey: %s, value: %s\n", szKey, szValue );
 		//	if(szKey == "game")
-			if(Q_strcmp (szKey, "game") == 0)
+			if(Q_strcmp (szKey, "game") == 0) // VXP: Sets window title from liblist.gam
 				SetWindowText(hwndEXT, szValue);
 		}	
 		

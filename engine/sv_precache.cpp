@@ -291,6 +291,7 @@ TABLEID CServerState::GetSoundPrecacheTable( void ) const
 int CServerState::PrecacheSound( char const *name, int flags )
 {
 	int idx = networkStringTableContainerServer->AddString( m_hSoundPrecacheTable, name );
+//	Warning( "Idx: %i, wrong id: %i, name: %s\n", idx, INVALID_STRING_INDEX, name );
 	if ( idx == INVALID_STRING_INDEX )
 	{
 		return -1;

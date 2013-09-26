@@ -1023,7 +1023,8 @@ static bool R_StudioCheckBBox( DrawModelState_t& state, const Vector& origin,
 
 			if ( invalid )
 			{
-				Assert( !"R_StudioCheckBBox:  Boxes differ!!!" );
+			//	Assert( !"R_StudioCheckBBox:  Boxes differ!!!" ); // VXP: Always when barnacle is in level
+				Warning( "R_StudioCheckBBox:  Boxes differ!!!\n" );
 				++errorCount;
 			}
 		}

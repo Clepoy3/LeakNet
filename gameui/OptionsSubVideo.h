@@ -46,6 +46,9 @@ private:
 		int			bpp;
 		int			windowed;
 		char		renderer[ 128 ];
+		char		aniso[ 128 ];
+		int			antialias;
+		int			waterentreflect;
 	};
 
 	CVidSettings		m_OrigSettings;
@@ -56,6 +59,8 @@ private:
 	void		ApplyVidSettings(bool bForceRefresh);
 
 //    void        SetCurrentRendererComboItem();
+	void        SetCurrentAnisoComboItem();
+	void        SetCurrentAntialiasComboItem();
     void        SetCurrentResolutionComboItem();
 
 	void		OnButtonChecked(KeyValues *data);
@@ -65,17 +70,24 @@ private:
 
 	vgui::ComboBox *m_pMode;
 //	vgui::ComboBox *m_pRenderer;
+	vgui::ComboBox *m_pAniso;
+	vgui::ComboBox *m_pAntialias;
 	vgui::ComboBox *m_pColorDepth;
 	vgui::CheckButton *m_pWindowed;
+	vgui::CheckButton *m_pWaterEntReflect;
 	vgui::ComboBox *m_pAspectRatio;
 
 	CCvarSlider		*m_pBrightnessSlider;
 	CCvarSlider		*m_pGammaSlider;
 
 //    char            m_pszRenderNames[3][32];
+	char            m_pszAnisoNames[5][32];
+	char            m_pszAntialiasNames[4][32];
 	char            m_pszAspectName[2][32];
 
 //    int             m_iStartRenderer;
+	int             m_iStartAniso;
+	int             m_iStartAntialias;
     int             m_iStartResolution;
 	bool			m_bStartWidescreen;
 

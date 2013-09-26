@@ -192,6 +192,10 @@ SOURCE=..\common\GameUI\Random.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\public\registry.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\RunGameEngine.cpp
 # End Source File
 # Begin Source File

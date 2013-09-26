@@ -47,6 +47,7 @@ static bool s_bCanAccessCurrentView = false;
 
 static ConVar r_WaterDrawRefraction( "r_WaterDrawRefraction", "1", 0, "Enable water refraction" );
 static ConVar r_WaterDrawReflection( "r_WaterDrawReflection", "1", 0, "Enable water reflection" );
+static ConVar r_WaterEntReflection( "r_WaterEntReflection", "0", FCVAR_ARCHIVE | FCVAR_USERINFO, "Enable water entity reflection" );
 static ConVar r_ForceWaterLeaf( "r_ForceWaterLeaf", "1", 0, "Enable for optimization to water - considers view in leaf under water for purposes of culling" );
 static ConVar cl_copyframebuffertotexture( "cl_copyframebuffertotexture", "1" );
 static ConVar cl_alwayscopyframebuffertotexture( "cl_alwayscopyframebuffertotexture", "1" );
@@ -1962,8 +1963,10 @@ void CViewRender::WaterDrawWorldAndEntities( bool drawSkybox, const CViewSetup &
 				}
 				if( bReflect )
 				{
-					IMaterialVar *pReflectEntitiesMatVar = pWaterMaterial->FindVar( "$reflectentities", NULL, false );
-					bReflectEntities = pReflectEntitiesMatVar->GetIntValue() != 0;
+				//	IMaterialVar *pReflectEntitiesMatVar = pWaterMaterial->FindVar( "$reflectentities", NULL, false );
+				//	bReflectEntities = pReflectEntitiesMatVar->GetIntValue() != 0;
+				//	bReflectEntities = true;
+					bReflectEntities = r_WaterEntReflection.GetBool();
 				}
 				
 				if( !( bReflect || bRefract ) )
