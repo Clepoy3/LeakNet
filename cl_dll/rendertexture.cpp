@@ -14,6 +14,26 @@
 #include "materialsystem/imesh.h"
 #include "materialsystem/ITexture.h"
 
+//#include "cdll_util.h"
+
+//=============================================================================
+// 
+//=============================================================================
+/*
+static CTextureReference s_pMotionBlurTex0;
+
+ITexture *GetMotionBlurTex0( void )
+{
+	if( !s_pMotionBlurTex0 )
+	{
+		s_pMotionBlurTex0.InitRenderTarget( TEXTURE_PAGE_SIZE, TEXTURE_PAGE_SIZE, IMAGE_FORMAT_ARGB8888, false );
+  		Assert( s_pMotionBlurTex0 );
+	}
+	
+	return s_pMotionBlurTex0;
+}
+*/
+
 //=============================================================================
 // 
 //=============================================================================

@@ -625,9 +625,13 @@ bool CClient_Precipitation::SimulateRain( PrecipitationParticle_t* pParticle )
 	// We still want this particle
 	return true;
 }
-
+/*
 bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 {
+	MEASURE_TIMED_STAT(CS_PRECIPITATION_PHYSICS);
+
+	if (GetRemainingLifetime( pParticle ) < 0.0f)
+		return false;
 //	if ( IsInAir( pParticle->m_Pos ) )
 //	{
 		// Update position
@@ -671,8 +675,8 @@ bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 //	return false;
 	return true;
 }
+*/
 
-/*
 bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 {
 	MEASURE_TIMED_STAT(CS_PRECIPITATION_PHYSICS);
@@ -715,7 +719,7 @@ bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 	// We still want this particle
 	return true;
 }
-*/
+
 
 //-----------------------------------------------------------------------------
 // EnvWind - global wind info

@@ -56,6 +56,7 @@ public:
 	virtual void	OnRenderStart();
 	virtual	void	Render( vrect_t *rect );
 	virtual void	RenderView( const CViewSetup &view, bool drawViewmodel );
+//	void			CViewRender::DoMotionBlur( void );
 
 	virtual void	StartPitchDrift( void );
 	virtual void	StopPitchDrift( void );

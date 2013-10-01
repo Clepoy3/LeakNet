@@ -14,6 +14,7 @@
 #ifndef RENDERTARGETS_H
 #define RENDERTARGETS_H
 
+//ITexture *GetMotionBlurTex0( void );
 ITexture *GetPowerOfTwoFrameBufferTexture( void );
 ITexture *GetFullFrameFrameBufferTexture( void );
 ITexture *GetWaterReflectionTexture( void );

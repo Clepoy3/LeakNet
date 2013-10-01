@@ -623,7 +623,7 @@ void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 		// Prevent team damage here so blood doesn't appear
 		if ( info.GetAttacker()->IsPlayer() )
 		{
-			CBasePlayer *pPlayer = (CBasePlayer*)info.GetAttacker();
+		//	CBasePlayer *pPlayer = (CBasePlayer*)info.GetAttacker();
 		//	if ( InSameTeam(pPlayer) )
 		//		return;
 			if ( !g_pGameRules->FPlayerCanTakeDamage( this, info.GetAttacker() ) )
@@ -1264,6 +1264,9 @@ void CBasePlayer::Event_Killed( const CTakeDamageInfo &info )
 		ApplyAbsVelocityImpulse( vecImpulse );
 	}
 
+	if ( FlashlightIsOn() )
+		FlashlightTurnOff(); // VXP: Maybe, should be here
+
 	// clear out the suit message cache so we don't keep chattering
 	SetSuitUpdate(NULL, false, 0);
 
@@ -1489,9 +1492,12 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	ResetSequence( animDesired );
 }
 */
-/*
+
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
+
+	/// VXP: Need to mess up with layer_<walk|run>_<aiming|hold>_<weapon> anims
+
 	Activity idealActivity = GetActivity();
 	int animDesired = GetSequence();
 	ResetSequence( animDesired );
@@ -1502,8 +1508,12 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	bool isMoving = ( speed != 0.0f ) ? true : false;
 	bool isDucked = ( GetFlags() & FL_DUCKING ) ? true : false;
 	bool isStillJumping = !( GetFlags() & FL_ONGROUND ) && ( GetActivity() == ACT_HOP );
-	bool isStillReloading = ( GetActivity() == ACT_RELOAD ) ? true : false;
+//	bool isStillReloading = ( GetActivity() == ACT_RELOAD ) ? true : false;
+//	bool isStillReloading = ( GetActivity() == ACT_RELOAD ) && ( !IsActivityFinished() ) && ( playerAnim != PLAYER_IDLE );
+	bool isStillReloading = false; // VXP: Is not working normal anyway
+//	Msg( "isStillReloading: %s\n", (isStillReloading) ? "true" : "false" );
 	bool isRunning = false;
+	char szAnim[64];
 
 	if ( speed > ARBITRARY_RUN_SPEED )
 	{
@@ -1521,20 +1531,109 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 	{
 	default:
 	case PLAYER_RELOAD:
-		idealActivity = ACT_RELOAD;
+		if( !isDucked )
+		{
+			idealActivity = ACT_RELOAD;
+		//	idealActivity = ACT_RELOAD_PISTOL_LOW;
+		//	animDesired = LookupSequence( "reload_pistol" );
+			Q_strncpy( szAnim, "reload_" ,sizeof(szAnim));
+			strcat( szAnim, m_szAnimExtension );
+			animDesired = LookupSequence( szAnim );
+			if (animDesired == -1)
+				animDesired = 0;
+			SetActivity( idealActivity );
+			ResetSequence( animDesired );
+		//	return;
+		}
+		else
+		{
+			idealActivity = ACT_RELOAD_LOW;
+		//	animDesired = LookupSequence( "crouch_reload_pistol" );
+			Q_strncpy( szAnim, "crouch_reload_" ,sizeof(szAnim));
+			strcat( szAnim, m_szAnimExtension );
+			animDesired = LookupSequence( szAnim );
+			if (animDesired == -1)
+				animDesired = 0;
+			SetActivity( idealActivity );
+			ResetSequence( animDesired );
+		//	return;
+		}
 		break;
 	case PLAYER_ATTACK1:
 		idealActivity = ACT_RANGE_ATTACK1;
+		RestartGesture( ACT_GESTURE_RANGE_ATTACK_PISTOL );
 		break;
 	case PLAYER_IDLE:
 		if( !isDucked )
 		{
-			idealActivity = ACT_IDLE;
+			if( !isStillReloading )
+			{
+			//	idealActivity = ACT_IDLE;
+			//	idealActivity = ACT_IDLE_ANGRY_PISTOL;
+				Q_strncpy( szAnim, "lowcover_aim_" ,sizeof(szAnim));
+				strcat( szAnim, m_szAnimExtension );
+				animDesired = LookupSequence( szAnim );
+				if (animDesired == -1)
+				{
+					animDesired = 0;
+					idealActivity = ACT_IDLE_ANGRY_PISTOL;
+				}
+				else
+				{
+					SetActivity( idealActivity );
+					ResetSequence( animDesired );
+				}
+			}
 		}
 		else
 		{
+		/*
+			if( !isStillReloading )
+			{
+			//	idealActivity = ACT_CROUCHIDLE;
+			//	animDesired = LookupSequence( "Crouch_idleD" );
+				animDesired = LookupSequence( "Crouch_idle_pistol" );
+			//	Q_strncpy( szAnim, "Crouch_idle_" ,sizeof(szAnim));
+			//	strcat( szAnim, m_szAnimExtension );
+			//	animDesired = LookupSequence( szAnim );
+				if (animDesired == -1)
+				{
+				//	animDesired = 0;
+				//	idealActivity = ACT_CROUCHIDLE;
+					animDesired = LookupSequence( "Crouch_idleD" );
+					if (animDesired == -1)
+					{
+						animDesired = 0;
+						idealActivity = ACT_CROUCHIDLE;
+					}
+					else
+					{
+						SetActivity( idealActivity );
+						ResetSequence( animDesired );
+					//	return;
+					}
+				}
+				else
+				{
+					SetActivity( idealActivity );
+					ResetSequence( animDesired );
+				//	return;
+				}
+			}
+		*/
 			idealActivity = ACT_CROUCHIDLE;
-			animDesired = LookupSequence( "Crouch_idleD" );
+			animDesired = (LookupSequence( "Crouch_idle_pistol" ) > 0) ? LookupSequence( "Crouch_idle_pistol" ) : LookupSequence( "Crouch_idleD" );
+			if( animDesired == -1 )
+			{
+				animDesired = 0;
+				idealActivity = ACT_CROUCHIDLE;
+			}
+			else
+			{
+				SetActivity( idealActivity );
+				ResetSequence( animDesired );
+			}
+			return;
 		}
 		break;
 	case PLAYER_WALK:
@@ -1564,9 +1663,27 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 				if ( isRunning )
 				{
 					if ( speed > ARBITRARY_RUN_SPEED + 50 )
+					{
 						idealActivity = ACT_RUN_RIFLE;
+					}
 					else
-						idealActivity = ACT_RUN;
+					{
+					//	idealActivity = ACT_RUN;
+
+						Q_strncpy( szAnim, "run_hold_" ,sizeof(szAnim));
+						strcat( szAnim, m_szAnimExtension );
+						animDesired = LookupSequence( szAnim );
+						if (animDesired == -1)
+						{
+							animDesired = 0;
+							idealActivity = ACT_RUN;
+						}
+						else
+						{
+							SetActivity( idealActivity );
+							ResetSequence( animDesired );
+						}
+					}
 				}
 				else
 				{
@@ -1626,213 +1743,6 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 		return;
 
 	ResetSequence( animDesired );
-}
-*/
-
-// Set the activity based on an event or current state
-void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
-{
-	int animDesired;
-	char szAnim[64];
-
-	float speed;
-
-	speed = GetAbsVelocity().Length2D();
-
-	if (GetFlags() & (FL_FROZEN|FL_ATCONTROLS))
-	{
-		speed = 0;
-		playerAnim = PLAYER_IDLE;
-		Msg( "Frozen or at controls\n" );
-	}
-
-	Activity idealActivity = ACT_WALK;// TEMP!!!!!
-
-	// This could stand to be redone. Why is playerAnim abstracted from activity? (sjb)
-	if (playerAnim == PLAYER_JUMP)
-	{
-		idealActivity = ACT_HOP;
-	}
-	else if (playerAnim == PLAYER_SUPERJUMP)
-	{
-		idealActivity = ACT_LEAP;
-	}
-	else if (playerAnim == PLAYER_RELOAD)
-	{
-		idealActivity = ACT_RELOAD;
-	}
-	else if (playerAnim == PLAYER_DIE)
-	{
-		if ( m_lifeState == LIFE_ALIVE )
-		{
-			idealActivity = GetDeathActivity();
-		}
-	}
-	else if (playerAnim == PLAYER_ATTACK1)
-	{
-		if ( m_Activity == ACT_HOVER	|| 
-			 m_Activity == ACT_SWIM		||
-			 m_Activity == ACT_HOP		||
-			 m_Activity == ACT_LEAP		||
-			 m_Activity == ACT_DIESIMPLE )
-		{
-			idealActivity = m_Activity;
-		}
-		else
-		{
-			idealActivity = ACT_RANGE_ATTACK1;
-		}
-	}
-	else if (playerAnim == PLAYER_IDLE || playerAnim == PLAYER_WALK)
-	{
-		if ( !( GetFlags() & FL_ONGROUND ) && (m_Activity == ACT_HOP || m_Activity == ACT_LEAP) )	// Still jumping
-		{
-			idealActivity = m_Activity;
-		}
-		else if ( GetWaterLevel() > 1 )
-		{
-			if ( speed == 0 )
-				idealActivity = ACT_HOVER;
-			else
-				idealActivity = ACT_SWIM;
-		}
-		else
-		{
-		//	idealActivity = ACT_WALK;
-			if( playerAnim == PLAYER_IDLE )
-			{
-			//	Msg( "IDLE\n" );
-				idealActivity = ACT_IDLE;
-			}
-			else
-			{
-			//	Msg( "WALK\n" );
-				idealActivity = ACT_WALK;
-			}
-		}
-	}
-
-	
-	if (idealActivity == ACT_RANGE_ATTACK1)
-	{
-		if ( GetFlags() & FL_DUCKING )	// crouching
-		{
-			Q_strncpy( szAnim, "crouch_shoot_" ,sizeof(szAnim));
-		}
-		else
-		{
-		//	Q_strncpy( szAnim, "ref_shoot_" ,sizeof(szAnim));
-			Q_strncpy( szAnim, "shoot_" ,sizeof(szAnim));
-		}
-		strcat( szAnim, m_szAnimExtension );
-		Msg( "%s, %s\n", szAnim, m_szAnimExtension );
-		animDesired = LookupSequence( szAnim );
-		if (animDesired == -1)
-			animDesired = 0;
-
-		if ( GetSequence() != animDesired || !SequenceLoops() )
-		{
-			m_flCycle = 0;
-		}
-
-		if (!SequenceLoops())
-		{
-			m_fEffects |= EF_NOINTERP;
-		}
-
-		SetActivity( idealActivity );
-		ResetSequence( animDesired );
-	}
-	else if (idealActivity == ACT_WALK)
-	{
-		if (GetActivity() != ACT_RANGE_ATTACK1 || IsActivityFinished())
-		{
-			if ( GetFlags() & FL_DUCKING )	// crouching
-			{
-				Q_strncpy( szAnim, "crouch_aim_" ,sizeof(szAnim));
-			}
-			else
-			{
-				Q_strncpy( szAnim, "ref_aim_" ,sizeof(szAnim));
-			}
-			strcat( szAnim, m_szAnimExtension );
-			animDesired = LookupSequence( szAnim );
-			if (animDesired == -1)
-				animDesired = 0;
-			if ( GetFlags() & FL_DUCKING )	// crouching
-			{
-			//	Msg( "CROUCHING WALK\n" );
-				SetActivity( ACT_WALK_CROUCH );
-			}
-			else
-			{
-			//	Msg( "STANDART WALK\n" );
-				SetActivity( ACT_WALK );
-			}
-			if ( GetActivity() == idealActivity)
-				return;
-		}
-		else
-		{
-			animDesired = GetSequence();
-		}
-	}
-	else if (idealActivity == ACT_RELOAD)
-	{
-		if ( GetFlags() & FL_DUCKING )	// crouching
-		{
-			Q_strncpy( szAnim, "crouch_reload_" ,sizeof(szAnim));
-		}
-		else
-		{
-		//	Q_strncpy( szAnim, "ref_shoot_" ,sizeof(szAnim));
-			Q_strncpy( szAnim, "reload_" ,sizeof(szAnim));
-		}
-		strcat( szAnim, m_szAnimExtension );
-	//	Msg( "%s, %s\n", szAnim, m_szAnimExtension );
-		animDesired = LookupSequence( szAnim );
-		if (animDesired == -1)
-			animDesired = 0;
-
-		if ( GetSequence() != animDesired || !SequenceLoops() )
-		{
-			m_flCycle = 0;
-		}
-
-		if (!SequenceLoops())
-		{
-			m_fEffects |= EF_NOINTERP;
-		}
-
-		SetActivity( idealActivity );
-		ResetSequence( animDesired );
-	}
-	else
-	{
-		if ( GetActivity() == idealActivity)
-			return;
-	
-		SetActivity( idealActivity );
-
-		animDesired = SelectWeightedSequence( m_Activity );
-
-		// Already using the desired animation?
-		if (GetSequence() == animDesired)
-			return;
-
-		ResetSequence( animDesired );
-		m_flCycle = 0;
-		return;
-	}
-
-	// Already using the desired animation?
-	if (GetSequence() == animDesired)
-		return;
-
-	//Msg( "Set animation to %d\n", animDesired );
-	// Reset to first frame of desired animation
-	ResetSequence( animDesired );
-	m_flCycle		= 0;
 }
 
 /*
@@ -2006,8 +1916,8 @@ void CBasePlayer::PlayerDeathThink(void)
 {
 	float flForward;
 	
-	if ( FlashlightIsOn() )
-		FlashlightTurnOff(); // VXP: I putted it here for some time. Maybe I should place it to the RemoveAllItems
+//	if ( FlashlightIsOn() )
+//		FlashlightTurnOff(); // VXP: I putted it here for some time. Maybe I should place it to the RemoveAllItems
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
 

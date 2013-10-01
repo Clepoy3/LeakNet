@@ -40,4 +40,6 @@ goto done
 @rem All done
 @rem
 :done
+copy ..\hl2\bin\client.dll ..\testmod\bin\
+copy ..\hl2\bin\server.dll ..\testmod\bin\
 call end_build

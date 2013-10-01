@@ -165,8 +165,8 @@ void CBaseUI::Initialize( CreateInterfaceFn *factories, int count )
 	//-----------------------------------------------------------------------------
 	// load the GameUI dll
 	char szDllName[512];
-//	_snprintf(szDllName, sizeof(szDllName), "bin\\gameui.dll" );
-	_snprintf(szDllName, sizeof(szDllName), "..\\bin\\gameui.dll" );
+	_snprintf(szDllName, sizeof(szDllName), "bin\\gameui.dll" );
+//	_snprintf(szDllName, sizeof(szDllName), "..\\bin\\gameui.dll" ); // VXP: Do not want.
 	COM_ExpandFilename(szDllName);
 	COM_FixSlashes(szDllName);
 

@@ -858,9 +858,24 @@ void CBaseShader::FogToFogColor( void )
 		unsigned char fogColor[3];
 		s_pShaderAPI->GetSceneFogColor( fogColor );
 		s_pShaderAPI->FogColor3ubv( fogColor );
+	/*
+		switch(s_pShaderAPI->GetSceneFogMode())
+		{
+		case MATERIAL_FOG_NONE:
+			Msg( "Fog Mode MATERIAL_FOG_NONE\n" );
+			break;
+		case MATERIAL_FOG_LINEAR:
+			Msg( "Fog Mode MATERIAL_FOG_LINEAR\n" );
+			break;
+		case MATERIAL_FOG_LINEAR_BELOW_FOG_Z:
+			Msg( "Fog Mode MATERIAL_FOG_LINEAR_BELOW_FOG_Z\n" );
+			break;
+		}
+	*/
 	}
 	else
 	{
+	//	Msg( "Fog Mode NONE\n" );
 		s_pShaderAPI->FogMode( MATERIAL_FOG_NONE );
 	}
 }

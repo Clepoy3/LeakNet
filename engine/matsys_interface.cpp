@@ -61,7 +61,7 @@ static ConVar mat_normalmaps( "mat_normalmaps", "0" );
 static ConVar mat_showlowresimage( "mat_showlowresimage", "0" );
 static ConVar mat_maxframelatency( "mat_maxframelatency", "1" );
 ConVar mat_showbadnormals( "mat_showbadnormals", "0" );
-static ConVar mat_forceaniso( "mat_forceaniso", "0" );
+static ConVar mat_forceaniso( "mat_forceaniso", "0", FCVAR_ARCHIVE | FCVAR_USERINFO );
 ConVar mat_trilinear( "mat_trilinear", "0" );
 ConVar mat_bilinear( "mat_bilinear", "0" );
 

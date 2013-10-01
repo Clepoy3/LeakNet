@@ -429,7 +429,8 @@ BEGIN_VS_SHADER( LightmappedGeneric,
 			bool bTangentSpace = params[ENVMAP]->IsDefined();
 
 			lightmappedgeneric_hdr_vs20_Index vshIndex;
-			vshIndex.SetFOG_TYPE( fogType );
+		//	vshIndex.SetFOG_TYPE( fogType );
+			vshIndex.SetFOG_TYPE( fogType == MATERIAL_FOG_LINEAR_BELOW_FOG_Z ); // VXP: Fix for water with fog
 			vshIndex.SetENVMAP_MASK( hasEnvmapMask );
 			vshIndex.SetTANGENTSPACE( bTangentSpace );
 			vshIndex.SetBUMPMAP( hasBump );

@@ -4121,7 +4121,7 @@ void CShaderAPIDX8::ReleaseResources()
 	}
 #endif
 
-	Assert( TextureCount() == 0 );
+	Assert( TextureCount() == 0 ); // VXP: This appears when running hammer when hl2.exe runned (for example)
 
 }
 
