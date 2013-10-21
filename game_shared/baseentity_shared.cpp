@@ -664,7 +664,7 @@ void CBaseEntity::VPhysicsUpdate( IPhysicsObject *pPhysics )
 
 			if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.x ) )
 			{
-				Msg( "Infinite values from vphysics!\n" );
+				Msg( "Infinite values from vphysics!\n" ); // VXP: Happened on e3_techdemo_5 after headcrab
 			}
 
 			SetAbsOrigin( origin );

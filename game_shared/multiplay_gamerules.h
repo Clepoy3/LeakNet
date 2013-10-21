@@ -31,6 +31,7 @@ public:
 	DECLARE_CLASS( CMultiplayRules, CGameRules );
 	DECLARE_NETWORKCLASS();
 
+	virtual bool			ShouldCollide( int collisionGroup0, int collisionGroup1 );
 
 #ifdef CLIENT_DLL
 
@@ -134,7 +135,9 @@ protected:
 	bool m_iEndIntermissionButtonHit;
 	void SendMOTDToClient( edict_t *client );
 	
-	void InitDefaultAIRelationships( void );
+	virtual void			InitDefaultAIRelationships( void );
+	virtual const char*		AIClassText(int classType);
+	virtual const char *GetGameDescription( void ) { return "Half-Life 2: Deathmatch"; }
 
 #endif
 };

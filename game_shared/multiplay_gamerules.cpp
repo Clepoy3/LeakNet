@@ -10,6 +10,8 @@
 #include "gameeventdefs.h"
 #include <KeyValues.h>
 
+#include "hl2_shareddefs.h"
+
 #ifdef CLIENT_DLL
 
 #else
@@ -983,6 +985,8 @@ END_NETWORK_TABLE()
 		engine->FreeFile( (byte *)aFileList );
 	}
 
+
+	
 	//------------------------------------------------------------------------------
 	// Purpose : Initialize all default class relationships
 	// Input   :
@@ -1964,5 +1968,97 @@ END_NETWORK_TABLE()
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_EARTH_FAUNA,			CLASS_PLAYER_ALLY_VITAL,D_HT, 0);
 	}
 
+
+	//------------------------------------------------------------------------------
+	// Purpose : Return classify text for classify type
+	// Input   :
+	// Output  :
+	//------------------------------------------------------------------------------
+	const char* CMultiplayRules::AIClassText(int classType)
+	{
+		switch (classType)
+		{
+			case CLASS_NONE:			return "CLASS_NONE";
+			case CLASS_PLAYER:			return "CLASS_PLAYER";
+			case CLASS_ANTLION:			return "CLASS_ANTLION";
+			case CLASS_BARNACLE:		return "CLASS_BARNACLE";
+			case CLASS_BULLSEYE:		return "CLASS_BULLSEYE";
+			case CLASS_BULLSQUID:		return "CLASS_BULLSQUID";	
+			case CLASS_CITIZEN_PASSIVE: return "CLASS_CITIZEN_PASSIVE";		
+			case CLASS_CITIZEN_REBEL:	return "CLASS_CITIZEN_REBEL";
+			case CLASS_COMBINE:			return "CLASS_COMBINE";
+			case CLASS_CONSCRIPT:		return "CLASS_CONSCRIPT";
+			case CLASS_CREMATOR:		return "CLASS_CREMATOR";
+			case CLASS_HEADCRAB:		return "CLASS_HEADCRAB";
+			case CLASS_HOUNDEYE:		return "CLASS_HOUNDEYE";
+			case CLASS_MANHACK:			return "CLASS_MANHACK";
+			case CLASS_METROPOLICE:		return "CLASS_METROPOLICE";
+			case CLASS_MILITARY:		return "CLASS_MILITARY";	
+			case CLASS_MORTAR_SYNTH:	return "CLASS_MORTAR_SYNTH";	
+			case CLASS_SCANNER:			return "CLASS_SCANNER";		
+			case CLASS_STALKER:			return "CLASS_STALKER";		
+			case CLASS_VORTIGAUNT:		return "CLASS_VORTIGAUNT";
+			case CLASS_WASTE_SCANNER:	return "CLASS_WASTE_SCANNER";		
+			case CLASS_ZOMBIE:			return "CLASS_ZOMBIE";
+			case CLASS_PROTOSNIPER:		return "CLASS_PROTOSNIPER";
+			case CLASS_MISSILE:			return "CLASS_MISSILE";
+			case CLASS_FLARE:			return "CLASS_FLARE";
+			case CLASS_EARTH_FAUNA:		return "CLASS_EARTH_FAUNA";
+
+			default:					return "MISSING CLASS in ClassifyText()";
+		}
+	}
+
 #endif		
 
+// ------------------------------------------------------------------------------------ //
+// Shared CMultiplayRules implementation.
+// ------------------------------------------------------------------------------------ //
+
+bool CMultiplayRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
+{
+	// HL2 treats movement and tracing against players the same, so just remap here
+	if ( collisionGroup0 == COLLISION_GROUP_PLAYER_MOVEMENT )
+	{
+		collisionGroup0 = COLLISION_GROUP_PLAYER;
+	}
+
+	if( collisionGroup1 == COLLISION_GROUP_PLAYER_MOVEMENT )
+	{
+		collisionGroup1 = COLLISION_GROUP_PLAYER;
+	}
+
+	if ( collisionGroup0 > collisionGroup1 )
+	{
+		// swap so that lowest is always first
+		int tmp = collisionGroup0;
+		collisionGroup0 = collisionGroup1;
+		collisionGroup1 = tmp;
+	}
+
+	if (collisionGroup0 == HL2COLLISION_GROUP_HOUNDEYE && collisionGroup1 == HL2COLLISION_GROUP_HOUNDEYE )
+	{
+		return false;
+	}
+	if (collisionGroup0 == HL2COLLISION_GROUP_HOMING_MISSILE && collisionGroup1 == HL2COLLISION_GROUP_HOMING_MISSILE )
+	{
+		return false;
+	}
+	if ( collisionGroup1 == HL2COLLISION_GROUP_CROW )
+	{
+		if ( collisionGroup0 == COLLISION_GROUP_PLAYER || collisionGroup0 == HL2COLLISION_GROUP_ZOMBIE ||
+			 collisionGroup0 == HL2COLLISION_GROUP_CROW )
+			return false;
+	}
+
+	if ( ( collisionGroup0 == HL2COLLISION_GROUP_HEADCRAB ) && ( collisionGroup1 == HL2COLLISION_GROUP_HEADCRAB ) )
+	{
+		return false;
+	}
+
+	// weapons and NPCs don't collide
+	if ( collisionGroup0 == COLLISION_GROUP_WEAPON && (collisionGroup1 >= HL2COLLISION_GROUP_FIRST_NPC && collisionGroup1 <= HL2COLLISION_GROUP_LAST_NPC ) )
+		return false;
+
+	return BaseClass::ShouldCollide( collisionGroup0, collisionGroup1 ); 
+}

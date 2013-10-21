@@ -7,6 +7,7 @@
 
 #include "cbase.h"
 
+//#if 0
 #include "ai_basenpc.h"
 #include "basecombatweapon.h"	// For SpawnBlood
 #include "soundent.h"
@@ -54,10 +55,12 @@ BEGIN_DATADESC( CPlayer_Manhack )
 
 	// Function Pointers
 	DEFINE_FUNCTION( CPlayer_Manhack, FlyThink ),
-	
+
 	// Inputs
 	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_VOID, "Activate", InputActivate ),
 	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_VOID, "Deactivate", InputDeactivate ),
+	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_FLOAT, "SetThrust", InputSetThrust ),
+	DEFINE_INPUTFUNC( CPlayer_Manhack, FIELD_FLOAT, "SetSideThrust", InputSetSideThrust ),
 
 END_DATADESC()
 
@@ -91,7 +94,7 @@ void CPlayer_Manhack::Spawn( void )
 {
 	Precache();
 //	m_flFriction = 0.55; // deading the bounce a bit
-	SetFriction( 0.55 ); // deading the bounce a bit
+	SetFriction( 0.55f );
 	
 	SetModel( "models/manhack.mdl" );
 	UTIL_SetSize(this, PMANHACK_HULL_MINS, PMANHACK_HULL_MAXS);
@@ -132,6 +135,7 @@ void CPlayer_Manhack::InputActivate( inputdata_t &inputdata )
 
 	pPlayer->SetFOV( 132 );
 	pPlayer->FollowEntity( this );
+//	engine->SetView( pPlayer->edict(), edict() );
 	pPlayer->m_nControlClass	= CLASS_MANHACK;
 	pPlayer->GiveNamedItem( "weapon_manhack" );
 }
@@ -166,6 +170,9 @@ void CPlayer_Manhack::InputDeactivate( inputdata_t &inputdata )
 	}
 	UTIL_RemoveImmediate(pBlade);
 	UTIL_Relink(pPlayer);
+
+	pPlayer->SetLocalOrigin( m_vSaveOrigin );
+//	pPlayer->StopFollowingEntity();
 
 	// Switch back to manhack model
 	VPhysicsDestroyObject();
@@ -252,9 +259,11 @@ void CPlayer_Manhack::CheckBladeTrace(trace_t &tr)
 	Assert( pPlayer );
 
 //	if (tr.u.ent)
-	if (tr.m_pEnt)
+//	if (tr.m_pEnt)
+	if (engine->PEntityOfEntIndex( tr.GetEntityIndex() ))
 	{
 	//	pHitEntity = CBaseEntity::Instance( tr.u.ent );
+	//	pHitEntity = CBaseEntity::Instance( tr.m_pEnt );
 		pHitEntity = CBaseEntity::Instance( engine->PEntityOfEntIndex( tr.GetEntityIndex() ) );
 
 		// Did I hit an entity that isn't a player?
@@ -409,3 +418,4 @@ void CPlayer_Manhack::FlyThink()
 		pPhysObj->AddVelocity(&vSubtract,NULL);
 	}
 }
+//#endif

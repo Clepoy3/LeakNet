@@ -377,6 +377,7 @@ void CWeaponCGuard::PrimaryAttack( void )
 void CWeaponCGuard::ItemPostFrame( void )
 {
 	//FIXME: UpdateLasers();
+	UpdateLasers();
 
 	if ( ( m_flChargeTime < gpGlobals->curtime ) && ( m_bFired == false ) )
 	{

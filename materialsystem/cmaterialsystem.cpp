@@ -812,7 +812,8 @@ void CMaterialSystem::SetAdapter( int nAdapter, int nAdapterFlags )
 //-----------------------------------------------------------------------------
 InitReturnVal_t CMaterialSystem::Init()
 {
-	MathLib_Init( 2.2f, 2.2f, 0.0f, 2, true, false, false, true );	// NJS: Why no SSE?
+//	MathLib_Init( 2.2f, 2.2f, 0.0f, 2, true, false, false, true );	// NJS: Why no SSE?
+	MathLib_Init( 2.2f, 2.2f, 0.0f, 2, true, true, true, true );	// VXP: Now with SSE
 
 	CreateInterfaceFn clientFactory = CreateShaderAPI( m_pShaderDLL ? m_pShaderDLL : "shaderapidx9" );
 	if (!clientFactory)
@@ -2305,7 +2306,11 @@ void CMaterialSystem::AllocateLightmapTexture( int lightmap )
 	g_pShaderAPI->ModifyTexture( lightmap + FIRST_LIGHTMAP_TEXID );
 	g_pShaderAPI->TexMinFilter( SHADER_TEXFILTERMODE_LINEAR );
 	g_pShaderAPI->TexMagFilter( SHADER_TEXFILTERMODE_LINEAR );
-	g_pShaderAPI->TexSetPriority( 1 );
+//	g_pShaderAPI->TexSetPriority( 1 );
+	if ( !bUseDynamicTextures )
+	{
+		g_pShaderAPI->TexSetPriority( 1 );
+	}
 
 	if( bAllocAlphaTexture )
 	{
@@ -2313,7 +2318,11 @@ void CMaterialSystem::AllocateLightmapTexture( int lightmap )
 		g_pShaderAPI->ModifyTexture( lightmap + FIRST_LIGHTMAP_ALPHA_TEXID );
 		g_pShaderAPI->TexMinFilter( SHADER_TEXFILTERMODE_LINEAR );
 		g_pShaderAPI->TexMagFilter( SHADER_TEXFILTERMODE_LINEAR );
-		g_pShaderAPI->TexSetPriority( 1 );
+	//	g_pShaderAPI->TexSetPriority( 1 );
+		if ( !bUseDynamicTextures )
+		{
+			g_pShaderAPI->TexSetPriority( 1 );
+		}
 	}
 
 	// Blat out the lightmap bits
@@ -2743,7 +2752,7 @@ void CMaterialSystem::UpdateBumpedLightmapBitsDynamic( int lightmap,
 			if( bLumInAlpha )
 			{
 				// not implemented for HDR
-				Assert( 0 );
+			//	Assert( 0 );
 				*pDst0++ = color[0][0]; *pDst0++ = color[0][1]; *pDst0++ = color[0][2]; *pDst0++ = lum;
 			}
 			else
@@ -2939,7 +2948,7 @@ void CMaterialSystem::UpdateLightmapBitsDynamic( int lightmap, float* pFloatImag
 	else
 	{
 		// not implemented for HDR
-		Assert( 0 );
+	//	Assert( 0 );
 		// DX 9 lightmap support with HDR capability
 		pSrc = pFloatImage;
 		for( int t = 0; t < pLightmapSize[1]; ++t )

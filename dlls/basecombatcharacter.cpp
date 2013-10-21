@@ -1592,6 +1592,7 @@ int CBaseCombatCharacter::IRelationPriority( CBaseEntity *pTarget )
 //-----------------------------------------------------------------------------
 Vector CBaseCombatCharacter::Weapon_ShootPosition( )
 {
+	// VXP: Need to remake this function with finding an "muzzle" attachment
 	Vector forward, right, up;
 
 	AngleVectors( GetAbsAngles(), &forward, &right, &up );

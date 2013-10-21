@@ -2553,6 +2553,12 @@ void SV_ConnectionlessPacket (void)
 	{
 		SV_Rcom (&net_from);
 	}
+	else if( c[0] == 'T' ) // VXP: Source Engine Query
+	{
+		Con_Printf( "Answering on Source Engine Query...\n" );
+		SVC_Info( false );
+		return;
+	}
 	else
 	{
 		// Just ignore it.

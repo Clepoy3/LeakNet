@@ -480,25 +480,7 @@ void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 	m_iState = WEAPON_NOT_CARRIED;
 	m_fEffects &= ~EF_NODRAW;
 	UTIL_Relink( this );
-//	FallInit();
-
-	// VXP: From FallInit function
-	// Maybe, when the weapon is under npc's dead body, VCollide msg will appears
-	SetModel( GetWorldModel() );
-	VPhysicsDestroyObject();
-	if ( !VPhysicsInitNormal( SOLID_BSP, FSOLID_TRIGGER, false ) )
-	{
-		SetMoveType( MOVETYPE_FLYGRAVITY );
-		SetSolid( SOLID_BSP );
-		AddSolidFlags( FSOLID_NOT_SOLID );
-		AddSolidFlags( FSOLID_TRIGGER );
-		Relink();
-	}
-	SetPickupTouch();
-	SetThink( &CBaseCombatWeapon::FallThink );
-	SetNextThink( gpGlobals->curtime + 0.1f );
-	// VXP: End
-
+	FallInit();
 	RemoveFlag( FL_ONGROUND );
 	SetThink( &CBaseCombatWeapon::SetPickupTouch );
 	SetTouch(NULL);
@@ -899,6 +881,7 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 
 	// No longer using holstering...  New weapon just pulled out
 	//SendWeaponAnim( ACT_VM_HOLSTER );
+	SendWeaponAnim( ACT_VM_HOLSTER ); // VXP: Let's try
 
 	CBaseCombatCharacter *pOwner = GetOwner();
 	if (pOwner)
@@ -1820,7 +1803,8 @@ void* SendProxy_SendActiveLocalWeaponDataTable( const void *pStruct, const void 
 	{
 		// Only send this chunk of data to the player carrying this weapon
 		CBasePlayer *pPlayer = ToBasePlayer( pWeapon->GetOwner() );
-		if ( pPlayer /*&& pPlayer->GetActiveWeapon() == pWeapon*/ )
+	//	if ( pPlayer /*&& pPlayer->GetActiveWeapon() == pWeapon*/ )
+		if ( pPlayer && pPlayer->GetActiveWeapon() == pWeapon )
 		{
 			pRecipients->SetOnly( pPlayer->GetClientIndex() );
 			return (void*)pVarData;

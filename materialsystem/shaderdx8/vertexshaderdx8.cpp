@@ -450,7 +450,7 @@ const PrecompiledShader_t *CShaderDictionary::LookupPrecompiledShader( Precompil
 	Warning( "shader \"%s\" not found!\n", pShaderName );
 	// Whoops! Using a bogus shader
 	// FIXME: Should we return an error shader here?
-	Assert( 0 );
+	Assert( 0 ); // VXP: When e3_seafloor is loading
 	return NULL;
 }
 

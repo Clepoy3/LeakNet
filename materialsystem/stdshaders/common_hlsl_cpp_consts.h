@@ -8,6 +8,8 @@
 
 // GR - HDR luminance maps to 0..n range
 // IMPORTANT: Keep the same value as in materialsystem_global.h
-#define MAX_HDR_OVERBRIGHT 16.0f
+//#define MAX_HDR_OVERBRIGHT 16.0f
+#define MAX_HDR_OVERBRIGHT 4.0f // VXP: Without prefer textures
+
 
 
