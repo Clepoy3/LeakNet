@@ -1,17 +1,22 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//=========== (C) Copyright 1999 Valve, L.L.C. All rights reserved. ===========
+//
+// The copyright to the contents herein is the property of Valve, L.L.C.
+// The contents may be used and/or copied only with the written permission of
+// Valve, L.L.C., or in accordance with the terms and conditions stipulated in
+// the agreement/contract under which the contents have been supplied.
 //
 // Purpose: 
 //
 // $Header: $
 // $NoKeywords: $
-//=============================================================================//
+//=============================================================================
 
 #ifndef IMAGELOADER_H
 #define IMAGELOADER_H
 #pragma once
 
 #include <stdio.h>
-
+//
 //-----------------------------------------------------------------------------
 // The various image format types
 //-----------------------------------------------------------------------------
@@ -48,7 +53,6 @@ enum ImageFormat
 	IMAGE_FORMAT_RGBA16161616F,
 	// GR - HDR
 	IMAGE_FORMAT_RGBA16161616,
-	IMAGE_FORMAT_UVLX8888,
 
 	NUM_IMAGE_FORMATS
 };
@@ -101,38 +105,10 @@ bool ConvertImageFormat( unsigned char *src, enum ImageFormat srcImageFormat,
 		                 unsigned char *dst, enum ImageFormat dstImageFormat, 
 						 int width, int height, int srcStride = 0, int dstStride = 0 );
 
-// Flags for ResampleRGBA8888
-enum
-{
-	RESAMPLE_NORMALMAP = 0x1,
-	RESAMPLE_ALPHATEST = 0x2,
-	RESAMPLE_NICE_FILTER = 0x4,
-	RESAMPLE_CLAMPS = 0x8,
-	RESAMPLE_CLAMPT = 0x10,
-};
+bool ResampleRGBA8888( unsigned char *src, unsigned char *dst, int srcWidth, int srcHeight,
+						int dstWidth, int dstHeight, float srcGamma, float dstGamma, 
+						float colorScale = 1.0f, bool bNormalMap = false );
 
-struct ResampleInfo_t
-{
-	ResampleInfo_t() : m_flColorScale( 1.0f ), m_nFlags(0), m_flAlphaThreshhold(0.4f), m_flAlphaHiFreqThreshhold(0.4f) {}
-
-	unsigned char *m_pSrc;
-	unsigned char *m_pDest;
-	int m_nSrcWidth;
-	int m_nSrcHeight;
-	int m_nDestWidth;
-	int m_nDestHeight;
-	float m_flSrcGamma;
-	float m_flDestGamma;
-	float m_flColorScale;
-	float m_flAlphaThreshhold;
-	float m_flAlphaHiFreqThreshhold;
-	int m_nFlags;
-};
-
-bool ResampleRGBA8888( const ResampleInfo_t &info );
-
-void ConvertNormalMapRGBA8888ToDUDVMapUVLX8888( unsigned char *src, int width, int height,
-										                     unsigned char *dst_ );
 void ConvertNormalMapRGBA8888ToDUDVMapUVWQ8888( unsigned char *src, int width, int height,
 										                     unsigned char *dst_ );
 void ConvertNormalMapRGBA8888ToDUDVMapUV88( unsigned char *src, int width, int height,
@@ -187,8 +163,6 @@ bool FlipImageVertically( unsigned char *src, unsigned char *dst,
 					      int widthHeight, enum ImageFormat imageFormat );
 bool FlipImageHorizontally( unsigned char *src, unsigned char *dst, 
 					        int widthHeight, enum ImageFormat imageFormat );
-bool SwapAxes( unsigned char *src, 
-			  int widthHeight, ImageFormat imageFormat );
 
 bool GenMipLevel( unsigned char *src, unsigned char *dst, enum ImageFormat imageFormat, 
 		           int srcWidth, int srcHeight, int dstWidth, int dstHeight );

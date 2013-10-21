@@ -19,7 +19,7 @@
 // FIXME: Reenable once we have a multithreaded tier0 for tools
 // memdbgon must be the last include file in a .cpp file!!!
 //#include "tier0/memdbgon.h"
-
+//
 
 //-----------------------------------------------------------------------------
 // Disk format for VTF files
@@ -1548,24 +1548,8 @@ void CVTFTexture::GenerateMipmaps()
 			{
 				unsigned char *pSrcLevel = ImageData( iFrame, iFace, 0 );
 				unsigned char *pDstLevel = ImageData( iFrame, iFace, iMipLevel );
-			//	ImageLoader::ResampleRGBA8888( pSrcLevel, pDstLevel, m_nWidth, m_nHeight,
-			//		nMipWidth, nMipHeight, 2.2, 2.2, mipColorScale, bNormalMap );
-				ImageLoader::ResampleInfo_t info;
-				info.m_pSrc = pSrcLevel;
-				info.m_pDest = pDstLevel;
-				info.m_nSrcWidth = m_nWidth;
-				info.m_nSrcHeight = m_nHeight;
-				info.m_nDestWidth = nMipWidth;
-				info.m_nDestHeight = nMipHeight;
-				info.m_flSrcGamma = 2.2f;
-				info.m_flDestGamma = 2.2f;
-				info.m_flColorScale = mipColorScale;
-				if (bNormalMap)
-				{
-					info.m_nFlags = 0x1; // RESAMPLE_NORMALMAP
-				}
-
-				ImageLoader::ResampleRGBA8888( info );
+				ImageLoader::ResampleRGBA8888( pSrcLevel, pDstLevel, m_nWidth, m_nHeight,
+					nMipWidth, nMipHeight, 2.2, 2.2, mipColorScale, bNormalMap );
 
 				if( m_nFlags & TEXTUREFLAGS_NORMAL )
 				{
@@ -1741,18 +1725,8 @@ bool CVTFTexture::ConstructLowResImage()
 	CUtlMemory<unsigned char> lowResSizeImage;
 	lowResSizeImage.EnsureCapacity( m_nLowResImageWidth * m_nLowResImageHeight * 4 );
 	unsigned char *tmpImage = lowResSizeImage.Base();
-//	if( !ImageLoader::ResampleRGBA8888( ImageData(0, 0, 0), tmpImage, 
-//		m_nWidth, m_nHeight, m_nLowResImageWidth, m_nLowResImageHeight, 2.2f, 2.2f ) )
-	ImageLoader::ResampleInfo_t info;
-	info.m_pSrc = ImageData(0, 0, 0);
-	info.m_pDest = tmpImage;
-	info.m_nSrcWidth = m_nWidth;
-	info.m_nSrcHeight = m_nHeight;
-	info.m_nDestWidth = m_nLowResImageWidth;
-	info.m_nDestHeight = m_nLowResImageHeight;
-	info.m_flSrcGamma = 2.2f;
-	info.m_flDestGamma = 2.2f;
-	if( !ImageLoader::ResampleRGBA8888( info ) )
+	if( !ImageLoader::ResampleRGBA8888( ImageData(0, 0, 0), tmpImage, 
+		m_nWidth, m_nHeight, m_nLowResImageWidth, m_nLowResImageHeight, 2.2f, 2.2f ) )
 	{
 		return false;
 	}
