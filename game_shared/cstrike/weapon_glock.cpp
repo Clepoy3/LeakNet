@@ -119,6 +119,8 @@ bool CWeaponGlock::Deploy( )
 			return DefaultDeploy( "models/v_glock18.mdl", "models/p_glock18.mdl", GLOCK18_DRAW2, "onehanded", UseDecrement() ? 1: 0 );
 	}
 	*/
+	
+	SendWeaponAnim( ACT_VM_DRAW );
 
 	return true;
 }
@@ -351,6 +353,11 @@ void CWeaponGlock::GLOCK18Fire( float flSpread, float flCycleTime, bool bFireBur
 		// Fire off the next two rounds
 		m_flGlock18Shoot = gpGlobals->curtime + 0.1;
 		m_iGlock18ShotsFired++;
+		SendWeaponAnim( ACT_VM_SECONDARYATTACK );
+	}
+	else
+	{
+		SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 	}
 
 	//ResetPlayerShieldAnim();

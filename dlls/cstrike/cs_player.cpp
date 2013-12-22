@@ -985,7 +985,7 @@ void CCSPlayer::CSWeaponDrop( CBaseCombatWeapon *pWeapon )
 		Vector vTossPos = WorldSpaceCenter() + vForward * 150;
 
 		Weapon_Drop( pWeapon, &vTossPos, NULL );
-		pWeapon->AddSolidFlags( FSOLID_NOT_SOLID );
+	//	pWeapon->AddSolidFlags( FSOLID_NOT_SOLID ); // VXP: For physics world models
 	}
 }
 

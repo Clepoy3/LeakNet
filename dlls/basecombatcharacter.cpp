@@ -1567,7 +1567,8 @@ Relationship_t *CBaseCombatCharacter::FindEntityRelationship( CBaseEntity *pTarg
 	}
 	AllocateDefaultRelationships();
 	// If none found return the default
-	return &m_DefaultRelationship[ Classify() ][ pTarget->Classify() ];
+	return &m_DefaultRelationship[ Classify() ][ pTarget->Classify() ]; // VXP: On another system (release) - map "crg" when looking at zombie and barnacle,
+																		// and also zombie trying to beat a barnacle
 }
 
 Disposition_t CBaseCombatCharacter::IRelationType ( CBaseEntity *pTarget )

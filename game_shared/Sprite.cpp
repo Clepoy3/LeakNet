@@ -553,7 +553,8 @@ int CSprite::DrawModel( int flags )
 	//Must be a sprite
 	if ( modelinfo->GetModelType( GetModel() ) != mod_sprite )
 	{
-		assert( 0 );
+	//	assert( 0 );
+		Warning( "CSprite::DrawModel: not a sprite!\n" ); // VXP
 		return 0;
 	}
 

@@ -560,6 +560,7 @@ void CC4::PrimaryAttack()
 			m_fArmedTime = gpGlobals->curtime + WEAPON_C4_ARM_TIME;
 			m_bBombPlacedAnimation = false;
 			//SendWeaponAnim( C4_ARM, UseDecrement() ? 1: 0 );
+			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 
 #if !defined( CLIENT_DLL )			
 			// freeze the player in place while planting
@@ -611,16 +612,18 @@ void CC4::PrimaryAttack()
 			//pPlayer->SetAnimation( PLAYER_HOLDBOMB );
 
 #endif
-			/*
+			/**/
 			if(m_bBombPlacedAnimation == true) //this means the placement animation is canceled
 			{
-				SendWeaponAnim( C4_DRAW, UseDecrement() ? 1: 0 );
+			//	SendWeaponAnim( C4_DRAW, UseDecrement() ? 1: 0 );
+				SendWeaponAnim( ACT_VM_DRAW );
 			}
 			else
 			{
-				SendWeaponAnim( C4_IDLE1, UseDecrement() ? 1: 0 );
+			//	SendWeaponAnim( C4_IDLE1, UseDecrement() ? 1: 0 );
+				SendWeaponAnim( ACT_VM_IDLE );
 			}
-			*/
+			/**/
 			
 			return;
 		}
@@ -636,6 +639,7 @@ void CC4::PrimaryAttack()
 				//call the c4 Placement animation 
 				m_bBombPlacedAnimation = true;
 				//SendWeaponAnim( C4_DROP, UseDecrement() ? 1: 0 );
+				SendWeaponAnim( ACT_VM_SECONDARYATTACK );
 				
 #if !defined( CLIENT_DLL )
 				// player "place" animation
@@ -749,12 +753,18 @@ void CC4::WeaponIdle()
 			pPlayer->SetProgressBarTime( 0 );
 		#endif 
 
-		/*
+		/**/
 		if(m_bBombPlacedAnimation == true) //this means the placement animation is canceled
-			SendWeaponAnim( C4_DRAW, UseDecrement() ? 1: 0);
+		{
+		//	SendWeaponAnim( C4_DRAW, UseDecrement() ? 1: 0);
+			SendWeaponAnim( ACT_VM_DRAW );
+		}
 		else
-			SendWeaponAnim( C4_IDLE1, UseDecrement() ? 1: 0);
-		*/
+		{
+		//	SendWeaponAnim( C4_IDLE1, UseDecrement() ? 1: 0);
+			SendWeaponAnim( ACT_VM_IDLE );
+		}
+		/**/
 	}
 
 	if (m_flTimeWeaponIdle > gpGlobals->curtime)

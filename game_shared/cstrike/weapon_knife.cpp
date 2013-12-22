@@ -54,7 +54,7 @@ PRECACHE_WEAPON_REGISTER( weapon_knife );
 
 int FilterKnifeActivity( int iActivity )
 {
-	if ( iActivity == ACT_SPECIAL_ATTACK1 || iActivity == ACT_SPECIAL_ATTACK2 || iActivity == ACT_VM_SWINGHIT )
+	if ( iActivity == ACT_SPECIAL_ATTACK1 || iActivity == ACT_SPECIAL_ATTACK2 /*|| iActivity == ACT_VM_SWINGHIT*/ ) // VXP
 		return ACT_VM_PRIMARYATTACK;
 	else
 		return iActivity;
