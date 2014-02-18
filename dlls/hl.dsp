@@ -28621,6 +28621,10 @@ SOURCE=.\env_entity_maker.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\env_fov.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\env_screenoverlay.cpp
 # End Source File
 # Begin Source File

@@ -170,6 +170,13 @@ void CFPSPanel::Paint()
 
 		i++;
 
+		g_pMatSystemSurface->DrawColoredText( m_hFont, x, 2 + i * ( vgui::surface()->GetFontTall( m_hFont ) + 2 ), 
+			255, 255, 255, 255, 
+			"ang:  %.2f %.2f %.2f", 
+			MainViewAngles().x, MainViewAngles().y, MainViewAngles().z );
+
+		i++;
+
 		Vector vel( 0, 0, 0 );
 		C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
 		if ( player )

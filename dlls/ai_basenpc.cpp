@@ -4354,14 +4354,14 @@ void CAI_BaseNPC::AddRelationship( const char *pszRelationship, CBaseEntity *pAc
 			{
 				disposition = D_NU;
 				Warning( "***ERROR***\nBad relationship type (%s) to unknown entity (%s)!\n", dispositionString,entityString );
-				Assert( 0 );
+			//	Assert( 0 );
 				return;
 			}
 		}
 		else
 		{
 			Warning("Can't parse relationship info (%s)\n", pszRelationship );
-			Assert(0);
+		//	Assert(0);
 			return;
 		}
 

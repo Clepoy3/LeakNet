@@ -773,7 +773,7 @@ int CGameUI::ActivateGameUI()
 	g_pTaskbar->SetVisible(true);
 
 	// pause the game
-	if( !engine->IsBackGroundMap( ) )
+	if( !engine->IsBackGroundMap() )
 		engine->ClientCmd("setpause");
 	else
 		engine->ClientCmd("unpause");
@@ -809,7 +809,7 @@ int CGameUI::ActivateDemoUI()
 //-----------------------------------------------------------------------------
 void CGameUI::HideGameUI()
 {
-	if( engine->IsBackGroundMap( ) )
+	if( engine->IsBackGroundMap() )
 		return;
 	
 //	TRACE_FUNCTION("CGameUI::HideGameUI");

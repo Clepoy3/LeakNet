@@ -2537,6 +2537,7 @@ const CShaderAPIDX8::DeviceSupportLevels_t *CShaderAPIDX8::GetCardSpecificInfo()
 //-----------------------------------------------------------------------------
 // Compute the effective DX support level based on all the other caps
 //-----------------------------------------------------------------------------
+
 void CShaderAPIDX8::ComputeDXSupportLevel()
 {
 	// NOTE: Support level is actually DX level * 10 + subversion
@@ -2607,8 +2608,55 @@ void CShaderAPIDX8::ComputeDXSupportLevel()
 	Assert( 0 ); // we don't support this!
 	m_Caps.m_DXSupportLevel = 50;
 }
+/*
+void CShaderAPIDX8::ComputeDXSupportLevel() // VXP
+{
+	// NOTE: Support level is actually DX level * 10 + subversion
+	// So, 70 = DX7, 80 = DX8, 81 = DX8 w/ 1.4 pixel shaders
+	// 90 = DX9 w/ 2.0 pixel shaders
+	// 95 = DX9 w/ 3.0 pixel shaders and vertex textures
+	// 98 = DX9 XBox360
+	// NOTE: 82 = NVidia nv3x cards, which can't run dx9 fast
 
+	// FIXME: Improve this!! There should be a whole list of features
+	// we require in order to be considered a DX7 board, DX8 board, etc.
 
+	// NOTE: sRGB is currently required for dx90 because it isn't doing 
+	// gamma correctly if that feature doesn't exist
+	if ( m_Caps.m_SupportsVertexShaders_2_0 && m_Caps.m_SupportsPixelShaders_2_0 && m_Caps.m_SupportsSRGB )
+	{
+		m_Caps.m_DXSupportLevel = 90;
+		return;
+	}
+
+	if ( m_Caps.m_SupportsPixelShaders && m_Caps.m_SupportsVertexShaders )// && m_Caps.m_bColorOnSecondStream)
+	{
+		if (m_Caps.m_SupportsPixelShaders_1_4)
+		{
+			m_Caps.m_DXSupportLevel = 81;
+			return;
+		}
+		m_Caps.m_DXSupportLevel = 80;
+		return;
+	}
+
+	if( m_Caps.m_SupportsCubeMaps && ( m_Caps.m_MaxBlendMatrices >= 2 ) )
+	{
+		m_Caps.m_DXSupportLevel = 70;
+		return;
+	}
+
+	if ( ( m_Caps.m_NumTextureUnits >= 2) && m_Caps.m_SupportsMipmapping )
+	{
+		m_Caps.m_DXSupportLevel = 60;
+		return;
+	}
+
+	Assert( 0 ); 
+	// we don't support this!
+	m_Caps.m_DXSupportLevel = 50;
+}
+*/
 // Use this when recording *.rec files that need to be run on more than one kind of 
 // hardware, etc.
 //#define DX8_COMPATABILITY_MODE
@@ -2677,7 +2725,8 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_nMaxAnisotropy = m_Caps.m_bSupportsAnisotropicFiltering ? caps.MaxAnisotropy : 0; 
 
 	m_Caps.m_SupportsCubeMaps = ( caps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP ) ? true : false;
-	m_Caps.m_SupportsNonPow2Textures = ( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) ? true : false;
+//	m_Caps.m_SupportsNonPow2Textures = ( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) ? true : false;
+/*
 	if( !( caps.TextureCaps & D3DPTEXTURECAPS_POW2 ) )
 		if( !( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) )
 			m_Caps.m_SupportsNonPow2Textures = true;
@@ -2685,16 +2734,25 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 			m_Caps.m_SupportsNonPow2Textures = false;
 	else
 		m_Caps.m_SupportsNonPow2Textures = false;
+*/
+	m_Caps.m_SupportsNonPow2Textures = 
+		( !( caps.TextureCaps & D3DPTEXTURECAPS_POW2 ) || 
+		( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) );
+
+	Assert( caps.TextureCaps & D3DPTEXTURECAPS_PROJECTED ); // VXP
 
 	// garymcthack - debug runtime doesn't let you use more than 96 constants.
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
 	// NOTE: Initting more constants than we are ever going to use may cause the 
 	// driver to try to keep track of them.. I'm forcing this to 96 so that this doesn't happen.
+/*
 #if 0
 	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
 #else
 	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
 #endif
+*/
+	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
 
 	if( m_Caps.m_SupportsPixelShaders )
 	{
@@ -2744,9 +2802,10 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// Thank you to all you driver writers who actually correctly return caps
 	if ((!modSupported) || (!addSupported))
 	{
+		Assert( 0 );
 		m_Caps.m_SupportsOverbright = false;
 	}
- 
+/*
 	// Some cards, like ATI Rage Pro doesn't support mipmapping (looks like ass)
 	// NOTE: This is necessary because ATI assumes that the wrap/clamp
 	// mode is shared among all texture units
@@ -2763,7 +2822,7 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	{
 		m_Caps.m_SupportsOverbright = false;
 	}
-
+*/
 	// Check if ZBias is supported...
 	m_Caps.m_ZBiasSupported = (caps.RasterCaps & D3DPRASTERCAPS_DEPTHBIAS) != 0;
 	m_Caps.m_SlopeScaledDepthBiasSupported = (caps.RasterCaps & D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS ) != 0;
@@ -2789,6 +2848,21 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
 		D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD | D3DUSAGE_QUERY_SRGBWRITE,
 		D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) == S_OK);
+/*
+	m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
+			D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD, D3DRTYPE_TEXTURE, D3DFMT_DXT1 ) == S_OK);
+
+		if ( m_Caps.m_SupportsSRGB )
+		{
+			m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
+				D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD | D3DUSAGE_QUERY_SRGBWRITE,
+				D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) == S_OK);
+		}
+*/
+	if ( CommandLine()->CheckParm( "-nosrgb" ) )
+	{
+		m_Caps.m_SupportsSRGB = false;
+	}
 
 	// GR - check for support of 16-bit per channel textures
 	m_Caps.m_SupportsFatTextures = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
@@ -2796,13 +2870,21 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 		D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16 ) == S_OK);
 
 	// GR - check if HDR rendering is supported
+/*
+	m_Caps.m_SupportsHDR = m_Caps.m_SupportsPixelShaders_2_0 &&
+		m_Caps.m_SupportsVertexShaders_2_0 &&
+		m_Caps.m_SupportsFatTextures &&
+	//	(caps.Caps3 & D3DCAPS3_ALPHA_FULLSCREEN_FLIP_OR_DISCARD) &&
+	//	(caps.PrimitiveMiscCaps & D3DPMISCCAPS_SEPARATEALPHABLEND) &&
+		m_Caps.m_SupportsSRGB;
+*/
 	m_Caps.m_SupportsHDR = m_Caps.m_SupportsPixelShaders_2_0 &&
 		m_Caps.m_SupportsVertexShaders_2_0 &&
 		m_Caps.m_SupportsFatTextures &&
 		(caps.Caps3 & D3DCAPS3_ALPHA_FULLSCREEN_FLIP_OR_DISCARD) &&
 		(caps.PrimitiveMiscCaps & D3DPMISCCAPS_SEPARATEALPHABLEND) &&
 		m_Caps.m_SupportsSRGB;
-	
+
 	// Compute the effective DX support level based on all the other caps
 	ComputeDXSupportLevel();
 
@@ -2901,7 +2983,7 @@ void CShaderAPIDX8::SpewDriverInfo() const
 		(caps.VertexShaderVersion >> 8) & 0xFF, caps.VertexShaderVersion & 0xFF,
 		(caps.PixelShaderVersion >> 8) & 0xFF, caps.PixelShaderVersion & 0xFF);
 
-	Warning("\nDefault Caps :\n");
+	Warning("\nSHADERAPI Caps :\n");
 	Warning("NumTextureUnits %d NumTextureStages %d\n",
 		m_Caps.m_NumTextureUnits,
 		m_Caps.m_NumTextureStages );
@@ -4075,10 +4157,18 @@ void CShaderAPIDX8::EndFrame()
 
 void CShaderAPIDX8::ReleaseResources()
 {
+/*
 	FreeFrameSyncObjects();
 	ReleaseAmbientCubeTexture();
 	MeshMgr()->ReleaseBuffers();
 	ShaderUtil()->ReleaseShaderObjects();
+	ReleaseRenderTargets();
+*/
+	FreeFrameSyncObjects();
+	ReleaseAmbientCubeTexture();
+	MeshMgr()->ReleaseBuffers();
+	ShaderUtil()->ReleaseShaderObjects();
+//	g_pShaderAPIDX8->DestroyVertexBuffers();
 	ReleaseRenderTargets();
 
 #ifdef _DEBUG
@@ -4092,7 +4182,9 @@ void CShaderAPIDX8::ReleaseResources()
 #endif
 	
 	// All meshes cleaned up?
-	Assert( MeshMgr()->BufferCount() == 0 ); // VXP: This appears when running hlmv when hl2.exe runned (for example)
+//	Assert( MeshMgr()->BufferCount() == 0 ); // VXP: This appears when running hlmv when hl2.exe runned (for example)
+	if( MeshMgr()->BufferCount() != 0 )
+		Warning( "Mesh buffer count is not 0! (%i)\n", MeshMgr()->BufferCount() );
 
 
 #ifdef _DEBUG
@@ -4121,7 +4213,9 @@ void CShaderAPIDX8::ReleaseResources()
 	}
 #endif
 
-	Assert( TextureCount() == 0 ); // VXP: This appears when running hammer when hl2.exe runned (for example)
+//	Assert( TextureCount() == 0 ); // VXP: This appears when running hammer when hl2.exe runned (for example)
+	if( TextureCount() != 0 )
+		Warning( "Texture count is not 0! (%i)\n", TextureCount() );
 
 }
 

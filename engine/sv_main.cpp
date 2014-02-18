@@ -4038,13 +4038,13 @@ void SV_CreateBaseline (void)
 		{
 		//	pModelString = "models/player.mdl";
 		//	pModelString = "models/humans/male_01.mdl";
+		//	pModelString = "models/player/male_03.mdl";
 			pModelString = (Q_strcmp(cl_model.GetString(), "") == 0) ? "player.mdl" : cl_model.GetString();
 		}
 		else
 		{
 			pModelString = STRING(serverEntity->GetModelName());
 		}
-
 		serverEntity->SetModelIndex( SV_ModelIndex( pModelString ) );
 		if (serverEntity->GetModelIndex() < 0)
 		{

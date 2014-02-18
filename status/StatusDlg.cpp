@@ -352,7 +352,7 @@ CStatusDlg::~CStatusDlg( void )
 
 	continueIdle = false;
 
-	GetEmailManager()->Shutdown();
+//	GetEmailManager()->Shutdown();
 
 	if ( !CheckParm( "-fake" ) )
 	{
@@ -448,7 +448,7 @@ int CStatusDlg::RMLPreIdle(void)
 
 	CheckForNewDay();
 
-	GetEmailManager()->Update( curtime );
+//	GetEmailManager()->Update( curtime );
 
 
 	return 0;
@@ -712,7 +712,7 @@ BOOL CStatusDlg::OnInitDialog()
 
 	ResetHistory();
 
-	GetEmailManager()->Init( this );
+//	GetEmailManager()->Init( this );
 
 	GetScheduler()->RemoveAllTimes();
 	sScheduleTimes = theApp.GetProfileString( "Status", "ScheduleTimes", "" );
@@ -1584,7 +1584,7 @@ void CStatusDlg::OnTimer( UINT nIDEvent )
 		SetTimer( TIMER_NUMBER, (nextTime - now) * 1000, (TIMERPROC) NULL);
 		if ( nIDEvent == TIMER_NUMBER )
 		{
-			GetEmailManager()->SendEmailsNow();
+		//	GetEmailManager()->SendEmailsNow();
 		}
 	}
 }
@@ -3687,7 +3687,7 @@ void CStatusDlg::EmailReport( char const *emailaddress )
 void CStatusDlg::OnEmail() 
 {
 	// TODO: Add your control notification handler code here
-	GetEmailManager()->SendEmailsNow();
+//	GetEmailManager()->SendEmailsNow();
 }
 
 void CStatusDlg::OnAddemail() 

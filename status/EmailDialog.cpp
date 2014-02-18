@@ -60,7 +60,7 @@ void CEmailDialog::OnRemoveemail()
 	int idx = m_emailList.GetCurSel();
 	if ( idx != -1 )
 	{
-		GetEmailManager()->RemoveItemByIndex( idx );
+	//	GetEmailManager()->RemoveItemByIndex( idx );
 		RepopulateList();
 	}
 }
@@ -69,11 +69,12 @@ void CEmailDialog::RepopulateList()
 {
 	m_emailList.ResetContent();
 
-	int c = GetEmailManager()->GetItemCount();
+//	int c = GetEmailManager()->GetItemCount();
+	int c = 1;
 	for ( int i = 0; i < c; i++ )
 	{
 		char buf[ 256 ];
-		GetEmailManager()->GetItemDescription( i, buf, sizeof( buf ) );
+	//	GetEmailManager()->GetItemDescription( i, buf, sizeof( buf ) );
 		m_emailList.AddString( buf );
 	}
 }

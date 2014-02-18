@@ -12,6 +12,7 @@
 #include "LoadingDialog.h"
 #include <stdio.h>
 
+#include <vgui_controls/FileOpenDialog.h>
 #include <vgui_controls/Button.h>
 #include <vgui_controls/CheckButton.h>
 #include <KeyValues.h>
@@ -218,14 +219,94 @@ void COptionsSubMultiplayer::OnCommand( const char *command )
 			m_hMultiplayerAdvancedDialog = new CMultiplayerAdvancedDialog(this);
 		}
 		m_hMultiplayerAdvancedDialog->Activate();*/
+		
 		if (!m_hLoadingDialog.Get())
 		{
 			m_hLoadingDialog = new CLoadingDialog(this);
 		}
 		m_hLoadingDialog->Activate();
+		
+		/*
+		if ( !m_hFileOpenDialog.Get() )
+		{
+			m_hFileOpenDialog = new FileOpenDialog( this, "Choose .vtf file", true );
+			if ( m_hFileOpenDialog != NULL )
+			{
+			//	m_hFileOpenDialog->AddFilter("*.vtf", "Demo Files (*.vtf)", true);
+			}
+		}
+		if ( m_hFileOpenDialog )
+		{
+			char startPath[ MAX_PATH ];
+			Q_strncpy( startPath, "hl2\\materials\\VGUI\\logos", sizeof( startPath ) );
+		//	COM_FixSlashes( startPath );
+			m_hFileOpenDialog->SetStartDirectory( startPath );
+			m_hFileOpenDialog->DoModal( false );
+		}
+		*/
 	}
 
 	BaseClass::OnCommand( command );
+}
+
+char *COM_FileExt (char *in)
+{
+	static char exten[8];
+	int             i;
+
+	while (*in && *in != '.')
+		in++;
+	if (!*in)
+		return "";
+	in++;
+	for (i=0 ; i<7 && *in ; i++,in++)
+		exten[i] = *in;
+	exten[i] = 0;
+	return exten;
+}
+
+void COptionsSubMultiplayer::OnFileSelected( char *fullpath )
+{
+	
+	if ( !fullpath || !fullpath[ 0 ] )
+		return;
+
+	char relativepath[ 512 ];
+//	filesystem()->FullPathToRelativePath( fullpath, relativepath );
+//	filesystem()->GetLocalPath( fullpath, relativepath );
+
+/*	if ( Q_strcasecmp( COM_FileExt( relativepath ), "vtf" ) )
+	{
+		return;
+	}*/
+	
+	// It's a dem file
+//	Cbuf_AddText( va( "playdemo %s\n", relativepath ) );
+//	Cbuf_AddText( "demopauseafterinit\n" );
+//	_snprintf(relativepath, sizeof(relativepath) - 10, "%s", fullpath);
+//	if ( Q_strcasecmp( fullpath, "ass" ) )
+	if ( stricmp( fullpath, "ass" ) )
+	{
+		Msg( "NOPE: %i\n", stricmp( fullpath, "hl2" ) );
+		return;
+	}
+	Msg( "%s\n", fullpath );
+	m_pLogoList->AddItem( relativepath, "" );
+	InitLogoList( m_pLogoList );
+
+	if ( m_hFileOpenDialog != NULL )
+	{
+		m_hFileOpenDialog->MarkForDeletion();
+	}
+	/*
+	Msg( "%s\n", fullpath );
+	m_pLogoList->AddItem( fullpath, "" );
+	InitLogoList( m_pLogoList );
+	if ( m_hFileOpenDialog != NULL )
+	{
+		m_hFileOpenDialog->MarkForDeletion();
+	}
+	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -303,7 +384,7 @@ void COptionsSubMultiplayer::InitLogoList( CLabeledCommandComboBox *cb )
 		//
 		if ( fn[ 0 ] && fn[0] != '.' )
 		{
-			// Strip the .bmp
+			// Strip the .vtf
 			char filename[ 512 ];
 			strcpy( filename, fn );
 			if ( strlen( filename ) >= 4 )
@@ -501,6 +582,7 @@ MessageMapItem_t COptionsSubMultiplayer::m_MessageMap[] =
 	MAP_MESSAGE_PTR( COptionsSubMultiplayer, "TextChanged", OnTextChanged, "panel" ),
 //	MAP_MESSAGE_PARAMS( COptionsSubMultiplayer, "SliderMoved", OnSliderMoved ),
 	MAP_MESSAGE( COptionsSubMultiplayer, "ControlModified", OnApplyButtonEnable ),
+	MAP_MESSAGE_CONSTCHARPTR( COptionsSubMultiplayer, "FileSelected", OnFileSelected, "fullpath" ),  
 };
 IMPLEMENT_PANELMAP( COptionsSubMultiplayer, BaseClass );
 
@@ -795,7 +877,10 @@ void COptionsSubMultiplayer::OnApplyChanges()
 	engine->ClientCmd(cmd);
 	
 	// save the model name
-	_snprintf(cmd, sizeof(cmd) - 1, "model models/player/%s.mdl\n", m_ModelName);
+	if( Q_strcmp( "", m_ModelName ) != 0 )
+		_snprintf(cmd, sizeof(cmd) - 1, "model models/player/%s.mdl\n", m_ModelName);
+	else
+		_snprintf(cmd, sizeof(cmd) - 1, "model models/player.mdl\n");
 	engine->ClientCmd(cmd);
 /*
 	int r, g, b;

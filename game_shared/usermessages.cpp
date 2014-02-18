@@ -146,7 +146,7 @@ bool CUserMessages::DispatchUserMessage( const char *pszName, int iSize, void *p
 	if ( !entry->clienthook )
 	{
 		DevMsg( "CUserMessages::DispatchUserMessage:  Missing client hook for %s\n", pszName );
-		Assert( 0 );
+	//	Assert( 0 );
 		return false;
 	}
 

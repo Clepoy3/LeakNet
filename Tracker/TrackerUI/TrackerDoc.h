@@ -34,7 +34,7 @@ public:
 	~CTrackerDoc();
 
 	// gets the base data registry
-	KeyValues *Data() { return m_pDataRegistry; }
+	KeyValues *Data() { return m_pDataRegistry; } // VXP: Crashed at this point when quitting game runned with -showplatform parameted
 
 	// current user
 	unsigned int GetUserID();

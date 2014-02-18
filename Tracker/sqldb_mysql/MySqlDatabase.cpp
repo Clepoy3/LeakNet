@@ -52,17 +52,19 @@ static DWORD WINAPI staticThreadFunc(void *param)
 bool CMySqlDatabase::Initialize(const char *serverName, const char *catalogName)
 {
 	// attempt to connect to the database via named pipes
-	m_Connection.connect(catalogName, serverName, "", "", true);
+//	m_Connection.connect("newtracker", "127.0.0.1", "root", "25voPGnBmq");
+	m_Connection.connect("newtracker", "127.0.0.1", "root", "1");
 
 	// check the connection
 	if (!m_Connection.connected())
 	{
-		// try again, using tcp/ip to connect instead
-		m_Connection.connect(catalogName, serverName, "", "", false);
+		// try again
+	//	m_Connection.connect("newtracker", "127.0.0.1", "root", "25voPGnBmq");
+		m_Connection.connect("newtracker", "127.0.0.1", "root", "1");
 
 		if (!m_Connection.connected())
 		{
-			g_pConsole->Print(5, "Failed to connect to MySqlDB %s : %s\n", serverName, m_Connection.error().c_str());
+			g_pConsole->Print(5, "Failed to connect to MySqlDB %s : %s\n", serverName, m_Connection.error());
 			return false;
 		}
 	}
@@ -242,7 +244,7 @@ CCriticalSection::~CCriticalSection()
 //-----------------------------------------------------------------------------
 // Purpose: wrapper
 //-----------------------------------------------------------------------------
-CCriticalSection::EnterCriticalSection()
+void CCriticalSection::EnterCriticalSection()
 {
 	::EnterCriticalSection(&m_CriticalSection);
 }
@@ -250,7 +252,7 @@ CCriticalSection::EnterCriticalSection()
 //-----------------------------------------------------------------------------
 // Purpose: wrapper
 //-----------------------------------------------------------------------------
-CCriticalSection::LeaveCriticalSection()
+void CCriticalSection::LeaveCriticalSection()
 {
 	::LeaveCriticalSection(&m_CriticalSection);
 }

@@ -33,6 +33,7 @@ public:
 
 protected:
 	virtual void OnCommand(const char *command);
+	void OnFileSelected( char *fullpath );
 
 	// Called when page is loaded.  Data should be reloaded from document into controls.
 	virtual void OnResetData();
@@ -85,6 +86,7 @@ private:
 */
 	vgui::DHANDLE<CMultiplayerAdvancedDialog> m_hMultiplayerAdvancedDialog;
 	vgui::DHANDLE<CLoadingDialog> m_hLoadingDialog; // VXP
+	vgui::DHANDLE< vgui::FileOpenDialog > m_hFileOpenDialog;
 };
 
 #endif // OPTIONSSUBMULTIPLAYER_H

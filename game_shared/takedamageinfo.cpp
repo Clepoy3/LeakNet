@@ -131,8 +131,8 @@ void AddMultiDamage( const CTakeDamageInfo &info, CBaseEntity *pEntity )
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( g_MultiDamage.GetDamageForce() != vec3_origin && g_MultiDamage.GetDamagePosition() != vec3_origin );
-		if ( (g_MultiDamage.GetDamageForce() == vec3_origin) && (g_MultiDamage.GetDamagePosition() == vec3_origin) )
-			Warning( "AddMultiDamage: hitting the assert!\n" );
+		if ( (g_MultiDamage.GetDamageForce() == vec3_origin) || (g_MultiDamage.GetDamagePosition() == vec3_origin) )
+			Warning( "AddMultiDamage:  g_MultiDamage.GetDamageForce() == vec3_origin\n" );
 	}
 }
 

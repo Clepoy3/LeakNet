@@ -4,7 +4,7 @@
 //
 // $NoKeywords: $
 //=============================================================================
-
+#if 0
 #ifndef EMAILMANAGER_H
 #define EMAILMANAGER_H
 #ifdef _WIN32
@@ -73,3 +73,4 @@ private:
 extern CEmailManager *GetEmailManager();
 
 #endif // EMAILMANAGER_H
+#endif

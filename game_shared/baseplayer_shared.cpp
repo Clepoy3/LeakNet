@@ -24,6 +24,8 @@
 
 extern int TrainSpeed(int iSpeed, int iMax);
 
+//#include "dlight.h"
+
 #endif
 
 #include "in_buttons.h"
@@ -871,6 +873,19 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 		vm->CalcViewModelView( this, vecBaseEyePosition, 
 			eyeAngles );
 	}
+/*
+#if !defined( CLIENT_DLL )
+	// VXP: It's working! I can put the dlight here!
+	if(FlashlightIsOn())
+	{
+		trace_t tr;
+		Vector plyVec;
+		AngleVectors( eyeAngles, &plyVec, NULL, NULL );
+		UTIL_TraceLine( eyeOrigin, eyeOrigin + plyVec * 5000.0f, MASK_SOLID, this, COLLISION_GROUP_NONE, &tr );
+		UTIL_DecalTrace( &tr, "FlashLight001" );
+	}
+#endif
+*/
 }
 
 //-----------------------------------------------------------------------------

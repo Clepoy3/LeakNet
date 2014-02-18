@@ -327,7 +327,8 @@ bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pE
 		idx = m_LeafElements.Next(idx);
 	}
 
-	Assert( CountElementsInLeaf(leaf) == nCount ); // VXP: Happened on d1_town_05. Happened when I tried to break the grass pot in mp
+	// VXP: Happened on d1_town_05. Happened when I tried to break the grass pot in mp, also on dm_lockdown when barrel breaks (after some crates breaks)
+	Assert( CountElementsInLeaf(leaf) == nCount );
 
 	return true;
 }

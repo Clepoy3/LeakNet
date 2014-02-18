@@ -789,7 +789,7 @@ int VGui_IsConsoleVisible()
 {
 	if (staticGameConsole && staticUIFuncs )
 	{
-		return ( staticUIFuncs->IsGameUIVisible() && staticGameConsole->IsConsoleVisible() );
+		return ( staticUIFuncs->IsGameUIVisible() && staticGameConsole->IsConsoleVisible() ); // VXP: Makes game crash
 	}
 
 	return false;

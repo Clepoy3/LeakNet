@@ -485,14 +485,14 @@ void CNPC_Bullsquid::RemoveIgnoredConditions( void )
 	if ( GetEnemy() != NULL )
 	{
 		// ( Unless after a tasty headcrab, yumm ^_^ )
-		if ( FClassnameIs( GetEnemy(), "monster_headcrab" ) )
+		if ( FClassnameIs( GetEnemy(), "npc_headbrab" ) )
 			 ClearCondition( COND_SMELL );
 	}
 }
 
 Disposition_t CNPC_Bullsquid::IRelationType( CBaseEntity *pTarget )
 {
-	if ( gpGlobals->curtime - m_flLastHurtTime < 5 && FClassnameIs ( pTarget, "monster_headcrab" ) )
+	if ( gpGlobals->curtime - m_flLastHurtTime < 5 && FClassnameIs ( pTarget, "npc_headbrab" ) )
 	{
 		// if squid has been hurt in the last 5 seconds, and is getting relationship for a headcrab, 
 		// tell squid to disregard crab. 
@@ -537,7 +537,7 @@ int CNPC_Bullsquid::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	}
 #endif
 
-	if ( !FClassnameIs ( inputInfo.GetAttacker(), "monster_headcrab" ) )
+	if ( !FClassnameIs ( inputInfo.GetAttacker(), "npc_headbrab" ) )
 	{
 		// don't forget about headcrabs if it was a headcrab that hurt the squid.
 		m_flLastHurtTime = gpGlobals->curtime;
@@ -688,7 +688,7 @@ int CNPC_Bullsquid::SelectSchedule( void )
 
 			if ( HasCondition( COND_NEW_ENEMY ) )
 			{
-				if ( m_fCanThreatDisplay && IRelationType( GetEnemy() ) == D_HT && FClassnameIs( GetEnemy(), "monster_headcrab" ) )
+				if ( m_fCanThreatDisplay && IRelationType( GetEnemy() ) == D_HT && FClassnameIs( GetEnemy(), "npc_headbrab" ) )
 				{
 					// this means squid sees a headcrab!
 					m_fCanThreatDisplay = FALSE;// only do the headcrab dance once per lifetime.
@@ -877,7 +877,7 @@ NPC_STATE CNPC_Bullsquid::SelectIdealState ( void )
 		COMBAT goes to ALERT upon death of enemy
 		*/
 		{
-			if ( GetEnemy() != NULL && ( HasCondition( COND_LIGHT_DAMAGE ) || HasCondition ( COND_HEAVY_DAMAGE ) ) && FClassnameIs( GetEnemy(), "monster_headcrab" ) )
+			if ( GetEnemy() != NULL && ( HasCondition( COND_LIGHT_DAMAGE ) || HasCondition ( COND_HEAVY_DAMAGE ) ) && FClassnameIs( GetEnemy(), "npc_headbrab" ) )
 			{
 				// if the squid has a headcrab enemy and something hurts it, it's going to forget about the crab for a while.
 				SetEnemy( NULL );

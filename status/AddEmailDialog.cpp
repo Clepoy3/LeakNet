@@ -74,7 +74,7 @@ void CAddEmailDialog::OnOK()
 	char interval[ 256 ];
 	sprintf( interval, "%s %s", m_strMagnitude, m_strUnits );
 
-	GetEmailManager()->AddEmailAddress( m_strAddress, interval );
+//	GetEmailManager()->AddEmailAddress( m_strAddress, interval );
 
 	CDialog::OnOK();
 }
