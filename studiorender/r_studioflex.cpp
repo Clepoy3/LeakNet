@@ -113,15 +113,29 @@ void CStudioRender::R_StudioEyeballPosition( const mstudioeyeball_t *peyeball, e
 
 		float upperlid = DEG2RAD( 9.5 );
 		float lowerlid = DEG2RAD( -26.4 );
+		
+		// FIXME: Crash workaround
+		Vector vecNormTarget;
+		vecNormTarget.Init( peyeball->uppertarget[0], peyeball->uppertarget[1], peyeball->uppertarget[2] );
+		vecNormTarget /= peyeball->radius;
+		vecNormTarget.x = clamp( vecNormTarget.x, -1.0f, 1.0f );
+		vecNormTarget.y = clamp( vecNormTarget.y, -1.0f, 1.0f );
+		vecNormTarget.z = clamp( vecNormTarget.z, -1.0f, 1.0f );
 
 		// get weighted position of eyeball angles based on the "raiser", "neutral", and "lowerer" controls
-		upperlid = m_FlexWeights[peyeball->upperflexdesc[0]] * asin( peyeball->uppertarget[0] / peyeball->radius );
-		upperlid += m_FlexWeights[peyeball->upperflexdesc[1]] * asin( peyeball->uppertarget[1] / peyeball->radius );
-		upperlid += m_FlexWeights[peyeball->upperflexdesc[2]] * asin( peyeball->uppertarget[2] / peyeball->radius );
+		upperlid = m_FlexWeights[peyeball->upperflexdesc[0]] * asin( vecNormTarget.x );
+		upperlid += m_FlexWeights[peyeball->upperflexdesc[1]] * asin( vecNormTarget.y );
+		upperlid += m_FlexWeights[peyeball->upperflexdesc[2]] * asin( vecNormTarget.z );
+		
+		vecNormTarget.Init( peyeball->lowertarget[0], peyeball->lowertarget[1], peyeball->lowertarget[2] );
+		vecNormTarget /= peyeball->radius;
+		vecNormTarget.x = clamp( vecNormTarget.x, -1.0f, 1.0f );
+		vecNormTarget.y = clamp( vecNormTarget.y, -1.0f, 1.0f );
+		vecNormTarget.z = clamp( vecNormTarget.z, -1.0f, 1.0f );
 
-		lowerlid = m_FlexWeights[peyeball->lowerflexdesc[0]] * asin( peyeball->lowertarget[0] / peyeball->radius );
-		lowerlid += m_FlexWeights[peyeball->lowerflexdesc[1]] * asin( peyeball->lowertarget[1] / peyeball->radius );
-		lowerlid += m_FlexWeights[peyeball->lowerflexdesc[2]] * asin( peyeball->lowertarget[2] / peyeball->radius );
+		lowerlid = m_FlexWeights[peyeball->lowerflexdesc[0]] * asin( vecNormTarget.x );
+		lowerlid += m_FlexWeights[peyeball->lowerflexdesc[1]] * asin( vecNormTarget.y );
+		lowerlid += m_FlexWeights[peyeball->lowerflexdesc[2]] * asin( vecNormTarget.z );
 
 		// Con_DPrintf("%.1f %.1f\n", RAD2DEG( upperlid ), RAD2DEG( lowerlid ) );		
 

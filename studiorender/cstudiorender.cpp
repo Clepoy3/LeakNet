@@ -288,7 +288,7 @@ bool CStudioRender::LoadModel(
 	studiohwdata_t	*pHardwareData 
 	)
 {
-#ifdef _DEBUG
+#if 0 // #ifdef _DEBUG
 	int bodyPartID;
 	for( bodyPartID = 0; bodyPartID < pStudioHdr->numbodyparts; bodyPartID++ )
 	{

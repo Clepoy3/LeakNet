@@ -12,7 +12,7 @@
 #include "LoadingDialog.h"
 #include <stdio.h>
 
-#include <vgui_controls/FileOpenDialog.h>
+//#include <vgui_controls/FileOpenDialog.h>
 #include <vgui_controls/Button.h>
 #include <vgui_controls/CheckButton.h>
 #include <KeyValues.h>
@@ -213,20 +213,21 @@ COptionsSubMultiplayer::~COptionsSubMultiplayer()
 void COptionsSubMultiplayer::OnCommand( const char *command )
 {
 	if ( !stricmp( command, "Advanced" ) )
-	{/*
+	{
+	/*
 		if (!m_hMultiplayerAdvancedDialog.Get())
 		{
 			m_hMultiplayerAdvancedDialog = new CMultiplayerAdvancedDialog(this);
 		}
-		m_hMultiplayerAdvancedDialog->Activate();*/
+		m_hMultiplayerAdvancedDialog->Activate();
+	*/
 		
 		if (!m_hLoadingDialog.Get())
 		{
 			m_hLoadingDialog = new CLoadingDialog(this);
 		}
 		m_hLoadingDialog->Activate();
-		
-		/*
+	/*
 		if ( !m_hFileOpenDialog.Get() )
 		{
 			m_hFileOpenDialog = new FileOpenDialog( this, "Choose .vtf file", true );
@@ -264,7 +265,7 @@ char *COM_FileExt (char *in)
 	exten[i] = 0;
 	return exten;
 }
-
+/*
 void COptionsSubMultiplayer::OnFileSelected( char *fullpath )
 {
 	
@@ -275,10 +276,10 @@ void COptionsSubMultiplayer::OnFileSelected( char *fullpath )
 //	filesystem()->FullPathToRelativePath( fullpath, relativepath );
 //	filesystem()->GetLocalPath( fullpath, relativepath );
 
-/*	if ( Q_strcasecmp( COM_FileExt( relativepath ), "vtf" ) )
-	{
-		return;
-	}*/
+//	if ( Q_strcasecmp( COM_FileExt( relativepath ), "vtf" ) )
+//	{
+//		return;
+//	}
 	
 	// It's a dem file
 //	Cbuf_AddText( va( "playdemo %s\n", relativepath ) );
@@ -298,17 +299,15 @@ void COptionsSubMultiplayer::OnFileSelected( char *fullpath )
 	{
 		m_hFileOpenDialog->MarkForDeletion();
 	}
-	/*
-	Msg( "%s\n", fullpath );
-	m_pLogoList->AddItem( fullpath, "" );
-	InitLogoList( m_pLogoList );
-	if ( m_hFileOpenDialog != NULL )
-	{
-		m_hFileOpenDialog->MarkForDeletion();
-	}
-	*/
+//	Msg( "%s\n", fullpath );
+//	m_pLogoList->AddItem( fullpath, "" );
+//	InitLogoList( m_pLogoList );
+//	if ( m_hFileOpenDialog != NULL )
+//	{
+//		m_hFileOpenDialog->MarkForDeletion();
+//	}
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose: Builds the list of logos
 //-----------------------------------------------------------------------------
@@ -582,7 +581,7 @@ MessageMapItem_t COptionsSubMultiplayer::m_MessageMap[] =
 	MAP_MESSAGE_PTR( COptionsSubMultiplayer, "TextChanged", OnTextChanged, "panel" ),
 //	MAP_MESSAGE_PARAMS( COptionsSubMultiplayer, "SliderMoved", OnSliderMoved ),
 	MAP_MESSAGE( COptionsSubMultiplayer, "ControlModified", OnApplyButtonEnable ),
-	MAP_MESSAGE_CONSTCHARPTR( COptionsSubMultiplayer, "FileSelected", OnFileSelected, "fullpath" ),  
+//	MAP_MESSAGE_CONSTCHARPTR( COptionsSubMultiplayer, "FileSelected", OnFileSelected, "fullpath" ),  
 };
 IMPLEMENT_PANELMAP( COptionsSubMultiplayer, BaseClass );
 

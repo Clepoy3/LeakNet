@@ -1316,7 +1316,10 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 	if ( info.GetDamageType() & DMG_NO_PHYSICS_FORCE || info.GetDamageType() == DMG_GENERIC )
 		return 1;
 
-	Assert(VPhysicsGetObject() != NULL);
+//	Assert(VPhysicsGetObject() != NULL); // VXP: When you crash the manhack
+	if( VPhysicsGetObject() == NULL )
+		Warning( "VPhysicsTakeDamage: can't get object\n" );
+
 	if ( VPhysicsGetObject() )
 	{
 		Vector force = info.GetDamageForce();
@@ -1331,7 +1334,7 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 	//	Assert( force != vec3_origin && offset != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
 		if ( (force == vec3_origin) || (offset == vec3_origin) )
-			Warning( "VPhysicsTakeDamage: error with moving explosions!\n" );
+			Warning( "VPhysicsTakeDamage: origin error!\n" );
 
 		VPhysicsGetObject()->ApplyForceOffset( force, offset );
 	}

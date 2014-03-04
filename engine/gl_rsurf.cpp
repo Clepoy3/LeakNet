@@ -140,6 +140,9 @@ static ConVar r_drawbrushmodels( "r_drawbrushmodels", "1" );
 static ConVar fog_enable_water_fog( "fog_enable_water_fog", "1" );
 static ConVar r_fastzreject( "r_fastzreject", "-1", 0, "Activate/deactivates a fast z-setting algorithm to take advantage of hardware with fast z reject. Use -1 to default to hardware settings" );
 
+ConVar max_hdr_overbright1("max_hdr_overbright1", "4.0");
+float ovbrPrev = 4.0f;
+
 
 //-----------------------------------------------------------------------------
 // Installs a client-side renderer for brush models
@@ -324,6 +327,14 @@ void Shader_TranslucentWorldSurface( int surfID )
 
 inline void Shader_WorldSurface( int surfID )
 {
+	// VXP: Sorry, maybe, I will fuck up the render, but this is Think function...
+	if( ovbrPrev != max_hdr_overbright1.GetFloat() )
+	{
+		R_RedownloadAllLightmaps( vec3_origin );
+		Msg( "Engine: overbright amount changed.\n" );
+		ovbrPrev = max_hdr_overbright1.GetFloat();
+	}
+
 	Assert( !SurfaceHasDispInfo( surfID ) );
 
 	// Each surface is in exactly one group

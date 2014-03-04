@@ -539,7 +539,9 @@ FORCEINLINE void VectorSubtract( Vector const& a, Vector const& b, Vector& c )
 FORCEINLINE void VectorMultiply( Vector const& a, vec_t b, Vector& c )
 {
 	CHECK_VALID(a);
-	assert( IsFinite(b) ); // VXP: Error here on d1_trainstation_02 when moving upstairs
+	// VXP: Error here on d1_trainstation_02 when moving upstairs and on d1_under_03 when you saw the citizens
+	// VXP: Fixed
+	assert( IsFinite(b) );
 	c.x = a.x * b;
 	c.y = a.y * b;
 	c.z = a.z * b;

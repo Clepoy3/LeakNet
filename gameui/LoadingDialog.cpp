@@ -67,7 +67,8 @@ CLoadingDialog::CLoadingDialog(vgui::Panel *parent) : Frame(parent, "LoadingDial
 	if (CommandLine()->FindParm("-steam") || CommandLine()->FindParm("-showplatform"))
 	{
 		char sponsorURL[1024];
-		if (system()->GetRegistryString("HKEY_LOCAL_MACHINE\\Software\\Valve\\Steam\\LastContentProviderURL", sponsorURL, sizeof(sponsorURL)))
+	//	if (system()->GetRegistryString("HKEY_LOCAL_MACHINE\\Software\\Valve\\Steam\\LastContentProviderURL", sponsorURL, sizeof(sponsorURL)))
+		if (system()->GetRegistryString("HKEY_CURRENT_USER\\Software\\LeakNet\\ContentProviderURL", sponsorURL, sizeof(sponsorURL)))
 		{
 			m_pHTML->OpenURL(sponsorURL);
 		}

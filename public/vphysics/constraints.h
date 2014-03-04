@@ -67,7 +67,7 @@ inline void BuildObjectRelativeXform( IPhysicsObject *pOutputSpace, IPhysicsObje
 	matrix3x4_t outInv, tmp, input;
 	pOutputSpace->GetPositionMatrix( tmp );
 	MatrixInvert( tmp, outInv );
-	pInputSpace->GetPositionMatrix( input ); // VXP: Error when dying in thirdperson from barnacle in singleplayer
+	pInputSpace->GetPositionMatrix( input ); // VXP: Error when dying from barnacle in singleplayer (sometimes)
 	ConcatTransforms( outInv, input, xformInToOut );
 }
 
