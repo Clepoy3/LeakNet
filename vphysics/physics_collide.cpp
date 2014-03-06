@@ -849,7 +849,8 @@ void CPhysicsCollision::VCollideUnload( vcollide_t *pVCollide )
 
 			if ( pEnv->IsCollisionModelUsed( (CPhysCollide *)pVCollide->solids[i] ) )
 			{
- 				AssertMsg(0, "Freed collision model while in use!!!\n");
+ 			//	AssertMsg(0, "Freed collision model while in use!!!\n");
+				Warning( "Freed collision model while in use!!!\n" );
 				return;
 			}
 		}

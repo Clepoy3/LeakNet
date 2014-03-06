@@ -557,7 +557,9 @@ void CBaseServerVehicle::HandleEntryExitFinish( bool bExitAnimOn )
 		{
 			Vector vecEyes;
 			QAngle vecEyeAng;
-			if ( m_iCurrentExitAnim >= 0 )
+		//	if ( m_iCurrentExitAnim >= 0 )
+			// VXP: Fix for fake-digger - when exitting vehicle, the game crashes
+			if ( m_iCurrentExitAnim >= 0 && m_iCurrentExitAnim < m_ExitAnimations.Count() )
 			{
 				pAnimating->GetAttachment( m_ExitAnimations[m_iCurrentExitAnim].szAnimName, vecEyes, vecEyeAng );
 			}

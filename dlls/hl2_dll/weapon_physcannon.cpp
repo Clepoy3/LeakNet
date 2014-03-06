@@ -195,7 +195,10 @@ float CGrabController::ComputeError()
 	{
 		Vector pos;
 		IPhysicsObject *pObj = pAttached->VPhysicsGetObject();
-		pObj->GetShadowPosition( &pos, NULL );
+		if( pObj != NULL )
+			pObj->GetShadowPosition( &pos, NULL );
+		else
+			pos = pAttached->GetAbsOrigin();
 		float error = (m_shadow.targetPosition - pos).Length();
 		m_errorTime = clamp(m_errorTime, 0, 1);
 		m_error = (1-m_errorTime) * m_error + m_errorTime * error;
@@ -437,6 +440,9 @@ void CPlayerPickupController::CheckObjectPosition( Vector &position, const QAngl
 	offsetDir.z = 0;
 	VectorNormalize(offsetDir);
 	Vector startSweep = position + offsetDir * pAttached->EntitySpaceSize().Length();
+
+	if( pAttached->VPhysicsGetObject() == NULL )
+		return;
 
 	TraceCollideAgainstBBox( pAttached->VPhysicsGetObject()->GetCollide(), startSweep, position, angles, 
 			m_pPlayer->GetAbsOrigin(), m_pPlayer->WorldAlignMins(), m_pPlayer->WorldAlignMaxs(), &tr );

@@ -119,7 +119,8 @@ void HostState_GameShutdown()
 {
 	// This will get called during shutdown, ignore it.
 	if ( g_HostState.m_currentState != HS_SHUTDOWN &&
-		 g_HostState.m_currentState != HS_RESTART )
+		 g_HostState.m_currentState != HS_RESTART &&
+		 g_HostState.m_currentState != HS_GAME_SHUTDOWN )
 	{
 		g_HostState.SetNextState( HS_GAME_SHUTDOWN );
 	}
