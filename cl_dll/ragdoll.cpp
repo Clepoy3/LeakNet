@@ -270,9 +270,16 @@ public:
 		{
 			vcollide_t *pCollide = modelinfo->GetVCollide( GetModelIndex() );
 			if ( !pCollide )
-				Error( "C_ServerRagdoll::InitModel: missing vcollide data" );
-
-			m_elementCount = RagdollExtractBoneIndices( m_boneIndex, hdr, pCollide );
+			{
+			//	Error( "C_ServerRagdoll::InitModel: missing vcollide data" );
+				const char *pszName = modelinfo->GetModelName( modelinfo->GetModel( GetModelIndex() ) );
+				Warning( "*** ERROR: C_ServerRagdoll::OnNewModel: %s missing vcollide data ***\n\n", (pszName) ? pszName : "<null>" );
+				m_elementCount = 0;
+			}
+			else
+			{
+				m_elementCount = RagdollExtractBoneIndices( m_boneIndex, hdr, pCollide );
+			}
 		}
 		return hdr;
 	}

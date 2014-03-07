@@ -787,12 +787,16 @@ void VGui_HideGameUI()
 
 int VGui_IsConsoleVisible()
 {
+/*
 	if (staticGameConsole && staticUIFuncs )
 	{
 		return ( staticUIFuncs->IsGameUIVisible() && staticGameConsole->IsConsoleVisible() ); // VXP: Makes game crash
 	}
 
 	return false;
+*/
+//	return staticUIFuncs->IsGameUIVisible() && staticGameConsole && staticGameConsole->IsConsoleVisible();
+	return VGui_IsGameUIVisible() && staticGameConsole && staticGameConsole->IsConsoleVisible();
 }
 
 

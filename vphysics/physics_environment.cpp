@@ -1211,7 +1211,7 @@ void CPhysicsEnvironment::Simulate( float deltaTime )
 	{
 		m_pPhysEnv->simulate_dtime( deltaTime );
 		// UNDONE: Change over to this?
-//		m_pPhysEnv->simulate_variable_time_step( deltaTime );
+//		m_pPhysEnv->simulate_variable_time_step( deltaTime ); // VXP: Maybe, change to this?
 	}
 	m_inSimulation = false;
 
