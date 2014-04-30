@@ -673,7 +673,7 @@ void CViewRender::DrawLowEndMonitors( CViewSetup cameraView, const vrect_t *rect
 #endif // HL2_CLIENT_DLL
 }
 
-ConVar r_anamorphic( "r_anamorphic", "0" );
+//ConVar r_anamorphic( "r_anamorphic", "0" );
 
 static float ScaleFOVByWidthRatio( float fovDegrees, float ratio )
 {
@@ -727,8 +727,8 @@ void CViewRender::SetUpOverView()
 // Purpose: Render current view into specified rectangle
 // Input  : *rect - 
 //-----------------------------------------------------------------------------
-float screenaspect;
-bool tempSCR = false;
+float oldWidth = 4.0f;
+float oldHeight = 3.0f;
 void CViewRender::Render( vrect_t *rect )
 {
 	Assert(s_TestOrigin == m_View.origin);
@@ -748,6 +748,7 @@ void CViewRender::Render( vrect_t *rect )
 	m_nNumVisOrigins		= 0;
 
 	// hook into the r_anamorphic convar from the engine.
+/*
 	switch( r_anamorphic.GetInt() )
 	{
 	case 1:
@@ -761,6 +762,23 @@ void CViewRender::Render( vrect_t *rect )
 	default:
 		break;
 	}
+*/
+
+	float scrAspectRatio = oldWidth / oldHeight;
+//	Msg( "CLIENT: W: %f, H: %f, SA: %f\n", oldWidth, oldHeight, scrAspectRatio );
+/*
+	if( scrAspectRatio == 1.777778f )
+		Msg( "ASPECT RATIO IS 16:9\n" );
+	else if( scrAspectRatio == 1.333333f )
+		Msg( "ASPECT RATIO IS 4:3\n" );
+	else if( scrAspectRatio == 1.6f )
+		Msg( "ASPECT RATIO IS 16:10\n" );
+	else
+		Msg( "ASPECT RATIO IS UNKNOWN\n" );
+*/
+	float aspectRatio = scrAspectRatio * 0.75f;	 // / (4/3)
+	m_View.fov = ScaleFOVByWidthRatio( m_View.fov,  aspectRatio );
+	m_View.fovViewmodel = ScaleFOVByWidthRatio( m_View.fovViewmodel, aspectRatio );
 	
 	// Invoke pre-render methods
 	// IGameSystem::PreRenderAllSystems();
@@ -777,52 +795,9 @@ void CViewRender::Render( vrect_t *rect )
 	m_View.width			= vr.width;
 	m_View.height			= vr.height;
 
-	if (!tempSCR)
-	{
-		char *scraspStr = "";
-		screenaspect = ( float )vr.width / ( float )vr.height;
-		if( screenaspect == ( 4.0f / 3.0f ) )
-		{
-			r_anamorphic.SetValue(0);
-			scraspStr = "4:3";
-		}
-		else if( screenaspect == ( 5.0f / 4.0f ) )
-		{
-			r_anamorphic.SetValue(0);
-			scraspStr = "5:4";
-		}
-		else if( screenaspect == ( 16.0f / 9.0f ) )
-		{
-			r_anamorphic.SetValue(1);
-			scraspStr = "16:9";
-		}
-		else if( screenaspect == ( 16.0f / 10.0f ) )
-		{
-			r_anamorphic.SetValue(2);
-			scraspStr = "16:10";
-		}
-		else
-		{
-			r_anamorphic.SetValue(0);
-			scraspStr = "unknown!";
-		}
+	oldWidth = m_View.width;
+	oldHeight = m_View.height;
 
-		tempSCR = true;
-		Msg( "Your screen aspect is: %s\n", scraspStr );
-	}
-/*
-	screenaspect = ( float )vr.width / ( float )vr.height;
-	if( screenaspect == ( 4.0f / 3.0f ) )
-		r_anamorphic.SetValue(0);
-	else if( screenaspect == ( 5.0f / 4.0f ) )
-		r_anamorphic.SetValue(0);
-	else if( screenaspect == ( 16.0f / 9.0f ) )
-		r_anamorphic.SetValue(1);
-	else if( screenaspect == ( 16.0f / 10.0f ) )
-		r_anamorphic.SetValue(2);
-	else
-		r_anamorphic.SetValue(0);
-*/
 	// Determine if we should draw view model ( client mode override )
 	drawViewModel = g_pClientMode->ShouldDrawViewModel();
 

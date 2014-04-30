@@ -709,13 +709,14 @@ void CRender::SetViewport( int x, int y, int w, int h )
 	materialSystemInterface->Viewport( x, y2, w, h );
 }
 
-ConVar r_anamorphic( "r_anamorphic", "0", FCVAR_ARCHIVE );
+//ConVar r_anamorphic( "r_anamorphic", "0", FCVAR_ARCHIVE );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : viewmodel - true if we are rendering the view model
 //			fov - field of view
 //-----------------------------------------------------------------------------
+float oldSA = 0.0f;
 void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forceAspectRatio1To1 )
 {
 	float	screenaspect;
@@ -727,7 +728,7 @@ void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forc
 	//
 	materialSystemInterface->MatrixMode( MATERIAL_PROJECTION );
 	materialSystemInterface->LoadIdentity();
-
+/*
 	if( forceAspectRatio1To1 )
 	{
 		screenaspect = 1.0f;
@@ -769,6 +770,31 @@ void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forc
 			break;
 		}
 	}
+*/
+//	screenaspect = ((m_view.height != 0) || (!forceAspectRatio1To1)) ? ( (float)m_view.width / (float)m_view.height ) : 1.0f;
+	if( forceAspectRatio1To1 || m_view.height == 0 )
+	{
+		screenaspect = 1.0f;
+	}
+	else
+	{
+		screenaspect = ( (float)m_view.width / (float)m_view.height );
+		if( screenaspect == ( 5.0f / 4.0f ) )
+		{
+			// Doh! Non-square pixel
+			screenaspect = ( 4.0f / 3.0f );
+		}
+		else if( (screenaspect != 1.0f) && (screenaspect != 2.0f) )
+		{
+			oldSA = screenaspect;
+		}
+	}
+	// VXP: This strange bug must be ignored...
+	if( (screenaspect == 1.0f) || (screenaspect == 2.0f) ) // VXP: (512x512, 512x256) res (that's RT)
+	{
+		screenaspect = oldSA;
+	}
+//	Msg( "ENGINE: W: %f, H: %f, SA: %f (old: %f)\n", (float)m_view.width, (float)m_view.height, screenaspect, oldSA );
 	materialSystemInterface->PerspectiveX( fov,  screenaspect, zNear, zFar );
 }
 
