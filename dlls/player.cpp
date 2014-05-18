@@ -5779,7 +5779,8 @@ void CBasePlayer::ChangeTeam( int iTeamNum )
 	// Are we being added to a team?
 	if ( iTeamNum )
 	{
-		GetGlobalTeam( iTeamNum )->AddPlayer( this );
+		if( GetGlobalTeam( iTeamNum ) != NULL )
+			GetGlobalTeam( iTeamNum )->AddPlayer( this );
 	}
 
 	BaseClass::ChangeTeam( iTeamNum );

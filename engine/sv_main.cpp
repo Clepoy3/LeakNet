@@ -106,7 +106,7 @@ ConVar	sv_password( "sv_password", "", FCVAR_SERVER | FCVAR_PROTECTED, "Server p
 ConVar  sv_lan( "sv_lan", "0", 0, "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses, 9999.0 rate, etc." );
 ConVar	sv_stressbots("sv_stressbots", "0", FCVAR_SERVER, "If set to 1, the server calculates data and fills packets to bots. Used for perf testing.");
 ConVar	sv_CacheEncodedEnts("sv_CacheEncodedEnts", "1", FCVAR_SERVER, "If set to 1, does an optimization to prevent extra SendTable_Encode calls.");
-ConVar  sv_VoiceCodec("sv_VoiceCodec", "vaudio_miles", 0, "Specifies which voice codec DLL to use in a game. Set to the name of the DLL without the extension.");
+ConVar  sv_VoiceCodec("sv_VoiceCodec", "voice_miles", 0, "Specifies which voice codec DLL to use in a game. Set to the name of the DLL without the extension.");
 ConVar  sv_deltatrace( "sv_deltatrace", "0", 0, "For debugging, print entity creation/deletion info to console." );
 ConVar  sv_packettrace( "sv_packettrace", "1", 0, "For debugging, print entity creation/deletion info to console." );
 
@@ -2221,6 +2221,159 @@ void SVC_Info ( qboolean bDetailed )
 
 	NET_SendPacket (NS_SERVER, buf.GetNumBytesWritten(), buf.GetData(), net_from);
 }
+const char *GetGameDescription()
+{
+	return "Deathmatch";
+}
+void SVC_InfoExclusive() // VXP: Special for Source Master Server
+{
+	int		i, count;
+
+	byte	data[1400];
+	char	gd[MAX_OSPATH];
+
+	char name[32];
+	char map[32];
+//	char gd[32];
+	char desc[32];
+
+	bf_write buf( "SVC_Info->buf", data, sizeof(data) );
+
+	if (!sv.active)            // Must be running a server.
+		return;
+
+	if (svs.maxclients <= 1)   // ignore in single player
+		return;
+
+	count = 0;
+	for (i=0 ; i<svs.maxclients ; i++)
+		if (svs.clients[i].active)
+			count++;
+
+	buf.WriteLong( 0xFFFFFFFF );
+
+	buf.WriteByte( 'I' );
+
+	buf.WriteByte( 24 );
+
+	Q_strcpy( name, host_name.GetString() );
+	name[ sizeof( name ) - 1 ] = '\0';
+	buf.WriteString( name );
+
+	Q_strcpy( map, sv.name );
+	map[ sizeof( map ) - 1 ] = '\0';
+	buf.WriteString( map );
+
+	Q_strcpy( gd, "hl2mp" );
+//	Q_strcpy( gd, "portal" );
+//	COM_FileBase( com_gamedir, gd );
+	gd[ sizeof( gd ) - 1 ] = '\0';
+	buf.WriteString( gd );
+
+	Q_strcpy( desc, "Deathmatch" );
+	desc[ sizeof( desc ) - 1 ] = '\0';
+	buf.WriteString( desc );
+
+	int g_iSteamAppID = 320; // HL2MP
+//	int g_iSteamAppID = 400; // Portal
+	uint appID = g_iSteamAppID;
+	buf.WriteShort( appID );
+
+	// this is a quick workaround from goldsrc for the admin mod reserved slots UI problem
+	int visibleClients = svs.maxclients;
+
+	// player info
+	buf.WriteByte( count );
+	buf.WriteByte( visibleClients );
+	int fakes = 0;
+	buf.WriteByte( fakes );
+
+	// Additional info....
+	if ( cls.state == ca_dedicated )
+		buf.WriteByte( 'd' );	// d = dedicated server
+	else
+		buf.WriteByte( 'l' );	// l = listen server
+
+#if defined(_WIN32)
+	buf.WriteByte( 'w' );
+#else // LINUX?
+	buf.WriteByte( 'l' );
+#endif
+
+	// Password?
+	buf.WriteByte( 0 );
+
+	buf.WriteByte( 0 );
+
+	char verString[40];
+	Q_snprintf( verString, sizeof(verString), "%s", gpszVersionString );
+	buf.WriteString( verString );
+
+	// temp hack until we kill the legacy interface
+#define S2A_EXTRA_DATA_HAS_GAME_PORT				0x80		// Next 2 bytes include the game port.
+#define S2A_EXTRA_DATA_HAS_SPECTATOR_DATA			0x40		// Next 2 bytes include the spectator port, then the spectator server name.
+#define S2A_EXTRA_DATA_HAS_GAMETAG_DATA				0x20		// Next bytes are the game tag string
+	
+	// Write a byte with some flags that describe what is to follow.
+	byte nNewFlags = 0;
+
+	nNewFlags |= S2A_EXTRA_DATA_HAS_GAME_PORT;
+//	nNewFlags |= S2A_EXTRA_DATA_HAS_SPECTATOR_DATA;
+//	nNewFlags |= S2A_EXTRA_DATA_HAS_GAMETAG_DATA;
+
+	buf.WriteByte( nNewFlags );
+
+	// Write the rest of the data.
+	if ( nNewFlags & S2A_EXTRA_DATA_HAS_GAME_PORT )
+	{
+	//	buf.WriteShort( NET_GetUDPPort( NS_SERVER ) );
+		int port1 = 27015;
+		uint udpPort1 = port1;
+		buf.WriteShort( udpPort1 );
+	}
+
+	if ( nNewFlags & S2A_EXTRA_DATA_HAS_SPECTATOR_DATA )
+	{
+	/*
+		buf.WriteShort( NET_GetUDPPort( NS_HLTV ) );
+		if ( hltv )
+			buf.WriteString( hltv->GetName() );
+		else
+			buf.WriteString( pServer->GetName() );	
+	*/
+	}
+
+	if ( nNewFlags & S2A_EXTRA_DATA_HAS_GAMETAG_DATA )
+	{
+	//	buf.WriteString( pchGameType );
+	}
+
+	NET_SendPacket (NS_SERVER, buf.GetNumBytesWritten(), buf.GetData(), net_from);
+}
+void SVC_GiveChallenge()
+{
+	char	buffer[2048+32];
+	bf_write msg(buffer,sizeof(buffer));
+
+	int challengeNr = (RandomInt(0,0x0FFF) << 16) | RandomInt(0,0xFFFF);
+	int	authprotocol = 0x03;
+
+	msg.WriteLong( 0xFFFFFFFF );
+
+	msg.WriteByte( S2C_CHALLENGE );
+	msg.WriteLong( challengeNr );
+	msg.WriteLong( authprotocol );
+
+	msg.WriteShort( 1 );
+	msg.WriteByte( 0 );
+	uint64 unSteamID = 0;
+	msg.WriteBytes( &unSteamID, sizeof(unSteamID) );
+	msg.WriteByte( 0 );
+
+	msg.WriteString( "000000" );	// padding bytes
+
+	NET_SendPacket (NS_SERVER, msg.GetNumBytesWritten(), msg.GetData(), net_from);
+}
 
 #define MAX_SINFO 2048
 void SVC_InfoString ( void )
@@ -2556,7 +2709,24 @@ void SV_ConnectionlessPacket (void)
 	else if( c[0] == 'T' ) // VXP: Source Engine Query
 	{
 		Con_Printf( "Answering on Source Engine Query...\n" );
-		SVC_Info( false );
+	//	SVC_Info( false );
+		SVC_InfoExclusive();
+		return;
+	}
+	else if( c[0] == 'U' ) // VXP: Source Engine Player
+	{
+		Con_Printf( "Giving info about my players\n" );
+	//	SVC_Info( false );
+	//	SVC_PlayerInfoExclusive();
+		SVC_PlayerInfo();
+		return;
+	}
+	else if( c[0] == 'q' ) // VXP: Source Engine Get Challenge
+	{
+		Con_Printf( "Giving challenge\n" );
+	//	SVC_Info( false );
+	//	SVC_PlayerInfoExclusive();
+		SVC_GiveChallenge();
 		return;
 	}
 	else

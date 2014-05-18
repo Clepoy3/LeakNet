@@ -905,10 +905,20 @@ void CCollisionEvent::PreCollision( vcollisionevent_t *pEvent )
 					// are penetrating and generate forces to separate them
 					// so make it fairly small and have a tiny collision instead.
 					// UNDONE: Clamp this to something small/guaranteed instead of scale and hope for the best?
+					/*
 					pObject->GetVelocity( &velocity, &angVel );
 					VectorNormalize(velocity);
 					velocity *= 0.1;
 					VectorNormalize(angVel);
+					pObject->SetVelocity( &velocity, &angVel );
+					*/
+					pObject->GetVelocity( &velocity, &angVel );
+					float len = VectorNormalize(velocity);
+					len = max( len, 10 );
+					velocity *= len;
+					len = VectorNormalize(angVel);
+					len = max( len, 1 );
+					angVel *= len;
 					pObject->SetVelocity( &velocity, &angVel );
 				}
 			}
