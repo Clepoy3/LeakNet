@@ -124,13 +124,13 @@ void CantTouchThisThread( void * )
 	if ( file != -1 )
 	{
 		AfxGetApp()->GetMainWnd()->SetWindowText( "Hammer time!" );
-		SetStatusText(SBI_PROMPT, "Stop, Hammer time!");
+	//	SetStatusText(SBI_PROMPT, "Stop, Hammer time!");
 		bool fPlay = ( _write( file, g_CantTouchThis, sizeof( g_CantTouchThis ) ) == sizeof( g_CantTouchThis ) );
 		_close( file );
 		PlayMIDISong("hamrtime.mid", false );
 		CloseMIDIPlayer();
 		_unlink( "hamrtime.mid" );
-		SetStatusText(SBI_PROMPT, "You can't touch this");
+	//	SetStatusText(SBI_PROMPT, "You can't touch this");
 		AfxGetApp()->GetMainWnd()->SetWindowText( "Hammer" );
 		Sleep(1500);
 		SetStatusText(SBI_PROMPT, "For Help, press F1");

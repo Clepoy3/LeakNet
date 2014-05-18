@@ -55,7 +55,13 @@ private:
 	CPanelAnimationVar( Color, m_DmgColorLeft, "DmgColorLeft", "255 0 0 0" );
 	CPanelAnimationVar( Color, m_DmgColorRight, "DmgColorRight", "255 0 0 0" );
 
+	CPanelAnimationVar( Color, m_DmgHighColorLeft, "DmgHighColorLeft", "255 0 0 0" );
+	CPanelAnimationVar( Color, m_DmgHighColorRight, "DmgHighColorRight", "255 0 0 0" );
+
+	CPanelAnimationVar( Color, m_DmgFullscreenColor, "DmgFullscreenColor", "255 0 0 0" );
+
 	void DrawDamageIndicator(int side);
+	void DrawFullscreenDamageIndicator();
 	void GetDamagePosition( const Vector &vecDelta, float *flRotation );
 };
 
@@ -66,6 +72,13 @@ void HudDamageIndicator_MsgFunc_Damage( const char *pszName, int iSize, void *pb
 {
 	((CHudDamageIndicator *)GET_HUDELEMENT( CHudDamageIndicator ))->MsgFunc_Damage( pszName, iSize, pbuf );
 }
+
+enum
+{
+	DAMAGE_ANY,
+	DAMAGE_LOW,
+	DAMAGE_HIGH,
+};
 
 
 //-----------------------------------------------------------------------------
@@ -84,6 +97,9 @@ void CHudDamageIndicator::Reset( void )
 {
 	m_DmgColorLeft[3] = 0;
 	m_DmgColorRight[3] = 0;
+	m_DmgHighColorLeft[3] = 0;
+	m_DmgHighColorRight[3] = 0;
+	m_DmgFullscreenColor[3] = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -91,6 +107,7 @@ void CHudDamageIndicator::Reset( void )
 //-----------------------------------------------------------------------------
 bool CHudDamageIndicator::ShouldDraw( void )
 {
+/*
 	if ( !CHudElement::ShouldDraw() )
 		return false;
 
@@ -98,6 +115,14 @@ bool CHudDamageIndicator::ShouldDraw( void )
 		return false;
 
 	return true;
+*/
+	bool bNeedsDraw = m_DmgColorLeft[3] || 
+						m_DmgColorRight[3] || 
+						m_DmgHighColorLeft[3] || 
+						m_DmgHighColorRight[3] ||
+						m_DmgFullscreenColor[3];
+
+	return ( bNeedsDraw && CHudElement::ShouldDraw() );
 }
 
 //-----------------------------------------------------------------------------
@@ -116,10 +141,37 @@ void CHudDamageIndicator::DrawDamageIndicator(int side)
 	int x1 = m_flDmgX;
 	int x2 = m_flDmgX + m_flDmgWide;
 	int y[4] = { m_flDmgY, m_flDmgY + insetY, m_flDmgY + m_flDmgTall1 - insetY, m_flDmgY + m_flDmgTall1 };
+	int alpha[4] = { 0.0f, 1.0f, 1.0f, 0.0f };
 
+	// see if we're high damage
+	bool bHighDamage = false;
+	if ( m_DmgHighColorRight[3] > m_DmgColorRight[3] || m_DmgHighColorLeft[3] > m_DmgColorLeft[3] )
+	{
+		// make more of the screen be covered by damage
+		x1 = GetWide() * 0.0f;
+		x2 = GetWide() * 0.5f;
+		y[0] = 0.0f;
+		y[1] = 0.0f;
+		y[2] = GetTall();
+		y[3] = GetTall();
+		alpha[0] = 1.0f;
+		alpha[1] = 0.0f;
+		alpha[2] = 0.0f;
+		alpha[3] = 1.0f;
+		bHighDamage = true;
+	}
+
+	int r, g, b, a;
 	if (side == 1)
 	{
-		int r = m_DmgColorRight[0], g = m_DmgColorRight[1], b = m_DmgColorRight[2], a = m_DmgColorRight[3];
+		if ( bHighDamage )
+		{
+			r = m_DmgHighColorRight[0], g = m_DmgHighColorRight[1], b = m_DmgHighColorRight[2], a = m_DmgHighColorRight[3];
+		}
+		else
+		{
+			r = m_DmgColorRight[0], g = m_DmgColorRight[1], b = m_DmgColorRight[2], a = m_DmgColorRight[3];
+		}
 
 		// realign x coords
 		x1 = GetWide() - x1;
@@ -147,7 +199,14 @@ void CHudDamageIndicator::DrawDamageIndicator(int side)
 	}
 	else
 	{
-		int r = m_DmgColorLeft[0], g = m_DmgColorLeft[1], b = m_DmgColorLeft[2], a = m_DmgColorLeft[3];
+		if ( bHighDamage )
+		{
+			r = m_DmgHighColorLeft[0], g = m_DmgHighColorLeft[1], b = m_DmgHighColorLeft[2], a = m_DmgHighColorLeft[3];
+		}
+		else
+		{
+			r = m_DmgColorLeft[0], g = m_DmgColorLeft[1], b = m_DmgColorLeft[2], a = m_DmgColorLeft[3];
+		}
 
 		meshBuilder.Color4ub( r, g, b, 0 );
 		meshBuilder.TexCoord2f( 0,0,0 );
@@ -175,10 +234,51 @@ void CHudDamageIndicator::DrawDamageIndicator(int side)
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: Draws full screen damage fade
+//-----------------------------------------------------------------------------
+void CHudDamageIndicator::DrawFullscreenDamageIndicator()
+{
+	IMaterial *pMat = materials->FindMaterial( "vgui/white_additive", 0, 0 );
+	IMesh *pMesh = materials->GetDynamicMesh( true, NULL, NULL, pMat );
+
+	CMeshBuilder meshBuilder;
+	meshBuilder.Begin( pMesh, MATERIAL_QUADS, 1 );
+	int r = m_DmgFullscreenColor[0], g = m_DmgFullscreenColor[1], b = m_DmgFullscreenColor[2], a = m_DmgFullscreenColor[3];
+
+	float wide = GetWide(), tall = GetTall();
+
+	meshBuilder.Color4ub( r, g, b, a );
+	meshBuilder.TexCoord2f( 0,0,0 );
+	meshBuilder.Position3f( 0.0f, 0.0f, 0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Color4ub( r, g, b, a );
+	meshBuilder.TexCoord2f( 0,1,0 );
+	meshBuilder.Position3f( wide, 0.0f, 0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Color4ub( r, g, b, a );
+	meshBuilder.TexCoord2f( 0,1,1 );
+	meshBuilder.Position3f( wide, tall, 0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Color4ub( r, g, b, a );
+	meshBuilder.TexCoord2f( 0,0,1 );
+	meshBuilder.Position3f( 0.0f, tall, 0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.End();
+	pMesh->Draw();
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Paints the damage display
 //-----------------------------------------------------------------------------
 void CHudDamageIndicator::Paint()
 {
+	// draw fullscreen damage indicators
+	DrawFullscreenDamageIndicator();
+
 	// draw damage indicators	
 	DrawDamageIndicator(0);
 	DrawDamageIndicator(1);
@@ -202,10 +302,27 @@ void CHudDamageIndicator::MsgFunc_Damage( const char *pszName, int iSize, void *
 	vecFrom.y = READ_FLOAT();
 	vecFrom.z = READ_FLOAT();
 
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( !pPlayer )
+		return;
+
+	// player has just died, just run the dead damage animation
+	if ( pPlayer->GetHealth() <= 0 )
+	{
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudPlayerDeath" );
+		return;
+	}
+
 	if ( vecFrom == vec3_origin )
 	{
 		// vecFrom = MainViewOrigin();
 		return;
+	}
+
+	int highDamage = DAMAGE_LOW;
+	if ( damageTaken > 25 )
+	{
+		highDamage = DAMAGE_HIGH;
 	}
 
 	Vector vecDelta = (vecFrom - MainViewOrigin());
@@ -220,22 +337,34 @@ void CHudDamageIndicator::MsgFunc_Damage( const char *pszName, int iSize, void *
 		if ( angle < 45.0f || angle > 315.0f )
 		{
 			// front
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageFront" );
+			if( highDamage == DAMAGE_LOW )
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageFront" );
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageHigh" );
 		}
 		else if ( angle >= 45.0f && angle <= 135.0f )
 		{
 			// left
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageLeft" );
+			if( highDamage == DAMAGE_LOW )
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageLeft" );
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageHighLeft" );
 		}
 		else if ( angle <= 315.0f && angle >= 225.0f )
 		{
 			// right
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageRight" );
+			if( highDamage == DAMAGE_LOW )
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageRight" );
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageHighRight" );
 		}
 		else
 		{
 			// behind
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageBehind" );
+			if( highDamage == DAMAGE_LOW )
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageBehind" );
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudTakeDamageHigh" );
 		}
 	}
 }

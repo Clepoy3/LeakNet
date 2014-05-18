@@ -404,30 +404,58 @@ void CPlayerPickupController::Shutdown()
 	Remove();
 }
 
+ConVar physpickup_old( "physpickup_old", "1", FCVAR_ARCHIVE );
 void CPlayerPickupController::ComputePlayerMatrix( matrix3x4_t &out, bool init )
 {
 	QAngle angles = m_pPlayer->EyeAngles();
 	Vector origin = m_pPlayer->EyePosition();
-	
-	// 0-360 / -180-180
-	angles.x = init ? 0 : AngleDistance( angles.x, 0 );
 
-	angles.x = clamp( angles.x, -PLAYER_LOOK_PITCH_RANGE, PLAYER_LOOK_PITCH_RANGE );
-
-	float feet = m_pPlayer->GetAbsMins().z;
-	float eyes = origin.z;
-	float zoffset = 0;
-	// moving up (negative pitch is up)
-	if ( angles.x < 0 )
+	if( physpickup_old.GetInt() == 1 )
 	{
-		zoffset = RemapVal( angles.x, 0, -PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_UP_EYES );
+		// 0-360 / -180-180
+		angles.x = init ? 0 : AngleDistance( angles.x, 0 );
+
+		angles.x = clamp( angles.x, -PLAYER_LOOK_PITCH_RANGE, PLAYER_LOOK_PITCH_RANGE );
+
+		float feet = m_pPlayer->GetAbsMins().z;
+		float eyes = origin.z;
+		float zoffset = 0;
+		// moving up (negative pitch is up)
+		if ( angles.x < 0 )
+		{
+			zoffset = RemapVal( angles.x, 0, -PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_UP_EYES );
+		}
+		else
+		{
+			zoffset = RemapVal( angles.x, 0, PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_DOWN_FEET + (feet - eyes) );
+		}
+		origin.z += zoffset;
+		angles.x = 0;
 	}
 	else
 	{
-		zoffset = RemapVal( angles.x, 0, PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_DOWN_FEET + (feet - eyes) );
+		// VXP: TODO
+		// 0-360 / -180-180
+		init = true;
+		angles.x = init ? 0 : AngleDistance( angles.x, 0 );
+		angles.x = clamp( angles.x, -PLAYER_LOOK_PITCH_RANGE, PLAYER_LOOK_PITCH_RANGE );
+
+		float feet = m_pPlayer->GetAbsOrigin().z + m_pPlayer->WorldAlignMins().z;
+		float eyes = origin.z;
+		float zoffset = 0;
+		// moving up (negative pitch is up)
+		if ( angles.x < 0 )
+		{
+			zoffset = RemapVal( angles.x, 0, -PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_UP_EYES );
+		}
+		else
+		{
+			zoffset = RemapVal( angles.x, 0, PLAYER_LOOK_PITCH_RANGE, PLAYER_HOLD_LEVEL_EYES, PLAYER_HOLD_DOWN_FEET + (feet - eyes) );
+		}
+		origin.z += zoffset;
+		angles.x = 0;
 	}
-	origin.z += zoffset;
-	angles.x = 0;
+
 	AngleMatrix( angles, origin, out );
 }
 
