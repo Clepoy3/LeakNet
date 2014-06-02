@@ -16,14 +16,18 @@ void Test_CreateEntity()
 {
 	if ( engine->Cmd_Argc() < 2 )
 	{
-		Error( "Test_CreateEntity: requires entity classname argument." );
+	//	Error( "Test_CreateEntity: requires entity classname argument." );
+		Warning( "Test_CreateEntity: requires entity classname argument.\n" );
+		return;
 	}
 
 	const char *pClassName = engine->Cmd_Argv( 1 );
 
 	if ( !CreateEntityByName( pClassName ) )
 	{
-		Error( "Test_CreateEntity( %s ) failed.", pClassName );
+	//	Error( "Test_CreateEntity( %s ) failed.", pClassName );
+		Warning( "Test_CreateEntity( %s ) failed.\n", pClassName );
+		return;
 	}
 }
 
@@ -34,11 +38,15 @@ void Test_RandomPlayerPosition()
 	CWorld *pWorld = GetWorldEntity();
 	if ( !pEnt || !dynamic_cast< CBasePlayer* >( pEnt ) )
 	{
-		Error( "Test_RandomPlayerPosition: no local player entity." );
+	//	Error( "Test_RandomPlayerPosition: no local player entity." );
+		Warning( "Test_RandomPlayerPosition: no local player entity.\n" );
+		return;
 	}
 	else if ( !pWorld )
 	{
-		Error( "Test_RandomPlayerPosition: no world entity." );
+	//	Error( "Test_RandomPlayerPosition: no world entity." );
+		Warning( "Test_RandomPlayerPosition: no world entity.\n" );
+		return;
 	}
 
 	CBasePlayer *pPlayer = dynamic_cast< CBasePlayer* >( pEnt );

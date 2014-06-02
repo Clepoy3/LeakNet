@@ -46,7 +46,7 @@ private:
 		int			bpp;
 		int			windowed;
 		char		renderer[ 128 ];
-		char		aniso[ 128 ];
+		int			aniso;
 		int			antialias;
 		int			waterentreflect;
 	};

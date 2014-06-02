@@ -307,12 +307,13 @@ void CHudDamageIndicator::MsgFunc_Damage( const char *pszName, int iSize, void *
 		return;
 
 	// player has just died, just run the dead damage animation
+/*
 	if ( pPlayer->GetHealth() <= 0 )
 	{
 		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudPlayerDeath" );
 		return;
 	}
-
+*/
 	if ( vecFrom == vec3_origin )
 	{
 		// vecFrom = MainViewOrigin();
