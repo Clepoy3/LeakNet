@@ -470,7 +470,7 @@ public:
 	{
 		if ( physenv )
 		{
-			if ( !pObject )
+			if ( !pObject || !pSave || !type ) // VXP: Additional checks
 				return;
 			physsaveparams_t params = { pSave, pObject, type };
 			physenv->Save( params );
@@ -695,10 +695,16 @@ class CPhysObjSaveRestoreOps : public CDefSaveRestoreOps
 public:
 	virtual void Save( const SaveRestoreFieldInfo_t &fieldInfo, ISave *pSave )
 	{
-		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
+		{
+			Warning( "CPhysObjSaveRestoreOps::Save: Physics save/load is only suitable for entities\n" );
+			return;
+		}
 		if ( m_type == PIID_UNKNOWN )
 		{
-			AssertMsg( 0, "Unknown physics save/load type");
+		//	AssertMsg( 0, "Unknown physics save/load type");
+			Warning( "CPhysObjSaveRestoreOps::Save: Unknown physics save/load type\n" );
 			return;
 		}
 		g_PhysSaveRestoreBlockHandler.QueueSave( (CBaseEntity *)fieldInfo.pOwner, fieldInfo.pTypeDesc, (void **)fieldInfo.pField, m_type );
@@ -706,10 +712,16 @@ public:
 	
 	virtual void Restore( const SaveRestoreFieldInfo_t &fieldInfo, IRestore *pRestore )
 	{
-		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
+		{
+			Warning( "CPhysObjSaveRestoreOps::Restore: Physics save/load is only suitable for entities\n" );
+			return;
+		}
 		if ( m_type == PIID_UNKNOWN )
 		{
-			AssertMsg( 0, "Unknown physics save/load type");
+		//	AssertMsg( 0, "Unknown physics save/load type");
+			Warning( "CPhysObjSaveRestoreOps::Restore: Unknown physics save/load type\n" );
 			return;
 		}
 		
@@ -718,13 +730,23 @@ public:
 	
 	virtual void MakeEmpty( const SaveRestoreFieldInfo_t &fieldInfo )
 	{
-		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
+		{
+			Warning( "CPhysObjSaveRestoreOps::MakeEmpty: Physics save/load is only suitable for entities\n" );
+			return;
+		}
 		memset( fieldInfo.pField, 0, fieldInfo.pTypeDesc->fieldSize * sizeof( void * ) );
 	}
 	
 	virtual bool IsEmpty( const SaveRestoreFieldInfo_t &fieldInfo )
 	{
-		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
+		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
+		{
+			Warning( "CPhysObjSaveRestoreOps::IsEmpty: Physics save/load is only suitable for entities\n" );
+			return false;
+		}
 		
 		void **ppPhysObj = (void **)fieldInfo.pField;
 		int nObjects = fieldInfo.pTypeDesc->fieldSize;

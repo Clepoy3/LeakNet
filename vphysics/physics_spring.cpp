@@ -180,20 +180,23 @@ void CPhysicsSpring::SetSpringLength( float flSpringLength )
 
 void CPhysicsSpring::WriteToTemplate( vphysics_save_cphysicsspring_t &params )
 {
-	params.constant = m_pSpring->get_constant();
-	params.naturalLength = ConvertDistanceToHL( m_pSpring->get_spring_length_zero_force() );
-	params.damping = m_pSpring->get_damp_factor();
-	params.relativeDamping = m_pSpring->get_rel_pos_damp();
+	if( m_pSpring ) // VXP: Check
+	{
+		params.constant = m_pSpring->get_constant();
+		params.naturalLength = ConvertDistanceToHL( m_pSpring->get_spring_length_zero_force() );
+		params.damping = m_pSpring->get_damp_factor();
+		params.relativeDamping = m_pSpring->get_rel_pos_damp();
 
-	const IVP_Anchor *anchor0 = m_pSpring->get_actuator_anchor(0);
-	ConvertPositionToHL( anchor0->object_pos, params.startPosition );
-	const IVP_Anchor *anchor1 = m_pSpring->get_actuator_anchor(1);
-	ConvertPositionToHL( anchor1->object_pos, params.endPosition );
-	params.useLocalPositions = true;
+		const IVP_Anchor *anchor0 = m_pSpring->get_actuator_anchor(0);
+		ConvertPositionToHL( anchor0->object_pos, params.startPosition );
+		const IVP_Anchor *anchor1 = m_pSpring->get_actuator_anchor(1);
+		ConvertPositionToHL( anchor1->object_pos, params.endPosition );
+		params.useLocalPositions = true;
 
-	params.onlyStretch = m_pSpring->get_only_stretch() ? true : false;
-	params.pObjStart = m_pObjStart;
-	params.pObjEnd = m_pObjEnd;
+		params.onlyStretch = m_pSpring->get_only_stretch() ? true : false;
+		params.pObjStart = m_pObjStart;
+		params.pObjEnd = m_pObjEnd;
+	}
 }
 
 

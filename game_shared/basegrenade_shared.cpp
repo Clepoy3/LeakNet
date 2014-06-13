@@ -201,8 +201,8 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 		data.m_flScale = explScale;
 		DispatchEffect( "watersplash", data );
 	//	Msg( "Water level: %i\n", GetWaterLevel() );
-		DevMsg( "Water height: %i, Damage: %f\nForce: x: %f, y: %f, z: %f\n", isInWater, m_flDamage, GetBlastForce().x, GetBlastForce().y, GetBlastForce().z );
-		DevMsg( "Radius: %f, Final result: %f\n", m_DmgRadius * .03, explScale );
+	//	DevMsg( "Water height: %i, Damage: %f\nForce: x: %f, y: %f, z: %f\n", isInWater, m_flDamage, GetBlastForce().x, GetBlastForce().y, GetBlastForce().z );
+	//	DevMsg( "Radius: %f, Final result: %f\n", m_DmgRadius * .03, explScale );
 	}
 
 	SetThink( &CBaseGrenade::SUB_Remove );

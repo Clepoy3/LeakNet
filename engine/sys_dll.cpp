@@ -918,7 +918,7 @@ void LoadEntityDLLs( char *szBaseDir )
 			strcpy( szValue, com_token );
 
 			DLL_SetModKey( &gmodinfo, szKey, szValue );
-			Msg( "ModKey: %s, value: %s\n", szKey, szValue );
+		//	Msg( "ModKey: %s, value: %s\n", szKey, szValue );
 		//	if(szKey == "game")
 			if(Q_strcmp (szKey, "game") == 0) // VXP: Sets window title from liblist.gam
 				SetWindowText(hwndEXT, szValue);
