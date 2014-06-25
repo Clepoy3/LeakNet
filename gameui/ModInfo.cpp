@@ -66,8 +66,7 @@ const char *CModInfo::GetStartMap()
 //-----------------------------------------------------------------------------
 const char *CModInfo::GetTrainMap()
 {
-//	return m_pModData->GetString("trainmap", "t0a0");
-	return m_pModData->GetString("trainmap", "bump_test");
+	return m_pModData->GetString("trainmap", "t0a0");
 }
 
 //-----------------------------------------------------------------------------
@@ -104,7 +103,6 @@ bool CModInfo::NoHiModel()
 //-----------------------------------------------------------------------------
 const char *CModInfo::GetGameDescription()
 {
-//	Msg( "%s\n", m_pModData->GetString("game", "") );
 	return m_pModData->GetString("game", "");
 }
 
@@ -114,7 +112,8 @@ const char *CModInfo::GetGameDescription()
 void CModInfo::LoadCurrentGameInfo()
 {
 	// Load up liblist.gam for the current mod
-	char const *filename = "liblist.gam";
+//	char const *filename = "liblist.gam";
+	char const *filename = "scripts\\liblist.gam";
 
 	// walk through and add the key/value pairs to the keyvalues object
 	FileHandle_t fh = vgui::filesystem()->Open( filename, "rb" );

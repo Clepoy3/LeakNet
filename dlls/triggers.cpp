@@ -1950,7 +1950,7 @@ void CTriggerCamera::FollowTarget( )
 	VectorAngles( m_hTarget->GetLocalOrigin() - GetLocalOrigin(), vecGoal );
 	
 	// UNDONE: Is this still necessary?
-	vecGoal.x = -vecGoal.x;
+//	vecGoal.x = -vecGoal.x;
 
 	// UNDONE: Can't we just use UTIL_AngleDiff here?
 	QAngle angles = GetLocalAngles();

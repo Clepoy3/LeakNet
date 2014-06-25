@@ -1712,15 +1712,14 @@ static void DoScreenSpaceBloom( void )
 	materials->DrawScreenSpaceQuad( pMatBloom );
 }
 
-/*
 // To toggle the blur on and off
-ConVar pp_motionblur("pp_motionblur", "1", 0, "Motion Blur"); 
+ConVar pp_motionblur("pp_motionblur", "1", FCVAR_ARCHIVE, "Motion Blur"); 
 // The amount of alpha to use when adding the FB to our custom buffer
-ConVar pp_motionblur_addalpha("pp_motionblur_addalpha", "0.1", 0, "Motion Blur Alpha");
+ConVar pp_motionblur_addalpha("pp_motionblur_addalpha", "0.1", FCVAR_ARCHIVE, "Motion Blur Alpha");
 // The amount of alpha to use when adding our custom buffer to the FB
-ConVar pp_motionblur_drawalpha("pp_motionblur_drawalpha", "1", 0, "Motion Blur Draw Alpha");
+ConVar pp_motionblur_drawalpha("pp_motionblur_drawalpha", "1", FCVAR_ARCHIVE, "Motion Blur Draw Alpha");
 // Delay to add between capturing the FB
-ConVar pp_motionblur_time("pp_motionblur_time", "0.05", 0, "The amount of time to wait until updating the FB");
+ConVar pp_motionblur_time("pp_motionblur_time", "0.05", FCVAR_ARCHIVE, "The amount of time to wait until updating the FB");
 void CViewRender::DoMotionBlur( void )
 {
 	if ( pp_motionblur.GetInt() == 0 ) return;
@@ -1733,19 +1732,25 @@ void CViewRender::DoMotionBlur( void )
 	ITexture *pMotionBlur = NULL;
 	ITexture *pOriginalTexture = NULL; 
 
-	bool bFound;
 	// Get the front buffer material
-	pMatScreen = materials->FindMaterial( "frontbuffer", &bFound, true );
-	if( !bFound )
+//	pMatScreen = materials->FindMaterial( "frontbuffer", TEXTURE_GROUP_OTHER, true );
+	bool nFound;
+	pMatScreen = materials->FindMaterial( "frontbuffer", &nFound, true );
+	if( !nFound )
 		return;
+	
+	// Set the camera up so we can draw the overlay
+	int oldX, oldY, oldW, oldH;
+	materials->GetViewport( oldX, oldY, oldW, oldH );
+
 	// Get our custom render target
-	pMotionBlur = GetMotionBlurTex0();
+	pMotionBlur = GetMotionBlurTex0( oldW, oldH );
 	// Store the current render target	
 	ITexture *pOriginalRenderTarget = materials->GetRenderTarget();
 
 	// Set the camera up so we can draw the overlay
-	int oldX, oldY, oldW, oldH;
-	materials->GetViewport( oldX, oldY, oldW, oldH );
+//	int oldX, oldY, oldW, oldH;
+//	materials->GetViewport( oldX, oldY, oldW, oldH );
  
 	materials->MatrixMode( MATERIAL_PROJECTION );
 	materials->PushMatrix();
@@ -1753,10 +1758,15 @@ void CViewRender::DoMotionBlur( void )
 
 	materials->MatrixMode( MATERIAL_VIEW );
 	materials->PushMatrix();
-	materials->LoadIdentity();
+	materials->LoadIdentity();	
 
-//	if( gpGlobals->curtime >= fNextDrawTime ) 
+	if ( fNextDrawTime - gpGlobals->curtime > 1.0f)
 	{
+		fNextDrawTime = 0.0f;
+	}
+	if( gpGlobals->curtime >= fNextDrawTime ) 
+	{
+	//	UpdateScreenEffectTexture( 0 );
 		UpdateScreenEffectTexture();
 
 		// Set the alpha to whatever our console variable is
@@ -1811,7 +1821,6 @@ void CViewRender::DoMotionBlur( void )
 	materials->MatrixMode( MATERIAL_VIEW );
 	materials->PopMatrix();
 }
-*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Renders entire view
@@ -1893,8 +1902,10 @@ void CViewRender::RenderView( const CViewSetup &view, bool drawViewModel )
 	{
 		DoScreenSpaceBloom();
 	}
-
-//	DoMotionBlur();
+	if( !engine->SupportsHDR() )
+	{
+		DoMotionBlur();
+	}
 
 	// Draw the 2D graphics
 	tmpView.clearColor = false;

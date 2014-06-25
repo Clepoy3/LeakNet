@@ -45,6 +45,7 @@ static ConVar r_DrawSpecificStaticProp( "r_DrawSpecificStaticProp", "-1" );
 static ConVar r_drawstaticprops( "r_drawstaticprops", "1" );
 static ConVar r_colorstaticprops( "r_colorstaticprops", "0" );
 static ConVar vcollide_wireframe( "vcollide_wireframe", "0" );
+static ConVar r_DrawWrongStaticProp( "r_DrawWrongStaticProp", "1" ); // VXP
 
 
 //-----------------------------------------------------------------------------
@@ -747,11 +748,14 @@ int CStaticProp::DrawModel( int flags )
 	modelrender->UseLightcache( &m_LightCacheHandle );
 
 #ifdef _DEBUG
-	studiohdr_t *pStudioHdr = modelinfo->GetStudiomodel( m_pModel );
-	Assert( pStudioHdr );
-	if( !( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP ) )
+	if( r_DrawWrongStaticProp.GetInt() == 0 )
 	{
-		return 0;
+		studiohdr_t *pStudioHdr = modelinfo->GetStudiomodel( m_pModel );
+		Assert( pStudioHdr );
+		if( !( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP ) )
+		{
+			return 0;
+		}
 	}
 #endif
 

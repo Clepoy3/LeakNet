@@ -74,7 +74,9 @@ void CChangeGameDialog::LoadModList()
 			{
 				// Check for dlls\*.dll
 				char szDllDirectory[MAX_PATH + 16];
-				sprintf(szDllDirectory, "%s\\liblist.gam", wfd.cFileName);
+			//	sprintf(szDllDirectory, "%s\\liblist.gam", wfd.cFileName);
+				sprintf(szDllDirectory, "%s\\scripts\\liblist.gam", wfd.cFileName);
+				Msg( "%s : %s\n", szDllDirectory, wfd.cFileName );
 
 				FILE *f = fopen(szDllDirectory, "rb");
 				if (f)

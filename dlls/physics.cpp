@@ -415,7 +415,7 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 			return false;
 	}
 
-	if ( pEntity0->ForceVPhysicsCollide( pEntity1 ) || pEntity1->ForceVPhysicsCollide( pEntity0 ) )
+	if ( pEntity0->ForceVPhysicsCollide( pEntity1 ) || pEntity1->ForceVPhysicsCollide( pEntity0 ) ) // VXP: Need to fix maybe
 		return 1;
 
 	if ( pEntity0->pev && pEntity1->pev )
