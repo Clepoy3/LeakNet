@@ -1749,6 +1749,7 @@ void CViewRender::DoMotionBlur( void )
 	ITexture *pOriginalRenderTarget = materials->GetRenderTarget();
 
 	// Set the camera up so we can draw the overlay
+	// VXP: Uphere
 //	int oldX, oldY, oldW, oldH;
 //	materials->GetViewport( oldX, oldY, oldW, oldH );
  
