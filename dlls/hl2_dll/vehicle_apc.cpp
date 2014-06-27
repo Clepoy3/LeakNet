@@ -72,7 +72,9 @@ public:
 	virtual int		OnTakeDamage( const CTakeDamageInfo &info );
 	virtual float	DamageModifier ( CTakeDamageInfo &info );
 	virtual bool	CanControlVehicle( void );
-	virtual void	EnterVehicle( CBasePlayer *pPlayer );
+//	virtual void	EnterVehicle( CBasePlayer *pPlayer );
+
+	virtual void	Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
 	// Weaponry
 	const Vector	&GetPrimaryGunOrigin( void ) { return m_vecGunOrigin; }
@@ -324,6 +326,10 @@ void CPropAPC::Think( void )
 			}
 			m_bExitAnimOn = false;
 		}
+		if ( m_bEnterAnimOn )
+		{
+			m_bEnterAnimOn = false;
+		}
 		int iSequence = SelectWeightedSequence( ACT_IDLE );
 		if ( iSequence > ACTIVITY_NOT_AVAILABLE )
 		{
@@ -519,6 +525,7 @@ void CPropAPC::FireGrenade( void )
 //-------------------------------------------------------------
 // EnterVehicle -- play animation of getting into the vehicle
 //-------------------------------------------------------------
+/*
 void CPropAPC::EnterVehicle( CBasePlayer *pPlayer )
 {
 	BaseClass::EnterVehicle( pPlayer );
@@ -533,6 +540,39 @@ void CPropAPC::EnterVehicle( CBasePlayer *pPlayer )
 		ResetSequence( iSequence );
 		ResetClientsideFrame();
 		m_bEnterAnimOn = true;
+	}
+}
+*/
+
+//-------------------------------------------------------------
+// Purpose:
+//-------------------------------------------------------------
+void CPropAPC::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+{
+	CBasePlayer *pPlayer = ToBasePlayer( pActivator );
+	if ( !pPlayer )
+		return;
+
+	ResetUseKey( pPlayer );
+
+	// setup to play "enter" sequence
+	int iEntryAnim = LookupSequence( "enter" );
+
+	// Are we in an entrypoint zone? 
+	if ( iEntryAnim != ACTIVITY_NOT_AVAILABLE )
+	{
+		// Check to see if this vehicle can be controlled or if it's locked
+		if ( CanControlVehicle() && CanEnterVehicle(pPlayer) )
+		{
+			pPlayer->GetInVehicle( GetServerVehicle(), VEHICLE_DRIVER);
+
+			// Setup the "enter" vehicle sequence and skip the animation if it isn't present.
+			m_flCycle = 0;
+			m_flAnimTime = gpGlobals->curtime;
+			ResetSequence( iEntryAnim );
+			ResetClientsideFrame();
+			m_bEnterAnimOn = true;
+		}
 	}
 }
 
