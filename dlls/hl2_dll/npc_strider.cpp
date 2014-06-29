@@ -606,7 +606,8 @@ public:
 	// CAI_BaseNPC
 	void	StartTask( const Task_t *pTask );
 	void	RunTask( const Task_t *pTask );
-	int		RangeAttack1Conditions( float flDot, float flDist );
+//	int		RangeAttack1Conditions( float flDot, float flDist );
+	int		RangeAttack2Conditions( float flDot, float flDist ); // VXP
 	int		MeleeAttack1Conditions( float flDot, float flDist );
 	int		MeleeAttack2Conditions( float flDot, float flDist );
 	bool	InnateWeaponLOSCondition( const Vector &ownerPos, const Vector &targetPos, bool bSetConditions );
@@ -956,7 +957,8 @@ void CNPC_Strider::Spawn( void )
 
 	CNPC_Strider::m_strideLength = (m_cullBoxStandMaxs.x - m_cullBoxStandMins.x) * 0.5;
 
-	CapabilitiesAdd( bits_CAP_MOVE_FLY | bits_CAP_INNATE_RANGE_ATTACK1 | bits_CAP_INNATE_MELEE_ATTACK1 | bits_CAP_INNATE_MELEE_ATTACK2 );
+//	CapabilitiesAdd( bits_CAP_MOVE_FLY | bits_CAP_INNATE_RANGE_ATTACK1 | bits_CAP_INNATE_MELEE_ATTACK1 | bits_CAP_INNATE_MELEE_ATTACK2 );
+	CapabilitiesAdd( bits_CAP_MOVE_FLY | bits_CAP_INNATE_RANGE_ATTACK2 | bits_CAP_INNATE_MELEE_ATTACK1 | bits_CAP_INNATE_MELEE_ATTACK2 | bits_CAP_SQUAD );
 
 	// setup absorigin
 	Relink();
@@ -1226,6 +1228,207 @@ void CNPC_Strider::NPCThink(void)
 	// update follower bones
 	m_BoneFollowerManager.UpdateBoneFollowers();
 }
+
+//---------------------------------------------------------
+//---------------------------------------------------------
+/*
+void CNPC_Strider::GatherConditions()
+{
+	if ( AIGetNumFollowers( this, m_iszHunterClassname ) == 0 )	
+	{
+		// This works with old data because need to do before base class so as to not choose as enemy
+		if ( m_PlayerFreePass.HasPass() || ( !m_pMinigun->IsShooting() || GetEnemy() != m_PlayerFreePass.GetPassTarget() ) ) // no free pass when in midst of shooting at target
+			m_PlayerFreePass.Update();
+	}
+	else
+	{
+		m_PlayerFreePass.Reset( strider_free_pass_after_escorts_dead.GetFloat(), strider_free_pass_tolerance_after_escorts_dead.GetFloat() );
+	}
+
+	if( IsUsingAggressiveBehavior() )
+	{
+		if( m_PlayerFreePass.HasPass() && !m_pMinigun->IsShooting() )
+		{
+			// Make the minigun stitch
+			m_bMinigunUseDirectFire = false;
+		}
+	}
+
+	//---------------------------------
+
+	BaseClass::GatherConditions();
+
+	if( IsUsingAggressiveBehavior() )
+	{
+		if( GetEnemy() )
+		{
+			if( HasCondition( COND_SEE_ENEMY ) )
+			{
+				// Keep setting up to play my hunt sound at some random time after losing sight of my enemy.
+				m_flTimeNextHuntSound = gpGlobals->curtime + 1.0f;
+			}
+			else
+			{
+				if( gpGlobals->curtime >= m_flTimeNextHuntSound && !m_pMinigun->IsShooting() )
+				{
+					HuntSound();
+				}
+			}
+		}
+
+		if( m_hPlayersMissile )
+		{
+			if( !m_pMinigun->IsShooting() && GetEnemy() && GetEnemy()->IsPlayer() )
+			{
+				// If the missile is closer to the player than I am, stay suppressed. This is essentially
+				// allowing the missile to strike me if it was fired off before I started shooting. 
+				// If the missile passes me or goes way off course, I can shoot.
+				float flPlayerMissileDist;
+				float flPlayerStriderDist;
+
+				flPlayerMissileDist = GetEnemy()->GetAbsOrigin().DistTo( m_hPlayersMissile->GetAbsOrigin() );
+				flPlayerStriderDist = GetEnemy()->GetAbsOrigin().DistTo( EyePosition() );
+				float flDiff = flPlayerMissileDist - flPlayerStriderDist;
+
+				// Figure out how long it's been since I've fired my cannon because of a player's missile.
+				float flTimeSuppressed = gpGlobals->curtime - m_flTimePlayerMissileDetected;
+
+				if( flDiff < strider_missile_suppress_dist.GetFloat() && flTimeSuppressed < strider_missile_suppress_time.GetFloat() )
+				{
+					// Defer the minigun until/unless the missile has passed me by 10 feet
+					m_pMinigun->StopShootingForSeconds( this, GetEnemy(), 0.5f );
+				}
+			}
+		}
+	}
+
+	// This pair of conditions is nice to have around...
+	if( m_pMinigun->IsShooting() )
+	{
+		SetCondition( COND_STRIDER_MINIGUN_SHOOTING );
+	}
+	else
+	{
+		SetCondition( COND_STRIDER_MINIGUN_NOT_SHOOTING );
+	}
+
+	if( GetCannonTarget() )
+	{
+		SetCondition( COND_STRIDER_HAS_CANNON_TARGET );
+
+		if( strider_show_cannonlos.GetBool() )
+		{
+			trace_t tr;
+			UTIL_TraceLine( CannonPosition(), GetCannonTarget()->WorldSpaceCenter(), MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
+			NDebugOverlay::Line( tr.startpos, tr.endpos, 0, 255, 0, false, 0.1 );
+
+			if( tr.fraction != 1.0 )
+				NDebugOverlay::Line( tr.endpos, GetCannonTarget()->WorldSpaceCenter(), 255, 0, 0, false, 0.1 );
+		}
+	}
+	else
+	{
+		ClearCondition( COND_STRIDER_HAS_CANNON_TARGET );
+	}
+
+	ClearCondition( COND_CAN_RANGE_ATTACK2 );
+	ClearCondition( COND_STRIDER_HAS_LOS_Z );
+
+	// If not locked into a crouch, look into adjusting height to attack targets.
+	if( !m_bCrouchLocked && !m_bDontCrouch )
+	{
+		if( m_hCannonTarget != NULL )
+		{	
+			if( !IsStriderCrouching() && !IsStriderStanding() )
+			{
+				if ( WeaponLOSCondition( GetAdjustedOrigin(), m_hCannonTarget->GetAbsOrigin(), false ) )
+				{
+					SetCondition( COND_CAN_RANGE_ATTACK2 );
+				}
+				else
+				{
+					GatherHeightConditions( GetAdjustedOrigin(), m_hCannonTarget );
+				}
+			}
+		}
+		else if( GetEnemy() )
+		{
+			if ( strider_distributed_fire.GetBool() && !IsUsingAggressiveBehavior() )
+			{
+				m_iVisibleEnemies = 0;
+				AIEnemiesIter_t iter;
+
+				for( AI_EnemyInfo_t *pEMemory = GetEnemies()->GetFirst(&iter); pEMemory != NULL; pEMemory = GetEnemies()->GetNext(&iter) )
+				{
+					if( IRelationType( pEMemory->hEnemy ) != D_NU && IRelationType( pEMemory->hEnemy ) != D_LI )
+					{
+						if( pEMemory->timeLastSeen == gpGlobals->curtime )
+						{
+							m_iVisibleEnemies++;
+						}
+					}
+				}
+
+				// If I'm on target and see more targets than just this one, move on to another target for a bit!
+				// Because the Mingun's state will stay "on target" until the minigun gets a chance to think,
+				// and this function may be called several times per strider think, don't call this code anymore in the same
+				// think when a new enemy is chosen.
+				//
+				// Don't switch targets if shooting at a bullseye! Level designers depend on bullseyes.
+				if( GetEnemy() && m_pMinigun->IsShooting() && GetTimeEnemyAcquired() != gpGlobals->curtime )
+				{
+					if( m_pMinigun->IsOnTarget( 3 ) && !FClassnameIs( GetEnemy(), "npc_bullseye" ) )
+					{
+						if( m_iVisibleEnemies > 1 )
+						{
+							// Time to ignore this guy for a little while and switch targets.
+							GetEnemies()->SetTimeValidEnemy( GetEnemy(), gpGlobals->curtime + ( STRIDER_IGNORE_TARGET_DURATION * m_iVisibleEnemies ) );
+							SetEnemy( NULL, false );
+							ChooseEnemy();
+						}
+						else if( GetEnemy()->IsPlayer() && GetEnemy() == m_pMinigun->GetTarget() )
+						{
+							// Give the poor target a break.
+							m_pMinigun->StopShootingForSeconds( this, GetEnemy(), GetMinigunShootDowntime() );
+						}
+					}
+				}
+			}
+
+			if ( GetEnemy() ) // Can go null above
+			{
+				if ( !IsStriderCrouching() && !IsStriderStanding() &&
+					 ( !HasCondition( COND_SEE_ENEMY ) || 
+					   !WeaponLOSCondition( GetAdjustedOrigin(), GetEnemy()->BodyTarget( GetAdjustedOrigin() ), false ) ) )
+				{
+#if 0
+					if ( !HasCondition( COND_STRIDER_SHOULD_CROUCH ) && !HasCondition( COND_STRIDER_SHOULD_CROUCH ) )
+						SetIdealHeight( min( GetMaxHeight(), GetHeight() + 75.0 * 0.1 ) ); // default to rising up
+#endif
+					GatherHeightConditions( GetAdjustedOrigin(), GetEnemy() );
+				}
+			}
+		}
+		else
+			SetIdealHeight( GetMaxHeight() );
+	}
+	else
+	{
+		if( m_hCannonTarget != NULL && CurrentWeaponLOSCondition( m_hCannonTarget->GetAbsOrigin(), false ) )
+			SetCondition( COND_CAN_RANGE_ATTACK2 );
+	}
+
+	if( m_bDontCrouch )
+	{
+		if( HasCondition( COND_STRIDER_SHOULD_CROUCH ) )
+		{
+			Msg("TELL WEDGE I'M TRYING TO CROUCH!\n");
+		}
+
+		ClearCondition( COND_STRIDER_SHOULD_CROUCH );
+	}
+}
+*/
 
 bool CNPC_Strider::CreateVPhysics()
 {
@@ -1572,8 +1775,10 @@ void CNPC_Strider::Touch( CBaseEntity *pOther )
 #endif
 }
 
-int CNPC_Strider::RangeAttack1Conditions( float flDot, float flDist )
+//int CNPC_Strider::RangeAttack1Conditions( float flDot, float flDist )
+int CNPC_Strider::RangeAttack2Conditions( float flDot, float flDist )
 {
+//	Msg( "CNPC_Strider::RangeAttack2Conditions\n" );
 	if ( m_hCannonTarget.Get() != NULL )
 	{
 		return COND_CAN_RANGE_ATTACK1;
@@ -1591,7 +1796,8 @@ int CNPC_Strider::RangeAttack1Conditions( float flDot, float flDist )
 	{
 		return COND_NONE;
 	}
-	return BaseClass::RangeAttack1Conditions( flDot, flDist );
+//	return BaseClass::RangeAttack1Conditions( flDot, flDist );
+	return BaseClass::RangeAttack2Conditions( flDot, flDist );
 }
 
 
@@ -1617,7 +1823,16 @@ void CNPC_Strider::OpenHatch()
 	pJet->SetLifetime(3.0);
 }
 
-
+//---------------------------------------------------------
+//---------------------------------------------------------
+/*
+int CNPC_Strider::RangeAttack2Conditions( float flDot, float flDist )
+{
+	// All of this code has moved to GatherConditions(), since the 
+	// strider uses the cannon on things that aren't the enemy!
+	return COND_NONE;
+}
+*/
 int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 {
 	if (gpGlobals->curtime < m_nextStompTime)
@@ -1672,6 +1887,7 @@ int CNPC_Strider::SelectSchedule()
 		}
 		if ( HasCondition( COND_CAN_RANGE_ATTACK1 ) )
 		{
+		//	Msg( "SV Strider: SelSched - SCHED_STRIDER_RANGE_ATTACK1\n" );
 			return SCHED_STRIDER_RANGE_ATTACK1;
 		}
 		if ( HasCondition( COND_CAN_RANGE_ATTACK2 ) )
@@ -1691,7 +1907,10 @@ int CNPC_Strider::TranslateSchedule( int scheduleType )
 	switch( scheduleType )
 	{
 	case SCHED_RANGE_ATTACK1:
+		{
+	//	Msg( "SV Strider: TranslSched - SCHED_STRIDER_RANGE_ATTACK1\n" );
 		return SCHED_STRIDER_RANGE_ATTACK1;
+		}
 	case SCHED_RANGE_ATTACK2:
 		return SCHED_STRIDER_RANGE_ATTACK2;
 	case SCHED_MELEE_ATTACK1:

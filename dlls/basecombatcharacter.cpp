@@ -1863,8 +1863,14 @@ void CBaseCombatCharacter::SetActiveWeapon( CBaseCombatWeapon *pNewWeapon )
 //-----------------------------------------------------------------------------
 Vector CBaseCombatCharacter::GetAttackAccuracy( CBaseCombatWeapon *pWeapon, CBaseEntity *pTarget )
 {
-	float flModifier = g_WeaponProficiencyTable[ GetCurrentWeaponProficiency() ].value;
-	return pWeapon->GetBulletSpread() * flModifier;
+	Vector vReturn = Vector( 0, 0, 0 );
+	if( pWeapon && pTarget )
+	{
+		float flModifier = g_WeaponProficiencyTable[ GetCurrentWeaponProficiency() ].value;
+	//	return pWeapon->GetBulletSpread() * flModifier;
+		vReturn = pWeapon->GetBulletSpread() * flModifier;
+	}
+	return vReturn;
 }
 
 //-----------------------------------------------------------------------------

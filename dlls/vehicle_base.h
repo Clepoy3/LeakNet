@@ -57,6 +57,7 @@ public:
 	virtual bool			IsVehicleUpright( void ) { return true; }
 	virtual void			GetPassengerStartPoint( int nRole, Vector *pPoint, QAngle *pAngles );
 	virtual void			GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles );
+	// VXP: make here dynamic_cast to
 	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
 	virtual float			DamageModifier ( CTakeDamageInfo &info ) { return 1.0; }
 	virtual const vehicleparams_t	*GetVehicleParams( void ) { return NULL; }

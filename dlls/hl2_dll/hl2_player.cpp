@@ -359,6 +359,8 @@ Class_T  CHL2_Player::Classify ( void )
 	{
 		if(IsInAVehicle())
 		{
+			// VXP:
+			// IDrivableVehicle *m_pDrivableVehicle = dynamic_cast<IDrivableVehicle*>(m_pVehicle);
 			IServerVehicle *pVehicle = GetVehicle();
 			return pVehicle->ClassifyPassenger( this, CLASS_PLAYER );
 		}
