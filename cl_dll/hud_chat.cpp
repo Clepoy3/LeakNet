@@ -237,13 +237,12 @@ void CHudChatLine::Expire( void )
 {
 	SetVisible( false );
 
-/* VXP: For what we duplicate this message on expire?
+// VXP: For what we duplicate this message on expire?
 	// Spit out label text now
 	char text[ 256 ];
 	GetText( text, 256 );
 
 	Msg( "%s\n", text );
-*/
 }
 
 class CHudChatEntry : public vgui::TextEntry
