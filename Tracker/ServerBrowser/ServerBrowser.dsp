@@ -59,9 +59,9 @@ TargetPath=.\Release\ServerBrowser.dll
 InputPath=.\Release\ServerBrowser.dll
 SOURCE="$(InputPath)"
 
-"..\..\..\bin\ServerBrowser.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if exist ..\..\..\bin\ServerBrowser.dll attrib -r ..\..\..\bin\ServerBrowser.dll 
-	if exist $(TargetPath) copy $(TargetPath) ..\..\..\bin\ServerBrowser.dll 
+"..\..\..\Platform\Servers\ServerBrowser.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist ..\..\..\Platform\Servers\ServerBrowser.dll attrib -r ..\..\..\Platform\Servers\ServerBrowser.dll 
+	if exist $(TargetPath) copy $(TargetPath) ..\..\..\Platform\Servers\ServerBrowser.dll 
 	
 # End Custom Build
 

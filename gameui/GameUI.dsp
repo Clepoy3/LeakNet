@@ -70,6 +70,8 @@ BuildCmds= \
 	copy $(InputPath) $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
 	if exist $(ProjDir)\..\..\cstrike\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
 	copy $(InputPath) $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
+	if exist $(ProjDir)\..\..\testmod\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\testmod\bin\$(InputName).dll \
+	copy $(InputPath) $(ProjDir)\..\..\testmod\bin\$(InputName).dll \
 	
 
 "$(ProjDir)\..\..\tf2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -82,6 +84,9 @@ BuildCmds= \
    $(BuildCmds)
 
 "$(ProjDir)\..\..\cstrike\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(ProjDir)\..\..\testmod\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 # End Custom Build
 
@@ -126,6 +131,8 @@ BuildCmds= \
 	copy $(InputPath) $(ProjDir)\..\..\hl1\bin\$(InputName).dll \
 	if exist $(ProjDir)\..\..\cstrike\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
 	copy $(InputPath) $(ProjDir)\..\..\cstrike\bin\$(InputName).dll \
+	if exist $(ProjDir)\..\..\testmod\bin\$(InputName).dll attrib -r $(ProjDir)\..\..\testmod\bin\$(InputName).dll \
+	copy $(InputPath) $(ProjDir)\..\..\testmod\bin\$(InputName).dll \
 	
 
 "$(ProjDir)\..\..\tf2\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -138,6 +145,9 @@ BuildCmds= \
    $(BuildCmds)
 
 "$(ProjDir)\..\..\cstrike\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(ProjDir)\..\..\testmod\bin\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 # End Custom Build
 
