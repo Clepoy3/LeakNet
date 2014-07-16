@@ -8,7 +8,7 @@
 
 // This is used, unless overridden in the registry
 //#define VALVE_MASTER_ADDRESS "half-life.east.won.net:27010"
-#define VALVE_MASTER_ADDRESS "91.90.9.191:27010"
+#define VALVE_MASTER_ADDRESS "94.158.153.11:27010"
 
 #define	PORT_MASTER	27010       // Default master port
 #define PORT_MODMASTER 27011    // Default mod-master port

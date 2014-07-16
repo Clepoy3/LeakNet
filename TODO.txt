@@ -100,3 +100,9 @@ Serverbrowser: сделать в Game правильное отображени�
 Пофиксить вылет после bulidcubemaps в режиме HDR
 
 В debug не показываются модели с "model props_trainstation/trainstation_arch001.mdl used as a static prop, but not compiled as a static prop"
+
+Сделать, чтобы страйдер мог протыкать ситизенов
+Пофиксить свет на дисплейсментах можно в engine\disp_mapload.cpp, наверное
+materialsystem\stdshaders\teeth.cpp - SHADER_FALLBACK - пофиксить E3 HACK
+CSceneEntity::DispatchStartMoveTo - пофиксить E3 HACK
+CNPC_Citizen::SelectSchedule - SCHED_HIDE_AND_RELOAD или SCHED_RELOAD

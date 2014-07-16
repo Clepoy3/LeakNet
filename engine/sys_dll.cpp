@@ -51,11 +51,16 @@
 
 
 #define FIFTEEN_MB				(15 * 1024 * 1024)
+#define ONE_HUNDRED_TWENTY_EIGHT_MB	(128 * 1024 * 1024)
 
-#define MINIMUM_WIN_MEMORY		0x0e00000 
+//#define MINIMUM_WIN_MEMORY		0x0e00000 
 #define WARNING_MEMORY          0x0200000
-#define MAXIMUM_WIN_MEMORY		0x2800000 // Ask for 40 MB max
-#define MAXIMUM_DEDICATED_MEMORY	0x2800000 // Ask for 40 MB max
+//#define MAXIMUM_WIN_MEMORY		0x2800000 // Ask for 40 MB max
+//#define MAXIMUM_DEDICATED_MEMORY	0x2800000 // Ask for 40 MB max
+
+#define MINIMUM_WIN_MEMORY			(unsigned)(48*1024*1024)
+#define MAXIMUM_WIN_MEMORY			max( (unsigned)(256*1024*1024), MINIMUM_WIN_MEMORY )
+#define MAXIMUM_DEDICATED_MEMORY	(unsigned)(64*1024*1024)
 
 char				*CheckParm(const char *psz, char **ppszValue = NULL);
 void				SeedRandomNumberGenerator( bool random_invariant );
@@ -414,6 +419,7 @@ void GameSetState(int iState )
 // Purpose: Allocate memory for engine hunk
 // Input  : *parms - 
 //-----------------------------------------------------------------------------
+/*
 void Sys_InitMemory( void )
 {
 #ifdef _WIN32
@@ -470,6 +476,92 @@ void Sys_InitMemory( void )
 		host_parms.memsize = MINIMUM_WIN_MEMORY;
 	}
 	
+	host_parms.membase = (unsigned char *)new unsigned char[ host_parms.memsize ];
+	if ( !host_parms.membase )
+	{
+		Sys_Error( "Unable to allocate %.2f MB\n", (float)(host_parms.memsize)/( 1024.0 * 1024.0 ) );
+	}
+}
+*/
+void Sys_InitMemory( void )
+{
+#ifdef _WIN32
+	// Allow overrides
+	int nHeapSize = CommandLine()->ParmValue( "-heapsize", 0 ); 
+	if ( nHeapSize )
+	{
+		host_parms.memsize = nHeapSize * 1024;
+		return;
+	}
+
+	if ( CommandLine()->FindParm( "-minmemory" ) )
+	{
+		host_parms.memsize = MINIMUM_WIN_MEMORY;
+		return;
+	}
+
+	host_parms.memsize = 0;
+
+	MEMORYSTATUS lpBuffer;
+	// Get OS Memory status
+	lpBuffer.dwLength = sizeof(MEMORYSTATUS);
+	GlobalMemoryStatus( &lpBuffer );
+
+	if ( lpBuffer.dwTotalPhys <= 0 )
+	{
+		host_parms.memsize = MAXIMUM_WIN_MEMORY;
+	}
+	else
+	{
+		host_parms.memsize = lpBuffer.dwTotalPhys;
+	}	
+		
+//	if ( host_parms.memsize < FIFTEEN_MB )
+//	{
+//		Sys_Error( "Available memory less than 15MB!!! %i\n", host_parms.memsize );
+//	}
+	if ( host_parms.memsize < ONE_HUNDRED_TWENTY_EIGHT_MB )
+	{
+		Sys_Error( "Available memory less than 128MB!!! %i\n", host_parms.memsize );
+	}
+
+	// take one quarter the physical memory
+	if ( host_parms.memsize <= 512*1024*1024)
+	{
+		host_parms.memsize >>= 2;
+		// Apply cap of 64MB for 512MB systems
+		// this keeps the code the same as HL2 gold
+		// but allows us to use more memory on 1GB+ systems
+		if (host_parms.memsize > MAXIMUM_DEDICATED_MEMORY)
+		{
+			host_parms.memsize = MAXIMUM_DEDICATED_MEMORY;
+		}
+	}
+	else
+	{
+		// just take one quarter, no cap
+		host_parms.memsize >>= 2;
+	}
+
+	// At least MINIMUM_WIN_MEMORY mb, even if we have to swap a lot.
+	if (host_parms.memsize < MINIMUM_WIN_MEMORY)
+	{
+		host_parms.memsize = MINIMUM_WIN_MEMORY;
+	}
+
+	// Apply cap
+	if (host_parms.memsize > MAXIMUM_WIN_MEMORY)
+	{
+		host_parms.memsize = MAXIMUM_WIN_MEMORY;
+	}
+#else
+	//FILE *meminfo=fopen("/proc/meminfo","r"); // read in meminfo file?
+	// sysinfo() system call??
+
+	// hard code 32 mb for dedicated servers
+	host_parms.memsize = MAXIMUM_DEDICATED_MEMORY;
+#endif
+
 	host_parms.membase = (unsigned char *)new unsigned char[ host_parms.memsize ];
 	if ( !host_parms.membase )
 	{

@@ -740,7 +740,8 @@ int CSocket::Broadcast( int port, CMsgBuffer *msg /*= NULL*/ )
 	struct sockaddr	addr;
 	netadr_t to;
 
-	to.port = htons( port );
+//	to.port = htons( port );
+	to.port = (unsigned short)htons( (unsigned short)port );
 	to.type = NA_BROADCAST;
 
 	net->NetAdrToSockAddr ( &to, &addr );

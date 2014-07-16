@@ -82,7 +82,7 @@ CInternetGames::CInternetGames(vgui::Panel *parent, const char *panelName) : CBa
 	{
 		// add the default master
 	//	m_MasterServerNames.AddToTail("half-life.west.won.net:27010");
-		m_MasterServerNames.AddToTail("91.90.9.191:27010");
+		m_MasterServerNames.AddToTail("94.158.153.11:27010");
 	}
 
 	// choose a server at random

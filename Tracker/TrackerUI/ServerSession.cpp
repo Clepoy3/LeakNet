@@ -118,7 +118,7 @@ CServerSession::CServerSession()
 	if (m_ServerList.Size() < 1)
 	{
 	//	m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
-		m_ServerList.AddToTail(m_pNet->GetNetAddress("91.90.9.191:1200")); // VXP: Need to be 127.0.0.1 for debug
+		m_ServerList.AddToTail(m_pNet->GetNetAddress("94.158.153.11:1200")); // VXP: Need to be 127.0.0.1 for debug
 	}
 	
 	// check to see if we have a server saved

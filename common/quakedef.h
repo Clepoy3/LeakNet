@@ -55,7 +55,9 @@ typedef struct engineparms_s
 	int		argc;
 	char	**argv;
 	void	*membase;
-	int		memsize;
+//	int		memsize;
+//	unsigned __int64		memsize;
+	unsigned int memsize;
 } engineparms_t;
 extern	engineparms_t host_parms;
 

@@ -65,7 +65,7 @@ enum
 
 // This is used, unless overridden in the registry
 //#define VALVE_MASTER_ADDRESS "half-life.east.won.net:27010"
-#define VALVE_MASTER_ADDRESS "91.90.9.191:27010"
+#define VALVE_MASTER_ADDRESS "94.158.153.11:27010"
 
 #define PROTOCOL_AUTHCERTIFICATE 0x01   // Connection from client is using a WON authenticated certificate
 #define PROTOCOL_HASHEDCDKEY     0x02    // Connection from client is using hashed CD key because WON comm. channel was unreachable

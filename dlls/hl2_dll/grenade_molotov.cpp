@@ -90,7 +90,10 @@ void CGrenade_Molotov::Spawn( void )
 		m_pFireTrail->m_Opacity		= 0.25f;
 
 		m_pFireTrail->SetLifetime( 20.0f );
-		m_pFireTrail->FollowEntity( entindex(), 2 );
+		
+		int nAttachmentIndex = LookupAttachment( "fire" );
+	//	m_pFireTrail->FollowEntity( entindex(), 2 );
+		m_pFireTrail->FollowEntity( entindex(), nAttachmentIndex );
 	}
 }
 
@@ -171,7 +174,7 @@ void CGrenade_Molotov::Detonate( void )
 	//	float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 100; // VXP: Best formula EVER!
 		float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 500;
 		float growth = 0.1f + ( 0.75f * ( offset / 128.0f ) );
-		Msg( "Scale for %f offset is: %f\n", offset, scale );
+	//	Msg( "Scale for %f offset is: %f\n", offset, scale );
 		if( firetrace.fraction != 1.0 )
 		{
 			FireSystem_StartFire( firetrace.endpos, scale, growth, 30.0f, (SF_FIRE_START_ON|SF_FIRE_SMOKELESS|SF_FIRE_NO_GLOW), (CBaseEntity*) this, FIRE_NATURAL );
@@ -243,7 +246,8 @@ void CGrenade_Molotov::Precache( void )
 {
 	BaseClass::Precache();
 
-	engine->PrecacheModel("models/weapons/w_bb_bottle.mdl");
+//	engine->PrecacheModel("models/weapons/w_bb_bottle.mdl");
+	engine->PrecacheModel("models/weapons/w_molotov.mdl");
 
 	UTIL_PrecacheOther("_firesmoke");
 }
