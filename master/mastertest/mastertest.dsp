@@ -8,12 +8,12 @@ CFG=mastertest - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "mastertest.mak".
+!MESSAGE NMAKE /f "MasterTest.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "mastertest.mak" CFG="mastertest - Win32 Debug"
+!MESSAGE NMAKE /f "MasterTest.mak" CFG="mastertest - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\common" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\common" /I "..\..\engine" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Yu"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -54,12 +54,12 @@ LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
 # ADD LINK32 /nologo /subsystem:windows /machine:I386
 # Begin Custom Build
-TargetPath=.\Release\mastertest.exe
-InputPath=.\Release\mastertest.exe
+TargetPath=.\Release\MasterTest.exe
+InputPath=.\Release\MasterTest.exe
 SOURCE="$(InputPath)"
 
-"d:\quiver\mastertest.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(TargetPath) d:\quiver\mastertest.exe
+"..\..\..\mastertest.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(TargetPath) ..\..\..\mastertest.exe
 
 # End Custom Build
 
@@ -76,7 +76,7 @@ SOURCE="$(InputPath)"
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\common" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\common" /I "..\..\engine" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -88,12 +88,12 @@ LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # Begin Custom Build
-TargetPath=.\Debug\mastertest.exe
-InputPath=.\Debug\mastertest.exe
+TargetPath=.\Debug\MasterTest.exe
+InputPath=.\Debug\MasterTest.exe
 SOURCE="$(InputPath)"
 
-"d:\quiver\mastertest.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(TargetPath) d:\quiver\mastertest.exe
+"..\..\..\mastertest.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(TargetPath) ..\..\..\mastertest.exe
 
 # End Custom Build
 
@@ -171,6 +171,10 @@ SOURCE=.\mastertestDlg.h
 # Begin Source File
 
 SOURCE=.\MessageBuffer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\engine\packed_entity.h
 # End Source File
 # Begin Source File
 

@@ -11,8 +11,10 @@ extern BOOL  bigendien;
 
 extern short   (*BigShort) (short l);
 extern short   (*LittleShort) (short l);
-extern int32     (*BigLong) (int32 l);
-extern int32     (*LittleLong) (int32 l);
+//extern int32     (*BigLong) (int32 l);
+//extern int32     (*LittleLong) (int32 l);
+extern long    (*BigLong) (long l);
+extern long    (*LittleLong) (long l);
 extern float   (*BigFloat) (float l);
 extern float   (*LittleFloat) (float l);
 

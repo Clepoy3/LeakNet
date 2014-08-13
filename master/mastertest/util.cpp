@@ -35,7 +35,8 @@ short   ShortNoSwap (short l)
 	return l;
 }
 
-int32    LongSwap (int32 l)
+//int32    LongSwap (int32 l)
+long    LongSwap (long l)
 {
 	byte    b1,b2,b3,b4;
 
@@ -44,10 +45,11 @@ int32    LongSwap (int32 l)
 	b3 = (l>>16)&255;
 	b4 = (l>>24)&255;
 
-	return ((int32)b1<<24) + ((int32)b2<<16) + ((int32)b3<<8) + b4;
+	return ((long)b1<<24) + ((long)b2<<16) + ((long)b3<<8) + b4;
 }
 
-int32     LongNoSwap (int32 l)
+//int32     LongNoSwap (int32 l)
+long     LongNoSwap (long l)
 {
 	return l;
 }

@@ -498,7 +498,7 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 			}
 		}
 	}
-	else
+/*	else
 	{
 // FIXME: BUG BUG: HACK HACK:  okay, you get the point
 // when we finally fix the delta encoding relative to multiple
@@ -510,7 +510,7 @@ void C_BasePlayer::PostDataUpdate( DataUpdateType_t updateType )
 		}
 #endif
 	}
-
+*/
 	if ( m_Local.m_iv_vecPunchAngle.GetCurrent() != m_Local.m_vecPunchAngle )
 	{
 		m_Local.m_iv_vecPunchAngle.NoteChanged( this, LATCH_SIMULATION_VAR );
@@ -1360,15 +1360,18 @@ void C_BasePlayer::LeaveVehicle( void )
 
 float C_BasePlayer::GetMinFOV()	const
 {
-//	if ( engine->GetMaxClients() == 1 )
-//	{
+/* VXP
+	if ( engine->GetMaxClients() == 1 )
+	{
 		// Let them do whatever they want, more or less, in single player
 		return 5;
-//	}
-//	else
-//	{
-//		return 75;
-//	}
+	}
+	else
+	{
+		return 75;
+	}
+*/
+	return 5;
 }
 
 //-----------------------------------------------------------------------------
