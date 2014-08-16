@@ -590,7 +590,8 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 	// Sadly, the only way to compute texture memory size
 	// is to allocate a crapload of textures until we can't any more
 	ImageFormat fmt = FindNearestSupportedFormat( IMAGE_FORMAT_BGR565 );
-	int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
+//	int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
+	int textureSize = 256 * 256 / 2.23168; // VXP: Need to test!!!
 
 	int totalSize = 0;
 	CUtlVector< IDirect3DBaseTexture* > textures;

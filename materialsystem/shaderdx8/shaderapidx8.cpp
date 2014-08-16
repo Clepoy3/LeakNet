@@ -1972,6 +1972,7 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 	InstallWindowHook( (HWND)hwnd );
 
 	m_Caps.m_TextureMemorySize = ComputeTextureMemorySize( m_DeviceGUID, m_DeviceType );
+//	m_Caps.m_TextureMemorySize = GetVidMemBytes(); // VXP: From release...
 
 	CreateMatrixStacks();
 	
@@ -3077,6 +3078,7 @@ void CShaderAPIDX8::SpewDriverInfo() const
 		(caps.RasterCaps & D3DPRASTERCAPS_ZTEST) ? " Y " : "*N*" );
 
 	Warning("Size of Texture Memory : %d kb\n", m_Caps.m_TextureMemorySize / 1024 );
+//	Warning("Size of Texture Memory : %d\n", m_Caps.m_TextureMemorySize );
 	Warning("Max Texture Dimensions : %d x %d\n", 
 		caps.MaxTextureWidth, caps.MaxTextureHeight );
 	if (caps.MaxTextureAspectRatio != 0)

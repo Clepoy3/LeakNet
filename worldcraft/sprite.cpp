@@ -219,7 +219,7 @@ bool CSpriteModel::LoadSprite(const char *pszSpritePath)
 		m_Width = m_pMaterial->GetWidth();
 		m_Height = m_pMaterial->GetHeight();
 		// FIXME: m_NumFrames = m_pMaterial->GetMaterial()->GetNumAnimationFrames();
-		m_pFrameVar = m_pMaterial->GetMaterial()->FindVar( "$spriteFrame", 0 );
+		m_pFrameVar = m_pMaterial->GetMaterial()->FindVar( "$spriteFrame", 0 ); // VXP: When open crg map source (WHEN NOT CONFIGURED!!!)
 		m_pRenderModeVar = m_pMaterial->GetMaterial()->FindVar( "$spriterendermode", 0 );
 
 		bool found;

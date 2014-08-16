@@ -101,9 +101,9 @@ static void GetAllPlayersInfo( void )
 			continue;
 
 		extra_player_info_t *extra = &g_PlayerExtraInfo[ i ];
-		C_Team *team = GetPlayersTeam(i);
-		if ( !team )
-			continue;
+	//	C_Team *team = GetPlayersTeam(i);
+	//	if ( !team )
+	//		continue;
 
 		extra->frags = g_PR->Get_Score( i );
 		extra->deaths = g_PR->Get_Deaths( i );
@@ -123,10 +123,12 @@ static void GetAllPlayersInfo( void )
 		extra->playerclass = 0;
 #endif
 
-		extra->teamnumber = team->GetTeamNumber();
+	//	extra->teamnumber = team->GetTeamNumber();
+		extra->teamnumber = 0;
 		extra->ping = g_PR->Get_Ping( i );
 		extra->packetloss = g_PR->Get_Packetloss( i );
-		Q_snprintf( extra->teamname, sizeof( extra->teamname ), "%s", team->Get_Name() );
+	//	Q_snprintf( extra->teamname, sizeof( extra->teamname ), "%s", team->Get_Name() );
+		Q_snprintf( extra->teamname, sizeof( extra->teamname ), "Combine" );
 	}
 
 	memset( g_IsSpectator, 0, sizeof( g_IsSpectator ) );
