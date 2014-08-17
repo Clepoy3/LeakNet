@@ -15,6 +15,7 @@
 #include "iefx.h"
 #include "decals.h"
 #include "engine/IEngineSound.h"
+#include "IViewRender.h" // VXP: Fix for crash when player shoots at leakable texture
 #include "view.h"
 
 #define SPLASH_MAX_FALL_DIST 1000
@@ -62,6 +63,12 @@ C_Splash::C_Splash()
 
 	m_bEmit = true;
 	m_nNumDecals = 1;
+
+	// VXP: Fix for crash when player shoots at leakable texture
+	ClientEntityList().AddNonNetworkableEntity( GetIClientUnknown() ); // VXP: From fx_impact.cpp(LeakEffect() after creating C_Splash)
+	// VXP: Taken from c_fire_smoke.cpp
+	m_Partition = partition->CreateHandle( GetIClientUnknown() );
+	view->AddVisibleEntity( this );
 }
 
 void C_Splash::SetPos(const Vector &pos, bool bInitial)
@@ -310,5 +317,11 @@ C_Splash::~C_Splash()
 	if(m_pParticleMgr)
 	{
 		m_pParticleMgr->RemoveEffect( &m_ParticleEffect );
+
+		// VXP: Fix for crash when player shoots at leakable texture
+		// Taken from c_fire_smoke.cpp
+		ClientEntityList().RemoveEntity( GetClientHandle() );
+		partition->Remove( PARTITION_CLIENT_SOLID_EDICTS | PARTITION_CLIENT_RESPONSIVE_EDICTS | PARTITION_CLIENT_NON_STATIC_EDICTS, m_Partition );
+		RemoveFromLeafSystem();
 	}
 }

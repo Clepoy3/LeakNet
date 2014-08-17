@@ -106,3 +106,5 @@ Serverbrowser: сделать в Game правильное отображени�
 materialsystem\stdshaders\teeth.cpp - SHADER_FALLBACK - пофиксить E3 HACK
 CSceneEntity::DispatchStartMoveTo - пофиксить E3 HACK
 CNPC_Citizen::SelectSchedule - SCHED_HIDE_AND_RELOAD или SCHED_RELOAD
+
+func_door - раньше был angles вместо movedir. Нужно сделать всё совместимым
