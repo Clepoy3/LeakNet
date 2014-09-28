@@ -167,6 +167,8 @@ int ACT_ANTLIONGRUB_HEAL;
 //Interaction IDs
 int	g_interactionAntlionGrubAlert = 0;
 
+CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+
 #define	REGISTER_INTERACTION( a )	{ a = CBaseCombatCharacter::GetInteractionID(); }
 
 //-----------------------------------------------------------------------------
@@ -284,7 +286,7 @@ void CNPC_AntlionGrub::Spawn( void )
 	
 	SetTouch( GrubTouch );
 
-	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+//	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
 
 	CPASAttenuationFilter filter( this );
 	m_pMovementSound	= controller.SoundCreate( filter, entindex(), CHAN_BODY, "npc/antlion_grub/movement.wav", 3.9f );
@@ -324,8 +326,8 @@ void CNPC_AntlionGrub::HandleAnimEvent( animevent_t *pEvent )
 		{
 			float duration = random->RandomFloat( 0.1f, 0.3f );
 
-			CSoundEnvelopeController::GetController().SoundChangePitch( m_pMovementSound, random->RandomInt( 100, 120 ), duration );
-			CSoundEnvelopeController::GetController().SoundChangeVolume( m_pMovementSound, random->RandomFloat( 0.6f, 0.8f ), duration );
+			controller.SoundChangePitch( m_pMovementSound, random->RandomInt( 100, 120 ), duration );
+			controller.SoundChangeVolume( m_pMovementSound, random->RandomFloat( 0.6f, 0.8f ), duration );
 		}
 		break;
 
@@ -333,8 +335,8 @@ void CNPC_AntlionGrub::HandleAnimEvent( animevent_t *pEvent )
 		{
 			float duration = random->RandomFloat( 0.1f, 0.3f );
 
-			CSoundEnvelopeController::GetController().SoundChangePitch( m_pMovementSound, random->RandomInt( 80, 100 ), duration );
-			CSoundEnvelopeController::GetController().SoundChangeVolume( m_pMovementSound, random->RandomFloat( 0.0f, 0.1f ), duration );
+			controller.SoundChangePitch( m_pMovementSound, random->RandomInt( 80, 100 ), duration );
+			controller.SoundChangeVolume( m_pMovementSound, random->RandomFloat( 0.0f, 0.1f ), duration );
 		}
 		break;
 
@@ -447,7 +449,7 @@ void CNPC_AntlionGrub::StartTask( const Task_t *pTask )
 
 		SetActivity( (Activity) ACT_ANTLIONGRUB_HEAL );
 
-		CSoundEnvelopeController::GetController().SoundChangeVolume( m_pHealSound, 0.5f, 2.0f );
+		controller.SoundChangeVolume( m_pHealSound, 0.5f, 2.0f );
 
 		//Must have a target
 		if ( GetEnemy() == NULL )
@@ -550,7 +552,7 @@ void CNPC_AntlionGrub::RunTask( const Task_t *pTask )
 		if ( ( GetEnemy()->m_iHealth == GetEnemy()->m_iMaxHealth ) || ( m_nHealthReserve <= 0 ) || ( (GetEnemy()->GetLocalOrigin() - GetLocalOrigin()).Length() > 64 ) )
 		{
 			m_bHealing = false;
-			CSoundEnvelopeController::GetController().SoundChangeVolume( m_pHealSound, 0.0f, 0.5f );
+			controller.SoundChangeVolume( m_pHealSound, 0.0f, 0.5f );
 			TaskComplete();
 			return;
 		}
@@ -591,6 +593,13 @@ int CNPC_AntlionGrub::TranslateSchedule( int type )
 	return BaseClass::TranslateSchedule( type );
 }
 
+int CNPC_AntlionGrub::OnTakeDamage_Alive( const CTakeDamageInfo &info )
+{
+	if( FClassnameIs( info.GetInflictor(), "npc_hydra" ) )
+		Squash( info.GetInflictor() );
+	return BaseClass::OnTakeDamage_Alive( info );
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *pOther - 
@@ -617,9 +626,9 @@ void CNPC_AntlionGrub::GrubTouch( CBaseEntity *pOther )
 		m_bSquashValid = true;
 		m_flSquashTime = gpGlobals->curtime + ANTLIONGRUB_SQUASH_TIME;
 		
-		CSoundEnvelopeController::GetController().CommandClear( m_pVoiceSound );
-		CSoundEnvelopeController::GetController().SoundChangePitch( m_pVoiceSound, 150, ANTLIONGRUB_SQUASH_TIME*0.5f );
-		CSoundEnvelopeController::GetController().SoundChangeVolume( m_pVoiceSound, 1.0f, 0.5f );
+		controller.CommandClear( m_pVoiceSound );
+		controller.SoundChangePitch( m_pVoiceSound, 150, ANTLIONGRUB_SQUASH_TIME*0.5f );
+		controller.SoundChangeVolume( m_pVoiceSound, 1.0f, 0.5f );
 	}
 	else
 	{
@@ -652,8 +661,8 @@ void CNPC_AntlionGrub::EndTouch( CBaseEntity *pOther )
 
 	m_bSquashValid = false;
 	
-	CSoundEnvelopeController::GetController().SoundChangePitch( m_pVoiceSound, 100, 0.5f );
-	CSoundEnvelopeController::GetController().SoundChangeVolume( m_pVoiceSound, 0.0f, 1.0f );
+	controller.SoundChangePitch( m_pVoiceSound, 100, 0.5f );
+	controller.SoundChangeVolume( m_pVoiceSound, 0.0f, 1.0f );
 
 	m_flPlaybackRate = 1.0f;
 }
@@ -705,7 +714,7 @@ bool CNPC_AntlionGrub::HandleInteraction( int interactionType, void *data, CBase
 		SetCondition( COND_ANTLIONGRUB_HEARD_SQUEAL );
 		
 		//float envDuration = PlayEnvelope( m_pVoiceSound, SOUNDCTRL_CHANGE_VOLUME, envScared, ARRAYSIZE(envScared) );
-		float envDuration = CSoundEnvelopeController::GetController().SoundPlayEnvelope( m_pVoiceSound, SOUNDCTRL_CHANGE_VOLUME, envMidSustain, ARRAYSIZE(envMidSustain) );
+		float envDuration = controller.SoundPlayEnvelope( m_pVoiceSound, SOUNDCTRL_CHANGE_VOLUME, envMidSustain, ARRAYSIZE(envMidSustain) );
 		m_flNextVoiceChange = gpGlobals->curtime + envDuration + random->RandomFloat( 4.0f, 8.0f );
 
 		return true;
@@ -764,12 +773,12 @@ void CNPC_AntlionGrub::SpawnSquashedGrub( void )
 
 void CNPC_AntlionGrub::StopLoopingSounds()
 {
-	CSoundEnvelopeController::GetController().SoundDestroy( m_pMovementSound );
-	CSoundEnvelopeController::GetController().SoundDestroy( m_pVoiceSound );
-	CSoundEnvelopeController::GetController().SoundDestroy( m_pHealSound );
-/*	m_pMovementSound = NULL;
+	controller.SoundDestroy( m_pMovementSound );
+	controller.SoundDestroy( m_pVoiceSound );
+	controller.SoundDestroy( m_pHealSound );
+/**/	m_pMovementSound = NULL;
 	m_pVoiceSound = NULL;
-	m_pHealSound = NULL;*/
+	m_pHealSound = NULL;/**/
 }
 
 //-----------------------------------------------------------------------------
@@ -824,7 +833,7 @@ void CNPC_AntlionGrub::PrescheduleThink( void )
 	{
 		if ( m_bHealing )
 		{
-			CSoundEnvelopeController::GetController().SoundChangeVolume( m_pHealSound, 0.0f, 0.5f );
+			controller.SoundChangeVolume( m_pHealSound, 0.0f, 0.5f );
 		}
 
 		m_bHealing = false;
@@ -860,16 +869,16 @@ void CNPC_AntlionGrub::PrescheduleThink( void )
 	{
 		if ( m_bMoving == false )
 		{
-			CSoundEnvelopeController::GetController().SoundChangePitch( m_pMovementSound, 100, 0.1f );
-			CSoundEnvelopeController::GetController().SoundChangeVolume( m_pMovementSound, 0.4f, 1.0f );
+			controller.SoundChangePitch( m_pMovementSound, 100, 0.1f );
+			controller.SoundChangeVolume( m_pMovementSound, 0.4f, 1.0f );
 
 			m_bMoving = true;
 		}
 	}
 	else if ( m_bMoving )
 	{
-		CSoundEnvelopeController::GetController().SoundChangePitch( m_pMovementSound, 80, 0.5f );
-		CSoundEnvelopeController::GetController().SoundChangeVolume( m_pMovementSound, 0.0f, 1.0f );
+		controller.SoundChangePitch( m_pMovementSound, 80, 0.5f );
+		controller.SoundChangeVolume( m_pMovementSound, 0.0f, 1.0f );
 		
 		m_bMoving = false;
 	}
@@ -877,7 +886,7 @@ void CNPC_AntlionGrub::PrescheduleThink( void )
 	//Check for a voice change
 	if ( m_flNextVoiceChange < gpGlobals->curtime )
 	{
-		float envDuration = CSoundEnvelopeController::GetController().SoundPlayEnvelope( m_pVoiceSound, SOUNDCTRL_CHANGE_VOLUME, &grubVoiceEnvelopes[rand()%ARRAYSIZE(grubVoiceEnvelopes)] );
+		float envDuration = controller.SoundPlayEnvelope( m_pVoiceSound, SOUNDCTRL_CHANGE_VOLUME, &grubVoiceEnvelopes[rand()%ARRAYSIZE(grubVoiceEnvelopes)] );
 		m_flNextVoiceChange = gpGlobals->curtime + envDuration + random->RandomFloat( 1.0f, 8.0f );
 	}
 }

@@ -169,7 +169,8 @@ void C_Splash::PlaySplashSound(Vector vPos)
 	if (gpGlobals->curtime > m_flNextSoundTime)
 	{
 		CLocalPlayerFilter filter;
-		EmitSound( filter, index, "Splash.SplashSound", &vPos );
+	//	EmitSound( filter, index, "Splash.SplashSound", &vPos );
+		EmitSound( filter, SOUND_FROM_WORLD, CHAN_STREAM, "Splash.SplashSound", 1.0, ATTN_NORM, 0, 100, &vPos );
 		m_flNextSoundTime = gpGlobals->curtime + SPLASH_SOUND_DELAY;
 	}
 }

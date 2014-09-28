@@ -560,9 +560,9 @@ void CPlayerClassCommando::ResetViewOffset( void )
 //-----------------------------------------------------------------------------
 void CPlayerClassCommando::InitVCollision( void )
 {
-	CPhysCollide *pStandModel = PhysCreateBbox( COMMANDOCLASS_HULL_STAND_MIN, COMMANDOCLASS_HULL_STAND_MAX );
-	CPhysCollide *pCrouchModel = PhysCreateBbox( COMMANDOCLASS_HULL_DUCK_MIN, COMMANDOCLASS_HULL_DUCK_MAX );
-	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_commando_stand", pCrouchModel, "tfplayer_commando_crouch" );
+/*	CPhysCollide *pStandModel = */PhysCreateBbox( COMMANDOCLASS_HULL_STAND_MIN, COMMANDOCLASS_HULL_STAND_MAX );
+/*	CPhysCollide *pCrouchModel = */PhysCreateBbox( COMMANDOCLASS_HULL_DUCK_MIN, COMMANDOCLASS_HULL_DUCK_MAX );
+//	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_commando_stand", pCrouchModel, "tfplayer_commando_crouch" );
 }
 
 //-----------------------------------------------------------------------------

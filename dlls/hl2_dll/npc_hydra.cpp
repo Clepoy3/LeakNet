@@ -8,6 +8,7 @@
 #include "cbase.h"
 
 #include "npc_hydra.h"
+#include "npc_antliongrub.h"
 
 #include "ai_hull.h"
 #include "saverestore_utlvector.h"
@@ -23,6 +24,8 @@
 //
 
 #define HYDRA_MAX_LENGTH	500
+#define HYDRA_MIN_STAB_HOLD_TIME	1.5f
+#define HYDRA_MAX_STAB_HOLD_TIME	10.0f
 
 LINK_ENTITY_TO_CLASS( npc_hydra, CNPC_Hydra );
 
@@ -702,6 +705,31 @@ void CNPC_Hydra::Stab( CBaseEntity *pOther, const Vector &vecSpeed, trace_t &tr 
 			}
 		}
 	}
+	else if (pOther->m_takedamage == DAMAGE_YES && pOther->IsPlayer())
+	{
+		Vector dir = vecSpeed;
+		VectorNormalize( dir );
+
+	//	UTIL_ScreenShake( pOther->GetAbsOrigin(), 50, 1, 0.1, 50, SHAKE_START, true );
+		UTIL_ScreenShake( pOther->EyePosition(), 50, 1, 0.1, 50, SHAKE_START, true );
+	//	if( random->RandomInt( 0, 1 ) == 1 )
+		int damage = 0;
+		if( random->RandomFloat( 0.0f, 1.0f ) < 0.1f )
+			damage = pOther->m_iHealth+25;
+		else
+			damage = 25;
+	//	ClearMultiDamage();
+		// VXP: Maybe, this cause hydra stupid
+		CTakeDamageInfo info( this, this, damage, DMG_SLASH );
+		CalculateMeleeDamageForce( &info, dir, tr.endpos );
+		pOther->DispatchTraceAttack( info, dir, &tr );
+	//	pOther->TakeDamage( info );
+		ApplyMultiDamage();
+		
+		CPASAttenuationFilter filter( this, "NPC_Hydra.Pain" );
+		Vector vecHead = EyePosition();
+		EmitSound( filter, entindex(), "NPC_Hydra.Pain", &vecHead );
+	}
 	else
 	{
 		Nudge( pOther, tr.endpos, vecSpeed );
@@ -1230,17 +1258,17 @@ void CNPC_Hydra::StartTask( const Task_t *pTask )
 				SetTarget( GetEnemy() );
 			}
 
-			//CPASAttenuationFilter filter( this, "NPC_Hydra.Alert" );
-			//Vector vecHead = EyePosition();
-			//EmitSound( filter, entindex(), "NPC_Hydra.Alert", &vecHead );
+			CPASAttenuationFilter filter( this, "NPC_Hydra.Alert" );
+			Vector vecHead = EyePosition();
+			EmitSound( filter, entindex(), "NPC_Hydra.Alert", &vecHead );
 		}
 		return;
 
 	case TASK_HYDRA_STAB:
 		{
-			//CPASAttenuationFilter filter( this, "NPC_Hydra.Attack" );
-			//Vector vecHead = EyePosition();
-			//EmitSound( filter, entindex(), "NPC_Hydra.Attack", &vecHead );
+			CPASAttenuationFilter filter( this, "NPC_Hydra.Attack" );
+			Vector vecHead = EyePosition();
+			EmitSound( filter, entindex(), "NPC_Hydra.Attack", &vecHead );
 
 			m_flTaskEndTime = gpGlobals->curtime + 0.5;
 		}
@@ -1266,6 +1294,7 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 	{
 	case TASK_HYDRA_DEPLOY:
 		{
+	//	Msg( "TASK_HYDRA_DEPLOY\n" );
 			m_flHeadGoalInfluence = 1.0;
 			float dist = (EyePosition() - m_vecHeadGoal).Length();
 
@@ -1280,6 +1309,7 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 
 	case TASK_HYDRA_PREP_STAB:
 		{
+	//	Msg( "TASK_HYDRA_PREP_STAB\n" );
 			int i;
 
 			if (m_body.Count() < 2)
@@ -1287,9 +1317,15 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 				TaskFail( "hydra is too short to begin stab" );
 				return;
 			}
+			
+			if( m_bStabbedEntity )
+			{
+				TaskFail( "hydra is stabbing someone" );
+				return;
+			}
 
 			CBaseEntity *pTarget = GetTarget();
-			if (pTarget == NULL)
+			if (pTarget == NULL /*|| pTarget->GetHealth() <= 0*/)
 			{
 				TaskFail( FAIL_NO_TARGET );
 			}
@@ -1410,6 +1446,7 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 
 	case TASK_HYDRA_STAB:
 		{
+	//	Msg( "TASK_HYDRA_STAB\n" );
 			int i;
 
 			if (m_body.Count() < 2)
@@ -1496,6 +1533,7 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 
 	case TASK_HYDRA_PULLBACK:
 		{
+		//	Msg( "TASK_HYDRA_PULLBACK\n" );
 			if (m_body.Count() < 2)
 			{
 				TaskFail( "hydra is too short to begin stab" );
@@ -1610,6 +1648,8 @@ public:
 	IPhysicsConstraint *CreateConstraint( CNPC_Hydra *pHydra, IPhysicsObject *pTargetPhys, IPhysicsConstraintGroup *pGroup );
 	static CHydraImpale *Create( CNPC_Hydra *pHydra, CBaseEntity *pObject2 );
 
+	IPhysicsConstraint	*GetConstraint( void );
+
 public:
 	IPhysicsConstraint		*m_pConstraint;
 	CHandle<CNPC_Hydra>		m_hHydra;
@@ -1706,6 +1746,11 @@ IPhysicsConstraint *CHydraImpale::CreateConstraint( CNPC_Hydra *pHydra, IPhysics
 	return m_pConstraint;
 }
 
+IPhysicsConstraint *CHydraImpale::GetConstraint()
+{
+	return m_pConstraint;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Create a Hydra Impale between the hydra and the entity passed in
 //-----------------------------------------------------------------------------
@@ -1747,14 +1792,32 @@ void CNPC_Hydra::AttachStabbedEntity( CBaseAnimating *pAnimating, Vector vecForc
 	info.SetDamageForce( vecForce );
 	info.SetDamagePosition( tr.endpos );
 
+//	if( pAnimating->Classify() == CLASS_ANTLION )
+	if( FClassnameIs( pAnimating, "npc_antliongrub" ) ) // VXP: Hack for antlion grub
+	{
+		CNPC_AntlionGrub *grub = dynamic_cast<CNPC_AntlionGrub*>(pAnimating);
+	//	grub->SetHealth(-1);
+		ClearMultiDamage();
+		// FIXME: this is bogus
+		CTakeDamageInfo info( this, this, 1000, DMG_SLASH );
+		CalculateMeleeDamageForce( &info, vecForce, tr.endpos );
+		grub->DispatchTraceAttack( info, vecForce, &tr );
+		ApplyMultiDamage();
+		return;
+	}
+
 	CBaseEntity *pRagdoll = CreateServerRagdoll( pAnimating, 0, info, COLLISION_GROUP_INTERACTIVE_DEBRIS );
 
 	// Create our impale entity
-	CHydraImpale::Create( this, pRagdoll );
+//	CHydraImpale::Create( this, pRagdoll );
+	m_pHydraImpale = CHydraImpale::Create( this, pRagdoll );
 
 	m_bStabbedEntity = true;
 
 	UTIL_Remove( pAnimating );
+	
+	m_flDetachEntityTime = gpGlobals->curtime + random->RandomFloat( HYDRA_MIN_STAB_HOLD_TIME, HYDRA_MAX_STAB_HOLD_TIME );
+//	m_flDetachEntityTime = gpGlobals->curtime + 1.0f;
 }
 
 void CNPC_Hydra::UpdateStabbedEntity( void )
@@ -1774,6 +1837,14 @@ void CNPC_Hydra::UpdateStabbedEntity( void )
 
 	m_grabController.SetTargetPosition( vecOrigin, vecAngles );
 	*/
+/*	if( m_pHydraImpale )
+	{
+		Msg( "%f\n", m_pHydraImpale.GetAbsOrigin().x );
+	}*/
+	if( m_bStabbedEntity && gpGlobals->curtime >= m_flDetachEntityTime )
+	{
+		DetachStabbedEntity( true );
+	}
 }
 
 void CNPC_Hydra::DetachStabbedEntity( bool playSound )
@@ -1794,10 +1865,24 @@ void CNPC_Hydra::DetachStabbedEntity( bool playSound )
 
 	m_grabController.DetachEntity();
 	*/
-
+	if( m_pHydraImpale != NULL )
+	{
+		IPhysicsConstraint *pConstraint = m_pHydraImpale->GetConstraint();
+		if( pConstraint != NULL )
+		{
+			pConstraint->Deactivate();
+			pConstraint = NULL;
+			
+			UTIL_Remove( m_pHydraImpale );
+		//	m_pHydraImpale = NULL;
+		}
+	}
 	if ( playSound )
 	{
 		//Play the detach sound
+		CPASAttenuationFilter filter( this, "NPC_Hydra.Bump" );
+		Vector vecHead = EyePosition();
+		EmitSound( filter, entindex(), "NPC_Hydra.Bump", &vecHead );
 	}
 
 	m_bStabbedEntity = false;

@@ -684,6 +684,7 @@ void ConvertResourceValueToChunks( int iResources, int *iNumProcessed, int *iNum
 	// Round up
 	if ( iResources )
 	{
-		*iNumNormal++;
+	//	*iNumNormal++;
+		(*iNumNormal)++;
 	}
 }

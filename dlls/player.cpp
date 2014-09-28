@@ -4933,16 +4933,9 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		pEntity = FindEntityForward( this );
 		if ( pEntity && !pEntity->IsPlayer() )
 		{
-			if ( !pEntity->IsPlayer() )
-			{
-				UTIL_Remove( pEntity );
-//				if ( pEntity->m_takedamage )
-//					pEntity->SetThink(SUB_Remove);
-			}
-			else
-			{
-				Warning( "Cannot remove object.\n" );
-			}
+			UTIL_Remove( pEntity );
+//			if ( pEntity->m_takedamage )
+//				pEntity->SetThink(SUB_Remove);
 		}
 		break;
 	}

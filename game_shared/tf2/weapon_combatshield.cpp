@@ -939,20 +939,32 @@ void CWeaponCombatShield::DrawBeams( C_BaseViewModel *pViewModel )
 	// Tesla Effect
 	Vector vecRightTop, vecRightBottom;
 	Vector vecLeftTop, vecLeftBottom;
-	iAttachment = pViewModel->LookupAttachment( "LeftBottom" );
-	pViewModel->GetAttachment( iAttachment, vecLeftBottom, vecAngle );
+//	iAttachment = pViewModel->LookupAttachment( "LeftBottom" );
+	iAttachment = 0;
+//	pViewModel->GetAttachment( iAttachment, vecLeftBottom, vecAngle );
+	vecLeftBottom = pViewModel->GetAbsOrigin();
+	vecAngle = QAngle( 0, 0, 0 );
 	pViewModel->UncorrectViewModelAttachment( vecLeftBottom );
 
-	iAttachment = pViewModel->LookupAttachment( "LeftTip" );
-	pViewModel->GetAttachment( iAttachment, vecLeftTop, vecAngle );
+//	iAttachment = pViewModel->LookupAttachment( "LeftTip" );
+	iAttachment = 0;
+//	pViewModel->GetAttachment( iAttachment, vecLeftTop, vecAngle );
+	vecLeftTop = pViewModel->GetAbsOrigin();
+	vecAngle = QAngle( 0, 0, 0 );
 	pViewModel->UncorrectViewModelAttachment( vecLeftTop );
 
-	iAttachment = pViewModel->LookupAttachment( "RightBottom" );
-	pViewModel->GetAttachment( iAttachment, vecRightBottom, vecAngle );
+//	iAttachment = pViewModel->LookupAttachment( "RightBottom" );
+	iAttachment = 1;
+//	pViewModel->GetAttachment( iAttachment, vecRightBottom, vecAngle );
+	vecRightBottom = pViewModel->GetAbsOrigin();
+	vecAngle = QAngle( 0, 0, 0 );
 	pViewModel->UncorrectViewModelAttachment( vecRightBottom );
 
-	iAttachment = pViewModel->LookupAttachment( "RightTip" );
-	pViewModel->GetAttachment( iAttachment, vecRightTop, vecAngle );
+//	iAttachment = pViewModel->LookupAttachment( "RightTip" );
+	iAttachment = 1;
+//	pViewModel->GetAttachment( iAttachment, vecRightTop, vecAngle );
+	vecRightTop = pViewModel->GetAbsOrigin();
+	vecAngle = QAngle( 0, 0, 0 );
 	pViewModel->UncorrectViewModelAttachment( vecRightTop );
 
 	m_flTeslaLeftInc += weapon_combat_shield_teslaspeed.GetFloat();
@@ -991,8 +1003,10 @@ void CWeaponCombatShield::DrawBeams( C_BaseViewModel *pViewModel )
 		Q_snprintf( szShieldJoint, 16, "Shield%d", nJoint );
 
 		Vector vecJoint;
-		int iAttachment = pViewModel->LookupAttachment( &szShieldJoint[0] );
-		pViewModel->GetAttachment( iAttachment, vecJoint, vecAngle );
+	//	int iAttachment = pViewModel->LookupAttachment( &szShieldJoint[0] );
+	//	pViewModel->GetAttachment( iAttachment, vecJoint, vecAngle );
+		vecJoint = pViewModel->GetAbsOrigin();
+		vecAngle = QAngle( 0, 0, 0 );
 		pViewModel->UncorrectViewModelAttachment( vecJoint );	
 
 		if ( nJoint < 5 )

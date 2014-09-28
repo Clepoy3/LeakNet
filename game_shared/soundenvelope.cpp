@@ -445,7 +445,12 @@ float CSoundPatch::GetVolume( void )
 //-----------------------------------------------------------------------------
 inline int CSoundPatch::EntIndex() const
 {
-	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
+//	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
+	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+	{
+		Warning( "CSoundPatch::EntIndex: Cannot get sound entity index!\n" );
+		return -1;
+	}
 	return m_hEnt.Get() ? m_hEnt->entindex() : -1;
 }
 
@@ -464,6 +469,11 @@ float CSoundPatch::GetVolumeForEngine( void )
 //-----------------------------------------------------------------------------
 void CSoundPatch::Shutdown( void )
 {
+	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+	{
+		Warning( "CSoundPatch::Shutdown: Cannot get sound entity!\n" );
+		return;
+	}
 //	Msg( "Removing sound %s\n", m_pszSoundName );
 	if ( m_isPlaying )
 	{
@@ -714,6 +724,9 @@ private:
 // UNDONE: Add start command?
 void CSoundControllerImp::ProcessCommand( SoundCommand_t *pCmd )
 {
+	if( !pCmd || !pCmd->m_pPatch )
+		return;
+
 	switch( pCmd->m_command )
 	{
 	case SOUNDCTRL_CHANGE_VOLUME:
@@ -1008,12 +1021,18 @@ void CSoundControllerImp::SoundDestroy( CSoundPatch	*pSound )
 
 void CSoundControllerImp::SoundChangePitch( CSoundPatch *pSound, float pitchTarget, float deltaTime )
 {
+	if( !pSound )
+		return;
+
 	pSound->ChangePitch( pitchTarget, deltaTime );
 }
 
 
 void CSoundControllerImp::SoundChangeVolume( CSoundPatch *pSound, float volumeTarget, float deltaTime )
 {
+	if( !pSound )
+		return;
+
 	pSound->ChangeVolume( volumeTarget, deltaTime );
 }
 

@@ -93,6 +93,7 @@ void CPlayer_Manhack::Precache( void )
 void CPlayer_Manhack::Spawn( void )
 {
 	Precache();
+	SetMoveType( MOVETYPE_FLY );
 //	m_flFriction = 0.55; // deading the bounce a bit
 	SetFriction( 0.55f );
 	
@@ -134,10 +135,12 @@ void CPlayer_Manhack::InputActivate( inputdata_t &inputdata )
 	Assert( pPlayer );
 
 	pPlayer->SetFOV( 132 );
-	pPlayer->FollowEntity( this );
-//	engine->SetView( pPlayer->edict(), edict() );
+//	pPlayer->FollowEntity( this );
+
+	engine->SetView( pPlayer->edict(), edict() );
 	pPlayer->m_nControlClass	= CLASS_MANHACK;
 	pPlayer->GiveNamedItem( "weapon_manhack" );
+	pPlayer->SelectItem( "weapon_manhack" );
 }
 
 //-----------------------------------------------------------------------------
@@ -163,7 +166,8 @@ void CPlayer_Manhack::InputDeactivate( inputdata_t &inputdata )
 	// Remove manhack blade weapon from player's inventory
 	CBaseEntity* pBlade = (CBaseEntity*)(pPlayer->GetActiveWeapon());
 //	pPlayer->Weapon_Drop( GetActiveWeapon() );
-	pPlayer->Weapon_Drop( GetActiveWeapon(), NULL, NULL );
+//	pPlayer->Weapon_Drop( GetActiveWeapon(), NULL, NULL );
+	pPlayer->RemovePlayerItem( pPlayer->GetActiveWeapon() );
 	if (m_pSaveWeapon)
 	{
 		pPlayer->Weapon_Switch( m_pSaveWeapon );
@@ -173,6 +177,7 @@ void CPlayer_Manhack::InputDeactivate( inputdata_t &inputdata )
 
 	pPlayer->SetLocalOrigin( m_vSaveOrigin );
 //	pPlayer->StopFollowingEntity();
+	engine->SetView( pPlayer->edict(), pPlayer->edict() );
 
 	// Switch back to manhack model
 	VPhysicsDestroyObject();

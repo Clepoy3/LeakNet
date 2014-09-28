@@ -1010,6 +1010,15 @@ CBaseEntity *CBaseTFPlayer::EntSelectSpawnPoint( void )
 			return entity;
 	}
 
+	// VXP
+/*	CBaseEntity *pSpot
+	pSpot = gEntList.FindEntityByClassname( g_pLastSpawn, "info_player_humans");
+	if( pSpot )
+		return pSpot;
+	pSpot = gEntList.FindEntityByClassname( g_pLastSpawn, "info_player_aliens");
+	if( pSpot )
+		return pSpot;*/
+
 	// If we're not in a team, or the team didn't have a spawnpoint for us,
 	// fall back to the basic spawnpoint code.
 	return BaseClass::EntSelectSpawnPoint();

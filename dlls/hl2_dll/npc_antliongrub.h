@@ -44,6 +44,7 @@ public:
 	void			StartTask( const Task_t *pTask );
 	void			RunTask( const Task_t *pTask );
 	void			GrubTouch( CBaseEntity *pOther );
+	virtual int		OnTakeDamage_Alive( const CTakeDamageInfo &info );
 	void			EndTouch(  CBaseEntity *pOther );
 	void			StickyTouch( CBaseEntity *pOther );
 	void			PainSound( void );

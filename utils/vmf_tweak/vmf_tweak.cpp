@@ -864,7 +864,7 @@ int main(int argc, char* argv[])
 	//
 	//
 	//
-	//ScanChunks( pRoot, ScanMoveDir );
+	ScanChunks( pRoot, ScanMoveDir );
 	//ScanChunks( pRoot, ScanFuncWaterMoveDir );
 	//ScanChunks( pRoot, ScanMomentaryRotButton );
 

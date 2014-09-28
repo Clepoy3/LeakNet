@@ -129,7 +129,7 @@ inline const Vector& CCollisionProperty::WorldAlignSize( ) const
 {
 //	Assert( !IsBoundsDefinedInEntitySpace() );
 	if( IsBoundsDefinedInEntitySpace() )
-		DevMsg( "Bounds not defined in entity space! (WorldAlignSize())\n" );
+		DevMsg( "Bounds defined in entity space! (WorldAlignSize())\n" );
 	return m_vecSize;
 }
 
@@ -147,7 +147,11 @@ inline const Vector& CCollisionProperty::EntitySpaceSize( ) const
 //-----------------------------------------------------------------------------
 inline bool CCollisionProperty::IsBoundsDefinedInEntitySpace() const
 {
-	return ( m_Solid == SOLID_BSP || m_Solid == SOLID_OBB || m_Solid == SOLID_VPHYSICS );
+//	return ( m_Solid == SOLID_BSP || m_Solid == SOLID_OBB || m_Solid == SOLID_VPHYSICS );
+	// VXP: ???
+	return ( m_Solid == SOLID_BSP ||
+				m_Solid == SOLID_OBB ||
+				((m_Solid == SOLID_VPHYSICS) && (m_usSolidFlags & FSOLID_NOT_SOLID) == 0) );
 }
 
 inline void CCollisionProperty::ClearSolidFlags( void )

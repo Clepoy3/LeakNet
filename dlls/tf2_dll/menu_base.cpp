@@ -16,6 +16,8 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+#define NEW_MENU
 		    
 // Global list of menus
 CMenu	*gMenus[MENU_LAST];
@@ -128,6 +130,10 @@ void CMenuTeam::RecalculateMenu( CBaseTFPlayer *pViewer )
 	{
 		strncat( m_szMenuString, "\n\n->9. Don't change team.\n", sizeof(m_szMenuString) );
 	}
+
+#ifdef NEW_MENU
+	ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, m_szMenuString );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -139,6 +145,9 @@ bool CMenuTeam::Input( CBaseTFPlayer *pViewer, int iInput )
 	if ( pViewer->GetTeam() && iInput == 9 )
 	{
 		pViewer->MenuReset();
+#ifdef NEW_MENU
+		ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, " " );
+#endif
 		return true;
 	}
 
@@ -151,12 +160,19 @@ bool CMenuTeam::Input( CBaseTFPlayer *pViewer, int iInput )
 		if ( iInput == pViewer->GetTeam()->GetTeamNumber() )
 		{
 			pViewer->MenuReset();
+#ifdef NEW_MENU
+			ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, " " );
+#endif
 			return true;
 		}
 	}
 
 	// Add the player to the team and then bring up the Class Menu
 	pViewer->ChangeTeam( iInput );
+#ifdef NEW_MENU
+	ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTTALK, "Switched to team %s", pViewer->GetTeam()->GetName() );
+#endif
+
 
 	// Clear out the class
 	if ( pViewer->GetPlayerClass() )
@@ -168,6 +184,10 @@ bool CMenuTeam::Input( CBaseTFPlayer *pViewer, int iInput )
 	}
 
 	pViewer->ForceRespawn();
+#ifdef NEW_MENU
+	pViewer->MenuReset();
+	ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, " " );
+#endif
 
 	return true;
 }
@@ -218,6 +238,10 @@ void CMenuClass::RecalculateMenu( CBaseTFPlayer *pViewer )
 	{
 		strncat( m_szMenuString, "\n\n->9. Don't change class.\n", sizeof(m_szMenuString) );
 	}
+
+#ifdef NEW_MENU
+	ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, m_szMenuString );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -230,6 +254,9 @@ bool CMenuClass::Input( CBaseTFPlayer *pViewer, int iInput )
 	// Allow aborting if they have a class
 	if ( pViewer->GetPlayerClass() && iInput == 9 )
 	{
+#ifdef NEW_MENU
+		ClientPrint( ToBasePlayer( pViewer ), HUD_PRINTCENTER, " " );
+#endif
 		pViewer->MenuReset();
 		return true;
 	}

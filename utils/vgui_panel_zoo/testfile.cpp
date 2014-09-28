@@ -76,8 +76,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	// In order to load resource files the file must be in your vgui filesystem path.
 //	vgui::filesystem()->AddSearchPath("../", "resources");
-//	vgui::filesystem()->AddSearchPath("../", "");
-	vgui::filesystem()->AddSearchPath("../platform/", ""); // VXP: From default bin path
+	vgui::filesystem()->AddSearchPath("../", "");
+//	vgui::filesystem()->AddSearchPath("../platform/", ""); // VXP: From default bin path
 
 	// Init the surface
 	vgui::surface()->Init();

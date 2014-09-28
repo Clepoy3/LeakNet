@@ -632,7 +632,12 @@ void CPlayerClass::SetMaxSpeed( float flMaxSpeed )
 int CPlayerClass::GetMaxHealthCVarValue()
 {
 	int val = GetTFClassInfo( GetTFClass() )->m_pMaxHealthCVar->GetInt();
-	Assert( val > 0 );	// If you hit this assert, then you probably didn't add an entry to skill?.cfg
+//	Assert( val > 0 );	// If you hit this assert, then you probably didn't add an entry to skill?.cfg
+	if( val <= 0 )
+	{
+		Warning( "Couldn't find right class health! Using the default..." );
+		val = 100;
+	}
 	return val;
 }
 

@@ -352,7 +352,8 @@ void CFlare::FlareTouch( CBaseEntity *pOther )
 		{
 			if( !pBCC->IsOnFire() )
 			{
-				pOther->MyCombatCharacterPointer()->Ignite( 100.0f );
+			//	pOther->MyCombatCharacterPointer()->Ignite( 100.0f );
+				pOther->MyCombatCharacterPointer()->Ignite( 15.0f );
 			}
 		}
 

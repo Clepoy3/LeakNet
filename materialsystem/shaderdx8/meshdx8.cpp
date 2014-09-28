@@ -1251,7 +1251,9 @@ void CMeshDX8::SetColorMesh( IMesh *pColorMesh )
 	{
 		int numVerts = NumVertices();
 		int numVertsColorMesh = m_pColorMesh->NumVertices();
-		Assert( numVerts == numVertsColorMesh );
+	//	Assert( numVerts == numVertsColorMesh ); // VXP
+		if( numVerts != numVertsColorMesh )
+			Warning( "CMeshDX8::SetColorMes: numVerts != numVertsColorMesh\n" );
 	}
 #endif
 }

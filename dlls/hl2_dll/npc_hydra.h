@@ -55,7 +55,7 @@ public:
 
 	DECLARE_SIMPLE_DATADESC();
 };
-
+class CHydraImpale;
 class CNPC_Hydra : public CAI_BaseNPC
 {
 	DECLARE_CLASS( CNPC_Hydra, CAI_BaseNPC );
@@ -168,6 +168,12 @@ public:
 	void		GetDesiredImpaledPosition( Vector *vecOrigin, QAngle *vecAngles );
 
 	bool		m_bStabbedEntity;
+
+	// VXP
+//	CBaseEntity *m_pRagdoll;
+	CHydraImpale	*m_pHydraImpale;
+//	IPhysicsConstraint *m_pHIPhysConstraint;
+	float		m_flDetachEntityTime;
 
 	DEFINE_CUSTOM_AI;
 
