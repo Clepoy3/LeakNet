@@ -188,7 +188,7 @@ static void WriteBoneInfo( studiohdr_t *phdr )
 		pbone[i].qAlignment		= g_bonetable[i].qAlignment;
 
 		// TODO: rewrite on version change!!  see studio.h for what to do.
-	//	Assert( STUDIO_VERSION == 36 );
+		Assert( STUDIO_VERSION == 37 );
 		AngleQuaternion( RadianEuler( g_bonetable[i].rot[0], g_bonetable[i].rot[1], g_bonetable[i].rot[2] ), pbone[i].quat );
 		QuaternionAlign( pbone[i].qAlignment, pbone[i].quat, pbone[i].quat );
 
@@ -403,22 +403,17 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 		pseqdesc->numblends		= g_sequence[i].numblends;
 		pseqdesc->groupsize[0]	= g_sequence[i].groupsize[0];
 		pseqdesc->groupsize[1]	= g_sequence[i].groupsize[1];
-		/*
-		for (j = 0; j < MAXSTUDIOBLENDS; j++)
+	/*	for (j = 0; j < MAXSTUDIOBLENDS; j++)
 		{
 			for (k = 0; k < MAXSTUDIOBLENDS; k++)
 			{
 				if (g_sequence[i].panim[j][k])
-				{
-				//	pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
-				}
+					pseqdesc->anim[j][k] = g_sequence[i].panim[j][k]->index;
 				else
-				{
-				//	pseqdesc->anim[j][k] = 0; // !!! bad
-				}
+					pseqdesc->anim[j][k] = 0; // !!! bad
 			}
-		}
-		*/
+		}*/
+
 		pseqdesc->paramindex[0]	= g_sequence[i].paramindex[0];
 		pseqdesc->paramstart[0] = g_sequence[i].paramstart[0];
 		pseqdesc->paramend[0]	= g_sequence[i].paramend[0];
@@ -1594,5 +1589,6 @@ void WriteFile (void)
 	LoadMaterials( phdr );
 	OptimizedModel::WriteOptimizedFiles( phdr, g_bodypart );
 }
+
 
 

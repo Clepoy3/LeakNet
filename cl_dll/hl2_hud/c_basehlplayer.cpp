@@ -108,6 +108,12 @@ void C_BaseHLPlayer::Weapon_DropPrimary( void )
 //-----------------------------------------------------------------------------
 void C_BaseHLPlayer::UpdateFOV( void )
 {
+	if( IsPlayerDead() )
+	{
+		engine->SetFieldOfView( default_fov.GetInt() );
+		return;
+	}
+
 	//Find our FOV with offset zoom value
 	float flFOVOffset = CurrentFOV() + GetZoom();
 

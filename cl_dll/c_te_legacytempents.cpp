@@ -905,6 +905,7 @@ void CTempEnts::Sprite_Spray( const Vector &pos, const Vector &dir, int modelInd
 	{
 		znoise = 1;
 	}
+	noise *= 10.0f; // VXP: Small multiplier
 
 	pModel = modelinfo->GetModel( modelIndex );
 	

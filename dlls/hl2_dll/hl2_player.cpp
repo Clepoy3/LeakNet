@@ -1284,7 +1284,18 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 		Weapon_DropSlot( WEAPON_PRIMARY_SLOT );
 		return true;
 	}
+#else
+	//Drop primary weapon
+	if( stricmp( cmd, "DropPrimary" ) == 0 )
+	{
+		if( GetActiveWeapon() )
+		{
+		//	Weapon_DropSlot( GetActiveWeapon()->GetSlot() );
+			Weapon_Drop( GetActiveWeapon(), NULL, NULL );
+		}
 
+		return true;
+	}
 #endif
 
 	if ( !stricmp( cmd, "emit" ) )

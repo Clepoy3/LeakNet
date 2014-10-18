@@ -196,6 +196,7 @@ void CSys::UpdateStatus( int force )
 	char	szMap[32];
 	float	fps;
 
+	float delay = 1.0f;
 	if ( !engine )
 		return;
 
@@ -205,7 +206,7 @@ void CSys::UpdateStatus( int force )
 
 	if ( !force )
 	{
-		if ( ( tCurrent - tLast ) < 0.5f )
+		if ( ( tCurrent - tLast ) < delay )
 			return;
 	}
 

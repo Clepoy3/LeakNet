@@ -66,6 +66,10 @@ LINK_ENTITY_TO_CLASS(info_player_start,CPointEntity);
 LINK_ENTITY_TO_CLASS(info_player_counterterrorist,CPointEntity);
 LINK_ENTITY_TO_CLASS(info_player_terrorist,CPointEntity);
 
+// VXP: TF2
+LINK_ENTITY_TO_CLASS(info_player_humans,CPointEntity);
+LINK_ENTITY_TO_CLASS(info_player_aliens,CPointEntity);
+
 LINK_ENTITY_TO_CLASS(info_landmark,CPointEntity);
 
 bool CBaseDMStart::IsTriggered( CBaseEntity *pEntity )

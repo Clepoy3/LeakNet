@@ -89,22 +89,22 @@ void CPlayerListDialog::Activate()
 			break;
 		
 		unsigned int userID = atoi(idString);
-		Msg( "idString: %s\n", idString );
+
 		// don't add self to list
-	//	if (g_pFriendsUser && userID == g_pFriendsUser->GetFriendsID())
-	//		continue;
+		if (g_pFriendsUser && userID == g_pFriendsUser->GetFriendsID())
+			continue;
 
 		// collate user data then add it to the table
 		KeyValues *data = new KeyValues(szPlayerIndex);
 		const char *playerName = engine->PlayerInfo_ValueForKey(i, "name");
 		data->SetString("Name", playerName);
 		data->SetString("TID", idString);
-		const char *userName;
-		if( g_pFriendsUser && g_pFriendsUser->IsValid() )
-			userName = g_pFriendsUser->GetUserName(userID);
+	//	const char *userName = g_pFriendsUser->GetUserName(userID);
+	//	data->SetString("TName", userName);
+		if( g_pFriendsUser && g_pFriendsUser->GetUserName(userID) )
+			data->SetString("TName", g_pFriendsUser->GetUserName(userID));
 		else
-			userName = "InDev";
-		data->SetString("TName", userName);
+			data->SetString("TName", "InDev");
 		data->SetInt("index", i);
 
 		// add to the list

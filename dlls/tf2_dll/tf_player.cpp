@@ -990,7 +990,7 @@ CBaseEntity *CBaseTFPlayer::EntSelectSpawnPoint( void )
 		if ( GetPlayerClass()  )
 		{
 			// Let individual player classes override the respawn point
-			entity = GetPlayerClass()->SelectSpawnPoint();
+			entity = GetPlayerClass()->SelectSpawnPoint(); // VXP: Mess with this
 			if ( entity )
 			{
 				return entity;
@@ -1011,7 +1011,7 @@ CBaseEntity *CBaseTFPlayer::EntSelectSpawnPoint( void )
 	}
 
 	// VXP
-/*	CBaseEntity *pSpot
+/*	CBaseEntity *pSpot;
 	pSpot = gEntList.FindEntityByClassname( g_pLastSpawn, "info_player_humans");
 	if( pSpot )
 		return pSpot;

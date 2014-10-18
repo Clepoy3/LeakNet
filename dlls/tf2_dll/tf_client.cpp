@@ -105,6 +105,11 @@ void ClientGamePrecache( void )
 	engine->PrecacheModel( "models/player/alien_escort.mdl" );
 	engine->PrecacheModel( "models/player/defender.mdl" );
 	engine->PrecacheModel( "models/player/technician.mdl" );
+	// VXP: Madness begins
+	engine->PrecacheModel( "models/player/alien_escort.mdl" );
+	engine->PrecacheModel( "models/player/alien_support.mdl" );
+	engine->PrecacheModel( "models/player/sniper.mdl" );
+	engine->PrecacheModel( "models/player/spy.mdl" );
 
 	// Precache team message sounds
 	enginesound->PrecacheSound( "vox/reinforcement.wav" );

@@ -133,6 +133,7 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 
 	if ( pTrace->fraction != 1.0 )
 	{
+		// VXP: On the ground
 		Vector vecNormal = pTrace->plane.normal;
 		surfacedata_t *pdata = physprops->GetSurfaceData( pTrace->surface.surfaceProps );	
 		CPASFilter filter( vecAbsOrigin );
@@ -149,6 +150,7 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	}
 	else
 	{
+		// VXP: In the air
 		CPASFilter filter( vecAbsOrigin );
 		te->Explosion( filter, 0.0,
 			&vecAbsOrigin, 
@@ -176,8 +178,31 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	flRndSound = random->RandomFloat( 0 , 1 );
 
 	EmitSound( "BaseGrenade.Explode" );
+	
+	if( contents & MASK_WATER )
+	{
+		Msg( "WE: in water\n" );
+		CEffectData	data;
+		Vector orig = vecAbsOrigin /*+ Vector( 0, 0, -pTrace->plane.dist/3 )*/+Vector( 0, 0, 100 );
+		data.m_vOrigin = orig;
+		data.m_vNormal = pTrace->plane.normal;
+		data.m_flScale = 10.0f;
+		DispatchEffect( "watersplash", data );
+//#if !defined( CLIENT_DLL )
+	//	NDebugOverlay::Box( orig, Vector( 5, 5, 5 ), Vector( -5, -5, -5 ), 255, 0, 0, 255, 5.0f );
+		NDebugOverlay::Text( vecAbsOrigin, "BEGIN", false, 5.0f );
+		NDebugOverlay::Line( vecAbsOrigin, orig, 0, 255, 0, true, 5.0f );
+		NDebugOverlay::Text( orig, "END", false, 5.0f );
+	/*	trace_t		tr;
+	//	UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, 10000), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
+		UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, pTrace->plane.dist), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
+		NDebugOverlay::Text( tr.endpos, "endpos", false, 5.0f );
+		NDebugOverlay::Line( vecAbsOrigin, tr.endpos, 0, 255, 0, true, 5.0f );*/
+//#endif
+	}
 
 	// VXP: Need to make vectors above water
+	/*
 	if( contents & MASK_WATER )
 	{
 		// VXP: TEST
@@ -200,10 +225,11 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 		float explScale = isInWater / (m_DmgRadius * .03) * 2;
 		data.m_flScale = explScale;
 		DispatchEffect( "watersplash", data );
-	//	Msg( "Water level: %i\n", GetWaterLevel() );
-	//	DevMsg( "Water height: %i, Damage: %f\nForce: x: %f, y: %f, z: %f\n", isInWater, m_flDamage, GetBlastForce().x, GetBlastForce().y, GetBlastForce().z );
-	//	DevMsg( "Radius: %f, Final result: %f\n", m_DmgRadius * .03, explScale );
+		Msg( "Water level: %i\n", GetWaterLevel() );
+		DevMsg( "Water height: %i, Damage: %f\nForce: x: %f, y: %f, z: %f\n", isInWater, m_flDamage, GetBlastForce().x, GetBlastForce().y, GetBlastForce().z );
+		DevMsg( "Radius: %f, Final result: %f\n", m_DmgRadius * .03, explScale );
 	}
+	*/
 
 	SetThink( &CBaseGrenade::SUB_Remove );
 	SetTouch( NULL );
