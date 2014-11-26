@@ -1236,7 +1236,7 @@ END_NETWORK_TABLE()
 			{
 				killer_weapon_name += 7;
 			}
-			else if ( strncmp( killer_weapon_name, "NPC_", 8 ) == 0 )
+			else if ( strncmp( killer_weapon_name, "NPC_", 4 ) == 0 )
 			{
 				killer_weapon_name += 8;
 			}

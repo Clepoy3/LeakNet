@@ -926,9 +926,12 @@ bool C_BaseAnimating::SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, i
 {
 	VPROF_BUDGET( "C_BaseAnimating::SetupBones", VPROF_BUDGETGROUP_OTHER_ANIMATION );
 
-	Assert( IsBoneAccessAllowed() ); // VXP: When GetAttachment
-//	if( !IsBoneAccessAllowed() )
-//		return false; // VXP: Well, we will see
+//	Assert( IsBoneAccessAllowed() ); // VXP: When GetAttachment
+	if( !IsBoneAccessAllowed() )
+	{
+	//	return false; // VXP: Well, we will see
+		Warning("C_BaseAnimating::SetupBones: Access to bone is not allowed\n");
+	}
 
 	boneMask = BONE_USED_BY_ANYTHING; // HACK HACK - this is a temp fix until we have accessors for bones to find out where problems are.
 	

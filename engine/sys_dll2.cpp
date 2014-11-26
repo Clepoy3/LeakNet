@@ -181,8 +181,15 @@ void Sys_ShowProgressTicks(char* specialProgressMsg)
 			msg[sizeof(msg)-1] = '\0';
 		}
 
-		Cvar_Set("scr_connectmsg1", msg);
-		Cvar_Set("scr_connectmsg2", "Downloading resources...");
+	//	Cvar_Set("scr_connectmsg1", msg);
+	//	Cvar_Set("scr_connectmsg2", "Downloading resources...");
+	/*	ConVar *var = (ConVar *)cv->FindVar( "scr_connectmsg" );
+		var->SetValue( specialProgressMsg );
+		var = (ConVar *)cv->FindVar( "scr_connectmsg1" );
+		var->SetValue( msg );
+		var = (ConVar *)cv->FindVar( "scr_connectmsg2" );
+		var->SetValue( "Downloading resources..." );
+	*/
 		SCR_UpdateScreen();
 	}
 #endif

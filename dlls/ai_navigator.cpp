@@ -510,7 +510,7 @@ bool CAI_Navigator::UpdateGoalPos( const Vector &goalPos )
 	// FindPath should be finding the goal position if the goal type is
 	// one of these two... We could just ignore the suggested position
 	// in these two cases I suppose!
-	Assert( (GetPath()->GoalType() != GOALTYPE_ENEMY) && (GetPath()->GoalType() != GOALTYPE_TARGETENT) );
+	Assert( (GetPath()->GoalType() != GOALTYPE_ENEMY) && (GetPath()->GoalType() != GOALTYPE_TARGETENT) ); // VXP: On scanner_playground2 when I arrived big purple-black thing
 
 	GetPath()->ResetGoalPosition( goalPos );
 	return FindPath();

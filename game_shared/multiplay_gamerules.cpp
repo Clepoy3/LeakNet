@@ -562,8 +562,8 @@ END_NETWORK_TABLE()
 						// If the inflictor is the killer,  then it must be their current weapon doing the damage
 						if ( pScorer->GetActiveWeapon() )
 						{
-						//	killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName(); // VXP: Not working for now...
-							killer_weapon_name = "god";
+						//	killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName();
+							killer_weapon_name = pScorer->GetActiveWeapon()->GetClassname();
 						}
 						else
 						{
@@ -586,7 +586,7 @@ END_NETWORK_TABLE()
 			{
 				killer_weapon_name += 7;
 			}
-			else if ( strncmp( killer_weapon_name, "NPC_", 8 ) == 0 )
+			else if ( strncmp( killer_weapon_name, "NPC_", 4 ) == 0 )
 			{
 				killer_weapon_name += 8;
 			}

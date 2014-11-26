@@ -4084,7 +4084,12 @@ void CShaderAPIDX8::ForceHardwareSync( void )
 
 		
 		// FIXME: Need to check for hr==D3DERR_DEVICELOST here.
-		Assert( hr != D3DERR_DEVICELOST );
+	//	Assert( hr != D3DERR_DEVICELOST ); // VXP: Happens when hl2.exe was minimized from fullscreen
+		if( hr == D3DERR_DEVICELOST )
+		{
+			hr = (hr != D3D_OK) ? hr : D3DERR_DEVICENOTRESET;
+			return;
+		}
 		Assert( hr == S_OK );
 		m_pFrameSyncQueryObject->Issue( D3DISSUE_END );
 	} 
@@ -4159,18 +4164,10 @@ void CShaderAPIDX8::EndFrame()
 
 void CShaderAPIDX8::ReleaseResources()
 {
-/*
 	FreeFrameSyncObjects();
 	ReleaseAmbientCubeTexture();
 	MeshMgr()->ReleaseBuffers();
 	ShaderUtil()->ReleaseShaderObjects();
-	ReleaseRenderTargets();
-*/
-	FreeFrameSyncObjects();
-	ReleaseAmbientCubeTexture();
-	MeshMgr()->ReleaseBuffers();
-	ShaderUtil()->ReleaseShaderObjects();
-//	g_pShaderAPIDX8->DestroyVertexBuffers();
 	ReleaseRenderTargets();
 
 #ifdef _DEBUG

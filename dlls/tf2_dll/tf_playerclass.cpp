@@ -1140,6 +1140,14 @@ void CPlayerClass::CheckDeterioratingObjects( void )
 //-----------------------------------------------------------------------------
 CBaseEntity *CPlayerClass::SelectSpawnPoint( void )
 {
+//	return NULL;
+	CBaseEntity *pSpot;
+	if( m_pPlayer->GetTeamNumber() == TEAM_HUMANS )
+		pSpot = gEntList.FindEntityByClassname( NULL, "info_player_humans");
+	else if( m_pPlayer->GetTeamNumber() == TEAM_ALIENS )
+		pSpot = gEntList.FindEntityByClassname( NULL, "info_player_aliens");
+	if( pSpot )
+		return pSpot;
 	return NULL;
 }
 

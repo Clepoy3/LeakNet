@@ -1838,7 +1838,8 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 		}
 
 		// Check the version against the Mod version
-		if ( !stricmp( gamedir, "valve" ) )
+	//	if ( !stricmp( gamedir, "valve" ) )
+		if ( !stricmp( gamedir, "hl2" ) )
 		{
 			if ( stricmp( version, m_szHLVersion ) )
 			{
@@ -1852,7 +1853,8 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 				reject = 1;
 			}
 		}
-		else if ( !stricmp( gamedir, "tfc" ) )
+	//	else if ( !stricmp( gamedir, "tfc" ) )
+		else if ( !stricmp( gamedir, "tf2" ) )
 		{
 			if ( stricmp( version, m_szTFCVersion ) )
 			{
