@@ -138,12 +138,16 @@ inline CBaseHandle CGameMovement::TestPlayerPosition( const Vector& pos, int col
 }
 
 
-/*
+/**/
 
 // FIXME FIXME:  Does this need to be hooked up?
 bool CGameMovement::IsWet() const
 {
-	return ((pev->flags & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->time);
+//	return ((pev->flags & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->time);
+//	return ((player->pev->flags & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->time);
+//	return ((player->GetFlags() & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->frametime);
+//	return (player->GetFlags() & FL_INRAIN) || (m_WetTime >= gpGlobals->frametime);
+	return (player->GetFlags() & FL_INRAIN) || (m_WetTime >= engine->Time());
 }
 
 //-----------------------------------------------------------------------------
@@ -153,6 +157,7 @@ bool CGameMovement::IsWet() const
 #define PLAYER_HALFWIDTH 12
 void CGameMovement::PlantFootprint( surfacedata_t *psurface )
 {
+	UpdateWetness();
 	// Can't plant footprints on fake materials (ladders, wading)
 	if ( psurface->gameMaterial != 'X' )
 	{
@@ -162,7 +167,9 @@ void CGameMovement::PlantFootprint( surfacedata_t *psurface )
 		// Use the wet footprint if we're wet...
 		if (IsWet())
 		{
-			footprintDecal = DECAL_FOOTPRINT_WET;
+		//	footprintDecal = DECAL_FOOTPRINT_WET;
+		//	footprintDecal = decalsystem->GetDecalIndexForName( "YellowBlood" );
+			footprintDecal = decalsystem->GetDecalIndexForName( ((m_IsFootprintOnLeft) ? "Footprint.Left" : "Footprint.Right") );
 		}
 		else
 		{	   
@@ -174,30 +181,38 @@ void CGameMovement::PlantFootprint( surfacedata_t *psurface )
 //				footprintDecal = DECAL_FOOTPRINT_DIRT;
 //				break;
 //			}
+		//	footprintDecal = decalsystem->GetDecalIndexForName( "Extinguish" );
 		}
 
 		if (footprintDecal != -1)
 		{
 			Vector right;
-			AngleVectors( pev->angles, 0, &right, 0 );
+		//	AngleVectors( player->pev->angles, 0, &right, 0 );
+			AngleVectors( mv->m_vecViewAngles, 0, &right, 0 );
 
 			// Figure out where the top of the stepping leg is 
 			trace_t tr;
 			Vector hipOrigin;
-			VectorMA( pev->origin, 
-				m_IsFootprintOnLeft ? -PLAYER_HALFWIDTH : PLAYER_HALFWIDTH,
+		//	VectorMA( player->pev->origin, 
+			VectorMA( mv->m_vecOrigin, 
+		//		m_IsFootprintOnLeft ? -PLAYER_HALFWIDTH : PLAYER_HALFWIDTH,
+				m_IsFootprintOnLeft ? -PLAYER_HALFWIDTH+8 : PLAYER_HALFWIDTH-8,
 				right, hipOrigin );
 
 			// Find where that leg hits the ground
 			UTIL_TraceLine( hipOrigin, hipOrigin + Vector(0, 0, -COORD_EXTENT * 1.74), 
-							MASK_SOLID_BRUSHONLY, edict(), COLLISION_GROUP_NONE, &tr);
+							MASK_SOLID_BRUSHONLY, player, COLLISION_GROUP_NONE, &tr);
 
-			unsigned char mType = TEXTURETYPE_Find( &tr );
+		//	unsigned char mType = TEXTURETYPE_Find( &tr );
 
 			// Splat a decal
 			CPVSFilter filter( tr.endpos );
-			te->FootprintDecal( filter, 0.0f, &tr.endpos, &right, ENTINDEX(tr.u.ent), 
-							   gDecals[footprintDecal].index, mType );
+		//	te->FootprintDecal( filter, 0.0f, &tr.endpos, &right, ENTINDEX(tr.u.ent), 
+		//	te->FootprintDecal( filter, 0.0f, &tr.endpos, &right, ENTINDEX(tr.m_pEnt), 
+			te->FootprintDecal( filter, 0.0f, &tr.endpos, &right, 0, 
+		//					   gDecals[footprintDecal].index, mType );
+		//					   footprintDecal, mType );
+							   footprintDecal, 0 );
 
 		}
 	}
@@ -209,7 +224,8 @@ void CGameMovement::PlantFootprint( surfacedata_t *psurface )
 #define WET_TIME			    5.f	// how many seconds till we're completely wet/dry
 #define DRY_TIME			   20.f	// how many seconds till we're completely wet/dry
 
-void CBasePlayer::UpdateWetness()
+//void CBasePlayer::UpdateWetness()
+void CGameMovement::UpdateWetness()
 {
 	// BRJ 1/7/01
 	// Check for whether we're in a rainy area....
@@ -218,42 +234,57 @@ void CBasePlayer::UpdateWetness()
 	// Update wetness based on whether we're in rain or not...
 
 	trace_t tr;
-	UTIL_TraceLine( pev->origin, pev->origin + Vector(0, 0, -COORD_EXTENT * 1.74), 
-					MASK_SOLID_BRUSHONLY, edict(), COLLISION_GROUP_NONE, &tr);
+//	UTIL_TraceLine( pPlayer->pev->origin, pPlayer->pev->origin + Vector(0, 0, -COORD_EXTENT * 1.74), 
+	UTIL_TraceLine( mv->m_vecOrigin, mv->m_vecOrigin + Vector(0, 0, -COORD_EXTENT * 1.74), 
+//					MASK_SOLID_BRUSHONLY, edict(), COLLISION_GROUP_NONE, &tr);
+					MASK_SOLID_BRUSHONLY,  player, COLLISION_GROUP_NONE, &tr);
 	if (tr.surface.flags & SURF_WET)
 	{
-		if (! (pev->flags & FL_INRAIN) )
+	//	if (! (pPlayer->pev->flags & FL_INRAIN) )
+		if ( !(player->GetFlags() & FL_INRAIN) )
 		{
 			// Transition...
 			// Figure out how wet we are now (we were drying off...)
-			float wetness = (m_WetTime - gpGlobals->time) / DRY_TIME;
+		//	float wetness = (m_WetTime - gpGlobals->time) / DRY_TIME;
+		//	float wetness = (m_WetTime - gpGlobals->frametime) / DRY_TIME;
+			float wetness = (m_WetTime - engine->Time()) / DRY_TIME;
 			if (wetness < 0.0f)
 				wetness = 0.0f;
 
 			// Here, wet time represents the time at which we get totally wet
-			m_WetTime = gpGlobals->time + (1.0 - wetness) * WET_TIME; 
+		//	m_WetTime = gpGlobals->time + (1.0 - wetness) * WET_TIME; 
+		//	m_WetTime = gpGlobals->frametime + (1.0 - wetness) * WET_TIME; 
+			m_WetTime = engine->Time() + (1.0 - wetness) * WET_TIME; 
 
-			pev->flags |= FL_INRAIN;
+		//	pPlayer->pev->flags |= FL_INRAIN;
+			player->AddFlag(FL_INRAIN);
 		}
 	}
 	else
 	{
-		if ((pev->flags & FL_INRAIN) != 0)
+	//	if ((pPlayer->pev->flags & FL_INRAIN) != 0)
+	//	if ((player->GetFlags() & FL_INRAIN) != 0)
+		if (player->GetFlags() & FL_INRAIN)
 		{
 			// Transition...
 			// Figure out how wet we are now (we were getting more wet...)
-			float wetness = 1.0f + (gpGlobals->time - m_WetTime) / WET_TIME;
+		//	float wetness = 1.0f + (gpGlobals->time - m_WetTime) / WET_TIME;
+		//	float wetness = 1.0f + (gpGlobals->frametime - m_WetTime) / WET_TIME;
+			float wetness = 1.0f + (engine->Time() - m_WetTime) / WET_TIME;
 			if (wetness > 1.0f)
 				wetness = 1.0f;
 
 			// Here, wet time represents the time at which we get totally dry
-			m_WetTime = gpGlobals->time + wetness * DRY_TIME; 
+		//	m_WetTime = gpGlobals->time + wetness * DRY_TIME; 
+		//	m_WetTime = gpGlobals->frametime + wetness * DRY_TIME; 
+			m_WetTime = engine->Time() + wetness * DRY_TIME; 
 
-			pev->flags &= ~FL_INRAIN;
+		//	pPlayer->pev->flags &= ~FL_INRAIN;
+			player->RemoveFlag(FL_INRAIN);
 		}
 	}
 }
-*/
+/**/
 
 
 //-----------------------------------------------------------------------------
@@ -289,6 +320,8 @@ void CGameMovement::PlayStepSound( surfacedata_t *psurface, float fvol, bool for
 
 // TODO:  See note above, should this be hooked up?
 //	PlantFootprint( psurface );
+	if( sv_footprints.GetFloat() )
+		PlantFootprint( psurface );
 
 	unsigned short count, start; 
 	if ( player->m_Local.m_nStepside )

@@ -565,7 +565,7 @@ void CBaseTFPlayer::InputRespawn( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseTFPlayer::InitHUD( void )
+void CBaseTFPlayer::InitHUD( void ) // VXP: Maybe, here I can put health bar
 {
 	CSingleUserRecipientFilter user( this );
 	user.MakeReliable();
@@ -990,7 +990,7 @@ CBaseEntity *CBaseTFPlayer::EntSelectSpawnPoint( void )
 		if ( GetPlayerClass()  )
 		{
 			// Let individual player classes override the respawn point
-			entity = GetPlayerClass()->SelectSpawnPoint(); // VXP: Mess with this
+			entity = GetPlayerClass()->SelectSpawnPoint();
 			if ( entity )
 			{
 				return entity;

@@ -42,6 +42,11 @@ public:
 	virtual const Vector&	GetPlayerMins( bool ducked ) const;
 	virtual const Vector&	GetPlayerMaxs( bool ducked ) const;
 	virtual const Vector&	GetPlayerViewOffset( bool ducked ) const;
+	
+	virtual bool CGameMovement::IsWet() const;
+	virtual void CGameMovement::PlantFootprint( surfacedata_t *psurface );
+//	virtual void CBasePlayer::UpdateWetness();
+	virtual void CGameMovement::UpdateWetness();
 
 protected:
 	// Input/Output for this movement
@@ -219,6 +224,9 @@ protected:
 	Vector			m_vecProximityMaxs;
 
 	float			m_fFrameTime;
+	
+	float			m_WetTime;
+	bool			m_IsFootprintOnLeft;
 
 //private:
 	bool			m_bSpeedCropped;

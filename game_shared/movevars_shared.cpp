@@ -20,6 +20,7 @@ ConVar	sv_waterfriction(  "sv_waterfriction", "1", FCVAR_SERVER | FCVAR_REPLICAT
 ConVar	sv_edgefriction ( "sv_edgefriction", "2", FCVAR_SERVER | FCVAR_REPLICATED);
 ConVar	sv_wateramp ( "sv_wateramp","0", FCVAR_SERVER | FCVAR_REPLICATED);
 ConVar	sv_footsteps( "sv_footsteps", "1", FCVAR_SERVER | FCVAR_REPLICATED, "Play footstep sound for players" );
+ConVar	sv_footprints( "sv_footprints", "0", FCVAR_SERVER | FCVAR_ARCHIVE | FCVAR_REPLICATED, "Plants footprints on the ground" ); // VXP
 ConVar	sv_rollspeed( "sv_rollspeed", "200", FCVAR_SERVER | FCVAR_REPLICATED);
 ConVar	sv_rollangle( "sv_rollangle", "2", FCVAR_SERVER | FCVAR_REPLICATED);
 ConVar	sv_friction		( "sv_friction","4", FCVAR_SERVER | FCVAR_REPLICATED, "World friction." );

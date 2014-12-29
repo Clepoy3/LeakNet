@@ -65,10 +65,10 @@ C_Splash::C_Splash()
 	m_nNumDecals = 1;
 
 	// VXP: Fix for crash when player shoots at leakable texture
-	ClientEntityList().AddNonNetworkableEntity( GetIClientUnknown() ); // VXP: From fx_impact.cpp(LeakEffect() after creating C_Splash)
+/*	ClientEntityList().AddNonNetworkableEntity( GetIClientUnknown() ); // VXP: From fx_impact.cpp(LeakEffect() after creating C_Splash)
 	// VXP: Taken from c_fire_smoke.cpp
 	m_Partition = partition->CreateHandle( GetIClientUnknown() );
-	view->AddVisibleEntity( this );
+	view->AddVisibleEntity( this );*/
 }
 
 void C_Splash::SetPos(const Vector &pos, bool bInitial)
@@ -157,6 +157,12 @@ void C_Splash::Start(CParticleMgr *pParticleMgr, IPrototypeArgAccess *pArgs)
 	m_pParticleMgr = pParticleMgr;
 
 	InitParticleCollisions();
+
+	// VXP: Fix for crash when player shoots at leakable texture
+	ClientEntityList().AddNonNetworkableEntity( GetIClientUnknown() ); // VXP: From fx_impact.cpp(LeakEffect() after creating C_Splash)
+	// VXP: Taken from c_fire_smoke.cpp
+	m_Partition = partition->CreateHandle( GetIClientUnknown() );
+	view->AddVisibleEntity( this );
 }
 
 //------------------------------------------------------------------------------
@@ -321,6 +327,7 @@ C_Splash::~C_Splash()
 
 		// VXP: Fix for crash when player shoots at leakable texture
 		// Taken from c_fire_smoke.cpp
+		ClientThinkList()->RemoveThinkable( GetClientHandle() );
 		ClientEntityList().RemoveEntity( GetClientHandle() );
 		partition->Remove( PARTITION_CLIENT_SOLID_EDICTS | PARTITION_CLIENT_RESPONSIVE_EDICTS | PARTITION_CLIENT_NON_STATIC_EDICTS, m_Partition );
 		RemoveFromLeafSystem();

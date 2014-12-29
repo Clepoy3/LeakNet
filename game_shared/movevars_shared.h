@@ -24,6 +24,7 @@ extern ConVar sv_wateraccelerate;
 extern ConVar sv_waterfriction;
 extern ConVar sv_wateramp;
 extern ConVar sv_footsteps;
+extern ConVar sv_footprints; // VXP
 extern ConVar sv_rollspeed;
 extern ConVar sv_rollangle;
 extern ConVar sv_friction;
