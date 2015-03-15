@@ -196,6 +196,9 @@ void CCSPlayer::Precache()
 {
 	engine->PrecacheModel( CS_PLAYER_MODEL );
 	engine->PrecacheModel( CS_TERRORIST_MODEL );
+
+	engine->PrecacheModel( "models/player/alien_commando.mdl" ); // VXP: For new CSS patch..
+
 	BaseClass::Precache();
 }
 

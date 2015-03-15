@@ -85,6 +85,8 @@ bool StudioKeyValues( studiohdr_t* pStudioHdr, KeyValues *pValue )
 //-----------------------------------------------------------------------------
 bool IsStaticProp( studiohdr_t* pHdr )
 {
+//	if ((pHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP))
+//		return true;
  	if ( (pHdr->numbones > 1) || (pHdr->numanim > 1) || (pHdr->numflexrules > 0) ||
 		 (pHdr->nummouths > 0) )
 		return false;
@@ -141,6 +143,11 @@ static char const* ConstructFileName( char const* pModelName )
 {
 	static char buf[1024];
 	sprintf( buf, "%s%s", gamedir, pModelName );
+
+	// VXP: Fix for static props
+	if( fopen( buf, "rb" ) == NULL)
+		sprintf( buf, "%s%s", basegamedir, pModelName );
+
 	return buf;
 }
 
@@ -280,7 +287,9 @@ static CPhysCollide* GetCollisionModel( char const* pModelName )
 
 	// Load the studio model file
 	CUtlBuffer buf;
-	if (!LoadStudioModel(pModelName, "static_prop", buf))
+//	if (!LoadStudioModel(pModelName, "static_prop", buf))
+	if (!LoadStudioModel(pModelName, "static_prop", buf) &&
+		!LoadStudioModel(pModelName, "prop_static", buf))
 	{
 		Warning("Error loading studio model \"%s\"!\n", pModelName );
 

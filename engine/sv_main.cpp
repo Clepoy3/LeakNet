@@ -2079,6 +2079,19 @@ void SVC_GetChallenge (void)
 	// send it back
 	NET_SendPacket ( NS_SERVER, Q_strlen( data ) + 1, data, net_from );
 }
+void SVC_GiveChallenge()
+{
+	char	buffer[16];
+	bf_write msg(buffer,sizeof(buffer));
+
+	// get a free challenge number
+	int challengeNr = (RandomInt(0,0x0FFF) << 16) | RandomInt(0,0xFFFF);
+	
+	msg.WriteLong( 0xFFFFFFFF );
+	msg.WriteByte( S2C_CHALLENGE );
+	msg.WriteLong( challengeNr );
+	NET_SendPacket( NS_SERVER, msg.GetNumBytesWritten(), msg.GetData(), net_from );
+}
 
 void SV_ResetModInfo( void )
 {
@@ -2227,7 +2240,7 @@ const char *GetGameDescription()
 }
 void SVC_InfoExclusive() // VXP: Special for Source Master Server
 {
-	int		i, count;
+	int		/*i,*/ count;
 
 	byte	data[1400];
 	char	gd[MAX_OSPATH];
@@ -2237,7 +2250,7 @@ void SVC_InfoExclusive() // VXP: Special for Source Master Server
 //	char gd[32];
 	char desc[32];
 
-	bf_write buf( "SVC_Info->buf", data, sizeof(data) );
+	bf_write buf( "SVC_InfoExclusive->buf", data, sizeof(data) );
 
 	if (!sv.active)            // Must be running a server.
 		return;
@@ -2245,10 +2258,11 @@ void SVC_InfoExclusive() // VXP: Special for Source Master Server
 	if (svs.maxclients <= 1)   // ignore in single player
 		return;
 
-	count = 0;
+/*	count = 0;
 	for (i=0 ; i<svs.maxclients ; i++)
 		if (svs.clients[i].active)
-			count++;
+			count++;*/
+	count = 63;
 
 	buf.WriteLong( 0xFFFFFFFF );
 
@@ -2280,7 +2294,8 @@ void SVC_InfoExclusive() // VXP: Special for Source Master Server
 	buf.WriteShort( appID );
 
 	// this is a quick workaround from goldsrc for the admin mod reserved slots UI problem
-	int visibleClients = svs.maxclients;
+//	int visibleClients = svs.maxclients;
+	int visibleClients = 64;
 
 	// player info
 	buf.WriteByte( count );
@@ -2350,6 +2365,7 @@ void SVC_InfoExclusive() // VXP: Special for Source Master Server
 
 	NET_SendPacket (NS_SERVER, buf.GetNumBytesWritten(), buf.GetData(), net_from);
 }
+/*
 void SVC_GiveChallenge()
 {
 	char	buffer[2048+32];
@@ -2374,7 +2390,7 @@ void SVC_GiveChallenge()
 
 	NET_SendPacket (NS_SERVER, msg.GetNumBytesWritten(), msg.GetData(), net_from);
 }
-
+*/
 #define MAX_SINFO 2048
 void SVC_InfoString ( void )
 {
@@ -2727,6 +2743,7 @@ void SV_ConnectionlessPacket (void)
 	//	SVC_Info( false );
 	//	SVC_PlayerInfoExclusive();
 		SVC_GiveChallenge();
+	//	SVC_GetChallenge();
 		return;
 	}
 	else

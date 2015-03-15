@@ -379,6 +379,8 @@ bool RecvTable_CreateDecoders()
 
 		// It should already have been linked to its ClientSendTable.
 		Assert( pDecoder->m_pClientSendTable );
+		if( !pDecoder->m_pClientSendTable )
+			return false;
 
 
 		// For each decoder, precalculate the SendTable's flat property list.

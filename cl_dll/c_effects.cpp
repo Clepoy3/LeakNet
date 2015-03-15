@@ -557,6 +557,11 @@ static bool IsInAir( const Vector& position )
 {
 	int contents = enginetrace->GetPointContents( position ); 	
 	return (contents & CONTENTS_SOLID) == 0;
+//	return (contents & (CONTENTS_SOLID | CONTENTS_WINDOW | CONTENTS_AUX | CONTENTS_GRATE | CONTENTS_SLIME | CONTENTS_WATER | CONTENTS_OPAQUE | CONTENTS_MOVEABLE | CONTENTS_ORIGIN | CONTENTS_MONSTER |
+//		CONTENTS_DEBRIS | CONTENTS_DETAIL)) == 0;
+//	return (contents & MASK_SOLID) == 0;
+
+//	return (contents & ALL_VISIBLE_CONTENTS) == 0;
 }
 
 

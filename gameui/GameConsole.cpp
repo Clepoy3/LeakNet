@@ -62,6 +62,14 @@ void CGameConsole::Initialize()
 	m_pConsole->SetBounds(
 		offset, offset, 
 		min( swide - 2 * offset, 560 ), min( stall - 2 * offset, 400 ) );
+/* VXP: Source-style console placement
+	vgui::surface()->GetScreenSize(swide, stall);
+	int offset = vgui::scheme()->GetProportionalScaledValue(16);
+	m_pConsole->SetBounds(
+		swide / 2 - (offset * 4),
+		offset,
+		(swide / 2) + (offset * 3),
+		stall - (offset * 8));*/
 	m_bInitialized = true;
 }
 
