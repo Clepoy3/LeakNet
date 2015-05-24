@@ -91,6 +91,11 @@ void CPhysicsCannister::Spawn( void )
 	m_active = false;
 
 	CreateVPhysics();
+//	if ( !VPhysicsGetObject() )
+//	{
+		// must have a physics object or code will crash later
+//		UTIL_Remove(this);
+//	}
 }
 
 void CPhysicsCannister::OnRestore()

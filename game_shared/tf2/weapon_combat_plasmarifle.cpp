@@ -396,7 +396,8 @@ void CWeaponCombatPlasmaRifle::DrawChargingEffect( float flSize, CBaseAnimating 
 		
 		if ( m_flPower >= MAX_RIFLE_POWER )
 		{
-			float frac = fmod( gpGlobals->curtime, 1.0 );
+		//	float frac = fmod( gpGlobals->curtime, 1.0 );
+			float frac = fmod( (float)gpGlobals->curtime, (float)1.0 );
 			frac *= 2 * M_PI;
 			frac = sin( frac );
 			flSize += (frac * 2) - 1.5;

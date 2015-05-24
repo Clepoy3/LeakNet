@@ -334,8 +334,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	if (!g_pMatSystemSurface)
 		return false;
 
-	g_pSharedModelCache->InitFileSystem( filesystem );
-
 	// Add the client systems.	
 	
 	// Client Leaf System has to be initialized first, since DetailObjectSystem uses it
@@ -398,6 +396,8 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetEntitiySaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetPhysSaveRestoreBlockHandler() );
+
+	g_pSharedModelCache->InitFileSystem( filesystem );
 
 	return true;
 }
@@ -680,7 +680,10 @@ void CHLClient::View_Render( vrect_t *rect )
 //-----------------------------------------------------------------------------
 void CHLClient::View_Fade( ScreenFade_t *pSF )
 {
-	vieweffects->Fade( NULL, 0, pSF );
+	if( pSF != NULL )
+	{
+		vieweffects->Fade( NULL, 0, pSF );
+	}
 }
 
 
@@ -949,7 +952,8 @@ void SimulateEntities()
 	// TODO: make an ISimulateable interface so C_BaseNetworkables can simulate?
 	C_BaseEntityIterator iterator;
 	C_BaseEntity *pEnt;
-	while ( (pEnt = iterator.Next()) )
+//	while ( (pEnt = iterator.Next()) )
+	while ( (pEnt = iterator.Next()) != NULL )
 	{
 		pEnt->Simulate();
 	}

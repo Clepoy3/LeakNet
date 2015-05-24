@@ -25,6 +25,8 @@ class ComboBox;
 
 class CCvarSlider;
 
+class CCvarToggleCheckButton;
+
 //-----------------------------------------------------------------------------
 // Purpose: Video Details, Part of OptionsDialog
 //-----------------------------------------------------------------------------
@@ -90,6 +92,8 @@ private:
 	int             m_iStartAntialias;
     int             m_iStartResolution;
 	bool			m_bStartWidescreen;
+	
+	CCvarToggleCheckButton  *m_pMotionBlurEnableCheckButton;
 
 
 	DECLARE_PANELMAP();

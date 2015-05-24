@@ -131,7 +131,8 @@ CVertexBuffer::CVertexBuffer(
 	desc.Format = D3DFMT_VERTEXDATA;
 	desc.Size = vertexCount * m_VertexSize;
 	desc.Type = D3DRTYPE_VERTEXBUFFER;
-	desc.Pool = D3DPOOL_DEFAULT; //m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+//	desc.Pool = D3DPOOL_DEFAULT; //m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+	desc.Pool = m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
 	desc.FVF = theFVF;
 	
 	desc.Usage = D3DUSAGE_WRITEONLY;
@@ -154,7 +155,8 @@ CVertexBuffer::CVertexBuffer(
 		// out of vid mem and try again.
 		// FIXME: need to record this
 		pD3D->EvictManagedResources();
-		pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+	//	pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+		hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
 		         				  desc.Usage,	desc.FVF, desc.Pool, &m_pVB, NULL );
 	}
 

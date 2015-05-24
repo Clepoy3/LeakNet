@@ -5,10 +5,24 @@
 // $NoKeywords: $
 //=============================================================================
 
+#include "tier0/dbg.h"
+#include "vstdlib/strtools.h"
+
 #include "filesystem.h"
 #include "filesystem_helpers.h"
 #include "characterset.h"
 
+//-----------------------------------------------------------------------------
+// Called in every FS_* function to ensure FS_InitFilesystem has been called
+//-----------------------------------------------------------------------------
+#define ASSERT_FS_INITED() AssertMsg(s_pFileSystem, "FS_InitFilesystem must be called before this function!")
+#define ASSERT_FULL_FS_INITED() AssertMsg(s_pFullFileSystem, "FS_InitFilesystem must be called with a full filesystem before this function!")
+
+//-----------------------------------------------------------------------------
+// Globals
+//-----------------------------------------------------------------------------
+static IBaseFileSystem *s_pFileSystem = NULL;
+static IFileSystem *s_pFullFileSystem = NULL;
 
 // wordbreak parsing set
 static characterset_t	g_BreakSet, g_BreakSetIncludingColons;
@@ -132,5 +146,57 @@ char* ParseFile( char* pFileBytes, char* pToken, bool* pWasQuoted )
 	return (char*)ParseFile( (const char*)pFileBytes, pToken, pWasQuoted );
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: initializes all other FS_* functions for use
+//-----------------------------------------------------------------------------
+void FS_InitFilesystem( IBaseFileSystem *pFS )
+{
+	AssertMsg(!s_pFileSystem, "FS_InitFilesystem called more than once");
 
+	Assert(pFS);
+	s_pFileSystem = pFS;
+}
+
+void FS_InitFilesystem( IFileSystem *pFS )
+{
+	AssertMsg(!s_pFullFileSystem, "FS_InitFilesystem called more than once");
+
+	Assert(pFS);
+	s_pFileSystem = s_pFullFileSystem = pFS;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: read the contents of pszFile into buf
+// Output : true = file was read into buf successfully
+//			false = file wasn't read completely into buf
+//-----------------------------------------------------------------------------
+bool FS_ReadFile( const char *pszFile, CUtlBuffer &buf, const char *pathID/*=NULL*/ )
+{
+//	ASSERT_FS_INITED();
+	Assert(pszFile);
+
+	// Try to open file
+	FileHandle_t hFile = s_pFileSystem->Open(pszFile, "rb", pathID);
+
+	if(!hFile)
+	{
+		Warning("FS_ReadFile: unable to load file %s\n", pszFile);
+		return false;
+	}
+
+	// Get file size
+	unsigned int nByteSize = s_pFileSystem->Size(hFile);
+
+	// Ensure enough space in buffer
+	buf.EnsureCapacity(nByteSize+1);
+	memset(buf.Base(), 0, nByteSize+1); ///< clear buffer (will null terminate)
+
+	// Read data into buffer
+	s_pFileSystem->Read(buf.Base(), nByteSize, hFile);
+
+	// Close file
+	s_pFileSystem->Close(hFile);
+
+	return true;
+}
 

@@ -39,7 +39,8 @@ void CGrenadeObjectSapper::Spawn( void )
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	SetGravity( 0.0 );
 	SetFriction( 1.0 );
-	SetModel( "models/sapper.mdl");
+//	SetModel( "models/sapper.mdl");
+	SetModel( "models/objects/obj_sapper.mdl" ); // VXP
 	UTIL_SetSize(this, Vector( -8, -8, -8), Vector(8, 8, 8));
 	SetCollisionGroup( TFCOLLISION_GROUP_WEAPON );
 	m_takedamage = DAMAGE_NO;
@@ -62,7 +63,8 @@ void CGrenadeObjectSapper::Spawn( void )
 //-----------------------------------------------------------------------------
 void CGrenadeObjectSapper::Precache( void )
 {
-	engine->PrecacheModel( "models/sapper.mdl" );
+//	engine->PrecacheModel( "models/sapper.mdl" );
+	engine->PrecacheModel( "models/objects/obj_sapper.mdl" );
 }
 
 //-----------------------------------------------------------------------------

@@ -118,7 +118,8 @@ BEGIN_VS_SHADER( Water_DX81,
 		// "REFRACT" "0..1"
 		int pshIndex = 
 			( bReflection ? 1 : 0 ) |
-			( bReflection ? 2 : 0 );				
+		//	( bReflection ? 2 : 0 );				
+			( bRefraction ? 2 : 0 );				
 		return pshIndex;
 	}
 

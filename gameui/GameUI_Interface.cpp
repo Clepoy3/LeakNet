@@ -500,7 +500,7 @@ void CGameUI::Start(struct cl_enginefuncs_s *engineFuncs, int interfaceVersion, 
 	g_pTaskbar->SetVisible(false);
 
 // FOR SRC
-	vgui::surface()->SetWorkspaceInsets( 0, 0, 0, g_pTaskbar->GetTall() ); // VXP: Test
+//	vgui::surface()->SetWorkspaceInsets( 0, 0, 0, g_pTaskbar->GetTall() );
 
 	// Start loading tracker
 	if (m_szPlatformDir[0] != 0)

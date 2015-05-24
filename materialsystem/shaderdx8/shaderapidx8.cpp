@@ -72,6 +72,7 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 //#define STUBD3D
 
 //#undef D3D_BUG_TRACKED_DOWN
+#define D3D_BUG_TRACKED_DOWN
 
 #ifdef STUBD3D
 #include "stubd3ddevice.h"
@@ -1606,6 +1607,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	if (!windowed)
 	{
 		bool useDefault = (mode.m_Width == 0) || (mode.m_Height == 0);
+		m_PresentParameters.BackBufferCount = 1; // VXP
 		m_PresentParameters.BackBufferWidth = useDefault ? d3ddm.Width : mode.m_Width;
 		m_PresentParameters.BackBufferHeight = useDefault ? d3ddm.Height : mode.m_Height;
 		if( g_pHardwareConfig->GetDXSupportLevel() >= 90 && g_pHardwareConfig->SupportsHDR() )
@@ -1617,7 +1619,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 		{
 			m_PresentParameters.BackBufferFormat = useDefault ? d3ddm.Format : ImageFormatToD3DFormat( mode.m_Format );
 		}
-		m_PresentParameters.BackBufferCount = 1;
+	//	m_PresentParameters.BackBufferCount = 1;
 
 		if (flags & MATERIAL_VIDEO_MODE_NO_WAIT_FOR_VSYNC)
 			m_PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -1980,7 +1982,8 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 	RECORD_COMMAND( DX8_SHOW_CURSOR, 1 );
 	RECORD_INT( false );
 
-	m_pD3DDevice->ShowCursor( false );
+//	m_pD3DDevice->ShowCursor( false );
+	m_pD3DDevice->ShowCursor( true );
 
 	// Initialize the shader manager
 	ShaderManager()->Init( ( flags & MATERIAL_VIDEO_MODE_PRELOAD_SHADERS ) != 0 );
@@ -2278,6 +2281,21 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 	SendIPCMessage( true );
 
 	IDirect3DDevice *pD3DDevice = NULL;
+
+	// raynorpat: Look for 'NVIDIA PerfHUD' adapter
+	// If it is present, override default settings
+	for (UINT Adapter = 0; Adapter<m_pD3D->GetAdapterCount(); Adapter++)
+	{
+		D3DADAPTER_IDENTIFIER9 Identifier;
+		HRESULT Res = m_pD3D->GetAdapterIdentifier(Adapter, 0, &Identifier);
+		if (strstr(Identifier.Description,"PerfHUD") != 0)
+		{
+			m_DisplayAdapter = Adapter;
+			m_DeviceType = D3DDEVTYPE_REF;
+			break;
+		}
+	}
+
 	hr = m_pD3D->CreateDevice( m_DisplayAdapter, m_DeviceType,
 		m_HWnd, deviceCreationFlags, &m_PresentParameters, &pD3DDevice );
 
@@ -2389,6 +2407,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 #endif
 	
 //	CheckDeviceLost();
+	CheckDeviceLost(); // VXP
 
 	// Tell all other instances of the material system it's ok to grab memory
 	SendIPCMessage( false );
@@ -2803,10 +2822,10 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// Thank you to all you driver writers who actually correctly return caps
 	if ((!modSupported) || (!addSupported))
 	{
-		Assert( 0 );
+	//	Assert( 0 );
 		m_Caps.m_SupportsOverbright = false;
 	}
-/*
+
 	// Some cards, like ATI Rage Pro doesn't support mipmapping (looks like ass)
 	// NOTE: This is necessary because ATI assumes that the wrap/clamp
 	// mode is shared among all texture units
@@ -2823,7 +2842,7 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	{
 		m_Caps.m_SupportsOverbright = false;
 	}
-*/
+
 	// Check if ZBias is supported...
 	m_Caps.m_ZBiasSupported = (caps.RasterCaps & D3DPRASTERCAPS_DEPTHBIAS) != 0;
 	m_Caps.m_SlopeScaledDepthBiasSupported = (caps.RasterCaps & D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS ) != 0;
@@ -2912,11 +2931,11 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 
 	// HACK HACK HACK!!
 	// If we aren't using stdshader_hdr_dx9.dll, don't bother trying to use hdr.
-	const char *pParam = CommandLine()->ParmValue( "-shader" );
-	if( !pParam || !Q_stristr( pParam, "_hdr_" ) )
-	{
-		m_Caps.m_SupportsHDR = false;
-	}
+//	const char *pParam = CommandLine()->ParmValue( "-shader" );
+//	if( !pParam || !Q_stristr( pParam, "_hdr_" ) )
+//	{
+//		m_Caps.m_SupportsHDR = false;
+//	}
 	return true;
 }							   
 
@@ -3375,8 +3394,8 @@ bool CShaderAPIDX8::ReadPixelsFromFrontBuffer() const
 bool CShaderAPIDX8::PreferDynamicTextures() const
 {
 	// For now, disable this feature.
-	return false;
-//	return m_Caps.m_PreferDynamicTextures;
+//	return false;
+	return m_Caps.m_PreferDynamicTextures;
 }
 
 bool CShaderAPIDX8::HasProjectedBumpEnv() const
@@ -3694,6 +3713,7 @@ void CShaderAPIDX8::ResetDXRenderState( void )
     SetRenderStateForce( D3DRS_POINTSCALE_B, dZero );
     SetRenderStateForce( D3DRS_POINTSCALE_C, dZero );
     SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, TRUE );
+//	SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, FALSE ); // VXP: Maybe, fix for nVidia cards
     SetRenderStateForce( D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF );
     SetRenderStateForce( D3DRS_PATCHEDGESTYLE, D3DPATCHEDGE_DISCRETE );
     SetRenderStateForce( D3DRS_DEBUGMONITORTOKEN, D3DDMT_ENABLE );
@@ -4169,7 +4189,8 @@ void CShaderAPIDX8::ReleaseResources()
 	MeshMgr()->ReleaseBuffers();
 	ShaderUtil()->ReleaseShaderObjects();
 	ReleaseRenderTargets();
-
+	ReleaseAllTextures(); // VXP
+/*
 #ifdef _DEBUG
 	if ( MeshMgr()->BufferCount() != 0 )
 	{
@@ -4184,7 +4205,7 @@ void CShaderAPIDX8::ReleaseResources()
 //	Assert( MeshMgr()->BufferCount() == 0 ); // VXP: This appears when running hlmv when hl2.exe runned (for example)
 	if( MeshMgr()->BufferCount() != 0 )
 		Warning( "Mesh buffer count is not 0! (%i)\n", MeshMgr()->BufferCount() );
-
+*/
 
 #ifdef _DEBUG
 	// Helps to find the unreleased textures.

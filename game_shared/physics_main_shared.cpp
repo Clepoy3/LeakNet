@@ -398,7 +398,8 @@ bool CBaseEntity::PhysicsCheckWater( void )
 	int cont = GetWaterType();
 
 	// If we're not in water + don't have a current, we're done
-	if ( cont & (MASK_WATER | MASK_CURRENT) != (MASK_WATER | MASK_CURRENT) )
+//	if ( cont & (MASK_WATER | MASK_CURRENT) != (MASK_WATER | MASK_CURRENT) )
+	if ( (cont & (MASK_WATER | MASK_CURRENT)) != (MASK_WATER | MASK_CURRENT) )
 		return GetWaterLevel() > 1;
 
 	// Compute current direction

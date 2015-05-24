@@ -21,7 +21,8 @@
 #include "hierarchy.h"
 
 #define POWERPACK_MODEL	"models/objects/human_obj_powerpack.mdl"
-#define POWERPACK_ASSEMBLING_MODEL	"models/objects/human_obj_powerpack_build.mdl"
+//#define POWERPACK_ASSEMBLING_MODEL	"models/objects/human_obj_powerpack_build.mdl"
+#define POWERPACK_ASSEMBLING_MODEL	"models/objects/human_obj_powerpack.mdl"
 
 IMPLEMENT_SERVERCLASS_ST( CObjectPowerPack, DT_ObjectPowerPack )
 	SendPropInt( SENDINFO(m_iObjectsAttached), 3, SPROP_UNSIGNED ),

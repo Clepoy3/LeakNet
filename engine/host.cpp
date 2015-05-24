@@ -231,7 +231,8 @@ static ConVar	host_profile( "host_profile","0" );
 
 ConVar	host_limitlocal( "host_limitlocal", "0", 0, "Apply cl_cmdrate and cl_updaterate to loopback connection" );
 ConVar	host_framerate( "host_framerate","0" );	// set to lock per-frame time elapse
-ConVar	host_timescale( "host_timescale","1.0" );	// set for slow motion
+//ConVar	host_timescale( "host_timescale","1.0" );	// set for slow motion
+ConVar	host_timescale( "host_timescale","1.0", FCVAR_REPLICATED );	// set for slow motion
 ConVar	host_speeds( "host_speeds","0" );		// set for running times
 ConVar  mp_logfile( "mp_logfile", "1", FCVAR_SERVER );  // Log multiplayer frags to server logfile
 ConVar  mp_logecho( "mp_logecho", "1", FCVAR_SERVER );  // Log multiplayer frags to console

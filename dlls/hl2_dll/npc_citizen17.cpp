@@ -584,13 +584,13 @@ int CNPC_Citizen::SelectSchedule ( void )
 
 			if ( HasCondition ( COND_NO_PRIMARY_AMMO ) )
 			{
-#if 0
+//#if 0
 				return SCHED_HIDE_AND_RELOAD;
-#else
+//#else
 				// @TODO (toml 05-07-03): e3-03 hack. prevent SW citizens from running inside during closing scene. remove afterwards
 				
-				return SCHED_RELOAD;
-#endif
+//				return SCHED_RELOAD;
+//#endif
 			}
 
 			break;

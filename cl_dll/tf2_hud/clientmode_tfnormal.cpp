@@ -33,6 +33,8 @@
 #include <vgui/IInput.h>
 #include <vgui/IPanel.h>
 #include <vgui_controls/AnimationController.h>
+#include "TFTeamMenu.h"
+#include <game_controls/IViewPort.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

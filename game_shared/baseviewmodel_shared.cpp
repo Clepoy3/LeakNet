@@ -141,24 +141,28 @@ void CBaseViewModel::SpawnControlPanels()
 	int nPanel;
 	for ( nPanel = 0; true; ++nPanel )
 	{
-		Q_snprintf( buf, 64, pAttachmentNameLL, nPanel );
+	//	Q_snprintf( buf, 64, pAttachmentNameLL, nPanel );
+		Q_snprintf( buf, sizeof( buf ), pAttachmentNameLL, nPanel );
 		int nLLAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
 		if (nLLAttachmentIndex <= 0)
 		{
 			// Try and use my panels then
 			pEntityToSpawnOn = this;
-			Q_snprintf( buf, 64, pOrgLL, nPanel );
+		//	Q_snprintf( buf, 64, pOrgLL, nPanel );
+			Q_snprintf( buf, sizeof( buf ), pOrgLL, nPanel );
 			nLLAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
 			if (nLLAttachmentIndex <= 0)
 				return;
 		}
 
-		Q_snprintf( buf, 64, pAttachmentNameUR, nPanel );
+	//	Q_snprintf( buf, 64, pAttachmentNameUR, nPanel );
+		Q_snprintf( buf, sizeof( buf ), pAttachmentNameUR, nPanel );
 		int nURAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
 		if (nURAttachmentIndex <= 0)
 		{
 			// Try and use my panels then
-			Q_snprintf( buf, 64, pOrgUR, nPanel );
+		//	Q_snprintf( buf, 64, pOrgUR, nPanel );
+			Q_snprintf( buf, sizeof( buf ), pOrgUR, nPanel );
 			nURAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
 			if (nURAttachmentIndex <= 0)
 				return;

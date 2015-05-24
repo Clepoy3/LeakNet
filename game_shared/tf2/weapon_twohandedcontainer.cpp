@@ -164,6 +164,7 @@ void CWeaponTwoHandedContainer::SetWeapons( CBaseTFCombatWeapon *left, CBaseTFCo
 
 	// Do we have a different left weapon?
 	if ( m_hLeftWeapon.Get() && m_hLeftWeapon != left )
+//	if ( m_hLeftWeapon.Get() && m_hLeftWeapon != (const CBaseTFCombatWeapon *)left )
 	{
 		// Holster our old one
 		m_hLeftWeapon->Holster();
@@ -171,6 +172,7 @@ void CWeaponTwoHandedContainer::SetWeapons( CBaseTFCombatWeapon *left, CBaseTFCo
 	}
 	// Do we have a different right weapon?
 	if ( m_hRightWeapon.Get() && m_hRightWeapon != right )
+//	if ( m_hRightWeapon.Get() && m_hRightWeapon != (const CBaseTFCombatWeapon *)right )
 	{
 		// Holster our old one
 		m_hRightWeapon->Holster();

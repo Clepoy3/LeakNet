@@ -75,6 +75,10 @@ CBasePlayer *BotPutInServer( bool bFrozen, int iTeam, int iClass )
 	}
 	pPlayer->ForceRespawn();
 
+	// VXP
+	pPlayer->ChangeTeam( TEAM_HUMANS );
+	pPlayer->ChangeClass( TFCLASS_COMMANDO );
+
 	BotNumber++;
 
 	return pPlayer;

@@ -364,8 +364,9 @@ void SetSkinValues( )
 	else
 	{
 		g_numskinfamilies = 1;
-		g_numskinref = g_numtextures;
+	//	g_numskinref = g_numtextures;
 	}
+	g_numskinref = g_numtextures;
 
 	// printf ("width: %i  height: %i\n",width, height);
 	/*
@@ -2334,7 +2335,8 @@ int Cmd_Sequence( )
 		}
 		else
 		{
-			i = sqrt( numblends );
+		//	i = sqrt( numblends );
+			i = sqrt( (float)numblends );
 			if (i * i == numblends)
 			{
 				pseq->groupsize[0] = i;
@@ -4264,6 +4266,15 @@ static void Cmd_RemoveMesh( LodScriptData_t& lodData )
 	newReplacement.SetSrcName( token );
 }
 
+static void Cmd_IncludeModel( void )
+{
+	GetToken( false );
+
+	// Create a new include model and write the model name
+	s_includemodel_t &includemodel = g_includemodel[g_includemodel.AddToTail()];
+	strncpy(includemodel.name, CDbgFmtMsg("models/%s", token), MAXSTUDIONAME);
+}
+
 static void Cmd_LOD( char const *cmdname )
 {
 	if ( gflags & STUDIOHDR_FLAGS_HASSHADOWLOD )
@@ -4613,7 +4624,8 @@ void Grab_Vertexanimation( s_source_t *psource )
 			}
 
 			// next command
-			if (sscanf( g_szLine, "%s %d", cmd, &index ))
+		//	if (sscanf( g_szLine, "%s %d", cmd, &index ))
+			if (sscanf( g_szLine, "%1023s %d", cmd, &index ))
 			{
 				if (strcmp( cmd, "time" ) == 0) 
 				{
@@ -4765,7 +4777,8 @@ void Grab_AxisInterpBones( )
 		{
 			return;
 		}
-		int i = sscanf( g_szLine, "%s \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d", cmd, pBone->bonename, tmp, pBone->controlname, tmp, &pBone->axis );
+	//	int i = sscanf( g_szLine, "%s \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d", cmd, pBone->bonename, tmp, pBone->controlname, tmp, &pBone->axis );
+		int i = sscanf( g_szLine, "%1023s \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d", cmd, pBone->bonename, tmp, pBone->controlname, tmp, &pBone->axis );
 		if (i == 6 && stricmp( cmd, "bone") == 0)
 		{
 			// printf( "\"%s\" \"%s\" \"%s\" \"%s\"\n", cmd, pBone->bonename, tmp, pBone->controlname );
@@ -5213,6 +5226,10 @@ void ParseScript (void)
 		else if (!stricmp (token, "$shadowlod"))
 		{
 			Cmd_ShadowLOD();
+		}
+		else if (!stricmp (token, "$includemodel") )
+		{
+			Cmd_IncludeModel();
 		}
 		else if (!stricmp( token, "$poseparameter" ))
 		{

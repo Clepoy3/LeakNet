@@ -210,6 +210,8 @@ public:
 	virtual void			PrintSearchPaths( void ) = 0;
 
 	virtual void			UnloadModule( CSysModule *pModule ) = 0;
+
+	virtual bool			WriteFile( const char *pFileName, const char *pathID, void const* pInput, int size ) = 0;
 };
 
 

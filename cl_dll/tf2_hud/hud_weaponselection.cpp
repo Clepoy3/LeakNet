@@ -91,7 +91,7 @@ public:
 		{
 			char slotSequence[ 128 ];
 			Q_snprintf( slotSequence, sizeof( slotSequence ), "%s%i", prefix, m_nActiveItem );
-
+Msg("%s\n", slotSequence);
 			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( slotSequence );
 		}
 	}
@@ -1291,7 +1291,7 @@ void CHudWeaponSelection::OpenSelection( void )
 	m_nActiveBuildMenu = -1;
 	
 	CBaseHudWeaponSelection::OpenSelection();
-	
+	Msg("WeaponOpenWeaponMenu\n");
 	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponOpenWeaponMenu");
 }
 
@@ -1303,7 +1303,7 @@ void CHudWeaponSelection::HideSelection( void )
 	{
 		HideBuildMenu();
 	}
-
+Msg("WeaponCloseWeaponMenu\n");
 	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponCloseWeaponMenu");
 }
 
@@ -1556,6 +1556,7 @@ void CHudWeaponItemPanel::TranslateColor( float percent, Color& clr )
 //-----------------------------------------------------------------------------
 void CHudWeaponItemPanel::DrawBox( bool isbuildmenu, int x, int y, int wide, int tall, bool isactive, bool isvalid, float normalizedAlpha, int number )
 {
+	//BaseClass::DrawBox( x, y, wide, tall, boxColor, normalizedAlpha / 255.0f );
 	CHudWeaponSelection *selection = static_cast< CHudWeaponSelection * >( GetParent() );
 	if ( !selection )
 	{
@@ -1664,7 +1665,7 @@ void CHudWeaponItemPanel::SetupIcons()
 			char sz[ 256 ];
 			Q_snprintf( sz, sizeof( sz ), "%s_weapon_%s_%s_%i",
 				teamtype, menutypestr, slottype, m_nSlotNumber + 1 );
-
+Msg("%s\n", sz);
 			m_BackgroundIcons[ team ][ type ] = gHUD.GetIcon( sz );;
 		}
 	}

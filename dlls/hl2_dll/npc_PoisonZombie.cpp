@@ -128,15 +128,19 @@ static const char *s_szLegsModel = "models/zombie/classic_legs.mdl";
 //-----------------------------------------------------------------------------
 static const char *s_szHeadcrabClassname = "npc_headcrab_poison";
 
+/*
 static const char *pFastBreathSounds[] =
 {
 	"npc/zombie_poison/pz_breathe_loop2.wav",
 };
+*/
 
 static const char *pMoanSounds[] =
 {
-	"npc/zombie_poison/pz_breathe_loop1.wav",
+//	"npc/zombie_poison/pz_breathe_loop1.wav",
+	"NPC_PoisonZombie.Moan1",
 };
+
 
 //-----------------------------------------------------------------------------
 // Skill settings.
@@ -271,7 +275,7 @@ void CNPC_PoisonZombie::Precache( void )
 	engine->PrecacheModel( "models/zombie/classic_legs.mdl" );
 
 	PRECACHE_SOUND_ARRAY( pMoanSounds );
-	PRECACHE_SOUND_ARRAY( pFastBreathSounds );
+//	PRECACHE_SOUND_ARRAY( pFastBreathSounds );
 
 	BaseClass::Precache();
 }
@@ -296,11 +300,13 @@ void CNPC_PoisonZombie::Spawn( void )
 	BaseClass::Spawn();
 
 	CPASAttenuationFilter filter( this, ATTN_IDLE );
-	m_pFastBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter, entindex(), CHAN_ITEM, RANDOM_SOUND_ARRAY( pFastBreathSounds ), ATTN_IDLE );
+//	m_pFastBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter, entindex(), CHAN_ITEM, RANDOM_SOUND_ARRAY( pFastBreathSounds ), ATTN_IDLE );
+	m_pFastBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter, entindex(), CHAN_ITEM, "NPC_PoisonZombie.FastBreath", ATTN_IDLE );
 	ENVELOPE_CONTROLLER.Play( m_pFastBreathSound, 0.0f, 100 );
 
 	CPASAttenuationFilter filter2( this );
-	m_pSlowBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter2, entindex(), CHAN_ITEM, RANDOM_SOUND_ARRAY( pMoanSounds ), ATTN_NORM );
+//	m_pSlowBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter2, entindex(), CHAN_ITEM, RANDOM_SOUND_ARRAY( pMoanSounds ), ATTN_NORM );
+	m_pSlowBreathSound = ENVELOPE_CONTROLLER.SoundCreate( filter2, entindex(), CHAN_ITEM, "NPC_PoisonZombie.Moan1", ATTN_NORM );
 	ENVELOPE_CONTROLLER.Play( m_pSlowBreathSound, BREATH_VOL_MAX, 100 );
 
 	int nCrabs = m_nCrabCount;
@@ -952,6 +958,7 @@ bool CNPC_PoisonZombie::ShouldPlayIdleSound( void )
 //-----------------------------------------------------------------------------
 void CNPC_PoisonZombie::AttackHitSound( void )
 {
+	EmitSound( "Zombie.AttackHit" );
 }
 
 //-----------------------------------------------------------------------------
@@ -959,6 +966,7 @@ void CNPC_PoisonZombie::AttackHitSound( void )
 //-----------------------------------------------------------------------------
 void CNPC_PoisonZombie::AttackMissSound( void )
 {
+	EmitSound( "Zombie.AttackMiss" );
 }
 
 //-----------------------------------------------------------------------------
@@ -966,6 +974,7 @@ void CNPC_PoisonZombie::AttackMissSound( void )
 //-----------------------------------------------------------------------------
 void CNPC_PoisonZombie::AttackSound( void )
 {
+	EmitSound( "NPC_PoisonZombie.Attack" );
 }
 
 //-----------------------------------------------------------------------------

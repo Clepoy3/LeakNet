@@ -120,7 +120,7 @@ void CTeamVehicleSpawnPoint::Activate( void )
 	if ( GetTeamNumber() > 0 && GetTeamNumber() <= MAX_TEAMS )
 	{
 		// Don't add vehicle spawnpoints to the team for now
-		//GetGlobalTeam( GetTeamNumber() )->AddSpawnpoint( this );
+		//GetGlobalTeam( GetTeamNumber() )->AddSpawnpoint( this ); // VXP: Re-enable maybe?
 	}
 	else
 	{

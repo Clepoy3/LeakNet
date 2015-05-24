@@ -190,9 +190,11 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 		DispatchEffect( "watersplash", data );
 //#if !defined( CLIENT_DLL )
 	//	NDebugOverlay::Box( orig, Vector( 5, 5, 5 ), Vector( -5, -5, -5 ), 255, 0, 0, 255, 5.0f );
-		NDebugOverlay::Text( vecAbsOrigin, "BEGIN", false, 5.0f );
-		NDebugOverlay::Line( vecAbsOrigin, orig, 0, 255, 0, true, 5.0f );
-		NDebugOverlay::Text( orig, "END", false, 5.0f );
+//#ifdef _DEBUG
+	//	NDebugOverlay::Text( vecAbsOrigin, "BEGIN", false, 5.0f );
+	//	NDebugOverlay::Line( vecAbsOrigin, orig, 0, 255, 0, true, 5.0f );
+	//	NDebugOverlay::Text( orig, "END", false, 5.0f );
+//#endif
 	/*	trace_t		tr;
 	//	UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, 10000), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
 		UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, pTrace->plane.dist), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);

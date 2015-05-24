@@ -363,6 +363,34 @@ static void WriteBoneInfo( studiohdr_t *phdr )
 		pData += hitboxset->numhitboxes * sizeof( mstudiobbox_t );
 		ALIGN4( pData );
 	}
+
+	// VXP: From TAP's code
+	// Add bone descriptions
+	phdr->numbonedesc = g_numbones;
+	phdr->bonedescindex = (pData - pStart);
+
+	mstudiobonedesc_t *pBoneDesc = (mstudiobonedesc_t *)pData;
+	pData += sizeof(mstudiobonedesc_t) * g_numbones;
+
+	for(i = 0; i < g_numbones; ++i, ++pBoneDesc)
+	{
+		AddToStringTable( pBoneDesc, &pBoneDesc->sznameindex, g_bonetable[i].name );
+		pBoneDesc->parent = g_bonetable[i].parent;
+		pBoneDesc->value[0] = g_bonetable[i].pos[0];
+		pBoneDesc->value[1] = g_bonetable[i].pos[1];
+		pBoneDesc->value[2] = g_bonetable[i].pos[2];
+		pBoneDesc->value[3] = g_bonetable[i].rot[0];
+		pBoneDesc->value[4] = g_bonetable[i].rot[1];
+		pBoneDesc->value[5] = g_bonetable[i].rot[2];
+		pBoneDesc->scale[0] = g_bonetable[i].posscale[0];
+		pBoneDesc->scale[1] = g_bonetable[i].posscale[1];
+		pBoneDesc->scale[2] = g_bonetable[i].posscale[2];
+		pBoneDesc->scale[3] = g_bonetable[i].rotscale[0];
+		pBoneDesc->scale[4] = g_bonetable[i].rotscale[1];
+		pBoneDesc->scale[5] = g_bonetable[i].rotscale[2];
+		MatrixInvert( g_bonetable[i].boneToPose, pbone[i].poseToBone );
+		memset(&pBoneDesc->fivefloat, 0, sizeof(pBoneDesc->fivefloat));
+	}
 }
 
 
@@ -376,7 +404,15 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 	mstudioevent_t		*pevent;
 	byte				*ptransition;
 
-	
+	// write anim group data
+	mstudioanimgroup_t *panimgroup = (mstudioanimgroup_t *)pData;
+
+	phdr->numanimgroup = g_numseq;
+	phdr->animgroupindex = (pData - pStart);
+
+	pData += g_numseq * sizeof( mstudioanimgroup_t );
+	ALIGN4( pData );
+
 	// write models to disk with this flag set false. This will force
 	// the sequences to be indexed by activity whenever the g_model is loaded
 	// from disk.
@@ -527,6 +563,41 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 			piklock++;
 		}
 
+		// save blend data
+		short *blends				= (short *)pData;
+		pseqdesc->blendindex		= (pData - pSequenceStart);
+		pData						+= ((g_sequence[i].groupsize[0] * g_sequence[i].groupsize[1]) + g_sequence[i].groupsize[0]) * sizeof(short);
+		ALIGN4( pData );
+
+		for ( j = 0; j < g_sequence[i].groupsize[0] ; j++ )
+		{
+			for ( k = 0; k < g_sequence[i].groupsize[1]; k++ )
+			{
+				// height value * width of row + width value
+				int offset = k * g_sequence[i].groupsize[0] + j;
+
+				// Point to the animation group
+				blends[offset] = (short)i;
+
+				if ( g_sequence[i].panim[j][k] )
+				{
+					int animindex = g_sequence[i].panim[j][k]->index;
+
+					Assert( animindex >= 0 && animindex < 32767 ); // VXP: SHRT_MAX
+
+					// Local seqgroup, set the anim index
+					panimgroup[i].group = 0;
+					panimgroup[i].index = animindex;
+				}
+				else
+				{
+					// Local seqgroup, no index
+					panimgroup[i].group = 0;
+					panimgroup[i].index = 0;
+				}
+			}
+		}
+
 		WriteSeqKeyValues( pseqdesc, &g_sequence[i].KeyValue );
 	}
 
@@ -536,7 +607,8 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 	}
 	// save g_sequence group info
 	pseqgroup = (mstudioseqgroup_t *)pData;
-	phdr->numseqgroups = g_numseqgroups;
+//	phdr->numseqgroups = g_numseqgroups;
+	phdr->numseqgroups = g_numseqgroups+g_includemodel.Count();
 	phdr->seqgroupindex = (pData - pStart);
 	pData += phdr->numseqgroups * sizeof( mstudioseqgroup_t );
 	ALIGN4( pData );
@@ -545,6 +617,12 @@ static void WriteSequenceInfo( studiohdr_t *phdr )
 	{
 		AddToStringTable( &pseqgroup[i], &pseqgroup[i].szlabelindex, g_sequencegroup[i].label );
 		AddToStringTable( &pseqgroup[i], &pseqgroup[i].sznameindex, g_sequencegroup[i].name );
+	}
+
+	for (i = g_numseqgroups; i < phdr->numseqgroups; i++)
+	{
+		AddToStringTable( &pseqgroup[i], &pseqgroup[i].szlabelindex, "shared_animation" );
+		AddToStringTable( &pseqgroup[i], &pseqgroup[i].sznameindex, g_includemodel[i].name );
 	}
 
 	// save transition graph
@@ -1394,11 +1472,15 @@ void WriteFile (void)
 	int			i;
 	char		filename[260];
 	studiohdr_t *phdr;
-	studioseqhdr_t *pseqhdr;
+//	studioseqhdr_t *pseqhdr;
 
 	pStart = (byte *)kalloc( 1, FILEBUFFER );
 
 	StripExtension (outname);
+
+	// SAULTODO: add shared model exporting (this is V36 demand loading sequence groups)
+#if 0
+	studioseqhdr_t *pseqhdr;
 
 	for (i = 1; i < g_numseqgroups; i++)
 	{
@@ -1434,6 +1516,7 @@ void WriteFile (void)
 		g_pFileSystem->Close(modelouthandle);
 		memset( pStart, 0, pseqhdr->length );
 	}
+#endif
 
 //
 // write the g_model output file

@@ -8,6 +8,7 @@
 
 #include <vgui_controls/CheckButton.h>
 #include <vgui_controls/ComboBox.h>
+#include "CvarToggleCheckButton.h"
 #include <KeyValues.h>
 #include <vgui/ILocalize.h>
 // memdbgon must be the last include file in a .cpp file!!!
@@ -127,6 +128,8 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 
 	m_pWaterEntReflect = new vgui::CheckButton( this, "WaterEntReflect", "Water Entity Reflections" ); // VXP: #GameUI_WaterEntReflect
 	m_pWaterEntReflect->SetSelected( m_CurrentSettings.waterentreflect ? true : false);
+	
+	m_pMotionBlurEnableCheckButton = new CCvarToggleCheckButton( this, "pp_motionblur", "Enable Motion Blur", "pp_motionblur" );
 
 	LoadControlSettings("Resource\\OptionsSubVideo.res");
 }
@@ -201,6 +204,8 @@ void COptionsSubVideo::OnResetData()
 	m_pGammaSlider->Reset();
     m_pWindowed->SetSelected(m_CurrentSettings.windowed);
 	m_pWaterEntReflect->SetSelected(m_CurrentSettings.waterentreflect);
+	
+	m_pMotionBlurEnableCheckButton->Reset();
 
 //    SetCurrentRendererComboItem();
 	SetCurrentAnisoComboItem();
@@ -334,6 +339,8 @@ void COptionsSubVideo::OnApplyChanges()
 	m_pGammaSlider->ApplyChanges();
 
 	ApplyVidSettings(bChanged);
+	
+	m_pMotionBlurEnableCheckButton->ApplyChanges();
 }
 
 //-----------------------------------------------------------------------------

@@ -28,6 +28,10 @@ void RegisterUserMessages( void )
 	usermessages->Register( "Fade", sizeof(ScreenFade_t) );
 	usermessages->Register( "TeamChange", 1 );
 	usermessages->Register( "ClearDecals", 1 );
+	
+	// VXP
+	usermessages->Register( "ShowTFTeamPanel", -1 );
+	usermessages->Register( "ShowTFClassPanel", -1 );
 
 	usermessages->Register( "VoiceMask", VOICE_MAX_PLAYERS_DW*4 * 2 + 1 );
 	usermessages->Register( "RequestState", 0 );

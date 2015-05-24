@@ -99,7 +99,8 @@ ConVar	mat_drawflat( "mat_drawflat","0", FCVAR_CHEAT);
 ConVar	mat_fullbright( "mat_fullbright","0", FCVAR_CHEAT );
 ConVar	mat_reversedepth( "mat_reversedepth", "0" );
 ConVar	mat_polyoffset(  "mat_polyoffset", "4", FCVAR_ARCHIVE );
-ConVar	mat_overbright(  "mat_overbright", "2" );
+//ConVar	mat_overbright(  "mat_overbright", "2" );
+ConVar	mat_overbright(  "mat_overbright", "1" ); // VXP
 ConVar	mat_wireframe(  "mat_wireframe", "0", FCVAR_CHEAT );
 ConVar	mat_luxels(  "mat_luxels", "0" );
 ConVar	mat_showlightmappage(  "mat_showlightmappage", "-1" );

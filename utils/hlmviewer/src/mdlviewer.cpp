@@ -205,7 +205,6 @@ MDLViewer::~MDLViewer ()
 //-----------------------------------------------------------------------------
 void MDLViewer::Refresh( void )
 {
-	g_pStudioModel->ReleaseStudioModel( ); // VXP
 	if ( recentFiles[0][0] != '\0' )
 	{
 		char szFile[MAX_PATH];

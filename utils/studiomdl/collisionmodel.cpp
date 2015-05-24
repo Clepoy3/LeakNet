@@ -1275,12 +1275,16 @@ bool IsApproximatelyPlanar( Vector **verts, int vertCount, float epsilon )
 
 	// form the plane and project all of the verts into it
 	float dist = DotProduct( normal, *verts[0] );
+	float maxDist = dist;
 
 	for ( int i = 0; i < vertCount; i++ )
 	{
-		float d = DotProduct( *verts[i], normal ) - dist;
+	//	float d = DotProduct( *verts[i], normal ) - dist;
+		float d = DotProduct( *verts[i], normal );
+		clamp( d, dist, maxDist );
 		// at least one vert out of the plane, we've got something 3 dimensional
-		if ( fabsf(d) > epsilon )
+	//	if ( fabsf(d) > epsilon )
+		if ( fabsf(maxDist-dist) > epsilon )
 			return false;
 	}
 	return true;
@@ -1345,7 +1349,8 @@ int ProcessSingleBody( CJointedModel &joints )
 		{
 			// HACKHACK: A heuristic to detect models without smoothing groups set
 			// UNDONE: Do a BSP to decompose arbitrary models to convex?
-			if ( IsApproximatelyPlanar( verts, vertCount, 0.1 ) )
+		//	if ( IsApproximatelyPlanar( verts, vertCount, 0.1 ) )
+			if ( IsApproximatelyPlanar( verts, vertCount, 0.5 ) )
 			{
 				printf("WARNING: Bad collision model, check your smoothing groups!!!\n\07\nTruncating model!!!!\n" );
 				printf( "%s has bad smoothing groups\n", pmodel->filename );

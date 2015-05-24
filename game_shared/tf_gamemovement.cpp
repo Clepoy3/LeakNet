@@ -6,6 +6,13 @@
 //=============================================================================
 #include "cbase.h"
 #include "tf_gamemovement.h"
+
+#ifdef TF2_CLIENT_DLL
+	#include "c_basetfplayer.h"
+#else
+	#include "tf_player.h"
+#endif
+
 #include "in_buttons.h"
 #include "tier0/vprof.h"
 #include "SoundEmitterSystemBase.h"
@@ -75,7 +82,8 @@ void CTFGameMovement::_ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMove )
 		return;
 	}
 
-	mv->m_flMaxSpeed = sv_maxspeed.GetFloat();
+//	mv->m_flMaxSpeed = sv_maxspeed.GetFloat();
+	mv->m_flMaxSpeed = GetClassSpecificSpeed( pPlayer ); // VXP
 
 	// Run the command.
 	PlayerMove();
@@ -83,6 +91,83 @@ void CTFGameMovement::_ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMove )
 	FinishMove();
 }
 
+//-----------------------------------------------------------------------------
+// Andy: A new function to return the correct speed, depending on our class
+//-----------------------------------------------------------------------------
+float CTFGameMovement::GetClassSpecificSpeed( CBasePlayer *pPlayer )
+{
+	float playerSpeed = sv_maxspeed.GetFloat(); //Setup a default speed using sv_maxspeed
+	ConVar const *classSpeed;
+
+	CBaseTFPlayer *tfPlayer = ToBaseTFPlayer( pPlayer );
+
+	switch ( tfPlayer->PlayerClass() )
+	{
+	case TFCLASS_COMMANDO:
+		{
+			classSpeed = cvar->FindVar( "class_commando_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_DEFENDER:
+		{
+			classSpeed = cvar->FindVar( "class_defender_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_ESCORT:
+		{
+			classSpeed = cvar->FindVar( "class_escort_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_INFILTRATOR:
+		{
+			classSpeed = cvar->FindVar( "class_infiltrator_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_MEDIC:
+		{
+			classSpeed = cvar->FindVar( "class_medic_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_PYRO:
+		{
+			playerSpeed = sv_maxspeed.GetFloat();
+			break;
+		}
+	case TFCLASS_RECON:
+		{
+			classSpeed = cvar->FindVar( "class_recon_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_SAPPER:
+		{
+			classSpeed = cvar->FindVar( "class_sapper_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_SNIPER:
+		{
+			classSpeed = cvar->FindVar( "class_sniper_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	case TFCLASS_SUPPORT:
+		{
+			classSpeed = cvar->FindVar( "class_support_speed" );
+			playerSpeed = classSpeed->GetFloat();
+			break;
+		}
+	default:
+		playerSpeed = sv_maxspeed.GetFloat();
+	}
+
+	return playerSpeed;
+}
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------

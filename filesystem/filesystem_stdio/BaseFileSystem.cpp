@@ -1339,6 +1339,24 @@ int CBaseFileSystem::Write( void const* pInput, int size, FileHandle_t file )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+bool CBaseFileSystem::WriteFile( const char *pFileName, const char *pathID, void const* pInput, int size )
+{
+	FileHandle_t hFile = Open(pFileName, "wb", pathID);
+	if(!IsOk(hFile))
+		return false;
+
+	// Write data
+	int nWritten = Write(pInput, size, hFile);
+
+	// Now close
+	Close(hFile);
+
+	return nWritten == size;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 int CBaseFileSystem::FPrintf( FileHandle_t file, char *pFormat, ... )
 {
 	VPROF_BUDGET( "CBaseFileSystem::FPrintf", VPROF_BUDGETGROUP_OTHER_FILESYSTEM );

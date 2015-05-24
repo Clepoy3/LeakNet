@@ -190,7 +190,7 @@ int CCollisionEvent::ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObje
 
 
 // This just encloses a change I (MikeD) made, in case it causes problems.
-#define DECAL_FIX // VXP: For test
+//#define DECAL_FIX
 
 
 // A class that implements an IClientSystem for physics

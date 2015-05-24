@@ -126,6 +126,10 @@ void CPlayerClassCommando::CreateClass( void )
 	// Create our two handed weapon layout
 	m_hWpnShield = m_pPlayer->GetCombatShield();
 
+	// VXP
+	m_hWpnPlasma = static_cast< CBaseTFCombatWeapon * >( m_pPlayer->GiveNamedItem( "weapon_rocket_launcher" ) );
+	m_hWpnGrenade = static_cast< CBaseTFCombatWeapon *>( m_pPlayer->GiveNamedItem( "weapon_combat_grenade" ));
+
 	CWeaponTwoHandedContainer *p = ( CWeaponTwoHandedContainer * )m_pPlayer->Weapon_OwnsThisType( "weapon_twohandedcontainer" );
 	if ( !p )
 	{

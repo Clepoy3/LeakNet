@@ -1762,6 +1762,7 @@ void CViewRender::DoMotionBlur( void )
 	materials->LoadIdentity();	
 
 	if ( fNextDrawTime - gpGlobals->curtime > 1.0f)
+//	if ( fNextDrawTime - gpGlobals->frametime > 1.0f)
 	{
 		fNextDrawTime = 0.0f;
 	}
@@ -1789,6 +1790,7 @@ void CViewRender::DoMotionBlur( void )
 
 		// Set the next draw time according to the convar
 		fNextDrawTime = gpGlobals->curtime + pp_motionblur_time.GetFloat();
+	//	fNextDrawTime = gpGlobals->frametime + pp_motionblur_time.GetFloat();
 	}
  
 	// Set the alpha
@@ -1822,6 +1824,79 @@ void CViewRender::DoMotionBlur( void )
 	materials->MatrixMode( MATERIAL_VIEW );
 	materials->PopMatrix();
 }
+/*
+void CViewRender::DoMotionBlur( void )
+{
+	CMatRenderContextPtr pRenderContext( materials );
+
+	ITexture *pFullFrameFB1 = materials->FindTexture( "_rt_FullFrameFB1", TEXTURE_GROUP_RENDER_TARGET );
+
+	//
+	// Render Velocities into a full-frame FB1
+	//
+	IMaterial *pGlowColorMaterial = materials->FindMaterial( "dev/glow_color", TEXTURE_GROUP_OTHER, true );
+	
+//	pRenderContext->PushRenderTargetAndViewport();
+//	pRenderContext->SetRenderTarget( pFullFrameFB1 );
+//	pRenderContext->Viewport( 0, 0, pSetup->width, pSetup->height );
+	materials->SetRenderTarget( pFullFrameFB1 );
+//	int oldX, oldY, oldW, oldH;
+//	materials->GetViewport( oldX, oldY, oldW, oldH );
+//	materials->SetViewport( true, 0, 0, oldW, oldH );
+
+	// Red and Green are x- and y- screen-space velocities biased and packed into the [0,1] range.
+	// A value of 127 gets mapped to 0, a value of 0 gets mapped to -1, and a value of 255 gets mapped to 1.
+	//
+	// Blue is set to 1 within the object's bounds and 0 outside, and is used as a mask to ensure that
+	// motion blur samples only pull from the core object itself and not surrounding pixels (even though
+	// the area being blurred is larger than the core object).
+	//
+	// Alpha is not used
+	pRenderContext->ClearColor4ub( 127, 127, 0, 0 );
+	// Clear only color, not depth & stencil
+	pRenderContext->ClearBuffers( true, false, false );
+
+	// Save off state
+	Vector vOrigColor;
+	render->GetColorModulation( vOrigColor.Base() );
+
+	// Use a solid-color unlit material to render velocity into the buffer
+	g_pStudioRender->ForcedMaterialOverride( pGlowColorMaterial );
+	g_ObjectMotionBlurManager.DrawObjects();	
+	g_pStudioRender->ForcedMaterialOverride( NULL );
+
+	render->SetColorModulation( vOrigColor.Base() );
+	
+	pRenderContext->PopRenderTargetAndViewport();
+
+	//
+	// Render full-screen pass
+	//
+	IMaterial *pMotionBlurMaterial;
+	IMaterialVar *pFBTextureVariable;
+	IMaterialVar *pVelocityTextureVariable;
+	bool bFound1 = false, bFound2 = false;
+
+	// Make sure our render target of choice has the results of the engine post-process pass
+	ITexture *pFullFrameFB = materials->FindTexture( "_rt_FullFrameFB", TEXTURE_GROUP_RENDER_TARGET );
+	pRenderContext->CopyRenderTargetToTexture( pFullFrameFB );
+
+	pMotionBlurMaterial = materials->FindMaterial( "effects/object_motion_blur", TEXTURE_GROUP_OTHER, true );
+	pFBTextureVariable = pMotionBlurMaterial->FindVar( "$fb_texture", &bFound1, true );
+	pVelocityTextureVariable = pMotionBlurMaterial->FindVar( "$velocity_texture", &bFound2, true );
+	if ( bFound1 && bFound2 )
+	{
+		pFBTextureVariable->SetTextureValue( pFullFrameFB );
+		
+		pVelocityTextureVariable->SetTextureValue( pFullFrameFB1 );
+
+		int nWidth, nHeight;
+		pRenderContext->GetRenderTargetDimensions( nWidth, nHeight );
+
+		pRenderContext->DrawScreenSpaceRectangle( pMotionBlurMaterial, 0, 0, nWidth, nHeight, 0.0f, 0.0f, nWidth - 1, nHeight - 1, nWidth, nHeight );
+	}
+}
+*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Renders entire view
@@ -1903,6 +1978,7 @@ void CViewRender::RenderView( const CViewSetup &view, bool drawViewModel )
 	{
 		DoScreenSpaceBloom();
 	}
+	// VXP: This stub is temporary, I think
 	if( !engine->SupportsHDR() )
 	{
 		DoMotionBlur();

@@ -59,9 +59,11 @@ void CCommanderStatusPanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
 
-	m_hFont = pScheme->GetFont( "Trebuchet20" );
+//	m_hFont = pScheme->GetFont( "Trebuchet20" );
+	m_hFontText = pScheme->GetFont( "HudNumbers" ); // VXP
 	// FIXME:  Outline, weight 1000
-	m_hFontText = pScheme->GetFont( "Trebuchet18" );
+//	m_hFontText = pScheme->GetFont( "Trebuchet18" );
+	m_hFontText = pScheme->GetFont( "HudNumbersTimer" ); // VXP
 	// FIXME:  Outline, weight 700
 }
 

@@ -87,6 +87,13 @@ EXTERN	bool		g_centerstaticprop;
 
 EXTERN	bool		g_realignbones;
 
+struct s_includemodel_t
+{
+	char			name[MAXSTUDIONAME];
+};
+
+EXTERN	CUtlVector<s_includemodel_t> g_includemodel;
+
 // Methods associated with the key value text block
 extern CUtlVector< char >	g_KeyValueText;
 int		KeyValueTextSize( CUtlVector< char > *pKeyValue );

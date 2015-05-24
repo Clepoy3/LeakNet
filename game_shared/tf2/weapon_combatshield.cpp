@@ -710,7 +710,8 @@ void CWeaponCombatShield::DrawAmmo( void )
 	float flFlash = 0;
 	if ( gpGlobals->curtime < m_flFlashTimeEnd && !GetPrimaryAmmo() )
 	{
-		flFlash = fmod( gpGlobals->curtime, 0.25 );
+	//	flFlash = fmod( gpGlobals->curtime, 0.25 );
+		flFlash = fmod( (float)gpGlobals->curtime, (float)0.25 );
 		flFlash *= 2 * M_PI;
 		flFlash = cos( flFlash );
 	}

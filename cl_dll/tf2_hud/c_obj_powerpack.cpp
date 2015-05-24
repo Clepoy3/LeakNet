@@ -301,6 +301,8 @@ CPowerPackControlPanel::CPowerPackControlPanel( vgui::Panel *parent, const char 
 bool CPowerPackControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData )
 {
 	m_pSocketsLabel = new vgui::Label( GetActivePanel(), "SocketReadout", "" );
+	m_pSocketsLabel->SetPos( 0, 100 );
+	m_pSocketsLabel->SetSize( 240, 20 );
 
 	if (!BaseClass::Init(pKeyValues, pInitData))
 		return false;

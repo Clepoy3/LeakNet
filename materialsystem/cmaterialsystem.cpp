@@ -2308,7 +2308,7 @@ void CMaterialSystem::AllocateLightmapTexture( int lightmap )
 	g_pShaderAPI->TexMinFilter( SHADER_TEXFILTERMODE_LINEAR );
 	g_pShaderAPI->TexMagFilter( SHADER_TEXFILTERMODE_LINEAR );
 //	g_pShaderAPI->TexSetPriority( 1 );
-	if ( !bUseDynamicTextures )
+//	if ( !bUseDynamicTextures )
 	{
 		g_pShaderAPI->TexSetPriority( 1 );
 	}
@@ -2320,7 +2320,7 @@ void CMaterialSystem::AllocateLightmapTexture( int lightmap )
 		g_pShaderAPI->TexMinFilter( SHADER_TEXFILTERMODE_LINEAR );
 		g_pShaderAPI->TexMagFilter( SHADER_TEXFILTERMODE_LINEAR );
 	//	g_pShaderAPI->TexSetPriority( 1 );
-		if ( !bUseDynamicTextures )
+	//	if ( !bUseDynamicTextures )
 		{
 			g_pShaderAPI->TexSetPriority( 1 );
 		}

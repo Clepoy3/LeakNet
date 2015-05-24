@@ -556,24 +556,24 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 			color32 tmp;
 			UTIL_StringToColor32( &tmp, szValue );
 			// VXP: Checking for old map rendercolor value
-			if( tmp.r == 0 && tmp.g == 0 && tmp.b == 0 )
-			{
-				tmp.r = tmp.g = tmp.b = 255;
-			}
+		//	if( tmp.r == 0 && tmp.g == 0 && tmp.b == 0 )
+		//	{
+		//		tmp.r = tmp.g = tmp.b = 255;
+		//	}
 			SetRenderColor( tmp.r, tmp.g, tmp.b );
 			// don't copy alpha, legacy support uses renderamt
 			return true;
 		}
 		else if ( FStrEq( szKeyName, "renderamt" ) )
 		{
-			int rAmt = atoi( szValue );
+		//	int rAmt = atoi( szValue );
 			// VXP: Checking for old map renderamt value
-			if( rAmt == 0 )
-			{
-				rAmt = 255;
-			}
-		//	SetRenderColorA( atoi( szValue ) );
-			SetRenderColorA( rAmt );
+		//	if( rAmt == 0 )
+		//	{
+		//		rAmt = 255;
+		//	}
+			SetRenderColorA( atoi( szValue ) );
+		//	SetRenderColorA( rAmt );
 			return true;
 		}
 	}

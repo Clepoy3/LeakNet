@@ -125,7 +125,7 @@ void C_BaseHLPlayer::UpdateFOV( void )
 	
 	// Clamp FOV in MP
 //	int min_fov = ( engine->GetMaxClients() == 1 ) ? 5 : default_fov.GetInt();
-	int min_fov = 5;
+	int min_fov = GetMinFOV();
 	
 	// Don't let it go too low
 	flFOVOffset = max( min_fov, flFOVOffset );

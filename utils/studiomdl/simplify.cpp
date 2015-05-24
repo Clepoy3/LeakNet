@@ -2553,8 +2553,10 @@ int RadianEulerCompareEpsilon(const RadianEuler& v1, const RadianEuler& v2, floa
 	for (i=0 ; i<3 ; i++)
 	{
 		// clamp to 2pi
-		float a1 = fmod(v1[i],2*M_PI);
-		float a2 = fmod(v2[i],2*M_PI);
+	//	float a1 = fmod(v1[i],2*M_PI);
+	//	float a2 = fmod(v2[i],2*M_PI);
+		float a1 = fmod((float)v1[i],(float)(2*M_PI));
+		float a2 = fmod((float)v2[i],(float)(2*M_PI));
 		float delta =  fabs(a1-a2);
 		
 		// use the smaller angle (359 == 1 degree off)

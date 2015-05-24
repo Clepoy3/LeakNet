@@ -73,7 +73,8 @@ bool CHudPlayerOverlayName::Init( KeyValues* pInitData )
 void CHudPlayerOverlayName::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
-	SetFont( pScheme->GetFont( "primary" ) );
+//	SetFont( pScheme->GetFont( "primary" ) );
+	SetFont( pScheme->GetFont( "HudNumbersTimer" ) ); // VXP
 }
 
 

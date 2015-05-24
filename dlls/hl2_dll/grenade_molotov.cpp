@@ -172,7 +172,8 @@ void CGrenade_Molotov::Detonate( void )
 	//	float scale	 = 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) );
 	//	float scale	 = ( 3.0f + ( 0.75f * ( 3.0f - ( offset / 128.0f ) ) ) ) * 10; // VXP: Cool
 	//	float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 100; // VXP: Best formula EVER!
-		float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 500;
+	//	float scale	 = ( 0.1f + ( 0.75f * ( 1.0f - ( offset / 128.0f ) ) ) ) * 500;
+		float scale	 = 2.0f + ( 2.75f * ( 20.0f - ( offset / 186.0f ) ) ); // VXP: From TAP
 		float growth = 0.1f + ( 0.75f * ( offset / 128.0f ) );
 	//	Msg( "Scale for %f offset is: %f\n", offset, scale );
 		if( firetrace.fraction != 1.0 )

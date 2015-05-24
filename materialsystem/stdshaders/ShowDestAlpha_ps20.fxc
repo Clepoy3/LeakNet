@@ -28,6 +28,6 @@ float4 main( PS_INPUT i ) : COLOR
 #if MULTIPLYBY_MAX_HDR_OVERBRIGHT
 	result.xyz *= MAX_HDR_OVERBRIGHT;
 #endif
-	return result;;
+	return result;
 }
 

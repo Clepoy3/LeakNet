@@ -96,6 +96,7 @@ public:
 	virtual bool				EndOfFile( FileHandle_t file );
  
 	virtual int					Read( void *pOutput, int size, FileHandle_t file );
+	virtual bool				WriteFile( const char *pFileName, const char *pathID, void const* pInput, int size ); // VXP
 	virtual int					Write( void const* pInput, int size, FileHandle_t file );
 	virtual char				*ReadLine( char *pOutput, int maxChars, FileHandle_t file );
 	virtual int					FPrintf( FileHandle_t file, char *pFormat, ... );

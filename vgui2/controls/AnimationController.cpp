@@ -563,6 +563,14 @@ void AnimationController::UpdateAnimations( float currentTime )
 	{
 		ActiveAnimation_t &anim = m_ActiveAnimations[i];
 
+		if (!anim.panel.Get())
+		{
+			// panel is gone, remove the animation
+			m_ActiveAnimations.Remove(i);
+			--i;
+			continue;
+		}
+
 		// see if the anim is ready to start
 		if (currentTime < anim.startTime)
 			continue;

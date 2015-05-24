@@ -469,6 +469,8 @@ CSentrygunControlPanel::CSentrygunControlPanel( vgui::Panel *parent, const char 
 bool CSentrygunControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData )
 {
 	m_pAmmoLabel = new vgui::Label( this, "AmmoReadout", "" );
+	m_pAmmoLabel->SetPos( 0, 100 );
+	m_pAmmoLabel->SetSize( 240, 20 );
 
 	if (!BaseClass::Init(pKeyValues, pInitData))
 		return false;

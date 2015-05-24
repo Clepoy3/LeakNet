@@ -96,7 +96,7 @@ protected:
 
 	// Weapons
 	CHandle<CBaseTFCombatWeapon> m_hWpnPlasma;
-//	CHandle<CBaseTFCombatWeapon> m_hWpnGrenade;
+	CHandle<CBaseTFCombatWeapon> m_hWpnGrenade;
 
 	// Automatic Melee Attack
 	bool						m_bCanBoot;				// True if he has the ability to boot

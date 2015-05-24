@@ -12150,6 +12150,146 @@ SOURCE=..\game_shared\tf2\TFClassData_Shared.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\tf2_hud\tfclassmenu.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\tf2_hud\tfclassmenu.h
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\tf2_hud\tfteammenu.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\tf2_hud\tfteammenu.h
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\ThermalMaterialProxy.cpp
 
 !IF  "$(CFG)" == "client - Win32 Release TF2"
@@ -16067,6 +16207,8 @@ SOURCE=.\hl2_hud\hud_target_id.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
