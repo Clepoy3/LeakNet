@@ -99,8 +99,7 @@ ConVar	mat_drawflat( "mat_drawflat","0", FCVAR_CHEAT);
 ConVar	mat_fullbright( "mat_fullbright","0", FCVAR_CHEAT );
 ConVar	mat_reversedepth( "mat_reversedepth", "0" );
 ConVar	mat_polyoffset(  "mat_polyoffset", "4", FCVAR_ARCHIVE );
-//ConVar	mat_overbright(  "mat_overbright", "2" );
-ConVar	mat_overbright(  "mat_overbright", "1" ); // VXP
+ConVar	mat_overbright(  "mat_overbright", "2" );
 ConVar	mat_wireframe(  "mat_wireframe", "0", FCVAR_CHEAT );
 ConVar	mat_luxels(  "mat_luxels", "0" );
 ConVar	mat_showlightmappage(  "mat_showlightmappage", "-1" );
@@ -176,10 +175,30 @@ void UpdateMaterialSystemConfig( void )
 		g_materialSystemConfig.overbright = mat_overbright.GetFloat();
 	else
 		g_materialSystemConfig.overbright = 0.0f;
-	if ((g_materialSystemConfig.overbright != 2) && (g_materialSystemConfig.overbright != 1))
+/*	if ((g_materialSystemConfig.overbright != 2) && (g_materialSystemConfig.overbright != 1))
 	{
 		mat_overbright.SetValue( 2.0f );
 		g_materialSystemConfig.overbright = 2;
+	}*/
+	// VXP: Adjustment for HDR
+//	if(g_pMaterialSystemHardwareConfig->SupportsHDR())
+	const char *m_pShaderDLL = g_pMaterialSystemHardwareConfig->GetShaderDLLName();
+	const char *pParam = CommandLine()->ParmValue( "-shader" );
+	if((m_pShaderDLL && Q_stristr( m_pShaderDLL, "_hdr_" )) || (pParam && Q_stristr( pParam, "_hdr_" ))) // VXP: dxsupport.cfg or command-line
+	{
+		if(g_materialSystemConfig.overbright != 1)
+		{
+			mat_overbright.SetValue( 1.0f );
+			g_materialSystemConfig.overbright = 1;
+		}
+	}
+	else
+	{
+		if(g_materialSystemConfig.overbright != 2 && !isFirstTimeInLDR)
+		{
+			mat_overbright.SetValue( 2.0f );
+			g_materialSystemConfig.overbright = 2;
+		}
 	}
 
 	g_materialSystemConfig.bAllowCheats = false; // hack
