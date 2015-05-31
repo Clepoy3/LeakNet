@@ -119,8 +119,7 @@ void HostState_GameShutdown()
 {
 	// This will get called during shutdown, ignore it.
 	if ( g_HostState.m_currentState != HS_SHUTDOWN &&
-		 g_HostState.m_currentState != HS_RESTART &&
-		 g_HostState.m_currentState != HS_GAME_SHUTDOWN )
+		 g_HostState.m_currentState != HS_RESTART )
 	{
 		g_HostState.SetNextState( HS_GAME_SHUTDOWN );
 	}
@@ -154,6 +153,12 @@ bool HostState_IsGameShuttingDown()
 
 CHostState::CHostState()
 {
+	m_currentState = HS_RUN;
+	m_nextState = HS_RUN;
+	m_activeGame = false;
+	memset(m_saveName, 0, sizeof(m_saveName));
+	memset(m_landmarkName, 0, sizeof(m_landmarkName));
+	memset(m_levelName, 0, sizeof(m_levelName));
 }
 
 void CHostState::Init()

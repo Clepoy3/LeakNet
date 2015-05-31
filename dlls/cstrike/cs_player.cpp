@@ -2753,7 +2753,7 @@ void CCSPlayer::Weapon_Equip( CBaseCombatWeapon *pWeapon )
 			if ( pDropWeapon )
 			{
 				CSWeaponDrop( pDropWeapon );
-				pDropWeapon->AddSolidFlags( FSOLID_NOT_SOLID );
+			//	pDropWeapon->AddSolidFlags( FSOLID_NOT_SOLID ); // VXP: Here too?
 			}
 		}
 	}

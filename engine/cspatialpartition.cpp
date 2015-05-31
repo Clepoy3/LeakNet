@@ -660,7 +660,7 @@ bool CSpatialPartition::EnumerateLeavesRay_R( int node, const Ray_t& ray,
 #ifdef _DEBUG
 			float tol = (nodeInfo.m_Dist > 1.0) ? nodeInfo.m_Dist * TEST_EPSILON : TEST_EPSILON;
 		//	Assert( fabs(split[nodeInfo.m_Axis] - nodeInfo.m_Dist) < tol );
-			if( fabs(split[nodeInfo.m_Axis] - nodeInfo.m_Dist) > tol )
+			if( (fabs(split[nodeInfo.m_Axis] - nodeInfo.m_Dist)) >= tol )
 				DevMsg( "EnumerateLeavesRay_R: error!\n" );
 #endif
 

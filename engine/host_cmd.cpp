@@ -851,6 +851,9 @@ void Host_SetPause_f (void)
 		return;
 	}
 
+	if ( sv.paused )
+		return;
+
 	sv.paused = true;
 
 	// send notification to all clients
@@ -878,6 +881,9 @@ void Host_UnPause_f (void)
 	{
 		return;
 	}
+
+	if ( !sv.paused )
+		return;
 
 	sv.paused = false;
 

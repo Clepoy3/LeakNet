@@ -420,6 +420,9 @@ void UTIL_ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName
 	if (pTrace->fraction == 1.0)
 		return;
 
+	if ( pTrace->surface.flags & SURF_NODRAW )
+		return;
+
 	pEntity->ImpactTrace( pTrace, iDamageType, pCustomImpactName );
 }
 

@@ -440,7 +440,12 @@ CDemo::CDemo( void )
 CDemo::~CDemo( void )
 {
 	// TODO:  Close any open file handles?
-	Assert( !m_pDemoFile );
+//	Assert( !m_pDemoFile ); // VXP
+	if ( m_pDemoFile )
+	{
+		g_pFileSystem->Close( m_pDemoFile );
+		m_pDemoFile = NULL;
+	}
 	if ( m_pDemoFileHeader )
 	{
 		g_pFileSystem->Close( m_pDemoFileHeader );

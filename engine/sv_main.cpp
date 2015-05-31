@@ -106,7 +106,7 @@ ConVar	sv_password( "sv_password", "", FCVAR_SERVER | FCVAR_PROTECTED, "Server p
 ConVar  sv_lan( "sv_lan", "0", 0, "Server is a lan server ( no heartbeat, no authentication, no non-class C addresses, 9999.0 rate, etc." );
 ConVar	sv_stressbots("sv_stressbots", "0", FCVAR_SERVER, "If set to 1, the server calculates data and fills packets to bots. Used for perf testing.");
 ConVar	sv_CacheEncodedEnts("sv_CacheEncodedEnts", "1", FCVAR_SERVER, "If set to 1, does an optimization to prevent extra SendTable_Encode calls.");
-//ConVar  sv_VoiceCodec("sv_VoiceCodec", "voice_miles", 0, "Specifies which voice codec DLL to use in a game. Set to the name of the DLL without the extension.");
+ConVar  sv_VoiceCodec("sv_VoiceCodec", "voice_miles", 0, "Specifies which voice codec DLL to use in a game. Set to the name of the DLL without the extension.");
 ConVar  sv_deltatrace( "sv_deltatrace", "0", 0, "For debugging, print entity creation/deletion info to console." );
 ConVar  sv_packettrace( "sv_packettrace", "1", 0, "For debugging, print entity creation/deletion info to console." );
 
@@ -602,7 +602,7 @@ void SV_MaxPlayers_f (void)
 
 	Con_Printf( "maxplayers set to %i\n", svs.maxclients );
 
-	deathmatch.SetValue( ( svs.maxclients == 1 ) ? 0 : 1 );
+	deathmatch.SetValue( ( svs.maxclients == 1 ) ? 0 : 1 ); // VXP: Is this needed?
 }
 
 
@@ -4165,15 +4165,12 @@ void SV_WriteVoiceCodec(bf_write *pBuf)
 {
 	pBuf->WriteByte( svc_voiceinit );
 
-/*
 	// Only send the voice codec in multiplayer. Otherwise, we don't want voice.
 
 	if( svs.maxclients <= 1 )
 		pBuf->WriteString( "" );
 	else
 		pBuf->WriteString( sv_VoiceCodec.GetString() );
-*/
-	pBuf->WriteString( "voice_miles" );
 }
 
 
@@ -4691,8 +4688,10 @@ int SV_SpawnServer( char *mapname, char *startspot )
 
 	KeyValues * event = new KeyValues( "server_spawn" );
 	event->SetString( "hostname", host_name.GetString() );
-	event->SetString( "address", "127.0.0.1" ); // TODO
-	event->SetInt(    "port", 27015 );				// TODO
+//	event->SetString( "address", "127.0.0.1" ); // TODO
+//	event->SetInt(    "port", 27015 );				// TODO
+	event->SetString( "address", NET_AdrToString( net_local_adr ) ); // VXP
+	event->SetInt(    "port", (unsigned short)Q_atoi( PORT_CLIENT ) ); // VXP: May be error here
 	event->SetString( "game", com_gamedir );
 	event->SetString( "mapname", mapname );
 	event->SetString( "startdate", "yy.mm.dd" );	// TODO
@@ -4757,6 +4756,8 @@ void SV_BroadcastPrintf (const char *fmt, ...)
 		cl->netchan.message.WriteByte (svc_print);
 		cl->netchan.message.WriteString (string);
 	}
+
+	Msg( string );
 }
 
 //-----------------------------------------------------------------------------

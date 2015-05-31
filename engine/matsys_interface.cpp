@@ -194,7 +194,7 @@ void UpdateMaterialSystemConfig( void )
 	}
 	else
 	{
-		if(g_materialSystemConfig.overbright != 2 && !isFirstTimeInLDR)
+		if(g_materialSystemConfig.overbright != 2)
 		{
 			mat_overbright.SetValue( 2.0f );
 			g_materialSystemConfig.overbright = 2;

@@ -11,14 +11,16 @@
 
 void __MsgFunc_MOTD( const char *pszName, int iSize, void *pbuf )
 {
-	gViewPortMsgs->MsgFunc_MOTD( pszName, iSize, pbuf );
+	if( gViewPortMsgs )
+		gViewPortMsgs->MsgFunc_MOTD( pszName, iSize, pbuf );
 }
 USER_MESSAGE_REGISTER( MOTD );
 
 
 void __MsgFunc_VGUIMenu( const char *pszName, int iSize, void *pbuf )
 {
-	gViewPortMsgs->MsgFunc_VGUIMenu( pszName, iSize, pbuf );
+	if( gViewPortMsgs )
+		gViewPortMsgs->MsgFunc_VGUIMenu( pszName, iSize, pbuf );
 }
 USER_MESSAGE_REGISTER( VGUIMenu );
 

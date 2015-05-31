@@ -892,6 +892,9 @@ CSaveRestoreData *CSaveRestore::SaveGameState( void )
 //-----------------------------------------------------------------------------
 void CSaveRestore::Finish( CSaveRestoreData *save )
 {
+	if( !save )
+		return;
+
 	char **pTokens = save->DetachSymbolTable();
 	if ( pTokens )
 		SaveFreeMemory( pTokens );
@@ -900,7 +903,7 @@ void CSaveRestore::Finish( CSaveRestoreData *save )
 	if ( pEntityTable )
 		SaveFreeMemory( pEntityTable );
 
-	if ( save )
+//	if ( save )
 		SaveFreeMemory( save );
 
 	g_ServerGlobalVariables.pSaveData = NULL;

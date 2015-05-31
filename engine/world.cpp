@@ -60,6 +60,8 @@ int SV_HullForEntity( edict_t *ent )
 	{
 		cmodel_t *pCModel = CM_InlineModelNumber( modelindex - 1 );
 
+		if( !pCModel )
+			return -1; // VXP
 		return pCModel->headnode;
 	}
 

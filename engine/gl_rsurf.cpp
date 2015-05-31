@@ -2926,7 +2926,8 @@ static bool R_SetupBrushModelTransform( const Vector& origin, QAngle const& angl
 		// FIXME: Use load matrix instead of R_RotateForEntity.. should work!
 //		materialSystemInterface->LoadMatrix( *pBrushToWorld );
 
-		R_RotateForEntity( origin, angles );
+	//	R_RotateForEntity( origin, angles );
+		materialSystemInterface->LoadMatrix( *pBrushToWorld ); // VXP: For tests!
 	}
 
 	return isIdentity;
@@ -3208,7 +3209,17 @@ void R_DrawIdentityBrushModel( model_t *model )
 		// brushes to the identity brush model list
 //		Assert ( (psurf->flags & SURFDRAW_TRANS ) == 0 );
 
-		// OPTIMIZE: Backface cull these guys?!?!?
+		// OPTIMIZE: Backface cull these guys?!?!? // VXP: Okay
+		// draw the polygon
+		float dot = DotProduct (modelorg, MSurf_Plane( surfID ).normal) - MSurf_Plane( surfID ).dist;
+		
+		// backfacing surface?
+		if ( (MSurf_Flags( surfID ) & SURFDRAW_NOCULL) == 0 )
+		{
+			if ( dot < -BACKFACE_EPSILON )
+				continue;
+		}
+
 		if ( MSurf_Flags( surfID ) & SURFDRAW_TRANS)
 //		if ( psurf->texinfo->material->IsTranslucent() )
 		{

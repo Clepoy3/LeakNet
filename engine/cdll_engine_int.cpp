@@ -382,6 +382,9 @@ class CEngineClient : public IVEngineClient
 
 	void GetPlayerInfo( int ent_num, hud_player_info_t *pinfo )
 	{
+		if(!pinfo)
+			return;
+
 		hudGetPlayerInfo( ent_num, pinfo );
 	}
 

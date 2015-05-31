@@ -45,7 +45,9 @@ static ConVar r_DrawSpecificStaticProp( "r_DrawSpecificStaticProp", "-1" );
 static ConVar r_drawstaticprops( "r_drawstaticprops", "1" );
 static ConVar r_colorstaticprops( "r_colorstaticprops", "0" );
 static ConVar vcollide_wireframe( "vcollide_wireframe", "0" );
+#ifdef _DEBUG
 static ConVar r_DrawWrongStaticProp( "r_DrawWrongStaticProp", "1" ); // VXP
+#endif
 
 
 //-----------------------------------------------------------------------------

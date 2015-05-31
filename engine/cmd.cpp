@@ -530,6 +530,36 @@ void Cmd_Alias_f (void)
 	a->value = CopyString (cmd);
 }
 
+
+void Cmd_TestAssert_f (void)
+{
+	AssertMsg(0, "Forced by \"test_assert\" command");
+}
+
+void Cmd_TestError_f (void)
+{
+	Error("Forced by \"test_error\" command\n");
+}
+
+void Cmd_TestHostEndGame_f (void)
+{
+	Host_EndGame("Forced by \"test_host_endgame\" command\n");
+}
+
+void Cmd_TestHostError_f (void)
+{
+	Host_Error("Forced by \"test_host_error\" command\n");
+}
+
+void Cmd_TestCrash_f (void)
+{
+	Msg("test_crash: Dereferencing NULL\n");
+
+	// Try dereferencing NULL
+	*((int*)0) = 1;
+}
+
+
 /*
 =============================================================================
 
@@ -568,6 +598,38 @@ static ConCommand cmd("cmd", Cmd_ForwardToServerProxy);
 static ConCommand wait("wait", Cmd_Wait_f);
 static ConCommand BindToggle( "BindToggle", Cmd_BindToggle_f );
 static ConCommand mem_dump( "mem_dump", Cmd_MemDump_f );
+
+static ConCommand test_assert( "test_assert", Cmd_TestAssert_f );
+static ConCommand test_error( "test_error", Cmd_TestError_f );
+static ConCommand test_host_endgame( "test_host_endgame", Cmd_TestHostEndGame_f );
+static ConCommand test_host_error( "test_host_error", Cmd_TestHostError_f );
+static ConCommand test_crash( "test_crash", Cmd_TestCrash_f );
+/*
+CON_COMMAND_F(test_start_progress_bar, "Start the progress bar dialog", FCVAR_DEVELOPMENT_ONLY)
+{
+	if(Cmd_Argc() != 3)
+	{
+		Warning("test_start_progress_bar: Syntax: <resource type> <points>\n");
+		return;
+	}
+
+	CL_StartProgressBar(Cmd_Argv(1), NULL, atoi(Cmd_Argv(2)));
+}
+
+CON_COMMAND_F(test_start_progress_bar_dual, "Start the dual progress bar dialog", FCVAR_DEVELOPMENT_ONLY)
+{
+	if(Cmd_Argc() != 3)
+	{
+		Warning("test_start_progress_bar_dual: Syntax: <resource type> <points>\n");
+		return;
+	}
+
+	CL_StartProgressBar(Cmd_Argv(1), NULL, atoi(Cmd_Argv(2)));
+	CL_StartSecondaryProgressBar(atoi(Cmd_Argv(2)));
+	CL_SetSecondaryProgressBarStatusText("test...");
+}
+*/
+
 
 
 void Cmd_Init( void )

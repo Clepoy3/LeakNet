@@ -481,7 +481,8 @@ void CL_ConnectClient( void )
 		return;
 	}
 
-	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
+//	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
+	VGui_NotifyOfServerProgress( 5, "Establishing connection to server..." ); // VXP
 
 	// Initiate the network channel
 	Netchan_Setup (NS_CLIENT, &cls.netchan, net_from );
@@ -981,6 +982,8 @@ void CL_Disconnect (void)
 	if ( cls.state == ca_disconnected )
 		return;
 
+	mat_fullbright.SetValue(0); // VXP
+
 	if ( cls.netchan.remote_address.type != NA_UNUSED )
 	{
 		byte	final[20];
@@ -1192,6 +1195,8 @@ void CL_SendConnectPacket (void)
 	// Mark time of this attempt for retransmit requests
 	cls.connect_time = realtime;
 	
+	VGui_NotifyOfServerProgress( 80, "Sending client info..." ); // VXP
+
 	NET_SendPacket (NS_CLIENT, strlen(data), data, adr);
 }
 
@@ -1318,7 +1323,7 @@ void CL_Connect_f (void)
 	// Store off the last address we tried to get to
 	strcpy ( cls.retry_address, cls.servername );
 
-	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
+//	VGui_NotifyOfServerProgress( 10, "Connecting to server..." ); // VXP
 
 	// For the check for resend timer to fire a connection / getchallenge request.
 	cls.state = ca_connecting;
@@ -1451,7 +1456,7 @@ void CL_SignonReply (void)
 		
 	case 3:
 		{
-			VGui_NotifyOfServerProgress( 80, "Sending client info..." );
+			VGui_NotifyOfServerProgress( 85, "Retrieving game data..." );
 			SpatialPartition()->SuppressLists( PARTITION_ALL_CLIENT_EDICTS, false );
 
 			// This has to happen here, in phase 3, because it is in this phase
