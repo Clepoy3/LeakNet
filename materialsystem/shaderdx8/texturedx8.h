@@ -14,6 +14,7 @@
 #ifndef TEXTUREDX8_H
 #define TEXTUREDX8_H
 
+#include "tier0/platform.h"
 #include "ImageLoader.h"
 #include "locald3dtypes.h"
 
@@ -23,7 +24,8 @@ class CPixelWriter;
 //-----------------------------------------------------------------------------
 // Returns the size of texture memory
 //-----------------------------------------------------------------------------
-int ComputeTextureMemorySize( const GUID &nDeviceId, D3DDEVTYPE deviceType );
+//int ComputeTextureMemorySize( const GUID &nDeviceId, D3DDEVTYPE deviceType );
+int64 ComputeTextureMemorySize( const GUID &nDeviceId, D3DDEVTYPE deviceType );
 
 
 //-----------------------------------------------------------------------------

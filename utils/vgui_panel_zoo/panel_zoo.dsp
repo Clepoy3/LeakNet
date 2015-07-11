@@ -96,9 +96,9 @@ TargetPath=.\Debug\panel_zoo.exe
 InputPath=.\Debug\panel_zoo.exe
 SOURCE="$(InputPath)"
 
-"..\..\..\Platform\Bin\panel_zoo.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if exist ..\..\..\Platform\Bin\panel_zoo.exe attrib -r ..\..\..\Platform\Bin\panel_zoo.exe 
-	if exist $(TargetPath) copy $(TargetPath) ..\..\..\Platform\Bin\panel_zoo.exe 
+"..\..\..\bin\panel_zoo.exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist ..\..\..\bin\panel_zoo.exe attrib -r ..\..\..\bin\panel_zoo.exe 
+	if exist $(TargetPath) copy $(TargetPath) ..\..\..\bin\panel_zoo.exe 
 	
 # End Custom Build
 

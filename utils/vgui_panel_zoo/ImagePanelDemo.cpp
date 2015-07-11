@@ -62,7 +62,6 @@ void ImagePanelDemo::ApplySchemeSettings(IScheme *pScheme)
 	BaseClass::ApplySchemeSettings( pScheme );
 
 	// get an image
-//	m_pImage = pScheme->GetImage("Resource/valve_logo");
 	m_pImage = scheme()->GetImage("Resource/valve_logo", false);
 
 	// now insert an image

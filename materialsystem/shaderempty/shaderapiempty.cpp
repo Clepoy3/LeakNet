@@ -525,7 +525,8 @@ public:
 	{
 		return "UNKNOWN";
 	}
-	int	 TextureMemorySize() const;
+//	int	 TextureMemorySize() const;
+	int64	 TextureMemorySize() const;
 	bool SupportsOverbright() const;
 	bool SupportsCubeMaps() const;
 	bool SupportsMipmappedCubemaps() const;
@@ -1272,7 +1273,8 @@ int  CShaderAPIEmpty::MaxTextureAspectRatio() const
 }
 
 
-int	 CShaderAPIEmpty::TextureMemorySize() const
+//int	 CShaderAPIEmpty::TextureMemorySize() const
+int64	 CShaderAPIEmpty::TextureMemorySize() const
 {
 	// fake it
 	return 64 * 1024 * 1024;

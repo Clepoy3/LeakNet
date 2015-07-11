@@ -10,7 +10,6 @@
 #include <vgui_controls\Controls.h>
 #include <KeyValues.h>
 #include <vgui_controls\FileOpenDialog.h>
-#include <vgui_controls\MessageBox.h>
 
 using namespace vgui;
 
@@ -55,7 +54,8 @@ void FileOpenDemo::SetVisible(bool status)
 		if (!m_hFileDialog.Get())
 		{
 			// Pop up the dialog
-			FileOpenDialog *pFileDialog = new FileOpenDialog (NULL, "Find the TestFile", true); // VXP: Third parameter needs to test
+			// VXP: Maybe, this instead of NULL?
+			FileOpenDialog *pFileDialog = new FileOpenDialog (NULL, "Find the TestFile", true);
 			m_hFileDialog = pFileDialog;
 			m_hFileDialog->AddActionSignalTarget(this);
 		}
@@ -71,9 +71,6 @@ void FileOpenDemo::OnFileSelected(const char *fullpath)
 	ivgui()->DPrintf("File selected\n");
 	ivgui()->DPrintf(fullpath);
 	ivgui()->DPrintf("\n");
-	
-	MessageBox *pMessage = new MessageBox ("The path is...", fullpath, NULL);
-	pMessage->DoModal();
 }
 
 MessageMapItem_t FileOpenDemo::m_MessageMap[] =

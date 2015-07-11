@@ -43,17 +43,12 @@ HTMLDemo2::HTMLDemo2(Panel *parent, const char *name) : DemoPage(parent, name)
 	m_pHTML2->SetBounds(20+250, 10, 240, 300);
 	
 	// now open a URL
-//	m_pHTML1->OpenURL("http://www.valvesoftware.com");
-//	m_pHTML2->OpenURL("http://www.valve-erc.com");
-	m_pHTML1->OpenURL("http://cs537106.vk.me/u16000438/docs/ee5d72b014ad/file.gif");
-//	m_pHTML1->OpenURL("http://www.youtube.com/watch?v=Vc1_2ql8XYM");
-	m_pHTML2->OpenURL("http://www.valvesoftware.com");
+	m_pHTML1->OpenURL("http://www.valvesoftware.com");
+	m_pHTML2->OpenURL("http://www.valve-erc.com");
 	// the URL can be any valid URL accepted by Internet Explorer, use file:///c:/... for local filesystem files :)
 	
 	// this call causes the control to repaint itself every 1000msec or so, to allow animated gifs to work
-//	m_pHTML1->StartAnimate(1000);
-	m_pHTML1->StartAnimate(1);
-	m_pHTML2->StartAnimate(1);
+	m_pHTML1->StartAnimate(1000);
 }
 
 

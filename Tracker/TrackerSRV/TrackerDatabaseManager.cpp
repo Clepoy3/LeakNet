@@ -115,7 +115,8 @@ bool CTrackerDatabaseManager::Initialize(int serverID, const char *dbsName, Crea
 	if (!m_pDistroDatabase)
 		return false;
 
-	m_pDistroDatabase->Initialize(serverID, dbsName, "Tracker", debugFactory);
+//	m_pDistroDatabase->Initialize(serverID, dbsName, "Tracker", debugFactory);
+	m_pDistroDatabase->Initialize(serverID, dbsName, "newtracker", debugFactory);
 
 	// get the distribution map
 	if (!ReloadUserDistribution())

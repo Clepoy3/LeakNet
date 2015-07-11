@@ -35,6 +35,7 @@ WHANDLE Sys_FindWindow(const char *className, const char *windowName);
 void Sys_EnumWindows(void *callbackFunction, int lparam);
 void Sys_GetWindowText(WHANDLE wnd, char *buffer, int bufferSize);
 void Sys_PostMessage(WHANDLE wnd, unsigned int msg, unsigned int wParam, unsigned int lParam);
+void Sys_SendMessage(WHANDLE wnd, unsigned int msg, unsigned int wParam, unsigned int lParam); // VXP
 WHANDLE Sys_CreateWindowEx(const char *windowName);
 void Sys_DestroyWindow(WHANDLE wnd);
 

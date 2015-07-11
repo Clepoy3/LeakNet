@@ -567,13 +567,15 @@ void LoadSubTexture( int bindId, int copy, IDirect3DBaseTexture* pTexture,
 #endif
 
 
-int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
+//int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
+int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 {
 	FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		GUID deviceId;
-		int texSize;
+	//	int texSize;
+		int64 texSize;
 		FileSystem()->Read( &deviceId, sizeof(deviceId), file );
 		FileSystem()->Read( &texSize, sizeof(texSize), file );
 		FileSystem()->Close( file );
@@ -590,10 +592,10 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 	// Sadly, the only way to compute texture memory size
 	// is to allocate a crapload of textures until we can't any more
 	ImageFormat fmt = FindNearestSupportedFormat( IMAGE_FORMAT_BGR565 );
-//	int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
-	int textureSize = 256 * 256 / 2.23168; // VXP: Need to test!!!
+	int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
+//	int textureSize = 256 * 256 * 2; // VXP: width * height * SizeInBytes(imageFormat)
 
-	int totalSize = 0;
+	int64 totalSize = 0;
 	CUtlVector< IDirect3DBaseTexture* > textures;
 
 #ifndef DONT_CHECK_MEM
@@ -614,7 +616,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		totalSize += textureSize;
 
 		textures.AddToTail( pTex );
-	} 
+	}
 
 	// Free all the temp textures
 	for (int i = textures.Size(); --i >= 0; )

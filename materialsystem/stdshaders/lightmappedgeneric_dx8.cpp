@@ -44,34 +44,54 @@ BEGIN_VS_SHADER( LightmappedGeneric_DX8,
 		}
 		
 		if( !params[ENVMAPMASKSCALE]->IsDefined() )
+		{
 			params[ENVMAPMASKSCALE]->SetFloatValue( 1.0f );
+		}
 
 		if( !params[ENVMAPTINT]->IsDefined() )
+		{
 			params[ENVMAPTINT]->SetVecValue( 1.0f, 1.0f, 1.0f );
+		}
 
 		if( !params[SELFILLUMTINT]->IsDefined() )
+		{
 			params[SELFILLUMTINT]->SetVecValue( 1.0f, 1.0f, 1.0f );
+		}
 
 		if( !params[DETAILSCALE]->IsDefined() )
+		{
 			params[DETAILSCALE]->SetFloatValue( 4.0f );
+		}
 
 		if( !params[FRESNELREFLECTION]->IsDefined() )
+		{
 			params[FRESNELREFLECTION]->SetFloatValue( 1.0f );
+		}
 
 		if( !params[ENVMAPMASKFRAME]->IsDefined() )
+		{
 			params[ENVMAPMASKFRAME]->SetIntValue( 0 );
+		}
 		
 		if( !params[ENVMAPFRAME]->IsDefined() )
+		{
 			params[ENVMAPFRAME]->SetIntValue( 0 );
+		}
 
 		if( !params[BUMPFRAME]->IsDefined() )
+		{
 			params[BUMPFRAME]->SetIntValue( 0 );
+		}
 
 		if( !params[ENVMAPCONTRAST]->IsDefined() )
+		{
 			params[ENVMAPCONTRAST]->SetFloatValue( 0.0f );
+		}
 		
 		if( !params[ENVMAPSATURATION]->IsDefined() )
+		{
 			params[ENVMAPSATURATION]->SetFloatValue( 1.0f );
+		}
 		
 		// No texture means no self-illum or env mask in base alpha
 		if ( !params[BASETEXTURE]->IsDefined() )

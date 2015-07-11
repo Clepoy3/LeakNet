@@ -3209,17 +3209,18 @@ void R_DrawIdentityBrushModel( model_t *model )
 		// brushes to the identity brush model list
 //		Assert ( (psurf->flags & SURFDRAW_TRANS ) == 0 );
 
-		// OPTIMIZE: Backface cull these guys?!?!? // VXP: Okay
+		// OPTIMIZE: Backface cull these guys?!?!?
+		// VXP: I added it, but should this be here..? I don't think so, because in 2007 engine it's not here
 		// draw the polygon
-		float dot = DotProduct (modelorg, MSurf_Plane( surfID ).normal) - MSurf_Plane( surfID ).dist;
-		
-		// backfacing surface?
-		if ( (MSurf_Flags( surfID ) & SURFDRAW_NOCULL) == 0 )
-		{
-			if ( dot < -BACKFACE_EPSILON )
-				continue;
-		}
+	//	float dot = DotProduct (modelorg, MSurf_Plane( surfID ).normal) - MSurf_Plane( surfID ).dist;
 
+		// backfacing surface?
+	//	if ( (MSurf_Flags( surfID ) & SURFDRAW_NOCULL) == 0 )
+	//	{
+	//		if ( dot < -BACKFACE_EPSILON )
+	//			continue;
+	//	}
+		
 		if ( MSurf_Flags( surfID ) & SURFDRAW_TRANS)
 //		if ( psurf->texinfo->material->IsTranslucent() )
 		{

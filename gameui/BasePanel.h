@@ -51,5 +51,6 @@ private:
 	typedef vgui::Panel BaseClass;
 };
 
+void FindLeakNet();
 
 #endif // BASEPANEL_H

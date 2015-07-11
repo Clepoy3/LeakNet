@@ -530,7 +530,8 @@ public:
 	int  MaxTextureWidth() const;
 	int  MaxTextureHeight() const;
 	int	 MaxTextureAspectRatio() const;
-	int	 TextureMemorySize() const;
+//	int	 TextureMemorySize() const;
+	int64	 TextureMemorySize() const;
 	bool SupportsOverbright() const;
 	bool SupportsMipmapping() const;
 	bool SupportsCubeMaps() const;
@@ -823,7 +824,8 @@ private:
 		bool m_SupportsCubeMaps;
 		int  m_NumPixelShaderConstants;
 		int  m_NumVertexShaderConstants;
-		int  m_TextureMemorySize;
+	//	int  m_TextureMemorySize;
+		int64  m_TextureMemorySize;
 		int  m_MaxNumLights;
 		bool m_SupportsHardwareLighting;
 		int  m_MaxBlendMatrices;
@@ -1974,7 +1976,6 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 	InstallWindowHook( (HWND)hwnd );
 
 	m_Caps.m_TextureMemorySize = ComputeTextureMemorySize( m_DeviceGUID, m_DeviceType );
-//	m_Caps.m_TextureMemorySize = GetVidMemBytes(); // VXP: From release...
 
 	CreateMatrixStacks();
 	
@@ -2765,14 +2766,11 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
 	// NOTE: Initting more constants than we are ever going to use may cause the 
 	// driver to try to keep track of them.. I'm forcing this to 96 so that this doesn't happen.
-/*
-#if 0
+//#if 0
 	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
-#else
-	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
-#endif
-*/
-	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
+//#else
+//	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
+//#endif
 
 	if( m_Caps.m_SupportsPixelShaders )
 	{
@@ -2898,7 +2896,8 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	//	(caps.PrimitiveMiscCaps & D3DPMISCCAPS_SEPARATEALPHABLEND) &&
 		m_Caps.m_SupportsSRGB;
 */
-	m_Caps.m_SupportsHDR = m_Caps.m_SupportsPixelShaders_2_0 &&
+//	m_Caps.m_SupportsHDR = m_Caps.m_SupportsPixelShaders_2_0 &&
+	bool hardwareSupportsHDR = m_Caps.m_SupportsHDR = m_Caps.m_SupportsPixelShaders_2_0 &&
 		m_Caps.m_SupportsVertexShaders_2_0 &&
 		m_Caps.m_SupportsFatTextures &&
 		(caps.Caps3 & D3DCAPS3_ALPHA_FULLSCREEN_FLIP_OR_DISCARD) &&
@@ -2931,11 +2930,13 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 
 	// HACK HACK HACK!!
 	// If we aren't using stdshader_hdr_dx9.dll, don't bother trying to use hdr.
-//	const char *pParam = CommandLine()->ParmValue( "-shader" );
+	const char *pParam = CommandLine()->ParmValue( "-shader" );
 //	if( !pParam || !Q_stristr( pParam, "_hdr_" ) )
 //	{
 //		m_Caps.m_SupportsHDR = false;
 //	}
+//	m_Caps.m_SupportsHDR = (((pParam) ? Q_stristr( pParam, "_hdr_" ) : false) || ((m_Caps.m_pShaderDLL) ? Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" ) : false));
+	m_Caps.m_SupportsHDR = (((pParam && Q_stristr( pParam, "_hdr_" )) ? hardwareSupportsHDR : false) || ((m_Caps.m_pShaderDLL && Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" )) ? hardwareSupportsHDR : false));
 	return true;
 }							   
 
@@ -3096,7 +3097,8 @@ void CShaderAPIDX8::SpewDriverInfo() const
 		(caps.RasterCaps & D3DPRASTERCAPS_DEPTHBIAS) ? " Y " : " N ",
 		(caps.RasterCaps & D3DPRASTERCAPS_ZTEST) ? " Y " : "*N*" );
 
-	Warning("Size of Texture Memory : %d kb\n", m_Caps.m_TextureMemorySize / 1024 );
+//	Warning("Size of Texture Memory : %d kb\n", m_Caps.m_TextureMemorySize / 1024 );
+	Warning("Size of Texture Memory: %lld kb\n", m_Caps.m_TextureMemorySize / 1024 );
 //	Warning("Size of Texture Memory : %d\n", m_Caps.m_TextureMemorySize );
 	Warning("Max Texture Dimensions : %d x %d\n", 
 		caps.MaxTextureWidth, caps.MaxTextureHeight );
@@ -3263,7 +3265,8 @@ int	 CShaderAPIDX8::MaxTextureAspectRatio() const
 	return m_Caps.m_MaxTextureAspectRatio;
 }
 
-int	 CShaderAPIDX8::TextureMemorySize() const
+//int	 CShaderAPIDX8::TextureMemorySize() const
+int64	 CShaderAPIDX8::TextureMemorySize() const
 {
 	return m_Caps.m_TextureMemorySize;
 }

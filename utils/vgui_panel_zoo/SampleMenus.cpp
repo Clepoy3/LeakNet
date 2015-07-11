@@ -5,6 +5,8 @@
 // $NoKeywords: $
 //=============================================================================
 
+#include <assert.h>
+
 #include "DemoPage.h"
 
 #include <VGUI\IVGui.h>
@@ -75,7 +77,7 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	m_pMenuButton = new MenuButton(this, "AMenuButton", "Fixed width");
 	int wide, tall;
 	m_pMenuButton->GetContentSize(wide, tall);
-	m_pMenuButton->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton->SetSize(wide + Label::Content, tall + Label::Content);
 	// Position the menu button in the window.
 	m_pMenuButton->SetPos(95, 15);
 
@@ -97,7 +99,7 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	// Scrolling menu
 	m_pScrollMenuButton = new MenuButton(this, "AMenuButton", "Scrolling");
 	m_pScrollMenuButton->GetContentSize(wide, tall);
-	m_pScrollMenuButton->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pScrollMenuButton->SetSize(wide + Label::Content, tall + Label::Content);
 	// Position the menu button in the window.
 	m_pScrollMenuButton->SetPos(360, 15);
 	m_pScrollMenu = new Menu(m_pScrollMenuButton, "AScrollingMenu");
@@ -118,7 +120,7 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	// A fixed width menu with checkable menu items and items with names longer than the menu width
 	m_pMenuButton2 = new MenuButton(this, "AMenuButton", "A Check menu");
 	m_pMenuButton2->GetContentSize(wide, tall);
-	m_pMenuButton2->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton2->SetSize(wide + Label::Content, tall + Label::Content);
 
 	// Position the menu button in the window.
 	m_pMenuButton2->SetPos(95, 85);
@@ -138,7 +140,7 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	// Scrolling menu with checkable menu items and items with names longer than the menu width
 	m_pScrollMenuButton2 = new MenuButton(this, "AMenuButton", "Scrolling");
 	m_pScrollMenuButton2->GetContentSize(wide, tall);
-	m_pScrollMenuButton2->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pScrollMenuButton2->SetSize(wide + Label::Content, tall + Label::Content);
 
 	// Position the menu button in the window.
 	m_pScrollMenuButton2->SetPos(360, 85);
@@ -172,14 +174,14 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	toggleMenuCheckButton->SetCommand("Check");
 	toggleMenuCheckButton->AddActionSignalTarget(this);
 	toggleMenuCheckButton->GetContentSize(wide, tall);
-	toggleMenuCheckButton->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	toggleMenuCheckButton->SetSize(wide + Label::Content, tall + Label::Content);
 	toggleMenuCheckButton->SetPos( 95, 220);
 
 
 	// A non fixed width menu with checkable menu items 
 	m_pMenuButton3 = new MenuButton(this, "AMenuButton", "A menu");
 	m_pMenuButton3->GetContentSize(wide, tall);
-	m_pMenuButton3->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton3->SetSize(wide + Label::Content, tall + Label::Content);
 	// Position the menu button in the window.
 	m_pMenuButton3->SetPos(285, 220);
 	m_pMenu3 = new Menu(m_pMenuButton3, "AMenu");
@@ -193,7 +195,7 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	// A non fixed width menu 
 	m_pMenuButton4 = new MenuButton(this, "AMenuButton", "A menu");
 	m_pMenuButton4->GetContentSize(wide, tall);
-	m_pMenuButton4->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton4->SetSize(wide + Label::Content, tall + Label::Content);
 	// Position the menu button in the window.
 	m_pMenuButton4->SetPos(355, 220);
 	m_pMenu4 = new Menu(m_pMenuButton4, "AMenu");
@@ -207,10 +209,10 @@ SampleMenus::SampleMenus(Panel *parent, const char *name) : DemoPage(parent, nam
 	// A non fixed width menu with a minimum width
 	m_pMenuButton5 = new MenuButton(this, "AMenuButton", "A Minimum Width Menu");
 	m_pMenuButton5->GetContentSize(wide, tall);
-	m_pMenuButton5->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton5->SetSize(wide + Label::Content, tall + Label::Content);
 
 	m_pMenuButton5->GetContentSize(wide, tall);
-	m_pMenuButton5->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pMenuButton5->SetSize(wide + Label::Content, tall + Label::Content);
 	// Position the menu button in the window.
 	m_pMenuButton5->SetPos(355, 270);
 	m_pMenu5 = new Menu(m_pMenuButton5, "AMenu");
@@ -237,7 +239,7 @@ void SampleMenus::InitMenus()
 	// Size the Button so we can read its label.
 	int wide, tall;
 	m_pOuterMenuButton->GetContentSize(wide, tall);
-	m_pOuterMenuButton->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pOuterMenuButton->SetSize(wide + Label::Content, tall + Label::Content);
 
 
 	// Create the Menu to go with it.
@@ -283,7 +285,7 @@ void SampleMenus::InitMenus()
 	m_pOuterMenu->AddMenuItem("Disabled Menuitem", "Disabled", this);
 
 	Panel *menuItem = m_pOuterMenu->FindChildByName("Disabled Menuitem");
-//	Assert(menuItem);
+	assert(menuItem);
 	menuItem->SetEnabled(false);
 
 	m_pOuterMenu->AddMenuItem("Normal Menuitem", "junk", this);
@@ -298,7 +300,7 @@ void SampleMenus::InitMenus()
 
 	// Size the Button so we can read its label.
 	m_pOuterMenuButton2->GetContentSize(wide, tall);
-	m_pOuterMenuButton2->SetSize(wide + Label::Content, tall + Label::Content + 15);
+	m_pOuterMenuButton2->SetSize(wide + Label::Content, tall + Label::Content);
 
 	// Create the Menu to go with it.
 	m_pOuterMenu2 = new Menu(m_pOuterMenuButton2, "OuterMenu");
@@ -344,7 +346,7 @@ void SampleMenus::InitMenus()
 	m_pOuterMenu2->AddCheckableMenuItem("Disabled Menuitem", "Disabled", this);
 
 	menuItem = m_pOuterMenu2->FindChildByName("Disabled Menuitem");
-//	Assert(menuItem);
+	assert(menuItem);
 	menuItem->SetEnabled(false);
 
 	m_pOuterMenu2->AddMenuItem("Normal Menuitem", "junk", this);

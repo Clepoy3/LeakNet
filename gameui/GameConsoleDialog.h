@@ -154,7 +154,8 @@ private:
 
 		~CompletionItem( void )
 		{
-			delete m_text;
+			if( m_text )
+				delete m_text;
 		}
 
 		char const *GetItemText( void )

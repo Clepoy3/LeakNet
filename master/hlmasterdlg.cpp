@@ -3227,6 +3227,10 @@ void CHLMasterDlg::GenerateFakeServers( void )
 
 		//if ( !(rand() % 3) )
 			//sprintf( szModName, "tfc" );
+		if ( !(rand() % 3) )
+			sprintf( szModName, "testmod" );
+		else if ( !(rand() % 2) )
+			sprintf( szModName, "hl2" );
 
 		SetCriteria( &sv->gamedir, szModName );
 
@@ -3876,14 +3880,14 @@ void CHLMasterDlg::ParseVersion( void )
 	token.ParseNextToken();
 
 	// Get the protocol version
-	if ( strlen(token.token) > 0 )
+/*	if ( strlen(token.token) > 0 )
 	{
 		CURRENT_PROTOCOL_M = atoi( token.token );
 		if ( CURRENT_PROTOCOL_M <= 0 )
 		{
 			CURRENT_PROTOCOL_M = PROTOCOL_VERSION;
 		}
-	}
+	}*/
 
 	delete[] pszBuffer;
 }

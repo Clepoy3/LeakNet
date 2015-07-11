@@ -248,7 +248,7 @@ void Tooltip::SizeTextWindow()
 		s_pTooltipWindow->SetToFullWidth();
 		int wide, tall;
 		s_pTooltipWindow->GetSize( wide, tall );
-		double newWide = sqrt( (2/1) * wide * tall );
+		double newWide = sqrt( (double)((2/1) * wide * tall) );
 		double newTall = (1/2) * newWide;
 		s_pTooltipWindow->SetMultiline(true);
 		s_pTooltipWindow->SetSize((int)newWide, (int)newTall );

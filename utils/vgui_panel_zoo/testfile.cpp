@@ -1,29 +1,14 @@
-/*
-#include "interface.h"
-#include "..\..\tracker\common\winlite.h"
-#include <VGUI_Controls.h>
-#include <VGUI_Panel.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_ILocalize.h>
-#include <VGUI_IVGui.h>
-#include "filesystem.h"
+#include <VGUI\MouseCode.h>
+#include <VGUI\KeyCode.h>
 
-#include "CControlCatalog.h"
-
-#include <stdio.h>
-*/
-#include <VGUI\IScheme.h>
 #include "interface.h"
 #include "..\..\tracker\common\winlite.h"
 #include <vgui_controls\Controls.h>
-#include <VGUI\MouseCode.h>
-#include <VGUI\KeyCode.h>
-#include <VGUI\IVGui.h>
+#include <vgui_controls\Panel.h>
+#include <VGUI\IScheme.h>
 #include <VGUI\ISurface.h>
 #include <VGUI\ILocalize.h>
-#include <vgui_controls\Panel.h>
-#include "utlbuffer.h"
+#include <VGUI\IVGui.h>
 #include "filesystem.h"
 
 #include "CControlCatalog.h"
@@ -75,9 +60,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	
 	// In order to load resource files the file must be in your vgui filesystem path.
-//	vgui::filesystem()->AddSearchPath("../", "resources");
-	vgui::filesystem()->AddSearchPath("../", "");
-//	vgui::filesystem()->AddSearchPath("../platform/", ""); // VXP: From default bin path
+#ifdef _DEBUG
+	vgui::filesystem()->AddSearchPath("../platform/", "resources");
+#else
+	vgui::filesystem()->AddSearchPath("../", "resources");
+#endif // #ifdef _DEBUG
 
 	// Init the surface
 	vgui::surface()->Init();

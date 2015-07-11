@@ -38,7 +38,6 @@ SampleEditFields::SampleEditFields(Panel *parent, const char *name) : DemoPage(p
 	m_pTextEntry->SetBounds(150, 200, 150, tall);
 	m_pTextEntry->InsertString("with content");
 	m_pTextEntry->SetEnabled(false);
-	m_pTextEntry->SetEditable(false); // VXP
 
 	LoadControlSettings("Demo/SampleEditFields.res");
 

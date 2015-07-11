@@ -67,6 +67,11 @@ void Sys_PostMessage(WHANDLE wnd, unsigned int msg, unsigned int wParam, unsigne
 	::PostMessageA((HWND)wnd, msg, wParam, lParam);
 }
 
+void Sys_SendMessage(WHANDLE wnd, unsigned int msg, unsigned int wParam, unsigned int lParam)
+{
+	::SendMessage((HWND)wnd, msg, wParam, lParam);
+}
+
 void Sys_SetCursorPos(int x, int y)
 {
 	::SetCursorPos(x, y);

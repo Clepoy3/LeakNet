@@ -1033,7 +1033,7 @@ void CSpatialPartition::EnumerateElementsAtPoint( SpatialPartitionListMask_t lis
 {
 	// If this assertion fails, you're using a list
 	// at a point where the spatial partition elements aren't set up!
-	Assert( (listMask & m_nSuppressedListMask) == 0);
+//	Assert( (listMask & m_nSuppressedListMask) == 0); // VXP: Commented at 2007's code, LOL
 	
 	// Early-out.
 	if ( listMask == 0 )

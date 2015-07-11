@@ -1291,11 +1291,6 @@ void TextEntry::OnKeyCodeTyped(KeyCode code)
 			}
 		case KEY_A:
 			{
-			//	_select[0] = 0;
-			//	_select[1] = m_TextStream.Count();
-			//	_cursorPos = _select[1]; // cursor at end of line
-			//	Repaint();
-			//	SelectAllOnFirstFocus( true );
 				SelectAllText( false );
 				break;
 			}
@@ -3159,8 +3154,6 @@ void TextEntry::SetToFullHeight()
 //-----------------------------------------------------------------------------
 void TextEntry::SelectAllText(bool bResetCursorPos)
 {
-	_cursorPos = m_TextStream.Count(); // VXP: Hack
-
 	if ( bResetCursorPos )
 	{
 		_cursorPos = 0;

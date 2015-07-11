@@ -153,12 +153,6 @@ bool HostState_IsGameShuttingDown()
 
 CHostState::CHostState()
 {
-	m_currentState = HS_RUN;
-	m_nextState = HS_RUN;
-	m_activeGame = false;
-	memset(m_saveName, 0, sizeof(m_saveName));
-	memset(m_landmarkName, 0, sizeof(m_landmarkName));
-	memset(m_levelName, 0, sizeof(m_levelName));
 }
 
 void CHostState::Init()
