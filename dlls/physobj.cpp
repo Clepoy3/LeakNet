@@ -465,15 +465,25 @@ bool CPhysBox::CreateVPhysics()
 		PhysSetGameFlags( pPhysics, FVPHYSICS_DMG_SLICE );
 	}
 
+	IPhysicsObject* vPhysicsObject = VPhysicsGetObject();
+
 	// Wake it up if not asleep
 	if ( !HasSpawnFlags(SF_PHYSBOX_ASLEEP) )
 	{
-		VPhysicsGetObject()->Wake();
+	//	VPhysicsGetObject()->Wake();
+		if( vPhysicsObject != NULL )
+		{
+			vPhysicsObject->Wake();
+		}
 	}
 
 	if ( HasSpawnFlags(SF_PHYSBOX_MOTIONDISABLED) || m_damageToEnableMotion > 0  )
 	{
-		VPhysicsGetObject()->EnableMotion( false );
+	//	VPhysicsGetObject()->EnableMotion( false );
+		if( vPhysicsObject != NULL )
+		{
+			vPhysicsObject->EnableMotion( false );
+		}
 	}
 
 	// only send data when physics moves this object

@@ -476,6 +476,12 @@ IPhysicsObject *PhysCreateWorld_Shared( CBaseEntity *pWorld, vcollide_t *pWorldC
 	params.pGameData = static_cast<void *>(pWorld);
 	params.pName = "world";
 
+	// VXP: Cath
+	if( pWorldCollide->solids == NULL )
+	{
+		return NULL;
+	}
+
 	IPhysicsObject *pWorldPhysics = physenv->CreatePolyObjectStatic( 
 		pWorldCollide->solids[0], surfaceData, vec3_origin, vec3_angle, &params );
 

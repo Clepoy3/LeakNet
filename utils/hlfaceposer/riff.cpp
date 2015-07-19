@@ -423,7 +423,9 @@ void IterateOutputRIFF::ChunkFinish( void )
 
 void IterateOutputRIFF::ChunkStart( unsigned int chunkname )
 {
-	Assert( m_chunkStart == -1 );
+//	Assert( m_chunkStart == -1 );
+	if( m_chunkStart != -1 )
+		printf("Not a negative chunk\n" );
 
 	m_chunkStart = m_riff.PositionGet();
 

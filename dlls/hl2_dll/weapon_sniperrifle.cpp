@@ -273,6 +273,21 @@ bool CWeaponSniperRifle::Reload( void )
 
 		if (primary > 0 || secondary > 0)
 		{
+			CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+			if (pPlayer != NULL)
+			{
+				if ( m_nZoomLevel != 0 )
+				{
+					pPlayer->ShowViewModel(true);
+					pPlayer->SetFOV( 0 );
+					m_nZoomLevel = 0;
+				}
+			}
+			else
+			{
+				return false;
+			}
+
 			// Play reload on different channel as it happens after every fire
 			// and otherwise steals channel away from fire sound
 			WeaponSound(RELOAD);

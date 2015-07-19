@@ -310,6 +310,13 @@ int CBSPTreeData::CountElementsInLeaf( int leaf )
 //-----------------------------------------------------------------------------
 bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pEnum, int context )
 {
+	// VXP: Fix by Cath
+	if( leaf > m_Leaf.Size() )
+	{
+		Warning( "CBSPTreeData::EnumerateElementsInLeaf: bad leaf index %i (numLeafs is %i)\n", leaf, m_Leaf.Size() );
+		return false;
+	}
+
 #ifdef _DEBUG
 	// The enumeration method better damn well not change this list...
 	int nCount = CountElementsInLeaf(leaf);

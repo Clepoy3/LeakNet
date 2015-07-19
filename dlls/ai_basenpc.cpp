@@ -750,6 +750,10 @@ bool CAI_BaseNPC::PlayerInSpread( const Vector &sourcePos, const Vector &targetP
 	for (int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if( pPlayer == NULL )
+		{
+			continue;
+		}
 
 		if ( !ignoreHatedPlayers || IRelationType( pPlayer ) != D_HT )
 		{

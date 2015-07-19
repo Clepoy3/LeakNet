@@ -480,6 +480,7 @@ void CC_Player_SetModel( void )
 		strcat( szName, engine->Cmd_Argv(1) );
 		strcat( szName, ".mdl" );
 
+	//	pPlayer->PrecacheModel( szName ); // VXP: Do we need this?
 		pPlayer->SetModel( szName );
 		UTIL_SetSize(pPlayer, VEC_HULL_MIN, VEC_HULL_MAX);
 		UTIL_Relink( pPlayer );

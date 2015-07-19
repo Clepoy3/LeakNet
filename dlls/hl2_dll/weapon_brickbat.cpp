@@ -44,7 +44,8 @@ struct BrickbatAmmo_s
 
 BrickbatAmmo_s	BrickBatAmmoArray[NUM_BRICKBAT_AMMO_TYPES] =
 {
-	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_bottle.mdl",		"models/props_junk/Rock001a.mdl" },
+//	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_bottle.mdl",		"models/props_junk/Rock001a.mdl" },
+	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_rock.mdl",		"models/props_junk/Rock001a.mdl" },
 	{ "grenade_beerbottle",		BRICKBAT_BOTTLE,		3,	"models/weapons/v_bb_bottle.mdl",		"models/weapons/w_bb_bottle.mdl" },
 	{ "grenade_crematorhead",	BRICKBAT_CREMATORHEAD,	1,	"models/weapons/v_bb_crematorhead.mdl",	"models/cremator_head.mdl" },
 };
@@ -52,8 +53,8 @@ BrickbatAmmo_s	BrickBatAmmoArray[NUM_BRICKBAT_AMMO_TYPES] =
 IMPLEMENT_SERVERCLASS_ST(CWeaponBrickbat, DT_WeaponBrickbat)
 END_SEND_TABLE()
 
-//LINK_ENTITY_TO_CLASS( weapon_brickbat, CWeaponBrickbat );
-//PRECACHE_WEAPON_REGISTER(weapon_brickbat);
+LINK_ENTITY_TO_CLASS( weapon_brickbat, CWeaponBrickbat );
+PRECACHE_WEAPON_REGISTER(weapon_brickbat);
 
 acttable_t	CWeaponBrickbat::m_acttable[] = 
 {
@@ -175,7 +176,7 @@ void CWeaponBrickbat::BrickbatTouch( CBaseEntity *pOther )
 
 	//FIXME: This ammo handling code is a bit bogus, need a real solution if brickbats are going to live
 
-	/*
+	/**/
 	// ----------------------------------------------------
 	//  Give brickbat ammo if touching client
 	// ----------------------------------------------------
@@ -225,7 +226,7 @@ void CWeaponBrickbat::BrickbatTouch( CBaseEntity *pOther )
 			pBCC->Weapon_Switch(oldWeapon);
 		}
 	}
-	*/
+	/**/
 }
 
 

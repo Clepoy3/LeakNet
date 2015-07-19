@@ -40,7 +40,8 @@ static bool ClipTracer( const Vector &start, const Vector &delta, Vector &clippe
 		float fraction = dist2 - dist1;
 
 		// Too close to clipping plane
-		if ( fraction < 1e-3 )
+		if ( fraction < 1e-3 &&
+			fraction > -1e-3 ) // VXP
 			return true;
 
 		fraction = -dist1 / fraction;

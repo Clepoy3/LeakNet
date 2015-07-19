@@ -130,6 +130,8 @@ void CPlayer_Control::ControlDeactivate( void )
 	pPlayer->SetMoveType( m_nSaveMoveType, m_nSaveMoveCollide );
 	pPlayer->SetViewOffset( m_vSaveViewOffset );
 	pPlayer->m_nControlClass	= CLASS_NONE;
+
+	UTIL_Relink( pPlayer ); // VXP
 }
 
 

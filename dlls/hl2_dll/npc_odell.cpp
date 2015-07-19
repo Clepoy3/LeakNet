@@ -145,7 +145,7 @@ Class_T	CNPC_Odell::Classify ( void )
 
 int CNPC_Odell::TranslateSchedule( int scheduleType ) 
 {
-#if 0
+#if 0 // VXP: Maybe, re-enable this? Odell
 	switch( scheduleType )
 	{
 	case SCHED_IDLE_STAND:

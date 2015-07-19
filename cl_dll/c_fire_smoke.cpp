@@ -896,6 +896,8 @@ void C_EntityFlame::OnDataChanged( DataUpdateType_t updateType )
 		SetupEntityRenderHandle( RENDER_GROUP_TRANSLUCENT_ENTITY );
 
 		C_BaseEntity *pEnt = m_hEntAttached;
+		if ( !pEnt )
+			return;
 		
 		// FIXME: this should be IsBaseAnimating
 		if (pEnt->IsBaseCombatCharacter())

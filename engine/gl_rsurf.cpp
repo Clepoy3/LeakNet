@@ -445,6 +445,12 @@ void Shader_DrawSurfaceDynamic( int surfID )
 #endif
 		for( int i = 0; i < MSurf_NumPrims( surfID ); i++, pPrim++ )
 		{
+			// VXP: Cath
+			if( pPrim->vertCount == NULL )
+			{
+				continue;
+			}
+
 			// Can't have heterogeneous primitive lists
 			Assert( primType == pPrim->type );
 			switch( pPrim->type )

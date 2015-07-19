@@ -213,12 +213,24 @@ void CDivideProxy::OnBind( void *pC_BaseEntity )
 
 	case MATERIAL_VAR_TYPE_FLOAT:
 		if (m_pSrc2->GetFloatValue() != 0)
+		{
 			SetFloatResult( m_pSrc1->GetFloatValue() / m_pSrc2->GetFloatValue() );
+		}
+		else
+		{
+			SetFloatResult( m_pSrc1->GetFloatValue() );
+		}
 		break;
 
 	case MATERIAL_VAR_TYPE_INT:
 		if (m_pSrc2->GetIntValue() != 0)
+		{
 			m_pResult->SetFloatValue( m_pSrc1->GetIntValue() / m_pSrc2->GetIntValue() );
+		}
+		else
+		{
+			m_pResult->SetFloatValue( m_pSrc1->GetIntValue() );
+		}
 		break;
 	}
 }

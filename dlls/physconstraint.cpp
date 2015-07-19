@@ -472,9 +472,17 @@ public:
 	{
 		if ( m_hinge.worldAxisDirection == vec3_origin )
 		{
-			DevMsg("ERROR: Hinge with bad data!!!\n" );
+			DevMsg("CreateConstraint: ERROR: Hinge with bad data!!!\n" );
 			return NULL;
 		}
+
+		// VXP: Cath
+		if( info.pObjects[0] == NULL || info.pObjects[1] == NULL )
+		{
+			DevMsg("CreateConstraint: ERROR: one of pObject pointers is NULL!\n" );
+			return NULL;
+		}
+
 		// BUGBUG: These numbers are very hard to edit
 		// Scale by 1000 to make things easier
 		// CONSIDER: Unify the units of torque around something other 

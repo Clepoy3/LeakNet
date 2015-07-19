@@ -55,6 +55,12 @@ inline void CBeamSegDraw::SpecifySeg( const Vector &vNormal )
 	CrossProduct( vDirToBeam, vNormal, vTangentY );
 	VectorNormalizeFast( vTangentY );
 
+	if( !vTangentY.IsValid() )
+	{
+		Warning("CBeamSegDraw::SpecifySeg: Warning: tangent is not a valid vector (NAN probably)\n");
+		return;
+	}
+
 	// Build the endpoints.
 	Vector vPoint1, vPoint2;
 	VectorMA( m_Seg.m_vPos,  m_Seg.m_flWidth*0.5f, vNormal, vPoint1 );

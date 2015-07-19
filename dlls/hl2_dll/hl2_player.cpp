@@ -124,6 +124,8 @@ void CHL2_Player::PreThink(void)
 	// Riding a vehicle?
 	if ( IsInAVehicle() )	
 	{
+		// Allow the suit to recharge when in the vehicle.
+		SuitPower_Update(); // VXP
 		// make sure we update the client, check for timed damage and update suit even if we are in a vehicle
 		UpdateClientData();		
 		CheckTimeBasedDamage();
@@ -485,6 +487,9 @@ void CHL2_Player::Spawn(void)
 
 	InitSprinting();
 
+//	if ( !IsSuitEquipped() )
+//		 StartWalking();
+
 	SuitPower_SetCharge( 100 );
 
 	m_iNumSelectedNPCs = 0;
@@ -554,9 +559,12 @@ public:
 	int ShouldMoveTo( IPhysicsObject *pObject, const Vector &position )
 	{
 		CHL2_Player *pPlayer = (CHL2_Player *)pObject->GetGameData();
-		if ( pPlayer->TouchedPhysics() )
+		if ( pPlayer )
 		{
-			return 0;
+			if ( pPlayer->TouchedPhysics() )
+			{
+				return 0;
+			}
 		}
 		return 1;
 	}
@@ -1439,7 +1447,7 @@ ConVar	sv_show_crosshair_target( "sv_show_crosshair_target", "0" );
 void CHL2_Player::UpdateWeaponPosture( void )
 {
 //FIXME: Reimplement this when movements blends are working again
-#if 0
+#if 0 // VXP: ?
 
 	//Setup our viewmodel's movement speed
 	CBaseViewModel *pVM = GetViewModel();

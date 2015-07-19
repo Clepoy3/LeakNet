@@ -395,7 +395,15 @@ void CWeapon_SLAM::StartTripmineAttach( void )
 			// -----------------------------------------
 			//  Play attach animation
 			// -----------------------------------------
-			SendWeaponAnim(ACT_SLAM_TRIPMINE_ATTACH);
+		//	SendWeaponAnim(ACT_SLAM_TRIPMINE_ATTACH);
+			if (m_bDetonatorArmed)
+			{
+				SendWeaponAnim(ACT_SLAM_STICKWALL_ATTACH);
+			}
+			else
+			{
+				SendWeaponAnim(ACT_SLAM_TRIPMINE_ATTACH);
+			}
 
 			m_bNeedReload		= true;
 			m_bAttachTripmine	= true;

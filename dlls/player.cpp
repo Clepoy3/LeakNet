@@ -463,6 +463,7 @@ CBasePlayer::CBasePlayer( )
 
 CBasePlayer::~CBasePlayer( )
 {
+	VPhysicsDestroyObject(); // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -3655,11 +3656,11 @@ void CBasePlayer::PostThinkVPhysics( void )
 	}
 
 	// teleport the physics object up by stepheight (game code does this - reflect in the physics)
-	if ( g_pMoveData->m_outStepHeight > 0.1 )
+	if ( g_pMoveData->m_outStepHeight > 0.1f )
 	{
 		m_pPhysicsController->StepUp( g_pMoveData->m_outStepHeight );
 	}
-	g_pMoveData->m_outStepHeight = 0;
+	g_pMoveData->m_outStepHeight = 0.0f;
 	UpdateVPhysicsPosition( newPosition, g_pMoveData->m_outWishVel );
 
 	m_oldOrigin = GetAbsOrigin();
@@ -5548,6 +5549,10 @@ QAngle CBasePlayer::AutoaimDeflection( Vector &vecSrc, float flDist, float flDel
 			Vector dir;
 			float dot;
 			CBaseEntity *pEntity = pList[i];
+
+			// Don't shoot yourself
+			if ( pEntity == this )
+				continue;
 
 			if (!pEntity->IsAlive() || !pEntity->edict() )
 				continue;

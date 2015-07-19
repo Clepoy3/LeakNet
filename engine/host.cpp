@@ -347,8 +347,11 @@ void Host_Error (char *error, ...)
 	inerror = true;
 
 	// VXP: Loading screen
-	staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
-	staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+	if( staticGameUIFuncs )
+	{
+		staticGameUIFuncs->LoadingFinished( "Shit", "Happens" ); // VXP: GameUI
+		staticGameUIFuncs->StopProgressBar( false, "Shit eater", "You are" ); // VXP: GameUI
+	}
 
 #ifndef SWDS
 	CL_WriteMessageHistory();

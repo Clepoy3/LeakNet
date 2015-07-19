@@ -285,6 +285,11 @@ void PlayImpactSound( trace_t	&tr )
 {
 	surfacedata_t *pdata = physprops->GetSurfaceData( tr.surface.surfaceProps );
 
+	if ( pdata->bulletImpact == 0 )
+	{
+		return;
+	}
+
 	const char *pbulletImpactSoundName = physprops->GetString( pdata->bulletImpact, rand()%pdata->bulletImpactCount );
 
 	CLocalPlayerFilter filter;

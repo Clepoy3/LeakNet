@@ -144,7 +144,7 @@ public:
 		SetBorder(NULL);
 
 		m_flMenuItemVisibilityRate = (float)atof(pScheme->GetResourceString("InGameDesktop/MenuItemVisibilityRate"));
-		if (m_flMenuItemVisibilityRate < 0.0000001)
+		if (m_flMenuItemVisibilityRate < 0.0000001f)
 		{
 			m_flMenuItemVisibilityRate = 0.0000001f;
 		}

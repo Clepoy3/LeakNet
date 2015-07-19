@@ -310,6 +310,10 @@ CBaseEntity *FindEntityProcedural( const char *szName, CBaseEntity *pSearchingEn
 		{
 			return FindPickerEntity( UTIL_PlayerByIndex(1) );
 		}
+		else if ( FStrEq( pName, "self" ) )
+		{
+			return pSearchingEntity;
+		}
 		else 
 		{
 			Warning( "Invalid entity search name %s\n", szName );

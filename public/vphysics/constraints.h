@@ -30,9 +30,9 @@ struct constraint_breakableparams_t
 
 	inline void Defaults()
 	{
-		forceLimit = 0;
-		torqueLimit = 0;
-		strength = 1.0;
+		forceLimit = 0.0f;
+		torqueLimit = 0.0f;
+		strength = 1.0f;
 		isActive = true;
 	}
 };
@@ -181,8 +181,8 @@ struct constraint_slidingparams_t
 	{
 		SetIdentityMatrix( attachedRefXform );
 		slideAxisRef.Init();
-		limitMin = limitMax = 0;
-		friction = 0;
+		limitMin = limitMax = 0.0f;
+		friction = 0.0f;
 		constraint.Defaults();
 	}
 };
@@ -199,8 +199,8 @@ struct constraint_pulleyparams_t
 	inline void Defaults()
 	{
 		constraint.Defaults();
-		totalLength = 1.0;
-		gearRatio = 1.0;
+		totalLength = 1.0f;
+		gearRatio = 1.0f;
 		pulleyPosition[0].Init();
 		pulleyPosition[1].Init();
 		objectPosition[0].Init();
@@ -230,7 +230,7 @@ struct constraint_lengthparams_t
 		constraint.Defaults();
 		objectPosition[0].Init();
 		objectPosition[1].Init();
-		totalLength = 1;
+		totalLength = 1.0f;
 		isRigid = false;
 	}
 };

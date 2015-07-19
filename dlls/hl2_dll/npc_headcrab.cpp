@@ -1853,7 +1853,8 @@ void CBlackHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 	{
 		case HC_POISON_AE_FOOTSTEP:
 		{
-			bool walk = ( GetActivity() == ACT_WALK ) ? 1.0 : 0.6;
+		//	bool walk = ( GetActivity() == ACT_WALK ) ? 1.0 : 0.6;
+			bool walk = ( GetActivity() == ACT_WALK );
 			if ( walk )
 			{
 				EmitSound( "NPC_BlackHeadcrab.FootstepWalk" );

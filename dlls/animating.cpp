@@ -1301,6 +1301,10 @@ const char *CBaseAnimating::GetFlexControllerType( int iFlexController )
 //-----------------------------------------------------------------------------
 Vector CBaseAnimating::GetGroundSpeedVelocity( void )
 {
+	studiohdr_t *pstudiohdr = GetModelPtr();
+	if (!pstudiohdr)
+		return vec3_origin;
+
 	QAngle  vecAngles;
 	Vector	vecVelocity;
 

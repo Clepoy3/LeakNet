@@ -1451,6 +1451,9 @@ void CViewRenderBeams::UpdateTempEntBeams( )
 	// Get frame time
 	float frametime = gpGlobals->frametime;
 
+	if ( frametime == 0.0f )
+		return;
+
 	// Draw temporary entity beams
 	Beam_t* pPrev = 0;
 	Beam_t* pNext;

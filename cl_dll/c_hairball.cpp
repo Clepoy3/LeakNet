@@ -333,6 +333,9 @@ void CreateHairballCallback()
 		
 		// Put it a short distance in front of the player.
 		C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+		if( !pPlayer )
+			return;
+
 		Vector vForward;
 		AngleVectors( pPlayer->GetAbsAngles(), &vForward );
 		pHairball->SetLocalOrigin( pPlayer->GetAbsOrigin() + vForward * 300 + RandomVector( 0, 100 ) );

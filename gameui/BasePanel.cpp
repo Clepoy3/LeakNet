@@ -50,7 +50,6 @@ void CBasePanel::OnChildAdded(VPANEL child)
 	{
 		g_pTaskbar->AddTask(child);
 	}
-//	FindLeakNet();
 }
 
 //-----------------------------------------------------------------------------
@@ -142,7 +141,8 @@ void CBasePanel::ApplySchemeSettings(IScheme *pScheme)
 void CBasePanel::SetBackgroundRenderState(EBackgroundState state)
 {
 	m_eBackgroundState = state;
-	FindLeakNet();
+//	FindLeakNet();
+	SendMessageToLeakNet( "LeakNetLevelNameMsg", (void *)engine->GetLevelName() );
 }
 
 //-----------------------------------------------------------------------------
@@ -200,32 +200,29 @@ void CBasePanel::DrawBackgroundImage()
 	*/
 }
 
-static void FindLeakNet()
+//static void FindLeakNet()
+static void SendMessageToLeakNet( char* wndMsg, void* pMsg )
+//static void SendMessageToLeakNet( char* wndMsg, void* pMsg, int size ) // VXP: Should try this
 {
-	Color clr( 100, 200, 255, 255 );
-	
 //	WHANDLE leaknet = Sys_FindWindow( NULL, _T("LeakNet") ); // Not working
 	WHANDLE leaknet = Sys_FindWindow( NULL, _T("LeakNet - Main") );
-	Msg( "%i\n", leaknet );
+//	Msg( "%i\n", leaknet );
 	if( leaknet )
 	{
+		Color clr( 100, 255, 200, 255 );
 		GameConsole().ColorPrintf( clr, "LeakNet found!\n" );
-		unsigned int wndMessage = Sys_RegisterWindowMessage( "TestLeakNetMessage" );
-		Msg( "WndMessage: %i\n", wndMessage );
-		const char *levelname = engine->GetLevelName();
+	//	unsigned int wndMessage = Sys_RegisterWindowMessage( "TestLeakNetMessage" );
+		unsigned int wndMessage = Sys_RegisterWindowMessage( wndMsg );
+	//	Msg( "WndMessage: %i\n", wndMessage );
+	/*	const char *levelname = engine->GetLevelName();
 		if( strcmp( levelname, "" ) == 0 )
 		{
 			return;
-		}
-		Msg( "MapName: %s\n", levelname );
+		}*/
+	//	Msg( "MapName: %s\n", levelname );
 	//	char *levelname = "This is the test!";
 	//	Sys_PostMessage( leaknet, wndMessage, 0, 1 );
-	
-		COPYDATASTRUCT cd;
-		cd.lpData = &levelname;
-		cd.cbData = strlen( levelname );
-	//	Sys_PostMessage( leaknet, WM_COPYDATA, 0, (LPARAM) &cd );
-	//	Sys_SendMessage( leaknet, WM_COPYDATA, 0, (LPARAM) &cd );
+
 	//	Sys_SendMessage( leaknet, WM_COPYDATA, 0, (LPARAM) &levelname );
 	//	Sys_SendMessage( leaknet, WM_COPYDATA, (WPARAM)levelname, NULL );
 	
@@ -237,10 +234,13 @@ static void FindLeakNet()
 	//	Sys_SendMessage( leaknet, wndMessage, strlen( levelname ), (LPARAM)&levelname );
 	//	Sys_SendMessage( leaknet, wndMessage, strlen( levelname ), (LPARAM)*levelname );
 	
-		Sys_PostMessage( leaknet, wndMessage, strlen( levelname ), (LPARAM)levelname );
+	//	Sys_PostMessage( leaknet, wndMessage, strlen( levelname ), (LPARAM)levelname );
+		Sys_PostMessage( leaknet, wndMessage, sizeof( &pMsg ), (LPARAM)pMsg );
+	//	Sys_PostMessage( leaknet, wndMessage, size, (LPARAM)pMsg );
 	}
 	else
 	{
+		Color clr( 100, 200, 255, 255 );
 		GameConsole().ColorPrintf( clr, "LeakNet not found\n" );
 	}
 }
