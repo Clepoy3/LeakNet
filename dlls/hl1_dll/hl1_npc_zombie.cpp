@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2001, Valve LLC, All rights reserved. ============
+//========= Copyright Â© 1996-2001, Valve LLC, All rights reserved. ============
 //
 // Purpose: A slow-moving, once-human headcrab victim with only melee attacks.
 //
@@ -313,7 +313,8 @@ void CNPC_Zombie::AttackSound( void )
 
 void CNPC_Zombie::RemoveIgnoredConditions ( void )
 {
-	if (( GetActivity() == ACT_MELEE_ATTACK1 ) || ( GetActivity() == ACT_MELEE_ATTACK1 ))
+//	if (( GetActivity() == ACT_MELEE_ATTACK1 ) || ( GetActivity() == ACT_MELEE_ATTACK1 ))
+	if (( GetActivity() == ACT_MELEE_ATTACK1 ))
 	{
 		if ( m_flNextFlinch >= gpGlobals->curtime)
 		{

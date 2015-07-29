@@ -2200,10 +2200,10 @@ void CNPC_Antlion::PrescheduleThink( void )
 			( eActivity != ACT_JUMP ) && 
 			( eActivity != ACT_GLIDE ) && 
 			( eActivity != ACT_LAND ) && 
-			( eActivity != ACT_ANTLION_DISTRACT ) && 
-			( eActivity != ACT_JUMP ) &&
-			( eActivity != ACT_GLIDE ) &&
-			( eActivity != ACT_LAND ) )
+			( eActivity != ACT_ANTLION_DISTRACT ) )
+		//	( eActivity != ACT_JUMP ) &&
+		//	( eActivity != ACT_GLIDE ) &&
+		//	( eActivity != ACT_LAND ) )
 	{
 		SetWings( false );
 	}

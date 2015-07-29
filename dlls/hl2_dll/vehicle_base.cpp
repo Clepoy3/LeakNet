@@ -600,7 +600,8 @@ void CPropVehicleDriveable::Think()
 		SetNextThink( gpGlobals->curtime );
 
 		// Time up?
-		if ( m_hKeepUpright && m_flTurnOffKeepUpright < gpGlobals->curtime && m_hKeepUpright )
+	//	if ( m_hKeepUpright && m_flTurnOffKeepUpright < gpGlobals->curtime && m_hKeepUpright )
+		if ( m_hKeepUpright != NULL && m_flTurnOffKeepUpright < gpGlobals->curtime )
 		{
 			variant_t emptyVariant;
 			m_hKeepUpright->AcceptInput( "TurnOff", this, this, emptyVariant, USE_TOGGLE );

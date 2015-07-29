@@ -19,7 +19,7 @@
 
 #include	"cbase.h"
 
-#if 0
+//#if 0
 
 #include	"npc_talker.h"
 #include	"ai_schedule.h"
@@ -350,6 +350,7 @@ void CNPC_Conscript::TalkInit()
 		// vortigaunt will try to talk to friends in this order:
 	m_szFriends[0] = "npc_conscript";
 //	m_szFriends[1] = "npc_vortigaunt"; disable for now
+	m_szFriends[1] = "npc_vortigaunt";
 
 	// get voice for head - just one barney voice for now
 	GetExpresser()->SetVoicePitch( 100 );
@@ -919,4 +920,4 @@ AI_DEFINE_SCHEDULE
 );
 
 
-#endif
+//#endif

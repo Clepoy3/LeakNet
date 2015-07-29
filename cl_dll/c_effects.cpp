@@ -90,6 +90,7 @@ private:
 	float GetWidth() const;
 	float GetLength() const;
 	float GetSpeed() const;
+	float GetLifetime() const;
 
 	// Gets the remaining lifetime of the particle
 	float GetRemainingLifetime( PrecipitationParticle_t* pParticle ) const;
@@ -104,13 +105,12 @@ private:
 	// Information helpful in creating and rendering particles
 	PMaterialHandle	m_MatHandle;	// material used 
 	float			m_Color[4];		// precip color
-	float			m_Lifetime;		// Precip lifetime
+//	float			m_Lifetime;		// Precip lifetime
 	float			m_InitialRamp;	// Initial ramp value
 	float			m_Speed;		// Precip speed
 	float			m_Width;		// Tracer width
 	float			m_Remainder;	// particles we should render next time
 	Type_t			m_Type;			// Precip type
-	float			m_Length;		// Precip speed
 
 	// Some state used in rendering and simulation
 	// Used to modify the rain density and wind from the console
@@ -118,6 +118,8 @@ private:
 	static ConVar s_rainwidth;
 	static ConVar s_rainlength;
 	static ConVar s_rainspeed;
+	
+	// Used to modify the snow density
 	static ConVar s_snowdensity;
 	static ConVar s_snowwidth;
 	static ConVar s_snowlength;
@@ -126,6 +128,8 @@ private:
 	static double s_FrameDeltaTime;		// stores the frame dt for simulation
 	static Vector s_WindVector;			// Stores the wind speed vector
 	static double s_CurrFrameTime;
+	
+//	static int snowParticlesCount;
 
 private:
 	CClient_Precipitation( const CClient_Precipitation & ); // not defined, not accessible
@@ -155,15 +159,20 @@ REGISTER_FUNCTION_INITIALIZER( InitPrecipitationData );
 ConVar CClient_Precipitation::s_raindensity( "r_raindensity","0.003");
 ConVar CClient_Precipitation::s_rainwidth( "r_rainwidth", "0.35f" );
 ConVar CClient_Precipitation::s_rainlength( "r_rainlength", "0.075f" );
-ConVar CClient_Precipitation::s_rainspeed( "r_rainspeed", "600.0f" );
+//ConVar CClient_Precipitation::s_rainspeed( "r_rainspeed", "600.0f" );
+ConVar CClient_Precipitation::s_rainspeed( "r_rainspeed", "425.0f" );
+
 ConVar CClient_Precipitation::s_snowdensity( "r_snowdensity","0.003");
-ConVar CClient_Precipitation::s_snowwidth( "r_snowwidth", "0.7f" );
-ConVar CClient_Precipitation::s_snowlength( "r_snowlength", "0.03f" );
+ConVar CClient_Precipitation::s_snowwidth( "r_snowwidth", "0.2f" );
+ConVar CClient_Precipitation::s_snowlength( "r_snowlength", "0.01f" );
+//ConVar CClient_Precipitation::s_snowspeed( "r_snowspeed", "600.0f" );
 ConVar CClient_Precipitation::s_snowspeed( "r_snowspeed", "80.0f" );
 
 double CClient_Precipitation::s_FrameDeltaTime;	// stores the frame dt for simulation
 Vector CClient_Precipitation::s_WindVector;		// Stores the wind speed vector
 double CClient_Precipitation::s_CurrFrameTime = -1;
+
+//int CClient_Precipitation::snowParticlesCount = 0;
 
 
 bool CClient_Precipitation::SimulateAndRender( Particle *pParticle, ParticleDraw* pParticleDraw, float &sortDist )
@@ -173,6 +182,7 @@ bool CClient_Precipitation::SimulateAndRender( Particle *pParticle, ParticleDraw
 	// Call the appropriate sim and render method
 	PrecipitationParticle_t* pPrecip = (PrecipitationParticle_t*)pParticle;
 	RenderParticle( pParticleDraw, pPrecip, sortDist );
+//	Msg( "%i\n", snowParticlesCount );
 	if( m_Type == RAIN )
 		return SimulateRain( pPrecip );
 	else
@@ -219,9 +229,6 @@ CClient_Precipitation::~CClient_Precipitation()
 #define RAIN_TRACER_WIDTH 0.35f
 #define SNOW_TRACER_WIDTH 0.7f
 
-#define RAIN_LENGTH 0.075f
-#define SNOW_LENGTH 0.005f
-
 void CClient_Precipitation::Precache( )
 {
 	if (m_Type == NOT_INITIALIZED)
@@ -230,17 +237,18 @@ void CClient_Precipitation::Precache( )
 		switch( m_nRenderFX )
 		{
 		case kRenderFxEnvSnow:
-			m_Speed	= SNOW_SPEED;
-			m_Length = SNOW_LENGTH;
+		//	m_Speed	= SNOW_SPEED;
+			m_Speed	= s_snowspeed.GetFloat();
 			m_MatHandle = m_ParticleEffect.FindOrAddMaterial( "particle/snow" );
 			m_Type = SNOW;
 			m_InitialRamp = 0.6f;
+		//	m_Color[3] = 1.0f;
 			m_Width = SNOW_TRACER_WIDTH;
 			break;
 
 		case kRenderFxEnvRain:
-			m_Speed	= RAIN_SPEED;
-			m_Length = RAIN_LENGTH;
+		//	m_Speed	= RAIN_SPEED;
+			m_Speed	= s_rainspeed.GetFloat();
 			m_MatHandle = m_ParticleEffect.FindOrAddMaterial( "particle/rain" );
 			m_Type = RAIN;
 			m_InitialRamp = 1.0f;
@@ -252,7 +260,7 @@ void CClient_Precipitation::Precache( )
 		// calculate the max amount of time it will take this flake to fall.
 		// This works if we assume the wind doesn't have a z component
 
-		m_Lifetime = (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / m_Speed;
+	//	m_Lifetime = (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / m_Speed;
 
 		// Store off the color
 		m_Color[0] = 1.0f;
@@ -269,7 +277,6 @@ void CClient_Precipitation::Precache( )
 inline float CClient_Precipitation::GetWidth() const
 {
 //	return m_Width;
-//	return s_rainwidth.GetFloat();
 	if( m_Type == RAIN )
 		return s_rainwidth.GetFloat();
 	else
@@ -279,7 +286,6 @@ inline float CClient_Precipitation::GetWidth() const
 inline float CClient_Precipitation::GetLength() const
 {
 //	return m_Length;
-//	return s_rainlength.GetFloat();
 	if( m_Type == RAIN )
 		return s_rainlength.GetFloat();
 	else
@@ -289,11 +295,17 @@ inline float CClient_Precipitation::GetLength() const
 inline float CClient_Precipitation::GetSpeed() const
 {
 //	return m_Speed;
-//	return s_rainspeed.GetFloat();
 	if( m_Type == RAIN )
 		return s_rainspeed.GetFloat();
 	else
 		return s_snowspeed.GetFloat();
+}
+
+inline float CClient_Precipitation::GetLifetime() const
+{
+	// calculate the max amount of time it will take this flake to fall.
+	// This works if we assume the wind doesn't have a z component
+	return (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / GetSpeed();
 }
 
 
@@ -304,7 +316,8 @@ inline float CClient_Precipitation::GetSpeed() const
 inline float CClient_Precipitation::GetRemainingLifetime( PrecipitationParticle_t* pParticle ) const
 {
 	float timeSinceSpawn = gpGlobals->curtime - pParticle->m_SpawnTime;
-	return m_Lifetime - timeSinceSpawn;
+//	return m_Lifetime - timeSinceSpawn;
+	return GetLifetime() - timeSinceSpawn;
 }
 
 //-----------------------------------------------------------------------------
@@ -395,11 +408,11 @@ void CClient_Precipitation::EmitParticles( float fTimeDelta )
 
 	// FIXME: Compute the precipitation density based on computational power
 //	float density = s_raindensity.GetFloat();
-	float density = 0.0f;
+	float density = 0.003f;
 	if( m_Type == RAIN )
 		density = s_raindensity.GetFloat();
 	else
-		density = s_raindensity.GetFloat();
+		density = s_snowdensity.GetFloat();
 
 	if (density > 0.01f) 
 		density = 0.01f;
@@ -557,11 +570,6 @@ static bool IsInAir( const Vector& position )
 {
 	int contents = enginetrace->GetPointContents( position ); 	
 	return (contents & CONTENTS_SOLID) == 0;
-//	return (contents & (CONTENTS_SOLID | CONTENTS_WINDOW | CONTENTS_AUX | CONTENTS_GRATE | CONTENTS_SLIME | CONTENTS_WATER | CONTENTS_OPAQUE | CONTENTS_MOVEABLE | CONTENTS_ORIGIN | CONTENTS_MONSTER |
-//		CONTENTS_DEBRIS | CONTENTS_DETAIL)) == 0;
-//	return (contents & MASK_SOLID) == 0;
-
-//	return (contents & ALL_VISIBLE_CONTENTS) == 0;
 }
 
 
@@ -630,62 +638,9 @@ bool CClient_Precipitation::SimulateRain( PrecipitationParticle_t* pParticle )
 	// We still want this particle
 	return true;
 }
-/*
-bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
-{
-	MEASURE_TIMED_STAT(CS_PRECIPITATION_PHYSICS);
-
-	if (GetRemainingLifetime( pParticle ) < 0.0f)
-		return false;
-//	if ( IsInAir( pParticle->m_Pos ) )
-//	{
-		// Update position
-		VectorMA( pParticle->m_Pos, s_FrameDeltaTime, pParticle->m_Velocity, 
-					pParticle->m_Pos );
-
-		// wind blows rain around
-		for ( int i = 0 ; i < 2 ; i++ )
-		{
-			if ( pParticle->m_Velocity[i] < s_WindVector[i] )
-			{
-				pParticle->m_Velocity[i] += ( 5.0f / pParticle->m_Mass );
-
-				// accelerating flakes get a trail
-				pParticle->m_Ramp = 0.5f;
-
-				// clamp
-				if ( pParticle->m_Velocity[i] > s_WindVector[i] )
-					pParticle->m_Velocity[i] = s_WindVector[i];
-			}
-			else if (pParticle->m_Velocity[i] > s_WindVector[i] )
-			{
-				pParticle->m_Velocity[i] -= ( 5.0f / pParticle->m_Mass );
-
-				// accelerating flakes get a trail
-				pParticle->m_Ramp = 0.5f;
-
-				// clamp.
-				if ( pParticle->m_Velocity[i] < s_WindVector[i] )
-					pParticle->m_Velocity[i] = s_WindVector[i];
-			}
-		}
-//		return true;
-//	}
-
-	if( !IsInAir( pParticle->m_Pos ) )
-		return false;
-
-
-	// Kill the particle immediately!
-//	return false;
-	return true;
-}
-*/
 
 bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 {
-	MEASURE_TIMED_STAT(CS_PRECIPITATION_PHYSICS);
-
 	if (GetRemainingLifetime( pParticle ) < 0.0f)
 		return false;
 
@@ -698,7 +653,10 @@ bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 	{
 		if ( pParticle->m_Velocity[i] < s_WindVector[i] )
 		{
-			pParticle->m_Velocity[i] += ( 5 / pParticle->m_Mass );
+			pParticle->m_Velocity[i] += ( 5.0f / pParticle->m_Mass );
+
+			// accelerating flakes get a trail
+			pParticle->m_Ramp = 0.5f;
 
 			// clamp
 			if ( pParticle->m_Velocity[i] > s_WindVector[i] )
@@ -706,22 +664,29 @@ bool CClient_Precipitation::SimulateSnow( PrecipitationParticle_t* pParticle )
 		}
 		else if (pParticle->m_Velocity[i] > s_WindVector[i] )
 		{
-			pParticle->m_Velocity[i] -= ( 5 / pParticle->m_Mass );
+			pParticle->m_Velocity[i] -= ( 5.0f / pParticle->m_Mass );
+
+			// accelerating flakes get a trail
+			pParticle->m_Ramp = 0.5f;
 
 			// clamp.
 			if ( pParticle->m_Velocity[i] < s_WindVector[i] )
 				pParticle->m_Velocity[i] = s_WindVector[i];
 		}
 	}
-
-	// No longer in the air? punt.
+/* VXP: Anyway we remove unnecessary particles by lifetime
 	if ( !IsInAir( pParticle->m_Pos ) )
 	{
-		// Tell the framework it's time to remove the particle from the list
+	//	snowParticlesCount--;
 		return false;
 	}
-
-	// We still want this particle
+	else
+	{
+	//	snowParticlesCount++;
+		return true;
+	}
+*/
+//	snowParticlesCount++;
 	return true;
 }
 

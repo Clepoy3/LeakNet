@@ -327,7 +327,7 @@ void CPositionInterpolator_Rope::GetDetails( char **outName, int *outMinKeyReq, 
 {
 	*outName = "Rope";
 	*outMinKeyReq = 0;
-	*outMinKeyReq = 1;
+	*outMinKeyReq = 1; // VXP: Should *outMaxKeyReq be here?
 }
 
 void CPositionInterpolator_Rope::SetKeyPosition( int keyNum, Vector const &vPos )

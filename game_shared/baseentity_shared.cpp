@@ -662,9 +662,11 @@ void CBaseEntity::VPhysicsUpdate( IPhysicsObject *pPhysics )
 
 			pPhysics->GetPosition( &origin, &angles );
 
-			if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.x ) )
+		//	if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.x ) )
+			if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.z ) )
 			{
 				Msg( "Infinite values from vphysics!\n" ); // VXP: Happened on e3_techdemo_5 after headcrab
+				// VXP: Maybe, after writing a valid check, this will not happen?
 			}
 
 			SetAbsOrigin( origin );

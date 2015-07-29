@@ -20,15 +20,17 @@
 #define	NPC_CONSCRIPT_H
 #pragma once
 
-#if 0
+//#if 0
 #include "npc_talker.h"
 
 //=========================================================
 //	>> CNPC_Conscript
 //=========================================================
-class CNPC_Conscript : public CAI_PlayerAlly
+//class CNPC_Conscript : public CAI_PlayerAlly
+class CNPC_Conscript : public CNPCSimpleTalker
 {
-	DECLARE_CLASS( CNPC_Conscript, CAI_PlayerAlly );
+//	DECLARE_CLASS( CNPC_Conscript, CAI_PlayerAlly );
+	DECLARE_CLASS( CNPC_Conscript, CNPCSimpleTalker );
 public:
 	void			Spawn( void );
 	void			Precache( void );
@@ -100,6 +102,6 @@ public:
 	DEFINE_CUSTOM_AI;
 };
 
-#endif
+//#endif
 
 #endif	//NPC_CONSCRIPT_H

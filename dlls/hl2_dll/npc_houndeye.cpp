@@ -1067,7 +1067,8 @@ int CNPC_Houndeye::SelectSchedule( void )
 				else
 				{
 					m_flNextAttack = gpGlobals->curtime;
-					SCHED_HOUND_ATTACK_STRAFE;
+				//	SCHED_HOUND_ATTACK_STRAFE;
+					return SCHED_HOUND_ATTACK_STRAFE;
 				}
 			}
 

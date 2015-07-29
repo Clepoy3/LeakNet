@@ -1124,6 +1124,7 @@ void CNPC_Vortigaunt::TalkInit()
 	// vortigaunt will try to talk to friends in this order:
 	m_szFriends[0] = "npc_vortigaunt";
 //	m_szFriends[1] = "npc_conscript";  disable for now
+	m_szFriends[1] = "npc_conscript";
 
 	// get voice for head - just one barney voice for now
 	GetExpresser()->SetVoicePitch( 100 );
