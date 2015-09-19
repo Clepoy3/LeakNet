@@ -106,6 +106,8 @@ END_PREDICTION_DATA()
 // Grenades flagged with this will be triggered when the owner calls detonateSatchelCharges
 #define SF_DETONATE		0x0001
 
+float waterOffset = 0.0f;
+
 // UNDONE: temporary scorching for PreAlpha - find a less sleazy permenant solution.
 void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 {
@@ -178,29 +180,34 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	flRndSound = random->RandomFloat( 0 , 1 );
 
 	EmitSound( "BaseGrenade.Explode" );
-	
+//	Msg( "Water offset: %f\n", waterOffset );
 	if( contents & MASK_WATER )
 	{
+#ifdef _DEBUG
 		Msg( "WE: in water\n" );
+#endif
 		CEffectData	data;
 		Vector orig = vecAbsOrigin /*+ Vector( 0, 0, -pTrace->plane.dist/3 )*/+Vector( 0, 0, 100 );
 		data.m_vOrigin = orig;
 		data.m_vNormal = pTrace->plane.normal;
 		data.m_flScale = 10.0f;
 		DispatchEffect( "watersplash", data );
-//#if !defined( CLIENT_DLL )
+		
+#if !defined( CLIENT_DLL )
 	//	NDebugOverlay::Box( orig, Vector( 5, 5, 5 ), Vector( -5, -5, -5 ), 255, 0, 0, 255, 5.0f );
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	//	NDebugOverlay::Text( vecAbsOrigin, "BEGIN", false, 5.0f );
 	//	NDebugOverlay::Line( vecAbsOrigin, orig, 0, 255, 0, true, 5.0f );
 	//	NDebugOverlay::Text( orig, "END", false, 5.0f );
-//#endif
-	/*	trace_t		tr;
-	//	UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, 10000), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
-		UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, pTrace->plane.dist), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
+
+		trace_t		tr;
+		UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, 10000), MASK_CURRENT, this, COLLISION_GROUP_INTERACTIVE, &tr);
+	//	UTIL_TraceLine ( vecAbsOrigin, vecAbsOrigin+Vector(0, 0, pTrace->plane.dist), MASK_WATER, this, COLLISION_GROUP_DEBRIS, &tr);
 		NDebugOverlay::Text( tr.endpos, "endpos", false, 5.0f );
-		NDebugOverlay::Line( vecAbsOrigin, tr.endpos, 0, 255, 0, true, 5.0f );*/
-//#endif
+		NDebugOverlay::Line( vecAbsOrigin, tr.endpos, 0, 255, 0, true, 5.0f );
+#endif
+		
+#endif
 	}
 
 	// VXP: Need to make vectors above water
@@ -288,7 +295,6 @@ void CBaseGrenade::PreDetonate( void )
 	SetNextThink( gpGlobals->curtime + 1.5 );
 }
 
-
 void CBaseGrenade::Detonate( void )
 {
 	trace_t		tr;
@@ -329,6 +335,13 @@ void CBaseGrenade::ExplodeTouch( CBaseEntity *pOther )
 
 void CBaseGrenade::DangerSoundThink( void )
 {
+	if( GetWaterLevel() != 0 )
+	{
+#ifdef _DEBUG
+		Msg( "Water offset sets to %f\n", GetAbsOrigin().z );
+#endif
+		waterOffset = GetAbsOrigin().z;
+	}
 	if (!IsInWorld())
 	{
 		Remove( );

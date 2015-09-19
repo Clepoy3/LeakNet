@@ -10,7 +10,7 @@
 #include <wtypes.h>
 #include <winuser.h>
 
-//#include <tchar.h>
+#include <tchar.h>
 
 #include "BasePanel.h"
 #include "Taskbar.h"
@@ -39,6 +39,7 @@ using namespace vgui;
 CBasePanel::CBasePanel() : Panel(NULL, "BasePanel")
 {
 	m_eBackgroundState = BACKGROUND_NONE;
+	SendMessageToLeakNet( "LeakNetStartMsg", NULL );
 }
 
 //-----------------------------------------------------------------------------

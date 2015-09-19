@@ -314,7 +314,7 @@ void CL_DispatchSoundPacket( const SoundPacket& sound )
 		
 		if ( cl_captions.GetInt() )
 		{
-			CL_HudMessage( pSentenceName );
+			CL_HudMessage( pSentenceName ); // VXP: Check for able to call this (for example, when you start a game with +map parameter, it will error)
 		}
 	}
 	else

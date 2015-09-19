@@ -373,6 +373,11 @@ void Host_Map_Helper( bool editmode )
 		COM_CheckAuthenticationType();
 	}
 
+	// VXP
+	// Stop demo loop
+	cls.demonum = -1;
+	Host_Disconnect();	// stop old game
+
 	// JAY: UNDONE: Remove this?
 	HostState_NewGame( name );
 

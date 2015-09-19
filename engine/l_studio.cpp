@@ -955,24 +955,25 @@ void R_ComputeBBox( DrawModelState_t& state, const Vector& origin,
 	VectorMin( mins, origin - worldExtents, mins );
 	VectorMax( maxs, origin + worldExtents, maxs );
 //#else
-//  	for (int i=0; i<8 ; i++)
-//  	{
-//  		Vector p1, p2;
-//   
-//  		p1[0] = (i & 1) ? pseqdesc->bbmin[0] : pseqdesc->bbmax[0];
-//  		p1[1] = (i & 2) ? pseqdesc->bbmin[1] : pseqdesc->bbmax[1];
-//  		p1[2] = (i & 4) ? pseqdesc->bbmin[2] : pseqdesc->bbmax[2];
-//  
-//  		VectorTransform( p1, *state.m_pModelToWorld, p2 );
-//  
-//  		if (p2[0] < mins[0]) mins[0] = p2[0];
-//  		if (p2[0] > maxs[0]) maxs[0] = p2[0];
-//  		if (p2[1] < mins[1]) mins[1] = p2[1];
-//  		if (p2[1] > maxs[1]) maxs[1] = p2[1];
-//  		if (p2[2] < mins[2]) mins[2] = p2[2];
-//  		if (p2[2] > maxs[2]) maxs[2] = p2[2];
-//  	}
-//#endif
+#if 0
+  	for (int i=0; i<8 ; i++)
+  	{
+  		Vector p1, p2;
+   
+  		p1[0] = (i & 1) ? pseqdesc->bbmin[0] : pseqdesc->bbmax[0];
+  		p1[1] = (i & 2) ? pseqdesc->bbmin[1] : pseqdesc->bbmax[1];
+  		p1[2] = (i & 4) ? pseqdesc->bbmin[2] : pseqdesc->bbmax[2];
+  
+  		VectorTransform( p1, *state.m_pModelToWorld, p2 );
+  
+  		if (p2[0] < mins[0]) mins[0] = p2[0];
+  		if (p2[0] > maxs[0]) maxs[0] = p2[0];
+  		if (p2[1] < mins[1]) mins[1] = p2[1];
+  		if (p2[1] > maxs[1]) maxs[1] = p2[1];
+  		if (p2[2] < mins[2]) mins[2] = p2[2];
+  		if (p2[2] > maxs[2]) maxs[2] = p2[2];
+  	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1004,7 +1005,7 @@ static bool R_StudioCheckBBox( DrawModelState_t& state, const Vector& origin,
 			{
 				invalid = true;
 			}
-			if ( fabs( delta1[1] ) >= .1f )
+			if ( fabs( delta1[2] ) >= .1f )
 			{
 				invalid = true;
 			}

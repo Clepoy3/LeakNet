@@ -68,7 +68,7 @@ int CHardwareMatrixState::FindLocalLRUIndex( void )
 {
 	int oldestLRUCounter = INT_MAX;
 	int i;
-	int oldestID;
+	int oldestID = 0;
 
 	for( i = 0; i < m_NumMatrices; i++ )
 	{
