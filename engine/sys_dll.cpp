@@ -86,6 +86,7 @@ qboolean			Win32AtLeastV4;
 
 #ifdef _WIN32
 extern HWND			*pmainwindow;
+//extern HWND			hwndEXT;
 extern HWND			hwndEXT;
 #endif
 

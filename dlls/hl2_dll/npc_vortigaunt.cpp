@@ -1273,6 +1273,7 @@ int CNPC_Vortigaunt::TranslateSchedule( int scheduleType )
 
 	// JAY: Removed because this interferes with combat behavior during follow
 	// Hook these to make a looping schedule
+	// VXP: Maybe, re-enable this?
 #if 0
 	case SCHED_TARGET_FACE:
 		{

@@ -192,8 +192,12 @@ void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias )
 
 //	int nAntialias = CommandLine()->ParmValue( "-mat_antialias", -1 );
 	if ( nAntialias != -1 )
+	{
 		if( nAntialias == 2 || nAntialias == 4 || nAntialias == 8 )
+		{
 			modeFlags |= MATERIAL_VIDEO_MODE_ANTIALIAS;
+		}
+	}
 
 	MaterialVideoMode_t mode;
 	mode.m_Width = mode.m_Height = 0;

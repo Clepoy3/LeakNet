@@ -1609,7 +1609,6 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	if (!windowed)
 	{
 		bool useDefault = (mode.m_Width == 0) || (mode.m_Height == 0);
-		m_PresentParameters.BackBufferCount = 1; // VXP
 		m_PresentParameters.BackBufferWidth = useDefault ? d3ddm.Width : mode.m_Width;
 		m_PresentParameters.BackBufferHeight = useDefault ? d3ddm.Height : mode.m_Height;
 		if( g_pHardwareConfig->GetDXSupportLevel() >= 90 && g_pHardwareConfig->SupportsHDR() )
@@ -1621,7 +1620,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 		{
 			m_PresentParameters.BackBufferFormat = useDefault ? d3ddm.Format : ImageFormatToD3DFormat( mode.m_Format );
 		}
-	//	m_PresentParameters.BackBufferCount = 1;
+		m_PresentParameters.BackBufferCount = 1;
 
 		if (flags & MATERIAL_VIDEO_MODE_NO_WAIT_FOR_VSYNC)
 			m_PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -1983,8 +1982,7 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 	RECORD_COMMAND( DX8_SHOW_CURSOR, 1 );
 	RECORD_INT( false );
 
-//	m_pD3DDevice->ShowCursor( false );
-	m_pD3DDevice->ShowCursor( true );
+	m_pD3DDevice->ShowCursor( false );
 
 	// Initialize the shader manager
 	ShaderManager()->Init( ( flags & MATERIAL_VIDEO_MODE_PRELOAD_SHADERS ) != 0 );
@@ -2408,7 +2406,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 #endif
 	
 //	CheckDeviceLost();
-	CheckDeviceLost(); // VXP
+//	CheckDeviceLost(); // VXP
 
 	// Tell all other instances of the material system it's ok to grab memory
 	SendIPCMessage( false );
@@ -2558,7 +2556,6 @@ const CShaderAPIDX8::DeviceSupportLevels_t *CShaderAPIDX8::GetCardSpecificInfo()
 //-----------------------------------------------------------------------------
 // Compute the effective DX support level based on all the other caps
 //-----------------------------------------------------------------------------
-
 void CShaderAPIDX8::ComputeDXSupportLevel()
 {
 	// NOTE: Support level is actually DX level * 10 + subversion
@@ -2629,55 +2626,8 @@ void CShaderAPIDX8::ComputeDXSupportLevel()
 	Assert( 0 ); // we don't support this!
 	m_Caps.m_DXSupportLevel = 50;
 }
-/*
-void CShaderAPIDX8::ComputeDXSupportLevel() // VXP
-{
-	// NOTE: Support level is actually DX level * 10 + subversion
-	// So, 70 = DX7, 80 = DX8, 81 = DX8 w/ 1.4 pixel shaders
-	// 90 = DX9 w/ 2.0 pixel shaders
-	// 95 = DX9 w/ 3.0 pixel shaders and vertex textures
-	// 98 = DX9 XBox360
-	// NOTE: 82 = NVidia nv3x cards, which can't run dx9 fast
 
-	// FIXME: Improve this!! There should be a whole list of features
-	// we require in order to be considered a DX7 board, DX8 board, etc.
 
-	// NOTE: sRGB is currently required for dx90 because it isn't doing 
-	// gamma correctly if that feature doesn't exist
-	if ( m_Caps.m_SupportsVertexShaders_2_0 && m_Caps.m_SupportsPixelShaders_2_0 && m_Caps.m_SupportsSRGB )
-	{
-		m_Caps.m_DXSupportLevel = 90;
-		return;
-	}
-
-	if ( m_Caps.m_SupportsPixelShaders && m_Caps.m_SupportsVertexShaders )// && m_Caps.m_bColorOnSecondStream)
-	{
-		if (m_Caps.m_SupportsPixelShaders_1_4)
-		{
-			m_Caps.m_DXSupportLevel = 81;
-			return;
-		}
-		m_Caps.m_DXSupportLevel = 80;
-		return;
-	}
-
-	if( m_Caps.m_SupportsCubeMaps && ( m_Caps.m_MaxBlendMatrices >= 2 ) )
-	{
-		m_Caps.m_DXSupportLevel = 70;
-		return;
-	}
-
-	if ( ( m_Caps.m_NumTextureUnits >= 2) && m_Caps.m_SupportsMipmapping )
-	{
-		m_Caps.m_DXSupportLevel = 60;
-		return;
-	}
-
-	Assert( 0 ); 
-	// we don't support this!
-	m_Caps.m_DXSupportLevel = 50;
-}
-*/
 // Use this when recording *.rec files that need to be run on more than one kind of 
 // hardware, etc.
 //#define DX8_COMPATABILITY_MODE
@@ -2760,7 +2710,7 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 		( !( caps.TextureCaps & D3DPTEXTURECAPS_POW2 ) || 
 		( caps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) );
 
-	Assert( caps.TextureCaps & D3DPTEXTURECAPS_PROJECTED ); // VXP
+//	Assert( caps.TextureCaps & D3DPTEXTURECAPS_PROJECTED ); // VXP
 
 	// garymcthack - debug runtime doesn't let you use more than 96 constants.
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
@@ -2820,10 +2770,9 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// Thank you to all you driver writers who actually correctly return caps
 	if ((!modSupported) || (!addSupported))
 	{
-	//	Assert( 0 );
 		m_Caps.m_SupportsOverbright = false;
 	}
-
+ 
 	// Some cards, like ATI Rage Pro doesn't support mipmapping (looks like ass)
 	// NOTE: This is necessary because ATI assumes that the wrap/clamp
 	// mode is shared among all texture units
@@ -2866,17 +2815,7 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
 		D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD | D3DUSAGE_QUERY_SRGBWRITE,
 		D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) == S_OK);
-/*
-	m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
-			D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD, D3DRTYPE_TEXTURE, D3DFMT_DXT1 ) == S_OK);
 
-		if ( m_Caps.m_SupportsSRGB )
-		{
-			m_Caps.m_SupportsSRGB = ( m_pD3D->CheckDeviceFormat( m_DisplayAdapter, m_DeviceType,
-				D3DFMT_X8R8G8B8, D3DUSAGE_QUERY_SRGBREAD | D3DUSAGE_QUERY_SRGBWRITE,
-				D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) == S_OK);
-		}
-*/
 	if ( CommandLine()->CheckParm( "-nosrgb" ) )
 	{
 		m_Caps.m_SupportsSRGB = false;
@@ -4107,12 +4046,12 @@ void CShaderAPIDX8::ForceHardwareSync( void )
 
 		
 		// FIXME: Need to check for hr==D3DERR_DEVICELOST here.
-	//	Assert( hr != D3DERR_DEVICELOST ); // VXP: Happens when hl2.exe was minimized from fullscreen
-		if( hr == D3DERR_DEVICELOST )
-		{
-			hr = (hr != D3D_OK) ? hr : D3DERR_DEVICENOTRESET;
-			return;
-		}
+		Assert( hr != D3DERR_DEVICELOST ); // VXP: Happens when hl2.exe was minimized from fullscreen
+	//	if( hr == D3DERR_DEVICELOST )
+	//	{
+	//		hr = (hr != D3D_OK) ? hr : D3DERR_DEVICENOTRESET;
+	//		return;
+	//	}
 		Assert( hr == S_OK );
 		m_pFrameSyncQueryObject->Issue( D3DISSUE_END );
 	} 

@@ -112,7 +112,7 @@ void Host_SetRenderer_f( void )
 
 void Host_SetVideoMode_f( void )
 {
-	int w, h, bpp = 16;
+	int w, h, bpp = 32;
 
 	if ( cls.state == ca_dedicated )
 		return;

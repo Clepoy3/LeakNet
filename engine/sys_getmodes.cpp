@@ -102,7 +102,8 @@ CVideoMode_Common::CVideoMode_Common( void )
 	m_bInitialized		= false;
 	m_safeMode.width	= 640;
 	m_safeMode.height	= 480;
-	m_safeMode.bpp		= 16;
+//	m_safeMode.bpp		= 16;
+	m_safeMode.bpp		= 32;
 }
 
 //-----------------------------------------------------------------------------
@@ -236,9 +237,9 @@ bool CVideoMode_Common::Init( void *pvInstance )
 	y = registry->ReadInt( "ScreenHeight", 480 );
 
 	// Default to 16 BPP Unless we're asked to change
-	int		bitsperpixel = 16;
+	int		bitsperpixel = 32;
 
-	bitsperpixel = registry->ReadInt( "ScreenBPP", 16 );
+//	bitsperpixel = registry->ReadInt( "ScreenBPP", 32 );
 
 	if ( CommandLine()->FindParm ( "-16bpp") )
 	{

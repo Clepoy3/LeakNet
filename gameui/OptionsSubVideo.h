@@ -74,9 +74,9 @@ private:
 //	vgui::ComboBox *m_pRenderer;
 	vgui::ComboBox *m_pAniso;
 	vgui::ComboBox *m_pAntialias;
-	vgui::ComboBox *m_pColorDepth;
+//	vgui::ComboBox *m_pColorDepth;
 	vgui::CheckButton *m_pWindowed;
-	vgui::CheckButton *m_pWaterEntReflect;
+//	vgui::CheckButton *m_pWaterEntReflect;
 	vgui::ComboBox *m_pAspectRatio;
 
 	CCvarSlider		*m_pBrightnessSlider;
@@ -93,6 +93,7 @@ private:
     int             m_iStartResolution;
 	bool			m_bStartWidescreen;
 	
+	CCvarToggleCheckButton  *m_pWaterEntReflect;
 	CCvarToggleCheckButton  *m_pMotionBlurEnableCheckButton;
 
 

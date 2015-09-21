@@ -115,9 +115,10 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
         m_pAntialias->AddItem( m_pszAntialiasNames[i], NULL );
     }
 
-	m_pColorDepth = new ComboBox( this, "ColorDepth", 2, false );
-	m_pColorDepth->AddItem("Medium (16 bit)", NULL);
-	m_pColorDepth->AddItem("Highest (32 bit)", NULL);
+	// VXP: Temporary solution...
+//	m_pColorDepth = new ComboBox( this, "ColorDepth", 2, false );
+//	m_pColorDepth->AddItem("Medium (16 bit)", NULL);
+//	m_pColorDepth->AddItem("Highest (32 bit)", NULL);
 
 //    SetCurrentRendererComboItem();
 	SetCurrentAnisoComboItem();
@@ -126,8 +127,9 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	m_pWindowed = new vgui::CheckButton( this, "Windowed", "#GameUI_Windowed" );
 	m_pWindowed->SetSelected( m_CurrentSettings.windowed ? true : false);
 
-	m_pWaterEntReflect = new vgui::CheckButton( this, "WaterEntReflect", "Water Entity Reflections" ); // VXP: #GameUI_WaterEntReflect
-	m_pWaterEntReflect->SetSelected( m_CurrentSettings.waterentreflect ? true : false);
+//	m_pWaterEntReflect = new vgui::CheckButton( this, "WaterEntReflect", "Water Entity Reflections" ); // VXP: #GameUI_WaterEntReflect
+//	m_pWaterEntReflect->SetSelected( m_CurrentSettings.waterentreflect ? true : false);
+	m_pWaterEntReflect = new CCvarToggleCheckButton( this, "WaterEntReflect", "Water Entity Reflections", "r_WaterEntReflection" );
 	
 	m_pMotionBlurEnableCheckButton = new CCvarToggleCheckButton( this, "pp_motionblur", "Enable Motion Blur", "pp_motionblur" );
 
@@ -203,8 +205,9 @@ void COptionsSubVideo::OnResetData()
 	m_pBrightnessSlider->Reset();
 	m_pGammaSlider->Reset();
     m_pWindowed->SetSelected(m_CurrentSettings.windowed);
-	m_pWaterEntReflect->SetSelected(m_CurrentSettings.waterentreflect);
+//	m_pWaterEntReflect->SetSelected(m_CurrentSettings.waterentreflect);
 	
+	m_pWaterEntReflect->Reset();
 	m_pMotionBlurEnableCheckButton->Reset();
 
 //    SetCurrentRendererComboItem();
@@ -318,14 +321,14 @@ void COptionsSubVideo::SetCurrentResolutionComboItem()
         m_pMode->SetText(sz);
 	}
 
-	if (m_CurrentSettings.bpp > 16)
-	{
-		m_pColorDepth->ActivateItemByRow(1);
-	}
-	else
-	{
-		m_pColorDepth->ActivateItemByRow(0);
-	}
+	// if (m_CurrentSettings.bpp > 16)
+	// {
+		// m_pColorDepth->ActivateItemByRow(1);
+	// }
+	// else
+	// {
+		// m_pColorDepth->ActivateItemByRow(0);
+	// }
 }
 
 //-----------------------------------------------------------------------------
@@ -340,6 +343,7 @@ void COptionsSubVideo::OnApplyChanges()
 
 	ApplyVidSettings(bChanged);
 	
+	m_pWaterEntReflect->ApplyChanges();
 	m_pMotionBlurEnableCheckButton->ApplyChanges();
 }
 
@@ -357,11 +361,16 @@ void COptionsSubVideo::GetVidSettings()
 
 	ConVar *var1 = (ConVar *)cvar->FindVar( "mat_forceaniso" );
 	if( var1 )
+	{
 		p->aniso = var1->GetInt();
-	p->antialias = registry->ReadInt( "ScreenAntialias", -1 );
-	ConVar *var2 = (ConVar *)cvar->FindVar( "r_WaterEntReflection" );
-	if( var2 )
-		p->waterentreflect = var2->GetInt();
+	}
+//	p->antialias = registry->ReadInt( "ScreenAntialias", -1 );
+	p->antialias = registry->ReadInt( "ScreenAntialias", -1 ); // VXP: Better
+	// ConVar *var2 = (ConVar *)cvar->FindVar( "r_WaterEntReflection" );
+	// if( var2 )
+	// {
+		// p->waterentreflect = var2->GetInt();
+	// }
 
 	m_CurrentSettings = m_OrigSettings;
 }
@@ -382,22 +391,22 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 	// Retrieve text from active controls and parse out strings
 	if ( m_pMode )
 	{
-		char sz[256], colorDepth[256];
+		char sz[256]/*, colorDepth[256]*/;
 		m_pMode->GetText(sz, 256);
-		m_pColorDepth->GetText(colorDepth, sizeof(colorDepth));
+	//	m_pColorDepth->GetText(colorDepth, sizeof(colorDepth));
 
 		int w, h;
 		sscanf( sz, "%i x %i", &w, &h );
 		m_CurrentSettings.w = w;
 		m_CurrentSettings.h = h;
-		if (strstr(colorDepth, "32"))
-		{
-			m_CurrentSettings.bpp = 32;
-		}
-		else
-		{
-			m_CurrentSettings.bpp = 16;
-		}
+		// if (strstr(colorDepth, "32"))
+		// {
+			// m_CurrentSettings.bpp = 32;
+		// }
+		// else
+		// {
+			// m_CurrentSettings.bpp = 16;
+		// }
 	}
 /*
 	if ( m_pRenderer )
@@ -482,15 +491,15 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		m_CurrentSettings.windowed = checked ? 1 : 0;
 	}
 
-	if ( m_pWaterEntReflect )
-	{
-		char szCmd[ 256 ];
-		bool checked = m_pWaterEntReflect->IsSelected();
+	// if ( m_pWaterEntReflect )
+	// {
+		// char szCmd[ 256 ];
+		// bool checked = m_pWaterEntReflect->IsSelected();
 
-		m_CurrentSettings.waterentreflect = checked ? 1 : 0;
-		sprintf( szCmd, "r_WaterEntReflection %i\n", m_CurrentSettings.waterentreflect );
-		engine->ClientCmd( szCmd );
-	}
+		// m_CurrentSettings.waterentreflect = checked ? 1 : 0;
+		// sprintf( szCmd, "r_WaterEntReflection %i\n", m_CurrentSettings.waterentreflect );
+		// engine->ClientCmd( szCmd );
+	// }
 
 	if ( memcmp( &m_OrigSettings, &m_CurrentSettings, sizeof( CVidSettings ) ) == 0 && !bForceRefresh)
 	{
@@ -518,7 +527,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 //	engine->ClientCmd( "_restart\n" );
 	if( m_CurrentSettings.w != m_OrigSettings.w ||
 		m_CurrentSettings.h != m_OrigSettings.h ||
-		m_CurrentSettings.bpp != m_OrigSettings.bpp ||
+	//	m_CurrentSettings.bpp != m_OrigSettings.bpp ||
 		m_CurrentSettings.windowed != m_OrigSettings.windowed ||
 		m_CurrentSettings.antialias != m_OrigSettings.antialias )
 	{
@@ -542,13 +551,13 @@ void COptionsSubVideo::OnButtonChecked(KeyValues *data)
 		}
 	}
 
-	if (pPanel == m_pWaterEntReflect)
-	{
-		if (state != m_CurrentSettings.waterentreflect)
-		{
-            OnDataChanged();
-		}
-	}
+	// if (pPanel == m_pWaterEntReflect)
+	// {
+		// if (state != m_CurrentSettings.waterentreflect)
+		// {
+            // OnDataChanged();
+		// }
+	// }
 }
 
 //-----------------------------------------------------------------------------

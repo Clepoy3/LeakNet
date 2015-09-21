@@ -155,8 +155,8 @@ CVertexBuffer::CVertexBuffer(
 		// out of vid mem and try again.
 		// FIXME: need to record this
 		pD3D->EvictManagedResources();
-	//	pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
-		hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+		pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+	//	hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
 		         				  desc.Usage,	desc.FVF, desc.Pool, &m_pVB, NULL );
 	}
 
