@@ -213,7 +213,13 @@ static int64 CalculateClockSpeed()
 	while(curCount.QuadPart - startCount.QuadPart < waitTime.QuadPart);
 	end.Sample();
 
-	return (end.m_Int64 - start.m_Int64) << scale;
+	int64 overallSpeed = (end.m_Int64 - start.m_Int64) << scale;
+	double freq = overallSpeed / 1000000.0;
+	if( (freq < 100) || (freq > 5000) ) // VXP: Wrong value
+	{
+		return CalculateClockSpeed();
+	}
+	return overallSpeed;
 
 #elif _LINUX
 	uint64 CalculateCPUFreq(); // from cpu_linux.cpp
@@ -253,8 +259,10 @@ const CPUInformation& GetCPUInformation()
 
 	GetSystemInfo( &si );
 
-	pi.m_nPhysicalProcessors = si.dwNumberOfProcessors / pi.m_nLogicalProcessors;
-	pi.m_nLogicalProcessors *= pi.m_nPhysicalProcessors;
+//	pi.m_nPhysicalProcessors = si.dwNumberOfProcessors / pi.m_nLogicalProcessors;
+//	pi.m_nLogicalProcessors *= pi.m_nPhysicalProcessors;
+	pi.m_nPhysicalProcessors = (unsigned char)(si.dwNumberOfProcessors / pi.m_nLogicalProcessors);
+	pi.m_nLogicalProcessors = (unsigned char)(pi.m_nLogicalProcessors * pi.m_nPhysicalProcessors);
 
 	// Make sure I always report at least one, when running WinXP with the /ONECPU switch, 
 	// it likes to report 0 processors for some reason.
