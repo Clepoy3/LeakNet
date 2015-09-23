@@ -520,12 +520,18 @@ void CNPC_RollerBull::StartTask( const Task_t *pTask )
 		{
 		CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
 
-		controller.Play( m_pRollSoundFast, 0.0, 80 );
-		controller.SoundChangeVolume( m_pRollSoundFast, 0.5, 1.0 );
-		controller.SoundChangePitch( m_pRollSoundFast, 110, 2.0 );
+		if(m_pRollSoundFast)
+		{
+			controller.Play( m_pRollSoundFast, 0.0, 80 );
+			controller.SoundChangeVolume( m_pRollSoundFast, 0.5, 1.0 );
+			controller.SoundChangePitch( m_pRollSoundFast, 110, 2.0 );
+		}
 		
-		controller.SoundChangePitch( m_pRollSound, 85, 1.0 );
-		controller.SoundFadeOut( m_pRollSound, 1.0 );
+		if(m_pRollSound)
+		{
+			controller.SoundChangePitch( m_pRollSound, 85, 1.0 );
+			controller.SoundFadeOut( m_pRollSound, 1.0 );
+		}
 		}
 		//CHIACHIN
 
@@ -909,10 +915,13 @@ void CNPC_RollerBull::Bark( void )
 //-----------------------------------------------------------------------------
 void CNPC_RollerBull::PowerOn( void )
 {
-	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
-	controller.Play( m_pRollSound, 0.0, 85 );
-	controller.SoundChangeVolume( m_pRollSound, 1.0, 0.5 );
-	controller.SoundChangePitch( m_pRollSound, 100, 0.5 );
+	if(m_pRollSound)
+	{
+		CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+		controller.Play( m_pRollSound, 0.0, 85 );
+		controller.SoundChangeVolume( m_pRollSound, 1.0, 0.5 );
+		controller.SoundChangePitch( m_pRollSound, 100, 0.5 );
+	}
 
 	BaseClass::PowerOn();
 }
@@ -925,9 +934,12 @@ void CNPC_RollerBull::PowerOn( void )
 //-----------------------------------------------------------------------------
 void CNPC_RollerBull::PowerOff( void )
 {
-	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
-	controller.SoundChangePitch( m_pRollSound, 85, 0.5 );
-	controller.SoundFadeOut( m_pRollSound, 0.5 );
+	if(m_pRollSound)
+	{
+		CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+		controller.SoundChangePitch( m_pRollSound, 85, 0.5 );
+		controller.SoundFadeOut( m_pRollSound, 0.5 );
+	}
 
 	BaseClass::PowerOff();
 }

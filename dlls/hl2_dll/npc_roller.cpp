@@ -387,7 +387,7 @@ void CNPC_Roller::Unstick( void )
 			//NDebugOverlay::Line( GetLocalOrigin(), GetLocalOrigin() + m_vecUnstickDirection, 255,255,0, true, 2 );
 
 			// Roll in this direction for a couple of seconds.
-			Msg( "unsticking!\n" );
+			DevMsg( "npc_roller: unsticking!\n" );
 			return;
 		}
 	}
@@ -418,12 +418,12 @@ void CNPC_Roller::RemainUpright( void )
 
 	if( vecRight.z > 0.0001 )
 	{
-		Msg( "-torque\n" );
+		DevMsg( "npc_roller: -torque\n" );
 		m_RollerController.m_vecAngular.x = ROLLER_UPRIGHT_SPEED;
 	}
 	else if ( vecRight.z < -0.0001 )
 	{
-		Msg( "+torque\n" );
+		DevMsg( "npc_roller: +torque\n" );
 		m_RollerController.m_vecAngular.x = -ROLLER_UPRIGHT_SPEED;
 	}
 	else 
@@ -913,7 +913,7 @@ void CNPC_Roller::TaskFail( AI_TaskFailureCode_t code )
 
 	if( pTask )
 	{
-		Msg( "Failed to: %s\n", TaskName( pTask->iTask ) );
+		DevMsg( "Failed to: %s\n", TaskName( pTask->iTask ) );
 
 		switch( pTask->iTask )
 		{
