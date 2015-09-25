@@ -963,12 +963,15 @@ void CWeaponGravityGun::SoundUpdate( void )
 			// blend the "mass" sounds between 50 and 500 kg
 			IPhysicsObject *pPhys = m_hObject->VPhysicsGetObject();
 			
-			float fade = UTIL_LineFraction( pPhys->GetMass(), 50, 500, 1.0 );
+			if( pPhys )
+			{
+				float fade = UTIL_LineFraction( pPhys->GetMass(), 50, 500, 1.0 );
 
-			EmitSound( filter, GetOwner()->entindex(), CHAN_STATIC, pShootSounds[SI_LIGHTOBJECT], 
-				fade * distance, ATTN_NORM, SND_CHANGE_VOL, PITCH_NORM );
-			EmitSound( filter, GetOwner()->entindex(), CHAN_STATIC, pShootSounds[SI_HEAVYOBJECT], 
-				(1.0 - fade) * distance, ATTN_NORM, SND_CHANGE_VOL, PITCH_NORM );
+				EmitSound( filter, GetOwner()->entindex(), CHAN_STATIC, pShootSounds[SI_LIGHTOBJECT], 
+					fade * distance, ATTN_NORM, SND_CHANGE_VOL, PITCH_NORM );
+				EmitSound( filter, GetOwner()->entindex(), CHAN_STATIC, pShootSounds[SI_HEAVYOBJECT], 
+					(1.0 - fade) * distance, ATTN_NORM, SND_CHANGE_VOL, PITCH_NORM );
+			}
 		}
 		break;
 	}

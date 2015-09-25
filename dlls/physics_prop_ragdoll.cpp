@@ -374,24 +374,28 @@ void CRagdollProp::Teleport( const Vector *newPosition, const QAngle *newAngles,
 	matrix3x4_t startMatrixInv;
 	matrix3x4_t startMatrix;
 
-	m_ragdoll.list[0].pObject->GetPositionMatrix( startMatrix );
-	MatrixInvert( startMatrix, startMatrixInv );
-	
-	// object 0 MUST be the one to get teleported!
-	VPhysicsSwapObject( m_ragdoll.list[0].pObject );
-	BaseClass::Teleport( newPosition, newAngles, newVelocity );
-
-	// Calculate the relative transform of the teleport
-	matrix3x4_t xform;
-	ConcatTransforms( EntityToWorldTransform(), startMatrixInv, xform );
-	UpdateNetworkDataFromVPhysics( m_ragdoll.list[0].pObject, 0 );
-	for ( int i = 1; i < m_ragdoll.listCount; i++ )
+	if( m_ragdoll.list != NULL &&
+		m_ragdoll.listCount > 0 )
 	{
-		matrix3x4_t matrix, newMatrix;
-		m_ragdoll.list[i].pObject->GetPositionMatrix( matrix );
-		ConcatTransforms( xform, matrix, newMatrix );
-		m_ragdoll.list[i].pObject->SetPositionMatrix( newMatrix, true );
-		UpdateNetworkDataFromVPhysics( m_ragdoll.list[i].pObject, i );
+		m_ragdoll.list[0].pObject->GetPositionMatrix( startMatrix );
+		MatrixInvert( startMatrix, startMatrixInv );
+	
+		// object 0 MUST be the one to get teleported!
+		VPhysicsSwapObject( m_ragdoll.list[0].pObject );
+		BaseClass::Teleport( newPosition, newAngles, newVelocity );
+
+		// Calculate the relative transform of the teleport
+		matrix3x4_t xform;
+		ConcatTransforms( EntityToWorldTransform(), startMatrixInv, xform );
+		UpdateNetworkDataFromVPhysics( m_ragdoll.list[0].pObject, 0 );
+		for ( int i = 1; i < m_ragdoll.listCount; i++ )
+		{
+			matrix3x4_t matrix, newMatrix;
+			m_ragdoll.list[i].pObject->GetPositionMatrix( matrix );
+			ConcatTransforms( xform, matrix, newMatrix );
+			m_ragdoll.list[i].pObject->SetPositionMatrix( newMatrix, true );
+			UpdateNetworkDataFromVPhysics( m_ragdoll.list[i].pObject, i );
+		}
 	}
 }
 

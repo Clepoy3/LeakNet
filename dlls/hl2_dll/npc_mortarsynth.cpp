@@ -151,7 +151,8 @@ CNPC_MSynth::CNPC_MSynth()
 //-----------------------------------------------------------------------------
 Class_T	CNPC_MSynth::Classify(void)
 {
-	return(CLASS_MORTAR_SYNTH);
+//	return(CLASS_MORTAR_SYNTH);
+	return CLASS_MORTAR_SYNTH;
 }
 
 
@@ -597,7 +598,7 @@ void CNPC_MSynth::Gib(void)
 			&GetAbsOrigin(), 255, 180, 100, 0, 100, 0.1, 0 );
 
 	// Throw mortar synth gibs
-	CGib::SpawnSpecificGibs( this, MSYNTH_GIB_COUNT, 800, 1000, "models/gibs/mortarsynth_gibs.mdl");
+//	CGib::SpawnSpecificGibs( this, MSYNTH_GIB_COUNT, 800, 1000, "models/gibs/mortarsynth_gibs.mdl"); // VXP: Empty gibs model for mortarsynth
 
 	ExplosionCreate(GetAbsOrigin(), GetAbsAngles(), NULL, random->RandomInt(30, 40), 0, true);
 
