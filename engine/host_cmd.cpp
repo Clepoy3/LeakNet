@@ -481,7 +481,8 @@ void Host_Reload_f (void)
 	else
 #endif
 	{
-		HostState_NewGame( host_map.GetString() );
+	//	HostState_NewGame( host_map.GetString() );
+		HostState_NewGame( sv.name ); // VXP: Fix for disconnecting after death and there's no saves at all (host_map cvar contains file name with extension)
 	}
 }
 

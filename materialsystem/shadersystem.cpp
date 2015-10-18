@@ -1114,6 +1114,7 @@ bool CShaderSystem::ComputeVertexFormatFromSnapshot( IMaterialVar **params, Shad
 	{
 		int numSnapshotsTest = pRenderState->m_Snapshots[mod].m_nPassCount;
 		StateSnapshot_t* pSnapshotsTest = (StateSnapshot_t*)_alloca( 
+	//	StateSnapshot_t* pSnapshotsTest = (StateSnapshot_t*)_malloca( 
 			numSnapshotsTest * sizeof(StateSnapshot_t) );
 
 		for (int i = 0; i < numSnapshotsTest; ++i)

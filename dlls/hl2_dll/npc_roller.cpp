@@ -103,7 +103,7 @@ BEGIN_DATADESC( CNPC_Roller )
 	DEFINE_FIELD( CNPC_Roller, m_flLastZPos, FIELD_FLOAT ),
 	DEFINE_FIELD( CNPC_Roller, m_iFail, FIELD_INTEGER ),
 	DEFINE_FIELD( CNPC_Roller, m_flForwardSpeed, FIELD_FLOAT ),
-	DEFINE_ARRAY( CNPC_Roller, m_iAccessCode, FIELD_STRING,  ROLLER_CODE_DIGITS  ),
+//	DEFINE_ARRAY( CNPC_Roller, m_iAccessCode, FIELD_STRING,  ROLLER_CODE_DIGITS  ), // VXP: Fix that
 	DEFINE_FIELD( CNPC_Roller, m_iCodeProgress, FIELD_INTEGER ),
 	DEFINE_EMBEDDED( CNPC_Roller, m_RollerController ),
 	DEFINE_PHYSPTR( CNPC_Roller, m_pMotionController ),

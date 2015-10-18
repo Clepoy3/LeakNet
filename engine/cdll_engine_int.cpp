@@ -369,6 +369,11 @@ class CEngineClient : public IVEngineClient
 		w = vid.width;
 		h = vid.height;
 	}
+	
+	float GetScreenAspectRatio( void )
+	{
+		return ( float )vid.width / ( float )vid.height;
+	}
 
 	int ServerCmd( const char *szCmdString, bool bReliable )
 	{

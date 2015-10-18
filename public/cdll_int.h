@@ -138,6 +138,7 @@ public:
 
 	// screen handlers
 	virtual void				GetScreenSize( int& width, int& height ) = 0;
+	virtual float				GetScreenAspectRatio( void ) = 0;
 
 	// command handlers
 	virtual int					ServerCmd( const char *szCmdString, bool bReliable = true ) = 0;

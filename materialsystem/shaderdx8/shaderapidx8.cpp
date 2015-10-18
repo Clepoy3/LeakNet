@@ -1596,12 +1596,12 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	// If we can't use CreateQuery() to check for the end of a frame, then we have to lock the backbuffer
 	m_PresentParameters.Flags = 0;
 
-#ifdef D3D_BUG_TRACKED_DOWN
+//#ifdef D3D_BUG_TRACKED_DOWN
 	if( m_DeviceSupportsCreateQuery == 0 )
-#else
+//#else
 	// NJS: Until we track down the D3D bug, basically force a lockable backbuffer unless createQuery is already detected.
-	if( m_DeviceSupportsCreateQuery != 1 )
-#endif
+//	if( m_DeviceSupportsCreateQuery != 1 )
+//#endif
 	{
 		m_PresentParameters.Flags |= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 	}
@@ -1609,6 +1609,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	if (!windowed)
 	{
 		bool useDefault = (mode.m_Width == 0) || (mode.m_Height == 0);
+		m_PresentParameters.BackBufferCount = 1; // VXP
 		m_PresentParameters.BackBufferWidth = useDefault ? d3ddm.Width : mode.m_Width;
 		m_PresentParameters.BackBufferHeight = useDefault ? d3ddm.Height : mode.m_Height;
 		if( g_pHardwareConfig->GetDXSupportLevel() >= 90 && g_pHardwareConfig->SupportsHDR() )
@@ -1620,7 +1621,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 		{
 			m_PresentParameters.BackBufferFormat = useDefault ? d3ddm.Format : ImageFormatToD3DFormat( mode.m_Format );
 		}
-		m_PresentParameters.BackBufferCount = 1;
+	//	m_PresentParameters.BackBufferCount = 1;
 
 		if (flags & MATERIAL_VIDEO_MODE_NO_WAIT_FOR_VSYNC)
 			m_PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -2344,7 +2345,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 		// that in fullscreen, the new device always returns device lost, even after
 		// being restored.  For now, we get around this by defaulting the initial device
 		// to contain a lockable z buffer.
-#ifdef D3D_BUG_TRACKED_DOWN
+//#ifdef D3D_BUG_TRACKED_DOWN
 		if( FAILED(hr) )
 		{
 			m_DeviceSupportsCreateQuery = 0;
@@ -2395,7 +2396,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 
 			m_DeviceSupportsCreateQuery = 1;
 		}
-#endif
+//#endif
 
 	}
 
@@ -2406,7 +2407,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 #endif
 	
 //	CheckDeviceLost();
-//	CheckDeviceLost(); // VXP
+	CheckDeviceLost(); // VXP
 
 	// Tell all other instances of the material system it's ok to grab memory
 	SendIPCMessage( false );
@@ -2875,7 +2876,15 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 //		m_Caps.m_SupportsHDR = false;
 //	}
 //	m_Caps.m_SupportsHDR = (((pParam) ? Q_stristr( pParam, "_hdr_" ) : false) || ((m_Caps.m_pShaderDLL) ? Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" ) : false));
-	m_Caps.m_SupportsHDR = (((pParam && Q_stristr( pParam, "_hdr_" )) ? hardwareSupportsHDR : false) || ((m_Caps.m_pShaderDLL && Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" )) ? hardwareSupportsHDR : false));
+//	m_Caps.m_SupportsHDR = (((pParam && Q_stristr( pParam, "_hdr_" )) ? hardwareSupportsHDR : false) || ((m_Caps.m_pShaderDLL && Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" )) ? hardwareSupportsHDR : false));
+	if( (pParam && Q_stristr( pParam, "_hdr_" )) || (m_Caps.m_pShaderDLL && Q_stristr( m_Caps.m_pShaderDLL, "_hdr_" )) )
+	{
+		m_Caps.m_SupportsHDR = hardwareSupportsHDR;
+	}
+	else
+	{
+		m_Caps.m_SupportsHDR = false;
+	}
 	return true;
 }							   
 
@@ -3654,8 +3663,8 @@ void CShaderAPIDX8::ResetDXRenderState( void )
     SetRenderStateForce( D3DRS_POINTSCALE_A, dOne );
     SetRenderStateForce( D3DRS_POINTSCALE_B, dZero );
     SetRenderStateForce( D3DRS_POINTSCALE_C, dZero );
-    SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, TRUE );
-//	SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, FALSE ); // VXP: Maybe, fix for nVidia cards
+//    SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, TRUE );
+	SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, FALSE ); // VXP: Maybe, fix for nVidia cards
     SetRenderStateForce( D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF );
     SetRenderStateForce( D3DRS_PATCHEDGESTYLE, D3DPATCHEDGE_DISCRETE );
     SetRenderStateForce( D3DRS_DEBUGMONITORTOKEN, D3DDMT_ENABLE );
@@ -5336,7 +5345,8 @@ void CShaderAPIDX8::SetPixelShaderConstant( int var, float const* pVec, int numV
 		DWORD* pDst = (DWORD*)&m_DynamicState.m_pPixelShaderConstant[var];
 		int count = numVecs * 4;
 
-		for(int i=0; i<count; i++) 
+		int i;
+		for(i=0; i<count; i++) 
 		{
 			if( pSrc[i] != pDst[i] )
 				break;
@@ -8885,7 +8895,7 @@ IDirect3DSurface* CShaderAPIDX8::GetBackBufferImage( ImageFormat& format )
 	FlushBufferedPrimitives();
 
 	HRESULT hr;
-	IDirect3DSurface *pSurfaceBits = 0;
+	IDirect3DSurface *pSurfaceBits = NULL;
 	IDirect3DSurface *pTmpSurface = NULL;
 
 	// Get the back buffer
@@ -8933,7 +8943,10 @@ IDirect3DSurface* CShaderAPIDX8::GetBackBufferImage( ImageFormat& format )
 	return pSurfaceBits;
 
 CleanUp2:
-	pSurfaceBits->Release();
+	if ( pSurfaceBits )
+	{
+		pSurfaceBits->Release();
+	}
 
 CleanUp:
 	if ( pTmpSurface )

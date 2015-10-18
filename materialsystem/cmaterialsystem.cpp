@@ -625,6 +625,11 @@ void CMaterialSystem::CreateDebugMaterials()
 		s_pErrorMaterial->SetMaterialVarFlag( MATERIAL_VAR_MODEL, true );
 		IMaterialVar *pVar = IMaterialVar::Create( s_pErrorMaterial, "$decalscale", 0.05f );
 		s_pErrorMaterial->AddMaterialVar( pVar );
+
+		// VXP: For TF2
+		pVar = IMaterialVar::Create( s_pErrorMaterial, "$translucent_material", 0.5f );
+		s_pErrorMaterial->AddMaterialVar( pVar );
+
 		s_pErrorMaterial->GetShaderParams()[BASETEXTURE]->SetTextureValue( TextureManager()->ErrorTexture() );
 		s_pErrorMaterial->IncrementReferenceCount();
 		AddMaterialToMaterialList( s_pErrorMaterial );
@@ -1076,10 +1081,11 @@ void CMaterialSystem::ReleaseShaderObjects()
 	TextureManager()->ReleaseTextures();
 	ReleaseStandardTextures();
 	ReleaseLightmapPages();
-	for (int i = 0; i < m_ReleaseFunc.Count(); ++i)
-	{
-		m_ReleaseFunc[i]();
-	}
+	// VXP: Fixes black model bug when game was minimized and then restored
+//	for (int i = 0; i < m_ReleaseFunc.Count(); ++i)
+//	{
+//		m_ReleaseFunc[i]();
+//	}
 }
 
 void CMaterialSystem::RestoreShaderObjects()
@@ -1635,6 +1641,7 @@ IMaterial* CMaterialSystem::FindMaterial( char const *pMaterialName, bool *pFoun
 	// We need lower-case symbols for this to work
 	size_t len = strlen(pMaterialName) + 1;
 	char *pTemp = (char*)_alloca( len );
+//	char *pTemp = (char*)_malloca( len );
 	strcpy( pTemp, pMaterialName );
 	Q_strlower( pTemp );
 	FixSlashes( pTemp );
@@ -1655,6 +1662,7 @@ IMaterial* CMaterialSystem::FindMaterial( char const *pMaterialName, bool *pFoun
 		int len = strlen( "materials/" ) + strlen( pTemp ) + strlen( ".vmt" ) + 1;
 		char *vmtName;
 		vmtName = ( char * )_alloca( len );
+	//	vmtName = ( char * )_malloca( len );
 		strcpy( vmtName, "materials/" );
 		strcat( vmtName, pTemp );
 		if ( !Q_stristr( pMaterialName, ".vmt" ) )
@@ -1681,6 +1689,7 @@ IMaterial* CMaterialSystem::FindMaterial( char const *pMaterialName, bool *pFoun
 			char *matNameWithExtension;
 			int len = strlen( pTemp ) + strlen( ".vmt" ) + 1;
 			matNameWithExtension = ( char * )_alloca( len );
+		//	matNameWithExtension = ( char * )_malloca( len );
 			strcpy( matNameWithExtension, pTemp );
 			strcat( matNameWithExtension, ".vmt" );
 			return AddMaterial( matNameWithExtension );
@@ -1692,6 +1701,7 @@ IMaterial* CMaterialSystem::FindMaterial( char const *pMaterialName, bool *pFoun
 				Assert( pTemp );
 				// convert to lowercase
 				char *name = (char*)_alloca( strlen(pTemp) + 1 );
+			//	char *name = (char*)_malloca( strlen(pTemp) + 1 );
 				strcpy( name, pTemp );
 				Q_strlower( name );
 

@@ -266,6 +266,8 @@ public:
 	float	GetFovY( void ) { return m_yFOV; };
 	float	GetFovViewmodel( void ) { return m_view.fovViewmodel; };
 
+	virtual float GetAspectRatio( void );
+
 	// Compute the number of pixels in screen space wide a particular sphere is 
 	float	GetScreenSize( const Vector& origin, float radius );
 
@@ -710,13 +712,44 @@ void CRender::SetViewport( int x, int y, int w, int h )
 }
 
 //ConVar r_anamorphic( "r_anamorphic", "0", FCVAR_ARCHIVE );
+//-----------------------------------------------------------------------------
+// Purpose: Retrieves aspect ratio that should be used
+//-----------------------------------------------------------------------------
+float CRender::GetAspectRatio( void )
+{
+	static float s_LastGoodAspectRatio = 0.0f;
+	float flScreenAspect = (float)m_view.width / (float)m_view.height;
+	// Return good aspect ratio, or if we don't have one, default to 4/3
+	if(flScreenAspect == 1 || flScreenAspect == 2) // VXP: 2 for RT's
+		return s_LastGoodAspectRatio ? s_LastGoodAspectRatio : ASPECT_4BY3;
+
+/*	if (flScreenAspect != ASPECT_4BY3 &&	// e.g. 1024x768
+		flScreenAspect != ASPECT_4BY3_HACK &&	// VXP: 1360x1024
+		flScreenAspect != ASPECT_5BY4 &&	// e.g. 1280x1024
+		flScreenAspect != ASPECT_16BY9 &&	// e.g. 1920x1080
+		flScreenAspect != ASPECT_16BY9_HACK &&	// raynorpat: waytogo HD TV manufacturers w/ marketing gimmick... (e.g. 1366x768)
+		flScreenAspect != ASPECT_16BY9_HACK2 &&	// VXP: 1280x768
+		flScreenAspect != ASPECT_16BY9_HACK3 &&	// VXP: 1360x768
+		flScreenAspect != ASPECT_16BY10 &&	// e.g. 1680x1050
+		flScreenAspect != ASPECT_16BY10_HACK)	// VXP: 720x480 resolution
+	{
+		DevWarning("Unsupported screen aspect ratio (%f) for resolution %dx%d\n", flScreenAspect, m_view.width, m_view.height);
+
+		// Default to 4/3 pixel aspect
+		flScreenAspect = ASPECT_4BY3;
+	}*/
+
+	// Store off the aspect ratio
+	s_LastGoodAspectRatio = flScreenAspect;
+	return flScreenAspect;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : viewmodel - true if we are rendering the view model
 //			fov - field of view
 //-----------------------------------------------------------------------------
-float oldSA = 0.0f;
+//float oldSA = 0.0f;
 void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forceAspectRatio1To1 )
 {
 	float	screenaspect;
@@ -772,7 +805,7 @@ void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forc
 	}
 */
 //	screenaspect = ((m_view.height != 0) || (!forceAspectRatio1To1)) ? ( (float)m_view.width / (float)m_view.height ) : 1.0f;
-	if( forceAspectRatio1To1 || m_view.height == 0 )
+/*	if( forceAspectRatio1To1 || m_view.height == 0 )
 	{
 		screenaspect = 1.0f;
 	}
@@ -793,8 +826,18 @@ void CRender::SetProjectionMatrix( float fov, float zNear, float zFar, bool forc
 	if( (screenaspect == 1.0f) || (screenaspect == 2.0f) ) // VXP: (512x512, 512x256) res (that's RT)
 	{
 		screenaspect = oldSA;
-	}
+	}*/
 //	Msg( "ENGINE: W: %f, H: %f, SA: %f (old: %f)\n", (float)m_view.width, (float)m_view.height, screenaspect, oldSA );
+
+	if( forceAspectRatio1To1 )
+	{
+		screenaspect = 1.0f;
+	}
+	else
+	{
+		screenaspect = GetAspectRatio();
+	}
+
 	materialSystemInterface->PerspectiveX( fov,  screenaspect, zNear, zFar );
 }
 

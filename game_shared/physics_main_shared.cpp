@@ -13,7 +13,8 @@
 #include "tier0/vprof.h"
 
 // memory pool for storing links between entities
-static CMemoryPool g_EdictTouchLinks( sizeof(touchlink_t), 512, CMemoryPool::GROW_NONE );
+//static CMemoryPool g_EdictTouchLinks( sizeof(touchlink_t), 512, CMemoryPool::GROW_NONE );
+static CMemoryPool g_EdictTouchLinks( sizeof(touchlink_t), MAX_EDICTS, CMemoryPool::GROW_NONE );
 
 int linksallocated = 0;
 
@@ -39,11 +40,13 @@ inline touchlink_t *AllocTouchLink( void )
 	else
 	{
 	//	Error( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
-		Warning( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
+		DevWarning( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
 	}
 
 	return link;
 }
+
+static touchlink_t *g_pNextLink = NULL;
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -54,7 +57,12 @@ inline void FreeTouchLink( touchlink_t *link )
 {
 	if ( link )
 	{
+		if ( link == g_pNextLink )
+		{
+			g_pNextLink = link->nextLink;
+		}
 		--linksallocated;
+		link->prevLink = link->nextLink = NULL;
 	}
 
 	g_EdictTouchLinks.Free( link );
@@ -67,12 +75,15 @@ inline void FreeTouchLink( touchlink_t *link )
 //-----------------------------------------------------------------------------
 void CBaseEntity::PhysicsCheckForEntityUntouch( void )
 {
-	touchlink_t *link, *nextLink;
+	Assert( g_pNextLink == NULL );
+
+	touchlink_t *link/*, *nextLink*/;
 
 	link = m_EntitiesTouched.nextLink;
 	while ( link != &m_EntitiesTouched )
 	{
-		nextLink = link->nextLink;
+	//	nextLink = link->nextLink;
+		g_pNextLink = link->nextLink;
 
 		// these touchlinks are not polled.  The ents are touching due to an outside
 		// system that will add/delete them as necessary (vphysics in this case)
@@ -95,8 +106,11 @@ void CBaseEntity::PhysicsCheckForEntityUntouch( void )
 			}
 		}
 
-		link = nextLink;
+	//	link = nextLink;
+		link = g_pNextLink;
 	}
+
+	g_pNextLink = NULL;
 
 	SetCheckUntouch( false );
 }
@@ -132,14 +146,15 @@ void CBaseEntity::PhysicsNotifyOtherOfUntouch( CBaseEntity *ent, CBaseEntity *ot
 void CBaseEntity::PhysicsRemoveToucher( CBaseEntity *other, touchlink_t *link )
 {
 	// Every start Touch gets a corresponding end touch
-	if ( (link->flags & FTOUCHLINK_START_TOUCH) && link->entityTouched != NULL )
+	if ( (link->flags & FTOUCHLINK_START_TOUCH) && link->entityTouched != NULL && other != NULL )
 	{
-		CBaseEntity *linkEntity = link->entityTouched;
-		CBaseEntity *otherEntity = other;
-		if ( linkEntity && otherEntity )
-		{
-			otherEntity->EndTouch( linkEntity );
-		}
+	//	CBaseEntity *linkEntity = link->entityTouched;
+	//	CBaseEntity *otherEntity = other;
+	//	if ( linkEntity && otherEntity )
+	//	{
+		//	otherEntity->EndTouch( linkEntity );
+			other->EndTouch( link->entityTouched );
+	//	}
 	}
 
 	link->nextLink->prevLink = link->prevLink;

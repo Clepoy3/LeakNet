@@ -91,7 +91,8 @@ void CPortableThumper::ThumperUse( CBaseEntity *pActivator, CBaseEntity *pCaller
 	CBasePlayer *pPlayer;
 
 	pPlayer = (CBasePlayer *)pActivator;
-	pPlayer->GiveNamedItem( "weapon_thumper" );
+	string_t iszItem = AllocPooledString( "weapon_thumper" );
+	pPlayer->GiveNamedItem( STRING(iszItem) );
 
 	UTIL_Remove( this );
 }

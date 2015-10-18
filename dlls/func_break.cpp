@@ -257,7 +257,8 @@ void CBreakable::Precache( void )
 		pGibName = "models/gibs/woodgibs.mdl";
 		break;
 	case matFlesh:
-		pGibName = "models/fleshgibs.mdl";
+	//	pGibName = "models/fleshgibs.mdl";
+		pGibName = "models/gibs/hgibs.mdl";
 		break;
 
 	case matUnbreakableGlass:
@@ -265,7 +266,8 @@ void CBreakable::Precache( void )
 		pGibName = "models/gibs/glass_shard.mdl";
 		break;
 	case matComputer:
-		pGibName = "models/computergibs.mdl";
+	//	pGibName = "models/computergibs.mdl";
+		pGibName = "models/gibs/computergibs.mdl";
 		break;
 	case matMetal:
 		pGibName = "models/gibs/metalgibs.mdl";
@@ -274,10 +276,12 @@ void CBreakable::Precache( void )
 		pGibName = "models/gibs/concgibs.mdl";
 		break;
 	case matRocks:
-		pGibName = "models/rockgibs.mdl";
+	//	pGibName = "models/rockgibs.mdl";
+		pGibName = "models/gibs/rock_gibs.mdl";
 		break;
 	case matCeilingTile:
-		pGibName = "models/ceilinggibs.mdl";
+	//	pGibName = "models/ceilinggibs.mdl";
+		pGibName = "models/gibs/concgibs.mdl"; // VXP: Temporary
 		break;
 	}
 

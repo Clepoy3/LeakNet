@@ -337,7 +337,7 @@ float CModelInfo::GetModelRadius( const model_t *model )
 //-----------------------------------------------------------------------------
 studiohdr_t *CModelInfo::GetStudiomodel( const model_t *model )
 {
-	if ( model->type == mod_studio )
+	if ( model != NULL && model->type == mod_studio )
 	{
 		return (studiohdr_t *)modelloader->GetExtraData( (model_t *)model );
 	}

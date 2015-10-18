@@ -77,6 +77,13 @@ void CWeapon_SLAM::Precache( void )
 
 	UTIL_PrecacheOther( "npc_tripmine" );
 	UTIL_PrecacheOther( "npc_satchel" );
+	
+	PrecacheScriptSound( "Weapon_SLAM.ThrowMode" );
+	PrecacheScriptSound( "Weapon_SLAM.TripMineMode" );
+	PrecacheScriptSound( "Weapon_SLAM.SatchelDetonate" );
+	PrecacheScriptSound( "Weapon_SLAM.TripMineAttach" );
+	PrecacheScriptSound( "Weapon_SLAM.SatchelThrow" );
+	PrecacheScriptSound( "Weapon_SLAM.SatchelAttach" );
 }
 
 //------------------------------------------------------------------------------

@@ -15,6 +15,8 @@
 #include "IEffects.h"
 #include "engine/IEngineSound.h"
 
+#include "npc_headcrab.h"
+
 // Global Savedata for changelevel trigger
 BEGIN_DATADESC( CGrenade_Brickbat )
 
@@ -314,4 +316,37 @@ void CGrenadeCrematorHead::Precache( void )
 
 LINK_ENTITY_TO_CLASS( grenade_crematorhead, CGrenadeCrematorHead );
 PRECACHE_REGISTER(grenade_crematorhead);
+
+
+//=====================================================================
+//	> HeadCrab
+//=====================================================================
+//class CGrenadeHeadCrab : public CGrenade_Brickbat
+class CGrenadeHeadCrab : public CFastHeadcrab
+{
+public:
+	DECLARE_CLASS( CGrenadeHeadCrab, CFastHeadcrab );
+
+	void Spawn(void);
+	void Precache( void );
+};
+
+void CGrenadeHeadCrab::Spawn(void)
+{
+//	m_nType		= BRICKBAT_HEADCRAB;
+//	m_bExplodes	= false;
+//	SetModel( "models/hc_squashed01.mdl" );
+	SetModel( "models/headcrab.mdl" );
+	BaseClass::Spawn();
+//	SetMoveType( MOVETYPE_STEP );
+}
+
+void CGrenadeHeadCrab::Precache( void )
+{
+//	engine->PrecacheModel("models/hc_squashed01.mdl");
+	engine->PrecacheModel("models/headcrab.mdl");
+	BaseClass::Precache();
+}
+LINK_ENTITY_TO_CLASS( grenade_headcrab, CGrenadeHeadCrab );
+PRECACHE_REGISTER(grenade_headcrab);
 

@@ -16,6 +16,18 @@
 #include "vector.h"
 #include "mathlib.h"
 
+//-----------------------------------------------------------------------------
+// Aspect ratio macros
+//-----------------------------------------------------------------------------
+#define ASPECT_4BY3			(4.0f/3.0f)
+//#define ASPECT_4BY3_HACK	(1360.0f/1024.0f)
+#define ASPECT_5BY4			(5.0f/4.0f)
+#define ASPECT_16BY9		(16.0f/9.0f)
+#define ASPECT_16BY9_HACK	(1366.0f/768.0f)
+//#define ASPECT_16BY9_HACK2	(1280.0f/768.0f)
+//#define ASPECT_16BY9_HACK3	(1360.0f/768.0f)
+#define ASPECT_16BY10		(16.0f/10.0f)
+//#define ASPECT_16BY10_HACK	(720.0f/480.0f)
 
 class Frustum_t
 {

@@ -50,7 +50,8 @@
 //-----------------------------------------------------------------------------
 enum
 {
-	VERTEX_BUFFER_SIZE = 32768,
+//	VERTEX_BUFFER_SIZE = 32768,
+	VERTEX_BUFFER_SIZE = 65535,
 	INDEX_BUFFER_SIZE = 32768,
 };
 
@@ -1292,10 +1293,13 @@ void CMeshDX8::LockVertexBuffer( int numVerts, MeshDesc_t& desc )
 
 	// Lock it baby
 	Assert( numVerts <= VERTEX_BUFFER_SIZE );
+//	int nMaxVerts = 65535;
+//	Assert( numVerts <= nMaxVerts );
 	unsigned char* pVertexMemory = m_pVertexBuffer->Lock( numVerts, desc.m_FirstVertex );
 	if( !pVertexMemory )
 	{
 		if( numVerts > VERTEX_BUFFER_SIZE )
+	//	if( numVerts > nMaxVerts )
 		{
 			Assert( 0 );
 			Error( "Too many verts for a dynamic vertex buffer (%d>%d) Tell a programmer to up VERTEX_BUFFER_SIZE.\n", 

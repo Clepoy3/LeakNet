@@ -856,7 +856,7 @@ END_NETWORK_TABLE()
 	//=========================================================
 	bool CMultiplayRules :: FAllowNPCs( void )
 	{
-		return true; // E3 hack
+	//	return true; // E3 hack
 		return ( allowNPCs.GetInt() != 0 );
 	}
 

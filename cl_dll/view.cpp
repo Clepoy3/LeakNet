@@ -727,8 +727,8 @@ void CViewRender::SetUpOverView()
 // Purpose: Render current view into specified rectangle
 // Input  : *rect - 
 //-----------------------------------------------------------------------------
-float oldWidth = 4.0f;
-float oldHeight = 3.0f;
+//float oldWidth = 4.0f;
+//float oldHeight = 3.0f;
 void CViewRender::Render( vrect_t *rect )
 {
 	Assert(s_TestOrigin == m_View.origin);
@@ -764,7 +764,7 @@ void CViewRender::Render( vrect_t *rect )
 	}
 */
 
-	float scrAspectRatio = oldWidth / oldHeight;
+//	float scrAspectRatio = oldWidth / oldHeight;
 //	Msg( "CLIENT: W: %f, H: %f, SA: %f\n", oldWidth, oldHeight, scrAspectRatio );
 /*
 	if( scrAspectRatio == 1.777778f )
@@ -776,7 +776,7 @@ void CViewRender::Render( vrect_t *rect )
 	else
 		Msg( "ASPECT RATIO IS UNKNOWN\n" );
 */
-	float aspectRatio = scrAspectRatio * 0.75f;	 // / (4/3)
+	float aspectRatio = engine->GetScreenAspectRatio() * 0.75f;	 // / (4/3)
 	m_View.fov = ScaleFOVByWidthRatio( m_View.fov,  aspectRatio );
 	m_View.fovViewmodel = ScaleFOVByWidthRatio( m_View.fovViewmodel, aspectRatio );
 	
@@ -795,8 +795,8 @@ void CViewRender::Render( vrect_t *rect )
 	m_View.width			= vr.width;
 	m_View.height			= vr.height;
 
-	oldWidth = m_View.width;
-	oldHeight = m_View.height;
+//	oldWidth = m_View.width;
+//	oldHeight = m_View.height;
 
 	// Determine if we should draw view model ( client mode override )
 	drawViewModel = g_pClientMode->ShouldDrawViewModel();

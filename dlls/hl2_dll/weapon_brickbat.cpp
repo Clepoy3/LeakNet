@@ -45,8 +45,11 @@ struct BrickbatAmmo_s
 BrickbatAmmo_s	BrickBatAmmoArray[NUM_BRICKBAT_AMMO_TYPES] =
 {
 //	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_bottle.mdl",		"models/props_junk/Rock001a.mdl" },
-	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_rock.mdl",		"models/props_junk/Rock001a.mdl" },
+	{ "grenade_rockbb",			BRICKBAT_ROCK,			5,	"models/weapons/v_bb_rock.mdl",			"models/props_junk/Rock001a.mdl" },
 	{ "grenade_beerbottle",		BRICKBAT_BOTTLE,		3,	"models/weapons/v_bb_bottle.mdl",		"models/weapons/w_bb_bottle.mdl" },
+//	{ "grenade_headcrab",		BRICKBAT_HEADCRAB,		1,	"models/weapons/v_bb_headcrab.mdl",		"models/hc_squashed01.mdl" }, // VXP
+	{ "npc_headcrab_fast",		BRICKBAT_HEADCRAB,		1,	"models/weapons/v_bb_headcrab.mdl",		"models/headcrab.mdl" }, // VXP: TODO: It's a PLACEHOLDER!
+//	{ "grenade_headcrab",		BRICKBAT_HEADCRAB,		1,	"models/weapons/v_bb_headcrab.mdl",		"models/headcrab.mdl" }, // VXP
 	{ "grenade_crematorhead",	BRICKBAT_CREMATORHEAD,	1,	"models/weapons/v_bb_crematorhead.mdl",	"models/cremator_head.mdl" },
 };
 
@@ -436,6 +439,17 @@ void CWeaponBrickbat::ThrowBrickbat( Vector vecSrc, Vector vecVelocity, float da
 	if ( pPhysicsObject )
 	{
 		pPhysicsObject->AddVelocity( &vecVelocity, &vecAngVel );
+
+		if ( Q_strcmp(BrickBatAmmoArray[m_iCurrentAmmoType].m_sClassName, "npc_headcrab_fast") == 0 )
+		{
+			pBrickbat->SetAbsVelocity( vecVelocity );
+
+			QAngle angVel;
+			AngularImpulseToQAngle( vecAngVel, angVel );
+			angVel.x = 0.0f;
+			angVel.z = 0.0f;
+			pBrickbat->SetLocalAngularVelocity( angVel );
+		}
 	}
 	// Otherwise
 	else
