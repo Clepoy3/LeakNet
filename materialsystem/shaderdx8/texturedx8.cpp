@@ -525,7 +525,11 @@ void LoadTexture( int bindId, int copy, IDirect3DBaseTexture*& pTexture,
 	{
 		// Determine the image format of the texture....
 		ImageFormat format = GetImageFormat( pTexture );
-		Assert (format == dstFormat);
+	//	Assert (format == dstFormat);
+		if( format != dstFormat )
+		{
+			DevWarning("LoadTexture: format != dstFormat (probably, DX6 error)\n");
+		}
 	}
 
 	// Copy in the bits...

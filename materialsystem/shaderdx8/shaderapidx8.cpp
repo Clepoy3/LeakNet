@@ -6051,9 +6051,12 @@ IDirect3DSurface* CShaderAPIDX8::GetTextureSurface( unsigned int tex )
 	// We'll be modifying this sucka
 	int renderTargetID;
 	bool found = FindTexture( tex, renderTargetID );
-	Assert( found );
+//	Assert( found );
 	if( !found )
+	{
+		DevWarning( "Cannot find RT texture!\n" );
 		return NULL;
+	}
 
 	IDirect3DBaseTexture* pD3DTex = GetD3DTexture( renderTargetID );
 	IDirect3DTexture* pTex = static_cast<IDirect3DTexture*>( pD3DTex );

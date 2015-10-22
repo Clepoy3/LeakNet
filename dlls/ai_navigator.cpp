@@ -510,7 +510,11 @@ bool CAI_Navigator::UpdateGoalPos( const Vector &goalPos )
 	// FindPath should be finding the goal position if the goal type is
 	// one of these two... We could just ignore the suggested position
 	// in these two cases I suppose!
-	Assert( (GetPath()->GoalType() != GOALTYPE_ENEMY) && (GetPath()->GoalType() != GOALTYPE_TARGETENT) ); // VXP: On scanner_playground2 when I arrived big purple-black thing
+//	Assert( (GetPath()->GoalType() != GOALTYPE_ENEMY) && (GetPath()->GoalType() != GOALTYPE_TARGETENT) ); // VXP: On scanner_playground2 when I arrived big purple-black thing
+	if( (GetPath()->GoalType() == GOALTYPE_ENEMY) || (GetPath()->GoalType() == GOALTYPE_TARGETENT) )
+	{
+		DevWarning( "CAI_Navigator::UpdateGoalPos: GoalType = GOALTYPE_ENEMY or GOALTYPE_TARGETENT\n" );
+	}
 
 	GetPath()->ResetGoalPosition( goalPos );
 	return FindPath();
@@ -1165,21 +1169,28 @@ bool CAI_Navigator::DelayNavigationFailure( const AIMoveTrace_t &trace )
 	// happened to have its think function called a half cycle before the one
 	// in front of it.
 
-	Assert( m_fPeerMoveWait == false ); // expected to be cleared each frame, and never call this function twice
+//	Assert( m_fPeerMoveWait == false ); // expected to be cleared each frame, and never call this function twice
+	if( m_fPeerMoveWait != false ) // VXP: Happens when there's no info_node's on the map with NPCs
+	{
+		DevWarning( "CAI_Navigator::DelayNavigationFailure: m_fPeerMoveWait != false\n" );
+	}
 	
 	CAI_BaseNPC *pBlocker = trace.pObstruction ? trace.pObstruction->MyNPCPointer() : NULL;
-	if ( pBlocker )
+	if ( !m_fPeerMoveWait || pBlocker != m_hPeerWaitingOn )
 	{
-		if ( m_hPeerWaitingOn != pBlocker || m_PeerWaitClearTimer.Expired() )
+		if ( pBlocker )
 		{
-			m_fPeerMoveWait = true;
-			m_hPeerWaitingOn = pBlocker;
-			m_PeerWaitMoveTimer.Reset();
-			m_PeerWaitClearTimer.Reset();
-		}
-		else if ( m_hPeerWaitingOn == pBlocker && !m_PeerWaitMoveTimer.Expired() )
-		{
-			m_fPeerMoveWait = true;
+			if ( m_hPeerWaitingOn != pBlocker || m_PeerWaitClearTimer.Expired() )
+			{
+				m_fPeerMoveWait = true;
+				m_hPeerWaitingOn = pBlocker;
+				m_PeerWaitMoveTimer.Reset();
+				m_PeerWaitClearTimer.Reset();
+			}
+			else if ( m_hPeerWaitingOn == pBlocker && !m_PeerWaitMoveTimer.Expired() )
+			{
+				m_fPeerMoveWait = true;
+			}
 		}
 	}
 	
@@ -1393,6 +1404,8 @@ bool CAI_Navigator::PreMove()
 {
 	Navigation_t goalType = GetPath()->CurWaypointNavType();
 	Navigation_t curType  = GetNavType();
+
+	m_fPeerMoveWait = false;
 	
 	if ( goalType == NAV_GROUND && curType != NAV_GROUND )
 	{
@@ -1428,7 +1441,7 @@ bool CAI_Navigator::PreMove()
 	
 	SimplifyPath();
 	
-	m_fPeerMoveWait = false;
+//	m_fPeerMoveWait = false; // VXP: It's upthere
 	
 	return true;
 }

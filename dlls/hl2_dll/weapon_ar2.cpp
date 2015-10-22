@@ -33,6 +33,7 @@ BEGIN_DATADESC( CWeaponAR2 )
 
 	DEFINE_FIELD( CWeaponAR2, m_nShotsFired,	FIELD_INTEGER ),
 	DEFINE_FIELD( CWeaponAR2, m_bZoomed,		FIELD_BOOLEAN ),
+	DEFINE_FIELD( CWeaponAR2, m_bUseGrenade,	FIELD_BOOLEAN ),
 
 END_DATADESC()
 
@@ -100,10 +101,17 @@ void CWeaponAR2::ItemPostFrame( void )
 		m_nShotsFired = 0;
 	}
 
+	if ( pOwner->m_afButtonPressed & IN_ALT1 )
+	{
+		m_bUseGrenade = !m_bUseGrenade;
+		Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
+	}
+	
 	//Zoom in
-	if ( pOwner->m_afButtonPressed & IN_ATTACK2 )
+	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) && !m_bUseGrenade )
 	{
 		Zoom();
+		// VXP: Playing EMPTY sound because of "secondary_ammo" is not "None"
 	}
 
 	//Don't kick the same when we're zoomed in
@@ -113,6 +121,62 @@ void CWeaponAR2::ItemPostFrame( void )
 	}
 
 	BaseClass::ItemPostFrame();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponAR2::SecondaryAttack( void )
+{
+	if( !m_bUseGrenade )
+		return;
+
+	// Only the player fires this way so we can cast
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+	
+	if ( pPlayer == NULL )
+		return;
+
+	//Must have ammo
+	if ( pPlayer->GetAmmoCount( m_iSecondaryAmmoType ) <= 0 )
+	{
+		SendWeaponAnim( ACT_VM_DRYFIRE );
+		BaseClass::WeaponSound( EMPTY );
+		m_flNextSecondaryAttack = gpGlobals->curtime + 0.5f;
+		return;
+	}
+
+	// MUST call sound before removing a round from the clip of a CMachineGun
+	BaseClass::WeaponSound( DOUBLE );
+
+	Vector vecSrc = pPlayer->Weapon_ShootPosition();
+	Vector vecThrow = pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES ) * 1000.0f;
+	
+	//Create the grenade
+	CGrenadeAR2 *pGrenade = (CGrenadeAR2*)Create( "grenade_ar2", vecSrc, vec3_angle, pPlayer );
+	pGrenade->SetAbsVelocity( vecThrow );
+
+	pGrenade->SetLocalAngularVelocity( RandomAngle( -400, 400 ) );
+	pGrenade->SetMoveType( MOVETYPE_FLYGRAVITY ); 
+	pGrenade->SetOwner( GetOwner() );
+	pGrenade->SetDamage( sk_plr_dmg_ar2_grenade.GetFloat() );
+
+	SendWeaponAnim( ACT_VM_SECONDARYATTACK );
+
+	// player "shoot" animation
+	pPlayer->SetAnimation( PLAYER_ATTACK1 );
+
+	// Decrease ammo
+	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
+
+	// Can shoot again immediately
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.5f;
+
+	// Can blow up after a short delay (so have time to release mouse button)
+	m_flNextSecondaryAttack = gpGlobals->curtime + 1.0f;
+
+	// Register a muzzleflash for the AI.
+	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 0.5 );	
 }
 
 //-----------------------------------------------------------------------------

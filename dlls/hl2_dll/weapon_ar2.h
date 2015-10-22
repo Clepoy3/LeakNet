@@ -39,6 +39,7 @@ public:
 	void	ItemPostFrame( void );
 	void	Precache( void );
 	void	PrimaryAttack( void );
+	void	SecondaryAttack( void );
 	void	AddViewKick( void );
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 
@@ -74,6 +75,8 @@ protected:
 
 	int				m_nShotsFired;
 	bool			m_bZoomed;
+	
+	bool			m_bUseGrenade;
 
 	static const char *pShootSounds[];
 

@@ -669,7 +669,11 @@ bool StudioModel::LoadModel(const char *modelname)
 	void *buffer;
 
 	// Load the MDL file.
-	assert( !m_pStudioHdr );
+//	assert( !m_pStudioHdr );
+	if( m_pStudioHdr )
+	{
+		Msg( mwWarning, "There's strange behavior of Worldcraft!\n" );
+	}
 
 	if( !m_pStudioRender )
 	{

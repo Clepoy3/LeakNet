@@ -615,7 +615,7 @@ int CNPC_AntlionGrub::TranslateSchedule( int type )
 
 int CNPC_AntlionGrub::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 {
-	if( FClassnameIs( info.GetInflictor(), "npc_hydra" ) )
+//	if( FClassnameIs( info.GetInflictor(), "npc_hydra" ) )
 		Squash( info.GetInflictor() );
 	return BaseClass::OnTakeDamage_Alive( info );
 }
