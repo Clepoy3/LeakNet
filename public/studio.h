@@ -1602,4 +1602,67 @@ inline int flexsetting_t::psetting( byte *base, int i, flexweight_t **weights ) 
 	return numsettings;
 };
 
+// Insert this code anywhere that you need to allow for conversion from an old STUDIO_VERSION
+// to a new one.
+// If we only support the current version, this function should be empty.
+inline void Studio_ConvertStudioHdrToNewVersion( studiohdr_t *pStudioHdr )
+{
+	COMPILE_TIME_ASSERT( STUDIO_VERSION == 37 ); //  put this to make sure this code is updated upon changing version.
+	int version = pStudioHdr->version;
+
+	return;
+	
+	if( version == STUDIO_VERSION )
+	{
+		return;
+	}
+	
+	if( version <= 31 )
+	{
+		pStudioHdr->version = STUDIO_VERSION;
+		
+		int i;
+		for( i = 0; i < pStudioHdr->numseq; i++ )
+		{
+		//	mstudioseqdesc_t *pSeqdesc = (mstudioseqdesc_t *)hdr->pSeqdesc( i );
+			mstudioseqdesc_t *pSeqdesc = pStudioHdr->pSeqdesc( i );
+			pSeqdesc->numiklocks = -1;
+		}
+	}
+
+	if( version <= 32 )
+	{
+		pStudioHdr->version = STUDIO_VERSION;
+		pStudioHdr->numhitboxsets = -1;
+	}
+
+	// Slam all bone contents to SOLID for versions <= 35
+	if( version <= 35 )
+	{
+		pStudioHdr->contents = CONTENTS_SOLID;
+
+		int i;
+		for( i = 0; i < pStudioHdr->numbones; i++ )
+		{
+			mstudiobone_t *pBone = pStudioHdr->pBone( i );
+			pBone->contents = CONTENTS_SOLID;
+		}
+	}
+
+	if( version >= 35 )
+	{
+		// Don't remove this!!!!  This code has to be inspected everytime the studio format changes.
+		COMPILE_TIME_ASSERT( STUDIO_VERSION == 37 ); //  put this to make sure this code is updated upon changing version.
+		pStudioHdr->version = STUDIO_VERSION;
+		
+		pStudioHdr->numanimgroup = 1;
+		pStudioHdr->animgroupindex = 1;
+		
+		pStudioHdr->numbonedesc = -1;
+		pStudioHdr->bonedescindex = -1;
+		
+		Assert( 0 );
+	}
+}
+
 #endif

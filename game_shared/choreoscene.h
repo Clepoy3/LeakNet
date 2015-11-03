@@ -20,6 +20,7 @@ class CUtlBuffer;
 class CFlexAnimationTrack;
 
 #include "utlvector.h"
+#include "utldict.h"
 #include "expressionsample.h"
 
 class ISceneTokenProcessor;
@@ -55,10 +56,13 @@ public:
 	static void		FileSaveFlexAnimations( CUtlBuffer& buf, int level, CChoreoEvent *e );
 	static void		FileSaveRamp( CUtlBuffer& buf, int level, CChoreoEvent *e );
 	static void		FileSaveSceneRamp( CUtlBuffer& buf, int level, CChoreoScene *scene );
+	static void		FileSaveScaleSettings( CUtlBuffer& buf, int level, CChoreoScene *scene );
 
 	static void		ParseFlexAnimations( ISceneTokenProcessor *tokenizer, CChoreoEvent *e, bool removeold = true );
 	static void		ParseRamp( ISceneTokenProcessor *tokenizer, CChoreoEvent *e );
 	static void		ParseSceneRamp( ISceneTokenProcessor *tokenizer, CChoreoScene *scene );
+	
+	static void		ParseScaleSettings( ISceneTokenProcessor *tokenizer, CChoreoScene *scene );
 
 	// Debugging
 	void			Print( void );
@@ -160,6 +164,13 @@ public:
 
 	// Global intensity for scene
 	float			GetSceneRampIntensity( float time );
+	
+	int				GetTimeZoom( char const *tool );
+	void			SetTimeZoom( char const *tool, int tz );
+	int				TimeZoomFirst();
+	int				TimeZoomNext( int i );
+	int				TimeZoomInvalid() const;
+	char const		*TimeZoomName( int i );
 
 private:
 	// Simulation stuff
@@ -285,6 +296,8 @@ private:
 
 	// Global scene ramp/envelope
 	CUtlVector< CExpressionSample > m_SceneRamp;
+	
+	CUtlDict< int, int >	m_TimeZoomLookup;
 };
 
 CChoreoScene *ChoreoLoadScene( 

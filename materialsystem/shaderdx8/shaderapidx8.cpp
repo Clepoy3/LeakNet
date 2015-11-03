@@ -71,8 +71,8 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 // Define this if you want to use a stubbed d3d.
 //#define STUBD3D
 
-//#undef D3D_BUG_TRACKED_DOWN
-#define D3D_BUG_TRACKED_DOWN
+#undef D3D_BUG_TRACKED_DOWN
+//#define D3D_BUG_TRACKED_DOWN
 
 #ifdef STUBD3D
 #include "stubd3ddevice.h"
@@ -1596,12 +1596,12 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	// If we can't use CreateQuery() to check for the end of a frame, then we have to lock the backbuffer
 	m_PresentParameters.Flags = 0;
 
-//#ifdef D3D_BUG_TRACKED_DOWN
+#ifdef D3D_BUG_TRACKED_DOWN
 	if( m_DeviceSupportsCreateQuery == 0 )
-//#else
+#else
 	// NJS: Until we track down the D3D bug, basically force a lockable backbuffer unless createQuery is already detected.
-//	if( m_DeviceSupportsCreateQuery != 1 )
-//#endif
+	if( m_DeviceSupportsCreateQuery != 1 )
+#endif
 	{
 		m_PresentParameters.Flags |= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 	}
@@ -1609,7 +1609,6 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 	if (!windowed)
 	{
 		bool useDefault = (mode.m_Width == 0) || (mode.m_Height == 0);
-		m_PresentParameters.BackBufferCount = 1; // VXP
 		m_PresentParameters.BackBufferWidth = useDefault ? d3ddm.Width : mode.m_Width;
 		m_PresentParameters.BackBufferHeight = useDefault ? d3ddm.Height : mode.m_Height;
 		if( g_pHardwareConfig->GetDXSupportLevel() >= 90 && g_pHardwareConfig->SupportsHDR() )
@@ -1621,7 +1620,7 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 		{
 			m_PresentParameters.BackBufferFormat = useDefault ? d3ddm.Format : ImageFormatToD3DFormat( mode.m_Format );
 		}
-	//	m_PresentParameters.BackBufferCount = 1;
+		m_PresentParameters.BackBufferCount = 1;
 
 		if (flags & MATERIAL_VIDEO_MODE_NO_WAIT_FOR_VSYNC)
 			m_PresentParameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
@@ -2345,7 +2344,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 		// that in fullscreen, the new device always returns device lost, even after
 		// being restored.  For now, we get around this by defaulting the initial device
 		// to contain a lockable z buffer.
-//#ifdef D3D_BUG_TRACKED_DOWN
+#ifdef D3D_BUG_TRACKED_DOWN
 		if( FAILED(hr) )
 		{
 			m_DeviceSupportsCreateQuery = 0;
@@ -2396,7 +2395,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 
 			m_DeviceSupportsCreateQuery = 1;
 		}
-//#endif
+#endif
 
 	}
 
@@ -2407,7 +2406,6 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 #endif
 	
 //	CheckDeviceLost();
-	CheckDeviceLost(); // VXP
 
 	// Tell all other instances of the material system it's ok to grab memory
 	SendIPCMessage( false );
@@ -3345,8 +3343,8 @@ bool CShaderAPIDX8::ReadPixelsFromFrontBuffer() const
 bool CShaderAPIDX8::PreferDynamicTextures() const
 {
 	// For now, disable this feature.
-//	return false;
-	return m_Caps.m_PreferDynamicTextures;
+	return false;
+//	return m_Caps.m_PreferDynamicTextures;
 }
 
 bool CShaderAPIDX8::HasProjectedBumpEnv() const
@@ -4055,13 +4053,19 @@ void CShaderAPIDX8::ForceHardwareSync( void )
 
 		
 		// FIXME: Need to check for hr==D3DERR_DEVICELOST here.
-		Assert( hr != D3DERR_DEVICELOST ); // VXP: Happens when hl2.exe was minimized from fullscreen
-	//	if( hr == D3DERR_DEVICELOST )
-	//	{
-	//		hr = (hr != D3D_OK) ? hr : D3DERR_DEVICENOTRESET;
-	//		return;
-	//	}
-		Assert( hr == S_OK );
+	//	Assert( hr != D3DERR_DEVICELOST ); // VXP: Happens when hl2.exe was minimized from fullscreen
+		if( hr == D3DERR_DEVICELOST )
+		{
+			hr = (hr != D3D_OK) ? hr : D3DERR_DEVICENOTRESET;
+			DevWarning( "CShaderAPIDX8::ForceHardwareSync: hr == D3DERR_DEVICELOST\n" );
+		//	return;
+		}
+	//	Assert( hr == S_OK );
+		if ( hr != S_OK )
+		{
+			DevWarning( "CShaderAPIDX8::ForceHardwareSync: hr != S_OK\n" );
+			return;
+		}
 		m_pFrameSyncQueryObject->Issue( D3DISSUE_END );
 	} 
 	else if( m_DeviceSupportsCreateQuery == 0 )	// (need to ensure device was created with a lockable back buffer)
@@ -4140,8 +4144,8 @@ void CShaderAPIDX8::ReleaseResources()
 	MeshMgr()->ReleaseBuffers();
 	ShaderUtil()->ReleaseShaderObjects();
 	ReleaseRenderTargets();
-	ReleaseAllTextures(); // VXP
-/*
+//	ReleaseAllTextures(); // VXP // VXP: Commented
+
 #ifdef _DEBUG
 	if ( MeshMgr()->BufferCount() != 0 )
 	{
@@ -4155,8 +4159,8 @@ void CShaderAPIDX8::ReleaseResources()
 	// All meshes cleaned up?
 //	Assert( MeshMgr()->BufferCount() == 0 ); // VXP: This appears when running hlmv when hl2.exe runned (for example)
 	if( MeshMgr()->BufferCount() != 0 )
-		Warning( "Mesh buffer count is not 0! (%i)\n", MeshMgr()->BufferCount() );
-*/
+		Warning( "CShaderAPIDX8::ReleaseResources: Mesh buffer count is not 0! (%i)\n", MeshMgr()->BufferCount() );
+
 
 #ifdef _DEBUG
 	// Helps to find the unreleased textures.
@@ -4186,7 +4190,7 @@ void CShaderAPIDX8::ReleaseResources()
 
 //	Assert( TextureCount() == 0 ); // VXP: This appears when running hammer when hl2.exe runned (for example)
 	if( TextureCount() != 0 )
-		Warning( "Texture count is not 0! (%i)\n", TextureCount() );
+		Warning( "CShaderAPIDX8::ReleaseResources: Texture count is not 0! (%i)\n", TextureCount() );
 
 }
 
@@ -5606,7 +5610,8 @@ void CShaderAPIDX8::ComputeStatsInfo( unsigned int textureIdx, bool isCubeMap )
 			Assert( !FAILED(hr) );
 // Why does D3DSURFACE_DESC no longer have a "Size" member?  Is there a helper for getting this value?
 //			Assert( 0 ); // fixme
-			GetTexture( textureIdx ).m_SizeBytes = 0;
+		//	GetTexture( textureIdx ).m_SizeBytes = 0;
+			GetTexture( textureIdx ).m_SizeBytes += 6 * ImageLoader::GetMemRequired( desc.Width, desc.Height, D3DFormatToImageFormat( desc.Format ), false );
 			GetTexture( textureIdx ).m_SizeTexels += 6 * desc.Width * desc.Height;
 		}
 	}
@@ -5626,7 +5631,8 @@ void CShaderAPIDX8::ComputeStatsInfo( unsigned int textureIdx, bool isCubeMap )
 			Assert( !FAILED(hr) );
 // Why does D3DSURFACE_DESC no longer have a "Size" member?  Is there a helper for getting this value?
 //			Assert( 0 ); // fixme
-			GetTexture( textureIdx ).m_SizeBytes = 0;
+		//	GetTexture( textureIdx ).m_SizeBytes = 0;
+			GetTexture( textureIdx ).m_SizeBytes += ImageLoader::GetMemRequired( desc.Width, desc.Height, D3DFormatToImageFormat( desc.Format ), false );
 			GetTexture( textureIdx ).m_SizeTexels += desc.Width * desc.Height;
 		}
 	}

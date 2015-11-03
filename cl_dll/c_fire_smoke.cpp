@@ -929,6 +929,9 @@ void C_EntityFlame::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 void C_EntityFlame::Simulate( void )
 {
+	if ( gpGlobals->frametime <= 0.0f )
+		return;
+
 	if (m_bAttachedToHitboxes)
 	{
 		UpdateHitBoxFlames();

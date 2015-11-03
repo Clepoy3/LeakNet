@@ -100,14 +100,18 @@ HALF4 main( PS_INPUT i ) : COLOR
 		ComputeBumpedLightmapCoordinates( i.lightmapTexCoord1And2, i.lightmapTexCoord3.xy,
 			bumpCoord1, bumpCoord2, bumpCoord3 );
 		
-		lightmapColor1 = tex2D( LightmapSampler, bumpCoord1 );
+	//	lightmapColor1 = tex2D( LightmapSampler, bumpCoord1 );
+		HALF4 lightmapSample1 = tex2D( LightmapSampler, bumpCoord1 );
+		lightmapColor1 = lightmapSample1.rgb;
 		lightmapColor2 = tex2D( LightmapSampler, bumpCoord2 );
 		lightmapColor3 = tex2D( LightmapSampler, bumpCoord3 );
 	}
 	else
 	{
 		HALF2 bumpCoord1 = ComputeLightmapCoordinates( i.lightmapTexCoord1And2, i.lightmapTexCoord3.xy );
-		lightmapColor1 = tex2D( LightmapSampler, bumpCoord1 );
+	//	lightmapColor1 = tex2D( LightmapSampler, bumpCoord1 );
+		HALF4 lightmapSample1 = tex2D( LightmapSampler, bumpCoord1 );
+		lightmapColor1 = lightmapSample1.rgb;
 	}
 
 	HALF3 specularFactor = 1.0f;
@@ -119,7 +123,7 @@ HALF4 main( PS_INPUT i ) : COLOR
 		normalTexel = tex2D( BumpmapSampler, i.detailOrBumpAndEnvmapMaskTexCoord.xy );
 		if( bNormalMapAlphaEnvmapMask )
 		{
-			specularFactor *= normalTexel.a;
+		//	specularFactor *= normalTexel.a;
 		}
 		normal = 2.0 * normalTexel - 1.0;
 	}
@@ -135,9 +139,20 @@ HALF4 main( PS_INPUT i ) : COLOR
 	HALF3 diffuseLighting = HALF3( 1.0f, 1.0f, 1.0f );
 	if( bBumpmap )
 	{
-		diffuseLighting = saturate( dot( normal, bumpBasis[0] ) ) * lightmapColor1 +
-						  saturate( dot( normal, bumpBasis[1] ) ) * lightmapColor2 +
-						  saturate( dot( normal, bumpBasis[2] ) ) * lightmapColor3;
+	//	diffuseLighting = saturate( dot( normal, bumpBasis[0] ) ) * lightmapColor1 +
+	//					  saturate( dot( normal, bumpBasis[1] ) ) * lightmapColor2 +
+	//					  saturate( dot( normal, bumpBasis[2] ) ) * lightmapColor3;
+		float3 dp;
+		dp.x = saturate( dot( normal, bumpBasis[0] ) );
+		dp.y = saturate( dot( normal, bumpBasis[1] ) );
+		dp.z = saturate( dot( normal, bumpBasis[2] ) );
+		dp *= dp;
+		
+		diffuseLighting = dp.x * lightmapColor1 +
+						  dp.y * lightmapColor2 +
+						  dp.z * lightmapColor3;
+		float sum = dot( dp, float3( 2.0f, 2.0f, 2.0f ) );
+		//diffuseLighting *= LIGHT_MAP_SCALE / sum;
 	}
 	else
 	{

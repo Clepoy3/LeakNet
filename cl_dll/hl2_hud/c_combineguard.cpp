@@ -735,20 +735,16 @@ void C_CombineGuard::ReceiveMessage( const char *msgname, int length, void *data
 			
 			Vector	pos, muzzleDir;
 			QAngle	angle;
-			AllowBoneAccess( true, false ); // VXP: Fix?
-			if( !GetAttachment( attachment, pos, angle ) )
-			{
-				Msg( "CMBGUARD: Wrong attachment\n" );
-			//	break;
-				pos = GetAbsOrigin();
-				angle = GetAbsAngles();
-			}
+
+			// VXP
+			AllowBoneAccess( true, false );
+			GetAttachment( attachment, pos, angle );
 			AllowBoneAccess( false, false );
 
-			m_pGunTrails	= new CSphereTrails( "C_CombineGuard::ReceiveMessage 1", GetAbsOrigin(), 0, 128, 256, entindex(), attachment );
-			m_pGunBall		= new CCombineGuardBall( "C_CombineGuard::ReceiveMessage 2", GetAbsOrigin(), 32, 1, 0, entindex(), attachment );
-		//	m_pGunTrails	= new CSphereTrails( "C_CombineGuard::ReceiveMessage 1", pos, 0, 128, 256, entindex(), attachment );
-		//	m_pGunBall		= new CCombineGuardBall( "C_CombineGuard::ReceiveMessage 2", pos, 32, 1, 0, entindex(), attachment );
+		//	m_pGunTrails	= new CSphereTrails( "C_CombineGuard::ReceiveMessage 1", GetAbsOrigin(), 0, 128, 256, entindex(), attachment );
+		//	m_pGunBall		= new CCombineGuardBall( "C_CombineGuard::ReceiveMessage 2", GetAbsOrigin(), 32, 1, 0, entindex(), attachment );
+			m_pGunTrails	= new CSphereTrails( "C_CombineGuard::ReceiveMessage 1", pos, 0, 128, 256, entindex(), attachment );
+			m_pGunBall		= new CCombineGuardBall( "C_CombineGuard::ReceiveMessage 2", pos, 32, 1, 0, entindex(), attachment );
 
 			//Make the warp overlay
 			if ( CCombineGuardMuzzleOverlay *pOverlay = new CCombineGuardMuzzleOverlay )
@@ -771,15 +767,8 @@ void C_CombineGuard::ReceiveMessage( const char *msgname, int length, void *data
 			Vector	pos, muzzleDir;
 			QAngle	angle;
 
-			int	attachment = LookupAttachment( "muzzle" );
-			AllowBoneAccess( true, false ); // VXP: Fix?
-			if( !GetAttachment( attachment, pos, angle ) )
-			{
-				Msg( "CMBGUARD: Wrong attachment\n" );
-			//	break;
-				pos = GetAbsOrigin();
-				angle = GetAbsAngles();
-			}
+			AllowBoneAccess( true, false );
+			GetAttachment( LookupAttachment( "muzzle" ), pos, angle );
 			AllowBoneAccess( false, false );
 
 			AngleVectors( angle, &muzzleDir );

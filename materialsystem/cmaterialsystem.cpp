@@ -48,7 +48,7 @@
 // NOTE: This must be the last file included!!!
 #include "tier0/memdbgon.h"
 
-ConVar mat_overbright_level("mat_overbright_level", "4.0");
+//ConVar mat_overbright_level("mat_overbright_level", "4.0");
 
 //#define WRITE_LIGHTMAP_TGA 1
 //#define READ_LIGHTMAP_TGA 1
@@ -627,8 +627,8 @@ void CMaterialSystem::CreateDebugMaterials()
 		s_pErrorMaterial->AddMaterialVar( pVar );
 
 		// VXP: For TF2
-		pVar = IMaterialVar::Create( s_pErrorMaterial, "$translucent_material", 0.5f );
-		s_pErrorMaterial->AddMaterialVar( pVar );
+	//	pVar = IMaterialVar::Create( s_pErrorMaterial, "$translucent_material", 0.5f );
+	//	s_pErrorMaterial->AddMaterialVar( pVar );
 
 		s_pErrorMaterial->GetShaderParams()[BASETEXTURE]->SetTextureValue( TextureManager()->ErrorTexture() );
 		s_pErrorMaterial->IncrementReferenceCount();
@@ -1082,10 +1082,11 @@ void CMaterialSystem::ReleaseShaderObjects()
 	ReleaseStandardTextures();
 	ReleaseLightmapPages();
 	// VXP: Fixes black model bug when game was minimized and then restored
-//	for (int i = 0; i < m_ReleaseFunc.Count(); ++i)
-//	{
-//		m_ReleaseFunc[i]();
-//	}
+	// VXP: Restored this func
+	for (int i = 0; i < m_ReleaseFunc.Count(); ++i)
+	{
+		m_ReleaseFunc[i]();
+	}
 }
 
 void CMaterialSystem::RestoreShaderObjects()
@@ -2758,7 +2759,7 @@ void CMaterialSystem::UpdateBumpedLightmapBitsDynamic( int lightmap,
 			
 			// Compute luminance
 			float lumF = pFloatImage[srcTexelOffset] * 0.30f + pFloatImage[srcTexelOffset+1] * 0.59f + pFloatImage[srcTexelOffset+2] * 0.11f;
-			unsigned char lum =  RoundFloatToByte( LinearToVertexLight( lumF ) / mat_overbright_level.GetFloat() * 255.0f );
+			unsigned char lum =  RoundFloatToByte( LinearToVertexLight( lumF ) / MAX_HDR_OVERBRIGHT * 255.0f );
 
 			if( bLumInAlpha )
 			{
@@ -2787,15 +2788,15 @@ static void HDRToTexture( const float *pSrc, unsigned char *pDst )
 		fMax = 1.0f;
 	}
 
-	// We want fMax / max_hdr_overbright1.GetFloat() * 255.0f to be an integer.
-	int tmpInt = ( int )( fMax / mat_overbright_level.GetFloat() * 255.0f );
+	// We want fMax / MAX_HDR_OVERBRIGHT * 255.0f to be an integer.
+	int tmpInt = ( int )( fMax / MAX_HDR_OVERBRIGHT * 255.0f );
 	if( tmpInt == 0 ) tmpInt = 1;
-	fMax = mat_overbright_level.GetFloat() / 255.0f * tmpInt;
+	fMax = MAX_HDR_OVERBRIGHT / 255.0f * tmpInt;
 	float scale = 1.0f / fMax;
 	pDst[0] = min( pow( pSrc[0] * scale, 1.0f / 2.2f ) * 255.0f, 255.0f );
 	pDst[1] = min( pow( pSrc[1] * scale, 1.0f / 2.2f ) * 255.0f, 255.0f );
 	pDst[2] = min( pow( pSrc[2] * scale, 1.0f / 2.2f ) * 255.0f, 255.0f );
-	pDst[3] = min( fMax / mat_overbright_level.GetFloat() * 255.0f, 255.0f );
+	pDst[3] = min( fMax / MAX_HDR_OVERBRIGHT * 255.0f, 255.0f );
 }
 
 //-----------------------------------------------------------------------------
@@ -2970,7 +2971,7 @@ void CMaterialSystem::UpdateLightmapBitsDynamic( int lightmap, float* pFloatImag
 				ColorSpace::LinearToLightmap( color, pSrc );
 				// Compute luminance
 				float lum = pSrc[0] * 0.30f + pSrc[1] * 0.59f + pSrc[2] * 0.11f;
-				color[3] =  RoundFloatToByte( LinearToVertexLight( lum ) / mat_overbright_level.GetFloat() * 255.0f );
+				color[3] =  RoundFloatToByte( LinearToVertexLight( lum ) / MAX_HDR_OVERBRIGHT * 255.0f );
 				*pDst++ = color[0];
 				*pDst++ = color[1];
 				*pDst++ = color[2];

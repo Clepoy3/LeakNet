@@ -1730,6 +1730,11 @@ void CNPC_Manhack::Spawn(void)
 	SetSolid( SOLID_BBOX );
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 
+	// VXP: Fixed(?) transition between two canals maps (assert in CBaseEntity::SetMoveType - no VPhysicsGetObject()->GetShadowController())
+	IPhysicsObject *pPhysicsObject = VPhysicsInitNormal( SOLID_VPHYSICS, FSOLID_NOT_STANDABLE, false );
+	if ( pPhysicsObject == NULL )
+		return;
+
 	SetMoveType( MOVETYPE_VPHYSICS );
 
 	m_iHealth			= sk_manhack_health.GetFloat();

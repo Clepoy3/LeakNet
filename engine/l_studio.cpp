@@ -112,7 +112,7 @@ bool Mod_LoadStudioModel (model_t *mod, void *buffer, bool zerostructure )
 
 	phdr = (studiohdr_t *)pin;
 
-//	Studio_ConvertStudioHdrToNewVersion( phdr );
+	Studio_ConvertStudioHdrToNewVersion( phdr );
 	
 	version = LittleLong (phdr->version);
 	if (version != STUDIO_VERSION)

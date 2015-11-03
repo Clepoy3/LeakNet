@@ -233,10 +233,12 @@ void CClient_Precipitation::Precache( )
 {
 	if (m_Type == NOT_INITIALIZED)
 	{
+		const int renderFXSnow = kRenderFxEnvSnow + 1;
+		const int renderFXRain = kRenderFxEnvRain + 1;
 		// Compute precipitation emission speed
 		switch( m_nRenderFX )
 		{
-		case kRenderFxEnvSnow:
+		case renderFXSnow:
 		//	m_Speed	= SNOW_SPEED;
 			m_Speed	= s_snowspeed.GetFloat();
 			m_MatHandle = m_ParticleEffect.FindOrAddMaterial( "particle/snow" );
@@ -246,7 +248,7 @@ void CClient_Precipitation::Precache( )
 			m_Width = SNOW_TRACER_WIDTH;
 			break;
 
-		case kRenderFxEnvRain:
+		case renderFXRain:
 		//	m_Speed	= RAIN_SPEED;
 			m_Speed	= s_rainspeed.GetFloat();
 			m_MatHandle = m_ParticleEffect.FindOrAddMaterial( "particle/rain" );

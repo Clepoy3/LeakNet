@@ -284,7 +284,7 @@ bool CPhysicsPushedEntities::SpeculativelyCheckPush( PhysicsPushedInfo_t &info, 
 
 	if ( (!bRotationalPush) && (info.m_Trace.fraction == 1.0) )
 	{
-		Assert( pBlocker->PhysicsTestEntityPosition() == false ); // VXP: Happened when func_train's blocking player
+	//	Assert( pBlocker->PhysicsTestEntityPosition() == false ); // VXP: Happened when func_train's blocking player
 		if ( pBlocker->PhysicsTestEntityPosition() != false )
 		{
 			Warning("Interpenetrating entities! (%s and %s)\n",

@@ -187,6 +187,12 @@ CChoreoScene& CChoreoScene::operator=( const CChoreoScene& src )
 
 	strcpy( m_szMapname, src.m_szMapname );
 
+	m_TimeZoomLookup.RemoveAll();
+	for ( i = 0; i < (int)src.m_TimeZoomLookup.Count(); i++ )
+	{
+		m_TimeZoomLookup.Insert( src.m_TimeZoomLookup.GetElementName( i ), src.m_TimeZoomLookup[ i ] );
+	}
+
 	// Copy ramp over
 	m_SceneRamp.RemoveAll();
 	for ( i = 0; i < src.m_SceneRamp.Count(); i++ )
@@ -1343,6 +1349,7 @@ bool CChoreoScene::SaveToFile( const char *filename )
 	}
 
 	FileSaveSceneRamp( buf, 0, this );
+	FileSaveScaleSettings( buf, 0, this ); // VXP
 
 	FilePrintf( buf, 0, "fps %i\n", m_nSceneFPS );
 	FilePrintf( buf, 0, "snap %s\n", m_bUseFrameSnap ? "on" : "off" );
@@ -1356,6 +1363,28 @@ bool CChoreoScene::SaveToFile( const char *filename )
 		return true;
 	}
 	return false;
+}
+
+void CChoreoScene::FileSaveScaleSettings( CUtlBuffer& buf, int level, CChoreoScene *scene )
+{
+	// Nothing to save?
+	int c = scene->m_TimeZoomLookup.Count();
+	if ( c <= 0 )
+		return;
+
+	FilePrintf( buf, level, "scalesettings\n" );
+	FilePrintf( buf, level, "{\n" );
+
+	for ( int i = 0; i < c; i++ )
+	{
+		int value = scene->m_TimeZoomLookup[ i ];
+
+		FilePrintf( buf, level + 1, "\"%s\" \"%i\"\n",
+			scene->m_TimeZoomLookup.GetElementName( i ),
+			value );	
+	}
+
+	FilePrintf( buf, level, "}\n" );
 }
 
 //-----------------------------------------------------------------------------
@@ -2656,6 +2685,92 @@ float CChoreoScene::SnapTime( float t )
 
 	// FIXME:  If FPS is set and "using grid", snap to proper fractional time value
 	return t;
+}
+
+int CChoreoScene::TimeZoomFirst()
+{
+	return m_TimeZoomLookup.First();
+}
+
+int CChoreoScene::TimeZoomNext( int i )
+{
+	return m_TimeZoomLookup.Next( i );
+}
+int CChoreoScene::TimeZoomInvalid() const
+{
+	return m_TimeZoomLookup.InvalidIndex();
+}
+char const *CChoreoScene::TimeZoomName( int i )
+{
+	return m_TimeZoomLookup.GetElementName( i );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *tool - 
+// Output : int
+//-----------------------------------------------------------------------------
+int CChoreoScene::GetTimeZoom( char const *tool )
+{
+	// If not present add it
+	int idx = m_TimeZoomLookup.Find( tool );
+	if ( idx == m_TimeZoomLookup.InvalidIndex() )
+	{
+		idx = m_TimeZoomLookup.Insert( tool, 100 );
+	}
+
+	return m_TimeZoomLookup[ idx ];
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *tool - 
+//			tz - 
+//-----------------------------------------------------------------------------
+void CChoreoScene::SetTimeZoom( char const *tool, int tz )
+{
+	// If not present add it
+	int idx = m_TimeZoomLookup.Find( tool );
+	if ( idx == m_TimeZoomLookup.InvalidIndex() )
+	{
+		idx = m_TimeZoomLookup.Insert( tool, 100 );
+	}
+
+	m_TimeZoomLookup[ idx ] = tz;
+}
+
+void CChoreoScene::ParseScaleSettings( ISceneTokenProcessor *tokenizer, CChoreoScene *scene )
+{
+	tokenizer->GetToken( true );
+
+	if ( stricmp( tokenizer->CurrentToken(), "{" ) )
+		tokenizer->Error( "expecting {\n" );
+	
+	while ( 1 )
+	{
+		// Parse until }
+		tokenizer->GetToken( true );
+		
+		if ( strlen( tokenizer->CurrentToken() ) <= 0 )
+		{
+			tokenizer->Error( "expecting scalesettings data\n" );
+			break;
+		}
+		
+		if ( !Q_stricmp( tokenizer->CurrentToken(), "}" ) )
+			break;
+
+		char tool[ 256 ];
+		Q_strncpy( tool, tokenizer->CurrentToken(), sizeof( tool ) );
+
+		tokenizer->GetToken( false );
+
+		int tz = Q_atoi( tokenizer->CurrentToken() );
+		if ( tz <= 0 )
+			tz = 100;
+
+		scene->SetTimeZoom( tool, tz );
+	}
 }
 
 float CChoreoScene::GetSceneRampIntensity( float time )

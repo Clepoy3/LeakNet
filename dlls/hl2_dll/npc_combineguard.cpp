@@ -272,7 +272,7 @@ void CNPC_CombineGuard::Precache( void )
 
 	BaseClass::Precache();
 
-//	m_nGibModel = engine->PrecacheModel( "models/gibs/metalgibs.mdl" );
+	m_nGibModel = engine->PrecacheModel( "models/gibs/metalgibs.mdl" );
 }
 
 //-----------------------------------------------------------------------------
@@ -865,6 +865,11 @@ void CNPC_CombineGuard::DestroyArmorPiece( int pieceID )
 	QAngle	vecDamageAngles;
 
 	GetAttachment( refPoint, vecDamagePoint, vecDamageAngles );
+	if ( vecDamagePoint == Vector( 0, 0, 0 ) )
+	{
+		Msg( "There's no bodygroup for this armor piece!\n" );
+		vecDamagePoint = GetAbsOrigin() + Vector( 0, 0, 20 );
+	}
 
 	Vector	vecVelocity, vecSize;
 

@@ -184,7 +184,7 @@ void UpdateMaterialSystemConfig( void )
 //	if(g_pMaterialSystemHardwareConfig->SupportsHDR())
 	const char *m_pShaderDLL = g_pMaterialSystemHardwareConfig->GetShaderDLLName();
 	const char *pParam = CommandLine()->ParmValue( "-shader" );
-	if((m_pShaderDLL && Q_stristr( m_pShaderDLL, "_hdr_" )) || (pParam && Q_stristr( pParam, "_hdr_" ))) // VXP: dxsupport.cfg or command-line
+	/*if((m_pShaderDLL && Q_stristr( m_pShaderDLL, "_hdr_" )) || (pParam && Q_stristr( pParam, "_hdr_" ))) // VXP: dxsupport.cfg or command-line
 	{
 		if(g_materialSystemConfig.overbright != 1)
 		{
@@ -199,7 +199,7 @@ void UpdateMaterialSystemConfig( void )
 			mat_overbright.SetValue( 2.0f );
 			g_materialSystemConfig.overbright = 2;
 		}
-	}
+	}*/
 
 	g_materialSystemConfig.bAllowCheats = false; // hack
 	g_materialSystemConfig.bLinearFrameBuffer = v_linearFrameBuffer.GetInt() ? true : false;

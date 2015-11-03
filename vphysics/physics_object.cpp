@@ -1052,8 +1052,11 @@ void CPhysicsObject::SetMaterialIndex( int materialIndex )
 
 	m_materialIndex = materialIndex;
 	IVP_Material *pMaterial = physprops->GetIVPMaterial( materialIndex );
-	m_pObject->l_default_material = pMaterial;
-	m_pObject->recompile_material_changed();
+	if ( pMaterial != NULL && m_pObject != NULL )
+	{
+		m_pObject->l_default_material = pMaterial;
+		m_pObject->recompile_material_changed();
+	}
 }
 
 // convert square velocity magnitude from IVP to HL

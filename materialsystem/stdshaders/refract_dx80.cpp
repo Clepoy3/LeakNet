@@ -202,7 +202,7 @@ BEGIN_VS_SHADER( Refract_DX80,
 
 		if( bHasEnvmap )
 		{
-			const bBlendSpecular = true;
+			const bool bBlendSpecular = true;
 			if( bIsModel )
 			{
 				DrawModelBumpedSpecularLighting( NORMALMAP, BUMPFRAME,
