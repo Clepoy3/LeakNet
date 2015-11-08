@@ -237,6 +237,11 @@ public:
 	{
 		return true;
 	}
+	
+	virtual bool				SupportsMSAAMode( int nMSAAMode )
+	{
+		return false;
+	}
 
 	// Creates/ destroys a child window
 	virtual bool				AddView( void* hwnd )

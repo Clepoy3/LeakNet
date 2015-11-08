@@ -23,6 +23,8 @@
 #include "string.h"
 #include "vstdlib/icommandline.h"
 
+#include "materialsystem/IMaterialSystem.h"
+
 // version check includes
 /*/#include "Socket.h"
 //#include "proto_oob.h"
@@ -88,6 +90,8 @@ IEngineVGui *enginevguifuncs = NULL;
 vgui::ISurface *enginesurfacefuncs = NULL;
 IBaseUI *baseuifuncs = NULL;
 IFriendsUser *g_pFriendsUser = NULL;
+
+IMaterialSystem *materials = NULL;
 
 // SRC functions
 // interface to the engine
@@ -228,6 +232,8 @@ void CGameUI::Initialize( CreateInterfaceFn *factories, int count )
 	{
 		g_pGameClientExports = (IGameClientExports *)clientFactory(GAMECLIENTEXPORTS_INTERFACE_VERSION, NULL);
 	}
+
+	materials = (IMaterialSystem * )engineFactory( MATERIAL_SYSTEM_INTERFACE_VERSION, NULL );
 }
 /*
 //-----------------------------------------------------------------------------

@@ -111,6 +111,9 @@ public:
 
 	// Sets the mode...
 	virtual bool SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0 ) = 0;
+	
+	// Reports support for a given MSAA mode
+	virtual bool SupportsMSAAMode( int nMSAAMode ) = 0;
 
 	virtual void GetWindowSize( int &width, int &height ) const = 0;
 

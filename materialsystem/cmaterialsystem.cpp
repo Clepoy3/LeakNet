@@ -121,6 +121,9 @@ public:
 
 	// Sets the mode...
 	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0 );
+	
+	// Reports support for a given MSAA mode
+	bool SupportsMSAAMode( int nMSAAMode );
 
 	// Creates/ destroys a child window
 	bool AddView( void* hwnd );
@@ -3765,6 +3768,12 @@ void CMaterialSystem::SwapBuffers( void )
 	VPROF_BUDGET( "CMaterialSystem::SwapBuffers", VPROF_BUDGETGROUP_SWAP_BUFFERS );
 	g_pShaderAPI->SwapBuffers();
 	g_FrameNum++;
+}
+
+// Does the device support the given MSAA level?
+bool CMaterialSystem::SupportsMSAAMode( int nNumSamples )
+{
+	return g_pShaderAPI->SupportsMSAAMode( nNumSamples );
 }
 
 void CMaterialSystem::SetHardwareGamma( float gamma )

@@ -27,6 +27,12 @@ class CCvarSlider;
 
 class CCvarToggleCheckButton;
 
+struct AAMode_t
+{
+	int m_nNumSamples;
+//	int m_nQualityLevel;
+};
+
 //-----------------------------------------------------------------------------
 // Purpose: Video Details, Part of OptionsDialog
 //-----------------------------------------------------------------------------
@@ -59,6 +65,9 @@ private:
 	void		GetVidSettings();
 	void		RevertVidSettings();
 	void		ApplyVidSettings(bool bForceRefresh);
+	
+	void		SetComboItemAsRecommended( vgui::ComboBox *combo, int iItem );
+	int			FindMSAAMode( int nAASamples );
 
 //    void        SetCurrentRendererComboItem();
 	void        SetCurrentAnisoComboItem();
@@ -92,6 +101,9 @@ private:
 	int             m_iStartAntialias;
     int             m_iStartResolution;
 	bool			m_bStartWidescreen;
+	
+	int				m_nNumAAModes;
+	AAMode_t		m_nAAModes[16];
 	
 	CCvarToggleCheckButton  *m_pWaterEntReflect;
 	CCvarToggleCheckButton  *m_pMotionBlurEnableCheckButton;

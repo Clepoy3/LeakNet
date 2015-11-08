@@ -238,6 +238,9 @@ public:
 	
 	// Sets the mode...
 	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSampleCount );
+	
+	// Reports support for a given MSAA mode
+	bool SupportsMSAAMode( int nMSAAMode );
 
 	void GetWindowSize( int &width, int &height ) const;
 
@@ -2104,5 +2107,10 @@ void CShaderAPIEmpty::SetShaderDLL( ShaderDLL_t hShaderDLL )
 
 void CShaderAPIEmpty::SyncToken( const char *pToken )
 {
+}
+// Sets the mode...
+bool CShaderAPIEmpty::SupportsMSAAMode( int nMSAAMode )
+{
+	return false;
 }
 

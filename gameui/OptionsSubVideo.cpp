@@ -6,6 +6,9 @@
 
 #include "iregistry.h"
 
+#include "materialsystem/IMaterialSystem.h"
+#include "materialsystem/IMaterialSystemHardwareConfig.h"
+
 #include <vgui_controls/CheckButton.h>
 #include <vgui_controls/ComboBox.h>
 #include "CvarToggleCheckButton.h"
@@ -13,6 +16,10 @@
 #include <vgui/ILocalize.h>
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
+
+//IMaterialSystem *materials = NULL;
+//extern IMaterialSystem *materials;
+//extern class IMaterialSystem *materials;
 
 using namespace vgui;
 	
@@ -104,7 +111,7 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	strcpy( m_pszAntialiasNames[1], "2x" );
 	strcpy( m_pszAntialiasNames[2], "4x" );
 	strcpy( m_pszAntialiasNames[3], "8x" );*/
-	localize()->ConvertUnicodeToANSI(L"Off", m_pszAntialiasNames[0], 32);
+/*	localize()->ConvertUnicodeToANSI(L"Off", m_pszAntialiasNames[0], 32);
 	localize()->ConvertUnicodeToANSI(L"2x", m_pszAntialiasNames[1], 32);
 	localize()->ConvertUnicodeToANSI(L"4x", m_pszAntialiasNames[2], 32);
 	localize()->ConvertUnicodeToANSI(L"8x", m_pszAntialiasNames[3], 32);
@@ -113,7 +120,43 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
     for ( i = 0; i < 4; i++)
     {
         m_pAntialias->AddItem( m_pszAntialiasNames[i], NULL );
-    }
+    }*/
+	
+	m_nNumAAModes = 0;
+	m_pAntialias = new ComboBox( this, "Antialiasing", 10, false );
+	m_pAntialias->AddItem("#GameUI_None", NULL);
+	m_nAAModes[m_nNumAAModes].m_nNumSamples = 1;
+	m_nNumAAModes++;
+	
+	Assert( materials );
+
+	if ( materials->SupportsMSAAMode(2) )
+	{
+		m_pAntialias->AddItem("#GameUI_2X", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 2;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsMSAAMode(4) )
+	{
+		m_pAntialias->AddItem("#GameUI_4X", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 4;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsMSAAMode(6) )
+	{
+		m_pAntialias->AddItem("#GameUI_6X", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 6;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsMSAAMode(8) )
+	{
+		m_pAntialias->AddItem("#GameUI_8X", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 8;
+		m_nNumAAModes++;
+	}
 
 	// VXP: Temporary solution...
 //	m_pColorDepth = new ComboBox( this, "ColorDepth", 2, false );
@@ -270,15 +313,49 @@ void COptionsSubVideo::SetCurrentAnisoComboItem()
     m_pAniso->ActivateItemByRow( m_iStartAniso );
 }
 
+void COptionsSubVideo::SetComboItemAsRecommended( vgui::ComboBox *combo, int iItem )
+	{
+		// get the item text
+		wchar_t text[512];
+	//	combo->GetItemText(iItem, text, sizeof(text));
+		combo->GetText(text, sizeof(text));
+
+		// append the recommended flag
+		wchar_t newText[512];
+		_snwprintf( newText, sizeof(newText) / sizeof(wchar_t), L"%s *", text );
+
+		// reset
+		combo->UpdateItem(iItem, newText, NULL);
+	}
+
+int COptionsSubVideo::FindMSAAMode( int nAASamples )
+{
+	// Run through the AA Modes supported by the device
+	for ( int nAAMode = 0; nAAMode < m_nNumAAModes; nAAMode++ )
+	{
+		// If we found the mode that matches what we're looking for, return the index
+		if ( ( m_nAAModes[nAAMode].m_nNumSamples == nAASamples) )
+		{
+			return nAAMode;
+		}
+	}
+
+	return 0;	// Didn't find what we're looking for, so no AA
+}
+
 void COptionsSubVideo::SetCurrentAntialiasComboItem()
 {
 	const char* item = "";
 	char buffer[33];
 	item = itoa( registry->ReadInt( "ScreenAntialias", -1 ), buffer, 10 );
+	
+	int nAASamples = registry->ReadInt( "ScreenAntialias", -1 );
+	int nMSAAMode = FindMSAAMode( nAASamples );
+	m_pAntialias->ActivateItem( nMSAAMode );
 
 //	if( atof(item) < 2 )
 //	{
-		m_iStartAntialias = 0;
+		//m_iStartAntialias = 0;
 //	}
 //	else
 //	{
@@ -286,12 +363,12 @@ void COptionsSubVideo::SetCurrentAntialiasComboItem()
 		{
 		//	if( strcmp( item, m_pszAnisoNames[i] ) == 0 )
 		//	Msg( "First: %i\n", strstr( m_pszAnisoNames[i], item ) );
-			if( strstr( m_pszAntialiasNames[i], item ) > 0 )
-				m_iStartAntialias = i;
+			//if( strstr( m_pszAntialiasNames[i], item ) > 0 )
+				//m_iStartAntialias = i;
 		}
 //	}
 
-    m_pAntialias->ActivateItemByRow( m_iStartAntialias );
+    //m_pAntialias->ActivateItemByRow( m_iStartAntialias );
 }
 
 //-----------------------------------------------------------------------------
@@ -464,7 +541,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 
 	if ( m_pAntialias )
 	{
-		char sz[ 256 ];
+	/*	char sz[ 256 ];
 		m_pAntialias->GetText(sz, sizeof(sz));
 
 		if ( !stricmp( sz, m_pszAntialiasNames[0] ) )
@@ -482,7 +559,11 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		else if ( !stricmp( sz, m_pszAntialiasNames[3] ) )
 		{
 			m_CurrentSettings.antialias = 8;
-		}
+		}*/
+		// Set the AA convars according to the menu item chosen
+		int nActiveAAItem = m_pAntialias->GetActiveItem();
+	//	ApplyChangesToConVar( "mat_antialias", m_nAAModes[nActiveAAItem].m_nNumSamples );
+		m_CurrentSettings.antialias = m_nAAModes[nActiveAAItem].m_nNumSamples;
 	}
 
 	if ( m_pWindowed )
@@ -595,8 +676,10 @@ void COptionsSubVideo::OnTextChanged(Panel *pPanel, const char *pszText)
 	else if (pPanel == m_pAntialias)
     {
     //    if (strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
-		if (Q_strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
+	//	if (Q_strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
+		if (m_CurrentSettings.antialias != m_pAntialias->GetActiveItem())
         {
+		//	Msg( "OnDataChanged\n" );
             OnDataChanged();
         }
     }

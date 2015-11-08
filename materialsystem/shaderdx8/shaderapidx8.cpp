@@ -287,6 +287,9 @@ public:
 	
 	// Sets the mode...
 	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0 );
+	
+	// Reports support for a given MSAA mode
+	bool SupportsMSAAMode( int nMSAAMode );
 
 	// Creates/ destroys a child window
 	bool AddView( void* hwnd );
@@ -3661,8 +3664,7 @@ void CShaderAPIDX8::ResetDXRenderState( void )
     SetRenderStateForce( D3DRS_POINTSCALE_A, dOne );
     SetRenderStateForce( D3DRS_POINTSCALE_B, dZero );
     SetRenderStateForce( D3DRS_POINTSCALE_C, dZero );
-//    SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, TRUE );
-	SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, FALSE ); // VXP: Maybe, fix for nVidia cards
+    SetRenderStateForce( D3DRS_MULTISAMPLEANTIALIAS, TRUE );
     SetRenderStateForce( D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF );
     SetRenderStateForce( D3DRS_PATCHEDGESTYLE, D3DPATCHEDGE_DISCRETE );
     SetRenderStateForce( D3DRS_DEBUGMONITORTOKEN, D3DDMT_ENABLE );
@@ -9365,4 +9367,12 @@ void CShaderAPIDX8::RecordString( const char *pStr )
 void CShaderAPIDX8::EvictManagedResources( void )
 {
 	m_pD3DDevice->EvictManagedResources();
+}
+
+bool CShaderAPIDX8::SupportsMSAAMode( int nMSAAMode )
+{
+	return ( D3D_OK == m_pD3D->CheckDeviceMultiSampleType( m_DisplayAdapter, m_DeviceType, 
+														   m_PresentParameters.BackBufferFormat,
+														   m_PresentParameters.Windowed,
+														   ComputeMultisampleType( nMSAAMode ), NULL ) );
 }

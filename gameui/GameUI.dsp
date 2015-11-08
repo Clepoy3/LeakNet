@@ -354,6 +354,14 @@ SOURCE=..\common\GameUI\IGameUI.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\public\materialsystem\imaterialsystem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\public\materialsystem\imaterialsystemhardwareconfig.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\public\interface.h
 # End Source File
 # Begin Source File
