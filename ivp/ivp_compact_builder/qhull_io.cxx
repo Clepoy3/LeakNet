@@ -814,7 +814,7 @@ void qh_geomplanes (facetT *facet, realT *outerplane, realT *innerplane) {
     qh_outerinner (facet, outerplane, innerplane);
     radius= qh PRINTradius;
     if (qh JOGGLEmax < REALmax/2)
-      radius -= qh JOGGLEmax * sqrt (qh hull_dim);  /* already accounted for in qh_outerinner() */
+      radius -= qh JOGGLEmax * (float)sqrt ((float)qh hull_dim);  /* already accounted for in qh_outerinner() */ // VXP: (float)
     *outerplane += radius;
     *innerplane -= radius;
     if (qh PRINTcoplanar || qh PRINTspheres) {
@@ -1351,7 +1351,7 @@ void qh_printbegin (FILE *fp, int format, facetT *facetlist, setT *facets, boolT
     }
     maximize_(qh PRINTradius, qh MINvisible); 
     if (qh JOGGLEmax < REALmax/2)
-      qh PRINTradius += qh JOGGLEmax * sqrt (qh hull_dim);
+      qh PRINTradius += qh JOGGLEmax * (float)sqrt ((float)qh hull_dim); // VXP: (float)
     if (qh PRINTdim != 4 &&
 	(qh PRINTcoplanar || qh PRINTspheres || qh PRINTcentrums)) {
       vertices= qh_facetvertices (facetlist, facets, printall);

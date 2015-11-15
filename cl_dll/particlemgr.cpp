@@ -393,6 +393,7 @@ Particle* CParticleEffectBinding::AddParticle( int sizeInBytes, IMaterial *pMate
 	if ( !pMaterial )
 	{
 		Assert( false );
+	//	DevWarning( "CParticleEffectBinding::AddParticle: !pMaterial\n" );
 		return NULL;
 	}
 

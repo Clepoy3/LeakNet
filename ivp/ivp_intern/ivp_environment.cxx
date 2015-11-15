@@ -894,7 +894,8 @@ void IVP_Environment::add_draw_vector(const IVP_U_Point *start_p, const IVP_U_Fl
 
 void IVP_Environment::simulate_psi(IVP_Time /*psi_time*/){
 
-    IVP_IF(1 || this->debug_information->display_statistic)
+//    IVP_IF(1 || this->debug_information->display_statistic) // VXP
+    IVP_IF(this->debug_information->display_statistic)
     {
 	if( get_current_time()- get_statistic_manager()->last_statistic_output >= 1.0f ) {
 	    get_statistic_manager()->output_statistic();

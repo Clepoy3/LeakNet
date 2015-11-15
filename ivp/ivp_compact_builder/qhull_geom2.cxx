@@ -225,7 +225,8 @@ void qh_detroundoff (void) {
     minimize_(maxangle, qh premerge_cos);
     minimize_(maxangle, qh postmerge_cos);
     /* max diameter * sin theta + DISTround for vertex to its hyperplane */
-    qh ONEmerge= sqrt (qh hull_dim) * qh MAXwidth *
+	// VXP: (float)
+    qh ONEmerge= (float)sqrt ((float)qh hull_dim) * qh MAXwidth *
       sqrt (1.0 - maxangle * maxangle) + qh DISTround;  
     maxrho= qh hull_dim * qh premerge_centrum + qh DISTround;
     maximize_(qh ONEmerge, maxrho);
@@ -239,7 +240,7 @@ void qh_detroundoff (void) {
     realT maxdist;
     
     qh KEEPnearinside= True;
-    maxdist= sqrt (qh hull_dim) * qh JOGGLEmax + qh DISTround;
+    maxdist= (float)sqrt ((float)qh hull_dim) * qh JOGGLEmax + qh DISTround; // VXP: (float)
     maxdist= 2*maxdist;  /* vertex and coplanar point can joggle in opposite directions */
     maximize_(qh NEARinside, maxdist);  /* must agree with qh_nearcoplanar() */
   }
@@ -376,7 +377,7 @@ realT qh_distnorm (int dim, pointT *point, pointT *normal, realT *offsetp) {
 realT qh_distround (int dimension, realT maxabs, realT maxsumabs) {
   realT maxdistsum, maxround;
 
-  maxdistsum= sqrt (dimension) * maxabs;
+  maxdistsum= (float)sqrt ((float)dimension) * maxabs; // VXP: (float)
   minimize_( maxdistsum, maxsumabs);
   maxround= REALepsilon * (dimension * maxdistsum * 1.01 + maxabs);
               /* adds maxabs for offset */
@@ -1336,7 +1337,7 @@ void qh_outerinner (facetT *facet, realT *outerplane, realT *innerplane) {
       
     }
     if (qh JOGGLEmax < REALmax/2)
-      *outerplane += qh JOGGLEmax * sqrt (qh hull_dim);
+      *outerplane += qh JOGGLEmax * (float)sqrt ((float)qh hull_dim); // VXP: (float)
   }
   if (innerplane) {
     if (facet) {
@@ -1350,7 +1351,7 @@ void qh_outerinner (facetT *facet, realT *outerplane, realT *innerplane) {
     }else 
       *innerplane= qh min_vertex - qh DISTround;
     if (qh JOGGLEmax < REALmax/2)
-      *innerplane -= qh JOGGLEmax * sqrt (qh hull_dim);
+      *innerplane -= qh JOGGLEmax * (float)sqrt ((float)qh hull_dim); // VXP: (float)
   }
 } /* outerinner */
 

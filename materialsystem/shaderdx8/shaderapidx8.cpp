@@ -71,8 +71,8 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 // Define this if you want to use a stubbed d3d.
 //#define STUBD3D
 
-#undef D3D_BUG_TRACKED_DOWN
-//#define D3D_BUG_TRACKED_DOWN
+//#undef D3D_BUG_TRACKED_DOWN
+#define D3D_BUG_TRACKED_DOWN
 
 #ifdef STUBD3D
 #include "stubd3ddevice.h"

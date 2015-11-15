@@ -9,8 +9,8 @@
 #include <ivp_debug_manager.hxx> //because of debug psi_synchrone
 
 void IVP_Statistic_Manager::output_statistic() {
-//    printf("nr_impacts %d  hard_resc %d  resc_after %d  delayed %d  sys_strt %d sys_imps %d unmov %d  coll_check %d  mindists %d  gen_mindists %d ov %d\n",
-//	   impact_counter,impact_hard_rescue_counter,impact_rescue_after_counter,impact_delayed_counter,impact_sys_num,impact_sum_sys,impact_unmov,impact_coll_checks, sum_of_mindists, mindists_generated, range_world_exceeded);
+    printf("nr_impacts %d  hard_resc %d  resc_after %d  delayed %d  sys_strt %d sys_imps %d unmov %d  coll_check %d  mindists %d  gen_mindists %d ov %d\n",
+	   impact_counter,impact_hard_rescue_counter,impact_rescue_after_counter,impact_delayed_counter,impact_sys_num,impact_sum_sys,impact_unmov,impact_coll_checks, sum_of_mindists, mindists_generated, range_world_exceeded);
     clear_statistic();
     IVP_IF(1){
 	IVP_Debug_Manager *deb_man = l_environment->get_debug_manager();

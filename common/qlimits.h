@@ -28,7 +28,8 @@
 // Resource counts;
 #define MAX_MODEL_INDEX_BITS	9   // sent as a short
 #define	MAX_MODELS				(1<<MAX_MODEL_INDEX_BITS)
-#define MAX_SOUND_INDEX_BITS	11
+//#define MAX_SOUND_INDEX_BITS	11
+#define MAX_SOUND_INDEX_BITS	13 // VXP: Increased sound precache table size
 #define	MAX_SOUNDS				(1<<MAX_SOUND_INDEX_BITS)
 
 #define MAX_GENERIC_INDEX_BITS	9

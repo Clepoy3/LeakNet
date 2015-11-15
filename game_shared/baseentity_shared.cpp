@@ -777,7 +777,11 @@ bool CBaseEntity::VPhysicsInitSetup()
 #endif
 
 	// If this entity already has a physics object, then it should have been deleted prior to making this call.
-	Assert(!m_pPhysicsObject);
+//	Assert(!m_pPhysicsObject); // VXP: Error when loading d1_under_02
+	if( m_pPhysicsObject )
+	{
+		DevWarning( "CBaseEntity::VPhysicsInitSetup: m_pPhysicsObject\n" );
+	}
 	VPhysicsDestroyObject();
 
 	// make sure absorigin / absangles are correct

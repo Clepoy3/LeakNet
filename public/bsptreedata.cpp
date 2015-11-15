@@ -328,18 +328,26 @@ bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pE
 		BSPTreeDataHandle_t handle = m_LeafElements[idx];
 		if (!pEnum->EnumerateElement( m_Handles[handle].m_UserId, context ))
 		{
-			Assert( CountElementsInLeaf(leaf) == nCount );
+#ifdef _DEBUG
+		//	Assert( CountElementsInLeaf(leaf) == nCount );
+			if ( CountElementsInLeaf(leaf) != nCount )
+			{
+				Warning( "CBSPTreeData::EnumerateElementsInLeaf: CountElementsInLeaf(leaf) != nCount (%i, %i) - loop\n", CountElementsInLeaf(leaf), nCount );
+			}
+#endif // _DEBUG
 			return false;
 		}
 		idx = m_LeafElements.Next(idx);
 	}
 
+#ifdef _DEBUG // VXP: _DEBUG - fix for compiling in release
 	// VXP: Happened on d1_town_05. Happened when I tried to break the grass pot in mp, also on dm_lockdown when barrel breaks (after some crates breaks)
 //	Assert( CountElementsInLeaf(leaf) == nCount );
-	if( CountElementsInLeaf(leaf) != nCount )
+	if ( CountElementsInLeaf(leaf) != nCount )
 	{
-		Warning( "CBSPTreeData::EnumerateElementsInLeaf: CountElementsInLeaf(leaf) != nCount! (%i, %i)\n", CountElementsInLeaf(leaf), nCount );
+		Warning( "CBSPTreeData::EnumerateElementsInLeaf: CountElementsInLeaf(leaf) != nCount (%i, %i)\n", CountElementsInLeaf(leaf), nCount );
 	}
+#endif // _DEBUG
 
 	return true;
 }
