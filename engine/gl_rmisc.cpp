@@ -822,6 +822,12 @@ void R_NewMap (void)
 		Con_DPrintf( "Level unlit, setting 'mat_fullbright 1'\n" );
 		mat_fullbright.SetValue( 1 );
 	}
+	// VXP
+	else
+	{
+		Con_DPrintf( "Level lit, revert to 'mat_fullbright 0'\n" );
+		mat_fullbright.SetValue( 0 );
+	}
 
 	UpdateMaterialSystemConfig();
 	

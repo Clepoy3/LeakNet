@@ -115,9 +115,11 @@ void RecvProxy_PlasmaScale( const CRecvProxyData *pData, void *pStruct, void *pO
 	{
 		pPlasmaSmoke->m_flScaleStart	= pPlasmaSmoke->m_flScaleRegister;
 		pPlasmaSmoke->m_flScaleEnd		= scale;			
+
+		pPlasmaSmoke->m_flScale = scale; // VXP: Was down here
 	}
 
-	pPlasmaSmoke->m_flScale = scale;
+//	pPlasmaSmoke->m_flScale = scale;
 }
 
 //-----------------------------------------------------------------------------
@@ -146,9 +148,10 @@ void RecvProxy_PlasmaScaleTime( const CRecvProxyData *pData, void *pStruct, void
 			pPlasmaSmoke->m_flScaleTimeStart	= gpGlobals->curtime;
 			pPlasmaSmoke->m_flScaleTimeEnd	= gpGlobals->curtime + time;
 		}
+		pPlasmaSmoke->m_flScaleTime = time; // VXP: Was down here
 	}
 
-	pPlasmaSmoke->m_flScaleTime = time;
+//	pPlasmaSmoke->m_flScaleTime = time;
 }
 
 //Receive datatable

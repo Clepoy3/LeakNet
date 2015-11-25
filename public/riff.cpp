@@ -213,7 +213,7 @@ void IterateRIFF::ChunkClear( void )
 //-----------------------------------------------------------------------------
 bool IterateRIFF::ChunkAvailable( void )
 {
-	if ( m_chunkSize != -1 )
+	if ( m_chunkSize != -1 && m_chunkSize < 0x10000000 )
 		return true;
 
 	return false;

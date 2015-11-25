@@ -333,7 +333,7 @@ void CreateHairballCallback()
 		
 		// Put it a short distance in front of the player.
 		C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-		if( !pPlayer )
+		if ( !pPlayer )
 			return;
 
 		Vector vForward;

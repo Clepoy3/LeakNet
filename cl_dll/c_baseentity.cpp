@@ -604,6 +604,13 @@ bool C_BaseEntity::InitializeAsClientEntity( const char *pszModelName, RenderGro
 	if ( pszModelName != NULL )
 	{
 		nModelIndex = modelinfo->GetModelIndex( pszModelName );
+
+		if ( nModelIndex == -1 )
+		{
+			// Model could not be found
+			Assert( !"Model could not be found, index is -1" );
+			return false;
+		}
 	}
 	else
 	{

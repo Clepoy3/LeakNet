@@ -58,7 +58,9 @@
 #include "saverestore.h"
 #include "physics_saverestore.h"
 #include "igameevents.h"
+
 #include "engine/ISharedModelCache.h"
+//#include "ITrackerUser.h"
 
 extern ConVar	cl_predict;
 
@@ -90,6 +92,7 @@ IEngineTrace *enginetrace = NULL;
 IGameUIFuncs *gameuifuncs = NULL;
 IGameEventManager *gameeventmanager = NULL;
 ISharedModelCache *g_pSharedModelCache = NULL;
+//ITrackerUser *g_pTrackerUser = NULL;
 
 // String tables
 TABLEID g_StringTableEffectDispatch = INVALID_STRING_TABLE;
@@ -298,6 +301,8 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		!(random = (IUniformRandomStream *)appSystemFactory(VENGINE_CLIENT_RANDOM_INTERFACE_VERSION, NULL)) ||
 		!(gameuifuncs = (IGameUIFuncs * )appSystemFactory( VENGINE_GAMEUIFUNCS_VERSION, NULL )) ||
 		!(gameeventmanager = (IGameEventManager *)appSystemFactory(INTERFACEVERSION_GAMEEVENTSMANAGER,NULL)) ||
+	//	!(g_pSharedModelCache = (ISharedModelCache*)appSystemFactory(SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL)) ||
+	//	!(g_pTrackerUser = (ITrackerUser *)appSystemFactory(TRACKERUSER_INTERFACE_VERSION,NULL))
 		!(g_pSharedModelCache = (ISharedModelCache*)appSystemFactory(SHARED_MODEL_CACHE_INTERFACE_VERSION, NULL))
 		)
 	{
@@ -662,6 +667,10 @@ void CHLClient::DecodeUserCmdFromBuffer( bf_read& buf, int buffersize, int slot 
 void CHLClient::View_Render( vrect_t *rect )
 {
 	VPROF( "View_Render" );
+
+	if ( rect->width == 0 || rect->height == 0 )
+		return;
+
 	// This is the main render entry point... 
 	g_SmokeFogOverlayAlpha = 0;	// Reset the overlay alpha.
 

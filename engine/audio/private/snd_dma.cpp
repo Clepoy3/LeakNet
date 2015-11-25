@@ -1123,8 +1123,8 @@ float SND_FadeToNewGain( channel_t *ch, float gain_new )
 
 #define SND_TRACE_UPDATE_MAX  2			// max of N channels may be checked for obscured source per frame
 
-static g_snd_trace_count = 0;
-static g_snd_last_trace_chan = 0;
+static int g_snd_trace_count = 0;
+static int g_snd_last_trace_chan = 0;
 
 // All new sounds must traceline once,
 // but cap the max number of tracelines performed per frame

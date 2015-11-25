@@ -76,8 +76,10 @@ void DispatchEffectToCallback( const char *pEffectName, const CEffectData &m_Eff
 		{
 			pReg->m_pFunction( m_EffectData );
 			// VXP: Should be "return" here?
+			return; // VXP: From Source 2007
 		}
 	}
+	DevMsg("DispatchEffect: effect '%s' not found on client\n", pEffectName );
 }
 
 //-----------------------------------------------------------------------------

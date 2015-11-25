@@ -1257,6 +1257,7 @@ void CBasePlayer::Event_Killed( const CTakeDamageInfo &info )
 	pl.deadflag = true;
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	SetMoveType( MOVETYPE_FLYGRAVITY );
+	SetGroundEntity( NULL ); // VXP
 	Relink();
 	RemoveFlag( FL_ONGROUND );
 	if (GetAbsVelocity().z < 10)
@@ -3964,6 +3965,7 @@ void CBasePlayer::Spawn( void )
 		StopObserverMode();
 	}
 
+	Relink(); // VXP
 	// Clear any screenfade
 	color32 nothing = {0,0,0,0};
 	UTIL_ScreenFade( this, nothing, 0, 0, FFADE_OUT );
@@ -5658,6 +5660,9 @@ bool CBasePlayer::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
 //-----------------------------------------------------------------------------
 void CBasePlayer::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector *pvecTarget /* = NULL */, const Vector *pVelocity /* = NULL */ )
 {
+	if ( !pWeapon )
+		return;
+
 	bool bWasActiveWeapon = false;
 	if ( pWeapon == GetActiveWeapon() )
 	{

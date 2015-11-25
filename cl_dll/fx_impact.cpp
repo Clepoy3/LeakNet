@@ -185,9 +185,9 @@ void LeakEffect( trace_t &tr )
 		return;
 
 	// VXP: Fix for crash when player shoots at leakable texture
-/*	ClientEntityList().AddNonNetworkableEntity( pLeak->GetIClientUnknown() );
+//	ClientEntityList().AddNonNetworkableEntity( pLeak->GetIClientUnknown() ); // VXP: Commented because causes crash at game shutdown
 	// VXP: Taken from c_fire_smoke.cpp
-	m_Partition = partition->CreateHandle( pLeak->GetIClientUnknown() );
+/*	m_Partition = partition->CreateHandle( pLeak->GetIClientUnknown() );
 	view->AddVisibleEntity( pLeak );*/
 
 	IMaterialVar*	pLeakColorVar = pTraceMaterial->FindVar( "$leakcolor", &found );

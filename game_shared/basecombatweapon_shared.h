@@ -326,6 +326,9 @@ public:
 	virtual void			GetViewmodelBoneControllers(C_BaseViewModel *pViewModel, float controllers[MAXSTUDIOBONECTRLS]) { return; }
 
 	virtual void			NotifyShouldTransmit( ShouldTransmitState_t state );
+	
+	virtual int				GetWorldModelIndex( void );
+	void					EnsureCorrectRenderingModel();
 
 #endif // End client-only methods
 

@@ -345,9 +345,9 @@ int COptionsSubVideo::FindMSAAMode( int nAASamples )
 
 void COptionsSubVideo::SetCurrentAntialiasComboItem()
 {
-	const char* item = "";
-	char buffer[33];
-	item = itoa( registry->ReadInt( "ScreenAntialias", -1 ), buffer, 10 );
+//	const char* item = "";
+//	char buffer[33];
+//	item = itoa( registry->ReadInt( "ScreenAntialias", -1 ), buffer, 10 );
 	
 	int nAASamples = registry->ReadInt( "ScreenAntialias", -1 );
 	int nMSAAMode = FindMSAAMode( nAASamples );
@@ -359,13 +359,13 @@ void COptionsSubVideo::SetCurrentAntialiasComboItem()
 //	}
 //	else
 //	{
-		for( int i = 0; i < 4; i++ )
-		{
+	//	for( int i = 0; i < 4; i++ )
+	//	{
 		//	if( strcmp( item, m_pszAnisoNames[i] ) == 0 )
 		//	Msg( "First: %i\n", strstr( m_pszAnisoNames[i], item ) );
 			//if( strstr( m_pszAntialiasNames[i], item ) > 0 )
 				//m_iStartAntialias = i;
-		}
+	//	}
 //	}
 
     //m_pAntialias->ActivateItemByRow( m_iStartAntialias );

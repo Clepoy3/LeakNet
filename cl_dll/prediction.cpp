@@ -1036,11 +1036,12 @@ void CPrediction::RestoreOriginalEntityState( void )
 		}
 
 		// HACK Force recomputation of origin
+		// VXP: Maybe, do this recursively: Source 2007: InvalidateEFlagsRecursive
 		ent->m_iEFlags |= EFL_DIRTY_ABSTRANSFORM |
 			EFL_DIRTY_ABSVELOCITY | EFL_DIRTY_ABSANGVELOCITY;
 
 		// FIXME: This is a hack, we need to figure out where this should go...
-		ent->MoveAimEnt();
+	//	ent->MoveAimEnt(); // VXP: Code above is clearly describes this function
 		ent->Relink();
 	}
 
@@ -1179,9 +1180,10 @@ void CPrediction::StorePredictionResults( int predicted_frame )
 			continue;
 
 		// HACK Force recomputation of origin
+		// VXP: Maybe, do this recursively: Source 2007: InvalidateEFlagsRecursive
 		entity->m_iEFlags |= EFL_DIRTY_ABSTRANSFORM | EFL_DIRTY_ABSVELOCITY | EFL_DIRTY_ABSANGVELOCITY;
 		// FIXME: This is a hack, we need to figure out where this should go...
-		entity->MoveAimEnt();
+	//	entity->MoveAimEnt();  // VXP: Code above is clearly describes this function
 		entity->Relink();
 
 		// Certain entities can be created locally and if so created, should be 
@@ -1327,6 +1329,35 @@ int CPrediction::ComputeFirstCommandToExecute( bool received_new_world_update, i
 			//	gpGlobals->tickcount,
 			//	skipahead,
 			//	m_nCommandsPredicted - 1 );
+		}
+		// VXP: From Source 2007
+		else
+		{
+			if ( m_bPreviousAckHadErrors )
+			{
+				C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+				
+				// If an entity gets a prediction error, then we want to clear out its interpolated variables
+				// so we don't mix different samples at the same timestamps. We subtract 1 tick interval here because
+				// if we don't, we'll have 3 interpolation entries with the same timestamp as this predicted
+				// frame, so we won't be able to interpolate (which leads to jerky movement in the player when
+	
+	
+				// ANY entity like your gun gets a prediction error).
+				float flPrev = gpGlobals->curtime;
+				gpGlobals->curtime = pLocalPlayer->GetTimeBase() - TICK_RATE;
+				
+				for ( int i = 0; i < predictables->GetPredictableCount(); i++ )
+				{
+					C_BaseEntity *entity = predictables->GetPredictable( i );
+					if ( entity )
+					{
+						entity->ResetLatched();
+					}
+				}
+	
+				gpGlobals->curtime = flPrev;
+			}
 		}
 	}
 

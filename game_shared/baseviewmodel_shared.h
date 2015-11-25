@@ -104,6 +104,8 @@ public:
 	virtual void			PostDataUpdate( DataUpdateType_t updateType );
 
 	virtual bool			Interpolate( float currentTime );
+	
+	void					UpdateAnimationParity( void );
 
 	virtual int				DrawModel( int flags );
 	int						DrawOverriddenViewmodel( int flags );

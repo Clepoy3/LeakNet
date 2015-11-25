@@ -1902,8 +1902,9 @@ int CGameMovement::TryPlayerMove( void )
 
 		// Assume we can move all the way from the current origin to the
 		//  end point.
-		for (i=0 ; i<3 ; i++)
-			end[i] = mv->m_vecOrigin[i] + time_left * mv->m_vecVelocity[i];
+	//	for (i=0 ; i<3 ; i++)
+	//		end[i] = mv->m_vecOrigin[i] + time_left * mv->m_vecVelocity[i];
+		VectorMA( mv->m_vecOrigin, time_left, mv->m_vecVelocity, end ); // VXP
 
 		// See if we can make it from origin to end point.
 		TracePlayerBBox( mv->m_vecOrigin, end, MASK_PLAYERSOLID, COLLISION_GROUP_PLAYER_MOVEMENT, pm );
@@ -2374,19 +2375,21 @@ int CGameMovement::ClipVelocity( Vector& in, Vector& normal, Vector& out, float 
 		change = normal[i]*backoff;
 		out[i] = in[i] - change; 
 		// If out velocity is too small, zero it out.
-		if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
-			out[i] = 0;
+		// VXP: Commented
+	//	if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
+	//		out[i] = 0;
 	}
 	
-#if 0
+//#if 0 // VXP
 	// slight adjustment - hopefully to adjust for displacement surfaces
 	float adjust = DotProduct( out, normal );
 	if( adjust < 0.0f )
 	{
-		out += ( normal * -adjust );
+	//	out += ( normal * -adjust );
+		out -= ( normal * adjust );
 //		Msg( "Adjustment = %lf\n", adjust );
 	}
-#endif
+//#endif
 
 	// Return blocking flags.
 	return blocked;
@@ -2603,8 +2606,9 @@ int CGameMovement::CheckStuck( void )
 
 	// Deal with stuckness...
 
-	MoveHelper()->Con_NPrintf( player->IsServer() ? 1 : 0, "%s stuck on object %i/%s", 
-		player->IsServer() ? "server" : "client",
+	bool isServer = player->IsServer();
+	MoveHelper()->Con_NPrintf( isServer ? 1 : 0, "%s stuck on object %i/%s", 
+		isServer ? "server" : "client",
 		hitent,
 		MoveHelper()->GetName(hitent) );
 
@@ -2865,7 +2869,7 @@ void CGameMovement::CategorizePosition( void )
 		}
 
 		// Standing on an entity other than the world
-		if ( !pm.DidHitWorld() )   // So signal that we are touching something.
+		if ( pm.m_pEnt && !pm.DidHitWorld() )   // So signal that we are touching something.
 		{
 			MoveHelper( )->AddToTouched( pm, mv->m_vecVelocity );
 		}

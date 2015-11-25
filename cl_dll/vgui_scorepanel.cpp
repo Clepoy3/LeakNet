@@ -92,18 +92,19 @@ static void GetAllPlayersInfo( void )
 			continue;
 		}
 
-		engine->GetPlayerInfo( i, &g_PlayerInfoList[i] );
-
 		if ( !g_PR )
 			continue;
 
 		if ( !g_PR->Get_Connected(i) )
 			continue;
 
+		engine->GetPlayerInfo( i, &g_PlayerInfoList[i] );
+
 		extra_player_info_t *extra = &g_PlayerExtraInfo[ i ];
-	//	C_Team *team = GetPlayersTeam(i);
-	//	if ( !team )
-	//		continue;
+		// VXP: I've previously commented these three lines
+		C_Team *team = GetPlayersTeam(i);
+		if ( !team )
+			continue;
 
 		extra->frags = g_PR->Get_Score( i );
 		extra->deaths = g_PR->Get_Deaths( i );
@@ -123,12 +124,12 @@ static void GetAllPlayersInfo( void )
 		extra->playerclass = 0;
 #endif
 
-	//	extra->teamnumber = team->GetTeamNumber();
-		extra->teamnumber = 0;
+		extra->teamnumber = team->GetTeamNumber();
+	//	extra->teamnumber = 0;
 		extra->ping = g_PR->Get_Ping( i );
 		extra->packetloss = g_PR->Get_Packetloss( i );
-	//	Q_snprintf( extra->teamname, sizeof( extra->teamname ), "%s", team->Get_Name() );
-		Q_snprintf( extra->teamname, sizeof( extra->teamname ), "Combine" );
+		Q_snprintf( extra->teamname, sizeof( extra->teamname ), "%s", team->Get_Name() );
+	//	Q_snprintf( extra->teamname, sizeof( extra->teamname ), "Combine" );
 	}
 
 	memset( g_IsSpectator, 0, sizeof( g_IsSpectator ) );
@@ -152,9 +153,12 @@ public:
 
 SBColumnInfo g_ColumnInfo[NUM_COLUMNS] =
 {
-	{NULL,			24,			Label::a_east},		// tracker column
-	{NULL,			140,		Label::a_east},		// name
-	{NULL,			56,			Label::a_east},		// class
+//	{NULL,			24,			Label::a_east},		// tracker column
+	{"#PLAYERS",	24,			Label::a_east},		// tracker column
+//	{NULL,			140,		Label::a_east},		// name
+	{"#TEAMS",		140,		Label::a_east},		// name
+//	{NULL,			56,			Label::a_east},		// class
+	{"#CLASS",		56,			Label::a_east},		// class
 	{"#SCORE",		40,			Label::a_east},
 	{"#DEATHS",		46,			Label::a_east},
 	{"#LATENCY",	46,			Label::a_east},
@@ -219,14 +223,14 @@ ScorePanel::ScorePanel( const char *pElementName ) : CHudElement( pElementName )
 	int xpos = XRES( g_ColumnInfo[0].m_Width + 3 );
 	m_TitleLabel.SetBounds(xpos + XRES( 10 ) , 4, wide - XRES( 20 ), SBOARD_TITLE_SIZE_Y);
 
-	SetPaintBorderEnabled(true);
+/*	SetPaintBorderEnabled(true);
 
 	m_pCloseButton = new Button( this, "Close", "x" );
 	m_pCloseButton->SetPaintBackgroundEnabled( false );
 	m_pCloseButton->SetFgColor( Color( 255, 255, 255, 255 ) );
 	m_pCloseButton->AddActionSignalTarget( this );
 	m_pCloseButton->SetBounds( wide-XRES(12 + 6), YRES(2), XRES( 12 ) , YRES( 12 ) );
-	m_pCloseButton->SetCommand( "close" );
+	m_pCloseButton->SetCommand( "close" );*/
 
 	memset( m_PlayerGrids, 0, sizeof( m_PlayerGrids ) );
 	memset( m_PlayerEntries, 0, sizeof( m_PlayerEntries ) );
@@ -960,15 +964,19 @@ void ScorePanel::FillGrid()
 				{
 				case COLUMN_NAME:
 					/*
-					if (g_pTrackerUser)
+				//	if (g_pTrackerUser)
+					if (g_TrackerUser)
 					{
 						int playerSlot = m_iSortedRows[row];
 						int trackerID = engine->GetTrackerIDForPlayer(playerSlot);
-						const char *trackerName = g_pTrackerUser->GetUserName(trackerID);
+					//	const char *trackerName = g_pTrackerUser->GetUserName(trackerID);
+						const char *trackerName = g_TrackerUser->GetUserName(trackerID);
 						if (trackerName && *trackerName)
 						{
-							Q_snprintf(sz, "   (%s)", trackerName);
-							pLabel->setText2(sz);
+						//	Q_snprintf(sz, "   (%s)", trackerName);
+						//	pLabel->setText2(sz);
+							Q_snprintf(sz, sizeof(sz), "   (%s)", trackerName);
+							pLabel->SetText2(sz);
 						}
 					}
 					*/
@@ -1018,16 +1026,21 @@ void ScorePanel::FillGrid()
 
 				case COLUMN_TRACKER:
 					/*
-					if (g_pTrackerUser)
+				//	if (g_pTrackerUser)
+					if (g_TrackerUser)
 					{
 						int playerSlot = m_iSortedRows[row];
 						int trackerID = engine->GetTrackerIDForPlayer(playerSlot);
 
-						if (g_pTrackerUser->IsFriend(trackerID) && trackerID != g_pTrackerUser->GetTrackerID())
+					//	if (g_pTrackerUser->IsFriend(trackerID) && trackerID != g_pTrackerUser->GetTrackerID())
+						if (g_TrackerUser->IsFriend(trackerID) && trackerID != g_TrackerUser->GetTrackerID())
 						{
-							pLabel->setImage(m_pTrackerIcon);
-							pLabel->setFgColorAsImageColor(false);
-							m_pTrackerIcon->setColor(Color(255, 255, 255, 255));
+						//	pLabel->setImage(m_pTrackerIcon);
+						//	pLabel->setFgColorAsImageColor(false);
+						//	m_pTrackerIcon->setColor(Color(255, 255, 255, 255));
+						//	pLabel->SetImage(m_pTrackerIcon);
+							pLabel->SetFgColorAsImageColor(false);
+							m_pTrackerIcon->SetColor(Color(255, 255, 255, 255));
 						}
 					}
 					*/

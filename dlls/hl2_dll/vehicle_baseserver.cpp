@@ -501,7 +501,10 @@ int CBaseServerVehicle::GetExitAnimToUse( void )
 
 	// No exit anims? 
 	if ( !m_ExitAnimations.Count() )
-		return 0;
+	{
+	//	return 0;
+		return ACTIVITY_NOT_AVAILABLE; // VXP: Fix for not available digger exit animation, so player can't leave a digger after entering
+	}
 
 	// Figure out which entrypoint hitbox the player is in
 	CBaseAnimating *pAnimating = dynamic_cast<CBaseAnimating *>(m_pVehicle);
@@ -510,7 +513,10 @@ int CBaseServerVehicle::GetExitAnimToUse( void )
 
 	studiohdr_t *pStudioHdr = pAnimating->GetModelPtr();
 	if (!pStudioHdr)
-		return 0;
+	{
+	//	return 0;
+		return ACTIVITY_NOT_AVAILABLE; // VXP: Fix for not available digger exit animation, so player can't leave a digger after entering
+	}
 
 	bool bUpright = IsVehicleUpright();
 

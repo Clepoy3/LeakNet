@@ -1637,7 +1637,9 @@ void CSaveRestore::LoadAdjacentEnts( const char *pOldLevel, const char *pLandmar
 	g_ServerGlobalVariables.pSaveData = NULL;
 	if ( !foundprevious )
 	{
-		Host_Error( "Level transition ERROR\nCan't find connection to %s from %s\n", pOldLevel, sv.name );
+		// Host_Error( "Level transition ERROR\nCan't find connection to %s from %s\n", pOldLevel, sv.name );
+		Warning( "Level transition ERROR\nCan't find connection to %s from %s\n", pOldLevel, sv.name );
+		Cbuf_AddText( "disconnect\n" );
 	}
 }
 

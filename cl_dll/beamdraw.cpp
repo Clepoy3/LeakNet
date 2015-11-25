@@ -603,7 +603,7 @@ void CalcSegOrigin( Vector *vecOut, int iPoint, int noise_divisions, float *prgN
 
 	// Iterator to resample noise waveform (it needs to be generated in powers of 2)
 	int noiseStep = (int)((float)(noise_divisions-1) * div * 65536.0f);
-	int noiseIndex = (iPoint+1) * noiseStep;
+	int noiseIndex = (iPoint+1) * noiseStep; // VXP: Maybe, just iPoint?
 
 	// Sine noise beams have different length calculations
 	if ( flags & FBEAM_SINENOISE )
@@ -1403,12 +1403,15 @@ void DrawRing( int noise_divisions, float *prgNoise, void (*pfnNoise)( float *no
 		point[2] = xaxis[2] * x + yaxis[2] * y + center[2];
 
 		// Distort using noise
-		factor = prgNoise[(noiseIndex>>16) & 0x7F] * scale;
-		VectorMA( point, factor, CurrentViewUp(), point );
-
-		// Rotate the noise along the perpendicluar axis a bit to keep the bolt from looking diagonal
-		factor = prgNoise[(noiseIndex>>16) & 0x7F] * scale * cos(fraction*M_PI*3*8+freq);
-		VectorMA( point, factor, CurrentViewRight(), point );
+		if ( scale != 0.0f )
+		{
+			factor = prgNoise[(noiseIndex>>16) & 0x7F] * scale;
+			VectorMA( point, factor, CurrentViewUp(), point );
+	
+			// Rotate the noise along the perpendicluar axis a bit to keep the bolt from looking diagonal
+			factor = prgNoise[(noiseIndex>>16) & 0x7F] * scale * cos(fraction*M_PI*3*8+freq);
+			VectorMA( point, factor, CurrentViewRight(), point );
+		}
 		
 		// Transform point into screen space
 		ScreenTransform( point, screen );

@@ -1036,7 +1036,7 @@ void CHudChat::MsgFunc_TextMsg( const char *pszName, int iSize, void *pbuf )
 	case HUD_PRINTNOTIFY:
 		psz[0] = 1;  // mark this message to go into the notify buffer
 		Q_snprintf( psz+1, sizeof( szBuf[5] ) - 1, msg_text, sstr1, sstr2, sstr3, sstr4 );
-		Msg( ConvertCRtoNL( psz ) );
+		Msg( "%s", ConvertCRtoNL( psz ) );
 		break;
 
 	case HUD_PRINTTALK:
@@ -1046,7 +1046,7 @@ void CHudChat::MsgFunc_TextMsg( const char *pszName, int iSize, void *pbuf )
 
 	case HUD_PRINTCONSOLE:
 		Q_snprintf( psz, sizeof( szBuf[5] ), msg_text, sstr1, sstr2, sstr3, sstr4 );
-		Msg( ConvertCRtoNL( psz ) );
+		Msg( "%s", ConvertCRtoNL( psz ) );
 		break;
 	}
 }

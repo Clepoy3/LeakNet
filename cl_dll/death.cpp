@@ -285,7 +285,7 @@ if ( strstr( victim_name, "Robin" ) )
 	// record the death notice in the console
 	if ( rgDeathNoticeList[i].iSuicide )
 	{
-		Msg( rgDeathNoticeList[i].szVictim );
+		Msg( "%s", rgDeathNoticeList[i].szVictim );
 
 		if ( !strcmp( killedwith, "d_world" ) )
 		{
@@ -298,15 +298,15 @@ if ( strstr( victim_name, "Robin" ) )
 	}
 	else if ( rgDeathNoticeList[i].iTeamKill )
 	{
-		Msg( rgDeathNoticeList[i].szKiller );
+		Msg( "%s", rgDeathNoticeList[i].szKiller );
 		Msg( " killed his teammate " );
-		Msg( rgDeathNoticeList[i].szVictim );
+		Msg( "%s", rgDeathNoticeList[i].szVictim );
 	}
 	else
 	{
-		Msg( rgDeathNoticeList[i].szKiller );
+		Msg( "%s", rgDeathNoticeList[i].szKiller );
 		Msg( " killed " );
-		Msg( rgDeathNoticeList[i].szVictim );
+		Msg( "%s", rgDeathNoticeList[i].szVictim );
 	}
 
 	if ( killedwith && *killedwith && (*killedwith > 13 ) && strcmp( killedwith, "d_world" ) && !rgDeathNoticeList[i].iTeamKill )

@@ -1010,6 +1010,13 @@ C_BaseAnimating* C_BasePlayer::GetRenderedWeaponModel()
 
 
 
+//-----------------------------------------------------------------------------
+// Purpose: single place to decide whether the local player should draw
+//-----------------------------------------------------------------------------
+bool C_BasePlayer::ShouldDrawLocalPlayer()
+{
+	return input->CAM_IsThirdPerson();
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 

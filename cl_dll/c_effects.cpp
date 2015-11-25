@@ -950,6 +950,8 @@ void C_Embers::SpawnEmber( void )
 
 	//Spawn the particle
 	SimpleParticle	*sParticle = (SimpleParticle *) m_pEmitter->AddParticle( sizeof( SimpleParticle ), m_hMaterial, offset );
+	if ( sParticle == NULL )
+		return;
 
 	float	cScale = random->RandomFloat( 0.75f, 1.0f );
 

@@ -582,10 +582,13 @@ void CPropVehicleDriveable::Think()
 {
 	BaseClass::Think();
 
+//	Msg( "m_bEnterAnimOn: %s, m_bExitAnimOn: %s\n", (m_bEnterAnimOn) ? "Yes" : "No", (m_bExitAnimOn) ? "Yes" : "No" );
+
 	// Always think if we have any driver in us
 	if ( GetDriver() )
 	{
 		SetNextThink( gpGlobals->curtime );
+		m_bEnterAnimOn = false; // VXP: Fix for not controllable digger
 	}
 
 	// If we have an NPC Driver, tell him to drive

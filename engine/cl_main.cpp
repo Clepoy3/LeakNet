@@ -982,7 +982,7 @@ void CL_Disconnect (void)
 	if ( cls.state == ca_disconnected )
 		return;
 
-	mat_fullbright.SetValue(0); // VXP
+//	mat_fullbright.SetValue(0); // VXP: Moved to R_NewMap()
 
 	if ( cls.netchan.remote_address.type != NA_UNUSED )
 	{
@@ -1434,7 +1434,8 @@ void CL_SignonReply (void)
 			Q_snprintf ( str, sizeof( str ), "spawn %i", cl.servercount );
 			cls.netchan.message.WriteString (str);
 			VGui_NotifyOfServerProgress( 15, "Retrieving server info..." );
-			Sys_ShowProgressTicks("");
+		//	Sys_ShowProgressTicks("");
+			Sys_ShowProgressTicks(str);
 		}
 		break;
 		

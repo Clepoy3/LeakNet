@@ -152,7 +152,8 @@ void Sys_ShowProgressTicks(char* specialProgressMsg)
 	static long numTics = 0;
 
 	// Nothing to do if not using Steam
-	if ( ! COM_CheckParm(STEAM_PARM) )
+//	if ( ! COM_CheckParm(STEAM_PARM) )
+	if ( !CommandLine()->CheckParm("-steam") )
 		return;
 
 	// Update number of tics to show...
@@ -183,13 +184,14 @@ void Sys_ShowProgressTicks(char* specialProgressMsg)
 
 	//	Cvar_Set("scr_connectmsg1", msg);
 	//	Cvar_Set("scr_connectmsg2", "Downloading resources...");
-	/*	ConVar *var = (ConVar *)cv->FindVar( "scr_connectmsg" );
-		var->SetValue( specialProgressMsg );
+		ConVar *var;
+	//	ConVar *var = (ConVar *)cv->FindVar( "scr_connectmsg" );
+	//	var->SetValue( specialProgressMsg );
 		var = (ConVar *)cv->FindVar( "scr_connectmsg1" );
 		var->SetValue( msg );
 		var = (ConVar *)cv->FindVar( "scr_connectmsg2" );
 		var->SetValue( "Downloading resources..." );
-	*/
+	
 		SCR_UpdateScreen();
 	}
 #endif
