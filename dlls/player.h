@@ -97,7 +97,8 @@ enum PlayerPhysFlag_e
 #define AUTOAIM_8DEGREES  0.1391731009601
 #define AUTOAIM_10DEGREES 0.1736481776669
 
-#define AUTOAIM_20DEGREES 0.1736481776669*2	//FIXME: Okay fine, this isn't exactly right
+//#define AUTOAIM_20DEGREES 0.1736481776669*2	//FIXME: Okay fine, this isn't exactly right
+#define AUTOAIM_20DEGREES 0.3490658503989 // VXP
 
 // useful cosines
 #define DOT_1DEGREE   0.9998476951564

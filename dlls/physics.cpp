@@ -602,7 +602,7 @@ int CCollisionEvent::ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObje
 	penetrateevent_t &event = FindOrAddPenetrateEvent( pEntity0, pEntity1 );
 	float eventTime = gpGlobals->curtime - event.startTime;
 
-#if _DEBUG
+#ifdef _DEBUG
 	const char *pName1 = STRING(pEntity0->GetModelName());
 	const char *pName2 = STRING(pEntity1->GetModelName());
 	DevMsg(2, "***Inter-penetration between %s AND %s (%.0f, %.0f)\n", pName1?pName1:"(null)", pName2?pName2:"(null)", gpGlobals->curtime, eventTime );
@@ -940,6 +940,9 @@ void CCollisionEvent::PostCollision( vcollisionevent_t *pEvent )
 		if ( pObject )
 		{
 			CBaseEntity *pEntity = reinterpret_cast<CBaseEntity *>(pObject->GetGameData());
+			if ( !pEntity )
+				return;
+
 			isNPC[i] = (pEntity->MyNPCPointer() || pEntity->IsPlayer()) ? true : false;
 			unsigned int flags = pObject->GetCallbackFlags();
 			m_gameEvent.pEntities[i] = pEntity;
@@ -1318,6 +1321,10 @@ void CCollisionEvent::StartTouch( IPhysicsObject *pObject1, IPhysicsObject *pObj
 {
 	CBaseEntity *pEntity1 = static_cast<CBaseEntity *>(pObject1->GetGameData());
 	CBaseEntity *pEntity2 = static_cast<CBaseEntity *>(pObject2->GetGameData());
+
+	if ( !pEntity1 || !pEntity2 )
+		return;
+
 	Vector endPoint, normal;
 	pTouchData->GetContactPoint( endPoint );
 	pTouchData->GetSurfaceNormal( normal );
@@ -1335,6 +1342,10 @@ void CCollisionEvent::EndTouch( IPhysicsObject *pObject1, IPhysicsObject *pObjec
 {
 	CBaseEntity *pEntity1 = static_cast<CBaseEntity *>(pObject1->GetGameData());
 	CBaseEntity *pEntity2 = static_cast<CBaseEntity *>(pObject2->GetGameData());
+
+	if ( !pEntity1 || !pEntity2 )
+		return;
+
 	Vector endPoint, normal;
 	pTouchData->GetContactPoint( endPoint );
 	pTouchData->GetSurfaceNormal( normal );

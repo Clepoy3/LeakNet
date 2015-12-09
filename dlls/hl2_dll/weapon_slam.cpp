@@ -213,7 +213,7 @@ void CWeapon_SLAM::SecondaryAttack( void )
 		if (m_tSlamState == SLAM_TRIPMINE_READY)
 		{
 			// Play sound for going to throw mode
-			EmitSound( "Weapon_SLAM.ThrowMode" );
+			pOwner->EmitSound( "Weapon_SLAM.ThrowMode" );
 
 			if (CanAttachSLAM())
 			{
@@ -229,7 +229,19 @@ void CWeapon_SLAM::SecondaryAttack( void )
 		else
 		{
 			// Play sound for going to tripmine mode
-			EmitSound( "Weapon_SLAM.TripMineMode" );
+		//	EmitSound( "Weapon_SLAM.TripMineMode" );
+		/* // VXP: Working
+			CPASAttenuationFilter filter( pOwner );
+			filter.MakeReliable();
+			filter.UsePredictionRules();
+			Vector origin = pOwner->GetAbsOrigin(); // + Vector( 0, 0, 10 );
+			CBaseEntity::EmitSound( filter, pOwner->entindex(), "Weapon_SLAM.TripMineMode", &origin );
+		*/
+		/* // VXP: Working
+			CPASAttenuationFilter filter( pOwner );
+			EmitSound( filter, pOwner->entindex(), CHAN_ITEM, "Weapon_SLAM.TripMineMode", 1.0, ATTN_NORM, 0, 100 );
+		*/
+			pOwner->EmitSound( "Weapon_SLAM.TripMineMode" );
 
 			if (m_tSlamState == SLAM_SATCHEL_ATTACH)
 			{
@@ -254,6 +266,12 @@ void CWeapon_SLAM::SecondaryAttack( void )
 void CWeapon_SLAM::SatchelDetonate()
 {
 	CBaseEntity *pEntity = NULL;
+	
+	CBaseCombatCharacter *pOwner  = GetOwner();
+	if (!pOwner)
+	{
+		return;
+	}
 
 	while ((pEntity = gEntList.FindEntityByClassname( pEntity, "npc_satchel" )) != NULL)
 	{
@@ -264,7 +282,7 @@ void CWeapon_SLAM::SatchelDetonate()
 		}
 	}
 	// Play sound for pressing the detonator
-	EmitSound( "Weapon_SLAM.SatchelDetonate" );
+	pOwner->EmitSound( "Weapon_SLAM.SatchelDetonate" );
 
 	m_bDetonatorArmed	= false;
 }
@@ -363,7 +381,7 @@ void CWeapon_SLAM::TripmineAttach( void )
 
 			pOwner->RemoveAmmo( 1, m_iSecondaryAmmoType );
 
-			EmitSound( "Weapon_SLAM.TripMineAttach" );
+			pOwner->EmitSound( "Weapon_SLAM.TripMineAttach" );
 		}
 	}
 }
@@ -464,7 +482,7 @@ void CWeapon_SLAM::SatchelThrow( void )
 	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
 
 	// Play throw sound
-	EmitSound( "Weapon_SLAM.SatchelThrow" );
+	pPlayer->EmitSound( "Weapon_SLAM.SatchelThrow" );
 }
 
 //-----------------------------------------------------------------------------
@@ -531,7 +549,7 @@ void CWeapon_SLAM::SatchelAttach( void )
 			angles.z -= 90;
 			tr.endpos.z -= 6.0f;
 
-			EmitSound( "Weapon_SLAM.SatchelAttach" );
+			pOwner->EmitSound( "Weapon_SLAM.SatchelAttach" );
 		
 			CSatchelCharge *pSatchel	= (CSatchelCharge*)CBaseEntity::Create( "npc_satchel", tr.endpos + tr.plane.normal * 3, angles, NULL );
 			pSatchel->SetMoveType( MOVETYPE_FLY ); // no gravity

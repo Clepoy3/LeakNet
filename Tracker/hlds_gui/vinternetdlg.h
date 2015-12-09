@@ -21,9 +21,9 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_PHandle.h>
+#include <vgui_controls\Frame.h>
+#include <vgui_controls\ListPanel.h>
+#include <vgui_controls\PHandle.h>
 #include "UtlVector.h"
 
 

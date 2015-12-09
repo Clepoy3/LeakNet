@@ -69,8 +69,12 @@
 //===================================================================================================================
 // Team Defines
 #define	TEAM_INVALID			-1
-#define TEAM_UNASSIGNED			1	// not assigned to a team
-#define TEAM_SPECTATOR			2	// spectator team
+// VXP: Previosly written by me. As commented, can issue the cstrike
+//#define TEAM_UNASSIGNED			1	// not assigned to a team
+//#define TEAM_SPECTATOR			2	// spectator team
+// VXP: Was by Valve
+#define TEAM_UNASSIGNED			0	// not assigned to a team
+#define TEAM_SPECTATOR			1	// spectator team
 
 #define MAX_TEAMS				32	// Max number of teams in a game
 #define MAX_TEAM_NAME_LENGTH	32	// Max length of a team's name
@@ -145,7 +149,8 @@ enum PLAYER_ANIM
 #define AUTOAIM_5DEGREES  0.08715574274766
 #define AUTOAIM_8DEGREES  0.1391731009601
 #define AUTOAIM_10DEGREES 0.1736481776669
-#define AUTOAIM_20DEGREES 0.1736481776669*2	//FIXME: Okay fine, this isn't exactly right
+//#define AUTOAIM_20DEGREES 0.1736481776669*2	//FIXME: Okay fine, this isn't exactly right
+#define AUTOAIM_20DEGREES 0.3490658503989 // VXP
 
 // instant damage
 

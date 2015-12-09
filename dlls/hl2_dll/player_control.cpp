@@ -89,8 +89,8 @@ void CPlayer_Control::ControlActivate( void )
 
 	// Save Data
 	m_nSaveFOV			= pPlayer->m_Local.m_iFOV;
-//	m_vSaveOrigin		= pPlayer->GetLocalOrigin();
-	m_vSaveOrigin		= pPlayer->GetAbsOrigin();
+	m_vSaveOrigin		= pPlayer->GetLocalOrigin();
+//	m_vSaveOrigin		= pPlayer->GetAbsOrigin();
 	m_vSaveAngles		= pPlayer->pl.v_angle;
 	m_nSaveMoveType		= pPlayer->GetMoveType();
 	m_nSaveMoveCollide	= pPlayer->GetMoveCollide();

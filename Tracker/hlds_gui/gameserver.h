@@ -24,10 +24,10 @@
 
 #include "engine_hlds_api.h"
 
-#include <VGUI_Frame.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_PropertyPage.h>
+#include <vgui_controls\Frame.h>
+#include <vgui_controls\ListPanel.h>
+#include <vgui_controls\PHandle.h>
+#include <vgui_controls\PropertyPage.h>
 #include "UtlVector.h"
 
 

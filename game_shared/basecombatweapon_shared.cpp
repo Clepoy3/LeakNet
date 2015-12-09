@@ -1803,8 +1803,8 @@ void* SendProxy_SendActiveLocalWeaponDataTable( const void *pStruct, const void 
 	{
 		// Only send this chunk of data to the player carrying this weapon
 		CBasePlayer *pPlayer = ToBasePlayer( pWeapon->GetOwner() );
-	//	if ( pPlayer /*&& pPlayer->GetActiveWeapon() == pWeapon*/ )
-		if ( pPlayer && pPlayer->GetActiveWeapon() == pWeapon )
+		if ( pPlayer /*&& pPlayer->GetActiveWeapon() == pWeapon*/ )
+	//	if ( pPlayer && pPlayer->GetActiveWeapon() == pWeapon )
 		{
 			pRecipients->SetOnly( pPlayer->GetClientIndex() );
 			return (void*)pVarData;

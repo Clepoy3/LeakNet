@@ -93,9 +93,9 @@ void CPlayer_Manhack::Precache( void )
 void CPlayer_Manhack::Spawn( void )
 {
 	Precache();
-	SetMoveType( MOVETYPE_FLY );
+//	SetMoveType( MOVETYPE_FLY );
 //	m_flFriction = 0.55; // deading the bounce a bit
-	SetFriction( 0.55f );
+//	SetFriction( 0.55f );
 	
 	SetModel( "models/manhack.mdl" );
 	UTIL_SetSize(this, PMANHACK_HULL_MINS, PMANHACK_HULL_MAXS);
@@ -135,9 +135,9 @@ void CPlayer_Manhack::InputActivate( inputdata_t &inputdata )
 	Assert( pPlayer );
 
 	pPlayer->SetFOV( 132 );
-//	pPlayer->FollowEntity( this );
+	pPlayer->FollowEntity( this );
 
-	engine->SetView( pPlayer->edict(), edict() );
+//	engine->SetView( pPlayer->edict(), edict() );
 	pPlayer->m_nControlClass	= CLASS_MANHACK;
 	pPlayer->GiveNamedItem( "weapon_manhack" );
 	pPlayer->SelectItem( "weapon_manhack" );

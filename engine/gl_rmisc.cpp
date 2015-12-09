@@ -311,7 +311,8 @@ void Cubemap_CreateDefaultCubemap( const char *pMapName, IBSPPack *iBSPPack )
 		flagUnion |= pSrcVTFTextures[i]->Flags();
 	}
 	bool bHasAlpha = 
-		( (flagUnion & ( TEXTUREFLAGS_ONEBITALPHA | TEXTUREFLAGS_EIGHTBITALPHA )) != 0 );
+	//	( flagUnion & ( TEXTUREFLAGS_ONEBITALPHA | TEXTUREFLAGS_EIGHTBITALPHA ) != 0 );
+		( ( flagUnion & ( TEXTUREFLAGS_ONEBITALPHA | TEXTUREFLAGS_EIGHTBITALPHA ) ) != 0 );
 	
 	// Convert the cube to format that we can apply tools to it...
 //	ImageFormat originalFormat = pDstCubemap->Format();

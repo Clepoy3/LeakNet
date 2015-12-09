@@ -384,7 +384,10 @@ void CSoundPatch::Init( IRecipientFilter *pFilter, CBaseEntity *pEnt, int channe
 	}
 
 #ifdef _DEBUG
-	m_iszClassName = AllocPooledString( pEnt->GetClassname() );
+	if ( pEnt )
+	{
+		m_iszClassName = AllocPooledString( pEnt->GetClassname() );
+	}
 #endif
 }
 
@@ -445,12 +448,12 @@ float CSoundPatch::GetVolume( void )
 //-----------------------------------------------------------------------------
 inline int CSoundPatch::EntIndex() const
 {
-//	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
-	if( m_hEnt.IsValid() && !m_hEnt.Get() )
-	{
-		Warning( "CSoundPatch::EntIndex: Cannot get sound entity index!\n" );
-		return -1;
-	}
+	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
+//	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+//	{
+//		Warning( "CSoundPatch::EntIndex: Cannot get sound entity index!\n" );
+//		return -1;
+//	}
 	return m_hEnt.Get() ? m_hEnt->entindex() : -1;
 }
 
@@ -469,11 +472,11 @@ float CSoundPatch::GetVolumeForEngine( void )
 //-----------------------------------------------------------------------------
 void CSoundPatch::Shutdown( void )
 {
-	if( m_hEnt.IsValid() && !m_hEnt.Get() )
-	{
-		Warning( "CSoundPatch::Shutdown: Cannot get sound entity!\n" );
-		return;
-	}
+//	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+//	{
+//		Warning( "CSoundPatch::Shutdown: Cannot get sound entity!\n" );
+//		return;
+//	}
 //	Msg( "Removing sound %s\n", m_pszSoundName );
 	if ( m_isPlaying )
 	{
@@ -575,8 +578,18 @@ void CSoundPatch::ResumeSound( void )
 {
 	if ( IsPlaying() && m_Filter.IsActive() )
 	{
-		CBaseEntity::EmitSound( m_Filter, EntIndex(), m_entityChannel, STRING( m_iszSoundName ), 
-			GetVolumeForEngine(), m_soundlevel, SND_CHANGE_VOL | SND_CHANGE_PITCH, (int)m_pitch.Value() );
+		if ( EntIndex() >= 0 )
+		{
+			CBaseEntity::EmitSound( m_Filter, EntIndex(), m_entityChannel, STRING( m_iszSoundName ), 
+				GetVolumeForEngine(), m_soundlevel, SND_CHANGE_VOL | SND_CHANGE_PITCH, (int)m_pitch.Value() );
+		}
+		else
+		{
+			// FIXME: Lost the entity on restore. It might have been suppressed by the save/restore system.
+			// This will probably leak the sound patch since there's no one to delete it, but the next
+			// call to CSoundPatch::Update should at least remove it from the list of sound patches.
+			DevWarning( "CSoundPatch::ResumeSound: Lost EHAndle on restore - destroy the sound patch in your entity's StopLoopingSounds! (%s)\n", STRING( m_iszSoundName ) );
+		}
 	}
 }
 
@@ -601,7 +614,8 @@ void CSoundPatch::AddPlayerPost( CBasePlayer *pPlayer )
 // can be deleted later if the envelope changes dynamically.
 struct SoundCommand_t
 {
-	SoundCommand_t( void ) {}
+//	SoundCommand_t( void ) {}
+	SoundCommand_t( void ) { memset( this, 0, sizeof(*this) ); } // VXP
 	SoundCommand_t( CSoundPatch *pSound, float executeTime, soundcommands_t command, float deltaTime, float value ) : m_pPatch(pSound), m_time(executeTime), m_deltaTime(deltaTime), m_command(command), m_value(value) {}
 
 	CSoundPatch		*m_pPatch;
@@ -724,8 +738,8 @@ private:
 // UNDONE: Add start command?
 void CSoundControllerImp::ProcessCommand( SoundCommand_t *pCmd )
 {
-	if( !pCmd || !pCmd->m_pPatch )
-		return;
+//	if( !pCmd || !pCmd->m_pPatch )
+//		return;
 
 	switch( pCmd->m_command )
 	{
@@ -953,6 +967,7 @@ void CSoundControllerImp::RestoreSoundPatch( CSoundPatch **ppSoundPatch, IRestor
 			pRestore->StartBlock();
 			if ( pRestore->ReadAll( pCommand ) )
 			{
+				pCommand->m_pPatch = pPatch; // VXP
 				CommandInsert( pCommand );
 			}
 
@@ -1021,8 +1036,8 @@ void CSoundControllerImp::SoundDestroy( CSoundPatch	*pSound )
 
 void CSoundControllerImp::SoundChangePitch( CSoundPatch *pSound, float pitchTarget, float deltaTime )
 {
-	if( !pSound )
-		return;
+//	if( !pSound )
+//		return;
 
 	pSound->ChangePitch( pitchTarget, deltaTime );
 }
@@ -1030,8 +1045,8 @@ void CSoundControllerImp::SoundChangePitch( CSoundPatch *pSound, float pitchTarg
 
 void CSoundControllerImp::SoundChangeVolume( CSoundPatch *pSound, float volumeTarget, float deltaTime )
 {
-	if( !pSound )
-		return;
+//	if( !pSound )
+//		return;
 
 	pSound->ChangeVolume( volumeTarget, deltaTime );
 }

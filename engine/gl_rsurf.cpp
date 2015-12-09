@@ -2930,10 +2930,9 @@ static bool R_SetupBrushModelTransform( const Vector& origin, QAngle const& angl
 		materialSystemInterface->PushMatrix();
 
 		// FIXME: Use load matrix instead of R_RotateForEntity.. should work!
-//		materialSystemInterface->LoadMatrix( *pBrushToWorld );
+		materialSystemInterface->LoadMatrix( *pBrushToWorld ); // VXP: Uncommented
 
 	//	R_RotateForEntity( origin, angles );
-		materialSystemInterface->LoadMatrix( *pBrushToWorld ); // VXP: For tests!
 	}
 
 	return isIdentity;

@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #pragma once
 #endif
-#undef STUBD3D
+//#undef STUBD3D
 #ifdef STUBD3D
 
 #include "locald3dtypes.h"

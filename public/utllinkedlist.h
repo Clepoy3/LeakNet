@@ -340,7 +340,7 @@ I CUtlLinkedList<T,I>::AllocInternal( bool multilist )
 		// Nothing in the free list; add.
 		// Since nothing is in the free list, m_TotalElements == total # of elements
 		// the list knows about.
-		if (m_TotalElements == m_Memory.NumAllocated())
+		if ((int)m_TotalElements == m_Memory.NumAllocated())
 			m_Memory.Grow();
 
 		Assert( m_TotalElements != InvalidIndex() );

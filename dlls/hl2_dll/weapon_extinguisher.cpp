@@ -164,12 +164,15 @@ void CWeaponExtinguisher::StartJet( void )
 		m_pJet->m_bUseMuzzlePoint = true;
 		m_pJet->m_bAutoExtinguish = false;
 		m_pJet->m_nLength = fire_extinguisher_distance.GetInt();
+		
+		m_pJet->m_bWithSound = false;
 	}
 
 	//Turn the jet on
 	if ( m_pJet != NULL )
 	{
 		m_pJet->TurnOn();
+		WeaponSound( SINGLE );
 	}
 }
 
@@ -181,7 +184,12 @@ void CWeaponExtinguisher::StopJet( void )
 	//Turn the jet off
 	if ( m_pJet != NULL )
 	{
+		if ( m_pJet->m_bEmit )
+		{
+			WeaponSound( SPECIAL1 );
+		}
 		m_pJet->TurnOff();
+		StopWeaponSound( SINGLE );
 	}
 }
 

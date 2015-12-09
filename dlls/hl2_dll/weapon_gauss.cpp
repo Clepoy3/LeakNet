@@ -529,7 +529,8 @@ void CWeaponGaussGun::SecondaryAttack( void )
 		//Start looping sound
 		if ( m_sndCharge == NULL )
 		{
-			CPASAttenuationFilter filter( this );
+		//	CPASAttenuationFilter filter( this );
+			CPASAttenuationFilter filter( pOwner );
 			m_sndCharge	= (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "weapons/gauss/chargeloop.wav", ATTN_NORM );
 		}
 

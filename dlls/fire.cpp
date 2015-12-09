@@ -827,7 +827,12 @@ void CFire::Update( float simTime )
 	{
 		CBaseEntity *pOther = pNearby[i];
 
-		if ( pOther != this && FClassnameIs( pOther, "env_fire" ) )
+	//	if ( pOther != this && FClassnameIs( pOther, "env_fire" ) )
+		if ( pOther == this )
+		{
+			continue;
+		}
+		else if ( FClassnameIs( pOther, "env_fire" ) )
 		{
 			if ( fireCount < ARRAYSIZE(pFires) )
 			{

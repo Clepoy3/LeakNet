@@ -1247,6 +1247,10 @@ bool CChoreoScene::ParseFromBuffer( ISceneTokenProcessor *tokenizer )
 		{
 			ParseSceneRamp( m_pTokenizer, this );
 		}
+		else if ( !stricmp( m_pTokenizer->CurrentToken(), "scalesettings" ) )
+		{
+			ParseScaleSettings( m_pTokenizer, this );
+		}
 		else
 		{
 			m_pTokenizer->Error( "unexpected token %s\n", m_pTokenizer->CurrentToken() );

@@ -20,29 +20,44 @@
 #include <stdarg.h>
 #include <assert.h>
 
-#include "..\common\winlite.h"
+/*#include "..\common\winlite.h"
 // base vgui interfaces
-#include <VGUI_Controls.h>
-#include <VGUI_IInput.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_MouseCode.h>
-#include "FileSystem.h"
+#include <vgui_controls\Controls.h>
+#include <VGUI\IInput.h>
+#include <VGUI\ISurface.h>
+#include <VGUI\IScheme.h>
+#include <VGUI\IVGui.h>
+#include <VGUI\MouseCode.h>
+#include "FileSystem.h"*/
+
+#include <VGUI\MouseCode.h>
+#include <VGUI\KeyCode.h>
+#include "interface.h"
+#include "..\common\winlite.h"
+#include <vgui_controls\Controls.h>
+#include <vgui_controls\Panel.h>
+#include <VGUI\IInput.h>
+#include <VGUI\IScheme.h>
+#include <VGUI\ISurface.h>
+#include <VGUI\ILocalize.h>
+#include <VGUI\IVGui.h>
+#include "filesystem.h"
+//#include "CControlCatalog.h"
+#include <stdio.h>
 
 // vgui controls
-#include <VGUI_Button.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_FocusNavGroup.h>
-#include <VGUI_Frame.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_Panel.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_PropertySheet.h>
-#include <VGUI_QueryBox.h>
+#include <vgui_controls\Button.h>
+#include <vgui_controls\CheckButton.h>
+#include <vgui_controls\ComboBox.h>
+#include <vgui_controls\FocusNavGroup.h>
+#include <vgui_controls\Frame.h>
+#include <KeyValues.h>
+#include <vgui_controls\ListPanel.h>
+#include <vgui_controls\MessageBox.h>
+#include <vgui_controls\Panel.h>
+#include <vgui_controls\TextEntry.h>
+#include <vgui_controls\PropertySheet.h>
+#include <vgui_controls\QueryBox.h>
 
 
 

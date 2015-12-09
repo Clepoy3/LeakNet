@@ -181,6 +181,8 @@ void C_BaseEntity::PhysicsCustom()
 	if ( m_vecVelocity[2] > 0 || !GetGroundEntity() || !GetGroundEntity()->IsStandable() )
 	{
 		RemoveFlag( FL_ONGROUND );
+	//	SetGroundEntity( NULL ); // VXP
+		// VXP: Previous line: think that this is unnecessary
 	}
 
 	// NOTE: The entity must set the position, angles, velocity in its custom movement

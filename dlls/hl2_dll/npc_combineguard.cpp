@@ -111,6 +111,8 @@ public:
 	int				TranslateSchedule( int type );
 	int				MeleeAttack1Conditions( float flDot, float flDist );
 	int				RangeAttack1Conditions( float flDot, float flDist );
+	
+	void			Event_Killed( const CTakeDamageInfo &info ); // VXP
 
 	void			Precache( void );
 	void			Spawn( void );
@@ -319,6 +321,7 @@ void CNPC_CombineGuard::Spawn( void )
 	SetBloodColor( BLOOD_COLOR_YELLOW );
 	m_iHealth				= 100;
 	m_iMaxHealth			= m_iHealth;
+//	m_iMaxHealth			= sk_combineguard_health.GetInt(); // VXP: In future
 	m_flFieldOfView			= 0.1f;
 	
 	SetSolid( SOLID_BBOX );
@@ -582,18 +585,21 @@ int CNPC_CombineGuard::SelectSchedule( void )
 
 		if( m_fOffBalance )
 		{
-			//Randomly destroy an armor piece
-			int iArmorPiece;
-			do 
+			if( !AllArmorDestroyed() )
 			{
+				//Randomly destroy an armor piece
+				int iArmorPiece;
+				do 
+				{
 
-				iArmorPiece = random->RandomInt( CGUARD_BGROUP_RIGHT_SHOULDER, CGUARD_BGROUP_LEFT_SHIN );
+					iArmorPiece = random->RandomInt( CGUARD_BGROUP_RIGHT_SHOULDER, CGUARD_BGROUP_LEFT_SHIN );
 
-			} while( m_armorPieces[ iArmorPiece ].destroyed  );
+				} while( m_armorPieces[ iArmorPiece ].destroyed ); // VXP: Causes freeze after "NO!!!!!!!! I'M DEADZ0R!!" message
 
-			DestroyArmorPiece( iArmorPiece );
+				DestroyArmorPiece( iArmorPiece );
 
-			Msg("DESTROYING PIECE:%d\n", iArmorPiece );
+				Msg("DESTROYING PIECE:%d\n", iArmorPiece );
+			}
 
 			if( AllArmorDestroyed() )
 			{
@@ -1035,7 +1041,23 @@ int	CNPC_CombineGuard::OnTakeDamage( const CTakeDamageInfo &info )
 		}
 	}
 
+	if( AllArmorDestroyed() )
+	{
+	//	Msg( "DEADLY PUNCHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!\n" );
+		CTakeDamageInfo subInfo = info;
+		subInfo.AddDamageType( DMG_REMOVENORAGDOLL ); // VXP: Because combine guard has not death animation. TODO
+		return BaseClass::OnTakeDamage( subInfo );
+	}
+
 	return 0;
+}
+
+void CNPC_CombineGuard::Event_Killed( const CTakeDamageInfo &info ) 
+{
+	DevMsg( "CG Killed.\n" );
+	m_iHealth = 0;
+	m_takedamage = DAMAGE_NO;
+	BaseClass::Event_Killed( info );
 }
 
 //-----------------------------------------------------------------------------

@@ -885,12 +885,14 @@ void CServerGameEnts::SetDebugEdictBase(edict_t *base)
 void CServerGameEnts::MarkEntitiesAsTouching( edict_t *e1, edict_t *e2 )
 {
 	CBaseEntity *entity = GetContainingEntity( e1 );
-	if ( entity )
+	CBaseEntity *entityTouched = GetContainingEntity( e2 );
+	if ( entity && entityTouched )
 	{
 		// HACKHACK: UNDONE: Pass in the trace here??!?!?
 		trace_t tr;
 		UTIL_ClearTrace( tr );
-		entity->PhysicsMarkEntitiesAsTouching( GetContainingEntity( e2 ), tr );
+		tr.endpos = (entity->GetAbsOrigin() + entityTouched->GetAbsOrigin()) * 0.5; // VXP
+		entity->PhysicsMarkEntitiesAsTouching( entityTouched, tr );
 	}
 }
 

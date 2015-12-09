@@ -1335,7 +1335,7 @@ void CShaderShadowDX8::ConfigureFVFVertexShader( unsigned int flags )
 		}
 		else
 		{
-			Assert (lastUsedTextureStage < 2);
+			Assert (lastUsedTextureStage < 2); // VXP: Strange rare crash
 				
 			// Here, we've got enough texture stages to do the modulation
 			m_ShadowState.m_TextureStage[lastUsedTextureStage].m_ColorArg1 = D3DTA_TFACTOR;

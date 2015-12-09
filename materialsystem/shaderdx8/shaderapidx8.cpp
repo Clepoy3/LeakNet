@@ -2718,11 +2718,11 @@ bool CShaderAPIDX8::DetermineHardwareCaps( )
 	// NEED TO TEST THIS ON DX9 TO SEE IF IT IS FIXED!
 	// NOTE: Initting more constants than we are ever going to use may cause the 
 	// driver to try to keep track of them.. I'm forcing this to 96 so that this doesn't happen.
-//#if 0
+#if 0
 	m_Caps.m_NumVertexShaderConstants = caps.MaxVertexShaderConst;
-//#else
-//	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
-//#endif
+#else
+	m_Caps.m_NumVertexShaderConstants = ( caps.MaxVertexShaderConst > 100 ) ? 100 : 96;
+#endif
 
 	if( m_Caps.m_SupportsPixelShaders )
 	{
@@ -8906,7 +8906,7 @@ IDirect3DSurface* CShaderAPIDX8::GetBackBufferImage( ImageFormat& format )
 	FlushBufferedPrimitives();
 
 	HRESULT hr;
-	IDirect3DSurface *pSurfaceBits = NULL;
+	IDirect3DSurface *pSurfaceBits = 0;
 	IDirect3DSurface *pTmpSurface = NULL;
 
 	// Get the back buffer
@@ -8954,10 +8954,10 @@ IDirect3DSurface* CShaderAPIDX8::GetBackBufferImage( ImageFormat& format )
 	return pSurfaceBits;
 
 CleanUp2:
-	if ( pSurfaceBits )
-	{
+//	if ( pSurfaceBits )
+//	{
 		pSurfaceBits->Release();
-	}
+//	}
 
 CleanUp:
 	if ( pTmpSurface )

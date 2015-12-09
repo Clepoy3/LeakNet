@@ -2779,6 +2779,11 @@ BOOL CMapView2D::OnToolsAlign(UINT nID)
 //-----------------------------------------------------------------------------
 void CMapView2D::OnContextMenu(CWnd* pWnd, CPoint point) 
 {
+	if ( m_MouseDrag || !g_pToolManager )
+	{
+		return;
+	}
+
 	CMapDoc *pDoc = GetDocument();
 	if (m_MouseDrag != MD_NOTHING)
 	{
@@ -3011,7 +3016,9 @@ void CMapView2D::WorldToClient(CPoint &point)
 //-----------------------------------------------------------------------------
 void CMapView2D::ZoomIn(BOOL bAllViews)
 {
-	SetZoom(m_fZoom * 1.2);
+//	SetZoom(m_fZoom * 1.2);
+	float newZoom = m_fZoom * 1.2;
+	SetZoom( newZoom );
 
 	//
 	// Set all doc 2d view zooms to this zoom level.
@@ -3020,7 +3027,8 @@ void CMapView2D::ZoomIn(BOOL bAllViews)
 	{
 		VIEW2DINFO vi;
 		vi.wFlags = VI_ZOOM;
-		vi.fZoom = m_fZoom;
+	//	vi.fZoom = m_fZoom;
+		vi.fZoom = newZoom;
 
 		CMapDoc *pDoc = GetDocument();
 		if (pDoc != NULL)
@@ -3037,7 +3045,9 @@ void CMapView2D::ZoomIn(BOOL bAllViews)
 //-----------------------------------------------------------------------------
 void CMapView2D::ZoomOut(BOOL bAllViews)
 {
-	SetZoom(m_fZoom / 1.2);
+//	SetZoom(m_fZoom / 1.2);
+	float newZoom = m_fZoom / 1.2;
+	SetZoom( newZoom );
 
 	//
 	// Set all doc 2d view zooms to this zoom level.
@@ -3046,7 +3056,8 @@ void CMapView2D::ZoomOut(BOOL bAllViews)
 	{
 		VIEW2DINFO vi;
 		vi.wFlags = VI_ZOOM;
-		vi.fZoom = m_fZoom;
+	//	vi.fZoom = m_fZoom;
+		vi.fZoom = newZoom;
 
 		CMapDoc *pDoc = GetDocument();
 		if (pDoc != NULL)

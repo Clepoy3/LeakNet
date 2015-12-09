@@ -11,17 +11,17 @@
 #pragma once
 #endif
 
-#include "Server/IServer.h"
+//#include "Server/IServer.h"
 #include "IVGuiModule.h"
 
-#include <VGUI_PHandle.h>
+#include <vgui_controls\PHandle.h>
 
 class VInternetDlg;
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles the UI and pinging of a half-life game server list
 //-----------------------------------------------------------------------------
-class CHLDS : public IServer, public IVGuiModule
+class CHLDS : /*public IServer, */public IVGuiModule
 {
 public:
 	CHLDS();
@@ -30,10 +30,14 @@ public:
 	// IVGui module implementation
 	virtual bool Initialize(CreateInterfaceFn *factorylist, int numFactories);
 	virtual bool PostInitialize(CreateInterfaceFn *modules, int factoryCount);
-	virtual vgui::VPanel *GetPanel();
+//	virtual vgui::VPanel *GetPanel();
+	virtual vgui::VPANEL GetPanel();
 	virtual bool Activate();
+	virtual void Deactivate();
+	virtual void Reactivate();
 	virtual bool IsValid();
 	virtual void Shutdown();
+	virtual void SetParent(vgui::VPANEL parent);
 
 	virtual void CreateDialog();
 	virtual void Open();

@@ -721,13 +721,17 @@ void CBaseEntity::SetCollisionBounds( const Vector& mins, const Vector &maxs )
 //-----------------------------------------------------------------------------
 // These methods encapsulate MOVETYPE_FOLLOW, which became obsolete
 //-----------------------------------------------------------------------------
-void CBaseEntity::FollowEntity( CBaseEntity *pBaseEntity )
+void CBaseEntity::FollowEntity( CBaseEntity *pBaseEntity, bool bBoneMerge /*=true*/ )
 {
 	if (pBaseEntity)
 	{
 		SetParent( pBaseEntity );
 		SetMoveType( MOVETYPE_NONE );
-		m_fEffects |= EF_BONEMERGE;
+
+	//	m_fEffects |= EF_BONEMERGE;
+		if ( bBoneMerge )
+			m_fEffects |= EF_BONEMERGE;
+
 		AddSolidFlags( FSOLID_NOT_SOLID );
 		SetLocalOrigin( vec3_origin );
 		SetLocalAngles( vec3_angle );
@@ -3224,8 +3228,10 @@ void CBaseEntity::InputKill( inputdata_t &inputdata )
 	if ( pOwner )
 	{
 		pOwner->DeathNotice( this );
+		SetOwnerEntity( NULL ); // VXP
 	}
 
+	// VXP: TODO: We should just drop if the entity is player
 	UTIL_Remove( this );
 }
 

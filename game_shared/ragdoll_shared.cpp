@@ -228,8 +228,9 @@ void RagdollDestroy( ragdoll_t &ragdoll )
 		if( ragdoll.list[i].pObject != NULL )
 		{
 			physenv->DestroyObject( ragdoll.list[i].pObject );
-			ragdoll.list[i].pObject = NULL;
+		//	ragdoll.list[i].pObject = NULL;
 		}
+		ragdoll.list[i].pObject = NULL; // VXP: Was upthere
 	}
 	physenv->DestroyConstraintGroup( ragdoll.pGroup );
 	ragdoll.pGroup = NULL;

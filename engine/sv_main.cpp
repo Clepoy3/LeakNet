@@ -2460,6 +2460,7 @@ void SVC_InfoString ( void )
 	}
 //	Info_SetValueForKey( info, "lan", va( "%i", Master_IsLanGame() ? 1 : 0 ), MAX_SINFO );
 	Info_SetValueForKey( info, "lan", va( "%i", 0 ), MAX_SINFO );
+//	Info_SetValueForKey( info, "lan", va( "%i", sv_lan.GetInt() ), MAX_SINFO ); // VXP: Later
 	Info_SetValueForKey( info, "max", va( "%i", svs.maxclients ), MAX_SINFO );
 
 	COM_FileBase( com_gamedir, gd );

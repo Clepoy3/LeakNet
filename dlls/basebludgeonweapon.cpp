@@ -14,6 +14,8 @@
 #include "animation.h"
 #include "ai_condition.h"
 #include "basebludgeonweapon.h"
+#include "effect_dispatch_data.h"
+#include "te_effect_dispatch.h"
 
 IMPLEMENT_SERVERCLASS_ST( CBaseHLBludgeonWeapon, DT_BaseHLBludgeonWeapon )
 END_SEND_TABLE()
@@ -211,12 +213,57 @@ Activity CBaseHLBludgeonWeapon::ChooseIntersectionPointAndActivity( trace_t &hit
 	return ACT_VM_HITCENTER;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : &traceHit - 
+//-----------------------------------------------------------------------------
+bool CBaseHLBludgeonWeapon::ImpactWater( const Vector &start, const Vector &end )
+{
+	//FIXME: This doesn't handle the case of trying to splash while being underwater, but that's not going to look good
+	//		 right now anyway...
+	
+	// We must start outside the water
+	if ( UTIL_PointContents( start ) & (CONTENTS_WATER|CONTENTS_SLIME))
+		return false;
+
+	// We must end inside of water
+	if ( !(UTIL_PointContents( end ) & (CONTENTS_WATER|CONTENTS_SLIME)))
+		return false;
+
+	trace_t	waterTrace;
+
+	UTIL_TraceLine( start, end, (CONTENTS_WATER|CONTENTS_SLIME), GetOwner(), COLLISION_GROUP_NONE, &waterTrace );
+
+	if ( waterTrace.fraction < 1.0f )
+	{
+		CEffectData	data;
+
+		data.m_fFlags  = 0;
+		data.m_vOrigin = waterTrace.endpos;
+		data.m_vNormal = waterTrace.plane.normal;
+		data.m_flScale = 8.0f;
+
+		// See if we hit slime
+	//	if ( waterTrace.contents & CONTENTS_SLIME )
+	//	{
+	//		data.m_fFlags |= FX_WATER_IN_SLIME;
+	//	}
+
+		DispatchEffect( "watersplash", data );			
+	}
+
+	return true;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CBaseHLBludgeonWeapon::ImpactEffect( trace_t &traceHit )
 {
+	// See if we hit water (we don't do the other impact effects in this case)
+	if ( ImpactWater( traceHit.startpos, traceHit.endpos ) )
+		return;
+
 	//FIXME: need new decals
 	UTIL_ImpactTrace( &traceHit, DMG_CLUB );
 }

@@ -10,11 +10,11 @@
 
 using namespace vgui;
 
-#include <VGUI_Controls.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_MessageBox.h>
+#include <vgui_controls\Controls.h>
+#include <KeyValues.h>
+#include <vgui_controls\ListPanel.h>
+#include <vgui_controls\ComboBox.h>
+#include <vgui_controls\MessageBox.h>
 
 #include "FileSystem.h"
 #include "vinternetdlg.h"
@@ -64,7 +64,8 @@ void CCreateMultiplayerGameServerPage::OnApplyChanges()
 	strncpy(m_szPassword, GetControlString("PasswordEdit", ""), DATA_STR_LENGTH);
 	m_iMaxPlayers = GetControlInt("MaxPlayersEdit", 4);
 
-	int selectedRow = m_pMapList->GetSelectedRow(0);
+//	int selectedRow = m_pMapList->GetSelectedRow(0);
+	int selectedRow = m_pMapList->GetSelectedItem(0);
 	if (selectedRow >= 0)
 	{
 		KeyValues *kv = m_pMapList->GetItem(selectedRow);
@@ -78,7 +79,8 @@ void CCreateMultiplayerGameServerPage::OnApplyChanges()
 void CCreateMultiplayerGameServerPage::LoadMODList()
 {
 
-	m_pMODList->RemoveAllItems();
+//	m_pMODList->RemoveAllItems();
+	m_pMODList->DeleteAllItems();
 
 	FileFindHandle_t findHandle = NULL;
 	const char *filename = filesystem()->FindFirst("*", &findHandle);
@@ -91,7 +93,7 @@ void CCreateMultiplayerGameServerPage::LoadMODList()
 			_snprintf(libname,1024,"%s\\liblist.gam",filename);
 			if(filesystem()->FileExists(libname))
 			{
-				m_pMODList->AddItem( filename);
+				m_pMODList->AddItem( filename, NULL);
 			}
 		}
 		
@@ -111,7 +113,8 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	m_pMapList->SetEnabled(true);
 	m_pGoButton->SetEnabled(true);
 
-	m_pMODList->GetText(0,m_szMod,DATA_STR_LENGTH);
+//	m_pMODList->GetText(0,m_szMod,DATA_STR_LENGTH);
+	m_pMODList->GetText(m_szMod,DATA_STR_LENGTH);
 	char basedir[1024];
 	//_snprintf(basedir,1024,"%s",m_szMod);
 	vgui::filesystem()->AddSearchPath(m_szMod, "BASEDIR");
@@ -148,7 +151,7 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 		}
 
 		// add to the map list
-		m_pMapList->AddItem(new KeyValues("data", "mapname", mapname));
+		m_pMapList->AddItem(new KeyValues("data", "mapname", mapname), NULL, false, false);
 
 		// get the next file
 	nextFile:
@@ -159,7 +162,9 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	// set the first item to be selected
 	if (m_pMapList->GetItemCount() > 0)
 	{
-		m_pMapList->SetSelectedRows(0, 0);
+	//	m_pMapList->SetSelectedRows(0, 0);
+		m_pMapList->ClearSelectedItems();
+		m_pMapList->AddSelectedItem(0);
 	}
 
 	vgui::filesystem()->RemoveSearchPath(basedir);
@@ -170,9 +175,11 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 
 const char *CCreateMultiplayerGameServerPage::GetMapName()
 {
-	if( m_pMapList->GetNumSelectedRows())
+//	if( m_pMapList->GetNumSelectedRows())
+	if( m_pMapList->GetSelectedItemsCount())
 	{
-		return m_pMapList->GetItem(m_pMapList->GetSelectedRow(0))->GetString("mapname");
+	//	return m_pMapList->GetItem(m_pMapList->GetSelectedRow(0))->GetString("mapname");
+		return m_pMapList->GetItem(m_pMapList->GetSelectedItem(0))->GetString("mapname");
 	}
 	return NULL;
 }
@@ -192,7 +199,8 @@ void CCreateMultiplayerGameServerPage::OnCommand(const char *text)
 		_snprintf(cmdline,1024,"-game %s -maxplayers %i +map %s ",
 						m_szMod,m_iMaxPlayers,GetMapName());
 
-		m_pExtraCmdLine->GetText(0,cvars,1024);
+	//	m_pExtraCmdLine->GetText(0,cvars,1024);
+		m_pExtraCmdLine->GetText(cvars,1024);
 		strncat(cmdline,cvars,1024);		
 
 		_snprintf(cvars,1024, "sv_lan 0\nsetmaster enable\nsv_password \"%s\"\nhostname \"%s\"\n",

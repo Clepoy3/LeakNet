@@ -1,7 +1,7 @@
 #include <windows.h> 
 #include "hlds.h"
-#include <VGUI_ISystem.h>
-#include <VGUI_Controls.h>
+#include <VGUI\ISystem.h>
+#include <vgui_controls\Controls.h>
 #include "FileSystem.h"
 
 CHLDSServer server;
@@ -201,7 +201,7 @@ EXPOSE_SINGLE_INTERFACE( CDedicatedExports, IDedicatedExports, VENGINE_DEDICATED
 //-----------------------------------------------------------------------------
 DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 {
-	int		iret = DLL_NORMAL;
+/*	int		iret = DLL_NORMAL;
 	IDedicatedServerAPI *engineAPI;
 
 	char cur[1024];
@@ -273,5 +273,6 @@ cleanup:
 
 	//return 0;
 	ExitThread(0);
-
+*/
+	return 0;
 }

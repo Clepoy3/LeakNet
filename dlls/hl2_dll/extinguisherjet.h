@@ -41,6 +41,7 @@ public:
 	CNetworkVar( bool, m_bEmit );	// Emit particles?
 	CNetworkVar( int, m_nLength );	// Length of jet
 	CNetworkVar( int, m_nSize );	// Size of jet (as in width and noise of particle movement)
+	CNetworkVar( bool, m_bWithSound ); // VXP
 	int		m_nRadius;	// Radius area to extinguish where jet hits
 	float	m_flStrength;	// Strength of the extinguisher
 

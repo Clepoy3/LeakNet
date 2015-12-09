@@ -157,11 +157,13 @@ void CGlobalEntityList::Clear( void )
 	while ( hCur != InvalidHandle() )
 	{
 		IServerNetworkable *ent = GetServerNetworkable( hCur );
-		if ( !ent )
-			continue;
-
-		// Force UpdateOnRemove to be called
-		UTIL_Remove( ent );
+	//	if ( !ent )
+	//		continue;
+		if ( ent )
+		{
+			// Force UpdateOnRemove to be called
+			UTIL_Remove( ent );
+		}
 		hCur = NextHandle( hCur );
 	}
 		

@@ -48,6 +48,7 @@ public:
 
 private:
 	virtual	void	ImpactEffect( trace_t &trace );
+	bool			ImpactWater( const Vector &start, const Vector &end );
 	virtual	void	ImpactSound( bool isWorld );
 	void			Swing( int bIsSecondary );
 	void			Hit( trace_t &traceHit, Activity nHitActivity );

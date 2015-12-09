@@ -11,9 +11,9 @@
 #pragma once
 #endif
 
-#include <VGUI_PropertyPage.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_Button.h>
+#include <vgui_controls\PropertyPage.h>
+#include <vgui_controls\ComboBox.h>
+#include <vgui_controls\Button.h>
 
 namespace vgui
 {

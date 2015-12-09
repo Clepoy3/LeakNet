@@ -133,6 +133,7 @@ void AddMultiDamage( const CTakeDamageInfo &info, CBaseEntity *pEntity )
 	//	Assert( g_MultiDamage.GetDamageForce() != vec3_origin && g_MultiDamage.GetDamagePosition() != vec3_origin );
 		if ( (g_MultiDamage.GetDamageForce() == vec3_origin) || (g_MultiDamage.GetDamagePosition() == vec3_origin) )
 			Warning( "AddMultiDamage:  g_MultiDamage.GetDamageForce() == vec3_origin\n" );
+	//	ASSERT( g_MultiDamage.GetDamageForce() != vec3_origin && g_MultiDamage.GetDamagePosition() != vec3_origin );
 	}
 }
 
