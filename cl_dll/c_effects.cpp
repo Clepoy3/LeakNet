@@ -90,7 +90,7 @@ private:
 	float GetWidth() const;
 	float GetLength() const;
 	float GetSpeed() const;
-	float GetLifetime() const;
+//	float GetLifetime() const;
 
 	// Gets the remaining lifetime of the particle
 	float GetRemainingLifetime( PrecipitationParticle_t* pParticle ) const;
@@ -105,7 +105,7 @@ private:
 	// Information helpful in creating and rendering particles
 	PMaterialHandle	m_MatHandle;	// material used 
 	float			m_Color[4];		// precip color
-//	float			m_Lifetime;		// Precip lifetime
+	float			m_Lifetime;		// Precip lifetime
 	float			m_InitialRamp;	// Initial ramp value
 	float			m_Speed;		// Precip speed
 	float			m_Width;		// Tracer width
@@ -263,6 +263,7 @@ void CClient_Precipitation::Precache( )
 		// This works if we assume the wind doesn't have a z component
 
 	//	m_Lifetime = (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / m_Speed;
+		m_Lifetime = (float)(WorldAlignMaxs()[2] - WorldAlignMins()[2]);
 
 		// Store off the color
 		m_Color[0] = 1.0f;
@@ -303,12 +304,12 @@ inline float CClient_Precipitation::GetSpeed() const
 		return s_snowspeed.GetFloat();
 }
 
-inline float CClient_Precipitation::GetLifetime() const
-{
+//inline float CClient_Precipitation::GetLifetime() const
+//{
 	// calculate the max amount of time it will take this flake to fall.
 	// This works if we assume the wind doesn't have a z component
-	return (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / GetSpeed();
-}
+//	return (WorldAlignMaxs()[2] - WorldAlignMins()[2]) / GetSpeed();
+//}
 
 
 //-----------------------------------------------------------------------------
@@ -319,7 +320,10 @@ inline float CClient_Precipitation::GetRemainingLifetime( PrecipitationParticle_
 {
 	float timeSinceSpawn = gpGlobals->curtime - pParticle->m_SpawnTime;
 //	return m_Lifetime - timeSinceSpawn;
-	return GetLifetime() - timeSinceSpawn;
+//	return GetLifetime() - timeSinceSpawn;
+
+	float lifetime = m_Lifetime / GetSpeed(); // VXP: Precomputed value / current speed
+	return lifetime - timeSinceSpawn;
 }
 
 //-----------------------------------------------------------------------------
