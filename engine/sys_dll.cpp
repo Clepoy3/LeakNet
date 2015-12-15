@@ -50,11 +50,11 @@
 #include "tier0/memdbgon.h"
 
 
-#define FIFTEEN_MB				(15 * 1024 * 1024)
-//#define ONE_HUNDRED_TWENTY_EIGHT_MB	(128 * 1024 * 1024)
+//#define FIFTEEN_MB				(15 * 1024 * 1024)
+#define ONE_HUNDRED_TWENTY_EIGHT_MB	(128 * 1024 * 1024)
 
 //#define MINIMUM_WIN_MEMORY		0x0e00000 
-#define WARNING_MEMORY          0x0200000
+//#define WARNING_MEMORY          0x0200000
 //#define MAXIMUM_WIN_MEMORY		0x2800000 // Ask for 40 MB max
 //#define MAXIMUM_DEDICATED_MEMORY	0x2800000 // Ask for 40 MB max
 
@@ -62,9 +62,12 @@
 //#define MAXIMUM_WIN_MEMORY			max( (unsigned)(256*1024*1024), MINIMUM_WIN_MEMORY )
 //#define MAXIMUM_DEDICATED_MEMORY	(unsigned)(64*1024*1024)
 
-#define MINIMUM_WIN_MEMORY			0x2000000 // VXP: 32
-#define MAXIMUM_WIN_MEMORY			0x4000000 // Ask for 64 MB max
-#define MAXIMUM_DEDICATED_MEMORY	0x4000000 // Ask for 64 MB max
+//#define MINIMUM_WIN_MEMORY			0x2000000 // VXP: 32
+//#define MAXIMUM_WIN_MEMORY			0x4000000 // Ask for 64 MB max
+//#define MAXIMUM_DEDICATED_MEMORY	0x4000000 // Ask for 64 MB max
+#define MINIMUM_WIN_MEMORY			(48 * 1024 * 1024)
+#define MAXIMUM_WIN_MEMORY			(256 * 1024 * 1024)
+#define MAXIMUM_DEDICATED_MEMORY	(64 * 1024 * 1024)
 
 char				*CheckParm(const char *psz, char **ppszValue = NULL);
 void				SeedRandomNumberGenerator( bool random_invariant );
@@ -507,14 +510,14 @@ void Sys_InitMemory( void )
 		host_parms.memsize = lpBuffer.dwTotalPhys;
 	}	
 		
-	if ( host_parms.memsize < FIFTEEN_MB )
-	{
-		Sys_Error( "Available memory less than 15MB!!! %i\n", host_parms.memsize );
-	}
-//	if ( host_parms.memsize < ONE_HUNDRED_TWENTY_EIGHT_MB )
+//	if ( host_parms.memsize < FIFTEEN_MB )
 //	{
-//		Sys_Error( "Available memory less than 128MB!!! %i\n", host_parms.memsize );
+//		Sys_Error( "Available memory less than 15MB!!! %i\n", host_parms.memsize );
 //	}
+	if ( host_parms.memsize < ONE_HUNDRED_TWENTY_EIGHT_MB )
+	{
+		Sys_Error( "Available memory less than 128MB!!! %i\n", host_parms.memsize );
+	}
 
 	// take one quarter the physical memory
 	if ( host_parms.memsize <= 512*1024*1024)

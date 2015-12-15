@@ -156,6 +156,16 @@ IDirect3DBaseTexture* CreateD3DTexture( int width, int height,
 	}
 	else
 	{
+		// Override usage and managed params if using special hardware shadow depth map formats...
+		if ( //( d3dFormat == NVFMT_RAWZ ) || ( d3dFormat == NVFMT_INTZ   ) || 
+		     ( d3dFormat == D3DFMT_D16 ) || ( d3dFormat == D3DFMT_D24S8 ) //|| 
+			 /*( d3dFormat == ATIFMT_D16 ) || ( d3dFormat == ATIFMT_D24S8 )*/ )
+		{
+			// Not putting D3DUSAGE_RENDERTARGET here causes D3D debug spew later, but putting the flag causes this create to fail...
+			usage = D3DUSAGE_DEPTHSTENCIL;
+			managed = false;
+		}
+
 		hr = D3DDevice()->CreateTexture( width, height, numLevels, 
 			usage, d3dFormat, managed ? D3DPOOL_MANAGED : D3DPOOL_DEFAULT, &pD3DTexture,NULL 
 			);

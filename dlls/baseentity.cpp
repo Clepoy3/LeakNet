@@ -1944,7 +1944,14 @@ IPhysicsObject *CBaseEntity::VPhysicsInitShadow( bool allowPhysicsMovement, bool
 
 	if ( GetSolid() == SOLID_BBOX )
 	{
-		pPhysicsObject = PhysModelCreateBox( this, WorldAlignMins(), WorldAlignMaxs(), origin, false );
+		// adjust these so the game tracing epsilons match the physics minimum separation distance
+		// this will shrink the vphysics version of the model by the difference in epsilons
+		float radius = 0.25f - DIST_EPSILON;
+		Vector mins = WorldAlignMins() + Vector(radius, radius, radius);
+		Vector maxs = WorldAlignMaxs() - Vector(radius, radius, radius);
+	//	pPhysicsObject = PhysModelCreateBox( this, WorldAlignMins(), WorldAlignMaxs(), origin, false );
+		pPhysicsObject = PhysModelCreateBox( this, mins, maxs, origin, false );
+		angles = vec3_angle;
 	}
 	else
 	{

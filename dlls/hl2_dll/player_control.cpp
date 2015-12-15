@@ -122,8 +122,8 @@ void CPlayer_Control::ControlDeactivate( void )
 	// Restore Data
 	pPlayer->SetFOV( m_nSaveFOV );
 	pPlayer->RemoveSolidFlags( FSOLID_NOT_SOLID );
-//	pPlayer->SetLocalOrigin( m_vSaveOrigin );
-	pPlayer->SetAbsOrigin( m_vSaveOrigin );
+	pPlayer->SetLocalOrigin( m_vSaveOrigin );
+//	pPlayer->SetAbsOrigin( m_vSaveOrigin );
 	pPlayer->SetLocalAngles( m_vSaveAngles );	// Note: Set GetLocalAngles(), not pl->v_angle
 	pPlayer->SnapEyeAngles( m_vSaveAngles );
 	pPlayer->StopFollowingEntity();

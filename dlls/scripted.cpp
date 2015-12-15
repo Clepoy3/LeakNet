@@ -1090,10 +1090,15 @@ void CAI_ScriptedSchedule::StartSchedule( CAI_BaseNPC *pTarget )
 	//
 	if ( m_nSchedule == SCHED_SCRIPT_ENEMY_IS_GOAL || m_nSchedule == SCHED_SCRIPT_ENEMY_IS_GOAL_AND_RUN_TO_GOAL )
 	{
-		pTarget->SetEnemy( pGoalEnt );
-		pTarget->UpdateEnemyMemory( pGoalEnt, pGoalEnt->GetAbsOrigin() );
-		pTarget->SetCondition( COND_NEW_ENEMY );
-		pTarget->SetCondition( COND_SCHEDULE_DONE );
+		if ( pGoalEnt && pGoalEnt->MyCombatCharacterPointer() )
+		{
+			pTarget->SetEnemy( pGoalEnt );
+			pTarget->UpdateEnemyMemory( pGoalEnt, pGoalEnt->GetAbsOrigin() );
+			pTarget->SetCondition( COND_NEW_ENEMY ); // VXP: Do we need this?
+			pTarget->SetCondition( COND_SCHEDULE_DONE );
+		}
+		else
+			DevMsg( "Scripted schedule %s specified an invalid enemy %s\n", STRING( GetEntityName() ), STRING( m_sGoalEnt ) );
 	}
 
 	bool bDidSetSchedule = false;

@@ -17,48 +17,13 @@
 #include "ai_memory.h"
 #include "beam_shared.h"
 
+#include "weapon_immolator.h"
+
 
 #define MAX_BURN_RADIUS		256
 #define RADIUS_GROW_RATE	50.0	// units/sec 
 
 #define IMMOLATOR_TARGET_INVALID Vector( FLT_MAX, FLT_MAX, FLT_MAX )
-
-class CWeaponImmolator : public CBaseHLCombatWeapon
-{
-public:
-	DECLARE_CLASS( CWeaponImmolator, CBaseHLCombatWeapon );
-
-	DECLARE_SERVERCLASS();
-
-	CWeaponImmolator( void );
-	
-	void Precache( void );
-	void PrimaryAttack( void );
-	void ItemPostFrame( void );
-
-	int CapabilitiesGet( void ) {	return bits_CAP_WEAPON_RANGE_ATTACK1;	}
-
-	void ImmolationDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore );
-	virtual bool WeaponLOSCondition( const Vector &ownerPos, const Vector &targetPos, bool bSetConditions );	
-	virtual int	WeaponRangeAttack1Condition( float flDot, float flDist );
-
-	void Update();
-	void UpdateThink();
-
-	void StartImmolating();
-	void StopImmolating();
-	bool IsImmolating() { return m_flBurnRadius != 0.0; }
-
-	DECLARE_ACTTABLE();
-	DECLARE_DATADESC();
-
-	int	m_beamIndex;
-
-	float m_flBurnRadius;
-	float m_flTimeLastUpdatedRadius;
-
-	Vector  m_vecImmolatorTarget;
-};
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponImmolator, DT_WeaponImmolator)
 END_SEND_TABLE()

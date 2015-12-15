@@ -614,8 +614,17 @@ CShadowController::~CShadowController( void )
 
 void CShadowController::AttachObject( void )
 {
+	if ( !m_pObject )
+		return;
+
 	IVP_Real_Object *pivp = m_pObject->GetObject();
+	if ( !pivp )
+		return;
+
 	IVP_Core *pCore = pivp->get_core();
+	if ( !pCore )
+		return;
+
 	m_saveRot = pCore->rot_speed_damp_factor;
 	m_savedRI = *pCore->get_rot_inertia();
 	m_savedMass = pCore->get_mass();

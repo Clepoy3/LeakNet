@@ -48,6 +48,7 @@ CPlasma::CPlasma( void )
 	m_nPlasmaModelIndex2	= engine->PrecacheModel( "sprites/plasma1.vmt" );//<<TEMP>>
 	m_nGlowModelIndex		= engine->PrecacheModel( "sprites/fire_floor.vmt" );
 	//Server-side
+	AddEFlags( EFL_FORCE_CHECK_TRANSMIT );
 }
 
 //-----------------------------------------------------------------------------
@@ -56,6 +57,15 @@ CPlasma::CPlasma( void )
 CPlasma::~CPlasma( void )
 {
 }
+
+/*void CPlasma::Spawn()
+{
+	Precache();
+	SetSolid( SOLID_NONE );
+	UTIL_SetSize( this, vec3_origin, vec3_origin );
+	Relink();
+	AddEFlags( EFL_FORCE_CHECK_TRANSMIT );
+}*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -78,6 +88,7 @@ void CPlasma::EnableSmoke( int state )
 //-----------------------------------------------------------------------------
 void CPlasma::Precache( void )
 {
+	BaseClass::Precache();
 	engine->PrecacheModel( "sprites/plasma1.vmt" );
 	engine->PrecacheModel( "sprites/fire_floor.vmt" );
 }

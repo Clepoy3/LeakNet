@@ -85,7 +85,7 @@ private:
 	int	m_nLogoB;
 */
 	vgui::DHANDLE<CMultiplayerAdvancedDialog> m_hMultiplayerAdvancedDialog;
-	vgui::DHANDLE<CLoadingDialog> m_hLoadingDialog; // VXP
+//	vgui::DHANDLE<CLoadingDialog> m_hLoadingDialog; // VXP
 //	vgui::DHANDLE< vgui::FileOpenDialog > m_hFileOpenDialog;
 };
 

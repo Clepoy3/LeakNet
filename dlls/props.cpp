@@ -715,6 +715,12 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo *pDamag
 		origin = GetAbsOrigin();
 		angles = GetAbsAngles();
 	}
+/*	Vector dInfoForce = pDamageInfo->GetDamageForce();
+	if ( dInfoForce != Vector( 0, 0, 0 ) || dInfoForce != velocity )
+	{
+		Msg("Set break velocity from damageinfo: %f %f %f\n", dInfoForce.x, dInfoForce.y, dInfoForce.z);
+		velocity = dInfoForce;
+	}*/
 	UTIL_Relink(this);
 
 	if ( m_explodeDamage > 0 || m_explodeRadius > 0 )
@@ -1232,6 +1238,7 @@ void CPhysicsProp::VPhysicsCollision( int index, gamevcollisionevent_t *pEvent )
 //-----------------------------------------------------------------------------
 int CPhysicsProp::OnTakeDamage( const CTakeDamageInfo &info )
 {
+	//Msg("OnTakeDamage\n");
 	// note: if motion is disabled, OnTakeDamage can't apply physics force
 	int ret = BaseClass::OnTakeDamage( info );
 	
@@ -1261,8 +1268,29 @@ int CPhysicsProp::OnTakeDamage( const CTakeDamageInfo &info )
 		EnableMotion();
 		VPhysicsTakeDamage( info );
 	}
+
+	// VXP
+	if ( HasSpawnFlags( SF_PHYSPROP_SHOOT ) )
+	{
+		Break( info.GetAttacker(), &info );
+	}
 	
 	return ret;
+}
+
+// VXP
+void CPhysicsProp::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
+{
+	//Msg("TraceAttack\n");
+//	if( (info.GetDamageType() & DMG_BULLET || DMG_CLUB || DMG_BUCKSHOT || DMG_ENERGYBEAM ) ) 
+//	{
+		if ( HasSpawnFlags( SF_PHYSPROP_SHOOT ) )
+		{
+			Break( info.GetAttacker(), &info );
+		}
+//	}
+
+	BaseClass::TraceAttack( info, vecDir, ptr );
 }
 
 //-----------------------------------------------------------------------------

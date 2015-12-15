@@ -20,6 +20,7 @@ public:
 	virtual	~CPlasma( void );
 	void	EnableSmoke( int state );
 
+//	virtual void	Spawn( void );
 	void	Precache( void );
 
 	DECLARE_SERVERCLASS();

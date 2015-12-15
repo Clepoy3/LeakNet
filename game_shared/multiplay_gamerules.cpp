@@ -945,6 +945,10 @@ END_NETWORK_TABLE()
 
 	void CMultiplayRules :: SendMOTDToClient( edict_t *client )
 	{
+		CBasePlayer *player = (CBasePlayer *)CBaseEntity::Instance( client );
+		if ( !player )
+			return;
+
 		// read from the MOTD.txt file
 		int length, char_count = 0;
 		char *pFileList;
@@ -971,8 +975,6 @@ END_NETWORK_TABLE()
 				pFileList = aFileList + char_count; 
 			else
 				*pFileList = 0;
-
-			CBasePlayer *player = (CBasePlayer *)CBaseEntity::Instance( client );
 
 			CSingleUserRecipientFilter user( player );
 			user.MakeReliable();

@@ -454,7 +454,9 @@ void CBaseCombatWeapon::Materialize( void )
 	if ( m_fEffects & EF_NODRAW )
 	{
 		// changing from invisible state to visible.
-		EmitSound( "BaseCombatWeapon.WeaponMaterialize" );
+		if ( g_pGameRules->IsMultiplayer() )
+			EmitSound( "BaseCombatWeapon.WeaponMaterialize" );
+
 		m_fEffects &= ~EF_NODRAW;
 		m_fEffects |= EF_MUZZLEFLASH;
 	}

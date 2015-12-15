@@ -62,7 +62,8 @@ bool CBaseViewModel::ShouldTransmit( const edict_t *recipient, const void *pvs, 
 		return false;
 	}
 
-	CBasePlayer *pPlayer = ToBasePlayer( m_hOwner );
+//	CBasePlayer *pPlayer = ToBasePlayer( m_hOwner );
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 	if ( pPlayer && pPlayer->edict() == recipient )
 	{
 		return true;

@@ -86,6 +86,7 @@ private :
 	unsigned short	m_VertexCount;
 	unsigned short	m_Position;
 	unsigned char	m_VertexSize;
+	int				m_nBufferSize;
 	bool	m_bDynamic;
 	bool	m_bLocked;
 	bool	m_bFlush;
@@ -114,7 +115,7 @@ CVertexBuffer::CVertexBuffer(
 							 DWORD theFVF, 
 			int vertexSize, int vertexCount, bool dynamic ) :
 	m_pVB(0), m_Position(0), m_VertexSize(vertexSize), m_bFlush(true),
-	m_bLocked(false), m_VertexCount(vertexCount), m_bDynamic(dynamic)
+	m_bLocked(false), m_VertexCount(vertexCount), m_nBufferSize(vertexSize * vertexCount), m_bDynamic(dynamic)
 {
 #ifdef RECORDING
 	// assign a UID
@@ -129,7 +130,8 @@ CVertexBuffer::CVertexBuffer(
 	D3DVERTEXBUFFER_DESC desc;
 	memset( &desc, 0x00, sizeof( desc ) );
 	desc.Format = D3DFMT_VERTEXDATA;
-	desc.Size = vertexCount * m_VertexSize;
+//	desc.Size = vertexCount * m_VertexSize;
+	desc.Size = m_nBufferSize;
 	desc.Type = D3DRTYPE_VERTEXBUFFER;
 //	desc.Pool = D3DPOOL_DEFAULT; //m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
 	desc.Pool = m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
@@ -141,13 +143,15 @@ CVertexBuffer::CVertexBuffer(
 	
 	RECORD_COMMAND( DX8_CREATE_VERTEX_BUFFER, 6 );
 	RECORD_INT( m_UID );
-	RECORD_INT( m_VertexCount * m_VertexSize );
+//	RECORD_INT( m_VertexCount * m_VertexSize );
+	RECORD_INT( m_nBufferSize );
 	RECORD_INT( desc.Usage );
 	RECORD_INT( desc.FVF );
 	RECORD_INT( desc.Pool );
 	RECORD_INT( m_bDynamic );
 
-	HRESULT hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+//	HRESULT hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+	HRESULT hr = pD3D->CreateVertexBuffer( m_nBufferSize,
 					desc.Usage,	desc.FVF, desc.Pool, &m_pVB, NULL );
 	if( hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY )
 	{
@@ -155,7 +159,8 @@ CVertexBuffer::CVertexBuffer(
 		// out of vid mem and try again.
 		// FIXME: need to record this
 		pD3D->EvictManagedResources();
-		pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+	//	pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
+		pD3D->CreateVertexBuffer( m_nBufferSize,
 	//	hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
 		         				  desc.Usage,	desc.FVF, desc.Pool, &m_pVB, NULL );
 	}

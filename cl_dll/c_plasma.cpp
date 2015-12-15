@@ -116,10 +116,10 @@ void RecvProxy_PlasmaScale( const CRecvProxyData *pData, void *pStruct, void *pO
 		pPlasmaSmoke->m_flScaleStart	= pPlasmaSmoke->m_flScaleRegister;
 		pPlasmaSmoke->m_flScaleEnd		= scale;			
 
-		pPlasmaSmoke->m_flScale = scale; // VXP: Was down here
+	//	pPlasmaSmoke->m_flScale = scale; // VXP: Was down here
 	}
 
-//	pPlasmaSmoke->m_flScale = scale;
+	pPlasmaSmoke->m_flScale = scale;
 }
 
 //-----------------------------------------------------------------------------
@@ -148,10 +148,10 @@ void RecvProxy_PlasmaScaleTime( const CRecvProxyData *pData, void *pStruct, void
 			pPlasmaSmoke->m_flScaleTimeStart	= gpGlobals->curtime;
 			pPlasmaSmoke->m_flScaleTimeEnd	= gpGlobals->curtime + time;
 		}
-		pPlasmaSmoke->m_flScaleTime = time; // VXP: Was down here
+	//	pPlasmaSmoke->m_flScaleTime = time; // VXP: Was down here
 	}
 
-//	pPlasmaSmoke->m_flScaleTime = time;
+	pPlasmaSmoke->m_flScaleTime = time;
 }
 
 //Receive datatable
@@ -247,7 +247,11 @@ void C_Plasma::AddEntity( void )
 //-----------------------------------------------------------------------------
 void C_Plasma::AddFlames( void )
 {
-	Vector	viewDir = GetAbsOrigin() - CurrentViewOrigin();
+	// VXP: Fixed
+	AllowCurrentViewAccess( true );
+	Vector	viewDir = GetAbsOrigin() - CurrentViewOrigin(); // VXP: Crash at "const Vector &CurrentViewOrigin()" in view_scene.cpp
+//	Vector	viewDir = GetAbsOrigin(); // VXP
+
 	VectorNormalize(viewDir);
 	float	dot		= viewDir.Dot( Vector( 0, 0, 1 ) );	//NOTENOTE: Flames always point up
 	float	alpha	= 1.0f;
@@ -267,8 +271,17 @@ void C_Plasma::AddFlames( void )
 			m_entFlames[i].SetBrightness( 255.0f * alpha );
 		}
 
+		Msg("%i: local %f %f %f\n", i, m_entFlames[i].GetLocalOrigin().x, m_entFlames[i].GetLocalOrigin().y, m_entFlames[i].GetLocalOrigin().z);
+		Msg("%i: abs %f %f %f\n", i, m_entFlames[i].GetAbsOrigin().x, m_entFlames[i].GetAbsOrigin().y, m_entFlames[i].GetAbsOrigin().z);
+
+	//	Vector off = m_entFlames[i].GetAbsOrigin(); // Is this local now?
+	//	m_entFlames[i].SetAbsOrigin(GetAbsOrigin() + off);
+	//	m_entFlames[i].SetAbsOrigin(GetAbsOrigin() + m_entFlames[i].GetLocalOrigin());
+
 		view->AddVisibleEntity( &m_entFlames[i] );
 	}
+	Msg("abs %f %f %f\n", GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z);
+	AllowCurrentViewAccess( false );
 }
 
 //-----------------------------------------------------------------------------

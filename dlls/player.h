@@ -268,6 +268,8 @@ public:
 	virtual void			Precache( void );
 	bool					IsOnLadder( void );
 
+	CBaseEntity				*GetViewEntity( void ) { return m_hViewEntity; }
+
 	virtual int				FlashlightIsOn( void ) { return false; }
 	virtual void			FlashlightTurnOn( void ) { };
 	virtual void			FlashlightTurnOff( void ) { };
@@ -353,6 +355,7 @@ public:
 	bool					ShouldAutoaim( void );
 	void					SetTargetInfo( Vector &vecSrc, float flDist );
 
+	void					SetViewEntity( CBaseEntity *pEntity );
 
 	virtual void			ForceClientDllUpdate( void );  // Forces all client .dll specific data to be resent to client.
 
@@ -670,6 +673,8 @@ private:
 	float					m_flOldPlayerZ;
 
 	bool					m_bPlayerUnderwater;
+
+	EHANDLE					m_hViewEntity;
 
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );

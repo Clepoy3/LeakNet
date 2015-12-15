@@ -570,91 +570,100 @@ int CNPC_MetroPolice::SelectSchedule( void )
 
 		case NPC_STATE_COMBAT:
 			{
-				float flEnemyDist;
+				float flEnemyDist = 0.0f; // VXP: Should I make this maximum distance?
 
-				flEnemyDist = ( GetEnemy()->GetLocalOrigin() - GetLocalOrigin() ).Length();
-
-				if( HasCondition( COND_NEW_ENEMY ) )
+			//	flEnemyDist = ( GetEnemy()->GetLocalOrigin() - GetLocalOrigin() ).Length();
+				if ( GetEnemy() != NULL ) // VXP: Am I right?
 				{
-					if( m_pSquad ) 
-					{
-						if( m_fCanPoint && OccupyStrategySlot( SQUAD_SLOT_POLICE_POINT ) )
-						{
-							// Flip this to false so that this NPC won't point anymore until
-							// he leaves combat state and re-enters.
-							m_fCanPoint = false;
-							return SCHED_METROPOLICE_POINT;
-							break;
-						}
+				//	flEnemyDist = GetEnemy()->GetLocalOrigin().DistToSqr( GetLocalOrigin() ); // VXP: I'm wrong (needs to compare with 300*300 i.e)
+					flEnemyDist = ( GetEnemy()->GetLocalOrigin() - GetLocalOrigin() ).Length();
+				//	Msg("Locals: %f\n", GetEnemy()->GetLocalOrigin().DistToSqr( GetLocalOrigin() ));
+				//	Msg("Abses: %f\n", GetEnemy()->GetAbsOrigin().DistToSqr( GetAbsOrigin() ));
+				//	Msg("Locals: %f\n",  ( GetEnemy()->GetLocalOrigin() - GetLocalOrigin() ).Length());
+				//	Msg("Abses: %f\n",  ( GetEnemy()->GetAbsOrigin() - GetAbsOrigin() ).Length());
 
-						if( CanDeployManhack() && OccupyStrategySlot( SQUAD_SLOT_POLICE_DEPLOY_MANHACK ) )
+					if( HasCondition( COND_NEW_ENEMY ) )
+					{
+						if( m_pSquad ) 
 						{
+							if( m_fCanPoint && OccupyStrategySlot( SQUAD_SLOT_POLICE_POINT ) )
+							{
+								// Flip this to false so that this NPC won't point anymore until
+								// he leaves combat state and re-enters.
+								m_fCanPoint = false;
+								return SCHED_METROPOLICE_POINT;
+								break;
+							}
+
+							if( CanDeployManhack() && OccupyStrategySlot( SQUAD_SLOT_POLICE_DEPLOY_MANHACK ) )
+							{
+								return SCHED_METROPOLICE_DEPLOY_MANHACK;
+							}
+						}
+						else
+						{
+							// Not in a squad.
+							if( CanDeployManhack() )
+							{
+								return SCHED_METROPOLICE_DEPLOY_MANHACK;
+								break;
+							}
+						}
+					}
+
+					if( !m_fWeaponDrawn )
+					{
+						return SCHED_METROPOLICE_DRAW_PISTOL;
+					}
+
+					if( HasCondition( COND_CAN_RANGE_ATTACK1 ) )
+					{
+						if( ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL1 ||
+							  !m_TimeYieldShootSlot.Expired() ) &&
+							OccupyStrategySlot( SQUAD_SLOT_POLICE_ATTACK_PISTOL1 ) )
+						{
+							if ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL1 )
+								m_TimeYieldShootSlot.Reset();
+							m_LastShootSlot = SQUAD_SLOT_POLICE_ATTACK_PISTOL1;
+							return SCHED_RANGE_ATTACK1;
+						}
+						else if( ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL2 ||
+							  !m_TimeYieldShootSlot.Expired() ) &&
+							OccupyStrategySlot( SQUAD_SLOT_POLICE_ATTACK_PISTOL2 ) )
+						{
+							if ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL2 )
+								m_TimeYieldShootSlot.Reset();
+							m_LastShootSlot = SQUAD_SLOT_POLICE_ATTACK_PISTOL2;
+							return SCHED_RANGE_ATTACK1;
+						}
+						else if( CanDeployManhack() && OccupyStrategySlot( SQUAD_SLOT_POLICE_DEPLOY_MANHACK ) )
+						{
+							m_LastShootSlot = 0;
 							return SCHED_METROPOLICE_DEPLOY_MANHACK;
 						}
-					}
-					else
-					{
-						// Not in a squad.
-						if( CanDeployManhack() )
+						else
 						{
-							return SCHED_METROPOLICE_DEPLOY_MANHACK;
-							break;
+							m_LastShootSlot = 0;
+							return SCHED_METROPOLICE_ADVANCE;
 						}
 					}
-				}
-
-				if( !m_fWeaponDrawn )
-				{
-					return SCHED_METROPOLICE_DRAW_PISTOL;
-				}
-
-				if( HasCondition( COND_CAN_RANGE_ATTACK1 ) )
-				{
-					if( ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL1 ||
-						  !m_TimeYieldShootSlot.Expired() ) &&
-						OccupyStrategySlot( SQUAD_SLOT_POLICE_ATTACK_PISTOL1 ) )
-					{
-						if ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL1 )
-							m_TimeYieldShootSlot.Reset();
-						m_LastShootSlot = SQUAD_SLOT_POLICE_ATTACK_PISTOL1;
-						return SCHED_RANGE_ATTACK1;
-					}
-					else if( ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL2 ||
-						  !m_TimeYieldShootSlot.Expired() ) &&
-						OccupyStrategySlot( SQUAD_SLOT_POLICE_ATTACK_PISTOL2 ) )
-					{
-						if ( m_LastShootSlot != SQUAD_SLOT_POLICE_ATTACK_PISTOL2 )
-							m_TimeYieldShootSlot.Reset();
-						m_LastShootSlot = SQUAD_SLOT_POLICE_ATTACK_PISTOL2;
-						return SCHED_RANGE_ATTACK1;
-					}
+					// If you can't attack, but you can deploy a manhack, do it!
 					else if( CanDeployManhack() && OccupyStrategySlot( SQUAD_SLOT_POLICE_DEPLOY_MANHACK ) )
 					{
-						m_LastShootSlot = 0;
 						return SCHED_METROPOLICE_DEPLOY_MANHACK;
+					}
+					// If you can't see the enemy, but you're close, overwatch
+					else if( !HasCondition( COND_SEE_ENEMY ) && flEnemyDist <= 512 )
+					{
+						return SCHED_METROPOLICE_OVERWATCH_LOS;
 					}
 					else
 					{
-						m_LastShootSlot = 0;
-						return SCHED_METROPOLICE_ADVANCE;
+		#if 0
+						Msg("DIST:%f\n", flEnemyDist );
+		#endif
+						return SCHED_METROPOLICE_CHASE_ENEMY;
 					}
-				}
-				// If you can't attack, but you can deploy a manhack, do it!
-				else if( CanDeployManhack() && OccupyStrategySlot( SQUAD_SLOT_POLICE_DEPLOY_MANHACK ) )
-				{
-					return SCHED_METROPOLICE_DEPLOY_MANHACK;
-				}
-				// If you can't see the enemy, but you're close, overwatch
-				else if( !HasCondition( COND_SEE_ENEMY ) && flEnemyDist <= 512 )
-				{
-					return SCHED_METROPOLICE_OVERWATCH_LOS;
-				}
-				else
-				{
-	#if 0
-					Msg("DIST:%f\n", flEnemyDist );
-	#endif
-					return SCHED_METROPOLICE_CHASE_ENEMY;
 				}
 			}
 			break;

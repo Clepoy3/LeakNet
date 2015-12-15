@@ -62,7 +62,8 @@ public:
 
 	virtual void			Spawn( void );
 
-	virtual CBaseEntity *GetOwner( void ) { return m_hOwner; };
+//	virtual CBaseEntity *GetOwner( void ) { return m_hOwner; };
+	virtual CBaseEntity	*GetOwner( void ) { return m_hOwner->Get(); };
 
 	void					SpawnControlPanels();
 	void					DestroyControlPanels();
@@ -140,7 +141,8 @@ private:
 
 private:
 	CNetworkVar( int, m_nViewModelIndex );		// Which viewmodel is it?
-	EHANDLE					m_hOwner;				// Player or AI carrying this weapon
+//	EHANDLE					m_hOwner;				// Player or AI carrying this weapon
+	CNetworkVar( EHANDLE, m_hOwner );
 
 	// soonest time Update will call WeaponIdle
 	float					m_flTimeWeaponIdle;							

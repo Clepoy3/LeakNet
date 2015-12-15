@@ -220,6 +220,12 @@ IPhysicsSpring *CreateSpring( IVP_Environment *pEnvironment, CPhysicsObject *pOb
 	IVP_U_Float_Point ivpPosStart;
 	IVP_U_Float_Point ivpPosEnd;
 
+	if ( !pObjectStart || !pObjectEnd )
+	{
+		DevWarning( "IPhysicsSpring *CreateSpring: no start or end object!\n" );
+		return NULL;
+	}
+
 	if ( !pParams->useLocalPositions )
 	{
 		Vector local;

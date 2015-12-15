@@ -9,7 +9,7 @@
 
 #include "OptionsSubMultiplayer.h"
 #include "MultiplayerAdvancedDialog.h"
-#include "LoadingDialog.h"
+//#include "LoadingDialog.h"
 #include <stdio.h>
 
 //#include <vgui_controls/FileOpenDialog.h>
@@ -214,19 +214,17 @@ void COptionsSubMultiplayer::OnCommand( const char *command )
 {
 	if ( !stricmp( command, "Advanced" ) )
 	{
-	/*
 		if (!m_hMultiplayerAdvancedDialog.Get())
 		{
 			m_hMultiplayerAdvancedDialog = new CMultiplayerAdvancedDialog(this);
 		}
 		m_hMultiplayerAdvancedDialog->Activate();
-	*/
 		
-		if (!m_hLoadingDialog.Get())
+	/*	if (!m_hLoadingDialog.Get())
 		{
 			m_hLoadingDialog = new CLoadingDialog(this);
 		}
-		m_hLoadingDialog->Activate();
+		m_hLoadingDialog->Activate();*/
 	/*
 		if ( !m_hFileOpenDialog.Get() )
 		{

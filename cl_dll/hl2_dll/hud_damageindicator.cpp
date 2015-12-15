@@ -107,22 +107,21 @@ void CHudDamageIndicator::Reset( void )
 //-----------------------------------------------------------------------------
 bool CHudDamageIndicator::ShouldDraw( void )
 {
-/*
 	if ( !CHudElement::ShouldDraw() )
 		return false;
 
-	if ( !m_DmgColorLeft[3] && !m_DmgColorRight[3] )
+	if ( !m_DmgColorLeft[3] && !m_DmgColorRight[3] && !m_DmgFullscreenColor[3] )
 		return false;
 
 	return true;
-*/
-	bool bNeedsDraw = m_DmgColorLeft[3] || 
+
+/*	bool bNeedsDraw = m_DmgColorLeft[3] || 
 						m_DmgColorRight[3] || 
 						m_DmgHighColorLeft[3] || 
 						m_DmgHighColorRight[3] ||
 						m_DmgFullscreenColor[3];
 
-	return ( bNeedsDraw && CHudElement::ShouldDraw() );
+	return ( bNeedsDraw && CHudElement::ShouldDraw() );*/
 }
 
 //-----------------------------------------------------------------------------

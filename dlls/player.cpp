@@ -559,7 +559,10 @@ void CBasePlayer::DeathSound( void )
 	}
 
 	// play one of the suit death alarms
-	UTIL_EmitGroupnameSuit(edict(), "HEV_DEAD");
+	if ( IsSuitEquipped() )
+	{
+		UTIL_EmitGroupnameSuit(edict(), "HEV_DEAD");
+	}
 }
 
 // override takehealth
@@ -693,6 +696,10 @@ void CBasePlayer::DamageEffect(float flDamage, int fDamageType)
 	{
 		// Sonic damage sound 
 		EmitSound( "Player.SonicDamage" );
+	}
+	else if ( fDamageType & DMG_BULLET )
+	{
+		EmitSound( "Flesh.BulletImpact" );
 	}
 }
 
@@ -1200,6 +1207,11 @@ int CBasePlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	if ( !BaseClass::OnTakeDamage_Alive( info ) )
 		return 0;
 
+	CBaseEntity * attacker = info.GetAttacker();
+
+	if ( !attacker )
+		return 0;
+
 	Vector vecDir = vec3_origin;
 	if ( info.GetInflictor() )
 	{
@@ -1257,7 +1269,7 @@ void CBasePlayer::Event_Killed( const CTakeDamageInfo &info )
 	pl.deadflag = true;
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	SetMoveType( MOVETYPE_FLYGRAVITY );
-	SetGroundEntity( NULL ); // VXP
+//	SetGroundEntity( NULL ); // VXP
 	Relink();
 	RemoveFlag( FL_ONGROUND );
 	if (GetAbsVelocity().z < 10)
@@ -3965,10 +3977,12 @@ void CBasePlayer::Spawn( void )
 		StopObserverMode();
 	}
 
-	Relink(); // VXP
+//	Relink(); // VXP
 	// Clear any screenfade
-	color32 nothing = {0,0,0,0};
-	UTIL_ScreenFade( this, nothing, 0, 0, FFADE_OUT );
+//	color32 nothing = {0,0,0,0};
+//	UTIL_ScreenFade( this, nothing, 0, 0, FFADE_OUT );
+	color32 nothing = {0,0,0,255};
+	UTIL_ScreenFade( this, nothing, 0, 0, FFADE_IN | FFADE_PURGE );
 
 	g_pGameRules->PlayerSpawn( this );
 
@@ -4311,25 +4325,24 @@ void CSprayCan::Spawn ( CBasePlayer *pOwner )
 
 void CSprayCan::Think( void )
 {
-	trace_t	tr;	
-	int playernum;
-	int nFrames;
 	CBasePlayer *pPlayer;
-	
 	pPlayer = ToBasePlayer( GetOwnerEntity() );
 
-	nFrames = 1; // FIXME, look up from material
+	if ( pPlayer )
+	{
+	//	int nFrames = 1; // FIXME, look up from material
+		int playernum = GetOwnerEntity()->entindex();
+		
+		// Msg( "Spray by player %i, %i of %i\n", playernum, (int)(m_flFrame + 1), nFrames);
+		Vector forward;
+		trace_t	tr;	
 
-	playernum = GetOwnerEntity()->entindex();
+		AngleVectors( GetAbsAngles(), &forward );
+		UTIL_TraceLine ( GetAbsOrigin(), GetAbsOrigin() + forward * 128, 
+			MASK_SOLID_BRUSHONLY, pPlayer, COLLISION_GROUP_NONE, & tr);
 	
-	// Msg( "Spray by player %i, %i of %i\n", playernum, (int)(m_flFrame + 1), nFrames);
-
-	Vector forward;
-	AngleVectors( GetAbsAngles(), &forward );
-	UTIL_TraceLine ( GetAbsOrigin(), GetAbsOrigin() + forward * 128, 
-		MASK_SOLID_BRUSHONLY, pPlayer, COLLISION_GROUP_NONE, & tr);
-
-	UTIL_PlayerDecalTrace( &tr, playernum );
+		UTIL_PlayerDecalTrace( &tr, playernum );
+	}
 	
 	// Just painted last custom frame.
 	UTIL_Remove( this );
@@ -4450,17 +4463,20 @@ CBaseEntity *FindEntityClassForward( CBasePlayer *pMe, char *classname )
 //-----------------------------------------------------------------------------
 CBaseEntity *FindEntityForward( CBasePlayer *pMe )
 {
-	trace_t tr;
-
-	Vector forward;
-	pMe->EyeVectors( &forward );
-	UTIL_TraceLine(pMe->EyePosition(),
-		pMe->EyePosition() + forward * MAX_COORD_RANGE,
-		MASK_SOLID, pMe, COLLISION_GROUP_NONE, &tr );
-	if ( tr.fraction != 1.0 && tr.DidHitNonWorldEntity() )
+	if ( pMe )
 	{
-		CBaseEntity *pHit = tr.m_pEnt;
-		return pHit;
+		trace_t tr;
+	
+		Vector forward;
+		pMe->EyeVectors( &forward );
+		UTIL_TraceLine(pMe->EyePosition(),
+			pMe->EyePosition() + forward * MAX_COORD_RANGE,
+			MASK_SOLID, pMe, COLLISION_GROUP_NONE, &tr );
+		if ( tr.fraction != 1.0 && tr.DidHitNonWorldEntity() )
+		{
+			CBaseEntity *pHit = tr.m_pEnt;
+			return pHit;
+		}
 	}
 	return NULL;
 
@@ -4766,7 +4782,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 	//	GiveNamedItem( "weapon_alyxgun" );
         GiveNamedItem( "weapon_ar1" );
         GiveNamedItem( "weapon_binoculars" );
-	//	GiveNamedItem( "weapon_brickbat" );
+		GiveNamedItem( "weapon_brickbat" );
         GiveNamedItem( "weapon_bugbait" );
         GiveNamedItem( "weapon_cguard" );
     //    GiveNamedItem( "weapon_cubemap" );
@@ -5164,7 +5180,8 @@ bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
 		{
 			// Only remove me if I have no ammo left
 			// Can't just check HasAnyAmmo because if I don't use clips, I want to be removed, 
-			if ( pWeapon->UsesClipsForAmmo1() && pWeapon->HasPrimaryAmmo() )
+		//	if ( pWeapon->UsesClipsForAmmo1() && pWeapon->HasPrimaryAmmo() )
+			if ( pWeapon->HasPrimaryAmmo() ) // VXP
 				return false;
 
 			UTIL_Remove( pWeapon );
@@ -5217,7 +5234,7 @@ bool CBasePlayer::RemovePlayerItem( CBaseCombatWeapon *pItem )
 //-----------------------------------------------------------------------------
 void CBasePlayer::ShowViewModel(bool bShow)
 {
-	m_Local.m_bDrawViewmodel = bShow ? 1 : 0;
+	m_Local.m_bDrawViewmodel = bShow;
 }
 
 //-----------------------------------------------------------------------------
@@ -6337,11 +6354,13 @@ void CBasePlayer::VPhysicsDestroyObject()
 
 	if ( m_pShadowStand )
 	{
+		m_pShadowStand->EnableCollisions( false );
 		PhysDestroyObject( m_pShadowStand );
 		m_pShadowStand = NULL;
 	}
 	if ( m_pShadowCrouch )
 	{
+		m_pShadowCrouch->EnableCollisions( false );
 		PhysDestroyObject( m_pShadowCrouch );
 		m_pShadowCrouch = NULL;
 	}
@@ -6470,4 +6489,22 @@ void CBasePlayer::DeactivateMovementConstraint( )
 	m_hConstraintEntity = NULL;
 	m_flConstraintRadius = 0.0f;
 	m_vecConstraintCenter = vec3_origin;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pEntity - 
+//-----------------------------------------------------------------------------
+void CBasePlayer::SetViewEntity( CBaseEntity *pEntity ) 
+{ 
+	m_hViewEntity = pEntity; 
+
+	if ( m_hViewEntity )
+	{
+		engine->SetView( edict(), m_hViewEntity->edict() );
+	}
+	else
+	{
+		engine->SetView( edict(), edict() );
+	}
 }
