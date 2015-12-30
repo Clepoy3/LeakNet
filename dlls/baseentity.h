@@ -1805,6 +1805,7 @@ inline float CBaseEntity::GetElasticity( void )	const
 	return m_flElasticity; 
 }
 
+// VXP: TODO: Changes the shadow cast distance over time
 inline void	CBaseEntity::SetShadowCastDistance( float flDistance )
 { 
 	m_flShadowCastDistance = flDistance; 

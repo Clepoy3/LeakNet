@@ -19,7 +19,7 @@
 #pragma once
 #endif
 
-#define TICK_RATE		(.015)  // 15 msec ticks
+#define TICK_RATE		(0.015)  // 15 msec ticks
 #define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)dt / TICK_RATE ) )
 #define ROUND_TO_TICKS( t )		( TICK_RATE * TIME_TO_TICKS( t ) )
 #define TICK_NEVER_THINK	(-1)

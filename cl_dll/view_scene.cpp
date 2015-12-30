@@ -107,7 +107,9 @@ CViewRender::CViewRender()
 //-----------------------------------------------------------------------------
 const Vector &CurrentViewOrigin()
 {
-	Assert( s_bCanAccessCurrentView ); // VXP: TODO when SmokeGrenade concommand called
+//	Assert( s_bCanAccessCurrentView ); // VXP: TODO when SmokeGrenade concommand called
+	if ( !s_bCanAccessCurrentView )
+		DevWarning( "CurrentViewOrigin: !s_bCanAccessCurrentView\n" );
 	return g_vecCurrentRenderOrigin;
 }
 

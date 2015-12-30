@@ -1839,8 +1839,8 @@ void CFuncTrackTrain::Find( void )
 
 	if ( !FClassnameIs( m_ppath, "path_track" ) )
 	{
-		Warning( "func_track_train must be on a path of path_track\n" );
-		Assert(0);
+		Warning( "func_tracktrain must be on a path of path_track\n" );
+	//	Assert(0);
 		m_ppath = NULL;
 		return;
 	}

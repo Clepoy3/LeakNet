@@ -536,8 +536,16 @@ void CServerGameDLL::GameFrame( bool simulating )
 {
 	VPROF( "CServerGameDLL::GameFrame" );
 
+	// Don't run frames until fully restored
+	if ( g_InRestore )
+		return;
+
+	float oldframetime = gpGlobals->frametime;
+
+#ifdef _DEBUG
 	// For profiling.. let them enable/disable the networkvar manual mode stuff.
 	g_bUseNetworkVars = g_UseNetworkVars.GetBool();
+#endif
 
 	extern void GameStartFrame( void );
 	extern void ServiceEventQueue( void );
@@ -564,7 +572,12 @@ void CServerGameDLL::GameFrame( bool simulating )
 	// FIXME:  Should this only occur on the final tick?
 	UpdateAllClientData();
 
-	g_pGameRules->EndGameFrame();
+	if ( g_pGameRules )
+	{
+		g_pGameRules->EndGameFrame();
+	}
+
+	gpGlobals->frametime = oldframetime;
 }
 
 //-----------------------------------------------------------------------------

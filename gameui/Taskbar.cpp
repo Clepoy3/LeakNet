@@ -411,25 +411,32 @@ void CTaskbar::UpdateGameMenus()
 
 	// check our current state
 	bool isInGame = false, isMulti = false;
-	const char *lvl = engine->GetLevelName();
-	if (lvl && *lvl)
+	if( engine->IsBackGroundMap() )
 	{
-		if( !engine->IsBackGroundMap( ) )
-		{
-			isInGame = true;
-			if (engine->GetMaxClients() > 1)
-			{
-				isMulti = true;
-			}
-		}
-		else
-		{
-			isInGame = false;
-		}
+		m_pGameMenu->UpdateMenuItemState( false, false );
 	}
+	else
+	{
+		const char *lvl = engine->GetLevelName();
+		if (lvl && *lvl)
+		{
+		//	if( !engine->IsBackGroundMap( ) )
+		//	{
+				isInGame = true;
+				if (engine->GetMaxClients() > 1)
+				{
+					isMulti = true;
+				}
+		//	}
+		//	else
+		//	{
+		//		isInGame = false;
+		//	}
+		}
 
-	// iterate all the menu items
-	m_pGameMenu->UpdateMenuItemState(isInGame, isMulti);
+		// iterate all the menu items
+		m_pGameMenu->UpdateMenuItemState(isInGame, isMulti);
+	}
 
 	// position the menu
 	m_pGameMenu->SetPos(m_iGameMenuInset, tall - m_pGameMenu->GetTall() - BLACK_BAR_SIZE);

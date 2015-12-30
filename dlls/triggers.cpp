@@ -1727,6 +1727,8 @@ void CAI_ChangeHintGroup::InputActivate( inputdata_t &inputdata )
 #define SF_CAMERA_PLAYER_POSITION	1
 #define SF_CAMERA_PLAYER_TARGET		2
 #define SF_CAMERA_PLAYER_TAKECONTROL 4
+#define SF_CAMERA_PLAYER_INFINITE_WAIT	8 // VXP
+#define SF_CAMERA_PLAYER_SNAP_TO		16 // VXP
 
 class CTriggerCamera : public CBaseEntity
 {
@@ -1735,6 +1737,8 @@ public:
 
 	void Spawn( void );
 	bool KeyValue( const char *szKeyName, const char *szValue );
+	void Enable( void );
+	void Disable( void );
 	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 	void FollowTarget( void );
 	void Move(void);
@@ -1746,6 +1750,10 @@ public:
 	}
 
 	DECLARE_DATADESC();
+	
+	// Input handlers
+	void InputEnable( inputdata_t &inputdata );
+	void InputDisable( inputdata_t &inputdata );
 
 	EHANDLE m_hPlayer;
 	EHANDLE m_hTarget;
@@ -1761,11 +1769,14 @@ public:
 	float m_deceleration;
 	int	  m_state;
 	Vector m_vecMoveDir;
+	
+	bool  m_bSnapToGoal;
 
 private:
 	COutputEvent m_OnEndFollow;
 };
 LINK_ENTITY_TO_CLASS( trigger_camera, CTriggerCamera );
+LINK_ENTITY_TO_CLASS( point_viewcontrol, CTriggerCamera );
 
 BEGIN_DATADESC( CTriggerCamera )
 
@@ -1783,6 +1794,12 @@ BEGIN_DATADESC( CTriggerCamera )
 	DEFINE_FIELD( CTriggerCamera, m_deceleration, FIELD_FLOAT ),
 	DEFINE_FIELD( CTriggerCamera, m_state, FIELD_INTEGER ),
 	DEFINE_FIELD( CTriggerCamera, m_vecMoveDir, FIELD_VECTOR ),
+	
+	DEFINE_FIELD( CTriggerCamera, m_bSnapToGoal, FIELD_BOOLEAN ),
+	
+	// Inputs
+	DEFINE_INPUTFUNC( CTriggerCamera, FIELD_VOID, "Enable", InputEnable ),
+	DEFINE_INPUTFUNC( CTriggerCamera, FIELD_VOID, "Disable", InputDisable ),
 
 	// Function Pointers
 	DEFINE_FUNCTION( CTriggerCamera, FollowTarget ),
@@ -1799,6 +1816,8 @@ void CTriggerCamera::Spawn( void )
 	SetSolid( SOLID_NONE );								// Remove model & collisions
 	SetRenderColorA( 0 );								// The engine won't draw this model if this is set to 0 and blending is on
 	m_nRenderMode = kRenderTransTexture;
+
+	m_state = 0;
 
 	m_initialSpeed = m_flSpeed;
 	if ( m_acceleration == 0 )
@@ -1836,30 +1855,51 @@ bool CTriggerCamera::KeyValue( const char *szKeyName, const char *szValue )
 	return true;
 }
 
+//------------------------------------------------------------------------------
+// Purpose: Input handler to turn on this trigger.
+//------------------------------------------------------------------------------
+void CTriggerCamera::InputEnable( inputdata_t &inputdata )
+{ 
+	m_hPlayer = inputdata.pActivator;
+	Enable();
+}
 
 
-void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+//------------------------------------------------------------------------------
+// Purpose: Input handler to turn off this trigger.
+//------------------------------------------------------------------------------
+void CTriggerCamera::InputDisable( inputdata_t &inputdata )
+{ 
+	Disable();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTriggerCamera::Enable( void )
 {
-	if ( !ShouldToggle( useType, m_state ) )
-		return;
-
-	// Toggle state
-	m_state = !m_state;
-	if (m_state == 0)
+	m_state = 1;
+	
+	if ( !m_hPlayer || !m_hPlayer->IsPlayer() )
 	{
-		m_flReturnTime = gpGlobals->curtime;
+		m_hPlayer = CBaseEntity::Instance(engine->PEntityOfEntIndex( 1 ));
+	}
+	
+	if ( !m_hPlayer )
+	{
+		NetworkStateManualMode( false );
 		return;
 	}
-	if ( !pActivator || !pActivator->IsPlayer() )
-	{
-		pActivator = CBaseEntity::Instance(engine->PEntityOfEntIndex( 1 ));
-	}
-		
-	m_hPlayer = pActivator;
 
 	m_flReturnTime = gpGlobals->curtime + m_flWait;
 	m_flSpeed = m_initialSpeed;
 	m_targetSpeed = m_initialSpeed;
+
+	// this pertains to view angles, not translation.
+	if ( HasSpawnFlags( SF_CAMERA_PLAYER_SNAP_TO ) )
+	{
+		m_bSnapToGoal = true;
+	}
 
 	if (HasSpawnFlags(SF_CAMERA_PLAYER_TARGET ) )
 	{
@@ -1871,20 +1911,20 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 	}
 
 	// Nothing to look at!
-	if ( m_hTarget == NULL )
-	{
-		return;
-	}
+//	if ( m_hTarget == NULL )
+//	{
+//		return;
+//	}
 
 
 	if (HasSpawnFlags(SF_CAMERA_PLAYER_TAKECONTROL ) )
 	{
-		((CBasePlayer *)pActivator)->EnableControl(FALSE);
+		((CBasePlayer *)m_hPlayer.Get())->EnableControl(FALSE);
 	}
 
 	if ( m_sPath != NULL_STRING )
 	{
-		m_pPath = gEntList.FindEntityByName( NULL, m_sPath, pActivator );
+		m_pPath = gEntList.FindEntityByName( NULL, m_sPath, m_hPlayer );
 	}
 	else
 	{
@@ -1903,26 +1943,79 @@ void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 	// copy over player information
 	if (HasSpawnFlags(SF_CAMERA_PLAYER_POSITION ) )
 	{
-		UTIL_SetOrigin( this, pActivator->EyePosition() );
-		SetLocalAngles( QAngle( pActivator->GetLocalAngles().x,
-			pActivator->GetLocalAngles().y, 0 ) );
-		SetAbsVelocity( pActivator->GetAbsVelocity() );
+		UTIL_SetOrigin( this, m_hPlayer->EyePosition() );
+		SetLocalAngles( QAngle( m_hPlayer->GetLocalAngles().x,
+			m_hPlayer->GetLocalAngles().y, 0 ) );
+		SetAbsVelocity( m_hPlayer->GetAbsVelocity() );
 	}
 	else
 	{
 		SetAbsVelocity( vec3_origin );
 	}
 
-	engine->SetView( pActivator->edict(), edict() );
+	engine->SetView( m_hPlayer->edict(), edict() );
 
-	SetModel( STRING(pActivator->GetModelName()) );
+	SetModel( STRING(m_hPlayer->GetModelName()) );
+	
+	// Hide the player's viewmodel?
 
-	// follow the player down
-	SetThink( &CTriggerCamera::FollowTarget );
-	SetNextThink( gpGlobals->curtime );
+	// Only track if we have a target
+	if ( m_hTarget )
+	{
+		// follow the player down
+		SetThink( &CTriggerCamera::FollowTarget );
+		SetNextThink( gpGlobals->curtime );
+	}
 
 	m_moveDistance = 0;
 	Move();
+	
+	NetworkStateManualMode( true );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTriggerCamera::Disable( void )
+{
+	if (m_hPlayer && m_hPlayer->IsAlive( ))
+	{
+		engine->SetView( m_hPlayer->edict(), m_hPlayer->edict() );
+		((CBasePlayer *)((CBaseEntity *)m_hPlayer))->EnableControl(TRUE);
+		// Restore the player's viewmodel?
+	}
+
+	m_OnEndFollow.FireOutput(this, this); // dvsents2: what is the best name for this output?
+
+	SetLocalAngularVelocity( vec3_angle );
+	m_state = 0;
+	m_flReturnTime = gpGlobals->curtime;
+	SetThink( NULL );
+	
+	NetworkStateManualMode( false );
+}
+
+void CTriggerCamera::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+{
+	if ( !ShouldToggle( useType, m_state ) )
+		return;
+
+	// Toggle state
+//	m_state = !m_state;
+//	if (m_state == 0)
+//	{
+//		m_flReturnTime = gpGlobals->curtime;
+//		return;
+//	}
+	if ( m_state != 0 )
+	{
+		Disable();
+	}
+	else
+	{
+		m_hPlayer = pActivator;
+		Enable();
+	}
 }
 
 
@@ -1931,54 +2024,68 @@ void CTriggerCamera::FollowTarget( )
 	if (m_hPlayer == NULL)
 		return;
 
-	if (m_hTarget == NULL || m_flReturnTime < gpGlobals->curtime)
+	if (m_hTarget == NULL )
 	{
-		if (m_hPlayer->IsAlive( ))
-		{
-			engine->SetView( m_hPlayer->edict(), m_hPlayer->edict() );
-			((CBasePlayer *)((CBaseEntity *)m_hPlayer))->EnableControl(TRUE);
-		}
+		Disable();
+		return;
+	}
 
-		m_OnEndFollow.FireOutput(this, this); // dvsents2: what is the best name for this output?
-
-		SetLocalAngularVelocity( vec3_angle );
-		m_state = 0;
+	if ( !HasSpawnFlags(SF_CAMERA_PLAYER_INFINITE_WAIT) && (!m_hTarget || m_flReturnTime < gpGlobals->curtime) )
+	{
+		Disable();
 		return;
 	}
 
 	QAngle vecGoal;
-	VectorAngles( m_hTarget->GetLocalOrigin() - GetLocalOrigin(), vecGoal );
+	if ( m_hTarget )
+	{
+		VectorAngles( m_hTarget->GetLocalOrigin() - GetLocalOrigin(), vecGoal );
+	}
+	else
+	{
+		// Use the viewcontroller's angles
+		vecGoal = GetAbsAngles();
+	}
 	
-	// UNDONE: Is this still necessary?
-//	vecGoal.x = -vecGoal.x;
+	// Should we just snap to the goal angles?
+	if ( m_bSnapToGoal ) 
+	{
+		SetAbsAngles( vecGoal );
+		m_bSnapToGoal = false;
+	}
+	else
+	{
+		// UNDONE: Is this still necessary?
+	//	vecGoal.x = -vecGoal.x;
 
-	// UNDONE: Can't we just use UTIL_AngleDiff here?
-	QAngle angles = GetLocalAngles();
+		// UNDONE: Can't we just use UTIL_AngleDiff here?
+		QAngle angles = GetLocalAngles();
 
-	if (angles.y > 360)
-		angles.y -= 360;
+		if (angles.y > 360)
+			angles.y -= 360;
 
-	if (angles.y < 0)
-		angles.y += 360;
+		if (angles.y < 0)
+			angles.y += 360;
 
-	SetLocalAngles( angles );
+		SetLocalAngles( angles );
 
-	float dx = vecGoal.x - GetLocalAngles().x;
-	float dy = vecGoal.y - GetLocalAngles().y;
+		float dx = vecGoal.x - GetLocalAngles().x;
+		float dy = vecGoal.y - GetLocalAngles().y;
 
-	if (dx < -180) 
-		dx += 360;
-	if (dx > 180) 
-		dx = dx - 360;
-	
-	if (dy < -180) 
-		dy += 360;
-	if (dy > 180) 
-		dy = dy - 360;
+		if (dx < -180) 
+			dx += 360;
+		if (dx > 180) 
+			dx = dx - 360;
+		
+		if (dy < -180) 
+			dy += 360;
+		if (dy > 180) 
+			dy = dy - 360;
 
-	QAngle vecAngVel;
-	vecAngVel.Init( dx * 40 * gpGlobals->frametime, dy * 40 * gpGlobals->frametime, GetLocalAngularVelocity().z );
-	SetLocalAngularVelocity(vecAngVel);
+		QAngle vecAngVel;
+		vecAngVel.Init( dx * 40 * gpGlobals->frametime, dy * 40 * gpGlobals->frametime, GetLocalAngularVelocity().z );
+		SetLocalAngularVelocity(vecAngVel);
+	}
 
 	if (!HasSpawnFlags(SF_CAMERA_PLAYER_TAKECONTROL))	
 	{

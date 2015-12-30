@@ -815,8 +815,8 @@ int CGameUI::ActivateDemoUI()
 //-----------------------------------------------------------------------------
 void CGameUI::HideGameUI()
 {
-	if( engine->IsBackGroundMap() )
-		return;
+//	if( engine->IsBackGroundMap() )
+//		return;
 	
 //	TRACE_FUNCTION("CGameUI::HideGameUI");
 	// we can't hide the UI if we're not in a level
@@ -837,6 +837,9 @@ void CGameUI::HideGameUI()
 //-----------------------------------------------------------------------------
 int CGameUI::HasExclusiveInput()
 {
+	if( engine->IsBackGroundMap() )
+		return true;
+
 	return IsGameUIActive();
 }
 
@@ -920,10 +923,12 @@ void CGameUI::RunFrame()
 //-----------------------------------------------------------------------------
 void CGameUI::ConnectToServer(const char *game, int IP, int port)
 {
-//	engine->ClientCmd("stop\n"); // VXP: Stop playing background music
+//	engine->ClientCmd("stop\n");
+	// VXP: Stop playing background music
+//	engine->ClientCmd("stopsound\n"); // VXP: Is this necessary? Music is stopping already
 //	Msg( "CGameUI::ConnectToServer\n" );
 	LoadingFinished( "Shit", "Happens" );
-	StopProgressBar( false, "Shit eater", "You are" );
+	StopProgressBar( false, "Test Message 1", "Test Message 2" );
 //	engine->pfnClientCmd("mp3 stop\n");
 //	SRC version
 //	engine->ClientCmd("stop\n");

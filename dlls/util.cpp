@@ -27,6 +27,7 @@
 #include "iservervehicle.h"
 #include "te_effect_dispatch.h"
 #include "utldict.h"
+#include "studio.h" // VXP: Am I doing this right?
 
 
 extern short		g_sModelIndexSmoke;			// (in combatweapon.cpp) holds the index for the smoke cloud
@@ -2054,6 +2055,27 @@ void UTIL_PointAtNamedEntity( CBaseEntity *pDest, string_t strTarget )
 	{
 		DevMsg( 1, "Unable to point at entity %s\n", STRING( strTarget ) );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Copy the pose parameter values from one entity to the other
+// Input  : *pSourceEntity - entity to copy from
+//			*pDestEntity - entity to copy to
+//-----------------------------------------------------------------------------
+bool UTIL_TransferPoseParameters( CBaseEntity *pSourceEntity, CBaseEntity *pDestEntity )
+{
+	CBaseAnimating *pSourceBaseAnimating = dynamic_cast<CBaseAnimating*>( pSourceEntity );
+	CBaseAnimating *pDestBaseAnimating = dynamic_cast<CBaseAnimating*>( pDestEntity );
+
+	if ( !pSourceBaseAnimating || !pDestBaseAnimating )
+		return false;
+
+	for ( int iPose = 0; iPose < MAXSTUDIOPOSEPARAM; ++iPose )
+	{
+		pDestBaseAnimating->SetPoseParameter( iPose, pSourceBaseAnimating->GetPoseParameter( iPose ) );
+	}
+	
+	return true;
 }
 
 //-----------------------------------------------------------------------------

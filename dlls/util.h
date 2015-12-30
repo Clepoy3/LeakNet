@@ -285,6 +285,9 @@ void		UTIL_SnapDirectionToAxis( Vector &direction, float epsilon = 0.01f );
 bool UTIL_PointAtEntity( CBaseEntity *pEnt, CBaseEntity *pTarget );
 void UTIL_PointAtNamedEntity( CBaseEntity *pEnt, string_t strTarget );
 
+// Copy the pose parameter values from one entity to the other
+bool UTIL_TransferPoseParameters( CBaseEntity *pSourceEntity, CBaseEntity *pDestEntity );
+
 // Search for water transition along a vertical line
 float		UTIL_WaterLevel( const Vector &position, float minz, float maxz );
 void		UTIL_Bubbles( const Vector& mins, const Vector& maxs, int count );

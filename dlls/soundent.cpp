@@ -322,7 +322,9 @@ int CSoundEnt :: IAllocSound( void )
 	if ( m_iFreeSound == SOUNDLIST_EMPTY )
 	{
 		// no free sound!
-		Msg( "Free Sound List is full!\n" );
+		if ( developer.GetInt() >= 2 )
+			Msg( "Free Sound List is full!\n" );
+
 		return SOUNDLIST_EMPTY;
 	}
 
@@ -362,7 +364,7 @@ void CSoundEnt :: InsertSound ( int iType, const Vector &vecOrigin, int iVolume,
 
 	if ( iThisSound == SOUNDLIST_EMPTY )
 	{
-		Msg( "Could not AllocSound() for InsertSound() (DLL)\n" );
+		DevMsg( "Could not AllocSound() for InsertSound() (DLL)\n" );
 		return;
 	}
 
@@ -460,7 +462,7 @@ void CSoundEnt :: Initialize ( void )
 
 		if ( iSound == SOUNDLIST_EMPTY )
 		{
-			Msg( "Could not AllocSound() for Client Reserve! (DLL)\n" );
+			DevMsg( "Could not AllocSound() for Client Reserve! (DLL)\n" );
 			return;
 		}
 
@@ -579,7 +581,8 @@ int CSoundEnt :: ClientSoundIndex ( edict_t *pClient )
 	int iReturn = ENTINDEX( pClient ) - 1;
 
 #ifdef _DEBUG
-	if ( iReturn < 0 || iReturn > gpGlobals->maxClients )
+//	if ( iReturn < 0 || iReturn > gpGlobals->maxClients )
+	if ( iReturn < 0 || iReturn >= gpGlobals->maxClients )
 	{
 		Msg( "** ClientSoundIndex returning a bogus value! **\n" );
 	}

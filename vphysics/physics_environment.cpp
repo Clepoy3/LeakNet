@@ -1303,7 +1303,10 @@ void CPhysicsEnvironment::DestroyFluidController( IPhysicsFluidController *pFlui
 
 void CPhysicsEnvironment::DestroyConstraint( IPhysicsConstraint *pConstraint )
 {
-	if ( !m_deleteQuick && pConstraint )
+	if ( !pConstraint )
+		return;
+
+	if ( !m_deleteQuick )
 	{
 		IPhysicsObject *pObj0 = pConstraint->GetReferenceObject();
 		if ( pObj0 )
@@ -1324,7 +1327,7 @@ void CPhysicsEnvironment::DestroyConstraint( IPhysicsConstraint *pConstraint )
 	}
 	else
 	{
-		delete pConstraint;
+		delete pConstraint; // VXP: Crash when quitting game after loading save after physmagnet on d1_canals_end (at the end of map)
 	}
 }
 

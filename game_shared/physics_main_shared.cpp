@@ -40,7 +40,7 @@ inline touchlink_t *AllocTouchLink( void )
 	else
 	{
 	//	Error( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
-		DevWarning( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
+		DevWarning( "AllocTouchLink:  Programming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
 	}
 
 	return link;
@@ -65,6 +65,7 @@ inline void FreeTouchLink( touchlink_t *link )
 		link->prevLink = link->nextLink = NULL;
 	}
 
+	// Necessary to catch crashes
 	g_EdictTouchLinks.Free( link );
 }
 

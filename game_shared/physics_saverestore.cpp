@@ -12,6 +12,7 @@
 #include "isaverestore.h"
 #include "physics.h"
 #include "physics_saverestore.h"
+#include "saverestoretypes.h"
 #include "gamestringpool.h"
 
 #if !defined( CLIENT_DLL )
@@ -393,6 +394,9 @@ public:
 	
 	void QueueSave( CBaseEntity *pOwner, typedescription_t *pTypeDesc, void **ppPhysObj, PhysInterfaceId_t type )
 	{
+		if ( !pOwner )
+			return;
+
 		bool fOnlyNotingExistence = !pOwner->ShouldSavePhysics();
 		
 		QueuedItem_t item;
@@ -416,24 +420,30 @@ public:
 			// Don't doing the box thing for things like wheels on cars
 			IPhysicsObject *pPhysObj = (IPhysicsObject *)(*ppPhysObj);
 
-			item.header.modelName = GetModelName( pPhysObj );
-			if ( item.header.modelName == NULL_STRING )
+			if ( pPhysObj )
 			{
-				BBox_t *pBBox = GetBBox( pPhysObj );
-				if ( pBBox != NULL )
+				item.header.modelName = GetModelName( pPhysObj );
+				if ( item.header.modelName == NULL_STRING )
 				{
-					item.header.bbox = *pBBox;
-				}
-				else 
-				{
-					IPhysicsObject *pPhys = (IPhysicsObject *)(*ppPhysObj);
-					if ( pPhys && pPhys->GetSphereRadius() != 0 )
+					BBox_t *pBBox = GetBBox( pPhysObj );
+					if ( pBBox != NULL )
+	
 					{
-						item.header.sphere.radius = pPhys->GetSphereRadius();
+						item.header.bbox = *pBBox;
 					}
-					else
+					else 
 					{
-						DevMsg( "Don't know how to save model for physics object (class \"%s\")\n", pOwner->GetClassname() );
+					//	IPhysicsObject *pPhys = (IPhysicsObject *)(*ppPhysObj);
+					//	if ( pPhys && pPhys->GetSphereRadius() != 0 )
+						if ( pPhysObj && pPhysObj->GetSphereRadius() != 0 )
+						{
+					//		item.header.sphere.radius = pPhys->GetSphereRadius();
+							item.header.sphere.radius = pPhysObj->GetSphereRadius();
+						}
+						else
+						{
+							DevMsg( "Don't know how to save model for physics object (class \"%s\")\n", pOwner->GetClassname() );
+						}
 					}
 				}
 			}
@@ -470,7 +480,7 @@ public:
 	{
 		if ( physenv )
 		{
-			if ( !pObject || !pSave || !type ) // VXP: Additional checks
+			if ( !pObject )
 				return;
 			physsaveparams_t params = { pSave, pObject, type };
 			physenv->Save( params );
