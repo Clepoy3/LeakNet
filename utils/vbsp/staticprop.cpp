@@ -85,8 +85,9 @@ bool StudioKeyValues( studiohdr_t* pStudioHdr, KeyValues *pValue )
 //-----------------------------------------------------------------------------
 bool IsStaticProp( studiohdr_t* pHdr )
 {
-//	if ((pHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP))
-//		return true;
+	if ((pHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP))
+		return true;
+
  	if ( (pHdr->numbones > 1) || (pHdr->numanim > 1) || (pHdr->numflexrules > 0) ||
 		 (pHdr->nummouths > 0) )
 		return false;
@@ -497,6 +498,11 @@ static void AddStaticPropToLump( StaticPropBuild_t const& build )
 	CUtlVector< unsigned short > leafList;
 	ComputeStaticPropLeaves( pConvexHull, build.m_Origin, build.m_Angles, leafList );
 
+	if ( !leafList.Count() )
+	{
+		Warning( "Static prop %s outside the map (%.2f, %.2f, %.2f)\n", build.m_pModelName, build.m_Origin.x, build.m_Origin.y, build.m_Origin.z );
+		return;
+	}
 	// Insert an element into the lump data...
 	int i = s_StaticPropLump.AddToTail( );
 	StaticPropLump_t& propLump = s_StaticPropLump[i];

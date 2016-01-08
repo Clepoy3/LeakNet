@@ -130,7 +130,8 @@ int	FindMiptex (const char *name)
 	else if ( ( propVal = GetMaterialVar( matID, "%compilePlayerControlClip" ) ) &&
 		StringIsTrue( propVal ) )
 	{
-		textureref[i].contents |= CONTENTS_DETAIL | CONTENTS_MIST;
+	//	textureref[i].contents |= CONTENTS_DETAIL | CONTENTS_MIST;
+		textureref[i].contents |= CONTENTS_PLAYERCLIP;
 		textureref[i].flags |= SURF_NODRAW | SURF_NOLIGHT;
 	}
 	else

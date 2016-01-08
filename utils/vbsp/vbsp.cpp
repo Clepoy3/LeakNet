@@ -361,6 +361,15 @@ void ProcessSubModel( )
 	if (!nocsg)
 		list = ChopBrushes (list);
 	tree = BrushBSP (list, mins, maxs);
+
+	// This would wind up crashing the engine because we'd have a negative leaf index in dmodel_t::headnode.
+	if ( tree->headnode->planenum == PLANENUM_LEAF )
+	{
+		const char *pClassName = ValueForKey( e, "classname" );
+		const char *pTargetName = ValueForKey( e, "targetname" );
+		Error( "bmodel %d has no head node (class '%s', targetname '%s')", entity_num, pClassName, pTargetName );
+	}
+
 	MakeTreePortals (tree);
 	MarkVisibleSides (tree, start, end, FULL_DETAIL);
 	MakeFaces (tree->headnode);
