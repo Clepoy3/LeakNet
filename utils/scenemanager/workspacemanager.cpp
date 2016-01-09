@@ -291,7 +291,7 @@ void CWorkspaceManager::UpdateMenus()
 	ITreeItem *item = GetBrowser()->GetSelectedItem();
 
 	bool hasworkspace = ws != NULL ? true : false;
-	bool workspacedirty = ws && ws->IsDirty() ? true : false;
+	//bool workspacedirty = ws && ws->IsDirty() ? true : false;
 	bool hasproject = item && item->GetProject() ? true : false;
 
 	m_pMenuBar->setEnabled( IDC_WSM_FILE_WS_SAVE, true );
@@ -1676,8 +1676,10 @@ HIMAGELIST CWorkspaceManager::CreateImageList()
     // Load the icon resources, and add the icons to the image list. 
     HICON hicon;
 	int slot;
-	int c = 0;
-	
+#ifdef _DEBUG
+	int c = 0; // VXP: Wut?
+#endif
+
 	hicon = LoadIcon( GetModuleHandle( 0 ), MAKEINTRESOURCE(IDI_WORKSPACE)); 
 	slot = ImageList_AddIcon(list, hicon); 
 	Assert( slot == c++ );
@@ -1745,10 +1747,20 @@ HIMAGELIST CWorkspaceManager::CreateImageList()
 //-----------------------------------------------------------------------------
 void CWorkspaceManager::RefreshBrowsers()
 {
-	GetBrowser()->PopulateTree();
+	if ( GetBrowser() )
+	{
+		GetBrowser()->PopulateTree();
+	}
 
-	GetSoundBrowser()->RepopulateTree();
-	GetWaveBrowser()->RepopulateTree();
+	if ( GetSoundBrowser() )
+	{
+		GetSoundBrowser()->RepopulateTree();
+	}
+
+	if ( GetWaveBrowser() )
+	{
+		GetWaveBrowser()->RepopulateTree();
+	}
 }
 
 void CWorkspaceManager::OnSoundShowInBrowsers()

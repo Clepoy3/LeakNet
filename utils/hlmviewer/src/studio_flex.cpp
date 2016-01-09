@@ -22,13 +22,13 @@ Vector r_origin( 0, 0, 0 );
 // hack!  Should probably use the gamma stuff in mathlib since we already linking it.
 int LocalLinearToTexture( float v )
 {
-	return pow( v, 1 / 2.2 ) * 255;
+	return pow( v, 1.0f / 2.2f ) * 255;
 }
 
 // hack!  Should probably use the gamma stuff in mathlib since we already linking it.
 float LocalTextureToLinear( int c )
 {
-	return pow( c / 255.0, 2.2 );
+	return pow( c / 255.0f, 2.2f );
 }
 
 

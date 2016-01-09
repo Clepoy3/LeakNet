@@ -534,51 +534,39 @@ void CServerGameDLL::ServerActivate( edict_t *pEdictList, int edictCount, int cl
 
 void CServerGameDLL::GameFrame( bool simulating )
 {
-	VPROF( "CServerGameDLL::GameFrame" );
+    VPROF( "CServerGameDLL::GameFrame" );
 
-	// Don't run frames until fully restored
-	if ( g_InRestore )
-		return;
+    // For profiling.. let them enable/disable the networkvar manual mode stuff.
+    g_bUseNetworkVars = g_UseNetworkVars.GetBool();
 
-	float oldframetime = gpGlobals->frametime;
+    extern void GameStartFrame( void );
+    extern void ServiceEventQueue( void );
+    extern void Physics_RunThinkFunctions( bool simulating );
 
-#ifdef _DEBUG
-	// For profiling.. let them enable/disable the networkvar manual mode stuff.
-	g_bUseNetworkVars = g_UseNetworkVars.GetBool();
-#endif
+    // Delete anything that was marked for deletion
+    //  outside of server frameloop (e.g., in response to concommand)
+    gEntList.CleanupDeleteList();
 
-	extern void GameStartFrame( void );
-	extern void ServiceEventQueue( void );
-	extern void Physics_RunThinkFunctions( bool simulating );
+    IGameSystem::FrameUpdatePreEntityThinkAllSystems();
+    GameStartFrame();
 
-	// Delete anything that was marked for deletion
-	//  outside of server frameloop (e.g., in response to concommand)
-	gEntList.CleanupDeleteList();
+    Physics_RunThinkFunctions( simulating );
 
-	IGameSystem::FrameUpdatePreEntityThinkAllSystems();
-	GameStartFrame();
+    IGameSystem::FrameUpdatePostEntityThinkAllSystems();
 
-	Physics_RunThinkFunctions( simulating );
-	
-	IGameSystem::FrameUpdatePostEntityThinkAllSystems();
+    // UNDONE: Make these systems IGameSystems and move these calls into FrameUpdatePostEntityThink()
+    // service event queue, firing off any actions whos time has come
+    ServiceEventQueue();
 
-	// UNDONE: Make these systems IGameSystems and move these calls into FrameUpdatePostEntityThink()
-	// service event queue, firing off any actions whos time has come
-	ServiceEventQueue();
+    // free all ents marked in think functions
+    gEntList.CleanupDeleteList();
 
-	// free all ents marked in think functions
-	gEntList.CleanupDeleteList();
+    // FIXME:  Should this only occur on the final tick?
+    UpdateAllClientData();
 
-	// FIXME:  Should this only occur on the final tick?
-	UpdateAllClientData();
-
-	if ( g_pGameRules )
-	{
-		g_pGameRules->EndGameFrame();
-	}
-
-	gpGlobals->frametime = oldframetime;
+    g_pGameRules->EndGameFrame();
 }
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Called every frame even if not ticking

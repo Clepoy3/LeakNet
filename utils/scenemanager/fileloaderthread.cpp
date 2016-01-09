@@ -26,12 +26,13 @@ public:
 	{
 		char filename[ 512 ];
 		Q_snprintf( filename, sizeof( filename ), "%s/%s", SceneManager_GetGameDirectory(), pFileName );
+	//	Q_snprintf( filename, sizeof( filename ), "%s/%s", SceneManager_GetGameDirectory(), pFileName );
 		return (int)_open( filename, _O_BINARY | _O_RDONLY );
 	}
 
 	int read( void *pOutput, int size, int file )
 	{
-		if ( !file )
+		if ( file == -1 )
 			return 0;
 
 		return _read( file, pOutput, size );
@@ -39,7 +40,7 @@ public:
 
 	void seek( int file, int pos )
 	{
-		if ( !file )
+		if ( file == -1 )
 			return;
 
 		_lseek( file, pos, SEEK_SET );
@@ -47,7 +48,7 @@ public:
 
 	unsigned int tell( int file )
 	{
-		if ( !file )
+		if ( file == -1 )
 			return 0;
 
 		return _tell( file );
@@ -55,7 +56,7 @@ public:
 
 	unsigned int size( int file )
 	{
-		if ( !file )
+		if ( file == -1 )
 			return 0;
 
 		long curpos = tell( file );
@@ -68,7 +69,7 @@ public:
 
 	void close( int file )
 	{
-		if ( !file )
+		if ( file == -1 )
 			return;
 
 		_close( file );

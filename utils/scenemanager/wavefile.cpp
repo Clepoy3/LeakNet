@@ -113,8 +113,6 @@ void CWaveFile::SetSentenceText( char const *newText )
 	if ( !Q_stricmp( GetSentenceText(), newText ) )
 		return;
 
-	m_Sentence.SetText( newText );
-
 	if ( !IsCheckedOut() )
 	{
 		int retval = MultipleRequest( va( "Check out '%s'?", GetFileName() ) );
@@ -123,6 +121,8 @@ void CWaveFile::SetSentenceText( char const *newText )
 
 		VSS_Checkout( GetFileName() );
 	}
+
+	m_Sentence.SetText( newText );
 
 	SceneManager_SaveSentenceToWavFile( GetFileName(), m_Sentence );
 }

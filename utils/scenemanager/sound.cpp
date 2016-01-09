@@ -692,7 +692,7 @@ void CAudioWaveOutput::Update( float time )
 		// UNDONE: These numbers are constants
 		// calc number of samples (2 channels * 2 bytes per sample)
 		int sampleCount = pBuffer->hdr->dwBufferLength >> 2;
-		float oldTime = m_mixTime;
+		//float oldTime = m_mixTime;
 
 		m_mixTime += sampleCount * (1.0f / OUTPUT_SAMPLE_RATE);
 

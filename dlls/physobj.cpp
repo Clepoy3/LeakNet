@@ -195,6 +195,9 @@ int CPhysicsSpring::DrawDebugTextOverlays(void)
 //-----------------------------------------------------------------------------
 void CPhysicsSpring::DrawDebugGeometryOverlays(void) 
 {
+	if ( !m_pSpring )
+		return;
+
 	// ------------------------------
 	// Draw if BBOX is on
 	// ------------------------------
@@ -268,10 +271,16 @@ void CPhysicsSpring::GetSpringObjectConnections( string_t nameStart, string_t na
 	else
 	{
 		CBaseEntity *pEntity0 = (CBaseEntity *) (pStartObject->GetGameData());
-		g_pNotify->AddEntity( this, pEntity0 );
+		if ( pEntity0 )
+		{
+			g_pNotify->AddEntity( this, pEntity0 );
+		}
 
 		CBaseEntity *pEntity1 = (CBaseEntity *) pEndObject->GetGameData();
-		g_pNotify->AddEntity( this, pEntity1 );
+		if ( pEntity1 )
+		{
+			g_pNotify->AddEntity( this, pEntity1 );
+		}
 	}
 
 	*pStart = pStartObject;
@@ -403,9 +412,11 @@ void CPhysBox::Spawn( void )
 {
 	Precache();
 
+	m_iMaxHealth = ( m_iHealth > 0 ) ? m_iHealth : 1;
 	if ( HasSpawnFlags( SF_BREAK_TRIGGER_ONLY ) )
 	{
-		m_takedamage = DAMAGE_NO;
+	//	m_takedamage = DAMAGE_NO;
+		m_takedamage = DAMAGE_EVENTS_ONLY; // VXP
 		AddSpawnFlags( SF_BREAK_DONT_TAKE_PHYSICS_DAMAGE );
 	}
 	else if ( m_iHealth == 0 )
@@ -419,7 +430,7 @@ void CPhysBox::Spawn( void )
 	}
   
 	SetMoveType( MOVETYPE_NONE );
-	SetSolid( SOLID_VPHYSICS );
+//	SetSolid( SOLID_VPHYSICS );
 
 	SetAbsVelocity( vec3_origin );
 	SetModel( STRING( GetModelName() ) );
@@ -512,8 +523,22 @@ void CPhysBox::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useT
 	CBasePlayer *pPlayer = ToBasePlayer( pActivator );
 	if ( pPlayer )
 	{
-		pPlayer->PickupObject( this );
+		if ( !HasSpawnFlags( SF_PHYSBOX_IGNOREUSE ) )
+		{
+			pPlayer->PickupObject( this );
+		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool CPhysBox::CanBePickedUpByPhyscannon()
+{
+	IPhysicsObject *pPhysicsObject = VPhysicsGetObject();
+	if ( !pPhysicsObject )
+		return false;	
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -566,7 +591,10 @@ void CPhysBox::InputEnableMotion( inputdata_t &inputdata )
 	if ( pPhysicsObject != NULL )
 	{
 		pPhysicsObject->EnableMotion( true );
+		pPhysicsObject->Wake();
 	}
+
+	m_damageToEnableMotion = 0; // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -620,12 +648,20 @@ void CPhysBox::VPhysicsUpdate( IPhysicsObject *pPhysics )
 
 void CPhysBox::OnPhysGunPickup( CBasePlayer *pPhysGunUser )
 {
-	m_hCarryingPlayer = pPhysGunUser;
+	IPhysicsObject *pPhysicsObject = VPhysicsGetObject();
+	if ( pPhysicsObject && !pPhysicsObject->IsMoveable() )
+	{
+		pPhysicsObject->EnableMotion( true );
+	}
+
 	m_OnPhysGunPickup.FireOutput( pPhysGunUser, this );
+	m_hCarryingPlayer = pPhysGunUser;
 }
 
 void CPhysBox::OnPhysGunDrop( CBasePlayer *pPhysGunUser, bool wasLaunched )
 {
+	BaseClass::OnPhysGunDrop( pPhysGunUser, wasLaunched );
+
 	m_hCarryingPlayer = NULL;
 	m_OnPhysGunDrop.FireOutput( pPhysGunUser, this );
 }
@@ -635,9 +671,20 @@ void CPhysBox::OnPhysGunDrop( CBasePlayer *pPhysGunUser, bool wasLaunched )
 //-----------------------------------------------------------------------------
 int CPhysBox::OnTakeDamage( const CTakeDamageInfo &info )
 {
+	if ( IsMarkedForDeletion() )
+		return 0;
+
 	// note: if motion is disabled, OnTakeDamage can't apply physics force
 	int ret = BaseClass::OnTakeDamage( info );
 
+	if ( info.GetInflictor() )
+	{
+		m_OnDamaged.FireOutput( info.GetAttacker(), this );
+	}
+
+	// Have we been broken? If so, abort
+	if ( GetHealth() <= 0 )
+		return ret;
 	// Check our health against the threshold:
 	if( m_damageToEnableMotion > 0 && GetHealth() < m_damageToEnableMotion )
 	{
@@ -652,11 +699,6 @@ int CPhysBox::OnTakeDamage( const CTakeDamageInfo &info )
 			
 			VPhysicsTakeDamage( info );
 		}
-	}
-
-	if ( info.GetInflictor() )
-	{
-		m_OnDamaged.FireOutput( info.GetAttacker(), this );
 	}
 
 	return ret;
@@ -701,20 +743,25 @@ void CPhysExplosion::Spawn( void )
 
 CBaseEntity *CPhysExplosion::FindEntity( CBaseEntity *pEntity, CBaseEntity *pActivator )
 {
+	float radius = m_radius;
+	if ( radius <= 0 )
+	{
+		// Use the same radius as combat
+		radius = m_damage * 2.5;
+	}
+	// Filter by name or classname
 	if ( m_targetEntityName != NULL_STRING )
 	{
-		return gEntList.FindEntityByName( pEntity, m_targetEntityName, pActivator );
+		// Try an explicit name first
+		CBaseEntity *pTarget = gEntList.FindEntityByName( pEntity, m_targetEntityName, pActivator );
+		if ( pTarget != NULL )
+			return pTarget;
+
+		// Failing that, try a classname
+		return gEntList.FindEntityByClassnameWithin( pEntity, STRING(m_targetEntityName), GetAbsOrigin(), radius );
 	}
-	else
-	{
-		float radius = m_radius;
-		if ( radius <= 0 )
-		{
-			// Use the same radius as combat
-			radius = m_damage * 2.5;
-		}
-		return gEntList.FindEntityInSphere( pEntity, GetAbsOrigin(), radius );
-	}
+	// Just find anything in the radius
+	return gEntList.FindEntityInSphere( pEntity, GetAbsOrigin(), radius );
 }
 
 
@@ -757,9 +804,9 @@ void CPhysExplosion::Explode( CBaseEntity *pActivator )
 				adjustedDamage =  flDist * falloff;
 				adjustedDamage = m_damage - adjustedDamage;
 		
-				if ( adjustedDamage < 0 )
+				if ( adjustedDamage < 1 )
 				{
-					adjustedDamage = 0;
+					adjustedDamage = 1;
 				}
 
 				CTakeDamageInfo info( this, this, adjustedDamage, DMG_BLAST );
@@ -812,10 +859,11 @@ void CPhysImpact::Activate( void )
 	BaseClass::Activate();
 	
 	//If we have a direction target, setup to point at it
-	if ( m_directionEntityName != NULL_STRING )
-	{
-		PointAtEntity();
-	}
+	// VXP: Moved to InputImpact
+//	if ( m_directionEntityName != NULL_STRING )
+//	{
+//		PointAtEntity();
+//	}
 }
 
 //-----------------------------------------------------------------------------
@@ -858,6 +906,12 @@ void CPhysImpact::InputImpact( inputdata_t &inputdata )
 	Vector	dir;
 	trace_t	trace;
 
+	//If we have a direction target, setup to point at it
+	if ( m_directionEntityName != NULL_STRING )
+	{
+		PointAtEntity();
+	}
+
 	AngleVectors( GetAbsAngles(), &dir );
 	
 	//Setup our trace information
@@ -870,12 +924,27 @@ void CPhysImpact::InputImpact( inputdata_t &inputdata )
 
 	if ( trace.fraction != 1.0 )
 	{
+		// if inside the object, just go opposite the direction
+		if ( trace.startsolid )
+		{
+			trace.plane.normal = -dir;
+		}
 		CBaseEntity	*pEnt = trace.m_pEnt;
 	
 		IPhysicsObject *pPhysics = pEnt->VPhysicsGetObject();
 		//If the entity is valid, hit it
 		if ( ( pEnt != NULL  ) && ( pPhysics != NULL ) )
 		{
+			CTakeDamageInfo info;
+			info.SetAttacker( this);
+			info.SetInflictor( this );
+			info.SetDamage( 0 );
+			info.SetDamageForce( vec3_origin );
+			info.SetDamageType( DMG_GENERIC );
+
+			pEnt->DispatchTraceAttack( info, dir, &trace );
+			ApplyMultiDamage();
+
 			//Damage falls off unless specified or the ray's length is infinite
 			float	damage = HasSpawnFlags( bitsPHYSIMPACT_NOFALLOFF | bitsPHYSIMPACT_INFINITE_LENGTH ) ? 
 								m_damage : (m_damage * (1.0f-trace.fraction));
@@ -885,7 +954,8 @@ void CPhysImpact::InputImpact( inputdata_t &inputdata )
 				damage *= pPhysics->GetMass();
 			}
 
-			pPhysics->ApplyForceOffset( -damage * trace.plane.normal * phys_pushscale.GetFloat(), trace.endpos );
+		//	pPhysics->ApplyForceOffset( -damage * trace.plane.normal * phys_pushscale.GetFloat(), trace.endpos );
+			pPhysics->ApplyForceOffset( damage * dir * phys_pushscale.GetFloat(), trace.endpos );
 		}
 	}
 }
@@ -1405,7 +1475,10 @@ void CPhysMagnet::ConstraintBroken( IPhysicsConstraint *pConstraint )
 		if ( m_MagnettedEntities[i].pConstraint == pConstraint )
 		{
 			IPhysicsObject *pPhysObject = m_MagnettedEntities[i].hEntity->VPhysicsGetObject();
-			m_flTotalMass -= pPhysObject->GetMass();
+			if( pPhysObject != NULL )
+			{
+				m_flTotalMass -= pPhysObject->GetMass();
+			}
 
 			m_MagnettedEntities.Remove(i);
 			break;
@@ -1434,7 +1507,10 @@ void CPhysMagnet::DetachAll( void )
 			m_MagnettedEntities[i].hEntity->SetShadowCastDistance( 0 );
 		}
 		*/
-		physenv->DestroyConstraint( m_MagnettedEntities[i].pConstraint  );
+		if ( m_MagnettedEntities[i].pConstraint != NULL )
+		{
+			physenv->DestroyConstraint( m_MagnettedEntities[i].pConstraint  );
+		}
 	}
 
 	m_MagnettedEntities.Purge();

@@ -1,0 +1,14 @@
+Critical:
+- Fix for UV on BorealisWorker and child_worker_f1
+- Add flexes
+
+Optional:
+- Transitions (numtransitions in studio.h)
+- For whatever reason bones with parent "-1" not compiling by standart studiomdl
+- Make LODs
+- Make poseparameters
+- Make physmodels
+
+Fixed:
+- Fix initial model rotation (rotate Y by 90 deg)
+- Add ACT_'s

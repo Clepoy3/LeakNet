@@ -654,7 +654,8 @@ void CSentence::ParseCloseCaption( CUtlBuffer& buf )
 				break;
 
 			char cc_type[32];
-			char cc_stream[ 512 ];
+		//	char cc_stream[ 512 ];
+			char cc_stream[ 1024 ];
 			int cc_length;
 			float start, end;
 

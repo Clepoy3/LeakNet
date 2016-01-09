@@ -58,7 +58,7 @@ void CStatusWindow::redraw()
 	rcText.bottom = h2() - 4;
 	rcText.top = rcText.bottom - lineheight;
 
-	int minval = m_pScrollbar->getMinValue();
+//	int minval = m_pScrollbar->getMinValue();
 	int maxval = m_pScrollbar->getMaxValue();
 	int pagesize = m_pScrollbar->getPagesize();
 	int curval = m_pScrollbar->getValue();

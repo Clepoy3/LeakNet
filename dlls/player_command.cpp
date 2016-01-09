@@ -294,7 +294,8 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 
 	// Set globals appropriately
 	gpGlobals->curtime		=  player->m_nTickBase * TICK_RATE;
-	gpGlobals->frametime	=  ucmd->frametime;
+//	gpGlobals->frametime	=  ucmd->frametime;
+	gpGlobals->frametime	=  TICK_RATE;
 
 	/*
 	// TODO:  We can check whether the player is sending more commands than elapsed real time
@@ -315,10 +316,17 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 		}
 	}
 
+	IServerVehicle *pVehicle = player->GetVehicle();
+
 	// Latch in impulse.
 	if ( ucmd->impulse )
 	{
-		player->m_nImpulse = ucmd->impulse;
+		// Discard impulse commands unless the vehicle allows them.
+		// FIXME: UsingStandardWeapons seems like a bad filter for this. The flashlight is an impulse command, for example.
+		if ( !pVehicle || player->UsingStandardWeaponsInVehicle() )
+		{
+			player->m_nImpulse = ucmd->impulse;
+		}
 	}
 
 	// Assume the player isn't standing on any moving object
@@ -327,7 +335,8 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 	// Update player input button states
 	player->UpdateButtonState( ucmd->buttons );
 
-	CheckMovingGround( player, ucmd->frametime );
+//	CheckMovingGround( player, ucmd->frametime );
+	CheckMovingGround( player, TICK_RATE );
 
 	g_pMoveData->m_vecOldAngles = player->pl.v_angle;
 
@@ -341,7 +350,8 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 	RunPreThink( player );
 
 	// Call Think if one is set
-	RunThink( player, ucmd->frametime );
+//	RunThink( player, ucmd->frametime );
+	RunThink( player, TICK_RATE );
 
 	// If conveyor, or think, set basevelocity, then send to client asap too.
 	if ( VectorLength( player->GetBaseVelocity() ) > 0.0 )
@@ -349,7 +359,7 @@ void CPlayerMove::RunCommand ( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 		player->m_Local.m_vecClientBaseVelocity = player->GetBaseVelocity();
 	}
 
-	IServerVehicle *pVehicle = player->GetVehicle();
+//	IServerVehicle *pVehicle = player->GetVehicle();
 
 	// Setup input.
 	SetupMove( player, ucmd, moveHelper, g_pMoveData );

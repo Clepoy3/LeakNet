@@ -144,7 +144,7 @@ void CAudioMixerWaveADPCM::DecompressBlockMono( short *pOut, const char *pIn, in
 	// this is a toggle to read nibbles, first nibble is high
 	int high = 1;
 
-	int error, sample;
+	int error = 0, sample = 0;
 
 	// now process the block
 	while ( count )
@@ -249,7 +249,7 @@ void CAudioMixerWaveADPCM::DecompressBlockStereo( short *pOut, const char *pIn, 
 	// this is a toggle to read nibbles, first nibble is high
 	int high = 1;
 
-	int error, sample;
+	int error, sample = 0;
 
 	// now process the block
 	while ( count )

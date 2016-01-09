@@ -119,6 +119,8 @@ void CWeaponAR2::ItemPostFrame( void )
 	{
 		m_fFireDuration = 0.05f;
 	}
+	
+//	AddTimedOverlay( "Test Message!", 15 ); // VXP: TODO
 
 	BaseClass::ItemPostFrame();
 }

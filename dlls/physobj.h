@@ -44,6 +44,8 @@ public:
 	virtual void VPhysicsUpdate( IPhysicsObject *pPhysics );
 	int		OnTakeDamage( const CTakeDamageInfo &info );
 
+	bool CanBePickedUpByPhyscannon();
+
 	virtual void OnPhysGunPickup( CBasePlayer *pPhysGunUser );
 	virtual void OnPhysGunDrop( CBasePlayer *pPhysGunUser, bool wasLaunched );
 

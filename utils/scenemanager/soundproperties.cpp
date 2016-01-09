@@ -204,16 +204,16 @@ static void PopulateWaveList( HWND wnd, CSoundEmitterSystemBase::CSoundParameter
 		m_SortedNames.Insert( name );
 	}
 
-	i = m_SortedNames.FirstInorder();
-	while ( i != m_SortedNames.InvalidIndex() )
+	int j = m_SortedNames.FirstInorder();
+	while ( j != m_SortedNames.InvalidIndex() )
 	{
-		char const *name = m_SortedNames[ i ];
+		char const *name = m_SortedNames[ j ];
 		if ( name && name[ 0 ] )
 		{
 			SendMessage( control, LB_ADDSTRING, 0, (LPARAM)name ); 
 		}
 
-		i = m_SortedNames.NextInorder( i );
+		j = m_SortedNames.NextInorder( j );
 	}
 }
 
@@ -246,16 +246,16 @@ static void PopulateWaveList_Available( HWND wnd )
 	// Remove all
 	SendMessage( control, LB_RESETCONTENT, 0, 0 );
 
-	i = m_SortedNames.FirstInorder();
-	while ( i != m_SortedNames.InvalidIndex() )
+	int j = m_SortedNames.FirstInorder();
+	while ( j != m_SortedNames.InvalidIndex() )
 	{
-		char const *name = m_SortedNames[ i ];
+		char const *name = m_SortedNames[ j ];
 		if ( name && name[ 0 ] )
 		{
 			SendMessage( control, LB_ADDSTRING, 0, (LPARAM)name ); 
 		}
 
-		i = m_SortedNames.NextInorder( i );
+		j = m_SortedNames.NextInorder( j );
 	}
 }
 

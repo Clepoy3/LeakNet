@@ -322,7 +322,7 @@ bool CAudioMixerWave::SkipSamples( channel_t *pChannel, int startSample, int sam
 
 	int inputSampleRate = (int)(pChannel->pitch * m_pData->Source().SampleRate());
 	float rate = (float)inputSampleRate / outputRate;
-	fixedint fracstep = FIX_FLOAT( rate );
+	// fixedint fracstep = FIX_FLOAT( rate );
 
 	sampleCount = min( sampleCount, PAINTBUFFER_SIZE );
 

@@ -334,8 +334,12 @@ void CPhysicsHook::LevelShutdownPostEntity()
 void CPhysicsHook::FrameUpdatePostEntityThink( ) 
 {
 	VPROF_BUDGET( "CPhysicsHook::FrameUpdatePostEntityThink", VPROF_BUDGETGROUP_PHYSICS );
+
+	// If game is paused, don't simulate vphysics
+	float interval = ( gpGlobals->frametime > 0.0f ) ? TICK_RATE : 0.0f;
+
 	// update the physics simulation
-	PhysFrame( gpGlobals->frametime );
+	PhysFrame( interval );
 	physicssound::PlayImpactSounds( m_impactSounds );
 }
 
@@ -418,7 +422,8 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 	if ( pEntity0->ForceVPhysicsCollide( pEntity1 ) || pEntity1->ForceVPhysicsCollide( pEntity0 ) ) // VXP: Need to fix maybe
 		return 1;
 
-	if ( pEntity0->pev && pEntity1->pev )
+//	if ( pEntity0->pev && pEntity1->pev )
+	if ( pEntity0->edict() && pEntity1->edict() )
 	{
 		// don't collide with your owner
 		if ( pEntity0->GetOwnerEntity() == pEntity1 || pEntity1->GetOwnerEntity() == pEntity0 )
@@ -454,8 +459,28 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 	// entities with non-physical move parents or entities with MOVETYPE_PUSH
 	// are considered as "AI movers".  They are unchanged by collision; they exert
 	// physics forces on the rest of the system.
-	bool aiMove0 = (movetype0==MOVETYPE_PUSH || pEntity0->GetMoveParent()) ? true : false;
-	bool aiMove1 = (movetype1==MOVETYPE_PUSH || pEntity1->GetMoveParent()) ? true : false;
+//	bool aiMove0 = (movetype0==MOVETYPE_PUSH || pEntity0->GetMoveParent()) ? true : false;
+//	bool aiMove1 = (movetype1==MOVETYPE_PUSH || pEntity1->GetMoveParent()) ? true : false;
+	bool aiMove0 = (movetype0==MOVETYPE_PUSH) ? true : false;
+	bool aiMove1 = (movetype1==MOVETYPE_PUSH) ? true : false;
+
+	if ( pEntity0->GetMoveParent() )
+	{
+		// if the object & its parent are both MOVETYPE_VPHYSICS, then this must be a special case
+		// like a prop_ragdoll_attached
+		if ( !(movetype0 == MOVETYPE_VPHYSICS && GetHighestParent( pEntity0 )->GetMoveType() == MOVETYPE_VPHYSICS) )
+		{
+			aiMove0 = true;
+		}
+	}
+	if ( pEntity1->GetMoveParent() )
+	{
+		// if the object & its parent are both MOVETYPE_VPHYSICS, then this must be a special case.
+		if ( !(movetype1 == MOVETYPE_VPHYSICS && GetHighestParent( pEntity1 )->GetMoveType() == MOVETYPE_VPHYSICS) )
+		{
+			aiMove1 = true;
+		}
+	}
 
 	// AI movers don't collide with the world/static/pinned objects or other AI movers
 	if ( (aiMove0 && !pObj1->IsMoveable()) ||
@@ -463,10 +488,14 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 		(aiMove0 && aiMove1) )
 		return 0;
 
+	// two objects under shadow control should not collide.  The AI will figure it out
+	if ( pObj0->GetShadowController() && pObj1->GetShadowController() )
+		return 0;
+
 	// BRJ 1/24/03
 	// You can remove the assert if it's problematic; I *believe* this condition
 	// should be met, but I'm not sure.
-	Assert ( (solid0 != SOLID_NONE) && (solid1 != SOLID_NONE) );
+	//Assert ( (solid0 != SOLID_NONE) && (solid1 != SOLID_NONE) );
 	if ( (solid0 == SOLID_NONE) || (solid1 == SOLID_NONE) )
 		return 0;
 
@@ -508,7 +537,7 @@ static void ReportPenetration( CBaseEntity *pEntity, float duration )
 		{
 			pEntity->m_debugOverlays |= OVERLAY_ABSBOX_BIT;
 		}
-		pEntity->AddTimedOverlay( "VPhysics Penetration Error!", duration );
+		pEntity->AddTimedOverlay( UTIL_VarArgs("VPhysics Penetration Error (%s)!", pEntity->GetDebugName()), duration );
 	}
 }
 
@@ -516,10 +545,12 @@ void CCollisionEvent::UpdatePenetrateEvents( void )
 {
 	for ( int i = m_penetrateEvents.Count()-1; i >= 0; --i )
 	{
+		CBaseEntity *pEntity0 = m_penetrateEvents[i].hEntity0;
+		CBaseEntity *pEntity1 = m_penetrateEvents[i].hEntity1;
+
 		if ( m_penetrateEvents[i].collisionState == COLLSTATE_TRYDISABLE )
 		{
-			CBaseEntity *pEntity0 = m_penetrateEvents[i].hEntity0;
-			CBaseEntity *pEntity1 = m_penetrateEvents[i].hEntity1;
+			
 			if ( pEntity0 && pEntity1 )
 			{
 				IPhysicsObject *pObj0 = pEntity0->VPhysicsGetObject();
@@ -536,14 +567,14 @@ void CCollisionEvent::UpdatePenetrateEvents( void )
 				continue;
 			}
 			// missing entity or object, clear event
-			m_penetrateEvents.FastRemove(i);
+		//	m_penetrateEvents.FastRemove(i); // VXP: Moved down
 		}
 		if ( gpGlobals->curtime - m_penetrateEvents[i].timeStamp > 1.0 )
 		{
 			if ( m_penetrateEvents[i].collisionState == COLLSTATE_DISABLED )
 			{
-				CBaseEntity *pEntity0 = m_penetrateEvents[i].hEntity0;
-				CBaseEntity *pEntity1 = m_penetrateEvents[i].hEntity1;
+			//	CBaseEntity *pEntity0 = m_penetrateEvents[i].hEntity0;
+			//	CBaseEntity *pEntity1 = m_penetrateEvents[i].hEntity1;
 				if ( pEntity0 && pEntity1 )
 				{
 					IPhysicsObject *pObj0 = pEntity0->VPhysicsGetObject();
@@ -556,8 +587,15 @@ void CCollisionEvent::UpdatePenetrateEvents( void )
 				}
 			}
 			// haven't penetrated for 1 second, so remove
-			m_penetrateEvents.FastRemove(i);
+		//	m_penetrateEvents.FastRemove(i); // VXP: Moved down
 		}
+		else
+		{
+			// recent timestamp, don't remove the event yet
+			continue;
+		}
+		// done, clear event
+		m_penetrateEvents.FastRemove(i);
 	}
 }
 
@@ -611,14 +649,21 @@ int CCollisionEvent::ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObje
 	if ( eventTime > 3 )
 	{
 		// two objects have been stuck for more than 3 seconds, try disabling simulation
-		event.collisionState = COLLSTATE_TRYDISABLE;
+	//	event.collisionState = COLLSTATE_TRYDISABLE;
 
-		if ( g_pDeveloper->GetInt() )
+		if ( g_pDeveloper->GetInt() && pEntity0 != pEntity1 )
 		{
 			ReportPenetration( pEntity0, 10 );
 			ReportPenetration( pEntity1, 10 );
 		}
 		event.startTime = gpGlobals->curtime;
+		// don't put players or game physics controlled objects to sleep
+		if ( !pEntity0->IsPlayer() && !pEntity1->IsPlayer() && !pObj0->GetShadowController() && !pObj1->GetShadowController() )
+		{
+			// two objects have been stuck for more than 3 seconds, try disabling simulation
+			event.collisionState = COLLSTATE_TRYDISABLE;
+			return false;
+		}
 	}
 
 
@@ -765,7 +810,12 @@ static void CallbackHighlight( CBaseEntity *pEntity )
 
 static void CallbackReport( CBaseEntity *pEntity )
 {
-	Msg( "%s\n", pEntity->GetClassname() );
+	const char *pName = STRING(pEntity->GetEntityName());
+	if ( !Q_strlen(pName) )
+	{
+		pName = STRING(pEntity->GetModelName());
+	}
+	Msg( "%s - %s\n", pEntity->GetClassname(), pName );
 }
 
 CON_COMMAND(physics_highlight_active, "Turns on the absbox for all active physics objects")
@@ -829,6 +879,7 @@ void PhysFrame( float deltaTime )
 				pEntity->VPhysicsUpdate( pActiveList[i] );
 			}
 		}
+		stackfree( pActiveList ); // VXP
 	}
 
 	for ( pItem = g_pShadowEntities->m_pItemList; pItem; pItem = pItem->pNext )
@@ -905,13 +956,12 @@ void CCollisionEvent::PreCollision( vcollisionevent_t *pEvent )
 					// are penetrating and generate forces to separate them
 					// so make it fairly small and have a tiny collision instead.
 					// UNDONE: Clamp this to something small/guaranteed instead of scale and hope for the best?
-					pObject->GetVelocity( &velocity, &angVel );
+					/*pObject->GetVelocity( &velocity, &angVel );
 					VectorNormalize(velocity);
 					velocity *= 0.1;
 					VectorNormalize(angVel);
-					pObject->SetVelocity( &velocity, &angVel );
+					pObject->SetVelocity( &velocity, &angVel );*/
 
-					/*
 					pObject->GetVelocity( &velocity, &angVel );
 					float len = VectorNormalize(velocity);
 					len = max( len, 10 );
@@ -920,7 +970,6 @@ void CCollisionEvent::PreCollision( vcollisionevent_t *pEvent )
 					len = max( len, 1 );
 					angVel *= len;
 					pObject->SetVelocity( &velocity, &angVel );
-					*/
 				}
 			}
 			pObject->GetVelocity( &m_gameEvent.preVelocity[i], &m_gameEvent.preAngularVelocity[i] );
@@ -967,9 +1016,9 @@ void CCollisionEvent::PostCollision( vcollisionevent_t *pEvent )
 	// special case for hitting self, only make one non-shadow call
 	if ( m_gameEvent.pEntities[0] == m_gameEvent.pEntities[1] )
 	{
-		if ( pEvent->isCollision )
+		if ( pEvent->isCollision && m_gameEvent.pEntities[0] )
 		{
-			m_gameEvent.pEntities[1] = NULL;
+			m_gameEvent.pEntities[1] = NULL; // VXP: Do we need this?
 			m_gameEvent.pEntities[0]->VPhysicsCollision( 0, &m_gameEvent );
 		}
 		return;
@@ -1281,6 +1330,9 @@ void CCollisionEvent::AddTouchEvent( CBaseEntity *pEntity0, CBaseEntity *pEntity
 
 void CCollisionEvent::AddDamageEvent( CBaseEntity *pEntity, const CTakeDamageInfo &info, IPhysicsObject *pInflictorPhysics, bool bRestoreVelocity, const Vector &savedVel, const AngularImpulse &savedAngVel )
 {
+	if ( pEntity->IsMarkedForDeletion() )
+		return;
+
 	if ( !( info.GetDamageType() & (DMG_BURN | DMG_DROWN | DMG_TIMEBASED) ) )
 	{
 		Assert( info.GetDamageForce() != vec3_origin && info.GetDamagePosition() != vec3_origin );
@@ -1366,14 +1418,36 @@ void CCollisionEvent::ObjectEnterTrigger( IPhysicsObject *pTrigger, IPhysicsObje
 {
 	CBaseEntity *pTriggerEntity = static_cast<CBaseEntity *>(pTrigger->GetGameData());
 	CBaseEntity *pEntity = static_cast<CBaseEntity *>(pObject->GetGameData());
-	pTriggerEntity->StartTouch( pEntity );
+	if ( pTriggerEntity && pEntity )
+	{
+	//	pTriggerEntity->StartTouch( pEntity );
+		if ( 0 && m_bBufferTouchEvents )
+		{
+			// VXP: Wat
+		}
+		else
+		{
+			pTriggerEntity->StartTouch( pEntity );
+		}
+	}
 }
 
 void CCollisionEvent::ObjectLeaveTrigger( IPhysicsObject *pTrigger, IPhysicsObject *pObject )
 {
 	CBaseEntity *pTriggerEntity = static_cast<CBaseEntity *>(pTrigger->GetGameData());
 	CBaseEntity *pEntity = static_cast<CBaseEntity *>(pObject->GetGameData());
-	pTriggerEntity->EndTouch( pEntity );
+	if ( pTriggerEntity && pEntity )
+	{
+	//	pTriggerEntity->EndTouch( pEntity );
+		if ( 0 && m_bBufferTouchEvents )
+		{
+			// VXP: Wat
+		}
+		else
+		{
+			pTriggerEntity->EndTouch( pEntity );
+		}
+	}
 }
 
 /*

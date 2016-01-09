@@ -191,6 +191,10 @@ void CPhysForce::Activate( void )
 {
 	BaseClass::Activate();
 	
+	if ( m_pController )
+	{
+		m_pController->WakeObjects();
+	}
 	if ( m_attachedObject == NULL )
 	{
 		m_attachedObject = gEntList.FindEntityByName( NULL, m_nameAttach, NULL );

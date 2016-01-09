@@ -381,7 +381,8 @@ void CGib :: BounceGibTouch ( CBaseEntity *pOther )
 		QAngle angVel = GetLocalAngularVelocity();
 		angVel.x = 0;
 		angVel.z = 0;
-		SetLocalAngularVelocity( angVel );
+	//	SetLocalAngularVelocity( angVel );
+		SetLocalAngularVelocity( vec3_angle );
 	}
 	else
 	{
@@ -442,7 +443,8 @@ void CGib :: StickyGibTouch ( CBaseEntity *pOther )
 //
 void CGib :: Spawn( const char *szGibModel )
 {
-	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
+//	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
+	SetMoveType( MOVETYPE_STEP, MOVECOLLIDE_FLY_BOUNCE ); // VXP: Good, just sliding down the slope, but hitting first assert at SetMoveType
 	SetFriction(0.55); // deading the bounce a bit
 	
 	// sometimes an entity inherits the edict from a former piece of glass,
@@ -457,6 +459,7 @@ void CGib :: Spawn( const char *szGibModel )
 	SetCollisionGroup( COLLISION_GROUP_DEBRIS );
 
 	SetModel( szGibModel );
+
 	UTIL_SetSize(this, vec3_origin, vec3_origin);
 
 	SetNextThink( gpGlobals->curtime + 4 );

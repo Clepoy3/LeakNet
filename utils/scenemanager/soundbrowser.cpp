@@ -467,7 +467,7 @@ void CSoundBrowser::LoadAllSounds()
 {
 	RemoveAllSounds();
 
-	int c = soundemitter->GetSoundCount();
+	// int c = soundemitter->GetSoundCount();
 	int added = 0;
 
 	int i;

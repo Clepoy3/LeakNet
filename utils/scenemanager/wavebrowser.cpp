@@ -860,7 +860,9 @@ CWaveFile	*CWaveBrowser::FindEntry( char const *wavname, bool jump /*= false*/ )
 	if ( idx != m_AllSounds.InvalidIndex() )
 	{
 		CWaveFile *wav = m_AllSounds[ idx ];
+#ifdef _DEBUG
 		char const *name = wav->GetName();
+#endif
 
 		if ( jump )
 		{
@@ -927,7 +929,8 @@ void CWaveBrowser::OnEnableVoiceDucking()
 {
 	BuildSelectionList( m_CurrentSelection );
 	int count = m_CurrentSelection.Count();
-	if ( count <= 1 )
+//	if ( count <= 1 )
+	if ( count < 1 )
 		return;
 
 	MultipleRequestChangeContext();
@@ -948,7 +951,8 @@ void CWaveBrowser::OnDisableVoiceDucking()
 {
 	BuildSelectionList( m_CurrentSelection );
 	int count = m_CurrentSelection.Count();
-	if ( count <= 1 )
+//	if ( count <= 1 )
+	if ( count < 1 )
 		return;
 
 	MultipleRequestChangeContext();

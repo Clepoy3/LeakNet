@@ -38,7 +38,7 @@ SampleListPanelCats::SampleListPanelCats(Panel *parent, const char *name) : Demo
 
 	// Add a new section
 	m_pSectionedListPanel->AddSection(0, "LIST ITEMS");
-	m_pSectionedListPanel->AddColumnToSection(0, "items", "", SectionedListPanel::COLUMN_BRIGHT, 200);
+	m_pSectionedListPanel->AddColumnToSection(0, "items", "LIST ITEMS", SectionedListPanel::COLUMN_BRIGHT, 200);
 
 	// Add items to the list
 	KeyValues *data = new KeyValues ("items");
@@ -63,7 +63,7 @@ SampleListPanelCats::SampleListPanelCats(Panel *parent, const char *name) : Demo
 
 	// Add a new section
 	m_pSectionedListPanel->AddSection(1, "RIGHT CLICK");
-	m_pSectionedListPanel->AddColumnToSection(1, "items", "", SectionedListPanel::COLUMN_BRIGHT, 200);
+	m_pSectionedListPanel->AddColumnToSection(1, "items", "RIGHT CLICK", SectionedListPanel::COLUMN_BRIGHT, 200);
 
 	// Add items to the list
 	data->SetString("items", "Right-click the item");

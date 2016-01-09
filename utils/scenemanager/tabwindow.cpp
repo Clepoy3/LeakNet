@@ -102,8 +102,10 @@ void CTabWindow::DrawTab( CDrawHelper& drawHelper, RECT& rcClient, int tabnum, b
 	if ( tabnum < 0 || tabnum >= m_Items.Size() )
 		return;
 
+#ifdef _DEBUG
 	CETItem *p = &m_Items[ tabnum ];
 	Assert( p );
+#endif
 
 	GetTabRect( rcClient, rcTab, tabnum );
 

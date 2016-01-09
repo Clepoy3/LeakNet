@@ -217,10 +217,10 @@ void BlendEdges( CCoreDispInfo *pListBase, int listSize )
 			for ( int iSub=0; iSub < 2; iSub++ )
 			{
 				CDispSubNeighbor *pSub = &pEdge->m_SubNeighbors[iSub];
-				CCoreDispInfo *pNeighbor = &pListBase[ pSub->GetNeighborIndex() ];
-
 				if ( !pSub->IsValid() )
 					continue;
+
+				CCoreDispInfo *pNeighbor = &pListBase[ pSub->GetNeighborIndex() ];
 
 				int iEdgeDim = g_EdgeDims[iEdge];
 

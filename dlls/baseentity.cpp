@@ -2662,7 +2662,11 @@ void CBaseEntity::SetMoveType( MoveType_t val, MoveCollide_t moveCollide )
 	// Make sure the move type + move collide are compatible...
 	if ((val != MOVETYPE_FLY) && (val != MOVETYPE_FLYGRAVITY))
 	{
-		Assert( moveCollide == MOVECOLLIDE_DEFAULT );
+	//	Assert( moveCollide == MOVECOLLIDE_DEFAULT );
+		if ( moveCollide != MOVECOLLIDE_DEFAULT )
+		{
+			DevWarning( "CBaseEntity::SetMoveType: moveCollide != MOVECOLLIDE_DEFAULT\n" );
+		}
 	}
 
 	if ( m_MoveType == MOVETYPE_VPHYSICS && val != m_MoveType )

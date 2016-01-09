@@ -837,8 +837,8 @@ void CGameUI::HideGameUI()
 //-----------------------------------------------------------------------------
 int CGameUI::HasExclusiveInput()
 {
-	if( engine->IsBackGroundMap() )
-		return true;
+//	if( engine->IsBackGroundMap() )
+//		return true;
 
 	return IsGameUIActive();
 }

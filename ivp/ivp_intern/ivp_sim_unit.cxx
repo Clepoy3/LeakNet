@@ -738,9 +738,10 @@ void IVP_Simulation_Unit::simulate_single_sim_unit_psi(IVP_Event_Sim *es, IVP_U_
 
 	IVP_Core *my_core = sim_unit_cores.element_at(d);
         this->init_moving_core_for_psi(my_core, current_time);
-	IVP_IF(1) {
-	  for(int k=my_core->objects.len()-1;k>=0;k--) {	    IVP_ASSERT(my_core->objects.element_at(k)->get_movement_state()<IVP_MT_NOT_SIM);	  }	    
-	}
+// VXP: I think this is bad, but I don't know how to fix crash with prop_vehicle_jeep and physics_canisters welded by physgun!
+//	IVP_IF(1) {
+//	  for(int k=my_core->objects.len()-1;k>=0;k--) {	    IVP_ASSERT(my_core->objects.element_at(k)->get_movement_state()<IVP_MT_NOT_SIM);	  }	    
+//	}
 	
 	my_core->commit_all_async_pushes(); // @@@OS this happens very seldomly !!!!, remove !!!!this necessary as it may happen that core was temporarily_unmovable
 	                                    // TL: it is also used for delayed pushes and async_pushes

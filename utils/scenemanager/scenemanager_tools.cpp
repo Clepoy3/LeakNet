@@ -634,9 +634,9 @@ bool SceneManager_SaveSentenceToWavFile( char const *wavfile, CSentence& sentenc
 	StripExtension( tempfile );
 	DefaultExtension( tempfile, ".tmp" );
 
-	if ( filesystem->FileExists( tempfile, NULL ) )
+	if ( filesystem->FileExists( tempfile, "GAME" ) )
 	{
-		filesystem->RemoveFile( tempfile, NULL );
+		filesystem->RemoveFile( tempfile, "GAME" );
 	}
 
 	if ( !filesystem->IsFileWritable( wavfile ) )
@@ -655,12 +655,13 @@ bool SceneManager_SaveSentenceToWavFile( char const *wavfile, CSentence& sentenc
 	}
 	
 	// Rename original wavfile to temp
-	filesystem->RenameFile( wavfile, tempfile, NULL );
+	filesystem->RenameFile( wavfile, tempfile, "GAME" );
 
 	// NOTE:  Put this in it's own scope so that the destructor for outfileRFF actually closes the file!!!!
 	{
 		// Read from Temp
 		InFileRIFF riff( tempfile, io_in );
+	//	Con_Printf( "tempfile: %s, riff.RIFFName(): %i, RIFF_WAVE: %i\n", tempfile, riff.RIFFName(), RIFF_WAVE );
 		Assert( riff.RIFFName() == RIFF_WAVE );
 
 		// set up the iterator for the whole file (root RIFF is a chunk)

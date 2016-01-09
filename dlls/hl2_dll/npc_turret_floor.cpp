@@ -368,7 +368,8 @@ void CNPC_FloorTurret::Spawn( void )
 	m_iAmmoType = GetAmmoDef()->Index( "MediumRound" );
 
 	m_iMuzzleAttachment = LookupAttachment( "eyes" );
-	m_iEyeAttachment = 2;	// FIXME: what's the correct name?
+//	m_iEyeAttachment = 2;	// FIXME: what's the correct name?
+	m_iEyeAttachment = LookupAttachment( "light" ); // VXP
 
 	//Create our eye sprite
 	m_pEyeGlow = CSprite::SpriteCreate( FLOOR_TURRET_GLOW_SPRITE, GetLocalOrigin(), false );
@@ -934,7 +935,7 @@ void CNPC_FloorTurret::AutoSearchThink( void )
 //-----------------------------------------------------------------------------
 void CNPC_FloorTurret::Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy )
 {
-	if ( GetEnemy() != NULL )
+	if ( GetEnemy() != NULL || OnSide() )
 	{
 		Vector vecDir = GetActualShootTrajectory( vecSrc );
 
