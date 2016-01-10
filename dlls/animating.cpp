@@ -534,6 +534,10 @@ bool CBaseAnimating::HasAnimEvent( int nSequence, int nEvent )
 //=========================================================
 void CBaseAnimating::DispatchAnimEvents ( CBaseAnimating *eventHandler )
 {
+	// don't fire events if the framerate is 0
+	if (m_flPlaybackRate == 0.0)
+		return;
+
   	animevent_t	event;
 
 	studiohdr_t *pstudiohdr = GetModelPtr( );
@@ -544,8 +548,8 @@ void CBaseAnimating::DispatchAnimEvents ( CBaseAnimating *eventHandler )
 		return;
 	}
 
-	// don't fire events if the framerate is 0, and skip this altogether if there are no events
-	if (m_flPlaybackRate == 0.0 || pstudiohdr->pSeqdesc( m_nSequence )->numevents == 0)
+	// skip this altogether if there are no events
+	if (pstudiohdr->pSeqdesc( m_nSequence )->numevents == 0)
 	{
 		return;
 	}
@@ -557,7 +561,8 @@ void CBaseAnimating::DispatchAnimEvents ( CBaseAnimating *eventHandler )
 
 	if (!m_bSequenceLoops && m_bSequenceFinished)
 	{
-		flEnd = 1.0f;
+	//	flEnd = 1.0f;
+		flEnd = 1.01f; // VXP: From Source 2007 - magic number? 0_o
 	}
 	m_flLastEventCheck = flEnd;
 
@@ -574,7 +579,16 @@ void CBaseAnimating::DispatchAnimEvents ( CBaseAnimating *eventHandler )
 	{
 		event.pSource = this;
 		// calc when this event should happen
-		event.eventtime = m_flAnimTime + (event.cycle - m_flCycle) / flCycleRate;
+	//	event.eventtime = m_flAnimTime + (event.cycle - m_flCycle) / flCycleRate;
+		if (flCycleRate > 0.0)
+		{
+			float flCycle = event.cycle;
+			if (flCycle > m_flCycle)
+			{
+				flCycle = flCycle - 1.0;
+			}
+			event.eventtime = m_flAnimTime + (flCycle - m_flCycle) / flCycleRate + GetAnimTimeInterval();
+		}
 
 		/*
 		if (m_debugOverlays & OVERLAY_NPC_SELECTED_BIT)

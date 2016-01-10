@@ -5228,6 +5228,7 @@ void CAI_BaseNPC::HandleAnimEvent( animevent_t *pEvent )
 		else
 		{
 			DevWarning( 2, "Unhandled animation event %d for %s\n", pEvent->event, GetClassname() );
+			BaseClass::HandleAnimEvent( pEvent );
 		}
 		break;
 

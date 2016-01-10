@@ -21,6 +21,8 @@
 #include "ai_hull.h"
 #include "engine/IEngineSound.h"
 
+//#include "studio.h"
+
 
 // For holograms, make them not solid so the player can walk through them
 #define	SF_GENERICNPC_NOTSOLID					4 
@@ -110,6 +112,20 @@ void CGenericNPC::TempGunEffect( void )
 //=========================================================
 void CGenericNPC :: HandleAnimEvent( animevent_t *pEvent )
 {
+#if 0
+	Msg("monster_generic HandleAnimEvent\n");
+	studiohdr_t *pstudiohdr = GetModelPtr( );
+	mstudioseqdesc_t	*pseqdesc;
+	for ( int i = 0; i < pstudiohdr->numseq; i++ )
+	{
+		pseqdesc = pstudiohdr->pSeqdesc( i );
+		for ( int j = 0; j < pseqdesc->numevents; j++ )
+		{
+			mstudioevent_t *pevent = pseqdesc->pEvent( j );
+			Msg( "Sequence: %i, event: %i - %f, %i, %i, %s\n", i, j, pevent->cycle, pevent->event, pevent->type, pevent->options );
+		}
+	}
+#endif
 	switch( pEvent->event )
 	{
 	case 1:

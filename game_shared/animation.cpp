@@ -378,13 +378,12 @@ int GetAnimationEvent( studiohdr_t *pstudiohdr, int sequence, animevent_t *pNPCE
 		return 0;
 
 	mstudioseqdesc_t *pseqdesc = pstudiohdr->pSeqdesc( sequence );
-	mstudioevent_t *pevent = pseqdesc->pEvent( 0 );
-
-	if (pseqdesc->numevents == 0 || index > pseqdesc->numevents )
+//	if (pseqdesc->numevents == 0 || index > pseqdesc->numevents )
+	if (pseqdesc->numevents == 0 || index >= pseqdesc->numevents )
 		return 0;
 
 	// Msg( "flStart %f flEnd %f (%d) %s\n", flStart, flEnd, pseqdesc->numevents, pseqdesc->label );
-
+	mstudioevent_t *pevent = pseqdesc->pEvent( 0 );
 	for (; index < pseqdesc->numevents; index++)
 	{
 		// Don't send client-side events to the server AI

@@ -709,6 +709,7 @@ void CNPC_Citizen::PrescheduleThink( void )
 		}
 	}
 
+#ifdef _DEBUG
 	if( IsSelected() )
 	{
 		// For now, just draw this box. Done this way so that
@@ -720,6 +721,7 @@ void CNPC_Citizen::PrescheduleThink( void )
 	{
 		NDebugOverlay::Line( GetAbsOrigin() + Vector( 0, 0, 8 ), GetCommandGoal() + Vector( 0, 0, 8 ), 0,255,0, false, 0.05 );
 	}
+#endif
 
 #if 0
 	if( ShouldStandoff() && !m_StandoffBehavior.IsActive() )
