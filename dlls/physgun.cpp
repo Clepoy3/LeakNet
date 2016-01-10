@@ -568,6 +568,8 @@ private:
 	int			m_pelletAttract;
 	float		m_glueTime;
 	CNetworkVar( bool, m_glueTouching );
+	
+	float		m_flNextPrimaryAttackAnim;
 };
 
 IMPLEMENT_SERVERCLASS_ST( CWeaponGravityGun, DT_WeaponGravityGun )
@@ -613,6 +615,8 @@ BEGIN_DATADESC( CWeaponGravityGun )
 	DEFINE_FIELD( CWeaponGravityGun, m_pelletAttract,		FIELD_INTEGER ),
 	DEFINE_FIELD( CWeaponGravityGun, m_glueTime,			FIELD_TIME ),
 	DEFINE_FIELD( CWeaponGravityGun, m_glueTouching,		FIELD_BOOLEAN ),
+	
+	DEFINE_FIELD( CWeaponGravityGun, m_flNextPrimaryAttackAnim,	FIELD_INTEGER ),
 
 END_DATADESC()
 
@@ -1241,9 +1245,15 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 //=========================================================
 void CWeaponGravityGun::PrimaryAttack( void )
 {
-	if ( !m_active )
+	if ( m_flNextPrimaryAttackAnim < gpGlobals->curtime )
 	{
 		SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+		m_flNextPrimaryAttackAnim = gpGlobals->curtime + SequenceDuration();
+	}
+	if ( !m_active )
+	{
+	//	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+		m_flNextPrimaryAttackAnim = gpGlobals->curtime;
 		EffectCreate();
 		SoundCreate();
 	}

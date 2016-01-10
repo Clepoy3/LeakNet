@@ -1329,6 +1329,11 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 			{
 				TaskFail( FAIL_NO_TARGET );
 			}
+			
+			if (pTarget->GetFlags() & FL_NOTARGET)
+			{
+				return;
+			}
 
 			if (pTarget->IsPlayer())
 			{

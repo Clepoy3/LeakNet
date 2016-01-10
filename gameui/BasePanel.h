@@ -51,7 +51,6 @@ private:
 	typedef vgui::Panel BaseClass;
 };
 
-//void FindLeakNet();
-void SendMessageToLeakNet( char* wndMessage, void* pMsg );
+//void SendMessageToLeakNet( char* wndMessage, void* pMsg );
 
 #endif // BASEPANEL_H

@@ -31,6 +31,10 @@
 #include "dinput.h"
 #include "con_nprint.h"
 
+// VXP: LeakNet stuff
+//#include "client_class.h"
+//#include "icliententitylist.h"
+//#include "icliententity.h"
 
 
 #include "vgui_DebugSystemPanel.h"
@@ -289,6 +293,23 @@ void VGui_HandleWindowMessage( void *hwnd, unsigned int uMsg, unsigned int wPara
 {
 	if ( g_pMatSystemSurface )
 		g_pMatSystemSurface->HandleWindowMessage( hwnd, uMsg, wParam, lParam );
+
+/* VXP: LeakNet stuff
+	unsigned int leaknetPrintMsg = RegisterWindowMessage( "LeakNetPrintMsg" );
+	if( uMsg == leaknetPrintMsg )
+	{
+		HWND hwnd = NULL;
+		HANDLE handle = NULL;
+		DWORD pid = 0;
+
+		hwnd = FindWindowA(NULL, _T("LeakNet - Main"));
+		GetWindowThreadProcessId(hwnd, &pid);
+		handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+
+		char buf[64];
+		ReadProcessMemory(handle, (LPVOID)lParam, &buf, sizeof(buf), NULL);
+		Msg( "LeakNetPrintMsg: %s\n", buf );
+	}*/
 }
 
 

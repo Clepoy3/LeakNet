@@ -1123,12 +1123,65 @@ void ListPanel::GetCellText(int itemID, int col, wchar_t *wbuffer, int bufferSiz
 		return;
 	}
 
-	const wchar_t *val = itemData->GetWString( key, L"" );
+//	const wchar_t *val = itemData->GetWString( key, L"" );
+	char const *val = itemData->GetString( key, "" );
 	if ( !val || !key[ 0 ] )
 		return;
+	
+/*	if (val[0] == '#')
+	{
+		// check for localization
+		wchar_t *wsz = localize()->Find(val);
+		if (wsz)
+		{
+			SetText(wsz);
+			return;
+		}
+	}*/
+	// check if the new text is a localized string, if so undo it
+/*	if (*val == '#')
+	{
+		// try lookup in localization tables
+		StringIndex_t unlocalizedTextSymbol = localize()->FindIndex(val + 1);
+		if (unlocalizedTextSymbol != INVALID_STRING_INDEX)
+		{
+			// we have a new text value
+			wval = localize()->GetValueByIndex(unlocalizedTextSymbol);
+		}
+		
+		if ( !wval )
+		{
+			wval = itemData->GetWString( key, L"" );
+		}
+	}
+	else
+	{
+		localize()->ConvertANSIToUnicode( val, wbuffer, sizeof(wbuffer) );
+	}
 
-	wcsncpy( wbuffer, val, bufferSize );
-	wbuffer[ bufferSize - 1 ] = 0;
+//	wcsncpy( wbuffer, val, bufferSize );
+//	wbuffer[ bufferSize - 1 ] = 0;
+	wcsncpy( wbuffer, wval, bufferSize );
+	wbuffer[ (bufferSize/sizeof(wchar_t)) - 1 ] = 0;*/
+	
+	const wchar_t *wval = NULL;
+
+	if ( val[ 0 ] == '#' )
+	{
+		StringIndex_t si = localize()->FindIndex( val + 1 );
+		if ( si != INVALID_STRING_INDEX )
+		{
+			wval = localize()->GetValueByIndex( si );
+		}
+	}
+
+	if ( !wval )
+	{
+		wval = itemData->GetWString( key, L"" );
+	}
+
+	wcsncpy( wbuffer, wval, bufferSize/sizeof(wchar_t) );
+	wbuffer[ (bufferSize/sizeof(wchar_t)) - 1 ] = 0;
 }
 
 //-----------------------------------------------------------------------------

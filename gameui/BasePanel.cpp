@@ -39,7 +39,7 @@ using namespace vgui;
 CBasePanel::CBasePanel() : Panel(NULL, "BasePanel")
 {
 	m_eBackgroundState = BACKGROUND_NONE;
-	SendMessageToLeakNet( "LeakNetStartMsg", NULL );
+//	SendMessageToLeakNet( "LeakNetStartMsg", NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -142,8 +142,7 @@ void CBasePanel::ApplySchemeSettings(IScheme *pScheme)
 void CBasePanel::SetBackgroundRenderState(EBackgroundState state)
 {
 	m_eBackgroundState = state;
-//	FindLeakNet();
-	SendMessageToLeakNet( "LeakNetLevelNameMsg", (void *)engine->GetLevelName() );
+//	SendMessageToLeakNet( "LeakNetLevelNameMsg", (void *)engine->GetLevelName() );
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +200,7 @@ void CBasePanel::DrawBackgroundImage()
 	*/
 }
 
-//static void FindLeakNet()
+/* VXP: LeakNet stuff
 static void SendMessageToLeakNet( char* wndMsg, void* pMsg )
 //static void SendMessageToLeakNet( char* wndMsg, void* pMsg, int size ) // VXP: Should try this
 {
@@ -215,11 +214,6 @@ static void SendMessageToLeakNet( char* wndMsg, void* pMsg )
 	//	unsigned int wndMessage = Sys_RegisterWindowMessage( "TestLeakNetMessage" );
 		unsigned int wndMessage = Sys_RegisterWindowMessage( wndMsg );
 	//	Msg( "WndMessage: %i\n", wndMessage );
-	/*	const char *levelname = engine->GetLevelName();
-		if( strcmp( levelname, "" ) == 0 )
-		{
-			return;
-		}*/
 	//	Msg( "MapName: %s\n", levelname );
 	//	char *levelname = "This is the test!";
 	//	Sys_PostMessage( leaknet, wndMessage, 0, 1 );
@@ -245,3 +239,4 @@ static void SendMessageToLeakNet( char* wndMsg, void* pMsg )
 		GameConsole().ColorPrintf( clr, "LeakNet not found\n" );
 	}
 }
+*/
