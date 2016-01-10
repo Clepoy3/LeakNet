@@ -1715,13 +1715,13 @@ static void DoScreenSpaceBloom( void )
 }
 
 // To toggle the blur on and off
-ConVar pp_motionblur("pp_motionblur", "1", FCVAR_ARCHIVE, "Motion Blur"); 
+ConVar pp_motionblur("pp_motionblur", "0", FCVAR_ARCHIVE, "Motion Blur"); 
 // The amount of alpha to use when adding the FB to our custom buffer
-ConVar pp_motionblur_addalpha("pp_motionblur_addalpha", "0.1", FCVAR_ARCHIVE, "Motion Blur Alpha");
+ConVar pp_motionblur_addalpha("pp_motionblur_addalpha", "0.7", FCVAR_ARCHIVE, "Motion Blur Alpha");
 // The amount of alpha to use when adding our custom buffer to the FB
 ConVar pp_motionblur_drawalpha("pp_motionblur_drawalpha", "1", FCVAR_ARCHIVE, "Motion Blur Draw Alpha");
 // Delay to add between capturing the FB
-ConVar pp_motionblur_time("pp_motionblur_time", "0.05", FCVAR_ARCHIVE, "The amount of time to wait until updating the FB");
+ConVar pp_motionblur_time("pp_motionblur_time", "0", FCVAR_ARCHIVE, "The amount of time to wait until updating the FB");
 void CViewRender::DoMotionBlur( void )
 {
 	if ( pp_motionblur.GetInt() == 0 ) return;
