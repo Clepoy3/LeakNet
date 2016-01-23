@@ -98,7 +98,8 @@ CViewRender::CViewRender()
 	m_AnglesHistoryCounter = 0;
 	memset(m_AnglesHistory, 0, sizeof(m_AnglesHistory));
 	m_flCheapWaterStartDistance = 0.0f;
-	m_flCheapWaterEndDistance = 0.1f;
+//	m_flCheapWaterEndDistance = 0.1f;
+	m_flCheapWaterEndDistance = 5000.0f; // VXP
 }
 
 
@@ -1683,7 +1684,8 @@ static void DoScreenSpaceBloom( void )
 
 	ITexture *pSaveRenderTarget = materials->GetRenderTarget();
 
-	ITexture *pFBTexture = GetFullFrameFrameBufferTexture();
+//	ITexture *pFBTexture = GetFullFrameFrameBufferTexture();
+	ITexture *pFBTexture = GetFullFrameFrameBufferTexture( 0 );
 	ITexture *pTex0 = GetSmallBufferHDR0();
 	ITexture *pTex1 = GetSmallBufferHDR1();
 
@@ -1714,6 +1716,7 @@ static void DoScreenSpaceBloom( void )
 	materials->DrawScreenSpaceQuad( pMatBloom );
 }
 
+bool g_bBlurredLastTime = false;
 // To toggle the blur on and off
 ConVar pp_motionblur("pp_motionblur", "0", FCVAR_ARCHIVE, "Motion Blur"); 
 // The amount of alpha to use when adding the FB to our custom buffer
@@ -1722,7 +1725,7 @@ ConVar pp_motionblur_addalpha("pp_motionblur_addalpha", "0.7", FCVAR_ARCHIVE, "M
 ConVar pp_motionblur_drawalpha("pp_motionblur_drawalpha", "1", FCVAR_ARCHIVE, "Motion Blur Draw Alpha");
 // Delay to add between capturing the FB
 ConVar pp_motionblur_time("pp_motionblur_time", "0", FCVAR_ARCHIVE, "The amount of time to wait until updating the FB");
-void CViewRender::DoMotionBlur( void )
+/*void CViewRender::DoMotionBlur( void )
 {
 	if ( pp_motionblur.GetInt() == 0 ) return;
 
@@ -1742,11 +1745,12 @@ void CViewRender::DoMotionBlur( void )
 		return;
 	
 	// Set the camera up so we can draw the overlay
-	int oldX, oldY, oldW, oldH;
-	materials->GetViewport( oldX, oldY, oldW, oldH );
+//	int oldX, oldY, oldW, oldH;
+//	materials->GetViewport( oldX, oldY, oldW, oldH );
 
 	// Get our custom render target
-	pMotionBlur = GetMotionBlurTex0( oldW, oldH );
+//	pMotionBlur = GetMotionBlurTex0( oldW, oldH );
+	pMotionBlur = GetMotionBlurTex0();
 	// Store the current render target	
 	ITexture *pOriginalRenderTarget = materials->GetRenderTarget();
 
@@ -1825,80 +1829,157 @@ void CViewRender::DoMotionBlur( void )
 	materials->PopMatrix();
 	materials->MatrixMode( MATERIAL_VIEW );
 	materials->PopMatrix();
-}
-/*
-void CViewRender::DoMotionBlur( void )
-{
-	CMatRenderContextPtr pRenderContext( materials );
-
-	ITexture *pFullFrameFB1 = materials->FindTexture( "_rt_FullFrameFB1", TEXTURE_GROUP_RENDER_TARGET );
-
-	//
-	// Render Velocities into a full-frame FB1
-	//
-	IMaterial *pGlowColorMaterial = materials->FindMaterial( "dev/glow_color", TEXTURE_GROUP_OTHER, true );
-	
-//	pRenderContext->PushRenderTargetAndViewport();
-//	pRenderContext->SetRenderTarget( pFullFrameFB1 );
-//	pRenderContext->Viewport( 0, 0, pSetup->width, pSetup->height );
-	materials->SetRenderTarget( pFullFrameFB1 );
-//	int oldX, oldY, oldW, oldH;
-//	materials->GetViewport( oldX, oldY, oldW, oldH );
-//	materials->SetViewport( true, 0, 0, oldW, oldH );
-
-	// Red and Green are x- and y- screen-space velocities biased and packed into the [0,1] range.
-	// A value of 127 gets mapped to 0, a value of 0 gets mapped to -1, and a value of 255 gets mapped to 1.
-	//
-	// Blue is set to 1 within the object's bounds and 0 outside, and is used as a mask to ensure that
-	// motion blur samples only pull from the core object itself and not surrounding pixels (even though
-	// the area being blurred is larger than the core object).
-	//
-	// Alpha is not used
-	pRenderContext->ClearColor4ub( 127, 127, 0, 0 );
-	// Clear only color, not depth & stencil
-	pRenderContext->ClearBuffers( true, false, false );
-
-	// Save off state
-	Vector vOrigColor;
-	render->GetColorModulation( vOrigColor.Base() );
-
-	// Use a solid-color unlit material to render velocity into the buffer
-	g_pStudioRender->ForcedMaterialOverride( pGlowColorMaterial );
-	g_ObjectMotionBlurManager.DrawObjects();	
-	g_pStudioRender->ForcedMaterialOverride( NULL );
-
-	render->SetColorModulation( vOrigColor.Base() );
-	
-	pRenderContext->PopRenderTargetAndViewport();
-
-	//
-	// Render full-screen pass
-	//
-	IMaterial *pMotionBlurMaterial;
-	IMaterialVar *pFBTextureVariable;
-	IMaterialVar *pVelocityTextureVariable;
-	bool bFound1 = false, bFound2 = false;
-
-	// Make sure our render target of choice has the results of the engine post-process pass
-	ITexture *pFullFrameFB = materials->FindTexture( "_rt_FullFrameFB", TEXTURE_GROUP_RENDER_TARGET );
-	pRenderContext->CopyRenderTargetToTexture( pFullFrameFB );
-
-	pMotionBlurMaterial = materials->FindMaterial( "effects/object_motion_blur", TEXTURE_GROUP_OTHER, true );
-	pFBTextureVariable = pMotionBlurMaterial->FindVar( "$fb_texture", &bFound1, true );
-	pVelocityTextureVariable = pMotionBlurMaterial->FindVar( "$velocity_texture", &bFound2, true );
-	if ( bFound1 && bFound2 )
+}*/
+//void CASWViewRender::DoMotionBlur( const CViewSetup &view )
+void CViewRender::DoMotionBlur( const CViewSetup &view )
+{	
+	float g_fMarinePoisonDuration = 0.0f;
+	if ( pp_motionblur.GetInt() == 0 && g_fMarinePoisonDuration <= 0)
 	{
-		pFBTextureVariable->SetTextureValue( pFullFrameFB );
-		
-		pVelocityTextureVariable->SetTextureValue( pFullFrameFB1 );
-
-		int nWidth, nHeight;
-		pRenderContext->GetRenderTargetDimensions( nWidth, nHeight );
-
-		pRenderContext->DrawScreenSpaceRectangle( pMotionBlurMaterial, 0, 0, nWidth, nHeight, 0.0f, 0.0f, nWidth - 1, nHeight - 1, nWidth, nHeight );
+		g_bBlurredLastTime = false;
+		return;
 	}
+
+	static float fNextDrawTime = 0.0f;
+
+	bool found;
+	IMaterialVar* mv = NULL;
+	IMaterial *pMatScreen = NULL;
+	ITexture *pMotionBlur = NULL;
+	ITexture *pOriginalTexture = NULL; 
+
+	// Get the front buffer material
+//	pMatScreen = materials->FindMaterial( "swarm/effects/frontbuffer", TEXTURE_GROUP_OTHER, true );
+	pMatScreen = materials->FindMaterial( "frontbuffer", NULL, true );
+	// Get our custom render target
+//	pMotionBlur = g_pASWRenderTargets->GetASWMotionBlurTexture();
+	pMotionBlur = GetMotionBlurTexture();
+	// Store the current render target
+//	CMatRenderContextPtr pRenderContext( materials );
+//	ITexture *pOriginalRenderTarget = pRenderContext->GetRenderTarget();
+	ITexture *pOriginalRenderTarget = materials->GetRenderTarget();
+
+	// Set the camera up so we can draw the overlay
+	int oldX, oldY, oldW, oldH;
+//	pRenderContext->GetViewport( oldX, oldY, oldW, oldH );
+
+//	pRenderContext->MatrixMode( MATERIAL_PROJECTION );
+//	pRenderContext->PushMatrix();
+//	pRenderContext->LoadIdentity();
+
+//	pRenderContext->MatrixMode( MATERIAL_VIEW );
+//	pRenderContext->PushMatrix();
+//	pRenderContext->LoadIdentity();
+
+	materials->GetViewport( oldX, oldY, oldW, oldH );
+
+	materials->MatrixMode( MATERIAL_PROJECTION );
+	materials->PushMatrix();
+	materials->LoadIdentity();
+
+	materials->MatrixMode( MATERIAL_VIEW );
+	materials->PushMatrix();
+	materials->LoadIdentity();
+
+	// set our blur parameters, based on convars or the poison duration
+	float add_alpha = pp_motionblur_addalpha.GetFloat();
+	float blur_time = pp_motionblur_time.GetFloat();
+	float draw_alpha = pp_motionblur_drawalpha.GetFloat();
+	if (g_fMarinePoisonDuration > 0)
+	{		
+		if (g_fMarinePoisonDuration < 1.0f)
+		{
+			draw_alpha = g_fMarinePoisonDuration;
+			add_alpha = 0.3f;
+		}
+		else
+		{
+			draw_alpha = 1.0f;
+			float over_time = g_fMarinePoisonDuration - 1.0f;
+		//	over_time = -MIN(4.0f, over_time);
+			over_time = -min(4.0f, over_time);
+			// map 0 to -4, to 0.3 to 0.05
+			add_alpha = (over_time + 4) * 0.0625 + 0.05f;
+		}
+		blur_time = 0.05f;
+	}
+	if (!g_bBlurredLastTime)
+		add_alpha = 1.0f;	// add the whole buffer if this is the first time we're blurring after a while, so we don't end up with images from ages ago
+
+	if ( fNextDrawTime - gpGlobals->curtime > 1.0f)
+	{
+		fNextDrawTime = 0.0f;
+	}
+
+	if( gpGlobals->curtime >= fNextDrawTime ) 
+	{
+		UpdateScreenEffectTexture( 0, view.x, view.y, view.width, view.height );
+	//	UpdateScreenEffectTexture();
+
+		// Set the alpha to whatever our console variable is
+		mv = pMatScreen->FindVar( "$alpha", &found, false );
+		if (found)
+		{
+			if ( fNextDrawTime == 0 )
+			{
+				mv->SetFloatValue( 1.0f );
+			}
+			else
+			{
+				mv->SetFloatValue( add_alpha );
+			}
+		}
+
+	//	pRenderContext->SetRenderTarget( pMotionBlur );
+	//	pRenderContext->DrawScreenSpaceQuad( pMatScreen );
+		materials->SetRenderTarget( pMotionBlur );
+		materials->DrawScreenSpaceQuad( pMatScreen );
+
+		// Set the next draw time according to the convar
+		fNextDrawTime = gpGlobals->curtime + blur_time;
+	}
+
+	// Set the alpha
+	mv = pMatScreen->FindVar( "$alpha", &found, false );
+	if (found)
+	{
+		mv->SetFloatValue( draw_alpha );
+	}
+
+	// Set the texture to our buffer
+	mv = pMatScreen->FindVar( "$basetexture", &found, false );
+	if (found)
+	{
+		pOriginalTexture = mv->GetTextureValue();
+		mv->SetTextureValue( pMotionBlur );
+	}
+
+	// Pretend we were never here, set everything back
+//	pRenderContext->SetRenderTarget( pOriginalRenderTarget );
+//	pRenderContext->DrawScreenSpaceQuad( pMatScreen );
+	materials->SetRenderTarget( pOriginalRenderTarget );
+	materials->DrawScreenSpaceQuad( pMatScreen );
+
+	// Set our texture back to _rt_FullFrameFB
+	if (found)
+	{
+		mv->SetTextureValue( pOriginalTexture );
+	}
+
+//	pRenderContext->DepthRange( 0.0f, 1.0f );
+//	pRenderContext->MatrixMode( MATERIAL_PROJECTION );
+//	pRenderContext->PopMatrix();
+//	pRenderContext->MatrixMode( MATERIAL_VIEW );
+//	pRenderContext->PopMatrix();
+
+	materials->DepthRange( 0.0f, 1.0f );
+	materials->MatrixMode( MATERIAL_PROJECTION );
+	materials->PopMatrix();
+	materials->MatrixMode( MATERIAL_VIEW );
+	materials->PopMatrix();
+
+	g_bBlurredLastTime = true;
 }
-*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Renders entire view
@@ -1981,10 +2062,11 @@ void CViewRender::RenderView( const CViewSetup &view, bool drawViewModel )
 		DoScreenSpaceBloom();
 	}
 	// VXP: This stub is temporary, I think
-	if( !engine->SupportsHDR() )
-	{
-		DoMotionBlur();
-	}
+//	if( !engine->SupportsHDR() )
+//	{
+	//	DoMotionBlur();
+		DoMotionBlur( tmpView );
+//	}
 
 	// Draw the 2D graphics
 	tmpView.clearColor = false;
@@ -2565,8 +2647,10 @@ void CViewRender::WaterDrawHelper(
 	bool renderUnderWater = (flags & DF_RENDER_UNDERWATER) != 0;
 	bool renderAboveWater = (flags & DF_RENDER_ABOVEWATER) != 0;
 
-	ITexture *pSaveFrameBufferCopyTexture = materials->GetFrameBufferCopyTexture();
-	materials->SetFrameBufferCopyTexture( GetPowerOfTwoFrameBufferTexture() );
+//	ITexture *pSaveFrameBufferCopyTexture = materials->GetFrameBufferCopyTexture();
+	ITexture *pSaveFrameBufferCopyTexture = materials->GetFrameBufferCopyTexture(0);
+//	materials->SetFrameBufferCopyTexture( GetPowerOfTwoFrameBufferTexture() );
+	materials->SetFrameBufferCopyTexture( GetPowerOfTwoFrameBufferTexture(), 0 );
 
 	DrawWorld( info, renderList, flags );
 	if( flags & DF_DRAW_ENTITITES )

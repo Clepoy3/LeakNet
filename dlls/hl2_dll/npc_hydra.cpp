@@ -289,9 +289,18 @@ void CNPC_Hydra::Spawn()
 
 	NPCInit();
 
-	m_takedamage = DAMAGE_NO;
+//	m_takedamage = DAMAGE_NO;
+	m_takedamage = DAMAGE_YES;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//
+//-----------------------------------------------------------------------------
+void CNPC_Hydra::DeathSound( void )
+{
+	EmitSound( "NPC_Hydra.Pain" );
+}
 
 //-------------------------------------
 
@@ -1566,6 +1575,68 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 		break;
 	}
 
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : pevInflictor - 
+//			pAttacker - 
+//			flDamage - 
+//			bitsDamageType - 
+// Output : int
+//-----------------------------------------------------------------------------
+int CNPC_Hydra::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
+{
+	CTakeDamageInfo info = inputInfo;
+
+#if 0
+	// Die instantly from a hit in idle/alert states
+	if( m_NPCState == NPC_STATE_IDLE || m_NPCState == NPC_STATE_ALERT )
+	{
+		info.SetDamage( m_iHealth );
+	}
+#endif //0 
+
+	return BaseClass::OnTakeDamage_Alive( info ); 
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CNPC_Hydra::Event_Killed(const CTakeDamageInfo &info) 
+{
+	Msg("HYDRA KILLED\n");
+	m_NPCState			= NPC_STATE_NONE;
+
+//	m_vecHeadGoal = GetAbsOrigin( ) - m_vecOutward * 100;
+//	m_idealLength = 0;
+//	m_vecHeadDir = -m_vecOutward;
+
+	// VXP: Better, but still some part of hydra is above ground
+/*	GetVectors( NULL, NULL, &m_vecOutward );
+	SetAbsAngles( QAngle( 0, 0, 0 ) );
+	m_vecChain.Set( 0, GetAbsOrigin( ) - m_vecOutward * 32 );
+	m_vecChain.Set( 1, GetAbsOrigin( ) + m_vecOutward * 16 );
+	m_vecHeadGoal = m_vecChain[1] + m_vecOutward * HYDRA_OUTWARD_BIAS;
+	m_vecHeadDir = Vector( 0, 0, 1 );
+	m_idealLength = 0;*/
+	
+	GetVectors( NULL, NULL, &m_vecOutward );
+	SetAbsAngles( QAngle( 0, 0, 0 ) );
+	m_vecChain.Set( 0, GetAbsOrigin( ) - m_vecOutward * 256 );
+	m_vecChain.Set( 1, GetAbsOrigin( ) + m_vecOutward * 2 );
+	m_vecHeadGoal = m_vecChain[1] + m_vecOutward * HYDRA_OUTWARD_BIAS;
+	m_vecHeadDir = Vector( 0, 0, 1 );
+	m_idealLength = 0;
+	
+	m_flHeadGoalInfluence = 1.0;
+//	AimHeadInTravelDirection( 1.0 );
+	CheckLength( );
+	AdjustLength( );
+	CalcGoalForces( );
+	MoveBody( );
+	
+	BaseClass::Event_Killed( info ); 
 }
 
 //-------------------------------------

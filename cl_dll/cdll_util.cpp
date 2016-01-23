@@ -261,6 +261,17 @@ CTextureReference::CTextureReference( ) : m_pTexture(NULL)
 {
 }
 
+CTextureReference::CTextureReference( const CTextureReference &ref ) : m_pTexture( NULL )
+{
+	Init( ref.m_pTexture );
+}
+
+const CTextureReference& CTextureReference::operator=( CTextureReference &ref )
+{
+	Init( ref.m_pTexture );
+	return *this;
+}
+
 CTextureReference::~CTextureReference( )
 {
 	Shutdown();

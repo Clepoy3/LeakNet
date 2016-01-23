@@ -583,12 +583,20 @@ void CPropVehicleDriveable::Think()
 	BaseClass::Think();
 
 //	Msg( "m_bEnterAnimOn: %s, m_bExitAnimOn: %s\n", (m_bEnterAnimOn) ? "Yes" : "No", (m_bExitAnimOn) ? "Yes" : "No" );
+//	Msg( "GetSequence: %i, IsValidSequence: %s, IsSequenceFinished: %s\n", GetSequence(), (IsValidSequence(GetSequence()) ? "Yes" : "No"), (IsSequenceFinished() ? "Yes" : "No") );
 
 	// Always think if we have any driver in us
 	if ( GetDriver() )
 	{
 		SetNextThink( gpGlobals->curtime );
-		m_bEnterAnimOn = false; // VXP: Fix for not controllable digger
+	//	m_bEnterAnimOn = false; // VXP: Fix for not controllable digger
+
+		// VXP: Digger (or other vehicle) do not have enter anim, so we are not causing other vehicles to ignore angles while player been entering these
+		// I think that's not right, but it's working, so I leave it here
+		if ( GetSequence() <= 0 )
+		{
+			m_bEnterAnimOn = false; // VXP: Fix for not controllable digger
+		}
 	}
 
 	// If we have an NPC Driver, tell him to drive

@@ -153,8 +153,10 @@ public:
 	ITexture* CreateRenderTargetTexture( int w, int h, ImageFormat format, bool depth );
 
 	// Set the current texture that is a copy of the framebuffer.
-	void SetFrameBufferCopyTexture( ITexture *pTexture );
-	ITexture *GetFrameBufferCopyTexture( void );
+//	void SetFrameBufferCopyTexture( ITexture *pTexture );
+	void SetFrameBufferCopyTexture( ITexture *pTexture, int textureIndex );
+//	ITexture *GetFrameBufferCopyTexture( void );
+	ITexture *GetFrameBufferCopyTexture( int textureIndex );
 
 	// Creates a procedural texture
 	ITexture *CreateProceduralTexture( const char *pTextureName, int w, int h, ImageFormat fmt, int nFlags );
@@ -240,6 +242,7 @@ public:
 	void		SetAmbientLightCube( Vector4D cube[6] );
 
 	void		CopyRenderTargetToTexture( ITexture *pTexture );
+	void		CopyRenderTargetToTextureEx( ITexture *pTexture, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect = NULL );
 
 	void		DepthRange( float zNear, float zFar );
 	void		ClearBuffers( bool bClearColor, bool bClearDepth );
@@ -352,7 +355,8 @@ public:
 	void BindGrey( TextureStage_t stage );
 	void BindFlatNormalMap( TextureStage_t stage );
 	void BindSyncTexture( TextureStage_t stage, int texture );
-	void BindFBTexture( TextureStage_t stage );
+//	void BindFBTexture( TextureStage_t stage );
+	void BindFBTexture( TextureStage_t stage, int textureIndex );
 	void BindNormalizationCubeMap( TextureStage_t stage );
 
 	// Create new materials	(currently only used by the editor!)
@@ -519,7 +523,8 @@ private:
 	
 	ITexture *m_pRenderTargetTexture;
 
-	ITexture *m_pCurrentFrameBufferCopyTexture;
+//	ITexture *m_pCurrentFrameBufferCopyTexture;
+	ITexture *m_pCurrentFrameBufferCopyTexture[MAX_FB_TEXTURES];
 
 	bool m_bInStubMode;
 	bool m_bForceBindWhiteLightmaps;
@@ -690,9 +695,15 @@ CMaterialSystem::CMaterialSystem() :
     m_MaterialDict( 0, 256, MaterialLessFunc ),
 	m_MissingList( 0, 32, MissingMaterialLessFunc )
 {
+	int i;
+
 	// set default values for members
 	m_pRenderTargetTexture = NULL;
-	m_pCurrentFrameBufferCopyTexture = NULL;
+//	m_pCurrentFrameBufferCopyTexture = NULL;
+	for ( i = 0; i < MAX_FB_TEXTURES; i++ )
+	{
+		m_pCurrentFrameBufferCopyTexture[i] = NULL;
+	}
 	m_pCurrentMaterial = NULL;
 	m_currentWhiteLightmapMaterial = NULL;
 	m_pLightmapPages = NULL;
@@ -1547,19 +1558,29 @@ void CMaterialSystem::SyncToken( const char *pToken )
 		g_pShaderAPI->SyncToken( pToken );
 }
 
-void CMaterialSystem::SetFrameBufferCopyTexture( ITexture *pTexture )
+void CMaterialSystem::SetFrameBufferCopyTexture( ITexture *pTexture, int textureIndex )
 {
-	if( m_pCurrentFrameBufferCopyTexture != pTexture )
+	if( textureIndex < 0 || textureIndex > MAX_FB_TEXTURES )
+	{
+		Assert( 0 );
+		return;
+	}
+	if( m_pCurrentFrameBufferCopyTexture[textureIndex] != pTexture )
 	{
 		g_pShaderAPI->FlushBufferedPrimitives();
 	}
 	// FIXME: Do I need to increment/decrement ref counts here, or assume that the app is going to do it?
-	m_pCurrentFrameBufferCopyTexture = pTexture;
+	m_pCurrentFrameBufferCopyTexture[textureIndex] = pTexture;
 }
 
-ITexture *CMaterialSystem::GetFrameBufferCopyTexture( void )
+ITexture *CMaterialSystem::GetFrameBufferCopyTexture( int textureIndex )
 {
-	return m_pCurrentFrameBufferCopyTexture;
+	if( textureIndex < 0 || textureIndex > MAX_FB_TEXTURES )
+	{
+		Assert( 0 );
+		return NULL; // FIXME!  This should return the error texture.
+	}
+	return m_pCurrentFrameBufferCopyTexture[textureIndex];
 }
 
 //-----------------------------------------------------------------------------
@@ -3355,7 +3376,7 @@ void CMaterialSystem::SetAmbientLightCube( Vector4D cube[6] )
 	g_pShaderAPI->SetAmbientLightCube( cube );
 }
 
-void CMaterialSystem::CopyRenderTargetToTexture( ITexture *pTexture )
+/*void CMaterialSystem::CopyRenderTargetToTexture( ITexture *pTexture )
 {
 	if( !pTexture )
 	{
@@ -3369,7 +3390,28 @@ void CMaterialSystem::CopyRenderTargetToTexture( ITexture *pTexture )
 		ITextureInternal *pTextureInternal = ( ITextureInternal * )pTexture;
 		pTextureInternal->CopyFrameBufferToMe();
 	}
+}*/
+void CMaterialSystem::CopyRenderTargetToTextureEx( ITexture *pTexture, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect )
+{
+	if( !pTexture )
+	{
+		Assert( 0 );
+		return;
+	}
+	if( HardwareConfig()->SupportsVertexAndPixelShaders() && 
+		HardwareConfig()->SupportsNonPow2Textures() &&
+		!g_config.bEditMode )
+	{
+		ITextureInternal *pTextureInternal = ( ITextureInternal * )pTexture;
+		pTextureInternal->CopyFrameBufferToMe( nRenderTargetID, pSrcRect, pDstRect );
+	}
 }
+
+void CMaterialSystem::CopyRenderTargetToTexture( ITexture *pTexture )
+{
+	CopyRenderTargetToTextureEx( pTexture, NULL, NULL );
+}
+
 
 void CMaterialSystem::DepthRange( float zNear, float zFar )
 {
@@ -3952,17 +3994,22 @@ void CMaterialSystem::BindSyncTexture( TextureStage_t stage, int texture )
 	g_pShaderAPI->BindTexture( stage, texture );
 }
 
-void CMaterialSystem::BindFBTexture( TextureStage_t stage )
+void CMaterialSystem::BindFBTexture( TextureStage_t stage, int textureIndex )
 {
-//	Assert( m_pCurrentFrameBufferCopyTexture );  // FIXME: Need to make Hammer bind something for this.
-	if( !m_pCurrentFrameBufferCopyTexture )
+	if( textureIndex < 0 || textureIndex > MAX_FB_TEXTURES )
+	{
+		Assert( 0 );
+		return;
+	}
+//	Assert( m_pCurrentFrameBufferCopyTexture[textureIndex] );  // FIXME: Need to make Hammer bind something for this.
+	if( !m_pCurrentFrameBufferCopyTexture[textureIndex] )
 	{
 		return;
 	}
 
-	if( m_pCurrentFrameBufferCopyTexture )
+	if( m_pCurrentFrameBufferCopyTexture[textureIndex] )
 	{
-		( ( ITextureInternal * )m_pCurrentFrameBufferCopyTexture )->Bind( stage );
+		( ( ITextureInternal * )m_pCurrentFrameBufferCopyTexture[textureIndex] )->Bind( stage );
 	}
 }
 

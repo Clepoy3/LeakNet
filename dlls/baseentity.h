@@ -415,7 +415,7 @@ public:
 	inline int				entindex( ) { return ENTINDEX( pev ); };
 
 	// These methods encapsulate MOVETYPE_FOLLOW, which became obsolete
-	void FollowEntity( CBaseEntity *pBaseEntity, bool bBoneMerge = true );
+	void FollowEntity( CBaseEntity *pBaseEntity );
 	void StopFollowingEntity( );	// will also change to MOVETYPE_NONE
 	bool IsFollowingEntity();
 	CBaseEntity *GetFollowedEntity();

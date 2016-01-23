@@ -13,6 +13,7 @@
 
 #include "materialsystem/imesh.h"
 #include "materialsystem/ITexture.h"
+#include "materialsystem/IMaterialSystem.h"
 
 #include "cdll_util.h"
 
@@ -20,7 +21,7 @@
 // 
 //=============================================================================
 
-static CTextureReference s_pMotionBlurTex0;
+/*static CTextureReference s_pMotionBlurTex0;
 
 //ITexture *GetMotionBlurTex0( void )
 ITexture *GetMotionBlurTex0( int w, int h )
@@ -33,7 +34,42 @@ ITexture *GetMotionBlurTex0( int w, int h )
 	}
 	
 	return s_pMotionBlurTex0;
-}
+}*/
+
+CTextureReference m_MotionBlurTexture;
+
+ITexture *GetMotionBlurTexture()
+{
+	if(!m_MotionBlurTexture)
+	{
+	//	m_MotionBlurTexture.InitRenderTarget(256, 256, RT_SIZE_FULL_FRAME_BUFFER, IMAGE_FORMAT_ARGB8888, MATERIAL_RT_DEPTH_NONE, false);
+	//	m_MotionBlurTexture.InitRenderTarget(256, 256, IMAGE_FORMAT_ARGB8888, false);
+	
+		int width, height;
+		materials->GetBackBufferDimensions( width, height );
+		Msg( "Get motion blur overlay with %ix%i size\n", width, height );
+		m_MotionBlurTexture.InitRenderTarget(width, height, IMAGE_FORMAT_ARGB8888, false);
+	
+	//	Assert(!IsErrorTexture(m_MotionBlurTexture));
+		Assert( m_MotionBlurTexture );
+	}
+ 
+	return m_MotionBlurTexture;
+} 
+/*static ITexture *m_MotionBlurTexture = NULL;
+//static CTextureReference m_MotionBlurTexture;
+ITexture *GetMotionBlurTexture( void )
+{
+	if( !m_MotionBlurTexture )
+	{
+		bool bFound;
+		m_MotionBlurTexture = materials->FindTexture( "_rt_MotionBlur", &bFound );
+	//	m_MotionBlurTexture.Init( materials->FindTexture( "_rt_MotionBlur", &bFound ) );
+		Assert( bFound );
+	}
+	
+	return m_MotionBlurTexture;
+}*/
 
 //=============================================================================
 // 
@@ -96,7 +132,7 @@ ITexture *GetCameraTexture( void )
 //=============================================================================
 // 
 //=============================================================================
-static ITexture *s_pFullFrameFrameBufferTexture = NULL;
+/*static ITexture *s_pFullFrameFrameBufferTexture = NULL;
 
 static void FullFrameFrameBufferTextureRestoreFunc( void )
 {
@@ -123,6 +159,45 @@ ITexture *GetFullFrameFrameBufferTexture( void )
 	}
 	
 	return s_pFullFrameFrameBufferTexture;
+}*/
+
+// VXP: Multiple
+static CTextureReference s_pFullFrameFrameBufferTexture[MAX_FB_TEXTURES];
+static void FullFrameFrameBufferTextureRestoreFunc( void )
+{
+	if (s_pFullFrameFrameBufferTexture)
+	{
+		s_pFullFrameFrameBufferTexture->Shutdown();
+	//	delete[] s_pFullFrameFrameBufferTexture;
+	}
+}
+ITexture *GetFullFrameFrameBufferTexture( int textureIndex /*= 0*/ )
+{
+	if ( !s_pFullFrameFrameBufferTexture[textureIndex] )
+	{
+		char name[256];
+		if( textureIndex != 0 )
+		{
+			sprintf( name, "_rt_FullFrameFB%d", textureIndex );
+		}
+		else
+		{
+			Q_strcpy( name, "_rt_FullFrameFB" );
+		}
+	//	s_pFullFrameFrameBufferTexture[textureIndex].Init( materials->FindTexture( name, TEXTURE_GROUP_RENDER_TARGET ) );
+		s_pFullFrameFrameBufferTexture[textureIndex].Init( materials->FindTexture( name, NULL ) );
+	//	Assert( !IsErrorTexture( s_pFullFrameFrameBufferTexture[textureIndex] ) );
+		Assert( s_pFullFrameFrameBufferTexture[textureIndex] );
+	//	AddReleaseFunc();
+		static bool bAddedRestoreFunc = false;
+		if( !bAddedRestoreFunc )
+		{
+			materials->AddRestoreFunc( FullFrameFrameBufferTextureRestoreFunc );
+			bAddedRestoreFunc = true;
+		}
+	}
+	
+	return s_pFullFrameFrameBufferTexture[textureIndex];
 }
 
 //=============================================================================

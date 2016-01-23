@@ -120,6 +120,7 @@ class CTextureReference
 public:
 	// constructor, destructor
 	CTextureReference( );
+	CTextureReference( const CTextureReference &ref ); // VXP
 	~CTextureReference();
 
 	// Attach to a texture
@@ -133,6 +134,9 @@ public:
 	operator ITexture*() { return m_pTexture; }
 	operator ITexture const*() const { return m_pTexture; }
 	ITexture* operator->() { return m_pTexture; }
+
+	// Assignment operator
+	const CTextureReference& operator=( CTextureReference &ref ); // VXP: Add later?
 	
 private:
 	ITexture* m_pTexture;

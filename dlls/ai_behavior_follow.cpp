@@ -912,8 +912,10 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 	CBaseEntity *pGoalEntity = GetGoalEntity();
 	if ( !pGoalEntity )
 	{
-		if ( pAI->IRelationType(UTIL_PlayerByIndex( 1 )) == D_LI )
-			pBehavior->SetFollowTarget( UTIL_PlayerByIndex( 1 ) );
+	//	if ( pAI->IRelationType(UTIL_PlayerByIndex( 1 )) == D_LI )
+	//		pBehavior->SetFollowTarget( UTIL_PlayerByIndex( 1 ) );
+		if ( pAI->IRelationType(pAI->GetBaseEntity()) == D_LI )
+			pBehavior->SetFollowTarget( pAI->GetBaseEntity() );
 	}
 	else
 	{
@@ -926,7 +928,7 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 void CAI_FollowGoal::DisableGoal( CAI_BaseNPC *pAI  )
 { 
 	CAI_FollowBehavior *pBehavior;
-	if ( !pAI->GetBehavior( &pBehavior ) )
+	if ( !pAI || !pAI->GetBehavior( &pBehavior ) )
 		return;
 	
 	pBehavior->SetFollowTarget( NULL );
@@ -1334,6 +1336,7 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_FollowBehavior)
 		"	Tasks"
 		"		TASK_LOCK_HINTNODE			0		" // this will fail the schedule if no hint node or not already lockable
 		"		TASK_GET_PATH_TO_HINTNODE	0"
+		"       TASK_ROLLER_FIND_PATROL_NODE 0"
 		"		TASK_SET_FOLLOW_TARGET_MARK 36"
 		"		TASK_WALK_PATH				0"
 		"		TASK_WAIT_FOR_MOVEMENT		0"

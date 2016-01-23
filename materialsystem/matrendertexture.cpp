@@ -139,6 +139,26 @@ ITexture *CreateSmallHDR1Texture( )
 		IMAGE_FORMAT_RGBA16161616, false );
 }
 
+// VXP: Does this function useless?
+ITexture *CreateMotionBlurTexture( )
+{
+	int width, height;
+	MaterialSystem()->GetBackBufferDimensions( width, height );
+	Msg( "Created motion blur overlay with %ix%i size\n", width, height );
+
+//	return pMaterialSystem->CreateNamedRenderTargetTextureEx(
+	return MaterialSystem()->CreateNamedRenderTargetTexture(
+		"_rt_MotionBlur",
+	//	256, 256, RT_SIZE_FULL_FRAME_BUFFER,
+		256, 256, 
+	//	width, height, 
+		MaterialSystem()->GetBackBufferFormat(),
+	//	MATERIAL_RT_DEPTH_NONE, 
+	//	TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT,
+	//	0 );
+		/*true, true, */false );
+}
+
 RenderTextureDescriptor_t rtDescriptors[] = 
 {
 	{ "_rt_PowerOfTwoFB",		CreatePowerOfTwoFBTexture },
@@ -148,6 +168,8 @@ RenderTextureDescriptor_t rtDescriptors[] =
 	{ "_rt_Camera",			    CreateCameraTexture },
 	{ "_rt_SmallHDR0",			CreateSmallHDR0Texture },
 	{ "_rt_SmallHDR1",			CreateSmallHDR1Texture },
+	{ "_rt_MotionBlur",			CreateMotionBlurTexture }, // VXP: Does this function useless?
+	{ "_rt_FullFrameFB1",		CreateFullFrameFBTexture },
 	{ "",						NULL}
 };
 

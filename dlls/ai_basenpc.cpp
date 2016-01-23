@@ -157,7 +157,7 @@ void CAI_Manager::RemoveAI( CAI_BaseNPC *pAI )
 {
 	int i = m_AIs.Find( pAI );
 
-	Assert( i != -1 );
+//	Assert( i != -1 );
 
 	if ( i != -1 )
 		m_AIs.FastRemove( i );
@@ -824,7 +824,7 @@ void BulletWizz( Vector vecSrc, Vector vecEndPos, edict_t *pShooter, bool isTrac
 			continue;
 
 		// Don't hear one's own bullets
-		if( pPlayer->pev == pShooter )
+		if( pPlayer->edict() == pShooter )
 			continue;
 
 		vecPlayerPath = pPlayer->EarPosition() - vecSrc;
@@ -4529,7 +4529,7 @@ bool CAI_BaseNPC::InitSquad( void )
 	{
 		if ( !m_SquadName )
 		{
-			Msg("WARNING: Found %s that isn't in a squad\n",GetClassname()); // VXP: Need work with this
+			DevMsg("WARNING: Found %s that isn't in a squad\n",GetClassname()); // VXP: Need work with this
 		}
 		else
 		{

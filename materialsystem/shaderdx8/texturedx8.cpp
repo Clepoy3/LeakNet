@@ -581,15 +581,17 @@ void LoadSubTexture( int bindId, int copy, IDirect3DBaseTexture* pTexture,
 #endif
 
 
-//int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
-int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
+int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
+//int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
+//unsigned int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 {
 	FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		GUID deviceId;
-	//	int texSize;
-		int64 texSize;
+		int texSize;
+	//	int64 texSize;
+	//	unsigned int texSize;
 		FileSystem()->Read( &deviceId, sizeof(deviceId), file );
 		FileSystem()->Read( &texSize, sizeof(texSize), file );
 		FileSystem()->Close( file );
@@ -608,8 +610,11 @@ int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 	ImageFormat fmt = FindNearestSupportedFormat( IMAGE_FORMAT_BGR565 );
 	int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
 //	int textureSize = 256 * 256 * 2; // VXP: width * height * SizeInBytes(imageFormat)
+//	unsigned int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
 
-	int64 totalSize = 0;
+//	int totalSize = 0;
+//	int64 totalSize = 0;
+	unsigned int totalSize = 0;
 	CUtlVector< IDirect3DBaseTexture* > textures;
 
 #ifndef DONT_CHECK_MEM
@@ -643,6 +648,12 @@ int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 #else
 	totalSize = 102236160;
 #endif
+
+	if ( totalSize >= INT_MAX )
+	{
+		totalSize = INT_MAX;
+	}
+
 	file = FileSystem()->Open( "vidcfg.bin", "wb", "EXECUTABLE_PATH" );
 	if ( file )
 	{

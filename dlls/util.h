@@ -195,6 +195,10 @@ extern CBasePlayer	*UTIL_PlayerByIndex( int playerIndex );
 
 void		UTIL_GetPlayerConnectionInfo( int playerIndex, int& ping, int &packetloss );
 
+// VXP
+void		UTIL_SetClientVisibilityPVS( edict_t *pClient, const unsigned char *pvs, int pvssize );
+bool		UTIL_ClientPVSIsExpanded();
+
 edict_t		*UTIL_FindClientInPVS( edict_t *pEdict );
 CBaseEntity *UTIL_EntitiesInPVS( CBaseEntity *pPVSEntity, CBaseEntity *pStartingEntity );
 

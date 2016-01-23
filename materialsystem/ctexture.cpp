@@ -165,7 +165,8 @@ public:
 	virtual int GetApproximateVidMemBytes( void ) const;
 
 	// Stretch blit the framebuffer into this texture.
-	virtual void CopyFrameBufferToMe( void );
+//	virtual void CopyFrameBufferToMe( void );
+	virtual void CopyFrameBufferToMe( int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect );
 
 protected:
 	void ReconstructTexture();
@@ -1781,11 +1782,20 @@ int CTexture::GetApproximateVidMemBytes( void ) const
 	return numFrames * ImageLoader::GetMemRequired( width, height, format, isMipmapped );
 }
 
-void CTexture::CopyFrameBufferToMe( void )
+/*void CTexture::CopyFrameBufferToMe( void )
 {
 	Assert( m_pTexIDs && m_nFrameCount >= 1 );
 	if( m_pTexIDs && m_nFrameCount >= 1 )
 	{
 		g_pShaderAPI->CopyRenderTargetToTexture( m_pTexIDs[0] );
+	}
+}*/
+void CTexture::CopyFrameBufferToMe( int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect )
+{
+	Assert( m_pTexIDs && m_nFrameCount >= 1 );
+	if( m_pTexIDs && m_nFrameCount >= 1 )
+	{
+	//	g_pShaderAPI->CopyRenderTargetToTexture( m_pTexIDs[0] );
+		g_pShaderAPI->CopyRenderTargetToTextureEx( m_pTexIDs[0], nRenderTargetID, pSrcRect, pDstRect );
 	}
 }

@@ -135,6 +135,7 @@ public:
 	virtual void TexWrap( ShaderTexCoordComponent_t coord, ShaderTexWrapMode_t wrapMode ) = 0;
 
 	virtual void CopyRenderTargetToTexture( int texID ) = 0;
+	virtual void CopyRenderTargetToTextureEx( int texID, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect ) = 0;
 	
 	// Binds a particular material to render with
 	virtual void Bind( IMaterial* pMaterial ) = 0;

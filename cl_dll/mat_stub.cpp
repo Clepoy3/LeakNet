@@ -480,12 +480,18 @@ public:
 	virtual void				CopyRenderTargetToTexture( ITexture * )
 	{
 	}
+
+	virtual void				CopyRenderTargetToTextureEx( ITexture *pTexture, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect = NULL )
+	{
+	}
 	
-	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture )
+//	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture )
+	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture, int textureIndex = 0 )
 	{
 	}
 
-	virtual	ITexture *          GetFrameBufferCopyTexture( void )
+//	virtual	ITexture *          GetFrameBufferCopyTexture( void )
+	virtual	ITexture *          GetFrameBufferCopyTexture( int textureIndex = 0 )
 	{
 		return NULL;
 	}

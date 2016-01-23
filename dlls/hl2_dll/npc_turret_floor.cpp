@@ -103,6 +103,7 @@ public:
 	void	AutoSearchThink( void );
 	void	TippedThink( void );
 	void	SuppressThink( void );
+	virtual void	HackFindEnemy( void ); // VXP
 
 	Vector	GetAttackAccuracy( CBaseCombatWeapon *pWeapon, CBaseEntity *pTarget ) 
 	{
@@ -159,7 +160,7 @@ public:
 protected:
 	
 	bool	PreThink( turretState_e state );
-	void	Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy );
+	void	Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy, bool bStrict = false );
 	void	SetEyeState( eyeState_t state );
 	void	Ping( void );	
 	void	Toggle( void );
@@ -608,14 +609,16 @@ void CNPC_FloorTurret::SuppressThink( void )
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	//Look for a new enemy
-	GetSenses()->Look( FLOOR_TURRET_RANGE );
+//	GetSenses()->Look( FLOOR_TURRET_RANGE );
 	
-	CBaseEntity *pEnemy = BestEnemy();
+//	CBaseEntity *pEnemy = BestEnemy();
 
-	SetEnemy( pEnemy );
+//	SetEnemy( pEnemy );
+	HackFindEnemy(); // VXP
 
 	//If we've acquired an enemy, start firing at it
-	if ( pEnemy != NULL )
+//	if ( pEnemy != NULL )
+	if ( !GetEnemy() )
 	{
 		SetThink( ActiveThink );
 		return;
@@ -708,6 +711,8 @@ void CNPC_FloorTurret::ActiveThink( void )
 	//Allow descended classes a chance to do something before the think function
 	if ( PreThink( TURRET_ACTIVE ) )
 		return;
+
+	HackFindEnemy(); // VXP
 
 	//Update our think time
 	SetNextThink( gpGlobals->curtime + 0.1f );
@@ -803,16 +808,20 @@ void CNPC_FloorTurret::ActiveThink( void )
 	
 	if ( m_flShotTime < gpGlobals->curtime )
 	{
+		float minCos3d = DOT_10DEGREE; // 10 degrees slop
 		//Fire the gun
-		if ( DotProduct( vecDirToEnemy, vecMuzzleDir ) >= 0.9848 ) // 10 degree slop
+		float dot3d = DotProduct( vecDirToEnemy, vecMuzzleDir );
+		if ( dot3d >= minCos3d ) 
 		{
 			SetActivity( ACT_RESET );
 			SetActivity( (Activity) ACT_FLOOR_TURRET_FIRE );
 			
 			//Fire the weapon
 #if !DISABLE_SHOT
-			Shoot( vecMuzzle, vecMuzzleDir );
+		//	Shoot( vecMuzzle, vecMuzzleDir );
+			Shoot( vecMuzzle, vecMuzzleDir, (dot3d < DOT_10DEGREE) );
 #endif
+
 		} 
 	}
 	else
@@ -853,8 +862,9 @@ void CNPC_FloorTurret::SearchThink( void )
 	//Acquire the target
 	if ( GetEnemy() == NULL )
 	{
-		GetSenses()->Look( FLOOR_TURRET_RANGE );
-		SetEnemy( BestEnemy() );
+	//	GetSenses()->Look( FLOOR_TURRET_RANGE );
+	//	SetEnemy( BestEnemy() );
+		HackFindEnemy(); // VXP
 	}
 
 	//If we've found a target, spin up the barrel and start to attack
@@ -918,8 +928,9 @@ void CNPC_FloorTurret::AutoSearchThink( void )
 	//Acquire Target
 	if ( GetEnemy() == NULL )
 	{
-		GetSenses()->Look( FLOOR_TURRET_RANGE );
-		SetEnemy( BestEnemy() );
+	//	GetSenses()->Look( FLOOR_TURRET_RANGE );
+	//	SetEnemy( BestEnemy() );
+		HackFindEnemy(); // VXP
 	}
 
 	//Deploy if we've got an active target
@@ -933,16 +944,25 @@ void CNPC_FloorTurret::AutoSearchThink( void )
 //-----------------------------------------------------------------------------
 // Purpose: Fire!
 //-----------------------------------------------------------------------------
-void CNPC_FloorTurret::Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy )
+void CNPC_FloorTurret::Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy, bool bStrict )
 {
-	if ( GetEnemy() != NULL || OnSide() )
+	if ( !bStrict && GetEnemy() != NULL )
 	{
 		Vector vecDir = GetActualShootTrajectory( vecSrc );
 
+	//	FireBullets( 1, vecSrc, vecDir, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType, 1, -1, -1, 5, NULL );
+	//	EmitSound( "NPC_FloorTurret.ShotSounds" );
+	//	m_fEffects |= EF_MUZZLEFLASH;
+
 		FireBullets( 1, vecSrc, vecDir, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType, 1, -1, -1, 5, NULL );
-		EmitSound( "NPC_FloorTurret.ShotSounds" );
-		m_fEffects |= EF_MUZZLEFLASH;
 	}
+	else
+	{
+		FireBullets( 1, vecSrc, vecDirToEnemy, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType, 1, -1, -1, 5, NULL );
+	}
+
+	EmitSound( "NPC_FloorTurret.ShotSounds" );
+	m_fEffects |= EF_MUZZLEFLASH;
 }
 
 //-----------------------------------------------------------------------------
@@ -963,9 +983,12 @@ bool CNPC_FloorTurret::IsValidEnemy( CBaseEntity *pEnemy )
 //-----------------------------------------------------------------------------
 void CNPC_FloorTurret::TippedThink( void )
 {
-	SetNextThink( gpGlobals->curtime + 0.05f );
+//	SetNextThink( gpGlobals->curtime + 0.05f );
 
 	StudioFrameAdvance();
+	
+	SetNextThink( gpGlobals->curtime + 0.05f );
+	SetEnemy( NULL );
 
 	//See if we should continue to thrash
 	if ( gpGlobals->curtime < m_flThrashTime )
@@ -1034,6 +1057,20 @@ void CNPC_FloorTurret::TippedThink( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: The turret doesn't run base AI properly, which is a bad decision.
+//			As a result, it has to manually find enemies.
+//-----------------------------------------------------------------------------
+void CNPC_FloorTurret::HackFindEnemy( void )
+{
+	// We have to refresh our memories before finding enemies, so
+	// dead enemies are cleared out before new ones are added.
+	GetEnemies()->RefreshMemories();
+
+	GetSenses()->Look( FLOOR_TURRET_RANGE );
+	SetEnemy( BestEnemy() );
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Determines whether the turret is upright enough to function
 // Output : Returns true if the turret is tipped over
 //-----------------------------------------------------------------------------
@@ -1051,6 +1088,14 @@ inline bool CNPC_FloorTurret::OnSide( void )
 //-----------------------------------------------------------------------------
 bool CNPC_FloorTurret::PreThink( turretState_e state )
 {
+	// Hack to disable turrets when ai is disabled
+	if ( CAI_BaseNPC::m_nDebugBits & bits_debugDisableAI )
+	{
+		// Push our think out into the future
+		SetNextThink( gpGlobals->curtime + 0.1f );
+		return true;
+	}
+
 	//Animate
 	StudioFrameAdvance();
 
@@ -1215,6 +1260,10 @@ void CNPC_FloorTurret::Enable( void )
 
 	m_bEnabled = true;
 
+	//This turret is on its side, it can't function
+	if ( OnSide() || ( IsAlive() == false ) ) // VXP
+		return;
+
 	// if the turret is flagged as an autoactivate turret, re-enable its ability open self.
 	if ( m_spawnflags & SF_FLOOR_TURRET_AUTOACTIVATE )
 	{
@@ -1230,15 +1279,20 @@ void CNPC_FloorTurret::Enable( void )
 //-----------------------------------------------------------------------------
 void CNPC_FloorTurret::Disable( void )
 {
-	if ( IsAlive() == false )
+//	if ( IsAlive() == false )
+	//This turret is on its side, it can't function
+	if ( OnSide() || ( IsAlive() == false ) )
 		return;
 
-	m_bEnabled = false;
-	m_bAutoStart = false;
+	if ( m_bEnabled )
+	{
+		m_bEnabled = false;
+		m_bAutoStart = false;
 
-	SetEnemy( NULL );
-	SetThink( Retire );
-	SetNextThink( gpGlobals->curtime + 0.1f );
+		SetEnemy( NULL );
+		SetThink( Retire );
+		SetNextThink( gpGlobals->curtime + 0.1f );
+	}
 }
 
 //-----------------------------------------------------------------------------

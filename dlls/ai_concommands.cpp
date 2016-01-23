@@ -291,18 +291,19 @@ void CC_NPC_Create( void )
 {
 	// First make sure one of these types exists, becuase if it ain't
 	// precached, we can't spawn one 
-	CBaseEntity *pPrecached = gEntList.FindEntityByClassname(NULL, engine->Cmd_Argv(1));
-	if (!pPrecached)
-	{
-		Msg("Can't create %s.  Not precached!\n",engine->Cmd_Argv(1));
-		return;
-	}
+//	CBaseEntity *pPrecached = gEntList.FindEntityByClassname(NULL, engine->Cmd_Argv(1));
+//	if (!pPrecached)
+//	{
+//		Msg("Can't create %s.  Not precached!\n",engine->Cmd_Argv(1));
+//		return;
+//	}
 
 	// Try to create entity
 	CAI_BaseNPC *baseNPC = (CAI_BaseNPC *)CreateEntityByName(engine->Cmd_Argv(1));
 	if (baseNPC)
 	{
 		baseNPC->KeyValue( "additionalequipment", npc_create_equipment.GetString() );
+		baseNPC->Precache();
 		baseNPC->Spawn();
 		// Now attempt to drop into the world
 		CBasePlayer* pPlayer = UTIL_GetCommandClient();

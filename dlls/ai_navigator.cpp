@@ -1176,9 +1176,9 @@ bool CAI_Navigator::DelayNavigationFailure( const AIMoveTrace_t &trace )
 	}
 	
 	CAI_BaseNPC *pBlocker = trace.pObstruction ? trace.pObstruction->MyNPCPointer() : NULL;
-	if ( !m_fPeerMoveWait || pBlocker != m_hPeerWaitingOn )
+	if ( pBlocker )
 	{
-		if ( pBlocker )
+		if ( !m_fPeerMoveWait || pBlocker != m_hPeerWaitingOn )
 		{
 			if ( m_hPeerWaitingOn != pBlocker || m_PeerWaitClearTimer.Expired() )
 			{
@@ -1404,8 +1404,6 @@ bool CAI_Navigator::PreMove()
 {
 	Navigation_t goalType = GetPath()->CurWaypointNavType();
 	Navigation_t curType  = GetNavType();
-
-	m_fPeerMoveWait = false;
 	
 	if ( goalType == NAV_GROUND && curType != NAV_GROUND )
 	{
@@ -1441,7 +1439,7 @@ bool CAI_Navigator::PreMove()
 	
 	SimplifyPath();
 	
-//	m_fPeerMoveWait = false; // VXP: It's upthere
+	m_fPeerMoveWait = false;
 	
 	return true;
 }

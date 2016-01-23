@@ -160,6 +160,9 @@ enum sharedtasks_e
 		// Path to nodes[ m_pHintNode ]
 		TASK_GET_PATH_TO_HINTNODE,
 
+		// VXP
+		TASK_ROLLER_FIND_PATROL_NODE,
+
 		// Store current position for later reference
 		TASK_STORE_LASTPOSITION,
 

@@ -2803,7 +2803,8 @@ static void R_DrawSortedBrushModel( IClientEntity *baseentity, model_t *model,
 	{
 		if( !bCopiedFrameBuffer && MSurf_TexInfo( surfID )->material->NeedsFrameBufferTexture() )
 		{
-			materialSystemInterface->CopyRenderTargetToTexture( materialSystemInterface->GetFrameBufferCopyTexture() );
+		//	materialSystemInterface->CopyRenderTargetToTexture( materialSystemInterface->GetFrameBufferCopyTexture() );
+			materialSystemInterface->CopyRenderTargetToTexture( materialSystemInterface->GetFrameBufferCopyTexture(0) );
 		}
 		Shader_BrushSurface( surfID, model, baseentity );
 
@@ -2930,9 +2931,9 @@ static bool R_SetupBrushModelTransform( const Vector& origin, QAngle const& angl
 		materialSystemInterface->PushMatrix();
 
 		// FIXME: Use load matrix instead of R_RotateForEntity.. should work!
-		materialSystemInterface->LoadMatrix( *pBrushToWorld ); // VXP: Uncommented
+	//	materialSystemInterface->LoadMatrix( *pBrushToWorld );
 
-	//	R_RotateForEntity( origin, angles );
+		R_RotateForEntity( origin, angles );
 	}
 
 	return isIdentity;

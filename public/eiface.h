@@ -348,7 +348,7 @@ public:
 	virtual void			ClientUserInfoChanged( edict_t *pEntity, char *infobuffer ) = 0;
 	
 	// Determine PVS origin and set PVS for the player/viewentity
-	virtual void			ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs ) = 0;
+	virtual void			ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs, int pvssize ) = 0;
 	
 	virtual float			ProcessUsercmds( edict_t *player, bf_read *buf, int numcmds, int totalcmds,
 								int dropped_packets, bool ignore, bool paused ) = 0;

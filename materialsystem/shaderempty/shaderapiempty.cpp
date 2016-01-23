@@ -317,8 +317,10 @@ public:
 	void BindBlack( TextureStage_t stage );
 	void BindGrey( TextureStage_t stage );
 	void BindSyncTexture( TextureStage_t stage, int texture );
-	void BindFBTexture( TextureStage_t stage );
+//	void BindFBTexture( TextureStage_t stage );
+	void BindFBTexture( TextureStage_t stage, int textureIndex = 0 );
 	void CopyRenderTargetToTexture( int texID );
+	void CopyRenderTargetToTextureEx( int texID, int nRenderTargetID, Rect_t *pSrcRect = NULL, Rect_t *pDstRect = NULL );
 
 
 	// Special system flat normal map binding.
@@ -528,8 +530,9 @@ public:
 	{
 		return "UNKNOWN";
 	}
-//	int	 TextureMemorySize() const;
-	int64	 TextureMemorySize() const;
+	int	 TextureMemorySize() const;
+//	int64	 TextureMemorySize() const;
+//	unsigned int TextureMemorySize() const;
 	bool SupportsOverbright() const;
 	bool SupportsCubeMaps() const;
 	bool SupportsMipmappedCubemaps() const;
@@ -1276,8 +1279,9 @@ int  CShaderAPIEmpty::MaxTextureAspectRatio() const
 }
 
 
-//int	 CShaderAPIEmpty::TextureMemorySize() const
-int64	 CShaderAPIEmpty::TextureMemorySize() const
+int	 CShaderAPIEmpty::TextureMemorySize() const
+//int64	 CShaderAPIEmpty::TextureMemorySize() const
+//unsigned int CShaderAPIEmpty::TextureMemorySize() const
 {
 	// fake it
 	return 64 * 1024 * 1024;
@@ -1592,11 +1596,16 @@ void CShaderAPIEmpty::BindSyncTexture( TextureStage_t stage, int texture )
 {
 }
 
-void CShaderAPIEmpty::BindFBTexture( TextureStage_t stage )
+void CShaderAPIEmpty::BindFBTexture( TextureStage_t stage, int textureIndex )
 {
 }
 
 void CShaderAPIEmpty::CopyRenderTargetToTexture( int texID )
+{
+}
+
+
+void CShaderAPIEmpty::CopyRenderTargetToTextureEx( int texID, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect )
 {
 }
 

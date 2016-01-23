@@ -209,6 +209,7 @@ struct MaterialSystem_SortInfo_t
 	int lightmapPageID;
 };
 
+#define MAX_FB_TEXTURES 4
 
 //-----------------------------------------------------------------------------
 // Information about each adapter
@@ -484,10 +485,13 @@ public:
 	
 	// Blit the backbuffer to the framebuffer texture
 	virtual void				CopyRenderTargetToTexture( ITexture *pTexture ) = 0;
+	virtual void				CopyRenderTargetToTextureEx( ITexture *pTexture, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect = NULL ) = 0;
 	
 	// Set the current texture that is a copy of the framebuffer.
-	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture ) = 0;
-	virtual ITexture		   *GetFrameBufferCopyTexture( void ) = 0;
+//	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture ) = 0;
+	virtual void				SetFrameBufferCopyTexture( ITexture *pTexture, int textureIndex = 0 ) = 0;
+//	virtual ITexture		   *GetFrameBufferCopyTexture( void ) = 0;
+	virtual ITexture		   *GetFrameBufferCopyTexture( int textureIndex = 0 ) = 0;
 	
 	// Get the image format of the back buffer. . useful when creating render targets, etc.
 	virtual ImageFormat			GetBackBufferFormat() const = 0;

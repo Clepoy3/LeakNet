@@ -721,17 +721,13 @@ void CBaseEntity::SetCollisionBounds( const Vector& mins, const Vector &maxs )
 //-----------------------------------------------------------------------------
 // These methods encapsulate MOVETYPE_FOLLOW, which became obsolete
 //-----------------------------------------------------------------------------
-void CBaseEntity::FollowEntity( CBaseEntity *pBaseEntity, bool bBoneMerge /*=true*/ )
+void CBaseEntity::FollowEntity( CBaseEntity *pBaseEntity )
 {
 	if (pBaseEntity)
 	{
 		SetParent( pBaseEntity );
 		SetMoveType( MOVETYPE_NONE );
-
-	//	m_fEffects |= EF_BONEMERGE;
-		if ( bBoneMerge )
-			m_fEffects |= EF_BONEMERGE;
-
+		m_fEffects |= EF_BONEMERGE;
 		AddSolidFlags( FSOLID_NOT_SOLID );
 		SetLocalOrigin( vec3_origin );
 		SetLocalAngles( vec3_angle );
@@ -2677,7 +2673,7 @@ void CBaseEntity::SetMoveType( MoveType_t val, MoveCollide_t moveCollide )
 			// you're changing away from MOVETYPE_VPHYSICS without making the object 
 			// shadow?  This isn't likely to work, assert.
 			// You probably meant to call VPhysicsInitShadow() instead of VPhysicsInitNormal()!
-			Assert( VPhysicsGetObject()->GetShadowController() ); // VXP: Oops, error!
+			Assert( VPhysicsGetObject()->GetShadowController() );
 		}
 	}
 #endif
@@ -2714,6 +2710,13 @@ void CBaseEntity::SetMoveType( MoveType_t val, MoveCollide_t moveCollide )
 		{
 			SetSimulatedEveryTick( false );
 			SetAnimatedEveryTick( false );
+		}
+		break;
+	case MOVETYPE_FLY:
+	case MOVETYPE_FLYGRAVITY:
+		{
+			// Initialize our water state, because these movetypes care about transitions in/out of water
+			UpdateWaterState();
 		}
 		break;
 	default:

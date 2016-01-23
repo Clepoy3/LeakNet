@@ -364,7 +364,8 @@ public:
 	virtual void BindBlack( TextureStage_t stage ) = 0;
 	virtual void BindGrey( TextureStage_t stage ) = 0;
 	virtual void BindSyncTexture( TextureStage_t stage, int texture ) = 0;
-	virtual void BindFBTexture( TextureStage_t stage ) = 0;
+//	virtual void BindFBTexture( TextureStage_t stage ) = 0;
+	virtual void BindFBTexture( TextureStage_t stage, int textureIndex = 0 ) = 0;
 
 	virtual void EnableSRGBRead( TextureStage_t stage, bool bEnable ) = 0;
 

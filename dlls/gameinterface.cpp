@@ -930,7 +930,7 @@ public:
 	virtual void			ClientPutInServer( edict_t *pEntity, const char *playername );
 	virtual void			ClientCommand( edict_t *pEntity );
 	virtual void			ClientUserInfoChanged( edict_t *pEntity, char *infobuffer );
-	virtual void			ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs );
+	virtual void			ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs, int pvssize );
 	virtual float			ProcessUsercmds( edict_t *player, bf_read *buf, int numcmds, int totalcmds,
 								int dropped_packets, bool ignore, bool paused );
 	// Player is running a command
@@ -1093,7 +1093,7 @@ void CServerGameClients::ClientUserInfoChanged( edict_t *pEdict, char *infobuffe
 //			**pvs - 
 //			**pas - 
 //-----------------------------------------------------------------------------
-void CServerGameClients::ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs )
+void CServerGameClients::ClientSetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char *pvs, int pvssize )
 {
 	Vector org;
 
@@ -1108,23 +1108,30 @@ void CServerGameClients::ClientSetupVisibility( edict_t *pViewEntity, edict_t *p
 	if ( pViewEntity )
 	{
 		pVE = GetContainingEntity( pViewEntity );
+		// If we have a viewentity, it overrides the player's origin
+		if ( pVE )
+		{
+			org = pVE->EyePosition();
+			engine->AddOriginToPVS( org );
+		}
 	}
 
-	if ( pVE )
-	{
-		org = pVE->EyePosition();
-		engine->AddOriginToPVS( org );
-	}
-	else
-	{
+//	if ( pVE )
+//	{
+//		org = pVE->EyePosition();
+//		engine->AddOriginToPVS( org );
+//	}
+//	else
+//	{
 
 		CBasePlayer *pPlayer = ( CBasePlayer * )GetContainingEntity( pClient );
 		if ( pPlayer )
 		{
 			org = pPlayer->EyePosition();
 			pPlayer->SetupVisibility( pvs, pas );
+			UTIL_SetClientVisibilityPVS( pClient, pvs, pvssize );
 		}
-	}
+//	}
 
 	for( unsigned short i = g_AreaPortals.Head(); i != g_AreaPortals.InvalidIndex(); i = g_AreaPortals.Next(i) )
 	{

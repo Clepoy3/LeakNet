@@ -82,6 +82,10 @@ public:
 	void		PrescheduleThink( void );
 
 	void        HandleAnimEvent( animevent_t *pEvent );
+	
+	int			OnTakeDamage_Alive( const CTakeDamageInfo &info ); // VXP
+	void		Event_Killed( const CTakeDamageInfo &info );
+	void		DeathSound( void );
 
 	void		StartTask( const Task_t *pTask );
 	void		RunTask( const Task_t *pTask );

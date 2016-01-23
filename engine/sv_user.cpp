@@ -349,8 +349,7 @@ static clc_func_t sv_clcfuncs[] =
 {
 	{ clc_bad, "clc_bad", NULL },   // 0
 	{ clc_nop, "clc_nop", NULL },   // 1
-//	{ clc_sendlogo, "clc_disconnect", SV_ParseSendLogo }, // 2
-	{ clc_sendlogo, "clc_sendlogo", SV_ParseSendLogo }, // 2 // VXP
+	{ clc_sendlogo, "clc_disconnect", SV_ParseSendLogo }, // 2
 	{ clc_move, "clc_move", SV_ParseMove }, // 3
 	{ clc_stringcmd, "clc_stringcmd", SV_ParseStringCommand }, // 4
 	{ clc_delta, "clc_delta", SV_ParseDelta }, // 5

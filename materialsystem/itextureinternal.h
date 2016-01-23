@@ -60,7 +60,8 @@ public:
 	virtual void Precache() = 0;
 
 	// Stretch blit the framebuffer into this texture.
-	virtual void CopyFrameBufferToMe( void ) = 0;
+//	virtual void CopyFrameBufferToMe( void ) = 0;
+	virtual void CopyFrameBufferToMe( int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect ) = 0;
 
 	// Creates a new texture
 	static ITextureInternal *CreateFileTexture( const char *pFileName, bool  );

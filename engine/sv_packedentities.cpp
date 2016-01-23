@@ -45,7 +45,7 @@ static void SV_ComputeClientPackInfo( client_t* pClient, ClientPackInfo_t *pInfo
 
 	// Compute Vis for each client
 	serverGameClients->ClientSetupVisibility( (edict_t *)pClient->pViewEntity,
-		pInfo->m_pClientEnt, pInfo->m_PVS );
+		pInfo->m_pClientEnt, pInfo->m_PVS, sizeof( pInfo->m_PVS ) );
 
 	// Compute the client area for each client
 	pInfo->m_ClientArea = pClient->pViewEntity ? pClient->pViewEntity->areanum :

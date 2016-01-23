@@ -121,6 +121,9 @@ void CHudNumericDisplay::Paint()
 	fgColor[3] *= alpha;
 	SetFgColor( fgColor );
 
+	Color bgColor = Color(0, 0, 0, 0);
+	SetBgColor( bgColor );
+
 	if (m_bDisplayValue)
 	{
 		// draw our numbers

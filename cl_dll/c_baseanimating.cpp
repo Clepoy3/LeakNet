@@ -927,14 +927,29 @@ bool C_BaseAnimating::SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, i
 	VPROF_BUDGET( "C_BaseAnimating::SetupBones", VPROF_BUDGETGROUP_OTHER_ANIMATION );
 
 //	Assert( IsBoneAccessAllowed() ); // VXP: When GetAttachment
-	if( !IsBoneAccessAllowed() )
-	{
+//	if( !IsBoneAccessAllowed() )
+//	{
 	//	return false; // VXP: Well, we will see
-		Warning("C_BaseAnimating::SetupBones: Access to bone is not allowed\n");
+//		Warning("C_BaseAnimating::SetupBones: Access to bone is not allowed\n");
+//	}
+
+	if ( !IsBoneAccessAllowed() )
+	{
+		static float lastWarning = 0.0f;
+
+		// Prevent spammage!!!
+		if ( gpGlobals->realtime >= lastWarning + 1.0f )
+		{
+			DevMsg( "*** ERROR: Bone access not allowed (entity %i:%s)\n", index, GetClassname() );
+			lastWarning = gpGlobals->realtime;
+		}
 	}
 
 	boneMask = BONE_USED_BY_ANYTHING; // HACK HACK - this is a temp fix until we have accessors for bones to find out where problems are.
-	
+
+	if ( m_nSequence == -1 )
+		 return false;
+
 	studiohdr_t *hdr = GetModelPtr();
 	if ( !hdr )
 	{
@@ -1287,6 +1302,10 @@ void C_BaseAnimating::DoAnimationEvents( void )
 	}
 
 	bool watch = false; // Q_strstr( hdr->name, "rifle" ) ? true : false;
+
+	// VXP: This should never happen.
+	if ( m_nSequence == -1 )
+		 return;
 
 	Assert( hdr );
 

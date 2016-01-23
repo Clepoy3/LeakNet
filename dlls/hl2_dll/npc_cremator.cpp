@@ -186,7 +186,8 @@ void CNPC_Cremator::Spawn( void )
 	NPCInit();
 	
 	BaseClass::Spawn();
-	
+
+#ifdef _DEBUG
 	studiohdr_t *pstudiohdr = GetModelPtr( );
 //	mstudioseqdesc_t	*pseqdesc = pstudiohdr->pSeqdesc( 0 );
 	mstudioseqdesc_t	*pseqdesc;
@@ -214,6 +215,7 @@ void CNPC_Cremator::Spawn( void )
 			Msg( "%i (%s): %i (%f, %i, %i, %s)\n", i, pseqdesc[i].pszLabel(), pseqdesc->numevents, pevent->cycle, pevent->event, pevent->type, pevent->options );
 		}
 	}
+#endif // _DEBUG
 }
 
 

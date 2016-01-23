@@ -135,7 +135,18 @@ void CBaseAnimating::UseClientSideAnimation()
 //-----------------------------------------------------------------------------
 float CBaseAnimating::GetAnimTimeInterval( void ) const
 {
-	float flInterval = clamp( m_flAnimTime - m_flPrevAnimTime, 0, MAX_ANIMTIME_INTERVAL );
+//	float flInterval = clamp( m_flAnimTime - m_flPrevAnimTime, 0, MAX_ANIMTIME_INTERVAL );
+	float flInterval;
+	if (m_flAnimTime < gpGlobals->curtime)
+	{
+		// estimate what it'll be this frame
+		flInterval = clamp( gpGlobals->curtime - m_flAnimTime, 0, MAX_ANIMTIME_INTERVAL );
+	}
+	else
+	{
+		// report actual
+		flInterval = clamp( m_flAnimTime - m_flPrevAnimTime, 0, MAX_ANIMTIME_INTERVAL );
+	}
 	return flInterval;
 }
 
@@ -146,7 +157,8 @@ void CBaseAnimating::StudioFrameAdvance()
 {
 	if ( !m_flPrevAnimTime )
 	{
-		m_flPrevAnimTime = gpGlobals->curtime;
+	//	m_flPrevAnimTime = gpGlobals->curtime;
+		m_flPrevAnimTime = m_flAnimTime;
 	}
 
 	// Time since last animation

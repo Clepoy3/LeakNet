@@ -533,8 +533,9 @@ public:
 	int  MaxTextureWidth() const;
 	int  MaxTextureHeight() const;
 	int	 MaxTextureAspectRatio() const;
-//	int	 TextureMemorySize() const;
-	int64	 TextureMemorySize() const;
+	int	 TextureMemorySize() const;
+//	int64	 TextureMemorySize() const;
+//	unsigned int TextureMemorySize() const;
 	bool SupportsOverbright() const;
 	bool SupportsMipmapping() const;
 	bool SupportsCubeMaps() const;
@@ -611,7 +612,8 @@ public:
 	void BindGrey( TextureStage_t stage );
 	void BindFlatNormalMap( TextureStage_t stage );
 	void BindSyncTexture( TextureStage_t stage, int texture );
-	void BindFBTexture( TextureStage_t stage );
+//	void BindFBTexture( TextureStage_t stage );
+	void BindFBTexture( TextureStage_t stage, int textureIndex = 0 );
 	void BindNormalizationCubeMap( TextureStage_t stage );
 
 	// Gets the lightmap dimensions
@@ -635,6 +637,7 @@ public:
 	void BindAmbientLightCubeToStage0( );
 
 	void CopyRenderTargetToTexture( int texID );
+	void CopyRenderTargetToTextureEx( int texID, int nRenderTargetID, Rect_t *pSrcRect = NULL, Rect_t *pDstRect = NULL );
 
 	// Returns the cull mode (for fill rate computation)
 	D3DCULL GetCullMode() const;
@@ -827,8 +830,9 @@ private:
 		bool m_SupportsCubeMaps;
 		int  m_NumPixelShaderConstants;
 		int  m_NumVertexShaderConstants;
-	//	int  m_TextureMemorySize;
-		int64  m_TextureMemorySize;
+		int  m_TextureMemorySize;
+	//	int64  m_TextureMemorySize;
+	//	unsigned int m_TextureMemorySize;
 		int  m_MaxNumLights;
 		bool m_SupportsHardwareLighting;
 		int  m_MaxBlendMatrices;
@@ -3046,8 +3050,8 @@ void CShaderAPIDX8::SpewDriverInfo() const
 		(caps.RasterCaps & D3DPRASTERCAPS_DEPTHBIAS) ? " Y " : " N ",
 		(caps.RasterCaps & D3DPRASTERCAPS_ZTEST) ? " Y " : "*N*" );
 
-//	Warning("Size of Texture Memory : %d kb\n", m_Caps.m_TextureMemorySize / 1024 );
-	Warning("Size of Texture Memory: %lld kb\n", m_Caps.m_TextureMemorySize / 1024 );
+	Warning("Size of Texture Memory : %d kb\n", m_Caps.m_TextureMemorySize / 1024 );
+//	Warning("Size of Texture Memory: %lld kb\n", m_Caps.m_TextureMemorySize / 1024 );
 //	Warning("Size of Texture Memory : %d\n", m_Caps.m_TextureMemorySize );
 	Warning("Max Texture Dimensions : %d x %d\n", 
 		caps.MaxTextureWidth, caps.MaxTextureHeight );
@@ -3214,8 +3218,9 @@ int	 CShaderAPIDX8::MaxTextureAspectRatio() const
 	return m_Caps.m_MaxTextureAspectRatio;
 }
 
-//int	 CShaderAPIDX8::TextureMemorySize() const
-int64	 CShaderAPIDX8::TextureMemorySize() const
+int	 CShaderAPIDX8::TextureMemorySize() const
+//int64	 CShaderAPIDX8::TextureMemorySize() const
+//unsigned int CShaderAPIDX8::TextureMemorySize() const
 {
 	return m_Caps.m_TextureMemorySize;
 }
@@ -6887,7 +6892,7 @@ void CShaderAPIDX8::BindAmbientLightCubeToStage0( )
 	BindTexture( SHADER_TEXTURE_STAGE0, TEXTURE_AMBIENT_CUBE );
 }
 
-void CShaderAPIDX8::CopyRenderTargetToTexture( int texID )
+/*void CShaderAPIDX8::CopyRenderTargetToTexture( int texID )
 {
 	VPROF( "CShaderAPIDX8::CopyRenderTargetToTexture" );
 
@@ -6936,6 +6941,75 @@ void CShaderAPIDX8::CopyRenderTargetToTexture( int texID )
 
 	pDstSurf->Release();
 	pRenderTargetSurface->Release();
+}*/
+
+static inline RECT* RectToRECT( Rect_t *pSrcRect, RECT &dstRect )
+{
+	if ( !pSrcRect )
+		return NULL;
+
+	dstRect.left = pSrcRect->x;
+	dstRect.top = pSrcRect->y;
+	dstRect.right = pSrcRect->x + pSrcRect->width;
+	dstRect.bottom = pSrcRect->y + pSrcRect->height;
+	return &dstRect;
+}
+void CShaderAPIDX8::CopyRenderTargetToTextureEx( int texID, int nRenderTargetID, Rect_t *pSrcRect, Rect_t *pDstRect )
+{
+	VPROF( "CShaderAPIDX8::CopyRenderTargetToTexture" );
+
+	int idx;
+	// hack!
+	if( !FindTexture( texID, idx ) )
+	{
+		Assert( 0 );
+		return;
+	}
+
+	IDirect3DSurface* pRenderTargetSurface;
+	HRESULT hr = m_pD3DDevice->GetRenderTarget( nRenderTargetID, &pRenderTargetSurface );
+	if (FAILED(hr))
+	{
+		Assert( 0 );
+		return;
+	}
+
+	// Don't flush here!!  If you have to flush here, then there is a driver bug.
+	//	FlushHardware( );
+
+	Texture_t *pTexture = &GetTexture( idx );
+	Assert( pTexture );
+	IDirect3DTexture *pD3DTexture = ( IDirect3DTexture * )pTexture->GetTexture();;
+	Assert( pD3DTexture );
+
+	IDirect3DSurface *pDstSurf;
+	hr = pD3DTexture->GetSurfaceLevel( 0, &pDstSurf );
+	Assert( !FAILED( hr ) );
+	if( FAILED( hr ) )
+	{
+		return;
+	}
+
+	bool tryblit = true;
+
+	if ( tryblit )
+	{
+		RECORD_COMMAND( DX8_COPY_FRAMEBUFFER_TO_TEXTURE, 1 );
+		RECORD_INT( texID );
+		
+		RECT srcRect, dstRect;
+		hr = m_pD3DDevice->StretchRect( pRenderTargetSurface, RectToRECT( pSrcRect, srcRect ),
+			pDstSurf, RectToRECT( pDstRect, dstRect ), D3DTEXF_NONE );
+		Assert( !FAILED( hr ) );
+	}
+
+	pDstSurf->Release();
+	pRenderTargetSurface->Release();
+}
+
+void CShaderAPIDX8::CopyRenderTargetToTexture( int texID )
+{
+	CopyRenderTargetToTextureEx( texID, 0 );
 }
 
 static float ComputeFixedUpComponent( int val, int numTexels )
@@ -9096,9 +9170,9 @@ void CShaderAPIDX8::BindSyncTexture( TextureStage_t stage, int texture )
 	ShaderUtil()->BindSyncTexture( stage, texture );
 }
 
-void CShaderAPIDX8::BindFBTexture( TextureStage_t stage )
+void CShaderAPIDX8::BindFBTexture( TextureStage_t stage, int textureIndex )
 {
-	ShaderUtil()->BindFBTexture( stage );
+	ShaderUtil()->BindFBTexture( stage, textureIndex );
 }
 
 void CShaderAPIDX8::BindNormalizationCubeMap( TextureStage_t stage )

@@ -58,7 +58,8 @@ public:
 	virtual void	RenderView( const CViewSetup &view, bool drawViewmodel );
 
 	// VXP
-	void			DoMotionBlur( void );
+//	void			DoMotionBlur( void );
+	void			DoMotionBlur( const CViewSetup &view );
 
 	virtual void	StartPitchDrift( void );
 	virtual void	StopPitchDrift( void );

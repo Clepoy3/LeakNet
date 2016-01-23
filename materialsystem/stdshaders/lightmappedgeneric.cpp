@@ -36,6 +36,7 @@ BEGIN_VS_SHADER( LightmappedGeneric,
 	// Set up anything that is necessary to make decisions in SHADER_FALLBACK.
 	SHADER_INIT_PARAMS()
 	{
+	//	params[ENVMAP]->SetUndefined(); // VXP: Removing all of white stuff
 		if( IsUsingGraphics() && params[ENVMAP]->IsDefined() )
 		{
 			if( stricmp( params[ENVMAP]->GetStringValue(), "env_cubemap" ) == 0 )

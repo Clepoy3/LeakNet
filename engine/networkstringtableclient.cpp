@@ -284,7 +284,7 @@ void CNetworkStringTableClient::DirectUpdate( int entryIndex, char const *string
 	//	Assert( entryIndex == GetNumStrings() );
 		if( entryIndex != GetNumStrings() )
 		{
-			DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings()\n" );
+			DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings() (%i != %i)\n", entryIndex, GetNumStrings() );
 		}
 		AddString( pName, nBytes, pUserData );
 	}
@@ -394,7 +394,11 @@ void CNetworkStringTableClient::ParseUpdate( void )
 		else
 		{
 			// Grow the table (entryindex must be the next empty slot)
-			Assert( entryIndex == GetNumStrings() );
+		//	Assert( entryIndex == GetNumStrings() );
+			if( entryIndex != GetNumStrings() )
+			{
+				DevWarning( "CNetworkStringTableClient::ParseUpdate: entryIndex != GetNumStrings() (%i != %i)\n", entryIndex, GetNumStrings() );
+			}
 			AddString( pName, nBytes, pUserData );
 		}
 	}

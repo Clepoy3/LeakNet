@@ -116,10 +116,8 @@ void RecvProxy_PlasmaScale( const CRecvProxyData *pData, void *pStruct, void *pO
 		pPlasmaSmoke->m_flScaleStart	= pPlasmaSmoke->m_flScaleRegister;
 		pPlasmaSmoke->m_flScaleEnd		= scale;			
 
-	//	pPlasmaSmoke->m_flScale = scale; // VXP: Was down here
+		pPlasmaSmoke->m_flScale = scale;
 	}
-
-	pPlasmaSmoke->m_flScale = scale;
 }
 
 //-----------------------------------------------------------------------------
@@ -148,10 +146,11 @@ void RecvProxy_PlasmaScaleTime( const CRecvProxyData *pData, void *pStruct, void
 			pPlasmaSmoke->m_flScaleTimeStart	= gpGlobals->curtime;
 			pPlasmaSmoke->m_flScaleTimeEnd	= gpGlobals->curtime + time;
 		}
-	//	pPlasmaSmoke->m_flScaleTime = time; // VXP: Was down here
+
+		pPlasmaSmoke->m_flScaleTime = time;
 	}
 
-	pPlasmaSmoke->m_flScaleTime = time;
+	
 }
 
 //Receive datatable
@@ -271,16 +270,8 @@ void C_Plasma::AddFlames( void )
 			m_entFlames[i].SetBrightness( 255.0f * alpha );
 		}
 
-		Msg("%i: local %f %f %f\n", i, m_entFlames[i].GetLocalOrigin().x, m_entFlames[i].GetLocalOrigin().y, m_entFlames[i].GetLocalOrigin().z);
-		Msg("%i: abs %f %f %f\n", i, m_entFlames[i].GetAbsOrigin().x, m_entFlames[i].GetAbsOrigin().y, m_entFlames[i].GetAbsOrigin().z);
-
-	//	Vector off = m_entFlames[i].GetAbsOrigin(); // Is this local now?
-	//	m_entFlames[i].SetAbsOrigin(GetAbsOrigin() + off);
-	//	m_entFlames[i].SetAbsOrigin(GetAbsOrigin() + m_entFlames[i].GetLocalOrigin());
-
 		view->AddVisibleEntity( &m_entFlames[i] );
 	}
-	Msg("abs %f %f %f\n", GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z);
 	AllowCurrentViewAccess( false );
 }
 
@@ -337,7 +328,8 @@ void C_Plasma::Start( void )
 
 		// Setup all the information for the client entity
 		m_entFlames[i].SetModelByIndex( nModelIndex );
-		m_entFlames[i].SetLocalOrigin( GetLocalOrigin() );
+	//	m_entFlames[i].SetLocalOrigin( GetLocalOrigin() );
+		m_entFlames[i].SetLocalOrigin( GetAbsOrigin() );
 		m_entFlames[i].m_flFrame			= random->RandomInt( 0.0f, maxFrames );
 		m_entFlames[i].m_flSpriteFramerate	= (float) random->RandomInt( 15, 20 );
 		m_entFlames[i].SetScale( m_flStartScale );
@@ -360,7 +352,8 @@ void C_Plasma::Start( void )
 
 	// Setup the glow
 	m_entGlow.SetModelByIndex( m_nGlowModelIndex );
-	m_entGlow.SetLocalOrigin( GetLocalOrigin() );
+//	m_entGlow.SetLocalOrigin( GetLocalOrigin() );
+	m_entGlow.SetLocalOrigin( GetAbsOrigin() );
 	m_entGlow.SetScale( m_flStartScale );
 	m_entGlow.m_nRenderMode		= kRenderTransAdd;
 	m_entGlow.m_nRenderFX		= kRenderFxNone;

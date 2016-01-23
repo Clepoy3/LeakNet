@@ -59,8 +59,12 @@ void CBasePanel::OnChildAdded(VPANEL child)
 void CBasePanel::PaintBackground()
 {
 	const char *levelName = engine->GetLevelName();
-	if (levelName && levelName[0])
+//	if (levelName && levelName[0])
+	if(engine->IsInGame())
 	{
+		if( engine->IsBackGroundMap() && !GameConsole().IsConsoleVisible() )
+			return;
+
 		// render filled background in game
 		int swide, stall;
 		surface()->GetScreenSize(swide, stall);

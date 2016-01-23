@@ -108,6 +108,7 @@ void CAI_Path::SetGoalDirection( const Vector &goalDirection )
 {
 	m_goalDirectionTarget = NULL;
 	m_goalDirection = goalDirection;
+	VectorNormalize( m_goalDirection ); // VXP
 	/*
 	AI_Waypoint_t *pLast = m_Waypoints.GetLast();
 	if ( pLast )
@@ -193,7 +194,7 @@ void CAI_Path::SetGoalPosition(const Vector &goalPos)
 	// Make sure goal position isn't set more than once
 	if (m_bGoalPosSet == true)
 	{
-		Msg( "GetCurWaypoint Goal Position Set Twice! (SetGoalPosition)\n");
+		DevMsg( "GetCurWaypoint Goal Position Set Twice! (SetGoalPosition)\n");
 	}
 #endif
 
@@ -212,7 +213,7 @@ void CAI_Path::SetLastNodeAsGoal(void)
 		// Make sure goal position isn't set more than once
 		if (m_bGoalPosSet == true)
 		{
-			Msg( "GetCurWaypoint Goal Position Set Twice! (SetLastNodeAsGoal)\n");
+			DevMsg( "GetCurWaypoint Goal Position Set Twice! (SetLastNodeAsGoal)\n");
 		}
 	#endif	
 	
@@ -294,9 +295,9 @@ void CAI_Path::SetGoalType(GoalType_t goalType)
 
 #ifdef _DEBUG
 	// Make sure goal position isn't set more than once
-	if (m_goalType != GOALTYPE_NONE)
+	if (m_goalType != GOALTYPE_NONE && goalType != GOALTYPE_NONE )
 	{
-		Msg( "GetCurWaypoint Goal Type Set Twice!\n");
+		DevMsg( "GetCurWaypoint Goal Type Set Twice!\n");
 	}
 	else if (goalType == GOALTYPE_NONE)
 	{
@@ -304,7 +305,14 @@ void CAI_Path::SetGoalType(GoalType_t goalType)
 	}
 #endif
 
-	m_bGoalTypeSet	= true;
+//	m_bGoalTypeSet	= true;
+	if (m_goalType != GOALTYPE_NONE)
+	{
+		m_bGoalTypeSet	= true;
+	}
+	else
+		m_bGoalTypeSet	= false;
+
 	m_goalType		= goalType;
 }
 
@@ -350,7 +358,7 @@ void CAI_Path::Advance( void )
 	// -------------------------------------------------
 	else 
 	{
-		Msg( "!!ERROR!! Force end of route with no goal!\n");
+		DevMsg( "!!ERROR!! Force end of route with no goal!\n");
 		GetCurWaypoint()->ModifyFlags( bits_WP_TO_GOAL, true );
 	}
 }
@@ -439,11 +447,11 @@ bool CAI_Path::CurWaypointIsGoal( void ) const
 		#ifdef _DEBUG
 			if (GetCurWaypoint()->GetNext())
 			{
-				Msg( "!!ERROR!! Goal is not last waypoint!\n");
+				DevMsg( "!!ERROR!! Goal is not last waypoint!\n");
 			}
 			if ((GetCurWaypoint()->GetPos() - m_goalPos).Length() > 0.1)
 			{
-				Msg( "!!ERROR!! Last waypoint isn't in goal position!\n");
+				DevMsg( "!!ERROR!! Last waypoint isn't in goal position!\n");
 			}
 		#endif
 		return true;
@@ -455,7 +463,7 @@ bool CAI_Path::CurWaypointIsGoal( void ) const
 #ifdef _DEBUG
 	if (!GetCurWaypoint()->GetNext())
 	{
-		Msg( "!!ERROR!! GetCurWaypoint has no goal!\n");
+		DevMsg( "!!ERROR!! GetCurWaypoint has no goal!\n");
 	}
 #endif
 

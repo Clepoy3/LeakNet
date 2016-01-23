@@ -48,7 +48,7 @@ void CAI_TestHull::Precache()
 {
 	BaseClass::Precache();
 	engine->PrecacheModel( "models/player.mdl" );
-	engine->PrecacheModel( "models/humans/male_01.mdl" );
+//	engine->PrecacheModel( "models/humans/male_01.mdl" );
 }
 
 //=========================================================
@@ -58,8 +58,8 @@ void CAI_TestHull::Spawn(void)
 {
 	Precache();
 
-//	SetModel( "models/player.mdl" );
-	SetModel( "models/humans/male_01.mdl" );
+	SetModel( "models/player.mdl" );
+//	SetModel( "models/humans/male_01.mdl" );
 
 	// Set an initial hull size (this will change later)
 	SetHullType(HULL_HUMAN);

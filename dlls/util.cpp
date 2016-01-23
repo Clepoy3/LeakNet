@@ -1793,9 +1793,11 @@ public:
 
 
 	byte	m_checkPVS[MAX_MAP_LEAFS/8];
+	byte	m_checkVisibilityPVS[MAX_MAP_LEAFS/8]; // VXP
 	int		m_checkCluster;
 	int		m_lastcheck;
 	float	m_lastchecktime;
+	bool	m_bClientPVSIsExpanded; // VXP
 };
 
 CCheckClient g_CheckClient;
@@ -1866,6 +1868,79 @@ static int UTIL_GetNewCheckClient( int check )
 	}
 	
 	return i;
+}
+
+//-----------------------------------------------------------------------------
+// Gets the current check client....
+//-----------------------------------------------------------------------------
+static edict_t *UTIL_GetCurrentCheckClient()
+{
+	edict_t	*ent;
+
+	// find a new check if on a new frame
+	float delta = gpGlobals->curtime - g_CheckClient.m_lastchecktime;
+	if ( delta >= 0.1 || delta < 0 )
+	{
+		g_CheckClient.m_lastcheck = UTIL_GetNewCheckClient( g_CheckClient.m_lastcheck );
+		g_CheckClient.m_lastchecktime = gpGlobals->curtime;
+	}
+
+	// return check if it might be visible	
+	ent = engine->PEntityOfEntIndex( g_CheckClient.m_lastcheck );
+
+	// Allow dead clients -- JAY
+	// Our monsters know the difference, and this function gates alot of behavior
+	// It's annoying to die and see monsters stop thinking because you're no longer
+	// "in" their PVS
+	if ( !ent || ent->free /*|| !ent->GetUnknown()*/)
+	{
+		return NULL;
+	}
+
+	return ent;
+}
+
+void UTIL_SetClientVisibilityPVS( edict_t *pClient, const unsigned char *pvs, int pvssize )
+{
+	if ( pClient == UTIL_GetCurrentCheckClient() )
+	{
+		Assert( pvssize <= sizeof(g_CheckClient.m_checkVisibilityPVS) );
+
+		g_CheckClient.m_bClientPVSIsExpanded = false;
+
+		unsigned *pFrom = (unsigned *)pvs;
+		unsigned *pMask = (unsigned *)g_CheckClient.m_checkPVS;
+		unsigned *pTo = (unsigned *)g_CheckClient.m_checkVisibilityPVS;
+
+		int limit = pvssize / 4;
+		int i;
+
+		for ( i = 0; i < limit; i++ )
+		{
+			pTo[i] = pFrom[i] & ~pMask[i];
+
+			if ( pFrom[i] )
+			{
+				g_CheckClient.m_bClientPVSIsExpanded = true;
+			}
+		}
+
+		int remainder = pvssize % 4;
+		for ( i = 0; i < remainder; i++ )
+		{
+			((unsigned char *)&pTo[limit])[i] = ((unsigned char *)&pFrom[limit])[i] & !((unsigned char *)&pMask[limit])[i];
+
+			if ( ((unsigned char *)&pFrom[limit])[i] != 0)
+			{
+				g_CheckClient.m_bClientPVSIsExpanded = true;
+			}
+		}
+	}
+}
+
+bool UTIL_ClientPVSIsExpanded()
+{
+	return g_CheckClient.m_bClientPVSIsExpanded;
 }
 
 //-----------------------------------------------------------------------------

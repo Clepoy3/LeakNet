@@ -450,7 +450,7 @@ const PrecompiledShader_t *CShaderDictionary::LookupPrecompiledShader( Precompil
 	Warning( "shader \"%s\" not found!\n", pShaderName );
 	// Whoops! Using a bogus shader
 	// FIXME: Should we return an error shader here?
-	Assert( 0 ); // VXP: When e3_seafloor is loading
+//	Assert( 0 ); // VXP: When e3_seafloor is loading
 	return NULL;
 }
 
@@ -788,6 +788,7 @@ PixelShader_t CShaderDictionary::CreatePixelShader( char const* pFileName, int n
 					( ( unsigned int * )byteCode.m_pRawData )[0] == 0x00000000 ) )
 			{
 				shader = ::CreatePixelShader( byteCode, info.m_pPrecompiledDXShader->m_nCentroidMask );
+			//	Msg( "Creating pixel shader %s...\n", pFileName );
 			}
 
 			// Check again
@@ -796,7 +797,8 @@ PixelShader_t CShaderDictionary::CreatePixelShader( char const* pFileName, int n
 				// Set shader to ugly green for invalid shader...
 				shader = s_pIllegalMaterialPS;
 			//	Assert( 0 );
-				Warning( "Set shader to ugly green for invalid shader...\n" );
+			//	Warning( "Set shader to ugly green for invalid shader...\n" );
+				DevWarning( "CShaderDictionary::CreatePixelShader: Invalid shader (%s, )\n", pFileName );
 			}
 		}
 	}

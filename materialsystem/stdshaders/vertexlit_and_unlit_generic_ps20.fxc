@@ -91,7 +91,7 @@ HALF4 main( PS_INPUT i ) : COLOR
 		{
 			specularFactor *= normalTexel.a;
 		}
-		tangentSpaceNormal = 2.0 * normalTexel - 1.0;
+		tangentSpaceNormal = 2.0f * normalTexel - 1.0f;
 	}
 	HALF4 envmapMaskTexel;
 	if( bEnvmapMask )

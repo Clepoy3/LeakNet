@@ -92,7 +92,8 @@ bool m_bBackGroundMap = false;
 
 CON_COMMAND( startupmenu, "Use background menu" )
 {
-	m_bBackGroundMap = true;
+//	m_bBackGroundMap = true;
+	m_bBackGroundMap = !m_bBackGroundMap;
 }
 
 void AddIntersectingLeafSurfaces( mleaf_t *pLeaf, GetIntersectingSurfaces_Struct *pStruct )

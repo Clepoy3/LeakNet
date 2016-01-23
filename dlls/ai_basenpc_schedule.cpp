@@ -437,7 +437,7 @@ void CAI_BaseNPC::MaintainSchedule ( void )
 	
 	if ( !fInitializedTimeLimit )
 	{
-		timeLimit.Init( 8 ); //  leave time for executing move/animation
+		timeLimit.Init( 8.0f ); //  leave time for executing move/animation
 		fInitializedTimeLimit = true;
 	}
 	
