@@ -21,12 +21,15 @@ public:
 	
 	void	Precache( void );
 	bool	Deploy( void );
+	
+	void	AddViewKick( void ); // VXP
 
 	int CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static Vector cone = VECTOR_CONE_15DEGREES;
+	//	static Vector cone = VECTOR_CONE_15DEGREES;
+		static const Vector cone = VECTOR_CONE_15DEGREES;
 		return cone;
 	}
 
@@ -90,4 +93,35 @@ bool CWeaponHMG1::Deploy( void )
 {
 	//CBaseCombatCharacter *pOwner  = m_hOwner;
 	return BaseClass::Deploy();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponHMG1::AddViewKick( void )
+{
+	#define	EASY_DAMPEN			0.5f
+	#define	MAX_VERTICAL_KICK	2.0f	//Degrees
+	#define	SLIDE_LIMIT			1.0f	//Seconds
+	
+	//Get the view kick
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+
+	if (!pPlayer)
+		return;
+
+	
+
+	QAngle viewPunch;
+	viewPunch.x = SHARED_RANDOMFLOAT( -0.5f, 0.5f );
+	viewPunch.y = SHARED_RANDOMFLOAT( -1.0f, 1.0f );
+	viewPunch.z = 0;
+
+	if ( pPlayer->GetFlags() & FL_DUCKING )
+	{
+		viewPunch *= 0.25;
+	}
+
+	pPlayer->ViewPunch( viewPunch );
+	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );
 }

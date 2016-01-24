@@ -91,6 +91,10 @@ BEGIN_DATADESC( CPlayer_Missile )
 	DEFINE_FIELD( CPlayer_Missile,	m_flStatic,			FIELD_FLOAT ),
 	DEFINE_FIELD( CPlayer_Missile,	m_flNextDangerTime,	FIELD_TIME ),
 	
+	// Inputs
+	DEFINE_INPUTFUNC( CPlayer_Missile, FIELD_VOID, "Activate", InputActivate ),
+	DEFINE_INPUTFUNC( CPlayer_Missile, FIELD_VOID, "Deactivate", InputDeactivate ),
+	
 
 	// Function Pointers
 	DEFINE_FUNCTION( CPlayer_Missile, Launch ),
