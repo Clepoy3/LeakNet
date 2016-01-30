@@ -110,7 +110,14 @@ void CNPC_Citizen::Precache( void )
 		SetModelName( MAKE_STRING( "models/Humans/male_01.mdl" ) );
 	}
 
-	engine->PrecacheModel( STRING( GetModelName() ) );
+//	engine->PrecacheModel( STRING( GetModelName() ) );
+	engine->PrecacheModel( "models/humans/male_01.mdl" );
+	engine->PrecacheModel( "models/humans/male_02.mdl" );
+	engine->PrecacheModel( "models/humans/male_03.mdl" );
+	engine->PrecacheModel( "models/humans/male_07.mdl" );
+	engine->PrecacheModel( "models/humans/male_08.mdl" );
+	engine->PrecacheModel( "models/humans/male_09.mdl" );
+	engine->PrecacheModel( "models/humans/male_cheaple.mdl" );
 
 	BaseClass::Precache();
 }
@@ -135,9 +142,41 @@ string_t CNPC_Citizen::GetModelName( void ) const
 		return NULL_STRING;
 	}
 
+	if ( !strnicmp(STRING(iszModelName), "random", 6) )
+	{
+		string_t rndmodel = GetRandomCitizenModel( random->RandomInt(0, 5) );
+		return rndmodel;
+	}
+
 	return iszModelName;
 }
 
+string_t CNPC_Citizen::GetRandomCitizenModel( int number ) const
+{
+	switch( number )
+	{
+	case 0:
+		return MAKE_STRING("models/humans/male_01.mdl");
+		break;
+	case 1:
+		return MAKE_STRING("models/humans/male_02.mdl");
+		break;
+	case 2:
+		return MAKE_STRING("models/humans/male_03.mdl");
+		break;
+	case 3:
+		return MAKE_STRING("models/humans/male_07.mdl");
+		break;
+	case 4:
+		return MAKE_STRING("models/humans/male_08.mdl");
+		break;
+	case 5:
+		return MAKE_STRING("models/humans/male_09.mdl");
+		break;
+	}
+
+	return NULL_STRING;
+}
 
 //-----------------------------------------------------------------------------
 // Not really random. Runs in a circuit.
@@ -146,7 +185,7 @@ void CNPC_Citizen::SelectCitizenModel()
 {
 	if( HasSpawnFlags( SF_CITIZEN_RANDOM_HEAD ) )
 	{
-		switch( m_nextHead )
+		/*switch( m_nextHead )
 		{
 		case 0:
 			SetModelName(MAKE_STRING("models/humans/male_01.mdl"));
@@ -166,7 +205,11 @@ void CNPC_Citizen::SelectCitizenModel()
 		case 5:
 			SetModelName(MAKE_STRING("models/humans/male_09.mdl"));
 			break;
-		}
+		}*/
+
+		string_t rndmodel = GetRandomCitizenModel( m_nextHead );
+		SetModelName( rndmodel );
+	//	GetRandomCitizenModel( random->RandomInt(0, 5) );
 
 		m_nextHead++;
 

@@ -585,7 +585,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 //int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 //unsigned int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 {
-	FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
+	/*FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		GUID deviceId;
@@ -599,7 +599,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		{
 			return texSize;
 		}
-	}
+	}*/
 	// How much texture memory?
 	if (deviceType == D3DDEVTYPE_REF)
 		return 64 * 1024 * 1024;
@@ -654,13 +654,13 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		totalSize = INT_MAX;
 	}
 
-	file = FileSystem()->Open( "vidcfg.bin", "wb", "EXECUTABLE_PATH" );
+	/*file = FileSystem()->Open( "vidcfg.bin", "wb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		FileSystem()->Write( &nDeviceGUID, sizeof(GUID), file );
 		FileSystem()->Write( &totalSize, sizeof(totalSize), file );
 		FileSystem()->Close( file );
-	}
+	}*/
 
 	return totalSize;
 }

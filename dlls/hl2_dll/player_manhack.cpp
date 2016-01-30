@@ -93,9 +93,9 @@ void CPlayer_Manhack::Precache( void )
 void CPlayer_Manhack::Spawn( void )
 {
 	Precache();
-//	SetMoveType( MOVETYPE_FLY );
+	SetMoveType( MOVETYPE_FLY );
 //	m_flFriction = 0.55; // deading the bounce a bit
-//	SetFriction( 0.55f );
+	SetFriction( 0.55f );
 	
 	SetModel( "models/manhack.mdl" );
 	UTIL_SetSize(this, PMANHACK_HULL_MINS, PMANHACK_HULL_MAXS);
@@ -176,8 +176,8 @@ void CPlayer_Manhack::InputDeactivate( inputdata_t &inputdata )
 	UTIL_Relink(pPlayer);
 
 	pPlayer->SetLocalOrigin( m_vSaveOrigin );
-//	pPlayer->StopFollowingEntity();
-	engine->SetView( pPlayer->edict(), pPlayer->edict() );
+	pPlayer->StopFollowingEntity();
+//	engine->SetView( pPlayer->edict(), pPlayer->edict() );
 
 	// Switch back to manhack model
 	VPhysicsDestroyObject();

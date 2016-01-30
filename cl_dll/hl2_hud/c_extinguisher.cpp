@@ -394,6 +394,7 @@ int C_ExtinguisherJet::DrawModel( int flags )
 void C_ExtinguisherJet::ClientThink(void)
 {
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+//	CBasePlayer *player = GetOwnerEntity()->GetSimulatingPlayer();
 
 	if ( m_bUseMuzzlePoint )
 	{
@@ -409,6 +410,11 @@ void C_ExtinguisherJet::ClientThink(void)
 			SetAbsOrigin( origin );
 			SetAbsAngles( angles );
 
+		}
+		else
+		{
+			SetAbsOrigin( player->GetAbsOrigin() );
+			SetAbsAngles( player->GetAbsAngles() );
 		}
 	}
 }

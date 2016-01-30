@@ -19,9 +19,16 @@
 //=========================================================
 
 // Spawnflags.
-#define	SF_CITIZEN_MEDIC			1024	//1024
-#define SF_CITIZEN_RANDOM_HEAD		4096
-#define SF_CITIZEN_FOLLOW			65536	//follow the player as soon as I spawn.
+/*#define	SF_CITIZEN_MEDIC			1024	//1024
+//#define SF_CITIZEN_RANDOM_HEAD		4096
+//#define SF_CITIZEN_RANDOM_HEAD		(1 << 18)
+#define SF_CITIZEN_FOLLOW			65536	//follow the player as soon as I spawn.*/
+
+#define	SF_CITIZEN_FOLLOW			65536
+#define	SF_CITIZEN_MEDIC			131072
+#define SF_CITIZEN_RANDOM_HEAD		262144
+#define SF_CITIZEN_AMMO_RESUPPLIER	524288
+#define SF_CITIZEN_NOT_COMMANDABLE	1048576
 
 #define CITIZEN_AE_HEAL 1
 
@@ -38,6 +45,8 @@ public:
 	int		GetSoundInterests ( void );
 
 	void SelectCitizenModel();
+
+	string_t GetRandomCitizenModel( int number ) const; // VXP
 
 	string_t GetModelName( void ) const;
 

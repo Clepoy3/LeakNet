@@ -104,14 +104,27 @@ void CWeaponAR2::ItemPostFrame( void )
 	if ( pOwner->m_afButtonPressed & IN_ALT1 )
 	{
 		m_bUseGrenade = !m_bUseGrenade;
-		Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
+		if ( m_bZoomed )
+		{
+			Zoom();
+		}
+	//	Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
 	}
 	
+	NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 );
+	
 	//Zoom in
-	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) && !m_bUseGrenade )
+	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) )
 	{
-		Zoom();
-		// VXP: Playing EMPTY sound because of "secondary_ammo" is not "None"
+		if ( !m_bUseGrenade )
+		{
+			Zoom();
+			// VXP: Playing EMPTY sound because of "secondary_ammo" is not "None"
+		}
+		else
+		{
+			SecondaryAttack();
+		}
 	}
 
 	//Don't kick the same when we're zoomed in
@@ -120,7 +133,11 @@ void CWeaponAR2::ItemPostFrame( void )
 		m_fFireDuration = 0.05f;
 	}
 	
-//	AddTimedOverlay( "Test Message!", 15 ); // VXP: TODO
+	// VXP: Fix for EMPTY sound while zooming
+	if ( !m_bUseGrenade )
+	{
+	//	return; // VXP: But PrimaryAttack not working then...
+	}
 
 	BaseClass::ItemPostFrame();
 }

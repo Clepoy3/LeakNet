@@ -210,12 +210,25 @@ void UpdateMaterialSystemConfig( void )
 	if (materialSystemInterface)
 	{
 		int skipMipLevels = 0;
+	//	if ( g_pMaterialSystemHardwareConfig )
+	//	{
+	//		Msg("Memory size: %lld\n", g_pMaterialSystemHardwareConfig->TextureMemorySize()/1024 );
+		//	Msg("Ass: %s\n", ((g_pMaterialSystemHardwareConfig->TextureMemorySize() <= 8 * 1024 * 1024) ? "Less-equal" : "Greater"));
+	//		Msg("Ass: %s\n", (((g_pMaterialSystemHardwareConfig->TextureMemorySize() / 1024) <= (8 * 1024 * 1024)) ? "Less-equal" : "Greater"));
+	//	}
 		if (g_pMaterialSystemHardwareConfig && g_pMaterialSystemHardwareConfig->TextureMemorySize() <= 4 * 1024 * 1024) 
+	//	if (g_pMaterialSystemHardwareConfig && (g_pMaterialSystemHardwareConfig->TextureMemorySize() / 1024) <= 4 * 1024) 
+		{
 			skipMipLevels = 2;
+		}
 		else if ( g_pMaterialSystemHardwareConfig && g_pMaterialSystemHardwareConfig->TextureMemorySize() <= 8 * 1024 * 1024)
+	//	else if ( g_pMaterialSystemHardwareConfig && (g_pMaterialSystemHardwareConfig->TextureMemorySize() / 1024) <= 8 * 1024 * 1024)
+		{
 			skipMipLevels = 1;
+		}
 		if (g_materialSystemConfig.skipMipLevels < skipMipLevels)
 			g_materialSystemConfig.skipMipLevels = skipMipLevels;
+	//	Msg("Detected mip-level %i\n", g_materialSystemConfig.skipMipLevels);
 	}						    
 	g_materialSystemConfig.bMeasureFillRate = mat_measurefillrate.GetInt() ? true : false;
 	g_materialSystemConfig.bVisualizeFillRate = mat_fillrate.GetInt() ? true : false;

@@ -1850,7 +1850,11 @@ void CViewRender::DoMotionBlur( const CViewSetup &view )
 
 	// Get the front buffer material
 //	pMatScreen = materials->FindMaterial( "swarm/effects/frontbuffer", TEXTURE_GROUP_OTHER, true );
-	pMatScreen = materials->FindMaterial( "frontbuffer", NULL, true );
+	pMatScreen = materials->FindMaterial( "frontbuffer", &found, true );
+	if ( !found )
+	{
+		return;
+	}
 	// Get our custom render target
 //	pMotionBlur = g_pASWRenderTargets->GetASWMotionBlurTexture();
 	pMotionBlur = GetMotionBlurTexture();

@@ -544,7 +544,7 @@ void CAI_ScriptedSequence::ScriptThink( void )
 	else if (FindEntity())
 	{
 		StartScript( );
-		DevMsg( 2,  "scripted_sequence \"%s\" using NPC \"%s\"(%s)\n", GetDebugName(), STRING( m_iszEntity ), GetTarget()->GetEntityName() );
+		DevMsg( 2,  "scripted_sequence \"%s\" using NPC \"%s\"(%s)\n", GetDebugName(), STRING( m_iszEntity ), ((GetTarget() != NULL) ? GetTarget()->GetEntityName().ToCStr() : "empty target" ) );
 	}
 	else
 	{

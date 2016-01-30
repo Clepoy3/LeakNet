@@ -100,9 +100,9 @@ bool CWeaponHMG1::Deploy( void )
 //-----------------------------------------------------------------------------
 void CWeaponHMG1::AddViewKick( void )
 {
-	#define	EASY_DAMPEN			0.5f
-	#define	MAX_VERTICAL_KICK	2.0f	//Degrees
-	#define	SLIDE_LIMIT			1.0f	//Seconds
+	#define	EASY_DAMPEN			1.0f
+	#define	MAX_VERTICAL_KICK	25.0f	//Degrees
+	#define	SLIDE_LIMIT			5.0f	//Seconds
 	
 	//Get the view kick
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
@@ -110,11 +110,9 @@ void CWeaponHMG1::AddViewKick( void )
 	if (!pPlayer)
 		return;
 
-	
-
-	QAngle viewPunch;
-	viewPunch.x = SHARED_RANDOMFLOAT( -0.5f, 0.5f );
-	viewPunch.y = SHARED_RANDOMFLOAT( -1.0f, 1.0f );
+/*	QAngle viewPunch;
+	viewPunch.x = SHARED_RANDOMFLOAT( -2.5f, 0.5f );
+	viewPunch.y = SHARED_RANDOMFLOAT( -1.1f, 1.1f );
 	viewPunch.z = 0;
 
 	if ( pPlayer->GetFlags() & FL_DUCKING )
@@ -122,6 +120,6 @@ void CWeaponHMG1::AddViewKick( void )
 		viewPunch *= 0.25;
 	}
 
-	pPlayer->ViewPunch( viewPunch );
+	pPlayer->ViewPunch( viewPunch );*/
 	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );
 }
