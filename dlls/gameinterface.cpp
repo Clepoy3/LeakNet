@@ -225,7 +225,10 @@ void DrawAllDebugOverlays( void )
 	}
 
 	// For not just using one big AI Network
-	g_pAINetworkManager->GetEditOps()->DrawAINetworkOverlay();	
+	if ( g_pAINetworkManager )
+	{
+		g_pAINetworkManager->GetEditOps()->DrawAINetworkOverlay();	
+	}
 
 	// PERFORMANCE: only do this in developer mode
 	if ( g_pDeveloper->GetInt() )
@@ -421,6 +424,7 @@ void EndRestoreEntities()
 	IGameSystem::OnRestoreAllSystems();
 
 	g_InRestore = false;
+	gEntList.CleanupDeleteList(); // VXP
 }
 
 void BeginRestoreEntities()
@@ -445,20 +449,32 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 	// That happens either in LoadGameState() or in MapEntity_ParseAllEntities()
 	if ( loadGame )
 	{
-		BeginRestoreEntities();
-		if ( !engine->LoadGameState( pMapName, 1 ) )
-		{
-			MapEntity_ParseAllEntities( pMapEntities );
-		}
-
 		if ( pOldLevel )
 		{
 			gpGlobals->eLoadType = MapLoad_Transition;
-			engine->LoadAdjacentEnts( pOldLevel, pLandmarkName );
 		}
 		else
 		{
 			gpGlobals->eLoadType = MapLoad_LoadGame;
+		}
+
+		BeginRestoreEntities();
+		if ( !engine->LoadGameState( pMapName, 1 ) )
+		{
+			if ( pOldLevel )
+			{
+				MapEntity_ParseAllEntities( pMapEntities );
+			}
+			else
+			{
+				// Regular save load case
+				return false;
+			}
+		}
+
+		if ( pOldLevel )
+		{
+			engine->LoadAdjacentEnts( pOldLevel, pLandmarkName );
 		}
 
 		if ( g_OneWayTransition )
@@ -574,6 +590,9 @@ void CServerGameDLL::GameFrame( bool simulating )
 //-----------------------------------------------------------------------------
 void CServerGameDLL::GameRenderDebugOverlays( bool simulating )
 {
+	if ( !simulating )
+		return;
+
 	// Only render stuff in single player
 	if ( gpGlobals->maxClients != 1 )
 		return;

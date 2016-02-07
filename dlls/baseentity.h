@@ -444,6 +444,7 @@ public:
 
 	// Hierarchy traversal
 	CBaseEntity *GetMoveParent( void );
+	CBaseEntity *GetRootMoveParent(); // VXP
 	CBaseEntity *FirstMoveChild( void );
 	CBaseEntity *NextMovePeer( void );
 

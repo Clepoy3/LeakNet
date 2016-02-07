@@ -46,7 +46,11 @@ void CGrenadeAR2::Spawn( void )
 {
 	Precache( );
 	SetSolid( SOLID_BBOX );
-	SetMoveType( MOVETYPE_FLY );
+//	SetMoveType( MOVETYPE_FLY );
+	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
+
+	// Hits everything but debris
+	SetCollisionGroup( COLLISION_GROUP_INTERACTIVE );
 
 	SetModel( "models/Weapons/ar2_grenade.mdl");
 	UTIL_SetSize(this, Vector(-3, -3, -3), Vector(3, 3, 3));
@@ -104,7 +108,8 @@ void CGrenadeAR2::Spawn( void )
 //-----------------------------------------------------------------------------
 void CGrenadeAR2::GrenadeAR2Think( void )
 {
-	SetNextThink( gpGlobals->curtime + 0.1f );
+//	SetNextThink( gpGlobals->curtime + 0.1f );
+	SetNextThink( gpGlobals->curtime + 0.05f );
 
 	if (!m_bIsLive)
 	{
@@ -119,7 +124,8 @@ void CGrenadeAR2::GrenadeAR2Think( void )
 	// the floor already when I went solid so blow up
 	if (m_bIsLive)
 	{
-		if (GetAbsVelocity().Length() == 0.0)
+		if (GetAbsVelocity().Length() == 0.0 ||
+			GetGroundEntity() != NULL )
 		{
 			Detonate();
 		}
@@ -201,7 +207,10 @@ void CGrenadeAR2::Detonate(void)
 	if ((tr.m_pEnt != GetWorldEntity()) || (tr.hitbox != 0))
 	{
 		// non-world needs smaller decals
-		UTIL_DecalTrace( &tr, "SmallScorch" );
+		if( tr.m_pEnt )
+		{
+			UTIL_DecalTrace( &tr, "SmallScorch" );
+		}
 	}
 	else
 	{

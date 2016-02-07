@@ -122,7 +122,7 @@ void PlayLockSounds(CBaseEntity *pEdict, locksound_t *pls, int flocked, int fbut
 			// play next 'door locked' sentence in group
 			int iprev = pls->iLockedSentence;
 			
-			pls->iLockedSentence = SENTENCEG_PlaySequentialSz(	pEdict->pev, 
+			pls->iLockedSentence = SENTENCEG_PlaySequentialSz(	pEdict->edict(), 
 																STRING(pls->sLockedSentence), 
 																0.85f, 
 																SNDLVL_NORM, 
@@ -162,7 +162,7 @@ void PlayLockSounds(CBaseEntity *pEdict, locksound_t *pls, int flocked, int fbut
 		{
 			int iprev = pls->iUnlockedSentence;
 			
-			pls->iUnlockedSentence = SENTENCEG_PlaySequentialSz(pEdict->pev, STRING(pls->sUnlockedSentence), 
+			pls->iUnlockedSentence = SENTENCEG_PlaySequentialSz(pEdict->edict(), STRING(pls->sUnlockedSentence), 
 					  0.85, SNDLVL_NORM, 0, 100, pls->iUnlockedSentence, FALSE);
 			pls->iLockedSentence = 0;
 
@@ -207,7 +207,14 @@ void CBaseDoor::Spawn()
 #ifdef HL1_DLL
 	SetSolid( IsRotatingDoor() ? SOLID_BSP : SOLID_VPHYSICS );
 #else
-	SetSolid( SOLID_VPHYSICS );
+	if ( GetMoveParent() && GetRootMoveParent()->GetSolid() == SOLID_BSP )
+	{
+		SetSolid( SOLID_BSP );
+	}
+	else
+	{
+		SetSolid( SOLID_VPHYSICS );
+	}
 #endif
 
 	// Convert movedir from angles to a vector
@@ -219,14 +226,17 @@ void CBaseDoor::Spawn()
 	// Subtract 2 from size because the engine expands bboxes by 1 in all directions making the size too big
 	m_vecPosition2	= m_vecPosition1 + (m_vecMoveDir * (fabs( m_vecMoveDir.x * (EntitySpaceSize().x-2) ) + fabs( m_vecMoveDir.y * (EntitySpaceSize().y-2) ) + fabs( m_vecMoveDir.z * (EntitySpaceSize().z-2) ) - m_flLip));
 	ASSERTSZ(m_vecPosition1 != m_vecPosition2, "door start/end positions are equal");
-	if ( HasSpawnFlags(SF_DOOR_START_OPEN) )
-	{	// swap pos1 and pos2, put door at pos2
-		UTIL_SetOrigin( this, m_vecPosition2);
-		m_toggle_state = TS_AT_TOP;
-	}
-	else
+	if ( !IsRotatingDoor() )
 	{
-		m_toggle_state = TS_AT_BOTTOM;
+		if ( HasSpawnFlags(SF_DOOR_START_OPEN) )
+		{	// swap pos1 and pos2, put door at pos2
+			UTIL_SetOrigin( this, m_vecPosition2);
+			m_toggle_state = TS_AT_TOP;
+		}
+		else
+		{
+			m_toggle_state = TS_AT_BOTTOM;
+		}
 	}
 
 	if (HasSpawnFlags(SF_DOOR_LOCKED))
@@ -238,7 +248,9 @@ void CBaseDoor::Spawn()
 	Relink();
 	
 	if (m_flSpeed == 0)
+	{
 		m_flSpeed = 100;
+	}
 	
 	SetTouch( &CBaseDoor::DoorTouch );
 
@@ -257,10 +269,11 @@ bool CBaseDoor::CreateVPhysics( )
 	if ( !FClassnameIs( this, "func_water" ) )
 	{
 		//normal door
-		if ( !IsSolidFlagSet( FSOLID_NOT_SOLID ) )
-		{
+		// VXP: NOTE: Create this even when the door is not solid to support constraints.
+	//	if ( !IsSolidFlagSet( FSOLID_NOT_SOLID ) )
+	//	{
 			VPhysicsInitShadow( false, false );
-		}
+	//	}
 	}
 	else
 	{
@@ -455,7 +468,7 @@ void CBaseDoor::UpdateAreaPortals( bool isOpen )
 		return;
 	
 	CBaseEntity *pPortal = NULL;
-	while ( pPortal = gEntList.FindEntityByClassname( pPortal, "func_areaportal" ) )
+	while ( ( pPortal = gEntList.FindEntityByClassname( pPortal, "func_areaportal" ) ) != NULL )
 	{
 		if ( pPortal->HasTarget( name ) )
 		{
@@ -499,7 +512,7 @@ void CBaseDoor::InputClose( inputdata_t &inputdata )
 {
 	if ( m_toggle_state != TS_AT_BOTTOM )
 	{	
-		m_OnClose.FireOutput(inputdata.pActivator, this);
+	//	m_OnClose.FireOutput(inputdata.pActivator, this); // VXP: Already in DoorGoDown
 		DoorGoDown();
 	}
 }
@@ -527,7 +540,7 @@ void CBaseDoor::InputOpen( inputdata_t &inputdata )
 
 		// Play door unlock sounds.
 		PlayLockSounds(this, &m_ls, false, false);
-		m_OnOpen.FireOutput( inputdata.pActivator, this );
+	//	m_OnOpen.FireOutput( inputdata.pActivator, this ); // VXP: Already in DoorGoUp
 		DoorGoUp();
 	}
 }
@@ -598,7 +611,10 @@ int CBaseDoor::DoorActivate( )
 		// play door unlock sounds
 		PlayLockSounds(this, &m_ls, FALSE, FALSE);
 		
-		DoorGoUp();
+		if ( m_toggle_state != TS_AT_TOP && m_toggle_state != TS_GOING_UP )
+		{
+			DoorGoUp();
+		}
 	}
 
 	return 1;
@@ -620,9 +636,13 @@ void CBaseDoor::DoorGoUp( void )
 	// filter them out and leave a client stuck with looping door sounds!
 	if ( !HasSpawnFlags(SF_DOOR_SILENT ) )
 	{
-		CPASAttenuationFilter filter( this );
-		filter.MakeReliable();
-		EmitSound( filter, entindex(), CHAN_STATIC, (char*)STRING(m_NoiseMoving), 1, ATTN_NORM );
+		// If we're not moving already, start the moving noise
+		if ( m_toggle_state != TS_GOING_UP && m_toggle_state != TS_GOING_DOWN )
+		{
+			CPASAttenuationFilter filter( this );
+			filter.MakeReliable();
+			EmitSound( filter, entindex(), CHAN_STATIC, (char*)STRING(m_NoiseMoving), 1, ATTN_NORM );
+		}
 	}
 
 	m_toggle_state = TS_GOING_UP;
@@ -634,7 +654,7 @@ void CBaseDoor::DoorGoUp( void )
 
 		if ( m_hActivator != NULL )
 		{
-			pevActivator = m_hActivator->pev;
+			pevActivator = m_hActivator->edict();
 			
 			if ( !HasSpawnFlags( SF_DOOR_ONEWAY ) && m_vecMoveAng.y ) 		// Y axis rotation, move away from the player
 			{
@@ -652,7 +672,9 @@ void CBaseDoor::DoorGoUp( void )
 		AngularMove(m_vecAngle2*sign, m_flSpeed);
 	}
 	else
+	{
 		LinearMove(m_vecPosition2, m_flSpeed);
+	}
 
 	//Fire our open ouput
 	m_OnOpen.FireOutput( this, this );
@@ -712,9 +734,13 @@ void CBaseDoor::DoorGoDown( void )
 {
 	if ( !HasSpawnFlags( SF_DOOR_SILENT ) )
 	{
-		CPASAttenuationFilter filter( this );
-		filter.MakeReliable();
-		EmitSound( filter, entindex(), CHAN_STATIC, (char*)STRING(m_NoiseMoving), 1, ATTN_NORM );
+		// If we're not moving already, start the moving noise
+		if ( m_toggle_state != TS_GOING_UP && m_toggle_state != TS_GOING_DOWN )
+		{
+			CPASAttenuationFilter filter( this );
+			filter.MakeReliable();
+			EmitSound( filter, entindex(), CHAN_STATIC, (char*)STRING(m_NoiseMoving), 1, ATTN_NORM );
+		}
 	}
 	
 #ifdef DOOR_ASSERT
@@ -988,9 +1014,12 @@ void CRotDoor::Spawn( void )
 		// We've already had our physics setup in BaseClass::Spawn, so teleport to our
 		// current position. If we don't do this, our vphysics shadow will not update.
 		Teleport( NULL, &m_vecAngle1, NULL );
+		m_toggle_state = TS_AT_BOTTOM;
 	}
-
-	m_toggle_state = TS_AT_BOTTOM;
+	else
+	{
+		m_toggle_state = TS_AT_BOTTOM;
+	}
 
 	Relink();
 }

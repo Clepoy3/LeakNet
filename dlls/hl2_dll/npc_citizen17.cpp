@@ -285,6 +285,7 @@ bool CNPC_Citizen::CreateBehaviors()
 {
 	AddBehavior( &m_AssaultBehavior );
 	AddBehavior( &m_StandoffBehavior );
+	AddBehavior( &m_LeadBehavior ); // VXP
 	AddBehavior( &m_FollowBehavior );
 	
 	return BaseClass::CreateBehaviors();

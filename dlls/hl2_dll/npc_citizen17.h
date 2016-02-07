@@ -10,6 +10,7 @@
 
 #include "ai_behavior.h"
 #include "ai_baseactor.h"
+#include "ai_behavior_lead.h" // VXP
 #include "ai_behavior_follow.h"
 #include "ai_behavior_standoff.h"
 #include "ai_behavior_assault.h"
@@ -169,6 +170,7 @@ public:
 	};
 
 	
+	CAI_LeadBehavior		m_LeadBehavior; // VXP
 	CAI_AssaultBehavior		m_AssaultBehavior;
 	CAI_FollowBehavior		m_FollowBehavior;
 	CAI_StandoffBehavior	m_StandoffBehavior;

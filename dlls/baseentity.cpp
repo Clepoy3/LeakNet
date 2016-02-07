@@ -441,8 +441,10 @@ void CBaseEntity::PostConstructor( const char *szClassname )
 		// Some ents like the player override the AttachEdict function and do it at a different time.
 		// While precaching, they don't ever have an edict, so we don't need to add them to
 		// the entity list in that case.
-		if ( pev )
+		if ( edict() )
+		{
 			gEntList.AddNetworkableEntity( this, entindex() );
+		}
 	}
 }
 

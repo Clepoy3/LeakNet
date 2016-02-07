@@ -319,7 +319,8 @@ public:
 					vcollide_t *pCollide = modelinfo->GetVCollide( modelIndex );
 					if ( pCollide )
 					{
-						pPhysCollide = pCollide->solids[0];
+						if ( pCollide->solidCount > 0 && pCollide->solids )
+							pPhysCollide = pCollide->solids[0];
 					}
 				}
 			}

@@ -34,6 +34,11 @@
 #endif
 
 #define MAX_ENTITYARRAY 64
+#define ZERO_TIME ((FLT_MAX*-0.5))
+// A bit arbitrary, but unlikely to collide with any saved games...
+#define TICK_NEVER_THINK_ENCODE	( INT_MAX - 3 )
+
+#define INVALID_TIME (FLT_MAX * -1.0) // Special value not rebased on save/load - SHOULD BE IN public\datamap.h
 
 ASSERT_INVARIANT( sizeof(EHandlePlaceholder_t) == sizeof(EHANDLE) );
 
@@ -1016,7 +1021,12 @@ void CSave::WriteTick( const int *data, int count )
 
 void CSave::WritePositionVector( const char *pname, const Vector &value )
 {
-	Vector tmp = value - m_pGameInfo->GetLandmark();
+//	Vector tmp = value - m_pGameInfo->GetLandmark();
+	Vector tmp = value;
+
+	if ( tmp != vec3_invalid )
+		tmp -= m_pGameInfo->GetLandmark();
+
 	WriteVector( pname, tmp );
 }
 
@@ -1024,7 +1034,12 @@ void CSave::WritePositionVector( const char *pname, const Vector &value )
 
 void CSave::WritePositionVector( const Vector &value )
 {
-	Vector tmp = value - m_pGameInfo->GetLandmark();
+//	Vector tmp = value - m_pGameInfo->GetLandmark();
+	Vector tmp = value;
+
+	if ( tmp != vec3_invalid )
+		tmp -= m_pGameInfo->GetLandmark();
+
 	WriteVector( tmp );
 }
 
@@ -1041,10 +1056,14 @@ void CSave::WritePositionVector( const char *pname, const Vector *value, int cou
 void CSave::WritePositionVector( const Vector *value, int count )
 {
 	int i;
-	Vector tmp;
+//	Vector tmp;
 	for ( i = 0; i < count; i++ )
 	{
-		tmp = value[i] - m_pGameInfo->GetLandmark();
+	//	tmp = value[i] - m_pGameInfo->GetLandmark();
+		Vector tmp = value[i];
+
+		if ( tmp != vec3_invalid )
+			tmp -= m_pGameInfo->GetLandmark();
 
 		WriteData( (const char *)&tmp.x, sizeof(Vector) );
 	}
@@ -1057,15 +1076,14 @@ void CSave::WriteFunction( datamap_t *pRootMap, const char *pname, const int *da
 	AssertMsg( count == 1, "Arrays of functions not presently supported" );
 	const char *functionName = UTIL_FunctionToName( pRootMap, (void *)(*data) );
 
-	if ( functionName )
-	{
-		BufferField( pname, strlen(functionName) + 1, functionName );
-	}
-	else
+	if ( !functionName )
 	{
 		Warning( "Invalid function pointer in entity!" );
 		Assert(0);
+		functionName = "BADFUNCTIONPOINTER";
 	}
+
+	BufferField( pname, strlen(functionName) + 1, functionName );
 }
 
 //-------------------------------------
@@ -1074,7 +1092,8 @@ void CSave::WriteEntityPtr( const char *pname, CBaseEntity **ppEntity, int count
 {
 	Assert( count <= MAX_ENTITYARRAY ); 
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( ppEntity[i] );
 	}
@@ -1087,7 +1106,8 @@ void CSave::WriteEntityPtr( CBaseEntity **ppEntity, int count )
 {
 	Assert( count <= MAX_ENTITYARRAY ); 
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( ppEntity[i] );
 	}
@@ -1099,7 +1119,8 @@ void CSave::WriteEntityPtr( CBaseEntity **ppEntity, int count )
 void CSave::WriteEdictPtr( const char *pname, edict_t **ppEdict, int count )
 {
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( ppEdict[i] );
 	}
@@ -1111,7 +1132,8 @@ void CSave::WriteEdictPtr( const char *pname, edict_t **ppEdict, int count )
 void CSave::WriteEdictPtr( edict_t **ppEdict, int count )
 {
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( ppEdict[i] );
 	}
@@ -1123,7 +1145,8 @@ void CSave::WriteEdictPtr( edict_t **ppEdict, int count )
 void CSave::WriteEHandle( const char *pname, const EHANDLE *pEHandle, int count )
 {
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( (CBaseEntity *)(const_cast<EHANDLE *>(pEHandle)[i]) );
 	}
@@ -1135,7 +1158,8 @@ void CSave::WriteEHandle( const char *pname, const EHANDLE *pEHandle, int count 
 void CSave::WriteEHandle( const EHANDLE *pEHandle, int count )
 {
 	int entityArray[MAX_ENTITYARRAY];
-	for ( int i = 0; i < count; i++ )
+//	for ( int i = 0; i < count; i++ )
+	for ( int i = 0; i < count && i < MAX_ENTITYARRAY; i++ )
 	{
 		entityArray[i] = EntityIndex( (CBaseEntity *)(const_cast<EHANDLE *>(pEHandle)[i]) );
 	}
@@ -1313,15 +1337,23 @@ void CRestore::ReadBasicField( const SaveRestoreRecordHeader_t &header, void *pD
 #ifdef _DEBUG
 			int startPos = GetReadPos();
 #endif
-			int nFieldCount = pField->fieldSize;
-			char *pFieldData = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pDest : *((void **)pDest) );
-			while ( --nFieldCount >= 0 )
+			if ( !(pField->flags & FTYPEDESC_PTR) || *((void **)pDest) )
 			{
-				// No corresponding "block" (see write) as it was used as the header of the field
-				ReadAll( pFieldData, pField->td );
-				pFieldData += pField->fieldSizeInBytes;
+				int nFieldCount = pField->fieldSize;
+				char *pFieldData = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pDest : *((void **)pDest) );
+				while ( --nFieldCount >= 0 )
+				{
+					// No corresponding "block" (see write) as it was used as the header of the field
+					ReadAll( pFieldData, pField->td );
+					pFieldData += pField->fieldSizeInBytes;
+				}
+				Assert( GetReadPos() - startPos == header.size );
 			}
-			Assert( GetReadPos() - startPos == header.size );
+			else
+			{
+				SetReadPos( GetReadPos() + header.size );
+				Warning( "Attempted to restore FIELD_EMBEDDEDBYREF %s but there is no destination memory\n", pField->fieldName );
+			}
 			break;
 			
 		}
@@ -1442,6 +1474,9 @@ void CRestore::EmptyFields( void *pBaseData, typedescription_t *pFields, int fie
 
 		case FIELD_EMBEDDED:
 			{
+				if ( (pField->flags & FTYPEDESC_PTR) && !*((void **)pFieldData) )
+					break;
+
 				int nFieldCount = pField->fieldSize;
 				char *pFieldMemory = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pFieldData : *((void **)pFieldData) );
 				while ( --nFieldCount >= 0 )
@@ -1509,10 +1544,13 @@ int CRestore::ReadFields( const char *pname, void *pBaseData, datamap_t *pRootMa
 	int symName = m_pData->FindCreateSymbol(pname);
 
 	// Check the struct name
-	if ( ReadShort() != symName )			// Field Set marker
+	int curSym = ReadShort();
+	if ( curSym != symName )			// Field Set marker
 	{
 		const char *pLastName = m_pData->StringFromSymbol( lastName );
-		Msg( "Expected %s found %s! (prev: %s)\n", pname, BufferPointer(), pLastName );
+		const char *pCurName = m_pData->StringFromSymbol( curSym );
+		Msg( "Expected %s found %s ( raw '%s' )! (prev: %s)\n", pname, pCurName, BufferPointer(), pLastName );
+		Msg( "Field type name may have changed or inheritance graph changed, save file is suspect\n" );
 		m_pData->Rewind( 2*sizeof(short) );
 		return 0;
 	}
@@ -1909,15 +1947,30 @@ void CRestore::ReadGameField( const SaveRestoreRecordHeader_t &header, void *pDe
 			int nRead = ReadString( pStringDest, pField->fieldSize, header.size );
 			if ( m_precache )
 			{
+#if !defined( CLIENT_DLL )
+				// HACKHACK: Rewrite the .bsp models to match the map name in case the bugreporter renamed it
+				if ( pField->fieldType == FIELD_MODELNAME && Q_stristr(pStringDest->ToCStr(), ".bsp") )
+				{
+					char buf[MAX_PATH];
+					Q_strncpy( buf, "maps/", sizeof(buf) );
+					Q_strncat( buf, gpGlobals->mapname.ToCStr(), sizeof(buf) );
+					Q_strncat( buf, ".bsp", sizeof(buf) );
+					*pStringDest = AllocPooledString( buf );
+				}
+#endif
 				for ( int i = 0; i < nRead; i++ )
 				{
 					if ( pStringDest[i] != NULL_STRING )
 					{
 #if !defined( CLIENT_DLL )	
 						if ( pField->fieldType == FIELD_MODELNAME )
+						{
 							engine->PrecacheModel( STRING( pStringDest[i] ) );
+						}
 						else if ( pField->fieldType == FIELD_SOUNDNAME )
+						{
 							enginesound->PrecacheSound( STRING( pStringDest[i] ) );
+						}
 #endif
 					}
 				}
@@ -1973,7 +2026,10 @@ int CRestore::ReadTime( float *pValue, int count, int nBytesAvailable )
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		pValue[i] += baseTime;
+		if ( pValue[i] == ZERO_TIME )
+			pValue[i] = 0.0;
+		else if ( pValue[i] != INVALID_TIME && pValue[i] != FLT_MAX )
+			pValue[i] += baseTime;
 	}
 	
 	return nRead;
@@ -1981,12 +2037,27 @@ int CRestore::ReadTime( float *pValue, int count, int nBytesAvailable )
 
 int CRestore::ReadTick( int *pValue, int count, int nBytesAvailable )
 {
-	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() );
+//	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() );
+	// HACK HACK:  Adding 0.1f here makes sure that all tick times read
+	//  from .sav file which are near the basetime will end up just ahead of
+	//  the base time, because we are restoring we'll have a slow frame of the
+	//  max frametime of 0.1 seconds and that could otherwise cause all of our
+	//  think times to get synchronized to each other... sigh.  ywb...
+	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() + 0.1f );
 	int nRead = ReadInt( pValue, count, nBytesAvailable );
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		pValue[i] += baseTick;
+		if ( pValue[ i ] != TICK_NEVER_THINK_ENCODE )
+		{
+			// Rebase it
+			pValue[i] += baseTick;
+		}
+		else
+		{
+			// Slam to -1 value
+			pValue[ i ] = TICK_NEVER_THINK;
+		}
 	}
 	
 	return nRead;
@@ -2008,7 +2079,8 @@ int CRestore::ReadPositionVector( Vector *pValue, int count, int nBytesAvailable
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		pValue[i] += basePosition;
+		if ( pValue[i] != vec3_invalid )
+			pValue[i] += basePosition;
 	}
 	
 	return nRead;
@@ -2588,11 +2660,26 @@ CSaveRestoreData *SaveInit( int size )
 	numentities = ClientEntityList().NumberOfEntities();
 #endif
 
-	pSaveData = MakeSaveRestoreData(engine->SaveAllocMemory( sizeof(CSaveRestoreData) + (sizeof(entitytable_t) * numentities) + size, sizeof(char) ));
+	void *pSaveMemory = engine->SaveAllocMemory( sizeof(CSaveRestoreData) + (sizeof(entitytable_t) * numentities) + size, sizeof(char) );
+	if ( !pSaveMemory )
+	{
+		return NULL;
+	}
+
+//	pSaveData = MakeSaveRestoreData(engine->SaveAllocMemory( sizeof(CSaveRestoreData) + (sizeof(entitytable_t) * numentities) + size, sizeof(char) ));
+	pSaveData = MakeSaveRestoreData( pSaveMemory );
 	pSaveData->Init( (char *)(pSaveData + 1), size );	// skip the save structure
 	
 	const int nTokens = 0xfff; // Assume a maximum of 4K-1 symbol table entries(each of some length)
-	pSaveData->InitSymbolTable( (char **)engine->SaveAllocMemory( nTokens, sizeof( char * ) ), nTokens );
+//	pSaveData->InitSymbolTable( (char **)engine->SaveAllocMemory( nTokens, sizeof( char * ) ), nTokens );
+	pSaveMemory = engine->SaveAllocMemory( nTokens, sizeof( char * ) );
+	if ( !pSaveMemory )
+	{
+		engine->SaveFreeMemory( pSaveMemory );
+		return NULL;
+	}
+
+	pSaveData->InitSymbolTable( (char **)pSaveMemory, nTokens );
 
 	//---------------------------------
 	
@@ -2844,60 +2931,76 @@ ISaveRestoreBlockSet *g_pGameSaveRestoreBlockSet = &g_SaveRestoreBlockSet;
 
 //=============================================================================
 #if !defined( CLIENT_DLL )
-//-----------------------------------------------------------------------------
-int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
+
+//------------------------------------------------------------------------------
+// Creates all entities that lie in the transition list
+//------------------------------------------------------------------------------
+void CreateEntitiesInTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 {
-	int			movedCount, active;
 	CBaseEntity *pent;
-	entitytable_t *pEntInfo;
-
-	movedCount = 0;
-
-	// Create entity list
 	int i;
 	for ( i = 0; i < pSaveData->NumEntities(); i++ )
 	{
-		pent = NULL;
-		pEntInfo = pSaveData->GetEntityInfo( i );
-		if ( pEntInfo->size && pEntInfo->edictindex != 0 )
+	//	pent = NULL;
+		entitytable_t *pEntInfo = pSaveData->GetEntityInfo( i );
+		pEntInfo->hEnt = NULL; // VXP
+
+		if ( pEntInfo->size == 0 || pEntInfo->edictindex == 0 )
+			continue;
+
+		if ( pEntInfo->classname == NULL_STRING )
 		{
-			if ( pEntInfo->classname != NULL_STRING )
+			Warning( "Entity with data saved, but with no classname\n" );
+			Assert(0);
+			continue;
+		}
+
+		bool active = (pEntInfo->flags & levelMask) ? 1 : 0;
+
+		// spawn players
+		pent = NULL;
+	//	if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex < gpGlobals->maxClients+1) )	
+		if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex <= gpGlobals->maxClients+1) )	
+		{
+			edict_t *ed = INDEXENT( pEntInfo->edictindex );
+
+			if ( active && ed && !ed->free )
 			{
-				active = (pEntInfo->flags & levelMask) ? 1 : 0;
-
-				// spawn players
-				if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex < gpGlobals->maxClients+1) )	
+				if ( !(pEntInfo->flags & FENTTABLE_PLAYER) )
 				{
-					edict_t *ed = INDEXENT( pEntInfo->edictindex );
-
-					if ( active && ed && !ed->free )
-					{
-						if ( !(pEntInfo->flags & FENTTABLE_PLAYER) )
-						{
-							Warning( "ENTITY IS NOT A PLAYER: %d\n" , i );
-							Assert(0);
-						}
-
-						pent = CBasePlayer::CreatePlayer( STRING(pEntInfo->classname), ed );
-					}
+					Warning( "ENTITY IS NOT A PLAYER: %d\n" , i );
+					Assert(0);
 				}
-				else if ( active )
-				{
-					pent = CreateEntityByName( STRING(pEntInfo->classname) );
-				}
+
+				pent = CBasePlayer::CreatePlayer( STRING(pEntInfo->classname), ed );
 			}
-			else
-			{
-				Warning( "Entity with data saved, but with no classname\n" );
-				Assert(0);
-			}
+		}
+		else if ( active )
+		{
+			pent = CreateEntityByName( STRING(pEntInfo->classname) );
 		}
 
 		pEntInfo->hEnt = pent;
 		
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
+{
+	int			movedCount/*, active*/;
+	CBaseEntity *pent;
+	entitytable_t *pEntInfo;
+
+	int i;
+	movedCount = 0;
+
+	// Create entity list
+	CreateEntitiesInTransitionList( pSaveData, levelMask );
 	
 	// Now spawn entities
+	CUtlVector<int> checkList;
 	for ( i = 0; i < pSaveData->NumEntities(); i++ )
 	{
 		pEntInfo = pSaveData->GetEntityInfo( i );
@@ -2923,6 +3026,10 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 					pEntInfo->restoreentityindex = pEntInfo->hEnt.Get()->entindex();
 					AddRestoredEntity( pEntInfo->hEnt.Get() );
 				}
+				else
+				{
+					UTIL_RemoveImmediate( pEntInfo->hEnt.Get() );
+				}
 				// -------------------------------------------------------------------------
 			}
 			else 
@@ -2935,7 +3042,7 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 				}
 				else
 				{
-					pent->Relink();
+					/*pent->Relink();
 					if ( !(pEntInfo->flags & FENTTABLE_PLAYER) && UTIL_EntityInSolid( pent ) )
 					{
 						// this can happen during normal processing - PVS is just a guess, some map areas won't exist in the new map
@@ -2948,12 +3055,42 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 						pEntInfo->flags = FENTTABLE_REMOVED;
 						pEntInfo->restoreentityindex = pent->entindex();
 						AddRestoredEntity( pent );
-					}
+					}*/
+
+					// needs to be checked.  Do this in a separate pass so that pointers & hierarchy can be traversed
+					checkList.AddToTail(i);
 				}
 			}
 
 			// Remove any entities that were removed using UTIL_Remove() as a result of the above calls to UTIL_RemoveImmediate()
 			gEntList.CleanupDeleteList();
+		}
+	}
+
+	for ( i = checkList.Count()-1; i >= 0; --i )
+	{
+		pEntInfo = pSaveData->GetEntityInfo( checkList[i] );
+		pent = pEntInfo->hEnt;
+
+		// NOTE: pent can be NULL because UTIL_RemoveImmediate (called below) removes all in hierarchy
+		if ( !pent )
+			continue;
+
+		pent->Relink();
+		if ( !(pEntInfo->flags & FENTTABLE_PLAYER) && UTIL_EntityInSolid( pent ) )
+		{
+			// this can happen during normal processing - PVS is just a guess, some map areas won't exist in the new map
+			DevMsg( 2, "Suppressing %s\n", STRING(pEntInfo->classname) );
+			UTIL_RemoveImmediate( pent );
+			// Remove any entities that were removed using UTIL_Remove() as a result of the above calls to UTIL_RemoveImmediate()
+			gEntList.CleanupDeleteList();
+		}
+		else
+		{
+			movedCount++;
+			pEntInfo->flags = FENTTABLE_REMOVED;
+			pEntInfo->restoreentityindex = pent->entindex();
+			AddRestoredEntity( pent );
 		}
 	}
 

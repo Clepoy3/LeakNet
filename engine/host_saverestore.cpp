@@ -149,7 +149,7 @@ public:
 	void					OnFinishedClientRestore();
 
 private:
-	void					SaveClientState( CSaveRestoreData *serverData, const char *name );
+	bool					SaveClientState( CSaveRestoreData *serverData, const char *name );
 
 	void					EntityPatchWrite( CSaveRestoreData *pSaveData, const char *level );
 	void					EntityPatchRead( CSaveRestoreData *pSaveData, const char *level );
@@ -189,6 +189,7 @@ private:
 		void Clear()
 		{
 			lookup.RemoveAll();
+			m_vecLandMarkOffset.Init(); // VXP
 		}
 
 		RestoreLookupTable( const RestoreLookupTable& src )
@@ -881,7 +882,11 @@ CSaveRestoreData *CSaveRestore::SaveGameState( void )
 	Q_snprintf(name, sizeof( name ), "%s%s.HL2", GetSaveDir(), sv.name);
 	COM_FixSlashes( name );
 	// Let the client see the server entity to id lookup tables, etc.
-	SaveClientState( pSaveData, name );
+	bool bSuccess = SaveClientState( pSaveData, name );
+	if ( !bSuccess )
+	{
+		return NULL;
+	}
 
 	return pSaveData;
 }
@@ -892,8 +897,8 @@ CSaveRestoreData *CSaveRestore::SaveGameState( void )
 //-----------------------------------------------------------------------------
 void CSaveRestore::Finish( CSaveRestoreData *save )
 {
-	if( !save )
-		return;
+//	if( !save )
+//		return;
 
 	char **pTokens = save->DetachSymbolTable();
 	if ( pTokens )
@@ -1062,7 +1067,15 @@ void CSaveRestore::RestoreClientState( char const *fileName, bool adjacent )
 
 	if ( sections.symbolsize > 0 )
 	{
-		pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sections.symbolcount, sizeof(char *) ), sections.symbolcount );
+	//	pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sections.symbolcount, sizeof(char *) ), sections.symbolcount );
+		void *pSaveMemory = SaveAllocMemory( sections.symbolcount, sizeof(char *) );
+		if ( !pSaveMemory )
+		{
+			SaveFreeMemory( pSaveData );
+			return;
+		}
+
+		pSaveData->InitSymbolTable( (char**)pSaveMemory, sections.symbolcount );
 
 		// Make sure the token strings pointed to by the pToken hashtable.
 		for( int i=0; i<sections.symbolcount; i++ )
@@ -1163,7 +1176,8 @@ int TranslatedEntityIndex( CSaveRestoreData *serverData, int entityindex )
 // Purpose: 
 // Input  : *name - 
 //-----------------------------------------------------------------------------
-void CSaveRestore::SaveClientState( CSaveRestoreData *serverData, const char *name )
+//void CSaveRestore::SaveClientState( CSaveRestoreData *serverData, const char *name )
+bool CSaveRestore::SaveClientState( CSaveRestoreData *serverData, const char *name )
 {
 #ifndef SWDS
 	decallist_t		*decalList;
@@ -1173,6 +1187,10 @@ void CSaveRestore::SaveClientState( CSaveRestoreData *serverData, const char *na
 	clientsections_t	sections;
 
 	CSaveRestoreData *pSaveData = g_ClientDLL->SaveInit( 0 );
+	if ( !pSaveData )
+	{
+		return false;
+	}
 	
 	sections.entitydata = pSaveData->AccessCurPos();
 
@@ -1239,6 +1257,7 @@ void CSaveRestore::SaveClientState( CSaveRestoreData *serverData, const char *na
 	Finish( pSaveData );
 
 	free( decalList );
+	return true;
 #endif
 }
 
@@ -1278,7 +1297,13 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 	
 	g_pFileSystem->Read( &sectionsInfo, sizeof(sectionsInfo), pFile );
 
-	CSaveRestoreData *pSaveData = MakeSaveRestoreData( SaveAllocMemory( sizeof(CSaveRestoreData) + sectionsInfo.SumBytes(), sizeof(char) ) );
+//	CSaveRestoreData *pSaveData = MakeSaveRestoreData( SaveAllocMemory( sizeof(CSaveRestoreData) + sectionsInfo.SumBytes(), sizeof(char) ) );
+	void *pSaveMemory = SaveAllocMemory( sizeof(CSaveRestoreData) + sectionsInfo.SumBytes(), sizeof(char) );
+	if ( !pSaveMemory )
+	{
+		return 0;
+	}
+	CSaveRestoreData *pSaveData = MakeSaveRestoreData( pSaveMemory );
 	strcpy( pSaveData->levelInfo.szCurrentMapName, level );
 	
 	g_pFileSystem->Read( (char *)(pSaveData + 1), sectionsInfo.SumBytes(), pFile );
@@ -1290,7 +1315,15 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 
 	if ( sectionsInfo.nBytesSymbols > 0 )
 	{
-		pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
+	//	pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
+		pSaveMemory = SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) );
+		if ( !pSaveMemory )
+		{
+			SaveFreeMemory( pSaveData );
+			return 0;
+		}
+
+		pSaveData->InitSymbolTable( (char**)pSaveMemory, sectionsInfo.nSymbols );
 
 		// Make sure the token strings pointed to by the pToken hashtable.
 		for( int i = 0; i<sectionsInfo.nSymbols; i++ )

@@ -707,7 +707,10 @@ IPhysicsObject *CBaseEntity::VPhysicsInitStatic( void )
 		// must be SOLID_VPHYSICS if in hierarchy to solve collisions correctly
 		if ( GetSolid() == SOLID_BSP )
 		{
-			SetSolid( SOLID_VPHYSICS );
+			if ( GetRootMoveParent()->GetSolid() != SOLID_BSP )
+			{
+				SetSolid( SOLID_VPHYSICS );
+			}
 		}
 
 		return VPhysicsInitShadow( false, false );
@@ -859,6 +862,22 @@ bool CBaseEntity::IsBSPModel() const
 		return true;
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Returns the highest parent of an entity
+//-----------------------------------------------------------------------------
+CBaseEntity *CBaseEntity::GetRootMoveParent()
+{
+	CBaseEntity *pEntity = this;
+	CBaseEntity *pParent = this->GetMoveParent();
+	while ( pParent )
+	{
+		pEntity = pParent;
+		pParent = pEntity->GetMoveParent();
+	}
+
+	return pEntity;
 }
 
 bool CBaseEntity::IsSimulatedEveryTick() const
