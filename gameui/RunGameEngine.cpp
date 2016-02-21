@@ -41,8 +41,8 @@ public:
 	// returns true if the player is currently connected to a game server
 	virtual bool IsInGame()
 	{
-		if( engine->IsBackGroundMap() )
-			return false;
+	//	if( engine->IsBackGroundMap() )
+	//		return false;
 		
 		return engine->GetLevelName() && strlen(engine->GetLevelName()) > 0;
 	}

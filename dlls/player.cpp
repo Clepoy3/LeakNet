@@ -3216,6 +3216,13 @@ void CBasePlayer::UpdateGeigerCounter( void )
 
 	range = (byte) (m_flgeigerRange / 4);
 
+	// VXP
+	// This is to make sure you aren't driven crazy by geiger while in the airboat
+	if ( IsInAVehicle() )
+	{
+		range = clamp( (int)range * 4, 0, 255 );
+	}
+
 	if (range != m_igeigerRangePrev)
 	{
 		m_igeigerRangePrev = range;
@@ -4280,6 +4287,10 @@ void CBasePlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExi
 	OnVehicleEnd( vNewPos );
 	SetAbsOrigin( vNewPos );
 	SetAbsAngles( qAngles );
+	// Clear out any leftover velocity
+	SetAbsVelocity( vec3_origin );
+
+	qAngles[ROLL] = 0;
 	SnapEyeAngles( qAngles );
 
 	m_Local.m_iHideHUD &= ~HIDEHUD_WEAPONS;
@@ -4289,8 +4300,8 @@ void CBasePlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExi
 	SetCollisionGroup( COLLISION_GROUP_PLAYER );
 	Relink();
 
-	qAngles[ROLL] = 0;
-	SnapEyeAngles( qAngles );
+//	qAngles[ROLL] = 0;
+//	SnapEyeAngles( qAngles );
 
 	m_hVehicle = NULL;
 	pVehicle->SetPassenger(nRole, NULL);

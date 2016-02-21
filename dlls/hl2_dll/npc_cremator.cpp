@@ -43,7 +43,9 @@
 #include "IEffects.h"
 #include "engine/IEngineSound.h"
 
+#ifdef _DEBUG
 #include "studio.h"
+#endif
 
 #include "npc_cremator.h"
 #include "grenade_brickbat.h"

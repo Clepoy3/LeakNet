@@ -1256,7 +1256,9 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 	//	Assert( inputInfo.GetDamageForce() != vec3_origin && inputInfo.GetDamagePosition() != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
 		if ( (inputInfo.GetDamageForce() == vec3_origin) || (inputInfo.GetDamagePosition() == vec3_origin) )
-			Warning( "TakeDamage: error with moving explosions!\n" );
+		{
+			DevWarning( "TakeDamage: .GetDamageForce() == vec3_origin\n" );
+		}
 	}
 
 	// Make sure our damage filter allows the damage.

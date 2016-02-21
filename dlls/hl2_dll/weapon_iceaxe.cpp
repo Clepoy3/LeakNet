@@ -38,7 +38,8 @@ public:
 	float		GetRange( void )		{	return	ICEAXE_RANGE;	}
 	float		GetFireRate( void )		{	return	ICEAXE_REFIRE;	}
 
-	void		ImpactSound( bool isWorld )	{	return;	}
+//	void		ImpactSound( bool isWorld )	{	return;	}
+	void		ImpactSound( bool isWorld );
 
 	void		AddViewKick( void );
 	float		GetDamageForActivity( Activity hitActivity );
@@ -87,4 +88,19 @@ void CWeaponIceAxe::AddViewKick( void )
 	punchAng.z = 0.0f;
 
 	pPlayer->ViewPunch( punchAng ); 
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Play the impact sound
+// Input  : isWorld - whether the hit was for the world or an entity
+//-----------------------------------------------------------------------------
+void CWeaponIceAxe::ImpactSound( bool isWorld )
+{
+	char* shootsound = isWorld ? "Weapon_IceAxe.Melee_HitWorld" : "Weapon_IceAxe.Melee_Hit";
+	CPASAttenuationFilter filter( GetOwner(), 105 );
+	if ( IsPredicted() )
+	{
+		filter.UsePredictionRules();
+	}
+	EmitSound( filter, entindex(), shootsound, NULL, 0.0f );
 }
