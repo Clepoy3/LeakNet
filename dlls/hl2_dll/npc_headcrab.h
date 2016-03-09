@@ -62,6 +62,11 @@ protected:
 	float	m_flTimeDrown;
 	float	m_flNextFlinchTime;
 	Vector	m_vecJumpVel;
+
+	// VXP
+	bool m_bCommittedToJump;		// Whether we have 'locked in' to jump at our enemy.
+	Vector m_vecCommittedJumpPos;	// The position of our enemy when we locked in our jump attack.
+	bool	m_bAttackFailed;		// whether we ran into a wall during a jump.
 };
 
 
@@ -185,8 +190,9 @@ private:
 	void JumpFlinch( const Vector *pvecAwayFromPos );
 	void Panic( float flDuration );
 
-	bool m_bCommittedToJump;		// Whether we have 'locked in' to jump at our enemy.
-	Vector m_vecCommittedJumpPos;	// The position of our enemy when we locked in our jump attack.
+	// VXP: Commented
+//	bool m_bCommittedToJump;		// Whether we have 'locked in' to jump at our enemy.
+//	Vector m_vecCommittedJumpPos;	// The position of our enemy when we locked in our jump attack.
 
 	bool m_bPanicState;
 	float m_flPanicStopTime;

@@ -2341,7 +2341,7 @@ void Host_Shutdown(void)
 	TRACESHUTDOWN( Key_Shutdown() );
 #endif
 
-	TRACESHUTDOWN( Filter_Shutdown() ); // VXP: Maybe, move this before host_initialized = false;?
+	TRACESHUTDOWN( Filter_Shutdown() );
 
 #ifndef SWDS
 	TRACESHUTDOWN( saverestore->Shutdown() );

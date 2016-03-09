@@ -3116,7 +3116,10 @@ int CAI_BaseNPC::SelectSchedule( void )
 				else
 				{
 					// chase!
-					if ( GetActiveWeapon() || (CapabilitiesGet() & (bits_CAP_INNATE_MELEE_ATTACK1|bits_CAP_INNATE_MELEE_ATTACK2)))
+				//	if ( GetActiveWeapon() || (CapabilitiesGet() & (bits_CAP_INNATE_MELEE_ATTACK1|bits_CAP_INNATE_MELEE_ATTACK2)))
+					/*if ( GetActiveWeapon() || (CapabilitiesGet() & (bits_CAP_INNATE_RANGE_ATTACK1|bits_CAP_INNATE_RANGE_ATTACK2)))
+						return SCHED_ESTABLISH_LINE_OF_FIRE;
+					else */if ( GetActiveWeapon() || (CapabilitiesGet() & (bits_CAP_INNATE_MELEE_ATTACK1|bits_CAP_INNATE_MELEE_ATTACK2)))
 						// if we can see enemy but can't use either attack type, we must need to get closer to enemy
 						return SCHED_CHASE_ENEMY;
 					else

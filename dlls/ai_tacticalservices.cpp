@@ -401,7 +401,7 @@ int CAI_TacticalServices::FindLosNode(const Vector &vThreatPos, const Vector &vT
 
 	if ( iMyNode == NO_NODE )
 	{
-		DevWarning( 2, "FindCover() - %s has no nearest node!\n", GetEntClassname());
+		DevWarning( 2, "FindLos() - %s has no nearest node!\n", GetEntClassname());
 		return NO_NODE;
 	}
 

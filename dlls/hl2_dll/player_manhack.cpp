@@ -48,10 +48,21 @@ public:
 	void	CheckBladeTrace(trace_t &tr);
 
 	DECLARE_DATADESC();
+	
+private:
+	bool		m_bFlying;
+	bool		m_bSideFlying;
+	float		m_flFlyThrust;
+	float		m_flSideFlyThrust;
 };
 
 
 BEGIN_DATADESC( CPlayer_Manhack )
+
+	DEFINE_FIELD( CPlayer_Manhack, m_bFlying, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CPlayer_Manhack, m_bSideFlying, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CPlayer_Manhack,	m_flFlyThrust,		FIELD_FLOAT),
+	DEFINE_FIELD( CPlayer_Manhack,	m_flSideFlyThrust,		FIELD_FLOAT),
 
 	// Function Pointers
 	DEFINE_FUNCTION( CPlayer_Manhack, FlyThink ),
@@ -101,6 +112,11 @@ void CPlayer_Manhack::Spawn( void )
 	UTIL_SetSize(this, PMANHACK_HULL_MINS, PMANHACK_HULL_MAXS);
 
 	m_bActive = false;
+	
+	m_bFlying = false;
+	m_bSideFlying = false;
+	m_flFlyThrust = 0.0f;
+	m_flSideFlyThrust = 0.0f;
 
 	CreateVPhysics();
 }
@@ -134,7 +150,8 @@ void CPlayer_Manhack::InputActivate( inputdata_t &inputdata )
 
 	Assert( pPlayer );
 
-	pPlayer->SetFOV( 132 );
+//	pPlayer->SetFOV( 132 );
+	pPlayer->SetFOV( 95 );
 	pPlayer->FollowEntity( this );
 
 //	engine->SetView( pPlayer->edict(), edict() );
@@ -203,11 +220,17 @@ void CPlayer_Manhack::InputSetThrust( inputdata_t &inputdata )
 	{
 		CPASAttenuationFilter filter( pPlayer, "Player_Manhack.ThrustLow" );
 		EmitSound( filter, pPlayer->entindex(), "Player_Manhack.ThrustLow" );
+		
+		m_bFlying = false;
+		m_flFlyThrust = 0.0f;
+
 		return;
 	}
 	CPASAttenuationFilter filter( pPlayer, "Player_Manhack.ThrustHigh" );
 	EmitSound( filter, pPlayer->entindex(), "Player_Manhack.ThrustHigh" );
 
+	m_bFlying = true;
+	m_flFlyThrust = inputdata.value.Float();
 
 	Vector vForce; 
 	pPlayer->EyeVectors( &vForce );
@@ -236,18 +259,25 @@ void CPlayer_Manhack::InputSetSideThrust( inputdata_t &inputdata )
 	{
 		CPASAttenuationFilter filter( pPlayer, "Player_Manhack.ThrustLow" );
 		EmitSound( filter, pPlayer->entindex(), "Player_Manhack.ThrustLow" );
+		
+		m_bSideFlying = false;
+		m_flSideFlyThrust = 0.0f;
+		
 		return;
 	}
 	CPASAttenuationFilter filter( pPlayer, "Player_Manhack.ThrustHigh" );
 	EmitSound( filter, pPlayer->entindex(), "Player_Manhack.ThrustHigh" );
+	
+	m_bSideFlying = true;
+	m_flSideFlyThrust = inputdata.value.Float();
 
 
-	Vector vForce; 
-	pPlayer->EyeVectors( 0, &vForce, 0 );
-	vForce = vForce * inputdata.value.Float() * 600;
+	// Vector vForce; 
+	// pPlayer->EyeVectors( 0, &vForce, 0 );
+	// vForce = vForce * inputdata.value.Float() * 600;
 
-	IPhysicsObject*	pPhysObj = VPhysicsGetObject();
-	pPhysObj->ApplyForceCenter( vForce );
+	// IPhysicsObject*	pPhysObj = VPhysicsGetObject();
+	// pPhysObj->ApplyForceCenter( vForce );
 }
 
 
@@ -350,8 +380,81 @@ void CPlayer_Manhack::FlyThink()
 	Vector vPlayerFacing;
 	pPlayer->EyeVectors( &vPlayerFacing );
 
+// void UTIL_SetOrigin( CBaseEntity *entity, const Vector &vecOrigin, bool bFireTriggers )
+// {
+	// entity->SetLocalOrigin( vecOrigin );
+	// engine->RelinkEntity( entity->edict(), bFireTriggers );
+// }
 
-	UTIL_SetOrigin(pPlayer,vPhysPos);
+//	UTIL_SetOrigin(pPlayer,vPhysPos);
+	pPlayer->SetAbsOrigin( vPhysPos );
+	engine->RelinkEntity( pPlayer->edict(), false );
+	engine->RelinkEntity( edict(), false );
+
+	/*AngularImpulse ampImp;
+	pPhysObj->GetVelocity( NULL, &ampImp );
+	Vector vecForce;
+	vecForce.x = vPlayerFacing.x - ampImp.x;
+	vecForce.y = vPlayerFacing.y - ampImp.y;
+	vecForce.z = vPlayerFacing.z - ampImp.z;
+	pPhysObj->ApplyTorqueCenter( vecForce * 1000 );*/
+
+	/*Vector vecForce;
+	vecForce.x = 0 - vPlayerFacing.x;
+	vecForce.y = 0;
+	vecForce.z = 0 - vPlayerFacing.z;
+	pPhysObj->ApplyForceOffset( vecForce, vPhysPos );*/
+
+	/*Vector forward, right, up;
+	pPlayer->GetVectors( &forward, &right, &up );
+	
+	float mul = 0.5f;
+
+	QAngle angForce = QAngle( 1 - pPlayer->GetLocalAngles()[0], 0, 1 - pPlayer->GetLocalAngles()[2] );
+//	QAngle angForce = QAngle( pPlayer->GetAbsAngles()[0], pPlayer->GetAbsAngles()[1], pPlayer->GetAbsAngles()[2] );
+
+	if ( angForce[0] != 0 )
+	{
+	//	Vector pitch = up      * (angForce[0] * 0.5f);
+		Vector pitch = up      * (angForce[0] * mul);
+		pPhysObj->ApplyForceOffset( forward, pitch );
+		pPhysObj->ApplyForceOffset( forward * -1, pitch * -1 );
+	}
+
+	Vector left = right * -1;
+	if ( angForce[1] != 0 )
+	{
+		Vector yaw = forward      * (angForce[1] * mul);
+		pPhysObj->ApplyForceOffset( left, yaw );
+		pPhysObj->ApplyForceOffset( left * -1, yaw * -1 );
+	}
+
+	if ( angForce[2] != 0 )
+	{
+		Vector roll = left      * (angForce[2] * mul);
+		pPhysObj->ApplyForceOffset( up, roll );
+		pPhysObj->ApplyForceOffset( up * -1, roll * -1 );
+	}*/
+
+	if ( m_bFlying )
+	{
+		Vector vForce; 
+		pPlayer->EyeVectors( &vForce );
+		vForce = vForce * m_flFlyThrust * 600;
+
+	//	IPhysicsObject*	pPhysObj = VPhysicsGetObject();
+		pPhysObj->ApplyForceCenter( vForce );
+	}
+	
+	if ( m_bSideFlying )
+	{
+		Vector vForce; 
+		pPlayer->EyeVectors( 0, &vForce, 0 );
+		vForce = vForce * m_flSideFlyThrust * 600;
+
+	//	IPhysicsObject*	pPhysObj = VPhysicsGetObject();
+		pPhysObj->ApplyForceCenter( vForce );
+	}
 
 	float flBrightness;
 	if (random->RandomInt(0,1)==0)

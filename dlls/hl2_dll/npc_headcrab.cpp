@@ -75,6 +75,7 @@ enum
 	SCHED_HEADCRAB_DISMOUNT_NPC, // get off the NPC's head!
 	SCHED_HEADCRAB_BARNACLED,
 	SCHED_HEADCRAB_UNHIDE,
+	SCHED_HEADCRAB_HARASS_ENEMY, // VXP
 
 	SCHED_FAST_HEADCRAB_RANGE_ATTACK1,
 };
@@ -90,6 +91,7 @@ enum
 	TASK_HEADCRAB_DROWN,
 	TASK_HEADCRAB_WAIT_FOR_BARNACLE_KILL,
 	TASK_HEADCRAB_UNHIDE,
+	TASK_HEADCRAB_HARASS_HOP, // VXP
 };
 
 
@@ -315,7 +317,7 @@ void CBaseHeadcrab::JumpAttack( bool bRandomJump, const Vector &vecPos, bool bTh
 	}
 
 	SetAbsVelocity( vecJumpDir );
-	m_flNextAttack = gpGlobals->curtime + 2;
+//	m_flNextAttack = gpGlobals->curtime + 2;
 }
 
 
@@ -393,6 +395,7 @@ void CBaseHeadcrab::Spawn( void )
 	
 	CapabilitiesClear();
 	CapabilitiesAdd( bits_CAP_MOVE_GROUND | bits_CAP_INNATE_RANGE_ATTACK1 );
+	CapabilitiesAdd( bits_CAP_INNATE_MELEE_ATTACK1 ); // VXP: Added and works almost fine...
 
 	// headcrabs get to cheat for 5 seconds (sjb)
 	GetEnemies()->SetFreeKnowledgeDuration( 5.0 );
@@ -440,12 +443,32 @@ void CBaseHeadcrab::RunTask( const Task_t *pTask )
 
 		case TASK_RANGE_ATTACK1:
 		case TASK_RANGE_ATTACK2:
-		{
+		/*{
 			if ( IsActivityFinished() )
 			{
 				TaskComplete();
 				SetTouch( NULL );
 				SetIdealActivity( ACT_IDLE );
+			}
+			break;
+		}*/
+		case TASK_HEADCRAB_HARASS_HOP:
+		{
+			if ( IsActivityFinished() )
+			{
+				TaskComplete();
+				SetTouch( NULL );
+				SetThink( CallNPCThink );
+				SetIdealActivity( ACT_IDLE );
+
+				if ( m_bAttackFailed )
+				{
+					// our attack failed because we just ran into something solid.
+					// delay attacking for a while so we don't just repeatedly leap
+					// at the enemy from a bad location.
+					m_bAttackFailed = false;
+					m_flNextAttack = gpGlobals->curtime + 1.2f;
+				}
 			}
 			break;
 		}
@@ -464,27 +487,42 @@ void CBaseHeadcrab::RunTask( const Task_t *pTask )
 //-----------------------------------------------------------------------------
 void CBaseHeadcrab::LeapTouch( CBaseEntity *pOther )
 {
-	if ( pOther->Classify() == Classify() )
+	if ( IRelationType( pOther ) == D_HT )
 	{
-		return;
-	}
-
-	// Don't hit if back on ground
-	if ( !( GetFlags() & FL_ONGROUND ) )
-	{
-		if ( pOther->m_takedamage != DAMAGE_NO )
+		// Don't hit if back on ground
+		if ( !( GetFlags() & FL_ONGROUND ) )
 		{
-			BiteSound();
-			TouchDamage( pOther );
+	 		if ( pOther->m_takedamage != DAMAGE_NO )
+			{
+				BiteSound();
+				TouchDamage( pOther );
+
+				// attack succeeded, so don't delay our next attack if we previously thought we failed
+				m_bAttackFailed = false;
+			}
+			else
+			{
+				ImpactSound();
+			}
 		}
 		else
 		{
 			ImpactSound();
 		}
 	}
-	else
+	else if( !(GetFlags() & FL_ONGROUND) )
 	{
-		ImpactSound();
+		// Still in the air...
+		if( !pOther->IsSolid() )
+		{
+			// Touching a trigger or something.
+			return;
+		}
+
+		// just ran into something solid, so the attack probably failed.  make a note of it
+		// so that when the attack is done, we'll delay attacking for a while so we don't
+		// just repeatedly leap at the enemy from a bad location.
+		m_bAttackFailed = true;
 	}
 
 	SetTouch( NULL );
@@ -601,6 +639,31 @@ void CBaseHeadcrab::StartTask( const Task_t *pTask )
 	case TASK_HEADCRAB_WAIT_FOR_BARNACLE_KILL:
 		break;
 
+	case TASK_HEADCRAB_HARASS_HOP:
+		{
+			// Just pop up into the air like you're trying to get at the
+			// enemy, even though it's known you can't reach them.
+			if ( GetEnemy() )
+			{
+				Vector forward, up;
+
+				GetVectors( &forward, NULL, &up );
+
+				m_vecCommittedJumpPos = GetAbsOrigin();
+				m_vecCommittedJumpPos += up * random->RandomFloat( 80, 150 );
+				m_vecCommittedJumpPos += forward * random->RandomFloat( 32, 80 );
+
+				m_bCommittedToJump = true;
+
+				SetIdealActivity( ACT_RANGE_ATTACK1 );
+			}
+			else
+			{
+				TaskFail( "No enemy" );
+			}
+		}
+		break;
+
 	case TASK_HEADCRAB_HOP_OFF_NPC:
 		{
 			CBaseEntity *ground = GetGroundEntity();
@@ -669,24 +732,24 @@ int CBaseHeadcrab::RangeAttack1Conditions ( float flDot, float flDist )
 {
 	if ( gpGlobals->curtime < m_flNextAttack )
 	{
-		return( 0 );
+		return 0;
 	}
 
 	if ( !( GetFlags() & FL_ONGROUND ) )
 	{
-		return( 0 );
+		return 0;
 	}
 
 	if ( flDist > 256 )
 	{
-		return( COND_TOO_FAR_TO_ATTACK );
+		return COND_TOO_FAR_TO_ATTACK;
 	}
 	else if ( flDot < 0.65 )
 	{
-		return( COND_NOT_FACING_ATTACK );
+		return COND_NOT_FACING_ATTACK;
 	}
 
-	return( COND_CAN_RANGE_ATTACK1 );
+	return COND_CAN_RANGE_ATTACK1;
 }
 
 
@@ -787,6 +850,34 @@ int CBaseHeadcrab::TranslateSchedule( int scheduleType )
 
 		case SCHED_FAIL_TAKE_COVER:
 			return SCHED_ALERT_FACE;
+
+		case SCHED_CHASE_ENEMY_FAILED:
+			{
+				if( !GetEnemy() )
+					break;
+
+				if( !HasCondition( COND_SEE_ENEMY ) )
+					break;
+
+				float flZDiff;
+				flZDiff = GetEnemy()->GetAbsOrigin().z - GetAbsOrigin().z;
+
+				// Make sure the enemy isn't so high above me that this would look silly.
+				if( flZDiff < 128.0f || flZDiff > 512.0f )
+					return SCHED_PATROL_WALK;
+
+				float flDist;
+				flDist = ( GetEnemy()->GetAbsOrigin() - GetAbsOrigin() ).Length2D();
+
+				// Maybe a patrol will bring me closer.
+				if( flDist > 384.0f )
+				{
+					return SCHED_PATROL_WALK;
+				}
+
+				return SCHED_HEADCRAB_HARASS_ENEMY;
+			}
+			break;
 	}
 
 	return BaseClass::TranslateSchedule( scheduleType );
@@ -1230,7 +1321,8 @@ void CFastHeadcrab::RunTask( const Task_t *pTask )
 			break;
 
 		case TASK_HEADCRAB_HOP_ASIDE:
-			GetMotor()->SetIdealYawAndUpdate( GetEnemy()->GetAbsOrigin() - GetAbsOrigin(), AI_KEEP_YAW_SPEED );
+			if ( GetEnemy() )
+				GetMotor()->SetIdealYawAndUpdate( GetEnemy()->GetAbsOrigin() - GetAbsOrigin(), AI_KEEP_YAW_SPEED );
 
 			if( GetFlags() & FL_ONGROUND )
 			{
@@ -1992,6 +2084,7 @@ AI_BEGIN_CUSTOM_NPC( npc_headcrab, CBaseHeadcrab )
 	DECLARE_TASK( TASK_HEADCRAB_HOP_OFF_NPC )
 	DECLARE_TASK( TASK_HEADCRAB_WAIT_FOR_BARNACLE_KILL )
 	DECLARE_TASK( TASK_HEADCRAB_UNHIDE )
+	DECLARE_TASK( TASK_HEADCRAB_HARASS_HOP ) // VXP
 
 	DECLARE_ACTIVITY( ACT_HEADCRAB_THREAT_DISPLAY )
 	DECLARE_ACTIVITY( ACT_HEADCRAB_HOP_LEFT )
@@ -2138,6 +2231,22 @@ AI_BEGIN_CUSTOM_NPC( npc_headcrab, CBaseHeadcrab )
 		"		TASK_HEADCRAB_UNHIDE			0"
 
 		"	Interrupts"
+	)
+
+	DEFINE_SCHEDULE
+	(
+		SCHED_HEADCRAB_HARASS_ENEMY,
+
+		"	Tasks"
+		"		TASK_FACE_ENEMY					0"
+		"		TASK_HEADCRAB_HARASS_HOP		0"
+		"		TASK_WAIT_FACE_ENEMY			1"
+		"		TASK_SET_ROUTE_SEARCH_TIME		2"	// Spend 2 seconds trying to build a path if stuck
+		"		TASK_GET_PATH_TO_RANDOM_NODE	300"
+		"		TASK_WALK_PATH					0"
+		"		TASK_WAIT_FOR_MOVEMENT			0"
+		"	Interrupts"
+		"		COND_NEW_ENEMY"
 	)
 
 AI_END_CUSTOM_NPC()

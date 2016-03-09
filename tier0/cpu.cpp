@@ -195,7 +195,7 @@ static unsigned char LogicalProcessorsPerPackage(void)
 
 // Measure the processor clock speed by sampling the cycle count, waiting
 // for some fraction of a second, then measuring the elapsed number of cycles.
-static int64 CalculateClockSpeed()
+/*static int64 CalculateClockSpeed()
 {
 #ifdef _WIN32
 	LARGE_INTEGER waitTime, startCount, curCount;
@@ -230,6 +230,37 @@ static int64 CalculateClockSpeed()
 	}
 	return freq;
 #endif
+}*/
+static int64 CalculateClockSpeed()
+{
+#ifdef _WIN32
+	LARGE_INTEGER waitTime, startCount, curCount;
+	CCycleCount start, end;
+
+	QueryPerformanceFrequency(&waitTime);
+	int scale = 5;		// Take 1/32 of a second for the measurement.
+	waitTime.QuadPart >>= scale;
+
+	QueryPerformanceCounter(&startCount);
+	start.Sample();
+	do
+	{
+		QueryPerformanceCounter(&curCount);
+	}
+	while(curCount.QuadPart - startCount.QuadPart < waitTime.QuadPart);
+	end.Sample();
+
+	return (end.m_Int64 - start.m_Int64) << scale;
+
+#elif _LINUX
+	uint64 CalculateCPUFreq(); // from cpu_linux.cpp
+	int64 freq =(int64)CalculateCPUFreq();
+	if ( freq == 0 ) // couldn't calculate clock speed
+	{
+		Error( "Unable to determine CPU Frequency\n" );
+	}
+	return freq;
+#endif
 }
 
 const CPUInformation& GetCPUInformation()
@@ -241,7 +272,8 @@ const CPUInformation& GetCPUInformation()
 		return pi;
 
 	// Redundant, but just in case the user somehow messes with the size.
-	ZeroMemory(&pi, sizeof(pi));
+//	ZeroMemory(&pi, sizeof(pi));
+	memset(&pi, 0x0, sizeof(pi)); // VXP
 
 	// Fill out the structure, and return it:
 	pi.m_Size = sizeof(pi);

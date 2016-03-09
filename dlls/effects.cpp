@@ -1610,3 +1610,94 @@ void CEnvSplash::InputSplash( inputdata_t &inputdata )
 
 	DispatchEffect( "watersplash", data );
 }
+
+//=========================================================
+// func_particlestorm
+//=========================================================
+
+class CParticleStorm : public CBaseParticleEntity
+{
+public:
+	DECLARE_CLASS( CParticleStorm, CBaseParticleEntity );
+
+	DECLARE_SERVERCLASS();
+
+	void	Spawn( void );
+
+/*public:
+	// Effect parameters. These will assume default values but you can change them.
+	float			m_SpawnRate;			// How many particles per second.
+
+	Vector			m_StartColor;			// Fade between these colors.
+	Vector			m_EndColor;
+
+	float			m_ParticleLifetime;		// How long do the particles live?
+	
+	float			m_MinSpeed;				// Speed range.
+	float			m_MaxSpeed;
+	
+	float			m_StartSize;			// Size ramp.
+	float			m_EndSize;
+
+	float			m_SpawnRadius;
+
+	bool			m_bEmit;				// Keep emitting particles?
+	Vector			m_vecAttachVel;
+	float			m_flSuck;
+	float			m_flDim;*/
+};
+
+LINK_ENTITY_TO_CLASS( point_particlestorm, CParticleStorm );
+
+// Just send the normal entity crap
+IMPLEMENT_SERVERCLASS_ST( CParticleStorm, DT_ParticleStorm)
+
+	/*SendPropFloat( SENDINFO(m_SpawnRate), 16, SPROP_NOSCALE ),
+	SendPropVector(	SENDINFO(m_StartColor), -1,	SPROP_COORD ),
+	SendPropVector(	SENDINFO(m_EndColor), -1,	SPROP_COORD ),
+	SendPropFloat( SENDINFO(m_ParticleLifetime), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_MinSpeed), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_MaxSpeed), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_StartSize), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_EndSize), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_SpawnRadius), 16, SPROP_NOSCALE ),
+	SendPropInt( SENDINFO(m_flAnimTime), 8, SPROP_UNSIGNED ),
+	SendPropVector(	SENDINFO(m_vecAttachVel), -1,	SPROP_COORD ),
+	SendPropFloat( SENDINFO(m_flSuck), 16, SPROP_NOSCALE ),
+	SendPropFloat( SENDINFO(m_flDim), 16, SPROP_NOSCALE ),*/
+
+END_SEND_TABLE()
+
+/*CParticleStorm::C_ParticleStorm()
+{
+	m_SpawnRate = 10;
+	m_StartColor.Init(0.5, 0.5, 0.5);
+	m_EndColor.Init(0,0,0);
+	m_ParticleLifetime = 5;
+	m_MinSpeed = 2;
+	m_MaxSpeed = 4;
+	m_StartSize = 35;
+	m_EndSize = 55;
+	m_SpawnRadius = 2;
+
+	m_flAnimTime = 0.0f;
+	m_StartColor.Init(0.0, 0.0, 0.0);
+	m_flSuck = 0.0f;
+	m_flDim = 0.0f;
+}
+
+
+CParticleStorm::~C_ParticleStorm()
+{
+}*/
+
+
+void CParticleStorm::Spawn( void )							   
+{
+	Precache();
+	SetSolid( SOLID_NONE );							// Remove model & collisions
+	SetMoveType( MOVETYPE_NONE );
+	SetModel( STRING( GetModelName() ) );		// Set size
+
+//	m_nRenderMode = kRenderEnvironmental;
+}

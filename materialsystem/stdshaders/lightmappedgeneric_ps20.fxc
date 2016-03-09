@@ -123,8 +123,9 @@ HALF4 main( PS_INPUT i ) : COLOR
 		normalTexel = tex2D( BumpmapSampler, i.detailOrBumpAndEnvmapMaskTexCoord.xy );
 		if( bNormalMapAlphaEnvmapMask )
 		{
-		//	specularFactor *= normalTexel.a;
-			specularFactor *= (normalTexel.a * 0.2f); // VXP: Should this not being hardcoded?
+			specularFactor *= normalTexel.a;
+		// VXP: Commented next line because it's crappy. We need to change this value only in texture
+		//	specularFactor *= (normalTexel.a * 0.2f); // VXP: Should this not being hardcoded?
 		//	normalTexel.a = 0.0f;
 		}
 		normal = 2.0 * normalTexel - 1.0;

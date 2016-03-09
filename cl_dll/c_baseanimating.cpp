@@ -946,10 +946,7 @@ bool C_BaseAnimating::SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, i
 	}
 
 	boneMask = BONE_USED_BY_ANYTHING; // HACK HACK - this is a temp fix until we have accessors for bones to find out where problems are.
-
-	if ( m_nSequence == -1 )
-		 return false;
-
+	
 	studiohdr_t *hdr = GetModelPtr();
 	if ( !hdr )
 	{
@@ -1302,10 +1299,6 @@ void C_BaseAnimating::DoAnimationEvents( void )
 	}
 
 	bool watch = false; // Q_strstr( hdr->name, "rifle" ) ? true : false;
-
-	// VXP: This should never happen.
-	if ( m_nSequence == -1 )
-		 return;
 
 	Assert( hdr );
 
