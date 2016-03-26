@@ -293,6 +293,7 @@ public:
 	}
 };
 LINK_ENTITY_TO_CLASS(item_ml_grenade, CItem_ML_Grenade);
+LINK_ENTITY_TO_CLASS(item_rpg_round, CItem_ML_Grenade);
 
 // ========================================================================
 //	>> AR2_Grenade

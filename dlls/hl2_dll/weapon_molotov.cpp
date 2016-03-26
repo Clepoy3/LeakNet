@@ -146,7 +146,8 @@ void CWeaponMolotov::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatC
 			// -----------------------------------------------------
 			// If owner has a hand, set position to the hand bone position
 			Vector launchPos;
-			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
+		//	int iBIndex = pNPC->LookupBone("Bip01 R Hand");
+			int iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
 			if (iBIndex != -1) 
 			{
 				Vector origin;

@@ -224,4 +224,5 @@ goto done
 @rem All done
 @rem
 :done
+copy ..\hl2\bin\GameUI.dll ..\testmod\bin\
 call end_build

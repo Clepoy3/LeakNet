@@ -30,6 +30,8 @@
 #include "baseviewmodel.h"
 #include "movevars_shared.h"
 
+#include "ndebugoverlay.h"
+
 extern ConVar sk_npc_dmg_brickbat;
 extern ConVar sk_plr_dmg_brickbat;
 
@@ -258,7 +260,8 @@ void CWeaponBrickbat::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombat
 			// -----------------------------------------------------
 			// If owner has a hand, set position to the hand bone position
 			Vector launchPos;
-			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
+		//	int iBIndex = pNPC->LookupBone("Bip01 R Hand");
+			int iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
 			if (iBIndex != -1) {
 				Vector origin;
 				QAngle angles;
@@ -269,9 +272,17 @@ void CWeaponBrickbat::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombat
 				Vector vFacingDir = pNPC->BodyDirection2D( );
 				vFacingDir = vFacingDir * 60.0; 
 				launchPos = pNPC->GetLocalOrigin()+vFacingDir;
+#ifdef _DEBUG
+			//	NDebugOverlay::Line(launchPos, vFacingDir, 0, 255, 0, false, 1.0f);
+#endif
 			}
 
 			ThrowBrickbat( launchPos, m_vecTossVelocity, sk_npc_dmg_brickbat.GetFloat());
+
+#ifdef _DEBUG
+		//	NDebugOverlay::Box(launchPos, Vector(-5, -5, -5), 
+		//			Vector(5, 5, 5), 255, 0, 0, 0, 2.0f);
+#endif
 
 			// Drop the weapon and remove as no more ammo
 			pNPC->Weapon_Drop( this );
@@ -392,6 +403,8 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 		CBaseEntity*	pBlocker	= NULL;
 		float			throwDist	= (throwStart - vecTarget).Length();
 		float			fGravity	= sv_gravity.GetFloat(); 
+		if ( m_iCurrentAmmoType == 1 ) // VXP: Little hack for beer bottle thrown by NPC
+			fGravity	= 2000;
 		float			throwLimit	= pNPC->ThrowLimit(throwStart, vecTarget, fGravity, 35, WorldAlignMins(), WorldAlignMaxs(), pEnemy, &vecToss, &pBlocker);
 
 		// If I can make the throw (or most of the throw)
@@ -686,4 +699,36 @@ CWeaponBrickbat::CWeaponBrickbat( void )
 
 	m_fMinRange1	= 200;
 	m_fMaxRange1	= 1000;
+}
+
+class CWeaponBeerbottle : public CWeaponBrickbat
+{
+public:
+	DECLARE_CLASS( CWeaponBeerbottle, CWeaponBrickbat );
+//	DECLARE_SERVERCLASS();
+
+	void				SecondaryAttack( void );
+
+	CWeaponBeerbottle( void );
+};
+
+//IMPLEMENT_SERVERCLASS_ST(CWeaponBrickbat, DT_WeaponBrickbat)
+//END_SEND_TABLE()
+
+LINK_ENTITY_TO_CLASS( weapon_beerbottle, CWeaponBeerbottle );
+PRECACHE_WEAPON_REGISTER(weapon_beerbottle);
+LINK_ENTITY_TO_CLASS( weapon_beerbottle2, CWeaponBeerbottle );
+PRECACHE_WEAPON_REGISTER(weapon_beerbottle2);
+
+//-----------------------------------------------------------------------------
+// Purpose: Constructor
+//-----------------------------------------------------------------------------
+CWeaponBeerbottle::CWeaponBeerbottle( void )
+{
+	m_iCurrentAmmoType = 1; // grenade_beerbottle
+}
+
+void CWeaponBeerbottle::SecondaryAttack( void )
+{
+	return;
 }
