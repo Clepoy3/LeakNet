@@ -182,6 +182,9 @@ public:
 	DEFINE_CUSTOM_AI;
 
 private:
+	bool		m_bDied;
+	float		m_flDieTime;
+	float		m_flNextStabTime;
 };
 
 //-----------------------------------------------------------------------------

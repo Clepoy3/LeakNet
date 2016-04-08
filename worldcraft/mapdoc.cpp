@@ -1640,7 +1640,8 @@ BOOL CMapDoc::Serialize(fstream& file, BOOL fIsStoring, BOOL bRMF)
 			m_bEditingPrefab = FALSE;
 			
 			CString str;
-			str.Format("Prefab%d.rmf", id++);
+		//	str.Format("Prefab%d.rmf", id++);
+			str.Format("Prefab%d.vmf", id++);
 			SetPathName(str);
 			return 1;
 		}
@@ -4116,6 +4117,27 @@ void CMapDoc::OnUpdateFileConvertWAD( CCmdUI * pCmdUI )
 
 
 //-----------------------------------------------------------------------------
+// Purpose: Gets the relevant file extensions for the given map format.
+// Input  : mf - 
+//			strEditExtension - The extension of the edit file (eg. .VMF, .RMF)
+//			strCompileExtension - The extension of the file to compile (eg. .VMF, .MAP)
+//-----------------------------------------------------------------------------
+void GetFileExtensions(MAPFORMAT mf, CString &strEditExtension, CString &strCompileExtension)
+{
+	if (mf == mfHalfLife2)
+	{
+		strEditExtension = ".vmf";
+		strCompileExtension = ".vmf";
+	}
+	else
+	{
+		strEditExtension = ".rmf";
+		strCompileExtension = ".map";
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 // Purpose: Does a normal map compile.
 //-----------------------------------------------------------------------------
 void CMapDoc::OnFileRunmap(void)
@@ -4129,27 +4151,34 @@ void CMapDoc::OnFileRunmap(void)
 		return;
 	}
 
+	CString strEditExtension;
+	CString strCompileExtension;
+	GetFileExtensions(m_pGame->mapformat, strEditExtension, strCompileExtension);
+
 	CRunMap dlg;
 	CRunMapExpertDlg dlgExpert;
 
 	CString strFile = GetPathName();
 
+	BOOL bSave = IsModified();
+
 	// make sure it is saved first
-	if (strFile.IsEmpty())
+	if (strFile.IsEmpty() || bSave)
 	{
 		OnFileSave();
 		strFile = GetPathName();
-		if (strFile.IsEmpty())
+		if (strFile.IsEmpty() || IsModified())
 		{
 			return;
 		}
 	}
 	
 	strFile.MakeLower();
-	int iPos;
-	BOOL bSave = IsModified();
+//	int iPos;
+	int iPos = strFile.Find(strEditExtension);
+//	BOOL bSave = IsModified(); // VXP: Upthere
 
-	if ((iPos = strFile.Find(".rmf")) != -1)
+	/*if ((iPos = strFile.Find(".rmf")) != -1)
 	{
 		if (bSave)
 		{	// save RMF file.
@@ -4159,11 +4188,25 @@ void CMapDoc::OnFileRunmap(void)
 		strcpy(strFile.GetBuffer(0)+iPos, ".map");
 		strFile.ReleaseBuffer();
 		bSave = TRUE;
+	}*/
+
+	if (iPos != -1)
+	{
+		strcpy(strFile.GetBuffer(0)+iPos, strCompileExtension);
+		strFile.ReleaseBuffer();
+
+		if (bSave)
+		{	// save RMF file.
+			OnSaveDocument(strFile);
+		}
+
+	//	bSave = TRUE;
 	}
 	
 	// make "bsp" string
 	CString strBspFile(strFile);
-	iPos = strBspFile.Find(".map");
+//	iPos = strBspFile.Find(".map");
+	iPos = strBspFile.Find(strCompileExtension);
 	strcpy(strBspFile.GetBuffer(0)+iPos, ".bsp");
 	strBspFile.ReleaseBuffer();
 	

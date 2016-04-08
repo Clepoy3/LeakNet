@@ -448,12 +448,16 @@ float CSoundPatch::GetVolume( void )
 //-----------------------------------------------------------------------------
 inline int CSoundPatch::EntIndex() const
 {
-	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
-//	if( m_hEnt.IsValid() && !m_hEnt.Get() )
-//	{
-//		Warning( "CSoundPatch::EntIndex: Cannot get sound entity index!\n" );
-//		return -1;
-//	}
+//	bool test1 = m_hEnt.IsValid();
+//	bool test2 = m_hEnt.Get() != NULL;
+//	Msg( "CSoundPatch:EntIndex: %s, %s\n", (test1 ? "YES" : "NO"), (test2 ? "YES" : "NO") );
+
+//	Assert( !m_hEnt.IsValid() || m_hEnt.Get() );
+	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+	{
+		DevWarning( "CSoundPatch::EntIndex: Cannot get sound entity index!\n" );
+		return -1;
+	}
 	return m_hEnt.Get() ? m_hEnt->entindex() : -1;
 }
 
@@ -472,11 +476,11 @@ float CSoundPatch::GetVolumeForEngine( void )
 //-----------------------------------------------------------------------------
 void CSoundPatch::Shutdown( void )
 {
-//	if( m_hEnt.IsValid() && !m_hEnt.Get() )
-//	{
-//		Warning( "CSoundPatch::Shutdown: Cannot get sound entity!\n" );
-//		return;
-//	}
+	if( m_hEnt.IsValid() && !m_hEnt.Get() )
+	{
+		DevWarning( "CSoundPatch::Shutdown: Cannot get sound entity!\n" );
+		return;
+	}
 //	Msg( "Removing sound %s\n", m_pszSoundName );
 	if ( m_isPlaying )
 	{

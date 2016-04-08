@@ -33,6 +33,8 @@
 #include "decals.h"
 #include "ai_nav_property.h"
 #include "iServerVehicle.h"
+#include "func_break.h" // CBreakable
+#include "props.h" // CBreakableProp
 
 ConVar	g_debug_antlionguard( "g_debug_antlionguard", "0" );
 ConVar	sk_antlionguard_dmg_charge( "sk_antlionguard_dmg_charge", "0" );
@@ -1068,10 +1070,22 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 			//Play the proper impact sound
 			//surfacedata_t *pHit = physprops->GetSurfaceData( m_hPhysicsTarget->entindex() );
 
-			//Send it flying
-			AngularImpulse angVel( random->RandomFloat(-180, 180), 100, random->RandomFloat(-360, 360) );
-			physObj->ApplyForceCenter( targetDir );
-			physObj->AddVelocity( NULL, &angVel );
+			if ( physObj->IsMoveable() )
+			{
+				//Send it flying
+				AngularImpulse angVel( random->RandomFloat(-180, 180), 100, random->RandomFloat(-360, 360) );
+				physObj->ApplyForceCenter( targetDir );
+				physObj->AddVelocity( NULL, &angVel );
+			}
+			else
+			{
+			//	CBreakable *pBreakable = dynamic_cast<CBreakable*>( physObj );
+				CBreakableProp *pBreakable = dynamic_cast<CBreakableProp*>( m_hPhysicsTarget.Get() );
+				if ( pBreakable )
+				{
+					pBreakable->Break( this, NULL );
+				}
+			}
 			
 			//Clear the state information, we're done
 			ClearCondition( COND_ANTLIONGUARD_PHYSICS_TARGET );

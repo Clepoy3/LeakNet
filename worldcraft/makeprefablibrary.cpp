@@ -34,7 +34,8 @@ void MakePrefabLibrary(LPCTSTR pszName)
 	static BOOL bFirst = TRUE;
 Again:
 	WIN32_FIND_DATA fd;
-	HANDLE hnd = FindFirstFile(bFirst ? "*.rmf" : "*.map", &fd);
+//	HANDLE hnd = FindFirstFile(bFirst ? "*.rmf" : "*.map", &fd);
+	HANDLE hnd = FindFirstFile(bFirst ? "*.vmf" : "*.vmf", &fd);
 
 	if(hnd != INVALID_HANDLE_VALUE)	do
 	{

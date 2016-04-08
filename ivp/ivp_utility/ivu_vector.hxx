@@ -158,7 +158,9 @@ public:
     };
 
     T* element_at(int index) const {
-	IVP_ASSERT(index>=0 && index < n_elems);
+//	IVP_ASSERT(index>=0 && index < n_elems);
+	if ( index < 0 || index >= n_elems ) // VXP
+		return NULL;
 	return (T *)elems[index];
     };
 };

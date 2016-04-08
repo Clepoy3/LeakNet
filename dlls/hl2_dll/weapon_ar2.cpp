@@ -35,6 +35,8 @@ BEGIN_DATADESC( CWeaponAR2 )
 	DEFINE_FIELD( CWeaponAR2, m_bZoomed,		FIELD_BOOLEAN ),
 	DEFINE_FIELD( CWeaponAR2, m_bUseGrenade,	FIELD_BOOLEAN ),
 
+//	DEFINE_ENTITYFUNC( CWeaponAR2, ScreenTextThink ), // VXP
+
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponAR2, DT_WeaponAR2)
@@ -83,6 +85,9 @@ void CWeaponAR2::Precache( void )
 bool CWeaponAR2::Deploy( void )
 {
 	m_nShotsFired = 0;
+	
+//	SetThink( ScreenTextThink );
+//	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	return BaseClass::Deploy();
 }
@@ -111,7 +116,7 @@ void CWeaponAR2::ItemPostFrame( void )
 	//	Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
 	}
 	
-	NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 );
+	NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 ); // VXP: Moved to Think
 	
 	//Zoom in
 	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) )
@@ -141,6 +146,11 @@ void CWeaponAR2::ItemPostFrame( void )
 
 	BaseClass::ItemPostFrame();
 }
+
+// void CWeaponAR2::ScreenTextThink()
+// {
+//		NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 );
+// }
 
 //-----------------------------------------------------------------------------
 // Purpose: 

@@ -148,16 +148,17 @@ int CProcessWnd::Execute(LPCTSTR pszCmd, LPCTSTR pszCmdLine)
 				PROCESS_INFORMATION pi;
 				CString str;
 				str.Format("%s %s", pszCmd, pszCmdLine);
-				if(CreateProcess(pszCmd, (char*) LPCTSTR(str), NULL, NULL, TRUE, 
+			//	if(CreateProcess(pszCmd, (char*) LPCTSTR(str), NULL, NULL, TRUE, 
+				if(CreateProcess(NULL, (char*) LPCTSTR(str), NULL, NULL, TRUE, 
 					DETACHED_PROCESS, NULL, NULL, &si, &pi))
 				{
 					HANDLE hProcess = pi.hProcess;
-					HANDLE hThread = pi.hThread;
+				//	HANDLE hThread = pi.hThread;
 					
 #define BUFFER_SIZE 4096
 					// read from pipe..
 					char buffer[BUFFER_SIZE];
-					int nLines = 0;
+				//	int nLines = 0;
 					BOOL bDone = FALSE;
 					
 					while(1)

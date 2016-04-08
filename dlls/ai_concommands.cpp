@@ -299,12 +299,14 @@ void CC_NPC_Create( void )
 //	}
 
 	// Try to create entity
-	CAI_BaseNPC *baseNPC = (CAI_BaseNPC *)CreateEntityByName(engine->Cmd_Argv(1));
+//	CAI_BaseNPC *baseNPC = (CAI_BaseNPC *)CreateEntityByName(engine->Cmd_Argv(1));
+	CAI_BaseNPC *baseNPC = dynamic_cast< CAI_BaseNPC * >( CreateEntityByName(engine->Cmd_Argv(1)) );
 	if (baseNPC)
 	{
 		baseNPC->KeyValue( "additionalequipment", npc_create_equipment.GetString() );
 		baseNPC->Precache();
-		baseNPC->Spawn();
+	//	baseNPC->Spawn();
+		DispatchSpawn( baseNPC );
 		// Now attempt to drop into the world
 		CBasePlayer* pPlayer = UTIL_GetCommandClient();
 		trace_t tr;
@@ -346,6 +348,17 @@ void CC_NPC_Create( void )
 				baseNPC->Relink();
 			}
 		}
+		baseNPC->Activate();
+/*
+		// VXP: Works properly, but takes some entity in some slot and asserts at CBaseEntityList::AddEntityAtSlot
+	//	baseNPC->PostConstructor( engine->Cmd_Argv(1) );
+		// or
+		if ( baseNPC->edict() )
+		{
+			gEntList.AddNetworkableEntity( baseNPC, baseNPC->entindex() );
+		}
+	//	gEntList.AddNonNetworkableEntity( baseNPC );
+*/
 	}
 }
 static ConCommand npc_create("npc_create", CC_NPC_Create, "Creates an NPC of the given type where the player is looking (if the given NPC can actually stand at that location).  Note that this only works for npc classes that are already in the world.  You can not create an entity that doesn't have an instance in the level.\n\tArguments:	{npc_class_name}", FCVAR_CHEAT);
@@ -358,12 +371,12 @@ void CC_NPC_Create_Aimed( void )
 {
 	// First make sure one of these types exists, becuase if it ain't
 	// precached, we can't spawn one 
-	CBaseEntity *pPrecached = gEntList.FindEntityByClassname(NULL, engine->Cmd_Argv(1));
-	if (!pPrecached)
-	{
-		Msg("Can't create %s.  Not precached!\n",engine->Cmd_Argv(1));
-		return;
-	}
+//	CBaseEntity *pPrecached = gEntList.FindEntityByClassname(NULL, engine->Cmd_Argv(1));
+//	if (!pPrecached)
+//	{
+//		Msg("Can't create %s.  Not precached!\n",engine->Cmd_Argv(1));
+//		return;
+//	}
 
 	// Try to create entity
 	CAI_BaseNPC *baseNPC = (CAI_BaseNPC *)CreateEntityByName(engine->Cmd_Argv(1));
@@ -391,7 +404,9 @@ void CC_NPC_Create_Aimed( void )
 
 			baseNPC->SetLocalOrigin( tr.endpos );
 
-			baseNPC->Spawn();
+			baseNPC->Precache();
+		//	baseNPC->Spawn();
+			DispatchSpawn( baseNPC );
 
 			UTIL_DropToFloor( baseNPC, MASK_NPCSOLID );
 

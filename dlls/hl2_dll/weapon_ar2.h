@@ -37,6 +37,7 @@ public:
 	bool	Reload( void );
 	float	GetFireRate( void );
 	void	ItemPostFrame( void );
+//	void	ScreenTextThink( void ); // VXP
 	void	Precache( void );
 	void	PrimaryAttack( void );
 	void	SecondaryAttack( void );

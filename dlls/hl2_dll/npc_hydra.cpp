@@ -126,6 +126,8 @@ IMPLEMENT_SERVERCLASS_ST(CNPC_Hydra, DT_NPC_Hydra)
 	SendPropFloat( SENDINFO( m_flRelaxedLength ), 12, 0, 0.0, HYDRA_MAX_LENGTH * 1.5 ),
 END_SEND_TABLE()
 
+ConVar	sk_hydra_health( "sk_hydra_health", "20" );
+ConVar	sk_hydra_stab_damage( "sk_hydra_stab_damage", "12" );
 
 //---------------------------------------------------------
 // Save/Restore
@@ -154,6 +156,9 @@ BEGIN_DATADESC( CNPC_Hydra )
 	DEFINE_FIELD( CNPC_Hydra,		m_flTaskEndTime,		FIELD_TIME ),
 	DEFINE_FIELD( CNPC_Hydra,		m_flLengthTime,			FIELD_TIME ),
 	DEFINE_FIELD( CNPC_Hydra,		m_bStabbedEntity,		FIELD_BOOLEAN ),
+	DEFINE_FIELD( CNPC_Hydra,		m_bDied,				FIELD_BOOLEAN ), // VXP
+	DEFINE_FIELD( CNPC_Hydra,		m_flDieTime,			FIELD_TIME ), // VXP
+	DEFINE_FIELD( CNPC_Hydra,		m_flNextStabTime,		FIELD_TIME ), // VXP
 
 END_DATADESC()
 
@@ -250,7 +255,8 @@ void CNPC_Hydra::Spawn()
 	SetMoveType( MOVETYPE_STEP );
 	SetBloodColor( BLOOD_COLOR_RED );
 	m_fEffects			= 0;
-	m_iHealth			= 20;
+	m_iHealth			= sk_hydra_health.GetFloat();
+	m_iMaxHealth		= m_iHealth;
 	m_flFieldOfView		= -1.0;// indicates the width of this NPC's forward view cone ( as a dotproduct result )
 	m_NPCState			= NPC_STATE_NONE;
 	// CapabilitiesAdd( bits_CAP_TURN_HEAD | bits_CAP_DOORS_GROUP | bits_CAP_MOVE_GROUND | bits_CAP_MOVE_CLIMB );
@@ -291,6 +297,10 @@ void CNPC_Hydra::Spawn()
 
 //	m_takedamage = DAMAGE_NO;
 	m_takedamage = DAMAGE_YES;
+
+	m_bDied = false;
+	m_flDieTime = 0;
+	m_flNextStabTime = gpGlobals->curtime;
 }
 
 //-----------------------------------------------------------------------------
@@ -716,28 +726,35 @@ void CNPC_Hydra::Stab( CBaseEntity *pOther, const Vector &vecSpeed, trace_t &tr 
 	}
 	else if (pOther->m_takedamage == DAMAGE_YES && pOther->IsPlayer())
 	{
-		Vector dir = vecSpeed;
-		VectorNormalize( dir );
+		if ( gpGlobals->curtime >= m_flNextStabTime )
+		{
+			Vector dir = vecSpeed;
+			VectorNormalize( dir );
 
-	//	UTIL_ScreenShake( pOther->GetAbsOrigin(), 50, 1, 0.1, 50, SHAKE_START, true );
-		UTIL_ScreenShake( pOther->EyePosition(), 50, 1, 0.1, 50, SHAKE_START, true );
-	//	if( random->RandomInt( 0, 1 ) == 1 )
-		int damage = 0;
-		if( random->RandomFloat( 0.0f, 1.0f ) < 0.1f )
-			damage = pOther->m_iHealth+25;
-		else
-			damage = 25;
-	//	ClearMultiDamage();
-		// VXP: Maybe, this cause hydra stupid
-		CTakeDamageInfo info( this, this, damage, DMG_SLASH );
-		CalculateMeleeDamageForce( &info, dir, tr.endpos );
-		pOther->DispatchTraceAttack( info, dir, &tr );
-	//	pOther->TakeDamage( info );
-		ApplyMultiDamage();
-		
-		CPASAttenuationFilter filter( this, "NPC_Hydra.Pain" );
-		Vector vecHead = EyePosition();
-		EmitSound( filter, entindex(), "NPC_Hydra.Pain", &vecHead );
+		//	UTIL_ScreenShake( pOther->GetAbsOrigin(), 50, 1, 0.1, 50, SHAKE_START, true );
+			UTIL_ScreenShake( pOther->EyePosition(), 50, 1, 0.1, 50, SHAKE_START, true );
+		//	if( random->RandomInt( 0, 1 ) == 1 )
+		/*	int damage = 0;
+			if( random->RandomFloat( 0.0f, 1.0f ) < 0.1f )
+				damage = pOther->m_iHealth+25;
+			else
+				damage = 25;*/
+		//	float damage = sk_hydra_stab_damage.GetFloat() + random->RandomFloat( -2.0f, 3.0f );
+			int damage = sk_hydra_stab_damage.GetInt() + random->RandomInt( -2, 3 );
+		//	ClearMultiDamage();
+			// VXP: Maybe, this cause hydra stupid
+			CTakeDamageInfo info( this, this, damage, DMG_SLASH );
+			CalculateMeleeDamageForce( &info, dir, tr.endpos );
+			pOther->DispatchTraceAttack( info, dir, &tr );
+		//	pOther->TakeDamage( info );
+			ApplyMultiDamage();
+			
+			CPASAttenuationFilter filter( this, "NPC_Hydra.Pain" );
+			Vector vecHead = EyePosition();
+			EmitSound( filter, entindex(), "NPC_Hydra.Pain", &vecHead );
+			
+			m_flNextStabTime = gpGlobals->curtime + 1.3f;
+		}
 	}
 	else
 	{
@@ -1205,6 +1222,14 @@ void CNPC_Hydra::PrescheduleThink()
 	{
 		UpdateStabbedEntity();
 	}
+
+	if ( m_bDied && gpGlobals->curtime >= m_flDieTime )
+	{
+#ifdef _DEBUG
+		Msg( "Hydra was removed.\n" );
+#endif
+		SetThink( SUB_Remove );
+	}
 }	
 
 //-------------------------------------
@@ -1223,6 +1248,13 @@ int CNPC_Hydra::SelectSchedule ()
 	case NPC_STATE_ALERT:
 		{
 			return SCHED_HYDRA_STAB;
+		/*	m_vecHeadGoal = GetAbsOrigin( ) + m_vecOutward * 100;
+
+			CPASAttenuationFilter filter( this, "NPC_Hydra.Search" );
+			Vector vecHead = EyePosition();
+			EmitSound( filter, entindex(), "NPC_Hydra.Search", &vecHead );
+
+			return SCHED_HYDRA_IDLE; // VXP: Maybe not..?*/
 		}
 		break;
 
@@ -1267,9 +1299,21 @@ void CNPC_Hydra::StartTask( const Task_t *pTask )
 				SetTarget( GetEnemy() );
 			}
 
-			CPASAttenuationFilter filter( this, "NPC_Hydra.Alert" );
-			Vector vecHead = EyePosition();
-			EmitSound( filter, entindex(), "NPC_Hydra.Alert", &vecHead );
+			if ( GetTarget() && GetTarget()->GetHealth() > 0 )
+			{
+				CPASAttenuationFilter filter( this, "NPC_Hydra.Alert" );
+				Vector vecHead = EyePosition();
+				EmitSound( filter, entindex(), "NPC_Hydra.Alert", &vecHead );
+			}
+			else if ( GetTarget() && GetTarget()->GetHealth() <= 0 )
+			{
+			//	m_flTaskEndTime += random->RandomFloat ( 2.0f, 5.0f );
+			//	m_flTaskEndTime = gpGlobals->curtime + pTask->flTaskData + 10.0f;
+
+			//	CPASAttenuationFilter filter( this, "NPC_Hydra.Search" );
+			//	Vector vecHead = EyePosition();
+			//	EmitSound( filter, entindex(), "NPC_Hydra.Search", &vecHead );
+			}
 		}
 		return;
 
@@ -1334,13 +1378,15 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 			}
 
 			CBaseEntity *pTarget = GetTarget();
-			if (pTarget == NULL /*|| pTarget->GetHealth() <= 0*/)
+			if (pTarget == NULL || ( pTarget && pTarget->GetHealth() <= 0 ))
 			{
 				TaskFail( FAIL_NO_TARGET );
+				return;
 			}
 			
 			if (pTarget->GetFlags() & FL_NOTARGET)
 			{
+				TaskFail( FAIL_NO_TARGET );
 				return;
 			}
 
@@ -1635,6 +1681,9 @@ void CNPC_Hydra::Event_Killed(const CTakeDamageInfo &info)
 	AdjustLength( );
 	CalcGoalForces( );
 	MoveBody( );
+
+	m_bDied = true;
+	m_flDieTime = gpGlobals->curtime + 2.0f;
 	
 	BaseClass::Event_Killed( info ); 
 }
