@@ -30,7 +30,7 @@ class CCvarToggleCheckButton;
 struct AAMode_t
 {
 	int m_nNumSamples;
-//	int m_nQualityLevel;
+	int m_nQualityLevel;
 };
 
 //-----------------------------------------------------------------------------
@@ -57,6 +57,7 @@ private:
 		int			aniso;
 		int			antialias;
 		int			waterentreflect;
+		int			antialiasquality;
 	};
 
 	CVidSettings		m_OrigSettings;
@@ -67,7 +68,7 @@ private:
 	void		ApplyVidSettings(bool bForceRefresh);
 	
 	void		SetComboItemAsRecommended( vgui::ComboBox *combo, int iItem );
-	int			FindMSAAMode( int nAASamples );
+	int			FindMSAAMode( int nAASamples, int nAAQuality );
 
 //    void        SetCurrentRendererComboItem();
 	void        SetCurrentAnisoComboItem();

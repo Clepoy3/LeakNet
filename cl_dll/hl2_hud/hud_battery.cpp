@@ -22,7 +22,8 @@
 #include "hudelement.h"
 #include "hud_macros.h"
 #include "parsemsg.h"
-#include "hud_numericdisplay.h"
+//#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 #include "iclientmode.h"
 
 #include <vgui_controls/AnimationController.h>
@@ -32,9 +33,11 @@
 //-----------------------------------------------------------------------------
 // Purpose: Displays suit power (armor) on hud
 //-----------------------------------------------------------------------------
-class CHudBattery : public CHudNumericDisplay, public CHudElement
+//class CHudBattery : public CHudNumericDisplay, public CHudElement
+class CHudBattery : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudBattery, CHudNumericDisplay );
+//	DECLARE_CLASS_SIMPLE( CHudBattery, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudBattery, CHudBitmapNumericDisplay );
 
 public:
 	CHudBattery( const char *pElementName );
@@ -57,7 +60,8 @@ DECLARE_HUD_MESSAGE( CHudBattery, Battery );
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit"), CHudElement( pElementName )
+//CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit"), CHudElement( pElementName )
+CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit2"), CHudElement( pElementName )
 {
 }
 

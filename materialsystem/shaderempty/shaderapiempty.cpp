@@ -237,10 +237,13 @@ public:
 	bool Prefer16BitTextures( ) const;
 	
 	// Sets the mode...
-	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSampleCount );
+	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSampleCount, int nQualityLevel );
 	
 	// Reports support for a given MSAA mode
 	bool SupportsMSAAMode( int nMSAAMode );
+
+	// Reports support for a given ÑSAA mode
+	bool SupportsCSAAMode( int nNumSamples, int nQualityLevel );
 
 	void GetWindowSize( int &width, int &height ) const;
 
@@ -1123,7 +1126,7 @@ void CShaderAPIEmpty::ClearSnapshots()
 }
 
 // Sets the mode...
-bool CShaderAPIEmpty::SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSampleCount )
+bool CShaderAPIEmpty::SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSampleCount, int nQualityLevel )
 {
 	return true;
 }
@@ -2119,6 +2122,11 @@ void CShaderAPIEmpty::SyncToken( const char *pToken )
 }
 // Sets the mode...
 bool CShaderAPIEmpty::SupportsMSAAMode( int nMSAAMode )
+{
+	return false;
+}
+
+bool CShaderAPIEmpty::SupportsCSAAMode( int nNumSamples, int nQualityLevel )
 {
 	return false;
 }

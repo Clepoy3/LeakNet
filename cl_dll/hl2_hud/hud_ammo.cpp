@@ -9,7 +9,8 @@
 #include "hudelement.h"
 #include "hud_macros.h"
 #include "parsemsg.h"
-#include "hud_numericdisplay.h"
+//#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 #include "iclientmode.h"
 
 #include <vgui_controls/AnimationController.h>
@@ -17,16 +18,19 @@
 //-----------------------------------------------------------------------------
 // Purpose: Displays current ammunition level
 //-----------------------------------------------------------------------------
-class CHudAmmo : public CHudNumericDisplay, public CHudElement
+//class CHudAmmo : public CHudNumericDisplay, public CHudElement
+class CHudAmmo : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudAmmo, CHudNumericDisplay );
+//	DECLARE_CLASS_SIMPLE( CHudAmmo, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudAmmo, CHudBitmapNumericDisplay );
 
 public:
 	CHudAmmo( const char *pElementName );
 	void Init( void );
 	void VidInit( void );
 
-	void SetAmmo(int ammo, bool playAnimation);
+//	void SetAmmo(int ammo, bool playAnimation);
+	void SetAmmo(int ammo, int maxammo, bool playAnimation);
 	void SetAmmo2(int ammo2, bool playAnimation);
 		
 protected:
@@ -43,7 +47,8 @@ DECLARE_HUDELEMENT( CHudAmmo );
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHudElement( pElementName )
+//CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHudElement( pElementName )
+CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo2"), CHudElement( pElementName )
 {
 }
 
@@ -102,13 +107,15 @@ void CHudAmmo::OnThink()
 	if (wpn == m_hCurrentActiveWeapon)
 	{
 		// same weapon, just update counts
-		SetAmmo(ammo1, true);
+	//	SetAmmo(ammo1, true);
+		SetAmmo(ammo1, wpn->GetMaxClip1(), true);
 		SetAmmo2(ammo2, true);
 	}
 	else
 	{
 		// diferent weapon, change without triggering
-		SetAmmo(ammo1, false);
+	//	SetAmmo(ammo1, false);
+		SetAmmo(ammo1, wpn->GetMaxClip1(), false);
 		SetAmmo2(ammo2, false);
 
 		// update whether or not we show the total ammo display
@@ -140,7 +147,7 @@ void CHudAmmo::OnThink()
 //-----------------------------------------------------------------------------
 // Purpose: Updates ammo display
 //-----------------------------------------------------------------------------
-void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
+void CHudAmmo::SetAmmo(int ammo, int maxammo, bool playAnimation)
 {
 	if (ammo != m_iAmmo)
 	{
@@ -162,7 +169,8 @@ void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
 		m_iAmmo = ammo;
 	}
 
-	SetDisplayValue(ammo);
+//	SetDisplayValue(ammo);
+	SetDisplayValue(ammo, maxammo);
 }
 
 //-----------------------------------------------------------------------------
@@ -196,12 +204,15 @@ void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
 //-----------------------------------------------------------------------------
 // Purpose: Displays the secondary ammunition level
 //-----------------------------------------------------------------------------
-class CHudSecondaryAmmo : public CHudNumericDisplay, public CHudElement
+//class CHudSecondaryAmmo : public CHudNumericDisplay, public CHudElement
+class CHudSecondaryAmmo : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmo, CHudNumericDisplay );
+//	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmo, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmo, CHudBitmapNumericDisplay );
 
 public:
-	CHudSecondaryAmmo( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary" ), CHudElement( pElementName )
+//	CHudSecondaryAmmo( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary" ), CHudElement( pElementName )
+	CHudSecondaryAmmo( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary2" ), CHudElement( pElementName )
 	{
 		m_iAmmo = -1;
 	}

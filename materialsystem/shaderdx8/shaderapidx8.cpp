@@ -74,6 +74,12 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 //#undef D3D_BUG_TRACKED_DOWN
 #define D3D_BUG_TRACKED_DOWN
 
+//-----------------------------------------------------------------------------
+// Vendor IDs sometimes needed for vendor-specific code
+//-----------------------------------------------------------------------------
+#define VENDORID_NVIDIA	0x10DE
+#define VENDORID_ATI	0x1002
+
 #ifdef STUBD3D
 #include "stubd3ddevice.h"
 #endif // STUBD3D
@@ -286,10 +292,13 @@ public:
 	virtual bool Prefer16BitTextures( ) const;
 	
 	// Sets the mode...
-	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0 );
+	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0, int nQualityLevel = 0 );
 	
 	// Reports support for a given MSAA mode
 	bool SupportsMSAAMode( int nMSAAMode );
+
+	// Reports support for a given ÑSAA mode
+	bool SupportsCSAAMode( int nNumSamples, int nQualityLevel );
 
 	// Creates/ destroys a child window
 	bool AddView( void* hwnd );
@@ -859,20 +868,20 @@ private:
 	bool ValidateMode( void* hwnd, const MaterialVideoMode_t &mode, int flags ) const;
 	bool DoesModeRequireDeviceChange( void* hwnd, const MaterialVideoMode_t &mode, int flags ) const;
 	bool CanRenderWindowed( ) const;
-	void SetPresentParameters( MaterialVideoMode_t const& mode, int flags, int nSampleCount );
+	void SetPresentParameters( MaterialVideoMode_t const& mode, int flags, int nSampleCount, int nQualityLevel );
 
 	// Changes the window size
-	bool ResizeWindow( const MaterialVideoMode_t &mode, int flags, int nSampleCount );
+	bool ResizeWindow( const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel );
 
 	// Finds a child window
 	int  FindView( void* hwnd ) const;
 
 	// Initialize, shutdown the D3DDevice....
-	bool InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount );
+	bool InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel );
 	void ShutdownDevice( );
 
 	// Creates the D3D Device
-	bool CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount );
+	bool CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel );
 
 	// Alloc and free objects that are necessary for frame syncing
 	void AllocFrameSyncObjects( void );
@@ -1581,7 +1590,7 @@ static D3DMULTISAMPLE_TYPE ComputeMultisampleType( int nSampleCount )
 //-----------------------------------------------------------------------------
 // Sets the present parameters
 //-----------------------------------------------------------------------------
-void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int flags, int nSampleCount )
+void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel )
 {
 	D3DDISPLAYMODE d3ddm;
 	HRESULT hr = m_pD3D->GetAdapterDisplayMode( m_DisplayAdapter, &d3ddm );
@@ -1672,20 +1681,61 @@ void CShaderAPIDX8::SetPresentParameters( const MaterialVideoMode_t &mode, int f
 		m_PresentParameters.BackBufferCount = 1;
 	}
 
-	if (flags & MATERIAL_VIDEO_MODE_ANTIALIAS)
+/*	if (flags & MATERIAL_VIDEO_MODE_ANTIALIAS)
 	{
-		DWORD nQualityLevel;
+	//	DWORD nQualityLevel;
 		D3DMULTISAMPLE_TYPE multiSampleType = ComputeMultisampleType( nSampleCount );
 		hr = m_pD3D->CheckDeviceMultiSampleType( m_DisplayAdapter, m_DeviceType, 
 			m_PresentParameters.BackBufferFormat, m_PresentParameters.Windowed, 
-			multiSampleType, &nQualityLevel 
+		//	multiSampleType, &nQualityLevel
+			multiSampleType, NULL
 			);
 
 		if (!FAILED(hr))
 		{
 			m_PresentParameters.MultiSampleType = multiSampleType;
-			m_PresentParameters.MultiSampleQuality = nQualityLevel - 1;
+		//	m_PresentParameters.MultiSampleQuality = nQualityLevel - 1;
+			m_PresentParameters.MultiSampleQuality = nQualityLevel;
 		}
+	}*/
+	// VXP: From Source 2007
+	if (nSampleCount > 0 && flags & MATERIAL_VIDEO_MODE_ANTIALIAS)
+	{
+		D3DMULTISAMPLE_TYPE multiSampleType = ComputeMultisampleType( nSampleCount );
+		if ( ( nSampleCount == 16 ) && ( m_nVendorId == VENDORID_NVIDIA ) )
+		{
+			multiSampleType = ComputeMultisampleType( 4 );
+			hr = m_pD3D->CheckDeviceMultiSampleType( m_DisplayAdapter, m_DeviceType, 
+				m_PresentParameters.BackBufferFormat, m_PresentParameters.Windowed, 
+				multiSampleType, NULL ); // 4x at highest quality level
+			if (!FAILED(hr) && ( nQualityLevel == 16 ))
+			{
+				nQualityLevel = nQualityLevel - 1; // Highest quality level triggers 16x CSAA
+			}
+			else
+			{
+				nQualityLevel  = 0; // No CSAA
+			}
+		}
+		else // Regular MSAA on any old vendor
+		{
+			hr = m_pD3D->CheckDeviceMultiSampleType( m_DisplayAdapter, m_DeviceType, 
+				m_PresentParameters.BackBufferFormat, m_PresentParameters.Windowed, 
+				multiSampleType, NULL );
+
+			nQualityLevel = 0;
+		}
+
+		if (!FAILED(hr))
+		{
+			m_PresentParameters.MultiSampleType = multiSampleType;
+			m_PresentParameters.MultiSampleQuality = nQualityLevel;
+		}
+	}
+	else
+	{
+		m_PresentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
+		m_PresentParameters.MultiSampleQuality = 0;
 	}
 }
 
@@ -1705,7 +1755,7 @@ void CShaderAPIDX8::GetBackBufferDimensions( int& width, int& height ) const
 //-----------------------------------------------------------------------------
 // Changes the window size
 //-----------------------------------------------------------------------------
-bool CShaderAPIDX8::ResizeWindow( const MaterialVideoMode_t &mode, int flags, int nSampleCount ) 
+bool CShaderAPIDX8::ResizeWindow( const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel ) 
 {
 	// We don't need to do crap if the window was set up to set up
 	// to be resizing...
@@ -1719,7 +1769,7 @@ bool CShaderAPIDX8::ResizeWindow( const MaterialVideoMode_t &mode, int flags, in
     ShaderUtil()->ReleaseShaderObjects();
 
     // Reset the device
-	SetPresentParameters( mode, flags, nSampleCount );
+	SetPresentParameters( mode, flags, nSampleCount, nQualityLevel );
 
 	RECORD_COMMAND( DX8_RESET, 1 );
 	RECORD_STRUCT( &m_PresentParameters, sizeof(m_PresentParameters) );
@@ -1957,7 +2007,7 @@ void CShaderAPIDX8::FreeFrameSyncObjects( void )
 //-----------------------------------------------------------------------------
 // Initialize, shutdown the Device....
 //-----------------------------------------------------------------------------
-bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount )
+bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel )
 {
 	bool restoreNeeded = false;
 
@@ -1972,7 +2022,7 @@ bool CShaderAPIDX8::InitDevice( void* hwnd, const MaterialVideoMode_t &mode, int
 	ShutdownDevice();
 	
 	// windowed
-	if (!CreateD3DDevice( (HWND)hwnd, mode, flags, nSampleCount ))
+	if (!CreateD3DDevice( (HWND)hwnd, mode, flags, nSampleCount, nQualityLevel ))
 		return false;
 
 	AcquireRenderTargets();
@@ -2082,7 +2132,7 @@ void CShaderAPIDX8::ShutdownDevice( )
 //-----------------------------------------------------------------------------
 // Sets the mode...
 //-----------------------------------------------------------------------------
-bool CShaderAPIDX8::SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount )
+bool CShaderAPIDX8::SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel )
 {
 	Assert( m_pD3D );
 
@@ -2098,11 +2148,11 @@ bool CShaderAPIDX8::SetMode( void* hwnd, const MaterialVideoMode_t &mode, int fl
 	bool ok;
 	if (!DoesModeRequireDeviceChange(hwnd, mode, flags))
 	{
-		ok = ResizeWindow( mode, flags, nSampleCount );
+		ok = ResizeWindow( mode, flags, nSampleCount, nQualityLevel );
 	}
 	else
 	{
-		ok = InitDevice( hwnd, mode, flags, nSampleCount );
+		ok = InitDevice( hwnd, mode, flags, nSampleCount, nQualityLevel );
 	}
 
 	if (!ok)
@@ -2240,7 +2290,7 @@ static DWORD ComputeDeviceCreationFlags( D3DCAPS& caps, D3DADAPTER_IDENTIFIER& i
 //-----------------------------------------------------------------------------
 // Creates the D3D Device
 //-----------------------------------------------------------------------------
-bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount )
+bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSampleCount, int nQualityLevel )
 {
 	// Get some caps....
 	HRESULT hr;
@@ -2269,7 +2319,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 		m_Caps.m_SupportsCompressedTextures = COMPRESSED_TEXTURES_OFF;
 
 	DWORD deviceCreationFlags = ComputeDeviceCreationFlags( caps, ident, flags );
-	SetPresentParameters( mode, flags, nSampleCount );
+	SetPresentParameters( mode, flags, nSampleCount, nQualityLevel );
 
 	// Create that device!
 	RECT windowRect;
@@ -2290,6 +2340,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 
 	// raynorpat: Look for 'NVIDIA PerfHUD' adapter
 	// If it is present, override default settings
+/*	VXP: NVIDIA PerfHUD is a tool that allows users to view adapter performance on the screen
 	for (UINT Adapter = 0; Adapter<m_pD3D->GetAdapterCount(); Adapter++)
 	{
 		D3DADAPTER_IDENTIFIER9 Identifier;
@@ -2300,7 +2351,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 			m_DeviceType = D3DDEVTYPE_REF;
 			break;
 		}
-	}
+	}*/
 
 	hr = m_pD3D->CreateDevice( m_DisplayAdapter, m_DeviceType,
 		m_HWnd, deviceCreationFlags, &m_PresentParameters, &pD3DDevice );
@@ -2365,7 +2416,7 @@ bool CShaderAPIDX8::CreateD3DDevice( void* hwnd, const MaterialVideoMode_t &mode
 
 			{
 				DWORD deviceCreationFlags = ComputeDeviceCreationFlags( caps, ident, flags );
-				SetPresentParameters( mode, flags, nSampleCount );
+				SetPresentParameters( mode, flags, nSampleCount, nQualityLevel );
 
 				hr = m_pD3D->CreateDevice( m_DisplayAdapter, m_DeviceType,
 					m_HWnd, deviceCreationFlags, &m_PresentParameters, &pD3DDevice );
@@ -9449,4 +9500,19 @@ bool CShaderAPIDX8::SupportsMSAAMode( int nMSAAMode )
 														   m_PresentParameters.BackBufferFormat,
 														   m_PresentParameters.Windowed,
 														   ComputeMultisampleType( nMSAAMode ), NULL ) );
+}
+
+bool CShaderAPIDX8::SupportsCSAAMode( int nNumSamples, int nQualityLevel )
+{
+	// Only nVidia does this kind of AA
+	if ( m_nVendorId != VENDORID_NVIDIA )
+		return false;
+
+	DWORD dwQualityLevels = 0;
+	HRESULT hr = m_pD3D->CheckDeviceMultiSampleType( m_DisplayAdapter, m_DeviceType, 
+														   m_PresentParameters.BackBufferFormat,
+														   m_PresentParameters.Windowed,
+														   ComputeMultisampleType( nNumSamples ), &dwQualityLevels );
+
+	return ( ( D3D_OK == hr ) && ( (int) dwQualityLevels >= nQualityLevel ) );
 }

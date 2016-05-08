@@ -110,10 +110,13 @@ public:
 	virtual void GetDisplayMode( MaterialVideoMode_t& info ) const = 0;
 
 	// Sets the mode...
-	virtual bool SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0 ) = 0;
+	virtual bool SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0, int nQualityLevel = 0 ) = 0;
 	
 	// Reports support for a given MSAA mode
 	virtual bool SupportsMSAAMode( int nMSAAMode ) = 0;
+
+	// Reports support for a given ÑSAA mode
+	virtual bool SupportsCSAAMode( int nNumSamples, int nQualityLevel ) = 0;
 
 	virtual void GetWindowSize( int &width, int &height ) const = 0;
 

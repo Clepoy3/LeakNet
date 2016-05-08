@@ -423,6 +423,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	pTextureBrowser = new CTextureBrowser(this);
 
+	// HACK: Spackle up the maximized window position to (0, 0) to fix an intermittent bug. =(
+	WINDOWPLACEMENT wp;
+	ZeroMemory(&wp, sizeof(wp));
+	wp.length = sizeof(wp);
+	SetWindowPlacement(&wp);
+
 	//
 	// !!!NOTE: Always do this last to ensure that the layout does not get recalculated before the
 	//			window is maximized. This prevents control bars from being incorrectly wrapped to
@@ -723,7 +729,7 @@ void CMainFrame::Configure(void)
 	COptionProperties dlg("Configure Worldcraft", NULL, 0);
 	if (dlg.DoModal() == IDOK)
 	{
-		Options.Write(TRUE);
+		Options.Write(TRUE, TRUE);
 	}
 }
 
@@ -762,7 +768,7 @@ void CMainFrame::OnClose()
 	m_SmoothingGroupDlg.DestroyWindow();
 
 	// save options
-	Options.Write(TRUE);
+	Options.Write(TRUE, TRUE);
 
 	CMDIFrameWnd::OnClose();
 }
@@ -807,12 +813,17 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 		CSplashWnd::c_pSplashWnd->HideSplashScreen();
 	}
 
+	// Don't continue if Hammer isn't configured yet!
+	if (Options.configs.nConfigs == 0)
+		return;
+
+
 	SetBrightness(Options.textures.fBrightness);
 
 	// repaint texture window
 	m_TextureBar.Invalidate();
 
-	if (bFirst && Options.configs.nConfigs == 0)
+/*	if (bFirst && Options.configs.nConfigs == 0)
 	{
 		if (AfxMessageBox(IDS_NO_CONFIGS_AVAILABLE, MB_YESNO) == IDYES)
 		{
@@ -820,7 +831,7 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 		}
 
 		Configure();
-	}
+	}*/
 }
 
 

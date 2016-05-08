@@ -1611,6 +1611,7 @@ void CEnvSplash::InputSplash( inputdata_t &inputdata )
 	DispatchEffect( "watersplash", data );
 }
 
+#ifdef HL2_DLL
 //=========================================================
 // func_particlestorm
 //=========================================================
@@ -1701,3 +1702,4 @@ void CParticleStorm::Spawn( void )
 
 //	m_nRenderMode = kRenderEnvironmental;
 }
+#endif

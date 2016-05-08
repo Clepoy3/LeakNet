@@ -196,6 +196,10 @@ int COptionsConfigs::LoadGameConfigs(const char *pszFileName)
 //-----------------------------------------------------------------------------
 void COptionsConfigs::SaveGameConfigs(const char *pszFileName)
 {
+	// Only do this if we've got configs to save!
+	if ( Options.configs.nConfigs == 0 )
+		return;
+
 	char szKey[MAX_PATH];
 	WritePrivateProfileString("Configs", "NumConfigs", itoa(nConfigs, szKey, 10), pszFileName);
 
@@ -345,7 +349,12 @@ void COptions::Init(void)
 	}
 
 	SetDefaults();
-	Read();
+
+//	Read();
+	if ( !Read() )
+	{
+		return;
+	}
 
 	if (bVHESettingsFound || bWCSettingsFound)
 	{
@@ -364,7 +373,8 @@ void COptions::Init(void)
 		pMainWnd->UpdateAllDocViews(MAPVIEW_UPDATE_2D | MAPVIEW_OPTIONS_CHANGED);
 		pMainWnd->UpdateAllDocViews(MAPVIEW_UPDATE_3D | MAPVIEW_OPTIONS_CHANGED);
 
-		pMainWnd->GlobalNotify(WM_GAME_CHANGED);
+		// VXP: FIXME: can't do this before the filesystem is initialized
+		//pMainWnd->GlobalNotify(WM_GAME_CHANGED);
 	}
 }
 
@@ -532,8 +542,10 @@ BOOL COptions::Read(void)
 	strcat(szIniPath, "GameCfg.ini");
 	if (configs.LoadGameConfigs(szIniPath) == 0)
 	{
-		COptionProperties dlg("Configure Worldcraft");
-		dlg.DoModal();
+	//	COptionProperties dlg("Configure Worldcraft");
+	//	dlg.DoModal();
+		if (!RunConfigurationDialog())
+			return false;
 	}
 
 	//
@@ -545,6 +557,37 @@ BOOL COptions::Read(void)
 	}
 
 	return(TRUE);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool COptions::RunConfigurationDialog()
+{
+	if (AfxMessageBox(IDS_NO_CONFIGS_AVAILABLE, MB_YESNO) == IDYES)
+	{
+		APP()->Help("Worldcraft_Setup_Guide.htm");
+	}
+
+	COptionProperties dlg("Configure Worldcraft");
+
+	do
+	{
+		if (dlg.DoModal() != IDOK)
+		{
+			return false;
+		}
+
+		if (configs.nConfigs == 0)
+		{
+			MessageBox(NULL, "You must create at least one game configuration before using Worldcraft.", "First Time Setup", MB_ICONEXCLAMATION | MB_OK);
+		}
+
+	} while (configs.nConfigs == 0);
+
+	Options.Write( TRUE, TRUE );
+	return true;
 }
 
 
@@ -632,7 +675,7 @@ void COptions::ReadColorSettings(void)
 // Purpose: 
 // Input  : fOverwrite - 
 //-----------------------------------------------------------------------------
-void COptions::Write(BOOL fOverwrite)
+void COptions::Write(BOOL fOverwrite, BOOL fSaveConfigs)
 {
 	APP()->WriteProfileInt("Configured", "Configured", iThisVersion);
 
@@ -702,10 +745,13 @@ void COptions::Write(BOOL fOverwrite)
 	// Write game configs to the INI file. This is in an external file so we can distribute it
 	// with worldcraft as a set of defaults.
 	//
-	char szIniPath[MAX_PATH];
-	APP()->GetDirectory(DIR_PROGRAM, szIniPath);
-	strcat(szIniPath, "GameCfg.ini");
-	configs.SaveGameConfigs(szIniPath);
+	if ( fSaveConfigs )
+	{
+		char szIniPath[MAX_PATH];
+		APP()->GetDirectory(DIR_PROGRAM, szIniPath);
+		strcat(szIniPath, "GameCfg.ini");
+		configs.SaveGameConfigs(szIniPath);
+	}
 }
 
 
@@ -779,7 +825,7 @@ void COptions::SetDefaults(void)
 
 	if (bWrite)
 	{
-		Write(FALSE);
+		Write(FALSE, FALSE);
 	}
 }
 

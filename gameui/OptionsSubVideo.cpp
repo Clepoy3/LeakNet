@@ -126,6 +126,7 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	m_pAntialias = new ComboBox( this, "Antialiasing", 10, false );
 	m_pAntialias->AddItem("#GameUI_None", NULL);
 	m_nAAModes[m_nNumAAModes].m_nNumSamples = 1;
+	m_nAAModes[m_nNumAAModes].m_nQualityLevel = 0;
 	m_nNumAAModes++;
 	
 	Assert( materials );
@@ -134,6 +135,7 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	{
 		m_pAntialias->AddItem("#GameUI_2X", NULL);
 		m_nAAModes[m_nNumAAModes].m_nNumSamples = 2;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 0;
 		m_nNumAAModes++;
 	}
 
@@ -141,6 +143,7 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	{
 		m_pAntialias->AddItem("#GameUI_4X", NULL);
 		m_nAAModes[m_nNumAAModes].m_nNumSamples = 4;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 0;
 		m_nNumAAModes++;
 	}
 
@@ -148,6 +151,23 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	{
 		m_pAntialias->AddItem("#GameUI_6X", NULL);
 		m_nAAModes[m_nNumAAModes].m_nNumSamples = 6;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 0;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsCSAAMode(4, 2) )							// nVidia CSAA			"8x"
+	{
+		m_pAntialias->AddItem("#GameUI_8X_CSAA", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 4;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 2;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsCSAAMode(4, 4) )							// nVidia CSAA			"16x"
+	{
+		m_pAntialias->AddItem("#GameUI_16X_CSAA", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 4;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 4;
 		m_nNumAAModes++;
 	}
 
@@ -155,6 +175,15 @@ COptionsSubVideo::COptionsSubVideo(vgui::Panel *parent) : PropertyPage(parent, N
 	{
 		m_pAntialias->AddItem("#GameUI_8X", NULL);
 		m_nAAModes[m_nNumAAModes].m_nNumSamples = 8;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 0;
+		m_nNumAAModes++;
+	}
+
+	if ( materials->SupportsCSAAMode(8, 2) )							// nVidia CSAA			"16xQ"
+	{
+		m_pAntialias->AddItem("#GameUI_16XQ_CSAA", NULL);
+		m_nAAModes[m_nNumAAModes].m_nNumSamples = 8;
+		m_nAAModes[m_nNumAAModes].m_nQualityLevel = 2;
 		m_nNumAAModes++;
 	}
 
@@ -328,13 +357,13 @@ void COptionsSubVideo::SetComboItemAsRecommended( vgui::ComboBox *combo, int iIt
 		combo->UpdateItem(iItem, newText, NULL);
 	}
 
-int COptionsSubVideo::FindMSAAMode( int nAASamples )
+int COptionsSubVideo::FindMSAAMode( int nAASamples, int nAAQuality )
 {
 	// Run through the AA Modes supported by the device
 	for ( int nAAMode = 0; nAAMode < m_nNumAAModes; nAAMode++ )
 	{
 		// If we found the mode that matches what we're looking for, return the index
-		if ( ( m_nAAModes[nAAMode].m_nNumSamples == nAASamples) )
+		if ( ( m_nAAModes[nAAMode].m_nNumSamples == nAASamples) && ( m_nAAModes[nAAMode].m_nQualityLevel == nAAQuality)  )
 		{
 			return nAAMode;
 		}
@@ -350,7 +379,8 @@ void COptionsSubVideo::SetCurrentAntialiasComboItem()
 //	item = itoa( registry->ReadInt( "ScreenAntialias", -1 ), buffer, 10 );
 	
 	int nAASamples = registry->ReadInt( "ScreenAntialias", -1 );
-	int nMSAAMode = FindMSAAMode( nAASamples );
+	int nAAQuality = registry->ReadInt( "ScreenAntialiasQuality", 0 );
+	int nMSAAMode = FindMSAAMode( nAASamples, nAAQuality );
 	m_pAntialias->ActivateItem( nMSAAMode );
 
 //	if( atof(item) < 2 )
@@ -443,6 +473,7 @@ void COptionsSubVideo::GetVidSettings()
 	}
 //	p->antialias = registry->ReadInt( "ScreenAntialias", -1 );
 	p->antialias = registry->ReadInt( "ScreenAntialias", -1 ); // VXP: Better
+	p->antialiasquality = registry->ReadInt( "ScreenAntialiasQuality", 0 );
 	// ConVar *var2 = (ConVar *)cvar->FindVar( "r_WaterEntReflection" );
 	// if( var2 )
 	// {
@@ -564,6 +595,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		int nActiveAAItem = m_pAntialias->GetActiveItem();
 	//	ApplyChangesToConVar( "mat_antialias", m_nAAModes[nActiveAAItem].m_nNumSamples );
 		m_CurrentSettings.antialias = m_nAAModes[nActiveAAItem].m_nNumSamples;
+		m_CurrentSettings.antialiasquality = m_nAAModes[nActiveAAItem].m_nQualityLevel;
 	}
 
 	if ( m_pWindowed )
@@ -603,6 +635,7 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 	engine->ClientCmd( szCmd );
 
 	registry->WriteInt( "ScreenAntialias", p->antialias );
+	registry->WriteInt( "ScreenAntialiasQuality", p->antialiasquality );
 
 	// Force restart of entire engine
 //	engine->ClientCmd( "_restart\n" );
@@ -610,7 +643,8 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		m_CurrentSettings.h != m_OrigSettings.h ||
 	//	m_CurrentSettings.bpp != m_OrigSettings.bpp ||
 		m_CurrentSettings.windowed != m_OrigSettings.windowed ||
-		m_CurrentSettings.antialias != m_OrigSettings.antialias )
+		m_CurrentSettings.antialias != m_OrigSettings.antialias ||
+		m_CurrentSettings.antialiasquality != m_OrigSettings.antialiasquality )
 	{
 		engine->ClientCmd( "_restart\n" );
 	}
@@ -677,7 +711,7 @@ void COptionsSubVideo::OnTextChanged(Panel *pPanel, const char *pszText)
     {
     //    if (strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
 	//	if (Q_strcmp(pszText, m_pszAntialiasNames[m_iStartAntialias]))
-		if (m_CurrentSettings.antialias != m_pAntialias->GetActiveItem())
+		if (m_CurrentSettings.antialias != m_pAntialias->GetActiveItem() || m_CurrentSettings.antialiasquality != m_pAntialias->GetActiveItem()) // VXP: Wut?
         {
 		//	Msg( "OnDataChanged\n" );
             OnDataChanged();

@@ -315,6 +315,10 @@ private:
 
 	void DrawTexturedLineInternal( const Vertex_t &a, const Vertex_t &b );
 
+
+	// Is a panel under the restricted panel?
+	bool IsPanelUnderRestrictedPanel( VPANEL panel );
+
 	// Point Translation for current panel
 	int				m_nTranslateX;
 	int				m_nTranslateY;
@@ -392,6 +396,8 @@ private:
 
 	bool _needKB;
 	bool _needMouse;
+
+	float	m_flZPos; // VXP
 
 	int		GetTitleEntry( vgui::VPANEL panel );
 };

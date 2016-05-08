@@ -343,9 +343,10 @@ public:
 	virtual void				GetDisplayMode( MaterialVideoMode_t& mode ) const = 0;
 
 	// Sets the mode...
-	virtual bool				SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0 ) = 0;
+	virtual bool				SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0, int nQualityLevel = 0 ) = 0;
 	
 	virtual bool				SupportsMSAAMode( int nMSAAMode ) = 0;
+	virtual bool				SupportsCSAAMode( int nNumSamples, int nQualityLevel ) = 0;
 
 	// Creates/ destroys a child window
 	virtual bool				AddView( void* hwnd ) = 0;

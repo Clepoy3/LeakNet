@@ -37,7 +37,8 @@ extern void HudDamageIndicator_MsgFunc_Damage( const char *pszName, int iSize, v
 using namespace vgui;
 
 #include "hudelement.h"
-#include "hud_numericdisplay.h"
+//#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 
 #include "ConVar.h"
 
@@ -46,9 +47,11 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Health panel
 //-----------------------------------------------------------------------------
-class CHudHealth : public CHudElement, public CHudNumericDisplay
+//class CHudHealth : public CHudElement, public CHudNumericDisplay
+class CHudHealth : public CHudElement, public CHudBitmapNumericDisplay
 {
-	DECLARE_CLASS_SIMPLE( CHudHealth, CHudNumericDisplay );
+//	DECLARE_CLASS_SIMPLE( CHudHealth, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudHealth, CHudBitmapNumericDisplay );
 
 public:
 	CHudHealth( const char *pElementName );
@@ -74,8 +77,11 @@ DECLARE_HUD_MESSAGE( CHudHealth, Damage );
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName ), CHudNumericDisplay(NULL, "HudHealth")
+//CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName ), CHudNumericDisplay(NULL, "HudHealth")
+CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName ), CHudBitmapNumericDisplay(NULL, "HudHealth2") // VXP: change "HudHealth" to something else to prevent crash at shutdown
+
 {
+//	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
 }
 
 //-----------------------------------------------------------------------------

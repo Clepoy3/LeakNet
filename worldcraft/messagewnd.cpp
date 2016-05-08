@@ -127,12 +127,19 @@ void CMessageWnd::AddMsg(MWMSGTYPE type, TCHAR* msg)
 	// Add the message, growing the array as necessary
 	MsgArray.SetAtGrow(iAddAt, mws);
 
+	// Don't do stuff that requires the window to exist.
+	if ( m_hWnd == NULL )
+		return;
+
 	CalculateScrollSize();
 	Invalidate();
 }
 
 void CMessageWnd::CalculateScrollSize()
 {
+	if ( m_hWnd == NULL )
+		return;
+
 	int iHorz;
 	int iVert;
 

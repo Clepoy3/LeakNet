@@ -233,12 +233,17 @@ public:
 	}
  
 	// Sets the mode...
-	virtual bool				SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0 )
+	virtual bool				SetMode( void* hwnd, const MaterialVideoMode_t &mode, int flags, int nSuperSamples = 0, int nQualityLevel = 0 )
 	{
 		return true;
 	}
 	
 	virtual bool				SupportsMSAAMode( int nMSAAMode )
+	{
+		return false;
+	}
+
+	virtual bool				SupportsCSAAMode( int nNumSamples, int nQualityLevel )
 	{
 		return false;
 	}

@@ -15,7 +15,7 @@
 static char BASED_CODE THIS_FILE[] = __FILE__;
 #endif
 
-#define HAMMER_TIME 1
+//#define HAMMER_TIME 1 // VXP
 #ifdef HAMMER_TIME
 #include <io.h>
 #include <fcntl.h>

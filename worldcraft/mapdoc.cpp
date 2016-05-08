@@ -1572,7 +1572,8 @@ BOOL CMapDoc::SelectDocType(void)
 
 	m_pGame = pGame;
 
-	if (GetActiveMapDoc() == this)
+//	if (GetActiveMapDoc() == this) // VXP: LOL wtf?
+	if (GetActiveMapDoc() != this)
 	{
 		SetActiveMapDoc(this);
 	}

@@ -104,6 +104,38 @@ void CBasePanel::PaintBackground()
 	}
 }
 
+/*
+#define ASPECT_4BY3			(4.0f/3.0f)
+#define ASPECT_4BY3_HACK	(1360.0f/1024.0f)
+#define ASPECT_5BY4			(5.0f/4.0f)
+#define ASPECT_16BY9		(16.0f/9.0f)
+#define ASPECT_16BY9_HACK	(1366.0f/768.0f)
+#define ASPECT_16BY9_HACK2	(1280.0f/768.0f)
+#define ASPECT_16BY9_HACK3	(1360.0f/768.0f)
+#define ASPECT_16BY10		(16.0f/10.0f)
+#define ASPECT_16BY10_HACK	(720.0f/480.0f)
+
+inline bool IsWideScreen( int width, int height )
+{
+	float flScreenAspect = (float)width / (float)height;
+	if (flScreenAspect != ASPECT_4BY3 &&	// e.g. 1024x768
+		flScreenAspect != ASPECT_4BY3_HACK &&	// VXP: 1360x1024
+		flScreenAspect != ASPECT_5BY4 &&	// e.g. 1280x1024
+		flScreenAspect != ASPECT_16BY9 &&	// e.g. 1920x1080
+		flScreenAspect != ASPECT_16BY9_HACK &&	// raynorpat: waytogo HD TV manufacturers w/ marketing gimmick... (e.g. 1366x768)
+		flScreenAspect != ASPECT_16BY9_HACK2 &&	// VXP: 1280x768
+		flScreenAspect != ASPECT_16BY9_HACK3 &&	// VXP: 1360x768
+		flScreenAspect != ASPECT_16BY10 &&	// e.g. 1680x1050
+		flScreenAspect != ASPECT_16BY10_HACK)	// VXP: 720x480 resolution
+	{
+		// Default to 4/3 pixel aspect
+		return false;
+	}
+
+	return true;
+}
+*/
+
 //-----------------------------------------------------------------------------
 // Purpose: loads background texture
 //-----------------------------------------------------------------------------
@@ -118,8 +150,29 @@ void CBasePanel::ApplySchemeSettings(IScheme *pScheme)
 	bimage_t &bimage = m_ImageID[0][0];
 	bimage.imageID = surface()->CreateNewTextureID();
 
+//	int scrWidth = 0;
+//	int scrHeight = 0;
+//	engine->GetScreenSize( scrWidth, scrHeight );
+//	bool widescreen = IsWideScreen( scrWidth, scrHeight );
+/*	bool widescreen = IsWideScreen( wide, tall );
+
 	char filename[512];
-	sprintf(filename, "console/console_background" );
+	if ( widescreen )
+	{
+		sprintf(filename, "console/console_background_widescreen" );
+	}
+	else
+	{
+		sprintf(filename, "console/console_background" );
+	}
+//	Msg( "background: %s\n", filename );*/
+
+	float aspectRatio = (float)wide/(float)tall;
+	bool bIsWidescreen = aspectRatio >= 1.5999f;
+
+	char filename[512];
+	Q_snprintf( filename, sizeof( filename ), "console/%s%s", "console_background", ( bIsWidescreen ? "_widescreen" : "" ) );
+
 	surface()->DrawSetTextureFile(bimage.imageID, filename, hardwareFilter, false);
 	surface()->DrawGetTextureSize(bimage.imageID, bimage.width, bimage.height);
 

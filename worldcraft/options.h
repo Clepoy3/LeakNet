@@ -150,8 +150,12 @@ class COptions
 
 		BOOL Read();
 		void SetDefaults();
-		void Write(BOOL fOverwrite);
+		void Write(BOOL fOverwrite, BOOL fSaveConfigs);
 		void PerformChanges(DWORD = 0xffffffff);
+
+		// This happens if it can't initialize the file system, or if they're missing gameinfo.txt.
+		// It forces them to choose or create a config that works.
+		bool RunConfigurationDialog();
 
 		// Accessors:
 		TextureAlignment_t GetTextureAlignment(void);

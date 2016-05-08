@@ -174,7 +174,7 @@ void Shader_ForceDXLevelDefaults( void )
 }
 
 //void Shader_SetMode( void *mainWindow, bool windowed )
-void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias )
+void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias, int nQualityLevel )
 {
 	int modeFlags = 0;
 	if ( windowed )
@@ -201,7 +201,7 @@ void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias )
 
 	MaterialVideoMode_t mode;
 	mode.m_Width = mode.m_Height = 0;
-	bool modeSet = materialSystemInterface->SetMode( (void*)mainWindow, mode, modeFlags, nAntialias );
+	bool modeSet = materialSystemInterface->SetMode( (void*)mainWindow, mode, modeFlags, nAntialias, nQualityLevel );
 	if (!modeSet)
 	{
 		Sys_Error( "Unable to set mode\n" );

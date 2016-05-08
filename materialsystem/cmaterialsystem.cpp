@@ -120,10 +120,13 @@ public:
 	void GetDisplayMode( MaterialVideoMode_t& info ) const;
 
 	// Sets the mode...
-	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0 );
+	bool SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples = 0, int nQualityLevel = 0 );
 	
 	// Reports support for a given MSAA mode
 	bool SupportsMSAAMode( int nMSAAMode );
+
+	// Reports support for a given CSAA mode
+	bool SupportsCSAAMode( int nNumSamples, int nQualityLevel );
 
 	// Creates/ destroys a child window
 	bool AddView( void* hwnd );
@@ -1005,10 +1008,10 @@ void CMaterialSystem::GetDisplayMode( MaterialVideoMode_t& info ) const
 }
 
 // Sets the mode...
-bool CMaterialSystem::SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples )
+bool CMaterialSystem::SetMode( void* hwnd, MaterialVideoMode_t const& mode, int flags, int nSuperSamples, int nQualityLevel )
 {
 	bool bPreviouslyUsingGraphics = g_pShaderAPI->IsUsingGraphics();
-	bool bOk = g_pShaderAPI->SetMode( hwnd, mode, flags, nSuperSamples );
+	bool bOk = g_pShaderAPI->SetMode( hwnd, mode, flags, nSuperSamples, nQualityLevel );
 	if (!bOk)
 		return false;
 
@@ -1829,14 +1832,15 @@ ITexture *CMaterialSystem::GetRenderTarget( void )
 
 void CMaterialSystem::GetRenderTargetDimensions( int &width, int &height ) const
 {
-	if( m_pRenderTargetTexture )
+	if( m_pRenderTargetTexture != NULL )
 	{
 		width = m_pRenderTargetTexture->GetActualWidth();
 		height = m_pRenderTargetTexture->GetActualHeight(); // GR - bug!!!
 	}
 	else
 	{
-		g_pShaderAPI->GetWindowSize( width, height );
+	//	g_pShaderAPI->GetWindowSize( width, height );
+		g_pShaderAPI->GetBackBufferDimensions( width, height ); // VXP
 	}
 }
 
@@ -2544,7 +2548,7 @@ void CMaterialSystem::RestoreLightmapPages()
 //-----------------------------------------------------------------------------
 // FIXME: This is a hack required for NVidia, can they fix in drivers?
 //-----------------------------------------------------------------------------
-void CMaterialSystem::DrawScreenSpaceQuad( IMaterial* pMaterial )
+/*void CMaterialSystem::DrawScreenSpaceQuad( IMaterial* pMaterial )
 {
 	// This is required because the texture coordinates for NVidia reading
 	// out of non-power-of-two textures is borked
@@ -2591,6 +2595,96 @@ void CMaterialSystem::DrawScreenSpaceQuad( IMaterial* pMaterial )
 
 	meshBuilder.End();
 	pMesh->Draw();
+}*/
+void CMaterialSystem::DrawScreenSpaceQuad( IMaterial* pMaterial )
+{
+	// This is required because the texture coordinates for NVidia reading
+	// out of non-power-of-two textures is borked
+	int w, h;
+
+	GetRenderTargetDimensions( w, h );
+	if ( ( w == 0 ) || ( h == 0 ) )
+		return;
+
+	// This is the size of the back-buffer we're reading from.
+	int bw, bh;
+	bw = w; bh = h;
+
+	/* FIXME: Get this to work in hammer/engine integration
+	if ( m_pRenderTargetTexture )
+	{
+	}
+	else
+	{
+		MaterialVideoMode_t mode;
+		GetDisplayMode( mode );
+		if ( ( mode.m_Width == 0 ) || ( mode.m_Height == 0 ) )
+			return;
+		bw = mode.m_Width;
+		bh = mode.m_Height;
+	}
+	*/
+
+	float s0, t0;
+	float s1, t1;
+		 	  
+	float flOffsetS = (bw != 0.0f) ? 1.0f / bw : 0.0f;
+	float flOffsetT = (bh != 0.0f) ? 1.0f / bh : 0.0f;
+	s0 = 0.5f * flOffsetS;
+	t0 = 0.5f * flOffsetT;
+	s1 = (w-0.5f) * flOffsetS;
+	t1 = (h-0.5f) * flOffsetT;
+	
+	Bind( pMaterial );
+	IMesh* pMesh = GetDynamicMesh( true );
+
+	MatrixMode( MATERIAL_VIEW );
+	PushMatrix();
+	LoadIdentity();
+
+	MatrixMode( MATERIAL_PROJECTION );
+	PushMatrix();
+	LoadIdentity();
+
+	CMeshBuilder meshBuilder;
+	meshBuilder.Begin( pMesh, MATERIAL_QUADS, 1 );
+
+	meshBuilder.Position3f( -1.0f, -1.0f, 0.0f );
+	meshBuilder.TangentS3f( 0.0f, 1.0f, 0.0f );
+	meshBuilder.TangentT3f( 1.0f, 0.0f, 0.0f );
+	meshBuilder.Normal3f( 0.0f, 0.0f, 1.0f );
+	meshBuilder.TexCoord2f( 0, s0, t1 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Position3f( -1.0f, 1, 0.0f );
+	meshBuilder.TangentS3f( 0.0f, 1.0f, 0.0f );
+	meshBuilder.TangentT3f( 1.0f, 0.0f, 0.0f );
+	meshBuilder.Normal3f( 0.0f, 0.0f, 1.0f );
+	meshBuilder.TexCoord2f( 0, s0, t0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Position3f( 1, 1, 0.0f );
+	meshBuilder.TangentS3f( 0.0f, 1.0f, 0.0f );
+	meshBuilder.TangentT3f( 1.0f, 0.0f, 0.0f );
+	meshBuilder.Normal3f( 0.0f, 0.0f, 1.0f );
+	meshBuilder.TexCoord2f( 0, s1, t0 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.Position3f( 1, -1.0f, 0.0f );
+	meshBuilder.TangentS3f( 0.0f, 1.0f, 0.0f );
+	meshBuilder.TangentT3f( 1.0f, 0.0f, 0.0f );
+	meshBuilder.Normal3f( 0.0f, 0.0f, 1.0f );
+	meshBuilder.TexCoord2f( 0, s1, t1 );
+	meshBuilder.AdvanceVertex();
+
+	meshBuilder.End();
+	pMesh->Draw();
+
+	MatrixMode( MATERIAL_VIEW );
+	PopMatrix();
+
+	MatrixMode( MATERIAL_PROJECTION );
+	PopMatrix();
 }
 
 
@@ -3398,13 +3492,16 @@ void CMaterialSystem::CopyRenderTargetToTextureEx( ITexture *pTexture, int nRend
 		Assert( 0 );
 		return;
 	}
-	if( HardwareConfig()->SupportsVertexAndPixelShaders() && 
-		HardwareConfig()->SupportsNonPow2Textures() &&
-		!g_config.bEditMode )
-	{
+
+	Flush( false ); // VXP: Test
+
+//	if( HardwareConfig()->SupportsVertexAndPixelShaders() && 
+//		HardwareConfig()->SupportsNonPow2Textures() &&
+//		!g_config.bEditMode )
+//	{
 		ITextureInternal *pTextureInternal = ( ITextureInternal * )pTexture;
 		pTextureInternal->CopyFrameBufferToMe( nRenderTargetID, pSrcRect, pDstRect );
-	}
+//	}
 }
 
 void CMaterialSystem::CopyRenderTargetToTexture( ITexture *pTexture )
@@ -3816,6 +3913,12 @@ void CMaterialSystem::SwapBuffers( void )
 bool CMaterialSystem::SupportsMSAAMode( int nNumSamples )
 {
 	return g_pShaderAPI->SupportsMSAAMode( nNumSamples );
+}
+
+// Does the device support the given CSAA level?
+bool CMaterialSystem::SupportsCSAAMode( int nNumSamples, int nQualityLevel )
+{
+	return g_pShaderAPI->SupportsCSAAMode( nNumSamples, nQualityLevel );
 }
 
 void CMaterialSystem::SetHardwareGamma( float gamma )

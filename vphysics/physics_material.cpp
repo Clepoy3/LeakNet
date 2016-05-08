@@ -531,12 +531,12 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_STEP_RIGHT].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "impact" ) )
+				else if ( !strcmpi( key, "impact" ) || !strcmpi( key, "impacthard" ) || !strcmpi( key, "impactsoft" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_IMPACT_SOUND].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "scrape" ) )
+				else if ( !strcmpi( key, "scrape" ) || !strcmpi( key, "scrapesmooth" ) || !strcmpi( key, "scraperough" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_SCRAPE_SOUND].AddToTail( sym );
@@ -569,7 +569,8 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 				else
 				{
 					// force a breakpoint
-					AssertMsg2( 0, "Bad surfaceprop key %s (%s)\n", key, value );
+				//	AssertMsg2( 0, "Bad surfaceprop key %s (%s)\n", key, value );
+					DevWarning( "Bad surfaceprop key %s (%s) - probably from Source 2007\n", key, value );
 				}
 			} while (pText);
 		}

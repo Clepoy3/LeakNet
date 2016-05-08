@@ -111,7 +111,7 @@ float PerlinNoise2D( float x, float y, float rockiness )
 
 	for( int ndxOctave = 0; ndxOctave < OCTAVE_COUNT_MINUS_ONE; ndxOctave++ )
 	{
-		float frequency = ( float )pow( 2, ndxOctave );
+		float frequency = ( float )pow( 2.0f, ndxOctave );
 		float amplitude = ( float )pow( persistence, ndxOctave );
 	
 		total += InterpNoise2D( x * frequency, y * frequency ) * amplitude;
@@ -135,7 +135,7 @@ float PerlinNoise2DScaled( float x, float y, float rockiness )
 
 	for( int ndxOctave = 0; ndxOctave < OCTAVE_COUNT_MINUS_ONE; ndxOctave++ )
 	{
-		float frequency = ( float )pow( 2, ndxOctave );
+		float frequency = ( float )pow( 2.0f, ndxOctave );
 		float amplitude = ( float )pow( persistence, ndxOctave );
 	
 		total += InterpNoise2D( x * frequency, y * frequency ) * amplitude;

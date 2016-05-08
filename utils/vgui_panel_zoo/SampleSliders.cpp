@@ -48,6 +48,7 @@ SampleSliders::SampleSliders(Panel *parent, const char *name) : DemoPage(parent,
 	m_pSlider->SetTickCaptions("0", "test");
 	m_pSlider->SetNumTicks(7);
 	m_pSlider->SetZPos(0);
+	m_pSlider->SetRange(0, 100);
 
 	m_pSliderLabel2 = new Label (this, "ASliderLabel", "Or, without numbers");
 	m_pSliderLabel2->SizeToContents();
@@ -59,6 +60,7 @@ SampleSliders::SampleSliders(Panel *parent, const char *name) : DemoPage(parent,
 	m_pSlider2->SetSize(165, 50);
 	m_pSlider2->SetNumTicks(7);
 	m_pSlider2->SetZPos(0);
+	m_pSlider2->SetRange(0, 100);
 
 
 	m_pSliderLabel3 = new Label (this, "ASliderLabel", "Label at left");
@@ -71,6 +73,7 @@ SampleSliders::SampleSliders(Panel *parent, const char *name) : DemoPage(parent,
 	m_pSlider3->SetPos(90+wide,125);
 	m_pSlider3->SetSize(150, 50);
 	m_pSlider3->SetNumTicks(5);
+	m_pSlider3->SetRange(0, 100);
 
 }
 

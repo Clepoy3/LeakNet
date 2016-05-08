@@ -647,12 +647,12 @@ void CMatSystemSurface::DrawTexturedLineInternal( const Vertex_t &a, const Verte
 
 	meshBuilder.Color4ubv( m_DrawColor );
 	meshBuilder.TexCoord2fv( 0, clippedVerts[0].m_TexCoord.Base() );
-	meshBuilder.Position3f( clippedVerts[0].m_Position.x, clippedVerts[0].m_Position.y, 0 );
+	meshBuilder.Position3f( clippedVerts[0].m_Position.x, clippedVerts[0].m_Position.y, m_flZPos );
 	meshBuilder.AdvanceVertex();
 
 	meshBuilder.Color4ubv( m_DrawColor );
 	meshBuilder.TexCoord2fv( 0, clippedVerts[1].m_TexCoord.Base() );
-	meshBuilder.Position3f( clippedVerts[1].m_Position.x, clippedVerts[1].m_Position.y, 0 );
+	meshBuilder.Position3f( clippedVerts[1].m_Position.x, clippedVerts[1].m_Position.y, m_flZPos );
 	meshBuilder.AdvanceVertex();
 
 	meshBuilder.End();
@@ -722,12 +722,12 @@ void CMatSystemSurface::DrawPolyLine( int *px, int *py ,int n )
 
 		meshBuilder.Color4ubv( m_DrawColor );
 		meshBuilder.TexCoord2fv( 0, clippedVerts[0].m_TexCoord.Base() );
-		meshBuilder.Position3f( clippedVerts[0].m_Position.x, clippedVerts[0].m_Position.y, 0 );
+		meshBuilder.Position3f( clippedVerts[0].m_Position.x, clippedVerts[0].m_Position.y, m_flZPos );
 		meshBuilder.AdvanceVertex();
 
 		meshBuilder.Color4ubv( m_DrawColor );
 		meshBuilder.TexCoord2fv( 0, clippedVerts[1].m_TexCoord.Base() );
-		meshBuilder.Position3f( clippedVerts[1].m_Position.x, clippedVerts[1].m_Position.y, 0 );
+		meshBuilder.Position3f( clippedVerts[1].m_Position.x, clippedVerts[1].m_Position.y, m_flZPos );
 		meshBuilder.AdvanceVertex();
 	}
 
@@ -762,22 +762,26 @@ void CMatSystemSurface::DrawQuad( const vgui::Vertex_t &ul, const vgui::Vertex_t
 	meshBuilder.Begin( m_pMesh, MATERIAL_QUADS, 1 );
 
 	meshBuilder.Color4ubv( pColor );
-	meshBuilder.Position3f( ul.m_Position.x, ul.m_Position.y, 0 );
+//	meshBuilder.Position3f( ul.m_Position.x, ul.m_Position.y, 1.0f ); // VXP: Was 0
+	meshBuilder.Position3f( ul.m_Position.x, ul.m_Position.y, m_flZPos );
 	meshBuilder.TexCoord2f( 0, ul.m_TexCoord.x, ul.m_TexCoord.y );
 	meshBuilder.AdvanceVertex();
 
 	meshBuilder.Color4ubv( pColor );
-	meshBuilder.Position3f( lr.m_Position.x, ul.m_Position.y, 0 );
+//	meshBuilder.Position3f( lr.m_Position.x, ul.m_Position.y, 1.0f ); // VXP: Was 0
+	meshBuilder.Position3f( lr.m_Position.x, ul.m_Position.y, m_flZPos );
 	meshBuilder.TexCoord2f( 0, lr.m_TexCoord.x, ul.m_TexCoord.y );
 	meshBuilder.AdvanceVertex();
 
 	meshBuilder.Color4ubv( pColor );
-	meshBuilder.Position3f( lr.m_Position.x, lr.m_Position.y, 0 );
+//	meshBuilder.Position3f( lr.m_Position.x, lr.m_Position.y, 1.0f ); // VXP: Was 0
+	meshBuilder.Position3f( lr.m_Position.x, lr.m_Position.y, m_flZPos );
 	meshBuilder.TexCoord2f( 0, lr.m_TexCoord.x, lr.m_TexCoord.y );
 	meshBuilder.AdvanceVertex();
 
 	meshBuilder.Color4ubv( pColor );
-	meshBuilder.Position3f( ul.m_Position.x, lr.m_Position.y, 0 );
+//	meshBuilder.Position3f( ul.m_Position.x, lr.m_Position.y, 1.0f ); // VXP: Was 0
+	meshBuilder.Position3f( ul.m_Position.x, lr.m_Position.y, m_flZPos );
 	meshBuilder.TexCoord2f( 0, ul.m_TexCoord.x, lr.m_TexCoord.y );
 	meshBuilder.AdvanceVertex();
 
@@ -806,22 +810,22 @@ void CMatSystemSurface::DrawQuadArray( int quadCount, vgui::Vertex_t *pVerts, un
 		vgui::Vertex_t &lr = pVerts[2*i + 1];
 
 		meshBuilder.Color4ubv( pColor );
-		meshBuilder.Position3f( ul.m_Position.x, ul.m_Position.y, 0 );
+		meshBuilder.Position3f( ul.m_Position.x, ul.m_Position.y, m_flZPos );
 		meshBuilder.TexCoord2f( 0, ul.m_TexCoord.x, ul.m_TexCoord.y );
 		meshBuilder.AdvanceVertex();
 
 		meshBuilder.Color4ubv( pColor );
-		meshBuilder.Position3f( lr.m_Position.x, ul.m_Position.y, 0 );
+		meshBuilder.Position3f( lr.m_Position.x, ul.m_Position.y, m_flZPos );
 		meshBuilder.TexCoord2f( 0, lr.m_TexCoord.x, ul.m_TexCoord.y );
 		meshBuilder.AdvanceVertex();
 
 		meshBuilder.Color4ubv( pColor );
-		meshBuilder.Position3f( lr.m_Position.x, lr.m_Position.y, 0 );
+		meshBuilder.Position3f( lr.m_Position.x, lr.m_Position.y, m_flZPos );
 		meshBuilder.TexCoord2f( 0, lr.m_TexCoord.x, lr.m_TexCoord.y );
 		meshBuilder.AdvanceVertex();
 
 		meshBuilder.Color4ubv( pColor );
-		meshBuilder.Position3f( ul.m_Position.x, lr.m_Position.y, 0 );
+		meshBuilder.Position3f( ul.m_Position.x, lr.m_Position.y, m_flZPos );
 		meshBuilder.TexCoord2f( 0, ul.m_TexCoord.x, lr.m_TexCoord.y );
 		meshBuilder.AdvanceVertex();
 	}
@@ -914,12 +918,12 @@ void CMatSystemSurface::DrawOutlinedCircle(int x, int y, int radius, int segment
 		{
 			meshBuilder.Color4ubv( m_DrawColor );
 			meshBuilder.TexCoord2fv( 0, renderVertex[0].m_TexCoord.Base() );
-			meshBuilder.Position3f( renderVertex[0].m_Position.x, renderVertex[0].m_Position.y, 0 );
+			meshBuilder.Position3f( renderVertex[0].m_Position.x, renderVertex[0].m_Position.y, m_flZPos );
 			meshBuilder.AdvanceVertex();
 
 			meshBuilder.Color4ubv( m_DrawColor );
 			meshBuilder.TexCoord2fv( 0, renderVertex[1].m_TexCoord.Base() );
-			meshBuilder.Position3f( renderVertex[1].m_Position.x, renderVertex[1].m_Position.y, 0 );
+			meshBuilder.Position3f( renderVertex[1].m_Position.x, renderVertex[1].m_Position.y, m_flZPos );
 			meshBuilder.AdvanceVertex();
 		}
 
@@ -1119,7 +1123,7 @@ void CMatSystemSurface::DrawTexturedPolygon(int n, Vertex_t *pVertices)
 		meshBuilder.Color4ubv( m_DrawColor );
 		meshBuilder.TexCoord2fv( 0, ppClippedVerts[i]->m_TexCoord.Base() );
 		meshBuilder.Position3f( ppClippedVerts[i]->m_Position.x, 
-			ppClippedVerts[i]->m_Position.y, 0 );
+			ppClippedVerts[i]->m_Position.y, m_flZPos );
 		meshBuilder.AdvanceVertex();
 	}
 
@@ -2047,6 +2051,9 @@ void CMatSystemSurface::RestrictPaintToSinglePanel(VPANEL panel)
 
 void CMatSystemSurface::PaintTraverse(VPANEL panel)
 {
+	if (!ipanel()->IsVisible(panel))
+		return;
+
 	VPROF( "CMatSystemSurface::PaintTraverse" );
 	MEASURE_TIMED_STAT( VGUIMATSURFACE_STATS_PAINTTRAVERSE_TIME );
 	bool topLevelDraw = false;
@@ -2057,9 +2064,7 @@ void CMatSystemSurface::PaintTraverse(VPANEL panel)
 		StartDrawing();
 	}
 
-	if (!ipanel()->IsVisible(panel))
-		return;
-
+	m_flZPos = 1.0f; // VXP: HACK HACK: For new old HUD
 	if (panel == GetEmbeddedPanel())
 	{
 		if ( m_pRestrictedPanel ) // only paint the restricted panel
