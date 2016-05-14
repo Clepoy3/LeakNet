@@ -720,17 +720,20 @@ bool CFourWheelVehiclePhysics::Think()
 	m_pVehicle->Update( gpGlobals->frametime, m_controls);
 
 	// boost sounds
-	if( IsBoosting() && !m_bLastBoost )
+//	Msg("Think: %s, %s, %f\n", (IsBoosting() ? "YES" : "NO"), (m_bLastBoost ? "YES" : "NO"), m_controls.boost);
+	if( (IsBoosting() /*|| m_controls.boost != 0.0f*/) && !m_bLastBoost )
 	{
 		m_bLastBoost = true;
+	//	Msg("Trying to play VS_TURBO\n");
 		m_pOuterServerVehicle->PlaySound( VS_TURBO );
 		m_turboTimer = gpGlobals->curtime + 2.75f;		// min duration for turbo sound
 	}
-	else if( !IsBoosting() && m_bLastBoost )
+	else if( (!IsBoosting() /*|| m_controls.boost == 0.0f*/) && m_bLastBoost )
 	{
 		if ( gpGlobals->curtime >= m_turboTimer )
 		{
 			m_bLastBoost = false;
+		//	Msg("Trying to play VS_TURBO_OFF\n");
 			m_pOuterServerVehicle->PlaySound( VS_TURBO_OFF );
 		}
 	}
@@ -1078,6 +1081,7 @@ void CFourWheelVehiclePhysics::UpdateDriverControls( int nButtons, float flFrame
 
 	if ( nButtons & IN_SPEED )
 	{
+	//	Msg("Boosting button has been pressed!\n");
 		m_controls.boost = 1.0f;
 	}
 
@@ -1167,7 +1171,9 @@ bool CFourWheelVehiclePhysics::IsBoosting( void )
 	const vehicle_operatingparams_t *pVehicleOperating = &m_pVehicle->GetOperatingParams();
 	if ( pVehicleParams && pVehicleOperating )
 	{	
-		return ( ( pVehicleOperating->boostDelay - pVehicleParams->engine.boostDelay ) > 0.0f );
+	//	Msg("%f, %f\n", pVehicleOperating->boostDelay, pVehicleParams->engine.boostDelay);
+		if ( ( pVehicleOperating->boostDelay - pVehicleParams->engine.boostDelay ) > 0.0f )
+			return true;
 	}
 
 	return false;

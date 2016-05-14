@@ -158,6 +158,10 @@ bool CBaseServerVehicle::Initialize( const char *pScriptName )
 		if ( !strcmpi( pBlock, "vehicle_sounds" ) )
 		{
 			pParse->ParseCustom( &m_vehicleSounds, &soundParser );
+		//	for( int i = 0; i < VS_NUM_SOUNDS; i++ )
+		//	{
+		//		Msg("m_vehicleSounds(%i): %s\n", i, m_vehicleSounds.iszSound[i]);
+		//	}
 		}
 		else
 		{
@@ -911,8 +915,10 @@ void CBaseServerVehicle::SoundUpdate( float flFrameTime, float flCurrentSpeed, b
 //-----------------------------------------------------------------------------
 void CBaseServerVehicle::PlaySound( vehiclesound iSound )
 {
+//	Msg("CBaseServerVehicle::PlaySound (%i) - %s\n", iSound, m_vehicleSounds.iszSound[iSound]);
 	if ( m_vehicleSounds.iszSound[iSound] != NULL_STRING )
 	{
+	//	Msg("Playing that sound...\n");
 		CPASAttenuationFilter filter( m_pVehicle );
 		CBaseEntity::EmitSound( filter, m_pVehicle->entindex(), CHAN_VOICE, STRING(m_vehicleSounds.iszSound[iSound]), m_flVehicleVolume, ATTN_NORM, 0, 100 );
 	}

@@ -685,6 +685,7 @@ float CVehicleController::UpdateBooster( float dt )
 {
 	m_pCarSystem->update_booster( dt );
 	m_currentState.boostDelay = m_pCarSystem->get_booster_delay();
+//	Msg("UpdateBooster: m_currentState.boostDelay: %f\n", m_currentState.boostDelay);
 	return m_currentState.boostDelay;
 }
 
@@ -802,12 +803,15 @@ void CVehicleController::UpdateEngine( vehicle_controlparams_t &controls, float 
 		}
 		else
 		{
-			m_pCarSystem->activate_booster( m_vehicleData.engine.boostForce * controls.boost, m_vehicleData.engine.boostDuration, m_vehicleData.engine.boostDelay );
+		//	m_pCarSystem->activate_booster( m_vehicleData.engine.boostForce * controls.boost, m_vehicleData.engine.boostDuration, m_vehicleData.engine.boostDelay );
 		}
+		// VXP: Fix for jeep boost sound
+		m_pCarSystem->activate_booster( m_vehicleData.engine.boostForce * controls.boost, m_vehicleData.engine.boostDuration, m_vehicleData.engine.boostDelay );
 	}
 
 	m_pCarSystem->update_booster( flDeltaTime );
 	m_currentState.boostDelay = m_pCarSystem->get_booster_delay();
+//	Msg("UpdateEngine: m_currentState.boostDelay: %f\n", m_currentState.boostDelay);
 
 	CalcEngine( flThrottle, flBrake, bHandbrake, controls.steering, torqueBoost );
 	m_pCarSystem->update_throttle( flThrottle );
