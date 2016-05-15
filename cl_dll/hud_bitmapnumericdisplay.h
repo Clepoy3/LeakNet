@@ -36,7 +36,7 @@ protected:
 	virtual void Paint();
 	bool PrepareTextures(); // VXP
 	bool PrepareSmallTextures(); // VXP
-	void PaintNumbers(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont);
+	void PaintNumbers(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
 	virtual void PaintNumbers(int xpos, int ypos, int value, Color col, bool isSmallFont = false)
 	{
 		PaintNumbers(xpos, ypos, value, col, 1, isSmallFont);
@@ -45,7 +45,7 @@ protected:
 	// VXP
 	void PaintLabel(int xpos, int ypos, CHudTexture *label, Color col);
 	void PaintProgressBar(int xpos, int ypos, int value, Color col);
-	void PaintDummies(int xpos, int ypos, Color col, int numSigDigits, bool isSmallFont);
+	void PaintDummies(int xpos, int ypos, Color col, int numSigDigits, bool isSmallFont = false);
 	virtual void PaintDummies(int xpos, int ypos, Color col, bool isSmallFont = false)
 	{
 		PaintDummies(xpos, ypos, col, 3, isSmallFont);
@@ -55,6 +55,9 @@ protected:
 	CPanelAnimationVar( Color, m_TextColor, "TextColor", "FgColor" );
 	CPanelAnimationVar( float, m_flBlur, "Blur", "0" );
 
+	CPanelAnimationVarAliasType( float, text_xpos, "text_xpos", "8", "proportional_float" );
+	CPanelAnimationVarAliasType( float, text_ypos, "text_ypos", "20", "proportional_float" );
+	CPanelAnimationVarAliasType( float, text_height, "text_height", "14", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit_xpos, "digit_xpos", "0", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit_ypos, "digit_ypos", "0", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit_height, "digit_height", "16", "proportional_float" );
@@ -63,6 +66,7 @@ protected:
 //	CPanelAnimationVarAliasType( float, digit_height, "digit_height", "25", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit2_xpos, "digit2_xpos", "0", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit2_ypos, "digit2_ypos", "0", "proportional_float" );
+	CPanelAnimationVarAliasType( float, digit2_height, "digit2_height", "8", "proportional_float" );
 
 private:
 

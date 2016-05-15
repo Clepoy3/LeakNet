@@ -139,7 +139,11 @@ public:
 	float						GetSensitivity();
 
 	void						DrawProgressBar( int x, int y, int width, int height, float percentage, Color& clr, unsigned char type );
-	void						DrawIconProgressBar( int x, int y, CHudTexture *icon, float percentage, Color& clr, int type );
+	void						DrawIconProgressBar( int x, int y, int width, int height, CHudTexture *icon, float percentage, Color& clr, int type ); // VXP
+	void						DrawIconProgressBar( int x, int y, CHudTexture *icon, float percentage, Color& clr, int type )/*;*/
+	{
+		DrawIconProgressBar( x, y, icon->Width(), icon->Height(), icon, percentage, clr, type );
+	}
 
 	CHudTexture					*GetIcon( const char *szIcon );
 

@@ -26,11 +26,15 @@ ConVar phys_gunforce("phys_gunforce", "5e5" );
 ConVar phys_guntorque("phys_guntorque", "100" );
 ConVar phys_gunglueradius("phys_gunglueradius", "128" );
 
+// VXP
+ConVar phys_continuous_vmodel_anim( "phys_continuous_vmodel_anim", "0", FCVAR_ARCHIVE,
+									"Enables continuous view model primary animation. May cause delayed primary attack release." );
+
 static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
 
 //#define MAX_PELLETS	16
-#define MAX_PELLETS	1600
+#define MAX_PELLETS	160
 
 class CWeaponGravityGun;
 
@@ -1245,7 +1249,7 @@ void CWeaponGravityGun::AttachObject( CBaseEntity *pObject, const Vector& start,
 //=========================================================
 void CWeaponGravityGun::PrimaryAttack( void )
 {
-	if ( m_flNextPrimaryAttackAnim < gpGlobals->curtime )
+	if ( phys_continuous_vmodel_anim.GetBool() && (m_flNextPrimaryAttackAnim < gpGlobals->curtime) )
 	{
 		SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 		m_flNextPrimaryAttackAnim = gpGlobals->curtime + SequenceDuration();
@@ -1253,7 +1257,14 @@ void CWeaponGravityGun::PrimaryAttack( void )
 	if ( !m_active )
 	{
 	//	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
-		m_flNextPrimaryAttackAnim = gpGlobals->curtime;
+		if ( phys_continuous_vmodel_anim.GetBool() )
+		{
+			m_flNextPrimaryAttackAnim = gpGlobals->curtime;
+		}
+		else
+		{
+			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+		}
 		EffectCreate();
 		SoundCreate();
 	}

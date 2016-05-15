@@ -145,7 +145,8 @@ void CHud::DrawProgressBar( int x, int y, int width, int height, float percentag
 //			clr - 
 //			type - 
 //-----------------------------------------------------------------------------
-void CHud::DrawIconProgressBar( int x, int y, CHudTexture *icon, float percentage, Color& clr, int type )
+//void CHud::DrawIconProgressBar( int x, int y, CHudTexture *icon, float percentage, Color& clr, int type )
+void CHud::DrawIconProgressBar( int x, int y, int width, int height, CHudTexture *icon, float percentage, Color& clr, int type )
 {
 	if ( icon == NULL )
 		return;
@@ -154,8 +155,8 @@ void CHud::DrawIconProgressBar( int x, int y, CHudTexture *icon, float percentag
 	percentage = min( 1.0f, percentage );
 	percentage = max( 0.0f, percentage );
 
-	int	height = icon->Height();
-	int	width  = icon->Width();
+//	int	height = icon->Height();
+//	int	width  = icon->Width();
 
 	Color darkClr = clr;
 	darkClr[0] /= 4;

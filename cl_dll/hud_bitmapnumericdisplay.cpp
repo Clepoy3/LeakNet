@@ -109,41 +109,51 @@ void CHudBitmapNumericDisplay::Paint()
 
 	if (m_bDisplayValue)
 	{
+		bool isAmmoHudPrimary = false;
+		bool isAmmoHudSecondary = false;
+
 		// VXP: Draw label
 		if ( wcscmp(m_LabelText, L"HEALTH") == 0 )
 		{
-			PaintLabel(digit_xpos - 58, digit_ypos, m_pHealthLabel, GetFgColor());
+			PaintLabel(text_xpos, text_ypos, m_pHealthLabel, GetFgColor());
 		}
 		else if ( wcscmp(m_LabelText, L"SUIT") == 0 )
 		{
-			PaintLabel(digit_xpos - 58, digit_ypos, m_pSuitLabel, GetFgColor());
+			PaintLabel(text_xpos, text_ypos, m_pSuitLabel, GetFgColor());
 		}
 		else if ( wcscmp(m_LabelText, L"AMMO") == 0 )
 		{
-			PaintLabel(digit_xpos - 58, digit_ypos, m_pAmmoLabel, GetFgColor());
-			PaintProgressBar(digit_xpos, digit2_ypos + digit2_ypos/2 + 2, m_iValue, GetFgColor());
+			isAmmoHudPrimary = true;
+			PaintLabel(((m_iValue < 100) ? (text_xpos + 19) : text_xpos), text_ypos, m_pAmmoLabel, GetFgColor());
+		//	PaintProgressBar(digit_xpos, digit_ypos, m_iValue, GetFgColor());
+		//	PaintProgressBar(digit_xpos, text_ypos + text_height, m_iValue, GetFgColor());
+			PaintProgressBar(digit_xpos, digit2_ypos - text_height/2, m_iValue, GetFgColor());
+		}
+		else if ( wcscmp(m_LabelText, L"AMMO2") == 0 )
+		{
+			isAmmoHudSecondary = true;
 		}
 
 		// VXP: Draw some dummies
-		PaintDummies(digit_xpos, digit_ypos + 14, GetFgColor());
+		PaintDummies(digit_xpos, digit_ypos, GetFgColor(), (((isAmmoHudPrimary && m_iValue < 100) || isAmmoHudSecondary) ? 2 : 3));
 	
 		// draw our numbers
 	//	surface()->DrawSetTextColor(GetFgColor());
-		PaintNumbers(digit_xpos, digit_ypos + 14, m_iValue, GetFgColor());
+		PaintNumbers(digit_xpos, digit_ypos, m_iValue, GetFgColor());
 
 		// draw the overbright blur
 		for (float fl = m_flBlur; fl > 0.0f; fl -= 1.0f)
 		{
 			if (fl >= 1.0f)
 			{
-				PaintNumbers(digit_xpos, digit_ypos + 14, m_iValue, GetFgColor());
+				PaintNumbers(digit_xpos, digit_ypos, m_iValue, GetFgColor());
 			}
 			else
 			{
 				// draw a percentage of the last one
 				Color col = GetFgColor();
 				col[3] *= fl;
-				PaintNumbers(digit_xpos, digit_ypos + 14, m_iValue, col);
+				PaintNumbers(digit_xpos, digit_ypos, m_iValue, col);
 			}
 		}
 	}
@@ -154,8 +164,9 @@ void CHudBitmapNumericDisplay::Paint()
 		//fgColor = m_Ammo2Color;
 		//fgColor[3] *= alpha;
 	//	surface()->DrawSetTextColor(fgColor);
-		PaintDummies(digit2_xpos, digit2_ypos + 14, fgColor, true);
-		PaintNumbers(digit2_xpos, digit2_ypos + 14, m_iSecondaryValue, fgColor, true);
+	//	PaintDummies(digit2_xpos, digit2_ypos, fgColor, true);
+		PaintDummies(digit2_xpos, digit2_ypos, fgColor, true);
+		PaintNumbers(digit2_xpos, digit2_ypos, m_iSecondaryValue, fgColor, true);
 	}
 }
 
@@ -264,15 +275,25 @@ void CHudBitmapNumericDisplay::PaintLabel(int xpos, int ypos, CHudTexture *label
 
 //	Msg("Drawing health label\n");
 
+	float downScale = 1.0f;
+
 //	float scale = ( digit_height / (float)label->Height());
-	float scale = 1.0f;
+//	float scale = 1.0f;
+//	float scale = (float)label->Height() * downScale;
+//	float scale = ( digit_height / (float)label->Height()) * downScale;
+
+	float scale = ( text_height / (float)label->Height()) * downScale;
+//	float scale = ( (digit_height * 1.92f) / (float)label->Height()) * downScale;
+
+//	Msg("width: %i, height: %i, digit_height: %i\n", label->Width(), label->Height(), digit_height);
+
 	int width = label->Width() * scale;
 	int height = label->Height() * scale;
 
 	label->DrawSelf( xpos, ypos, width, height, col );
 }
 
-#define BAR_HEIGHT 28
+#define BAR_HEIGHT 26
 #define BAR_INCREMENT 2
 
 //-----------------------------------------------------------------------------
@@ -280,7 +301,7 @@ void CHudBitmapNumericDisplay::PaintLabel(int xpos, int ypos, CHudTexture *label
 //-----------------------------------------------------------------------------
 void CHudBitmapNumericDisplay::PaintProgressBar(int xpos, int ypos, int value, Color col )
 {
-//	float scale = ( digit_height / (float)label->Height());
+//	float scale = ( digit_height / (float)m_pProgressBar->Height());
 	float scale = 1.0f;
 	int width = m_pProgressBar->Width() * scale;
 	int height = m_pProgressBar->Height() * scale;
@@ -292,12 +313,20 @@ void CHudBitmapNumericDisplay::PaintProgressBar(int xpos, int ypos, int value, C
 
 //	int newHeight = (BAR_HEIGHT * value) / 32768;
 	int newHeight = (BAR_HEIGHT * value) / m_iMaxValue;
+//	int newHeight = (m_pProgressBar->Height() * value) / m_iMaxValue;
         //newHeight = ((newHeight + (BAR_INCREMENT-1)) / BAR_INCREMENT) * BAR_INCREMENT;  // round to nearest BAR_INCREMENT
 		newHeight = ((newHeight + (BAR_INCREMENT-1)) / BAR_INCREMENT) * BAR_INCREMENT;  // round to nearest BAR_INCREMENT
 
 //	Msg("height: %i, value: %i, m_iSecondaryValue: %i; newHeight: %i\n", height, value, m_iSecondaryValue, newHeight);
 //	m_pProgressBar->DrawSelfCropped( xpos, ypos, 0, newHeight, width, height, col );
-	m_pProgressBar->DrawSelf( xpos, (ypos - newHeight) + height + 1, width, height, col );
+//	m_pProgressBar->DrawSelf( xpos, (ypos - newHeight) + height + 1, width, height, col );
+//	m_pProgressBar->DrawSelf( xpos, (ypos - newHeight) + height, width, height, col );
+//	m_pProgressBar->DrawSelf( xpos, (ypos - newHeight) + height, width, newHeight, col );
+
+	float ammoPerc = 1.0f - ( (float) value / (float) m_iMaxValue );
+//	gHUD.DrawIconProgressBar( xpos, ypos, width, height, m_pProgressBar, ammoPerc, col, CHud::HUDPB_VERTICAL );
+	gHUD.DrawIconProgressBar( xpos, ypos, m_pProgressBar, ammoPerc, col, CHud::HUDPB_VERTICAL );
+//	gHUD.DrawProgressBar( xpos, ypos, width, height, ammoPerc, col, CHud::HUDPB_VERTICAL );
 }
 
 //-----------------------------------------------------------------------------
@@ -315,7 +344,7 @@ void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int n
 	}
 	else
 	{
-		downScale = 0.7f;
+	//	downScale = 0.7f;
 	//	memcpy(numberArray, m_pSmallNumbers, 12*sizeof(CHudTexture *));
 	}
 	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
@@ -323,7 +352,8 @@ void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int n
 	int pos = 10000;
 
 	
-	float scale = ( digit_height / (float)numberArray[DIGIT_NUMBER_DUMMY1]->Height()) * downScale;
+//	float scale = ( digit_height / (float)numberArray[DIGIT_NUMBER_DUMMY1]->Height()) * downScale;
+	float scale = ( (isSmallFont ? digit2_height : digit_height) / (float)numberArray[DIGIT_NUMBER_DUMMY1]->Height()) * downScale;
 	int width = numberArray[DIGIT_NUMBER_DUMMY1]->Width() * scale;
 	int height = numberArray[DIGIT_NUMBER_DUMMY1]->Height() * scale;
 	bool bStart = false;
@@ -393,7 +423,7 @@ void CHudBitmapNumericDisplay::PaintNumbers(int xpos, int ypos, int value, Color
 	}
 	else
 	{
-		downScale = 0.7f;
+	//	downScale = 0.7f;
 	//	memcpy(numberArray, m_pSmallNumbers, 12*sizeof(CHudTexture *));
 	}
 	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
@@ -405,7 +435,8 @@ void CHudBitmapNumericDisplay::PaintNumbers(int xpos, int ypos, int value, Color
 
 	int pos = 10000;
 
-	float scale = ( digit_height / (float)numberArray[0]->Height()) * downScale;
+//	float scale = ( digit_height / (float)numberArray[0]->Height()) * downScale;
+	float scale = ( (isSmallFont ? digit2_height : digit_height) / (float)numberArray[0]->Height()) * downScale;
 
 	int digit;
 	Color color = GetFgColor();

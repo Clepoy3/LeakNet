@@ -215,6 +215,8 @@ public:
 	CHudSecondaryAmmo( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary2" ), CHudElement( pElementName )
 	{
 		m_iAmmo = -1;
+
+		SetLabelText(L"AMMO2");
 	}
 
 	void Init( void )
