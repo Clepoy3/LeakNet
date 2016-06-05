@@ -204,6 +204,8 @@ void CPhysicsSpring::WriteToTemplate( vphysics_save_cphysicsspring_t &params )
 		params.damping = 0.0f;
 		params.relativeDamping = 0.0f;
 		
+		params.startPosition = Vector( 0, 0, 0 );
+		params.endPosition = Vector( 0, 0, 0 );
 		params.useLocalPositions = true;
 		
 		params.onlyStretch = false;
