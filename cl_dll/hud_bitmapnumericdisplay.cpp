@@ -31,8 +31,8 @@ CHudBitmapNumericDisplay::CHudBitmapNumericDisplay(vgui::Panel *parent, const ch
 	m_iMaxValue = -1;
 	m_bDisplayValue = true;
 //	memset( m_pNumbers, 0, 10*sizeof(CHudTexture *) );
-	memset( m_pNumbers, 0, 12*sizeof(CHudTexture *) );
-	memset( m_pSmallNumbers, 0, 12*sizeof(CHudTexture *) );
+	memset( m_pNumbers, 0, NUMBERS_COUNT * sizeof(CHudTexture *) );
+	memset( m_pSmallNumbers, 0, NUMBERS_COUNT * sizeof(CHudTexture *) );
 
 	m_LabelText[0] = 0;
 	m_pHealthLabel = NULL;
@@ -124,10 +124,24 @@ void CHudBitmapNumericDisplay::Paint()
 		else if ( wcscmp(m_LabelText, L"AMMO") == 0 )
 		{
 			isAmmoHudPrimary = true;
-			PaintLabel(((m_iValue < 100) ? (text_xpos + 19) : text_xpos), text_ypos, m_pAmmoLabel, GetFgColor());
+		//	PaintLabel(((m_iValue < 100) ? (text_xpos + 19) : text_xpos), text_ypos, m_pAmmoLabel, GetFgColor());
+		//	PaintLabel(((m_iValue < 100) ? (text_xpos + m_pNumbers[0]->Width()) : text_xpos), text_ypos, m_pAmmoLabel, GetFgColor());
+		//	PaintLabel(((m_iValue < 100) ? (text_xpos + (float)XRES((float)m_pNumbers[0]->Width())) : text_xpos), text_ypos, m_pAmmoLabel, GetFgColor());
+			if ( m_iValue < 100 )
+			{
+			//	PaintLabel(text_xpos + (float)XRES((float)m_pNumbers[0]->Width()), text_ypos, m_pAmmoLabel, GetFgColor());
+			//	PaintLabel(text_xpos + GetProportionalNormalizedValue(m_pNumbers[0]->Width()), text_ypos, m_pAmmoLabel, GetFgColor());
+			//	PaintLabel(text_xpos + scheme()->GetProportionalScaledValue(m_pNumbers[0]->Width()), text_ypos, m_pAmmoLabel, GetFgColor());
+				PaintLabel(scheme()->GetProportionalScaledValue(m_pNumbers[0]->Width()) / 2, text_ypos, m_pAmmoLabel, GetFgColor());
+			}
+			else
+			{
+				PaintLabel(text_xpos, text_ypos, m_pAmmoLabel, GetFgColor());
+			}
 		//	PaintProgressBar(digit_xpos, digit_ypos, m_iValue, GetFgColor());
 		//	PaintProgressBar(digit_xpos, text_ypos + text_height, m_iValue, GetFgColor());
-			PaintProgressBar(digit_xpos, digit2_ypos - text_height/2, m_iValue, GetFgColor());
+		//	PaintProgressBar(digit_xpos, digit2_ypos - text_height/2, m_iValue, GetFgColor()); // VXP: Good from 800x600 to <1920x1080
+			PaintProgressBar(digit_xpos, digit_ypos, m_iValue, GetFgColor());
 		}
 		else if ( wcscmp(m_LabelText, L"AMMO2") == 0 )
 		{
@@ -135,7 +149,15 @@ void CHudBitmapNumericDisplay::Paint()
 		}
 
 		// VXP: Draw some dummies
-		PaintDummies(digit_xpos, digit_ypos, GetFgColor(), (((isAmmoHudPrimary && m_iValue < 100) || isAmmoHudSecondary) ? 2 : 3));
+	//	PaintDummies(digit_xpos, digit_ypos, GetFgColor(), (((isAmmoHudPrimary && m_iValue < 100) || isAmmoHudSecondary) ? 2 : 3));
+		if ( (isAmmoHudPrimary && m_iValue < 100) || isAmmoHudSecondary)
+		{
+			PaintDummies(digit_xpos, digit_ypos, 99, GetFgColor(), 2);
+		}
+		else
+		{
+			PaintDummies(digit_xpos, digit_ypos, 999, GetFgColor(), 3);
+		}
 	
 		// draw our numbers
 	//	surface()->DrawSetTextColor(GetFgColor());
@@ -275,14 +297,14 @@ void CHudBitmapNumericDisplay::PaintLabel(int xpos, int ypos, CHudTexture *label
 
 //	Msg("Drawing health label\n");
 
-	float downScale = 1.0f;
+//	float downScale = 1.0f;
 
 //	float scale = ( digit_height / (float)label->Height());
 //	float scale = 1.0f;
 //	float scale = (float)label->Height() * downScale;
 //	float scale = ( digit_height / (float)label->Height()) * downScale;
 
-	float scale = ( text_height / (float)label->Height()) * downScale;
+	float scale = ( text_height / (float)label->Height()) /* * downScale*/;
 //	float scale = ( (digit_height * 1.92f) / (float)label->Height()) * downScale;
 
 //	Msg("width: %i, height: %i, digit_height: %i\n", label->Width(), label->Height(), digit_height);
@@ -305,6 +327,9 @@ void CHudBitmapNumericDisplay::PaintProgressBar(int xpos, int ypos, int value, C
 	float scale = 1.0f;
 	int width = m_pProgressBar->Width() * scale;
 	int height = m_pProgressBar->Height() * scale;
+
+	// y2 = y1 + h1 / 2 - h2 / 2
+	ypos = ypos + digit_height/2 - height/2;
 
 	// DrawSelfCropped( int x, int y, int cropx, int cropy, int cropw, int croph, Color& clr )
 //	int newHeight = height;
@@ -332,22 +357,22 @@ void CHudBitmapNumericDisplay::PaintProgressBar(int xpos, int ypos, int value, C
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int numSigDigits, bool isSmallFont )
+/*void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int numSigDigits, bool isSmallFont )
 {
 	float downScale = 1.12f;
 
-	CHudTexture *numberArray[12];
-	memset( numberArray, 0, 12*sizeof(CHudTexture *) );
+	CHudTexture *numberArray[NUMBERS_COUNT];
+	memset( numberArray, 0, NUMBERS_COUNT * sizeof(CHudTexture *) );
 	if ( !isSmallFont )
 	{
-	//	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
+	//	memcpy(numberArray, m_pNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 	}
 	else
 	{
 	//	downScale = 0.7f;
-	//	memcpy(numberArray, m_pSmallNumbers, 12*sizeof(CHudTexture *));
+	//	memcpy(numberArray, m_pSmallNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 	}
-	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
+	memcpy(numberArray, m_pNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 
 	int pos = 10000;
 
@@ -362,14 +387,14 @@ void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int n
 
 	int numdigits = 1;
 
-/*	int x = pos;
-	while( x >= 10 )
-	{
-		if( value >= x )
-			numdigits++;
-
-		x /= 10;
-	}*/
+//	int x = pos;
+//	while( x >= 10 )
+//	{
+//		if( value >= x )
+//			numdigits++;
+//
+//		x /= 10;
+//	}
 
 	if( numdigits < numSigDigits )
 		numdigits = numSigDigits;
@@ -406,6 +431,73 @@ void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int n
 
 		pos /= 10;
 	}
+}*/
+void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont )
+{
+	if( value > 100000 )
+	{
+		value = 99999;
+	}
+
+	int pos = 10000;
+
+//	float scale = ( digit_height / (float)m_pNumbers[DIGIT_NUMBER_DUMMY1]->Height());
+	float scale = ( (isSmallFont ? digit2_height : digit_height) / (float)m_pNumbers[DIGIT_NUMBER_DUMMY1]->Height());
+
+	int digit;
+	Color color = GetFgColor();
+	int width = m_pNumbers[DIGIT_NUMBER_DUMMY1]->Width() * scale;
+	int height = m_pNumbers[DIGIT_NUMBER_DUMMY1]->Height() * scale;
+	bool bStart = false;
+
+	//right align to xpos
+
+	int numdigits = 1;
+
+	int x = pos;
+	while( x >= 10 )
+	{
+		if( value >= x )
+			numdigits++;
+
+		x /= 10;
+	}
+
+	if( numdigits < numSigDigits )
+		numdigits = numSigDigits;
+
+	xpos -= numdigits * width;
+
+	//draw the digits
+	while( pos >= 1 )
+	{
+		digit = value / pos;
+		value = value % pos;
+		
+		bool isSecondPosition = false;
+	//	Msg("%i\n", pos);
+		if ( pos == 10 )
+		{
+			isSecondPosition = true;
+		}
+		
+		if( bStart || digit > 0 || pos <= pow(10.0f,numSigDigits-1) )
+		{
+			bStart = true;
+		//	m_pNumbers[digit]->DrawSelf( xpos, ypos, width, height, col );
+			if ( isSecondPosition )
+			{
+				m_pNumbers[DIGIT_NUMBER_DUMMY2]->DrawSelf( xpos, ypos, width, height, col );
+			}
+			else
+			{
+				m_pNumbers[DIGIT_NUMBER_DUMMY1]->DrawSelf( xpos, ypos, width, height, col );
+			}
+			xpos += width;
+		}		
+
+		pos /= 10;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -413,20 +505,20 @@ void CHudBitmapNumericDisplay::PaintDummies(int xpos, int ypos, Color col, int n
 //-----------------------------------------------------------------------------
 void CHudBitmapNumericDisplay::PaintNumbers(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont )
 {
-	float downScale = 1.12f;
+//	float downScale = 1.12f;
 
-	CHudTexture *numberArray[12];
-	memset( numberArray, 0, 12*sizeof(CHudTexture *) );
+	CHudTexture *numberArray[NUMBERS_COUNT];
+	memset( numberArray, 0, NUMBERS_COUNT * sizeof(CHudTexture *) );
 	if ( !isSmallFont )
 	{
-	//	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
+	//	memcpy(numberArray, m_pNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 	}
 	else
 	{
 	//	downScale = 0.7f;
-	//	memcpy(numberArray, m_pSmallNumbers, 12*sizeof(CHudTexture *));
+	//	memcpy(numberArray, m_pSmallNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 	}
-	memcpy(numberArray, m_pNumbers, 12*sizeof(CHudTexture *));
+	memcpy(numberArray, m_pNumbers, NUMBERS_COUNT * sizeof(CHudTexture *));
 
 	if( value > 100000 )
 	{
@@ -436,7 +528,7 @@ void CHudBitmapNumericDisplay::PaintNumbers(int xpos, int ypos, int value, Color
 	int pos = 10000;
 
 //	float scale = ( digit_height / (float)numberArray[0]->Height()) * downScale;
-	float scale = ( (isSmallFont ? digit2_height : digit_height) / (float)numberArray[0]->Height()) * downScale;
+	float scale = ( (isSmallFont ? digit2_height : digit_height) / (float)numberArray[0]->Height()) /* * downScale*/;
 
 	int digit;
 	Color color = GetFgColor();

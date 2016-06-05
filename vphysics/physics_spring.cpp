@@ -197,6 +197,19 @@ void CPhysicsSpring::WriteToTemplate( vphysics_save_cphysicsspring_t &params )
 		params.pObjStart = m_pObjStart;
 		params.pObjEnd = m_pObjEnd;
 	}
+	else
+	{
+		params.constant = 0.0f;
+		params.naturalLength = 0.0f;
+		params.damping = 0.0f;
+		params.relativeDamping = 0.0f;
+		
+		params.useLocalPositions = true;
+		
+		params.onlyStretch = false;
+		params.pObjStart = m_pObjStart;
+		params.pObjEnd = m_pObjEnd;
+	}
 }
 
 
@@ -220,11 +233,6 @@ IPhysicsSpring *CreateSpring( IVP_Environment *pEnvironment, CPhysicsObject *pOb
 	IVP_U_Float_Point ivpPosStart;
 	IVP_U_Float_Point ivpPosEnd;
 
-	if ( !pObjectStart || !pObjectEnd )
-	{
-		DevWarning( "IPhysicsSpring *CreateSpring: no start or end object!\n" );
-		return NULL;
-	}
 
 	if ( !pParams->useLocalPositions )
 	{

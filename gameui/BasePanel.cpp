@@ -25,6 +25,8 @@
 
 #include "Sys_Utils.h"
 
+#include "FileSystem.h"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
 
@@ -171,7 +173,15 @@ void CBasePanel::ApplySchemeSettings(IScheme *pScheme)
 	bool bIsWidescreen = aspectRatio >= 1.5999f;
 
 	char filename[512];
-	Q_snprintf( filename, sizeof( filename ), "console/%s%s", "console_background", ( bIsWidescreen ? "_widescreen" : "" ) );
+//	Q_snprintf( filename, sizeof( filename ), "console/%s%s", "console_background", ( bIsWidescreen ? "_widescreen" : "" ) );
+	if ( bIsWidescreen && vgui::filesystem()->FileExists( "materials/console/console_background_widescreen.vmt" ) )
+	{
+		Q_snprintf( filename, sizeof( filename ), "console/%s", "console_background_widescreen" );
+	}
+	else
+	{
+		Q_snprintf( filename, sizeof( filename ), "console/%s", "console_background" );
+	}
 
 	surface()->DrawSetTextureFile(bimage.imageID, filename, hardwareFilter, false);
 	surface()->DrawGetTextureSize(bimage.imageID, bimage.width, bimage.height);

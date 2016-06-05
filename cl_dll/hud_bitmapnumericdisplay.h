@@ -12,6 +12,8 @@
 
 #include "hud_numericdisplay.h"
 
+#define NUMBERS_COUNT 12
+
 class CHudBitmapNumericDisplay : public vgui::Panel
 {	
 	DECLARE_CLASS_SIMPLE( CHudBitmapNumericDisplay, vgui::Panel );
@@ -45,10 +47,10 @@ protected:
 	// VXP
 	void PaintLabel(int xpos, int ypos, CHudTexture *label, Color col);
 	void PaintProgressBar(int xpos, int ypos, int value, Color col);
-	void PaintDummies(int xpos, int ypos, Color col, int numSigDigits, bool isSmallFont = false);
+	void PaintDummies(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
 	virtual void PaintDummies(int xpos, int ypos, Color col, bool isSmallFont = false)
 	{
-		PaintDummies(xpos, ypos, col, 3, isSmallFont);
+		PaintDummies(xpos, ypos, 999, col, 3, isSmallFont);
 	}
 
 	CPanelAnimationVar( float, m_flAlphaOverride, "Alpha", "255" );
@@ -71,8 +73,8 @@ protected:
 private:
 
 //	CHudTexture *m_pNumbers[10];
-	CHudTexture *m_pNumbers[12];
-	CHudTexture *m_pSmallNumbers[12];
+	CHudTexture *m_pNumbers[NUMBERS_COUNT];
+	CHudTexture *m_pSmallNumbers[NUMBERS_COUNT];
 
 	int m_iValue;
 	int m_iMaxValue;
