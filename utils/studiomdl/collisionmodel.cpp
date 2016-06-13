@@ -1350,7 +1350,7 @@ int ProcessSingleBody( CJointedModel &joints )
 			// HACKHACK: A heuristic to detect models without smoothing groups set
 			// UNDONE: Do a BSP to decompose arbitrary models to convex?
 		//	if ( IsApproximatelyPlanar( verts, vertCount, 0.1 ) )
-			if ( IsApproximatelyPlanar( verts, vertCount, 0.5 ) )
+			if ( IsApproximatelyPlanar( verts, vertCount, 0.5f ) )
 			{
 				printf("WARNING: Bad collision model, check your smoothing groups!!!\n\07\nTruncating model!!!!\n" );
 				printf( "%s has bad smoothing groups\n", pmodel->filename );
