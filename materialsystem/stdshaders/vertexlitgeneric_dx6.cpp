@@ -413,3 +413,9 @@ BEGIN_SHADER( VertexLitGeneric_DX6,
 	}
 END_SHADER
 
+//-----------------------------------------------------------------------------
+// This allows us to use a block labelled 'Water_DX60' in the water materials
+//-----------------------------------------------------------------------------
+//BEGIN_INHERITED_SHADER( Water_DX60, VertexLitGeneric_DX6, "Help for Water_DX60" )
+//END_INHERITED_SHADER
+

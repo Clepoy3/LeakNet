@@ -14,6 +14,7 @@
 
 // uncomment this if you want to build for nv3x
 //#define NV3X 1
+#define HDR 1 // VXP: makes stupid texture-size bright blur - see BaseVSShader.cpp ("bool bBlendableOutput")
 
 // This is what all shaders include.
 // CBaseShader will become CShader in this file.
@@ -210,5 +211,30 @@ inline bool CShader_IsFlag2Set( IMaterialVar **params, MaterialVarFlags2_t _flag
 	SHADER_INIT {} \
 	SHADER_DRAW {} \
 	END_SHADER
+
+// A dumbed-down version which does what I need now which works
+// This version doesn't allow you to do chain *anything* down to the base class
+#define BEGIN_INHERITED_SHADER_FLAGS( _name, _base, _help, _flags ) \
+	namespace _base\
+	{\
+		namespace _name\
+		{\
+			static const char *s_Name = #_name; \
+			static const char *s_HelpString = _help;\
+			static int s_nFlags = _flags;\
+			class CShader : public _base::CShader\
+			{\
+			public:\
+				char const* GetName() const			\
+				{									\
+					return s_Name;					\
+				}									\
+				int GetFlags() const				\
+				{									\
+					return s_nFlags;				\
+				}
+
+#define BEGIN_INHERITED_SHADER( _name, _base, _help ) BEGIN_INHERITED_SHADER_FLAGS( _name, _base, _help, 0 )
+#define END_INHERITED_SHADER END_SHADER }
 
 #endif // CSHADER_H

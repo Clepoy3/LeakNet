@@ -1613,7 +1613,7 @@ void CEnvSplash::InputSplash( inputdata_t &inputdata )
 
 #ifdef HL2_DLL
 //=========================================================
-// func_particlestorm
+// point_particlestorm
 //=========================================================
 
 class CParticleStorm : public CBaseParticleEntity

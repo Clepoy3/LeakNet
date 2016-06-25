@@ -84,6 +84,7 @@ BEGIN_VS_SHADER( Water_DX80,
 			!g_pHardwareConfig->HasProjectedBumpEnv() )
 		{
 			return "Water_DX60";
+		//	return "UnlitGeneric";
 		}
 		return 0;
 	}

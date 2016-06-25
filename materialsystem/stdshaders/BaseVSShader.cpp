@@ -13,7 +13,8 @@
 #include "ConVar.h"
 
 #ifdef HDR
-#include "vertexlit_and_unlit_generic_hdr_ps20.inc"
+//#include "vertexlit_and_unlit_generic_hdr_ps20.inc"
+#include "fxctmp9/vertexlit_and_unlit_generic_hdr_ps20.inc" // VXP
 #endif
 
 //-----------------------------------------------------------------------------
@@ -1871,8 +1872,11 @@ void CBaseVSShader::DrawVertexLitAndUnlitGenericPass_HDR( bool bVertexLitGeneric
 		s_pShaderAPI->SetPixelShaderConstant( 8, preMultHack );
 
 #if 1
+		// VXP: Fix later
 		extern ConVar building_cubemaps;
-		bool bBlendableOutput = !building_cubemaps.GetBool();
+	//	bool bBlendableOutput = !building_cubemaps.GetBool();
+		bool bBlendableOutput = true;
+	//	bool bBlendableOutput = false; // VXP: Makes fire sprite light like a bitch
 		vertexlit_and_unlit_generic_hdr_ps20_Index pshIndex;
 		pshIndex.SetBLENDOUTPUT( bBlendableOutput );
 		s_pShaderAPI->SetPixelShaderIndex( pshIndex.GetIndex() );

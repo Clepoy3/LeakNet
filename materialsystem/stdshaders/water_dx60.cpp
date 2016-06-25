@@ -8,5 +8,6 @@
 #include "shaderlib/CShader.h"
 
 
-DEFINE_FALLBACK_SHADER( Water, UnlitGeneric )
+//DEFINE_FALLBACK_SHADER( Water, UnlitGeneric )
+DEFINE_FALLBACK_SHADER( Water, Water_DX60 )
 

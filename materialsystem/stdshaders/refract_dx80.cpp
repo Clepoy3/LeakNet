@@ -69,7 +69,10 @@ BEGIN_VS_SHADER( Refract_DX80,
 	SHADER_FALLBACK
 	{
 		if( g_pHardwareConfig->GetDXSupportLevel() < 80 )
-			return "Wireframe";
+		{
+		//	return "Wireframe";
+			return "Refract_DX60";
+		}
 
 		return 0;
 	}
