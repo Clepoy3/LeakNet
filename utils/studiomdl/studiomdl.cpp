@@ -833,7 +833,7 @@ void Grab_Animation( s_source_t *psource )
 				}
 				if (t < psource->startframe)
 				{
-					Error( "Frame Error(%d) : %s", g_iLinecount, g_szLine );
+					Error( "Frame Error(%d)1 : %s", g_iLinecount, g_szLine );
 				}
 				if (t > psource->endframe)
 				{
@@ -2676,7 +2676,8 @@ void Option_Flex( char *name, char *vtafile, int imodel )
 		}
 		else
 		{
-			Error( "unknown option: %s", token );
+		//	Assert(0);
+			Error( "unknown option1: %s", token );
 		}
 
 	}
@@ -2772,7 +2773,8 @@ void Option_Eyelid( int imodel )
 
 		else
 		{
-			Error( "unknown option: %s", token );
+		//	Assert(0);
+			Error( "unknown option2: %s", token );
 		}
 	}
 
@@ -4634,11 +4636,11 @@ void Grab_Vertexanimation( s_source_t *psource )
 
 					if (t < psource->startframe)
 					{
-						Error( "Frame Error(%d) : %s", g_iLinecount, g_szLine );
+						Error( "Frame Error(%d)2 : %s", g_iLinecount, g_szLine );
 					}
 					if (t > psource->endframe)
 					{
-						Error( "Frame Error(%d) : %s", g_iLinecount, g_szLine );
+						Error( "Frame Error(%d)3 : %s", g_iLinecount, g_szLine );
 					}
 
 					t -= psource->startframe;

@@ -1274,17 +1274,36 @@ bool IsApproximatelyPlanar( Vector **verts, int vertCount, float epsilon )
 	}
 
 	// form the plane and project all of the verts into it
-	float dist = DotProduct( normal, *verts[0] );
+/*	float dist = DotProduct( normal, *verts[0] );
 	float maxDist = dist;
 
 	for ( int i = 0; i < vertCount; i++ )
 	{
-	//	float d = DotProduct( *verts[i], normal ) - dist;
-		float d = DotProduct( *verts[i], normal );
-		clamp( d, dist, maxDist );
+		float d = DotProduct( *verts[i], normal ) - dist;
+	//	float d = DotProduct( *verts[i], normal );
+	//	clamp( d, dist, maxDist );
 		// at least one vert out of the plane, we've got something 3 dimensional
-	//	if ( fabsf(d) > epsilon )
-		if ( fabsf(maxDist-dist) > epsilon )
+		if ( fabsf(d) > epsilon )
+	//	if ( fabsf(maxDist-dist) > epsilon )
+			return false;
+	}*/
+
+	float minDist = DotProduct( normal, *verts[0] );
+	float maxDist = minDist;
+
+	for ( int i = 0; i < vertCount; i++ )
+	{
+		float d = DotProduct( *verts[i], normal );
+		if ( d < minDist )
+		{
+			minDist = d;
+		}
+		else if ( d > maxDist )
+		{
+			maxDist = d;
+		}
+		// at least one vert out of the plane, we've got something 3 dimensional
+		if ( fabsf(maxDist-minDist) > epsilon )
 			return false;
 	}
 	return true;
