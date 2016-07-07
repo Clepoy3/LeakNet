@@ -22,8 +22,13 @@
 #include "hudelement.h"
 #include "hud_macros.h"
 #include "parsemsg.h"
-//#include "hud_numericdisplay.h"
+
+#if !defined( HL2_CLIENT_DLL )
+#include "hud_numericdisplay.h"
+#else
 #include "hud_bitmapnumericdisplay.h"
+#endif // HL2_DLL
+
 #include "iclientmode.h"
 
 #include <vgui_controls/AnimationController.h>
@@ -33,11 +38,17 @@
 //-----------------------------------------------------------------------------
 // Purpose: Displays suit power (armor) on hud
 //-----------------------------------------------------------------------------
-//class CHudBattery : public CHudNumericDisplay, public CHudElement
+#if !defined( HL2_CLIENT_DLL )
+class CHudBattery : public CHudNumericDisplay, public CHudElement
+#else
 class CHudBattery : public CHudBitmapNumericDisplay, public CHudElement
+#endif // HL2_DLL
 {
-//	DECLARE_CLASS_SIMPLE( CHudBattery, CHudNumericDisplay );
+#if !defined( HL2_CLIENT_DLL )
+	DECLARE_CLASS_SIMPLE( CHudBattery, CHudNumericDisplay );
+#else
 	DECLARE_CLASS_SIMPLE( CHudBattery, CHudBitmapNumericDisplay );
+#endif
 
 public:
 	CHudBattery( const char *pElementName );
@@ -60,8 +71,11 @@ DECLARE_HUD_MESSAGE( CHudBattery, Battery );
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-//CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit"), CHudElement( pElementName )
+#if !defined( HL2_CLIENT_DLL )
+CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit"), CHudElement( pElementName )
+#else
 CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit2"), CHudElement( pElementName )
+#endif
 {
 }
 
