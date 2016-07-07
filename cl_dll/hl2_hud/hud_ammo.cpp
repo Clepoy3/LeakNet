@@ -44,8 +44,8 @@ public:
 	void SetAmmo(int ammo, bool playAnimation);
 #else
 	void SetAmmo(int ammo, int maxammo, bool playAnimation);
-	void SetAmmo2(int ammo2, bool playAnimation);
 #endif // HL2_DLL
+	void SetAmmo2(int ammo2, bool playAnimation);
 	
 		
 protected:
@@ -130,8 +130,8 @@ void CHudAmmo::OnThink()
 		SetAmmo(ammo1, true);
 #else
 		SetAmmo(ammo1, wpn->GetMaxClip1(), true);
-		SetAmmo2(ammo2, true);
 #endif // HL2_DLL
+		SetAmmo2(ammo2, true);
 	}
 	else
 	{
@@ -140,8 +140,8 @@ void CHudAmmo::OnThink()
 		SetAmmo(ammo1, false);
 #else
 		SetAmmo(ammo1, wpn->GetMaxClip1(), false);
-		SetAmmo2(ammo2, false);
 #endif // HL2_DLL
+		SetAmmo2(ammo2, false);
 
 		// update whether or not we show the total ammo display
 		if (wpn->UsesClipsForAmmo1())
@@ -206,7 +206,6 @@ void CHudAmmo::SetAmmo(int ammo, int maxammo, bool playAnimation)
 	
 }
 
-#if defined( HL2_CLIENT_DLL )
 //-----------------------------------------------------------------------------
 // Purpose: Updates 2nd ammo display
 //-----------------------------------------------------------------------------
@@ -234,7 +233,6 @@ void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
 
 	SetSecondaryValue(ammo2);
 }
-#endif // HL2_DLL
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays the secondary ammunition level
