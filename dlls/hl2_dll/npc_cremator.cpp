@@ -59,6 +59,9 @@
 
 #define CREM_ATTN_IDLE	(float) 4.5
 
+// CVars
+ConVar	sk_Cremator_health( "sk_Cremator_health", "100" );
+
 //=========================================================
 // Private activities
 //=========================================================
@@ -101,7 +104,6 @@ enum CrematorConditions
 BEGIN_DATADESC( CNPC_Cremator )
 
 	//DEFINE_FIELD( CNPC_Cremator, m_iDeleteThisField, FIELD_INTEGER ),
-	DEFINE_FIELD( CNPC_Cremator, m_flNextIdleSoundTime, FIELD_TIME ),
 
 END_DATADESC()
 
@@ -170,12 +172,10 @@ void CNPC_Cremator::Spawn( void )
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetMoveType( MOVETYPE_STEP );
 	SetBloodColor( DONT_BLEED );
-	m_iMaxHealth		= 100; // VXP: Make a convar
+	m_iMaxHealth		= sk_Cremator_health.GetInt(); // VXP: Make a convar
 	m_iHealth			= m_iMaxHealth;
 	m_flFieldOfView		= -0.7f;
 	m_NPCState			= NPC_STATE_IDLE;
-	
-	m_flNextIdleSoundTime	= gpGlobals->curtime;
 
 	CapabilitiesClear();
 	//CapabilitiesAdd( bits_CAP_NONE );
@@ -231,14 +231,13 @@ Class_T	CNPC_Cremator::Classify( void )
 
 void CNPC_Cremator::IdleSound( void ) // TODO: replace with modern script-based system
 {
-	Msg("IdleSound\n");
-	CPASAttenuationFilter filter( this, CREM_ATTN_IDLE );
-	EmitSound("NPC_Cremator.Breathe");
+#ifdef _DEBUG
+	DevMsg( "CREMATOR: IdleSound\n" );
+#endif
+//	CPASAttenuationFilter filter( this, CREM_ATTN_IDLE );
+	EmitSound( "NPC_Cremator.Breathe" );
 //	enginesound->EmitSound( filter, entindex(), CHAN_VOICE, "npc/cremator/amb_loop.wav", 1, ATTN_NORM );
-	EmitSound("NPC_Cremator.CloakSwish");
-
-	m_flNextIdleSoundTime = gpGlobals->curtime + random->RandomFloat( 14.0f, 28.0f );
-//	m_flNextIdleSoundTime = gpGlobals->curtime + random->RandomFloat( 1.0f, 2.0f );
+//	EmitSound("NPC_Cremator.CloakSwish");
 }
 
 void CNPC_Cremator::AlertSound( void )
@@ -262,10 +261,10 @@ void CNPC_Cremator::AlertSound( void )
 //-----------------------------------------------------------------------------
 void CNPC_Cremator::DeathSound ( void )
 {
-	EmitSound("NPC_Cremator.Die");
+	EmitSound( "NPC_Cremator.Die" );
 //	StopSound( int iEntIndex, int iChannel, const char *pSample )
-	StopSound("NPC_Cremator.Breathe");
-	StopSound("NPC_Cremator.CloakSwish");
+//	StopSound("NPC_Cremator.Breathe");
+//	StopSound("NPC_Cremator.CloakSwish");
 }
 
 //-----------------------------------------------------------------------------

@@ -74,8 +74,6 @@ public:
 	// character.
 	//int		m_iDeleteThisField;
 
-	float	m_flNextIdleSoundTime;
-
 	DEFINE_CUSTOM_AI;
 
 private:
