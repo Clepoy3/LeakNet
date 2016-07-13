@@ -1632,7 +1632,13 @@ void CNPC_Hydra::RunTask( const Task_t *pTask )
 // Output : int
 //-----------------------------------------------------------------------------
 int CNPC_Hydra::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
-{
+{	
+//	Msg("Hydra attacker: %s\n", inputInfo.GetAttacker()->GetClassname());
+	if ( !strncmp( inputInfo.GetAttacker()->GetClassname(), "prop_ragdoll", 12 ) )
+	{
+		return 0; // VXP: Prevent from ragdoll damaging
+	}
+
 	CTakeDamageInfo info = inputInfo;
 
 #if 0
@@ -1937,12 +1943,15 @@ void CNPC_Hydra::AttachStabbedEntity( CBaseAnimating *pAnimating, Vector vecForc
 //	CHydraImpale::Create( this, pRagdoll );
 	m_pHydraImpale = CHydraImpale::Create( this, pRagdoll );
 
-	m_bStabbedEntity = true;
+	if ( m_pHydraImpale )
+	{
+		m_bStabbedEntity = true;
 
-	UTIL_Remove( pAnimating );
+		UTIL_Remove( pAnimating );
 	
-	m_flDetachEntityTime = gpGlobals->curtime + random->RandomFloat( HYDRA_MIN_STAB_HOLD_TIME, HYDRA_MAX_STAB_HOLD_TIME );
-//	m_flDetachEntityTime = gpGlobals->curtime + 1.0f;
+		m_flDetachEntityTime = gpGlobals->curtime + random->RandomFloat( HYDRA_MIN_STAB_HOLD_TIME, HYDRA_MAX_STAB_HOLD_TIME );
+	//	m_flDetachEntityTime = gpGlobals->curtime + 1.0f;
+	}
 }
 
 void CNPC_Hydra::UpdateStabbedEntity( void )
@@ -1990,18 +1999,21 @@ void CNPC_Hydra::DetachStabbedEntity( bool playSound )
 
 	m_grabController.DetachEntity();
 	*/
-	if( m_pHydraImpale != NULL )
+	if( m_pHydraImpale == NULL )
+		return;
+
+	IPhysicsConstraint *pConstraint = m_pHydraImpale->GetConstraint();
+	if( pConstraint != NULL )
 	{
-		IPhysicsConstraint *pConstraint = m_pHydraImpale->GetConstraint();
-		if( pConstraint != NULL )
-		{
-			pConstraint->Deactivate();
-			pConstraint = NULL;
+		pConstraint->Deactivate();
+		pConstraint = NULL;
 			
-			UTIL_Remove( m_pHydraImpale );
-		//	m_pHydraImpale = NULL;
-		}
+		UTIL_Remove( m_pHydraImpale );
+	//	m_pHydraImpale = NULL;
+
+		m_bStabbedEntity = false;
 	}
+
 	if ( playSound )
 	{
 		//Play the detach sound
@@ -2009,8 +2021,6 @@ void CNPC_Hydra::DetachStabbedEntity( bool playSound )
 		Vector vecHead = EyePosition();
 		EmitSound( filter, entindex(), "NPC_Hydra.Bump", &vecHead );
 	}
-
-	m_bStabbedEntity = false;
 }
 
 void CNPC_Hydra::GetDesiredImpaledPosition( Vector *vecOrigin, QAngle *vecAngles )

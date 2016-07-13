@@ -6,7 +6,7 @@
 //=============================================================================
 
 #include "BaseVSShader.h"
-#include "convar.h"
+//#include "convar.h"
 #include "common_hlsl_cpp_consts.h"
 
 //ConVar mat_overbright_level( "mat_overbright_level", "4", 0, "Bloom threshold" );
