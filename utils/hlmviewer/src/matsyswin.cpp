@@ -95,7 +95,7 @@ void InitMaterialSystemConfig(MaterialSystem_Config_t *pConfig)
 	{
 		pConfig->overbright = 1;
 	}
-	pConfig->overbright = 2;
+//	pConfig->overbright = 2; // VXP: Fix for "Enable overbrightening" checkbox
 	pConfig->bAllowCheats = false;
 	pConfig->bLinearFrameBuffer = false;
 	pConfig->polyOffset = 4;

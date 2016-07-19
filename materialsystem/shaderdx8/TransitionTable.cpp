@@ -929,8 +929,52 @@ void CTransitionTable::ApplyTransition( TransitionList_t& list, int snapshot )
 	if ( !m_bUsingStateBlocks )
 	{
 	//	Assert( !memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) );
-		if( memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) )
-			Warning( "CTransitionTable::ApplyTransition: assert!\n" );
+	//	if( memcmp( &m_BoardState, &CurrentShadowState(), sizeof(m_BoardState) ) )
+	//		Warning( "CTransitionTable::ApplyTransition: assert!\n" );
+		// NOTE: A memcmp here isn't enough since we don't set alpha args in cases where the op is nothing.
+
+	//	const ShadowState_t &testState1 = *CurrentShadowState();
+		const ShadowState_t &testState1 = CurrentShadowState();
+		ShadowState_t testState2 = m_BoardState;
+
+		if ( testState1.m_ZEnable == D3DZB_FALSE )
+		{
+			testState2.m_ZBias = testState1.m_ZBias;
+			testState2.m_ZFunc = testState1.m_ZFunc;
+		}
+
+		if ( !testState1.m_AlphaTestEnable )
+		{
+			testState2.m_AlphaRef = testState1.m_AlphaRef;
+			testState2.m_AlphaFunc = testState1.m_AlphaFunc;
+		}
+		for( i = 0; i < nStageCount; i++ )
+		{
+			if ( !testState1.m_UsingFixedFunction )
+			{
+				testState2.m_TextureStage[i].m_ColorOp = testState1.m_TextureStage[i].m_ColorOp;
+				testState2.m_TextureStage[i].m_ColorArg1 = testState1.m_TextureStage[i].m_ColorArg1;
+				testState2.m_TextureStage[i].m_ColorArg2 = testState1.m_TextureStage[i].m_ColorArg2;
+				testState2.m_TextureStage[i].m_AlphaOp = testState1.m_TextureStage[i].m_AlphaOp;
+				testState2.m_TextureStage[i].m_AlphaArg1 = testState1.m_TextureStage[i].m_AlphaArg1;
+				testState2.m_TextureStage[i].m_AlphaArg2 = testState1.m_TextureStage[i].m_AlphaArg2;
+			}
+			else
+			{
+				if ( testState1.m_TextureStage[i].m_ColorOp == D3DTOP_DISABLE )
+				{
+					testState2.m_TextureStage[i].m_ColorArg1 = testState1.m_TextureStage[i].m_ColorArg1;
+					testState2.m_TextureStage[i].m_ColorArg2 = testState1.m_TextureStage[i].m_ColorArg2;
+				}
+				if ( testState1.m_TextureStage[i].m_AlphaOp == D3DTOP_DISABLE )
+				{
+					testState2.m_TextureStage[i].m_AlphaArg1 = testState1.m_TextureStage[i].m_AlphaArg1;
+					testState2.m_TextureStage[i].m_AlphaArg2 = testState1.m_TextureStage[i].m_AlphaArg2;
+				}
+			}
+		}
+
+		Assert( !memcmp( &testState1, &testState2, sizeof( testState1 ) ) );
 	}
 #endif
 }

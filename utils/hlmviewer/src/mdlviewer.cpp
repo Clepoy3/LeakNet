@@ -150,7 +150,7 @@ MDLViewer::MDLViewer ()
 #ifdef WIN32
 	menuOptions->addSeparator ();
 	menuOptions->add ("Make Screenshot...", IDC_OPTIONS_MAKESCREENSHOT);
-	//menuOptions->add ("Dump Model Info", IDC_OPTIONS_DUMP);
+	menuOptions->add ("Dump Model Info", IDC_OPTIONS_DUMP); // VXP: Uncommented
 #endif
 
 	menuView->add ("File Associations...", IDC_VIEW_FILEASSOCIATIONS);
@@ -506,14 +506,19 @@ MDLViewer::handleEvent (mxEvent *event)
 
 		case IDC_HELP_ABOUT:
 			mxMessageBox (this,
-				"Half-Life Model Viewer v1.22 (c) 1999 by Mete Ciragan\n\n"
+			//	"Half-Life Model Viewer v1.22 (c) 1999 by Mete Ciragan\n\n"
+				"Half-Life Model Viewer v1.22 (c) 1999-2016\n"
+				"\tby Mete Ciragan, Valve and VXP\n\n"
 				"Left-drag to rotate.\n"
 				"Right-drag to zoom.\n"
 				"Shift-left-drag to x-y-pan.\n\n"
 				"Ctrl-left-drag to move light.\n\n"
 				"Build:\t" __DATE__ ".\n"
-				"Email:\tmete@swissquake.ch\n"
-				"Web:\thttp://www.swissquake.ch/chumbalum-soft/", "About Half-Life Model Viewer",
+			//	"Email:\tmete@swissquake.ch\n"
+				"Email:\tmete@swissquake.ch, uavxp29@gmail.com\n"
+			//	"Web:\thttp://www.swissquake.ch/chumbalum-soft/", "About Half-Life Model Viewer",
+				"Web:\thttp://www.swissquake.ch/chumbalum-soft/\n"
+				"\thttp://leaknet.tk/", "About Half-Life Model Viewer",
 				MX_MB_OK | MX_MB_INFORMATION);
 			break;
 		

@@ -1814,7 +1814,7 @@ ControlPanel::handleEvent (mxEvent *event)
 void
 ControlPanel::dumpModelInfo ()
 {
-#if 0
+//#if 0 // VXP
 	studiohdr_t *hdr = g_pStudioModel->getStudioHeader ();
 	if (hdr)
 	{
@@ -1831,10 +1831,14 @@ ControlPanel::dumpModelInfo ()
 			fprintf (file, "length: %d\n\n", hdr->length);
 
 			fprintf (file, "eyeposition: %f %f %f\n", hdr->eyeposition[0], hdr->eyeposition[1], hdr->eyeposition[2]);
-			fprintf (file, "min: %f %f %f\n", hdr->min[0], hdr->min[1], hdr->min[2]);
-			fprintf (file, "max: %f %f %f\n", hdr->max[0], hdr->max[1], hdr->max[2]);
-			fprintf (file, "bbmin: %f %f %f\n", hdr->bbmin[0], hdr->bbmin[1], hdr->bbmin[2]);
-			fprintf (file, "bbmax: %f %f %f\n", hdr->bbmax[0], hdr->bbmax[1], hdr->bbmax[2]);
+		//	fprintf (file, "min: %f %f %f\n", hdr->min[0], hdr->min[1], hdr->min[2]);
+		//	fprintf (file, "max: %f %f %f\n", hdr->max[0], hdr->max[1], hdr->max[2]);
+			fprintf (file, "hull_min: %f %f %f\n", hdr->hull_min[0], hdr->hull_min[1], hdr->hull_min[2]);
+			fprintf (file, "hull_max: %f %f %f\n", hdr->hull_max[0], hdr->hull_max[1], hdr->hull_max[2]);
+		//	fprintf (file, "bbmin: %f %f %f\n", hdr->bbmin[0], hdr->bbmin[1], hdr->bbmin[2]);
+		//	fprintf (file, "bbmax: %f %f %f\n", hdr->bbmax[0], hdr->bbmax[1], hdr->bbmax[2]);
+			fprintf (file, "view_bbmin: %f %f %f\n", hdr->view_bbmin[0], hdr->view_bbmin[1], hdr->view_bbmin[2]);
+			fprintf (file, "view_bbmax: %f %f %f\n", hdr->view_bbmax[0], hdr->view_bbmax[1], hdr->view_bbmax[2]);
 			
 			fprintf (file, "flags: %d\n\n", hdr->flags);
 
@@ -1842,7 +1846,8 @@ ControlPanel::dumpModelInfo ()
 			for (i = 0; i < hdr->numbones; i++)
 			{
 				mstudiobone_t *pbones = (mstudiobone_t *) (phdr + hdr->boneindex);
-				fprintf (file, "\nbone %d.name: \"%s\"\n", i + 1, pbones[i].name);
+			//	fprintf (file, "\nbone %d.name: \"%s\"\n", i + 1, pbones[i].name);
+				fprintf (file, "\nbone %d.name: \"%s\"\n", i + 1, pbones[i].pszName());
 				fprintf (file, "bone %d.parent: %d\n", i + 1, pbones[i].parent);
 				fprintf (file, "bone %d.flags: %d\n", i + 1, pbones[i].flags);
 				fprintf (file, "bone %d.bonecontroller: %d %d %d %d %d %d\n", i + 1, pbones[i].bonecontroller[0], pbones[i].bonecontroller[1], pbones[i].bonecontroller[2], pbones[i].bonecontroller[3], pbones[i].bonecontroller[4], pbones[i].bonecontroller[5]);
@@ -1859,9 +1864,11 @@ ControlPanel::dumpModelInfo ()
 				fprintf (file, "bonecontroller %d.start: %f\n", i + 1, pbonecontrollers[i].start);
 				fprintf (file, "bonecontroller %d.end: %f\n", i + 1, pbonecontrollers[i].end);
 				fprintf (file, "bonecontroller %d.rest: %d\n", i + 1, pbonecontrollers[i].rest);
-				fprintf (file, "bonecontroller %d.index: %d\n", i + 1, pbonecontrollers[i].index);
+			//	fprintf (file, "bonecontroller %d.index: %d\n", i + 1, pbonecontrollers[i].index);
+				fprintf (file, "bonecontroller %d.inputfield: %d\n", i + 1, pbonecontrollers[i].inputfield);
 			}
 
+		/*
 			fprintf (file, "\nnumhitboxes: %d\n", hdr->numhitboxes);
 			for (i = 0; i < hdr->numhitboxes; i++)
 			{
@@ -1871,13 +1878,30 @@ ControlPanel::dumpModelInfo ()
 				fprintf (file, "hitbox %d.bbmin: %f %f %f\n", i + 1, pbboxes[i].bbmin[0], pbboxes[i].bbmin[1], pbboxes[i].bbmin[2]);
 				fprintf (file, "hitbox %d.bbmax: %f %f %f\n", i + 1, pbboxes[i].bbmax[0], pbboxes[i].bbmax[1], pbboxes[i].bbmax[2]);
 			}
+		*/
+			fprintf (file, "\nhitbox sets: %d\n", hdr->numhitboxsets);
+			for (i = 0; i < hdr->numhitboxsets; i++)
+			{
+				fprintf (file, "\nhitbox set: %d\n", i + 1);
+				mstudiohitboxset_t *pbboxesset = (mstudiohitboxset_t *) (phdr + hdr->hitboxsetindex);
+				fprintf (file, "\nnumhitboxes: %d\n", pbboxesset->numhitboxes);
+				for (i = 0; i < pbboxesset->numhitboxes; i++)
+				{
+					mstudiobbox_t *pbboxes = (mstudiobbox_t *) (phdr + pbboxesset->hitboxindex);
+					fprintf (file, "\nhitbox %d.bone: %d\n", i + 1, pbboxes[i].bone);
+					fprintf (file, "hitbox %d.group: %d\n", i + 1, pbboxes[i].group);
+					fprintf (file, "hitbox %d.bbmin: %f %f %f\n", i + 1, pbboxes[i].bbmin[0], pbboxes[i].bbmin[1], pbboxes[i].bbmin[2]);
+					fprintf (file, "hitbox %d.bbmax: %f %f %f\n", i + 1, pbboxes[i].bbmax[0], pbboxes[i].bbmax[1], pbboxes[i].bbmax[2]);
+				}
+			}
 
 			fprintf (file, "\nnumseq: %d\n", hdr->numseq);
 			for (i = 0; i < hdr->numseq; i++)
 			{
 				mstudioseqdesc_t *pseqdescs = (mstudioseqdesc_t *) (phdr + hdr->seqindex);
-				fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].label);
-				fprintf (file, "seqdesc %d.fps: %f\n", i + 1, pseqdescs[i].fps);
+			//	fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].label);
+				fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].pszLabel());
+			//	fprintf (file, "seqdesc %d.fps: %f\n", i + 1, pseqdescs[i].fps); // VXP: Fix later
 				fprintf (file, "seqdesc %d.flags: %d\n", i + 1, pseqdescs[i].flags);
 				fprintf (file, "<...>\n");
 			}
@@ -1891,21 +1915,22 @@ ControlPanel::dumpModelInfo ()
 				fprintf (file, "\nseqgroup %d.data: %d\n", i + 1, pseqgroups[i].data);
 			}
 */
-			hdr = g_pStudioModel->getTextureHeader ();
+		//	hdr = g_pStudioModel->getTextureHeader ();
 			fprintf (file, "\nnumtextures: %d\n", hdr->numtextures);
 			fprintf (file, "textureindex: %d\n", hdr->textureindex);
-			fprintf (file, "texturedataindex: %d\n", hdr->texturedataindex);
+		//	fprintf (file, "texturedataindex: %d\n", hdr->texturedataindex);
 			for (i = 0; i < hdr->numtextures; i++)
 			{
 				mstudiotexture_t *ptextures = (mstudiotexture_t *) ((byte *) hdr + hdr->textureindex);
-				fprintf (file, "\ntexture %d.name: \"%s\"\n", i + 1, ptextures[i].name);
+			//	fprintf (file, "\ntexture %d.name: \"%s\"\n", i + 1, ptextures[i].name);
+				fprintf (file, "\ntexture %d.name: \"%s\"\n", i + 1, ptextures[i].pszName());
 				fprintf (file, "texture %d.flags: %d\n", i + 1, ptextures[i].flags);
 				fprintf (file, "texture %d.width: %d\n", i + 1, ptextures[i].width);
 				fprintf (file, "texture %d.height: %d\n", i + 1, ptextures[i].height);
-				fprintf (file, "texture %d.index: %d\n", i + 1, ptextures[i].index);
+			//	fprintf (file, "texture %d.index: %d\n", i + 1, ptextures[i].index);
 			}
 
-			hdr = g_pStudioModel->getStudioHeader ();
+		//	hdr = g_pStudioModel->getStudioHeader ();
 			fprintf (file, "\nnumskinref: %d\n", hdr->numskinref);
 			fprintf (file, "numskinfamilies: %d\n", hdr->numskinfamilies);
 
@@ -1913,7 +1938,8 @@ ControlPanel::dumpModelInfo ()
 			for (i = 0; i < hdr->numbodyparts; i++)
 			{
 				mstudiobodyparts_t *pbodyparts = (mstudiobodyparts_t *) ((byte *) hdr + hdr->bodypartindex);
-				fprintf (file, "\nbodypart %d.name: \"%s\"\n", i + 1, pbodyparts[i].name);
+			//	fprintf (file, "\nbodypart %d.name: \"%s\"\n", i + 1, pbodyparts[i].name);
+				fprintf (file, "\nbodypart %d.name: \"%s\"\n", i + 1, pbodyparts[i].pszName());
 				fprintf (file, "bodypart %d.nummodels: %d\n", i + 1, pbodyparts[i].nummodels);
 				fprintf (file, "bodypart %d.base: %d\n", i + 1, pbodyparts[i].base);
 				fprintf (file, "bodypart %d.modelindex: %d\n", i + 1, pbodyparts[i].modelindex);
@@ -1923,7 +1949,8 @@ ControlPanel::dumpModelInfo ()
 			for (i = 0; i < hdr->numattachments; i++)
 			{
 				mstudioattachment_t *pattachments = (mstudioattachment_t *) ((byte *) hdr + hdr->attachmentindex);
-				fprintf (file, "attachment %d.name: \"%s\"\n", i + 1, pattachments[i].name);
+			//	fprintf (file, "attachment %d.name: \"%s\"\n", i + 1, pattachments[i].name);
+				fprintf (file, "attachment %d.name: \"%s\"\n", i + 1, pattachments[i].pszName());
 			}
 
 			fclose (file);
@@ -1931,7 +1958,7 @@ ControlPanel::dumpModelInfo ()
 			ShellExecute ((HWND) getHandle (), "open", "midump.txt", 0, 0, SW_SHOW);
 		}
 	}
-#endif
+//#endif
 }
 
 
