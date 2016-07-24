@@ -494,8 +494,8 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 	{
 		// special case for static lighting only
 		// Don't need to bother converting to linear space in this case.
-	//	returnColor = staticLightingColor;
-		returnColor = GammaToLinear( staticLightingColor * cOverbright ); // VXP
+		returnColor = staticLightingColor;
+	//	returnColor = GammaToLinear( staticLightingColor * cOverbright ); // VXP
 	}
 	else
 	{
@@ -510,8 +510,8 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 		// for dx9, we don't need to scale back down to 0..1 for overbrighting.
 		// FIXME: But we're going to because there's some visual difference between dx8 + dx9 if we don't
 		// gotta look into that later.
-	//	returnColor = HuePreservingColorClamp( cOOOverbright * LinearToGamma( linearColor ) );
-		returnColor = linearColor; // VXP
+		returnColor = HuePreservingColorClamp( cOOOverbright * LinearToGamma( linearColor ) );
+	//	returnColor = linearColor;
 	}
 
 	return returnColor;
