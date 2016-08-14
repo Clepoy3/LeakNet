@@ -13,10 +13,22 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
+
+//#include "common.h"
 #include "studio.h"
 #include "optimize.h"
 #include "vtfconvert.h"
 #include "mathlib.h"
+
+//#include "StudioModel.h"
+#include "IStudioRender.h"
+
+#include "materialsystem/imaterialsystem.h"
+#include "materialsystem/imaterialsystemhardwareconfig.h"
+#include "materialsystem/imaterial.h"
+#include "materialsystem/imaterialvar.h"
+
+//#include "bone_setup.h"
 
 imglib_t image;
 
@@ -94,6 +106,25 @@ void COM_WinFixSlashes( char *pname )
 			*pname = '\\';
 		pname++;
 	}
+}
+
+/*
+============
+COM_SkipPath
+============
+*/
+char *COM_SkipPath (char *pathname)
+{
+	char    *last;
+	
+	last = pathname;
+	while (*pathname)
+	{
+		if (*pathname=='/')
+			last = pathname+1;
+		pathname++;
+	}
+	return last;
 }
 
 void    StripFilename (char *path)
@@ -379,8 +410,17 @@ const char *unlookupControl( int val )
 	return NULL;
 }
 
+class StudioModel
+{
+public:
+	bool					LoadModel( const char *modelname );
+
+protected:
+	static IStudioRender	*m_pStudioRender;
+};
+
 //bool GenerateQCFile2836( studiohdr_t *pStudioHdr )
-bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
+bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr, OptimizedModel::FileHeader_t *pVtxHdr, char *pFilename)
 {
 	char pFullNameExt[MAX_PATH];
 	strncpy( pFullNameExt, pStudioHdr->name, sizeof( pFullNameExt ) );
@@ -433,17 +473,28 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 //	}
 	fprintf( fp, "$scale 1.0\r\n" );
 
+	if ( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP )
+	{
+		fprintf( fp, "$staticprop\r\n" );
+	}
+
 	fprintf( fp, "\r\n" );
 
 	fprintf( fp, "$bbox %f %f %f %f %f %f\r\n", pStudioHdr->hull_min.x, pStudioHdr->hull_min.y, pStudioHdr->hull_min.z, pStudioHdr->hull_max.x, pStudioHdr->hull_max.y, pStudioHdr->hull_max.z );
 	fprintf( fp, "$cbox %f %f %f %f %f %f\r\n", pStudioHdr->view_bbmin.x, pStudioHdr->view_bbmin.y, pStudioHdr->view_bbmin.z, pStudioHdr->view_bbmax.x, pStudioHdr->view_bbmax.y, pStudioHdr->view_bbmax.z );
 	fprintf( fp, "$eyeposition %f %f %f\r\n", pStudioHdr->eyeposition.x, pStudioHdr->eyeposition.y, pStudioHdr->eyeposition.z );
-	fprintf( fp, "$origin 0.000000 0.000000 -0.000000 -90\r\n" );
+	if ( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP )
+	{
+		fprintf( fp, "$origin 0.000000 0.000000 -0.000000 -90\r\n" );
+	}
 
 	fprintf( fp, "\r\n" );
 	fprintf( fp, "\r\n" );
 
 	fprintf( fp, "//reference mesh(es)\r\n" );
+	
+	// VXP: Loading LOD information
+//	OptimizedModel::FileHeader_t *pVtxHdr = LoadVtxHdr( pFilename );
 
 	for( int i = 0; i < pStudioHdr->numbodyparts; i++ )
 	{
@@ -457,17 +508,45 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 			{
 				fprintf( fp, "$bodygroup \"%s\"\r\n", pBodypart->pszName() );
 				fprintf( fp, "{\r\n" );
-				fprintf( fp, "blank\r\n" );
+				fprintf( fp, "\tblank\r\n" );
 				fprintf( fp, "}\r\n" );
 				fprintf( fp, "\r\n" );
 			}
 			else
 			{
 				char pModelName[MAX_PATH];
-				strncpy( pModelName, pModel->name, sizeof( pModelName ) );
+			//	strncpy( pModelName, pModel->name, sizeof( pModelName ) );
+				strncpy( pModelName, COM_SkipPath( pModel->name ), sizeof( pModelName ) );
 				StripExtension( pModelName );
 
 				fprintf( fp, "$body \"%s\" \"%s_lod0\"\r\n", pBodypart->pszName(), pModelName );
+
+			/*	VXP: Re-enable and fix
+				OptimizedModel::BodyPartHeader_t *bodyPart = pVtxHdr->pBodyPart( i );
+				mstudiobodyparts_t *pStudioBodyPart = pStudioHdr->pBodypart( i );
+
+				for( int lodID = 0; lodID < pVtxHdr->numLODs; lodID++ )
+				{
+					for (int modelID = 0; modelID < bodyPart->numModels; ++modelID)
+					{
+						OptimizedModel::ModelHeader_t *model = bodyPart->pModel( modelID );
+						OptimizedModel::ModelLODHeader_t *pLOD = model->pLOD( lodID );
+						Msg("LOD%d, switchPoint: %i\n", lodID, (int)pLOD->switchPoint);
+						fprintf( fp, "$lod %i\r\n", (int)pLOD->switchPoint );
+						fprintf( fp, "{\r\n" );
+						fprintf( fp, "\treplacemodel \"%s_lod0.smd\" \"%s_lod%i.smd\"\r\n", pModelName, pModelName, lodID );
+						fprintf( fp, "}\r\n" );
+					}
+				}*/
+
+				// VXP: Flexes
+			/*	mstudiomesh_t *pMesh = pModel->pMesh(0);
+				for( int j = 0; j < pMesh->numflexes; j++ )
+				{
+					mstudioflex_t *pFlex = pMesh->pFlex(j);
+					Msg("flex - name: %s\n", pFlex->pszName());
+				}*/
+
 				fprintf( fp, "\r\n" );
 			}
 		}
@@ -482,7 +561,7 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 
 				if( !pModel->nummeshes )
 				{
-					fprintf( fp, "blank\r\n" );
+					fprintf( fp, "\tblank\r\n" );
 				}
 				else
 				{
@@ -490,7 +569,7 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 					strncpy( pModelName, pModel->name, sizeof( pModelName ) );
 					StripExtension( pModelName );
 
-					fprintf( fp, "studio \"%s_lod0\"\r\n", pModelName );
+					fprintf( fp, "\tstudio \"%s_lod0\"\r\n", pModelName );
 				}
 			}
 
@@ -500,6 +579,93 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 
 	}
 	
+	// VXP: Skins
+	Msg("numskinfamilies: %i\n", pStudioHdr->numskinfamilies);
+/*	if ( pStudioHdr->numtextures )
+	{
+		fprintf( fp, "// %d skin(s)\r\n", pStudioHdr->numtextures );
+
+		fprintf( fp, "$texturegroup skinfamilies {\r\n" );
+
+		for (int i = 0; i < pStudioHdr->numtextures; i++)
+		{
+			mstudiotexture_t *pTexture = pStudioHdr->pTexture(i);
+			fprintf( fp, "\t{ \"%s.vmt\" }\r\n", pTexture->pszName());
+		}
+
+		fprintf(fp, "}\r\n");
+	}*/
+	if ( pStudioHdr->numskinfamilies )
+	{
+		fprintf( fp, "// %d skin(s)\r\n", pStudioHdr->numskinfamilies );
+
+
+		// VXP: What the fuck is this shit? O_o
+	//	IStudioRender	*StudioModel::m_pStudioRender = NULL;
+	/*	IStudioRender	*m_pStudioRender = NULL;
+		CSysModule *studioRenderDLL = NULL;
+		studioRenderDLL = Sys_LoadModule( "StudioRender.dll" );
+		if ( !studioRenderDLL )
+			Msg("Error loading module\n");
+		CreateInterfaceFn studioRenderFactory = Sys_GetFactory( "StudioRender.dll" );
+		if ( !studioRenderFactory )
+			Msg("Error loading interface\n");
+		m_pStudioRender = ( IStudioRender * )studioRenderFactory( STUDIO_RENDER_INTERFACE_VERSION, NULL );
+		if ( !m_pStudioRender )
+			Msg("Error loading factory\n");
+		studiohwdata_t m_HardwareData;
+		memset( &m_HardwareData, 0, sizeof( m_HardwareData ) );
+		FILE *file;
+		// load the model
+		char pVtxFileName[MAX_PATH];
+		memset( pVtxFileName, 0, sizeof(pVtxFileName) );
+		sprintf( pVtxFileName, "%s.dx7_2bone.vtx", pFilename );
+		file = fopen( pVtxFileName, "rb" );
+		if ( !file )
+			Msg("Error loading file\n");
+		CUtlMemory<unsigned char> tmpVtxMem; // This goes away when we leave this scope.
+		fseek( file, 0, SEEK_END );
+		long size = ftell( file );
+		fseek( file, 0, SEEK_SET );
+
+		tmpVtxMem.EnsureCapacity( size );
+		fread( tmpVtxMem.Base(), size, 1, file );
+		fclose( file );
+
+		bool modelloaded = m_pStudioRender->LoadModel( (studiohdr_t *)pStudioHdr, tmpVtxMem.Base(), &m_HardwareData );
+		if ( !modelloaded )
+			Msg("Error loading model\n");
+
+		IMaterial **ppMaterials = m_HardwareData.m_pLODs[0].ppMaterials;
+
+		fprintf( fp, "$texturegroup skinfamilies {\r\n" );
+
+		for( int m = 0; m < pStudioHdr->numskinfamilies; m++ )
+		{
+			short *pSkinRef = pStudioHdr->pSkinref(m);
+
+			for( int i = 0; i < pStudioHdr->numbodyparts; i++ )
+			{
+				mstudiobodyparts_t *pBodypart = pStudioHdr->pBodypart( i );
+				for( int j = 0; j < pStudioHdr->numbodyparts; j++ )
+				{
+					mstudiomodel_t *pModel = pBodypart->pModel(j);
+
+					for( int k = 0; k < pModel->nummeshes; ++k )
+					{
+						mstudiomesh_t *pMesh = pModel->pMesh(k);
+						IMaterial *pMaterial = ppMaterials[pSkinRef[pMesh->material]];
+						Msg("pSkinRef: %i\n", pMaterial->GetName());
+					}
+				}
+			}
+		}
+
+		
+
+		fprintf(fp, "}\r\n");*/
+	}
+
 	fprintf(fp, "\r\n");
 
 	if( pStudioHdr->numbonecontrollers )
@@ -510,13 +676,21 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 		{
 			mstudiobonecontroller_t *pBonecontroller = pStudioHdr->pBonecontroller(i);
 
+			int bonecontrollertype = pBonecontroller->type & STUDIO_TYPES;
+			if ( unlookupControl(bonecontrollertype) == NULL )
+			{
+				bonecontrollertype = pBonecontroller->type;
+			}
+
 			if( pBonecontroller->inputfield == 4 )
 			{
-				fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+			//	fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+				fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(bonecontrollertype), pBonecontroller->start, pBonecontroller->end );
 			}
 			else
 			{
-				fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+			//	fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+				fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( bonecontrollertype), pBonecontroller->start, pBonecontroller->end );
 			}
 		}
 
@@ -581,9 +755,11 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 	{
 	//	mstudioseqdesc_t *pSeqdesc = pStudioHdr->pSeqdesc(i);
 		mstudioseqdesc_v36_t *pSeqdesc = pStudioHdr->pSeqdesc(i);
-		mstudioanimdesc_t *pAnimdesc = pStudioHdr->pAnimdesc( pSeqdesc->anim[0][0] );
+	//	mstudioanimdesc_t *pAnimdesc = pStudioHdr->pAnimdesc( pSeqdesc->anim[0][0] );
+		mstudioanimdesc_t *pAnimdesc = pStudioHdr->pAnimdesc( pSeqdesc->pAnimValue(0, 0) );
 
-		fprintf( fp, "$sequence \"%s\" \"%s\" fps %.0f ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel(), pAnimdesc->fps );
+	//	fprintf( fp, "$sequence \"%s\" \"%s\" fps %.0f ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel(), pAnimdesc->fps );
+		fprintf( fp, "$sequence %s \"%s\" ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel() );
 		
 		bool looping = pSeqdesc->flags & STUDIO_LOOPING ? true : false;
 
@@ -592,11 +768,89 @@ bool GenerateQCFile2836(studiohdr_v36_t *pStudioHdr)
 			fprintf( fp, "loop " );
 		}
 
+		bool snapping = pSeqdesc->flags & STUDIO_SNAP ? true : false;
+
+		if( snapping )
+		{
+			fprintf( fp, "snap " );
+		}
+
+		fprintf( fp, "fps %.0f ", pAnimdesc->fps );
+
+		// Blends here
+		Msg( "numblends: %i\n", pSeqdesc->numblends );
+	//	for (int j = 0; j < pSeqdesc->numblends; j++)
+	//	{
+			if ( unlookupControl(pSeqdesc->paramindex[0] & STUDIO_TYPES) != NULL )
+			{
+				fprintf(fp, "blend %s %i %i ", unlookupControl(pSeqdesc->paramindex[0] & STUDIO_TYPES), pSeqdesc->paramstart[0], pSeqdesc->paramend[0]);
+			}
+	//	}
+
 		// $sequence "Idle" "Idle" fps 30 loop activity ACT_IDLE 1
 		if (*pSeqdesc->pszActivityName() != '\0')
 		{
-			fprintf(fp, "activity %s %i ", pSeqdesc->pszActivityName(), pSeqdesc->actweight);
+		//	fprintf(fp, "activity %s %i ", pSeqdesc->pszActivityName(), pSeqdesc->actweight);
+			fprintf(fp, "%s %i ", pSeqdesc->pszActivityName(), pSeqdesc->actweight);
 		}
+
+		// { event 3005 1 }
+		// { event %i %f %i } ?
+		// VXP: Need to compute frame (second argument) by cycle
+		Msg( "%s's events count:  %i (%i)\n", pSeqdesc->pszLabel(), pSeqdesc->numevents, pSeqdesc->eventindex );
+
+		// VXP: Adding some additional brackets
+		if ( pSeqdesc->numevents > 1 )
+		{
+			fprintf(fp, "{\r\n");
+		}
+
+		for (int j = 0; j < pSeqdesc->numevents; j++)
+		{
+			mstudioevent_t *pevent = pSeqdesc->pEvent( j );
+		//	fprintf(fp, "{ event %i %f %s } ", pevent->event, pevent->cycle, pevent->options);
+		//	Msg("{ event %i %f %s }\n", pevent->event, pevent->cycle, pevent->options);
+
+		//	float duration = (pAnimdesc->numframes - 1) / pAnimdesc->fps * pSeqdesc->actweight;
+		//	Msg("ACT_NAME: %s\n", pSeqdesc->pszActivityName());
+		//	Msg("numframes: %i; duration: %f; pevent-cycle: %f\n", pAnimdesc->numframes, duration, pevent->cycle);
+		//	Msg("frame: %f\n",  pevent->cycle / 100 * pAnimdesc->numframes * 100);
+
+			float neededFrame = pevent->cycle / 100 * (pAnimdesc->numframes - 1) * 100;
+		//	int frame = static_cast<int>(neededFrame);
+		//	char *test = (( stricmp( pevent->options, "" ) != 0 ) ? strcat( " ", pevent->options ) : "");
+		//	Msg("%s\n", test);
+			int newEvent = pevent->event /* + 2000*/;
+		//	Msg("%i; %f; %s\n", newEvent, pevent->cycle, (const char*)pevent->options);
+		//	fprintf(fp, "{ event %i %f%s } ", newEvent, frame, (( stricmp( pevent->options, "" ) != 0 ) ? strcat( " ", pevent->options ) : ""));
+
+		//	fprintf(fp, "{\r\n\t{ event %i %i %s }\r\n} ", newEvent, ( int )neededFrame, "\"assno\"");
+
+			// VXP: Making some beauty here
+			if ( j >= 0 && pSeqdesc->numevents > 1 )
+			{
+				fprintf(fp, "\t");
+			}
+
+		//	fprintf(fp, "{ event %i %i %s } ", newEvent, ( int )neededFrame, "\"missingno\"");
+			fprintf(fp, "{ event %i %i } ", newEvent, ( int )neededFrame);
+
+			// VXP: Making some beauty here
+			if ( j < pSeqdesc->numevents - 1 && pSeqdesc->numevents > 1 )
+			{
+				fprintf(fp, "\r\n");
+			}
+		}
+
+		// VXP: Adding some additional brackets
+		if ( pSeqdesc->numevents > 1 )
+		{
+			fprintf(fp, "\r\n}");
+		}
+	
+	//	float m_poseparameter[MAXSTUDIOPOSEPARAM];
+	//	int iParameter = LookupPoseParameter( "" );
+	//	Msg("numframes: %i\n", Studio_Duration( pStudioHdr, i, Studio_GetPoseParameter( pStudioHdr, iParameter, m_poseparameter[iParameter] ) ));
 
 		fprintf( fp, "\r\n" );
 	}
@@ -678,7 +932,8 @@ bool GenerateReferenceSMD3136(studiohdr_v36_t *pStudioHdr, OptimizedModel::FileH
 				if( pStudioModel->nummeshes > 0 )
 				{
 					char pModelName[MAX_PATH];
-					strncpy( pModelName, pStudioModel->name, sizeof( pModelName ) );
+				//	strncpy( pModelName, pStudioModel->name, sizeof( pModelName ) );
+					strncpy( pModelName, COM_SkipPath( pStudioModel->name ), sizeof( pModelName ) );
 					StripExtension( pModelName );
 
 					char pEndRefName[MAX_PATH];
@@ -691,8 +946,16 @@ bool GenerateReferenceSMD3136(studiohdr_v36_t *pStudioHdr, OptimizedModel::FileH
 
 					for( int i = 0; i < pStudioHdr->numbones; i++ )
 					{
+					//	Msg("Working at %d bone, ", i);
+					//	Msg("this bone is %s, so ", ((pStudioHdr->pBone(i) != NULL) ? "Cool" : "Shit"));
 						mstudiobone_t *pBone = pStudioHdr->pBone(i);
 
+					//	if ( pBone == NULL )
+					//	{
+					//		Msg("This bone is NULL!\n");
+					//	}
+
+					//	Msg("name: %s, parent: %d\n", pBone->pszName(), pBone->parent);
 						fprintf( fp, "  %d \"%s\" %d\r\n", i, pBone->pszName(), pBone->parent );
 					}
 
@@ -1179,7 +1442,8 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 	fprintf( fp, "==============================================================================\r\n" );
 	fprintf( fp, "\r\n" );
 	fprintf( fp, "QC script generated by Half-Life 2 Beta 28-37 decompiler\r\n" );
-	fprintf( fp, "2013 by Fire64\r\n" );
+//	fprintf( fp, "2013 by Fire64\r\n" );
+	fprintf(fp, "2013-2016 by Fire64 and VXP\r\n");
 	fprintf( fp, "\r\n" );
 	fprintf( fp, "Original internal name: %s\r\n", pStudioHdr->name );
 	fprintf( fp, "\r\n" );
@@ -1187,10 +1451,20 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 	fprintf( fp, "*/\r\n" );
 	fprintf( fp, "\r\n" );
 
-	fprintf( fp, "$modelname \"%s.mdl\"\r\n", pClearName );
-	fprintf( fp, "$cd \".\\\"\r\n" );
-	fprintf( fp, "$cdtexture \".\\\"\r\n" );
+//	fprintf( fp, "$modelname \"%s.mdl\"\r\n", pClearName );
+	fprintf(fp, "$modelname \"%s\"\r\n", pStudioHdr->name);
+//	fprintf( fp, "$cd \".\\\"\r\n" );
+//	fprintf( fp, "$cdtexture \".\\\"\r\n" );
+	for (int i = 0; i < pStudioHdr->numcdtextures; i++)
+	{
+		fprintf(fp, "$cdmaterials \"%s\"\r\n", pStudioHdr->pCdtexture(i));
+	}
 	fprintf( fp, "$scale 1.0\r\n" );
+
+	if ( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP )
+	{
+		fprintf( fp, "$staticprop\r\n" );
+	}
 
 	fprintf( fp, "\r\n" );
 
@@ -1215,14 +1489,15 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 			{
 				fprintf( fp, "$bodygroup \"%s\"\r\n", pBodypart->pszName() );
 				fprintf( fp, "{\r\n" );
-				fprintf( fp, "blank\r\n" );
+				fprintf( fp, "\tblank\r\n" );
 				fprintf( fp, "}\r\n" );
 				fprintf( fp, "\r\n" );
 			}
 			else
 			{
 				char pModelName[MAX_PATH];
-				strncpy( pModelName, pModel->name, sizeof( pModelName ) );
+			//	strncpy( pModelName, pModel->name, sizeof( pModelName ) );
+				strncpy( pModelName, COM_SkipPath( pModel->name ), sizeof( pModelName ) );
 				StripExtension( pModelName );
 
 				fprintf( fp, "$body \"%s\" \"%s_lod0\"\r\n", pBodypart->pszName(), pModelName );
@@ -1240,7 +1515,7 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 
 				if( !pModel->nummeshes )
 				{
-					fprintf( fp, "blank\r\n" );
+					fprintf( fp, "\tblank\r\n" );
 				}
 				else
 				{
@@ -1248,7 +1523,7 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 					strncpy( pModelName, pModel->name, sizeof( pModelName ) );
 					StripExtension( pModelName );
 
-					fprintf( fp, "studio \"%s_lod0\"\r\n", pModelName );
+					fprintf( fp, "\tstudio \"%s_lod0\"\r\n", pModelName );
 				}
 			}
 
@@ -1268,13 +1543,21 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 		{
 			mstudiobonecontroller_t *pBonecontroller = pStudioHdr->pBonecontroller(i);
 
+			int bonecontrollertype = pBonecontroller->type & STUDIO_TYPES;
+			if ( unlookupControl(bonecontrollertype) == NULL )
+			{
+				bonecontrollertype = pBonecontroller->type;
+			}
+
 			if( pBonecontroller->inputfield == 4 )
 			{
-				fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+			//	fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+				fprintf( fp, "$controller mouth \"%s\" %s %f %f\r\n", pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl(bonecontrollertype), pBonecontroller->start, pBonecontroller->end );
 			}
 			else
 			{
-				fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+			//	fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( pBonecontroller->type), pBonecontroller->start, pBonecontroller->end );
+				fprintf( fp, "$controller %d \"%s\" %s %f %f\r\n", pBonecontroller->inputfield, pStudioHdr->pBone( pBonecontroller->bone )->pszName(), unlookupControl( bonecontrollertype), pBonecontroller->start, pBonecontroller->end );
 			}
 		}
 
@@ -1346,13 +1629,69 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 
 		mstudioanimdesc_t *pAnimdesc = GetAnimDesc( pStudioHdr, anim[0][0] );
 
-		fprintf( fp, "$sequence \"%s\" \"%s\" fps %.0f ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel(), pAnimdesc->fps );
-
+	//	fprintf( fp, "$sequence \"%s\" \"%s\" fps %.0f ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel(), pAnimdesc->fps );
+		fprintf( fp, "$sequence %s \"%s\" ", pSeqdesc->pszLabel(), pSeqdesc->pszLabel() );
+		
 		bool looping = pSeqdesc->flags & STUDIO_LOOPING ? true : false;
 
 		if( looping )
 		{
 			fprintf( fp, "loop " );
+		}
+
+		bool snapping = pSeqdesc->flags & STUDIO_SNAP ? true : false;
+
+		if( snapping )
+		{
+			fprintf( fp, "snap " );
+		}
+
+		fprintf( fp, "fps %.0f ", pAnimdesc->fps );
+
+		if ( unlookupControl(pSeqdesc->paramindex[0] & STUDIO_TYPES) != NULL )
+		{
+			fprintf(fp, "blend %s %i %i ", unlookupControl(pSeqdesc->paramindex[0] & STUDIO_TYPES), pSeqdesc->paramstart[0], pSeqdesc->paramend[0]);
+		}
+
+		// $sequence "Idle" "Idle" fps 30 loop activity ACT_IDLE 1
+		if (*pSeqdesc->pszActivityName() != '\0')
+		{
+		//	fprintf(fp, "activity %s %i ", pSeqdesc->pszActivityName(), pSeqdesc->actweight);
+			fprintf(fp, "%s %i ", pSeqdesc->pszActivityName(), pSeqdesc->actweight);
+		}
+
+		// VXP: Adding some additional brackets
+		if ( pSeqdesc->numevents > 1 )
+		{
+			fprintf(fp, "{\r\n");
+		}
+
+		for (int j = 0; j < pSeqdesc->numevents; j++)
+		{
+			mstudioevent_t *pevent = pSeqdesc->pEvent( j );
+
+			float neededFrame = pevent->cycle / 100 * (pAnimdesc->numframes - 1) * 100;
+			int newEvent = pevent->event /* + 2000*/;
+
+			// VXP: Making some beauty here
+			if ( j >= 0 && pSeqdesc->numevents > 1 )
+			{
+				fprintf(fp, "\t");
+			}
+
+			fprintf(fp, "{ event %i %i } ", newEvent, ( int )neededFrame);
+
+			// VXP: Making some beauty here
+			if ( j < pSeqdesc->numevents - 1 && pSeqdesc->numevents > 1 )
+			{
+				fprintf(fp, "\r\n");
+			}
+		}
+
+		// VXP: Adding some additional brackets
+		if ( pSeqdesc->numevents > 1 )
+		{
+			fprintf(fp, "\r\n}");
 		}
 
 		fprintf( fp, "\r\n" );
@@ -1366,6 +1705,8 @@ bool GenerateQCFile37(studiohdr_t *pStudioHdr)
 
 	return true;
 }
+
+// VXP: Con_ColorPrintf
 
 //bool GenerateReferenceSMD37( studiohdr37_t *pStudioHdr, OptimizedModel::FileHeader_t *pVtxHdr )
 bool GenerateReferenceSMD37(studiohdr_t *pStudioHdr, OptimizedModel::FileHeader_t *pVtxHdr)
@@ -2149,14 +2490,14 @@ int main( int argc, char **argv )
 	if( pStudioHdr->version > 27 && pStudioHdr->version < 31 )
 	{
 		//size mstudiomodel_t in 30 = 120 bytes
-		GenerateQCFile2836( pStudioHdr );
+		GenerateQCFile2836( pStudioHdr, pVtxHdr, pFilename );
 		GenerateReferenceSMD2830( pStudioHdr, pVtxHdr );
 		GenerateAnimationSMD2836( pStudioHdr );
 		CopyTextureFiles2836( pStudioHdr );
 	}
 	else if( pStudioHdr->version > 30 && pStudioHdr->version < 37 )
 	{
-		GenerateQCFile2836( pStudioHdr );
+		GenerateQCFile2836( pStudioHdr, pVtxHdr, pFilename );
 		GenerateReferenceSMD3136( pStudioHdr, pVtxHdr );
 		GenerateAnimationSMD2836( pStudioHdr );
 		CopyTextureFiles2836( pStudioHdr );

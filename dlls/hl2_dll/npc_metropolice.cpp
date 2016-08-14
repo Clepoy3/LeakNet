@@ -179,7 +179,15 @@ void CNPC_MetroPolice::PrescheduleThink( void )
 //-----------------------------------------------------------------------------
 void CNPC_MetroPolice::Precache( void )
 {
+	// VXP: ElitePolice
+	if( !GetModelName() )
+	{
+		// Level designer has not provided a default
+		SetModelName( MAKE_STRING( "models/Police.mdl" ) );
+	}
+
 	engine->PrecacheModel("models/Police.mdl");
+	engine->PrecacheModel("models/ElitePolice.mdl");
 
 	UTIL_PrecacheOther( "npc_manhack" );
 
@@ -196,7 +204,8 @@ void CNPC_MetroPolice::Spawn( void )
 {
 	Precache();
 
-	SetModel( "models/Police.mdl" );
+//	SetModel( "models/Police.mdl" );
+	SetModel( STRING( GetModelName() ) );
 
 	SetHullType(HULL_HUMAN);
 	SetHullSizeNormal();

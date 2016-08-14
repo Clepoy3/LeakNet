@@ -263,8 +263,8 @@ void CNPC_Cremator::DeathSound ( void )
 {
 	EmitSound( "NPC_Cremator.Die" );
 //	StopSound( int iEntIndex, int iChannel, const char *pSample )
-//	StopSound("NPC_Cremator.Breathe");
-//	StopSound("NPC_Cremator.CloakSwish");
+	StopSound( "NPC_Cremator.Breathe" );
+	StopSound( "NPC_Cremator.CloakSwish" );
 }
 
 //-----------------------------------------------------------------------------

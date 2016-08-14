@@ -1,6 +1,7 @@
 Critical:
 - Fix for UV on BorealisWorker and child_worker_f1
 - Add flexes
+- Skins
 
 Optional:
 - Transitions (numtransitions in studio.h)
@@ -8,7 +9,14 @@ Optional:
 - Make LODs
 - Make poseparameters
 - Make physmodels
+- 37: Check for .mdl in name (to disable shit like this: $modelname "Combine_Elite.mdl.mdl")
+- Work on 37 decompilation
 
 Fixed:
-- Fix initial model rotation (rotate Y by 90 deg)
-- Add ACT_'s
+- Fixed initial model rotation (rotate Y by 90 deg)
+	- Also, only static props needs this rotation (by 2R1Zt)
+- Added ACT_'s
+- Controller types
+- "snap" $sequence parameter
+- Blend rules
+- Decmpiling old world weapon models (that are pistols)
