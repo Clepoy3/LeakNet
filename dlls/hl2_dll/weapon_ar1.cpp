@@ -59,6 +59,8 @@ public:
 	void SecondaryAttack( void );
 
 	void FireBullets(int cShots, const Vector &vecSrc, const Vector &vecDirShooting, const Vector &vecSpread, float flDistance, int iBulletType, int iTracerFreq);
+	
+	void AddViewKick( void );
 
 	virtual const Vector& GetBulletSpread( void )
 	{
@@ -176,4 +178,25 @@ void CWeaponAR1::SecondaryAttack( void )
 		}
 	}
 	Msg( "\n" );
+}
+
+/*
+==================================================
+AddViewKick
+==================================================
+*/
+
+void CWeaponAR1::AddViewKick( void )
+{
+	#define	EASY_DAMPEN			0.5f
+	#define	MAX_VERTICAL_KICK	24.0f	//Degrees
+	#define	SLIDE_LIMIT			3.0f	//Seconds
+	
+	//Get the view kick
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+
+	if (!pPlayer)
+		return;
+
+	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );
 }
