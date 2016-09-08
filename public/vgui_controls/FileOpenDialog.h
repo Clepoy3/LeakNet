@@ -83,6 +83,8 @@ protected:
 	// fills the filelist with the names of all the files in the current directory
 	virtual void PopulateFileList();
 
+	virtual void PopulateDirectoryList();
+
 	virtual void PopulateDriveList();
 
 	virtual void PopulateFileNameCompletion();

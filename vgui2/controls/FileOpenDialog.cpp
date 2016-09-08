@@ -648,6 +648,47 @@ void FileOpenDialog::ValidatePath()
 	m_pFullPathEdit->SetTooltipText(pData);
 }
 
+void FileOpenDialog::PopulateDirectoryList()
+{
+	// get the current directory
+	char dir[MAX_PATH * 4];
+	GetCurrentDirectory(dir, sizeof(dir));
+	Q_strncat(dir, "*", sizeof(dir));
+
+	KeyValues *kv = new KeyValues("item");
+
+	// open the directory and walk it, loading files
+	WIN32_FIND_DATA findData;
+	HANDLE findHandle = FindFirstFile(dir, &findData);
+
+	if(findHandle != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+				continue;
+
+			if(!strcmp(findData.cFileName, ".") || !strcmp(findData.cFileName, ".."))
+				continue;
+
+			// add the file to the list
+			kv->SetString("text", findData.cFileName);
+		//	kv->SetInt("image", 3);
+		//	kv->SetInt("imageSelected", 4);
+			kv->SetInt("image", 2);
+			kv->SetInt("imageSelected", 3);
+			kv->SetInt("directory", 1);
+
+			m_pFileList->AddItem(kv, false, false);
+		}
+		while (FindNextFile(findHandle, &findData) != 0);
+	}
+
+	FindClose(findHandle);
+
+	kv->deleteThis();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Fill the filelist with the names of all the files in the current directory
 //-----------------------------------------------------------------------------
@@ -659,6 +700,9 @@ void FileOpenDialog::PopulateFileList()
 	// get the current directory
 	char dir[MAX_PATH * 4];
 	GetCurrentDirectory(dir, sizeof(dir));
+
+	// Populate directory listing
+	PopulateDirectoryList();
 
 	KeyValues *combokv = m_pFileTypeCombo->GetActiveItemUserData();
 	if (combokv)
@@ -676,7 +720,7 @@ void FileOpenDialog::PopulateFileList()
 
 	// open the directory and walk it, loading files
 	WIN32_FIND_DATA findData;
-	HANDLE findHandle = ::FindFirstFile(dir, &findData);
+	/*HANDLE findHandle = ::FindFirstFile(dir, &findData);
 	while (findHandle != INVALID_HANDLE_VALUE)
 	{
 		// add the file to the list
@@ -710,6 +754,29 @@ void FileOpenDialog::PopulateFileList()
 		if (!::FindNextFile(findHandle, &findData))
 			break;
 	}
+	::FindClose(findHandle);*/
+
+	HANDLE findHandle = ::FindFirstFile(dir, &findData);
+
+	if(findHandle != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+				continue;
+
+			// add the file to the list
+			kv->SetString("text", findData.cFileName);
+
+			kv->SetInt("image", 1);
+			kv->SetInt("imageSelected", 2);
+			kv->SetInt("directory", 0);
+
+			m_pFileList->AddItem(kv, false, false);
+		}
+		while (::FindNextFile(findHandle, &findData) != 0);
+	}
+
 	::FindClose(findHandle);
 
 	kv->deleteThis();

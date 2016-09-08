@@ -406,6 +406,8 @@ while( <FXC> )
 	{
 		$perlskipcode .= "(" . $1 . ")||";
 		push @perlskipcodeindividual, $1;
+	# VXP
+	#	print "Skipping $1 combo\n";
 	}	
 }
 if( defined $perlskipcode )
@@ -467,6 +469,10 @@ for( $i = 0; $i < $numCombos; $i++ )
 	{
 		# skip this combo!
 #		print "$i/$numCombos: SKIP\n";
+	# VXP
+	#	local( $ass );
+	#	$ass = &BuildDefineOptions( $i );
+	#	print "$i/$numCombos: SKIP ($ass)\n";
 		$compileFailed = 1;
 		$numSkipped++;
 	}

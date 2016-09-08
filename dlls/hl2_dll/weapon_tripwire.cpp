@@ -54,8 +54,8 @@ IMPLEMENT_ACTTABLE(CWeapon_Tripwire);
 
 void CWeapon_Tripwire::Spawn( )
 {
-	UTIL_Remove(this);
-	return;
+//	UTIL_Remove(this);
+//	return;
 
 	BaseClass::Spawn();
 

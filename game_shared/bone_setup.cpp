@@ -1,24 +1,26 @@
-//====== Copyright © 2008-2009, Axel Project Team, all rights reserved ======//
-//
-// Purpose: Bone setup file 
-//
-//===========================================================================//
 
 #include "tier0/dbg.h"
 #include "mathlib.h"
 #include "bone_setup.h"
 #include <string.h>
+
 #include "collisionutils.h"
 #include "vstdlib/random.h"
 #include "tier0/vprof.h"
+
 #include "engine/ISharedModelCache.h"
 
 #include "tier0/memdbgon.h"
 
-//-----------------------------------------------------------------------------
-// Forward declarations
-//-----------------------------------------------------------------------------
-void BuildBoneChain(const studiohdr_t *pStudioHdr, matrix3x4_t &rootxform, Vector pos[], Quaternion q[], int iBone, matrix3x4_t *pBoneToWorld );
+//#define ORIG_CODEBASE
+
+void BuildBoneChain(
+	const studiohdr_t *pStudioHdr,
+	matrix3x4_t &rootxform,
+	Vector pos[], 
+	Quaternion q[], 
+	int	iBone,
+	matrix3x4_t *pBoneToWorld );
 
 //-----------------------------------------------------------------------------
 // Purpose: returns a model animation from the sequence group and returns a
@@ -100,12 +102,12 @@ static mstudioanimdesc_t *GetAnimDesc( const studiohdr_t *pStudioHdr, const mstu
 // Purpose: return a sub frame rotation for a single bone
 //-----------------------------------------------------------------------------
 void CalcBoneQuaternion( const studiohdr_t *pStudioHdr, int frame, float s, 
-			 const mstudiobone_t *pbone, const mstudioanim_t *panim, Quaternion &q )
+						const mstudiobone_t *pbone, const mstudioanim_t *panim, Quaternion &q )
 {
 
-	int			j, k;
-	Quaternion		q1, q2;
-	RadianEuler		angle1(0,0,0), angle2(0,0,0);
+	int					j, k;
+	Quaternion			q1, q2;
+	RadianEuler			angle1(0,0,0), angle2(0,0,0);
 	mstudioanimvalue_t	*panimvalue;
 
 	if (!(panim->flags & STUDIO_ROT_ANIMATED))
@@ -212,7 +214,7 @@ static mstudiobonecontroller_t* FindController( const studiohdr_t *pStudioHdr, i
 void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s, 
 	const mstudiobone_t *pbone, const mstudioanim_t *panim, Vector &pos	)
 {
-	int			j, k;
+	int					j, k;
 	mstudioanimvalue_t	*panimvalue;
 
 	if (!(panim->flags & STUDIO_POS_ANIMATED))
@@ -227,7 +229,11 @@ void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s,
 		if (panim->u.offset[j] != 0)
 		{
 			panimvalue = panim->pAnimvalue( j );
-		
+			/*
+			if (i == 0 && j == 0)
+				Con_DPrintf("%d  %d:%d  %f\n", frame, panimvalue->num.valid, panimvalue->num.total, s );
+			*/
+			
 			k = frame;
 			// DEBUG
 			if (panimvalue->num.total < panimvalue->num.valid)
@@ -276,15 +282,15 @@ void CalcBonePosition( const studiohdr_t *pStudioHdr, int frame, float s,
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-static void CalcRotations( 	const studiohdr_t *pStudioHdr,	Vector *pos, Quaternion *q, 
-				const mstudioseqdesc_t *pseqdesc,
-				const mstudioanimdesc_t *panimdesc, float cycle, int boneMask )
+static void CalcRotations( const studiohdr_t *pStudioHdr,	Vector *pos, Quaternion *q, 
+	const mstudioseqdesc_t *pseqdesc,
+	const mstudioanimdesc_t *panimdesc, float cycle, int boneMask )
 {
-	int		i;
-	mstudiobone_t 	*pbone = pStudioHdr->pBone( 0 );
+	int					i;
+	mstudiobone_t *pbone = pStudioHdr->pBone( 0 );
 
-	int	iFrame;
-	float	s;
+	int					iFrame;
+	float				s;
 
 	float fFrame = cycle * (panimdesc->numframes - 1);
 
@@ -306,7 +312,7 @@ static void CalcRotations( 	const studiohdr_t *pStudioHdr,	Vector *pos, Quaterni
 // qt = ( s * p ) * q
 void QuaternionSM( float s, const Quaternion &p, const Quaternion &q, Quaternion &qt )
 {
-	Quaternion	p1, q1;
+	Quaternion		p1, q1;
 
 	QuaternionScale( p, s, p1 );
 	QuaternionMult( p1, q, q1 );
@@ -357,8 +363,8 @@ void SlerpBones(
 	float s,
 	int boneMask )
 {
-	int		i;
-	Quaternion	q3, q4;
+	int			i;
+	Quaternion		q3, q4;
 	float		s1, s2;
 
 	if (s <= 0.0f) 
@@ -367,7 +373,7 @@ void SlerpBones(
 	}
 	else if (s > 1.0f)
 	{
-		s = 1.0f;
+		s = 1.0f;		
 	}
 
 	if (pseqdesc->flags & STUDIO_DELTA)
@@ -455,8 +461,8 @@ void BlendBones(
 	float s,
 	int boneMask )
 {
-	int		i;
-	Quaternion	q3;
+	int			i;
+	Quaternion		q3;
 
 	if (s <= 0)
 	{
@@ -540,8 +546,8 @@ void Studio_LocalPoseParameter( const studiohdr_t *pStudioHdr, const float poseP
 
 	if (pSeqDesc->posekeyindex == 0)
 	{
-		float flLocalStart = (pSeqDesc->paramstart[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
-		float flLocalEnd   = (pSeqDesc->paramend[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
+		float flLocalStart	= (pSeqDesc->paramstart[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
+		float flLocalEnd	= (pSeqDesc->paramend[iLocalPose] - pPose->start) / (pPose->end - pPose->start);
 
 		// convert into local range
 		flSetting = (flValue - flLocalStart) / (flLocalEnd - flLocalStart);
@@ -616,11 +622,12 @@ void InitPose(
 
 		pos[i] = Vector( pbone->value[0], pbone->value[1], pbone->value[2] );
 
+	//	AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code after this line" );
 #if STUDIO_VERSION == 37
 		q[i] = pbone->quat;
 #else
 		// FIXME!!!
-		if ( pbone->quat.w == 0.0 )
+		if ( pbone->quat.w == 0.0)
 		{
 			AngleQuaternion( RadianEuler( pbone->value[3], pbone->value[4], pbone->value[5] ), q[i] );
 			QuaternionAlign( pbone->qAlignment, q[i], q[i] );
@@ -662,10 +669,10 @@ bool CalcPoseSingle(
 
 	pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
-	int 	i0 = 0, i1 = 0;
-	float 	s0 = 0, s1 = 0;
-	mstudioanimdesc_t	*panim0;
-	mstudioanimdesc_t	*panim1;
+	int i0 = 0, i1 = 0;
+	float s0 = 0, s1 = 0;
+	mstudioanimdesc_t		*panim0;
+	mstudioanimdesc_t		*panim1;
 
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 0, s0, i0 );
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 1, s1, i1 );
@@ -679,7 +686,11 @@ bool CalcPoseSingle(
 		}
 		else
 		{
+#ifdef ORIG_CODEBASE
+			cycle = max( 0.0, min( cycle, 0.9999 ) );
+#else
 			cycle = clamp( cycle, 0.0f, 1.0f );
+#endif
 		}
 	}
 
@@ -687,14 +698,16 @@ bool CalcPoseSingle(
 	{
 		if (pseqdesc->groupsize[0] == 1)
 		{
+		//	panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[0][0]);
 			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, 0, 0 );
-
 			CalcRotations( pStudioHdr, pos, q, pseqdesc, panim0, cycle, boneMask);
 		}
 		else
 		{
-			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
-			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
+		//	panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1  ]);
+		//	panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1  ]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1   );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1   );
 
 			// remove "zero" positional blends
 			if ((panim0->flags & STUDIO_ALLZEROS) && (s0 < 0.001))
@@ -716,8 +729,10 @@ bool CalcPoseSingle(
 	{
 		if (pseqdesc->groupsize[0] == 1)
 		{
-			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
-			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
+		//	panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1  ]);
+		//	panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1+1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1   );
+			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1+1 );
 
 			CalcRotations( pStudioHdr, pos,  q,  pseqdesc, panim0, cycle, boneMask );
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim1, cycle, boneMask );
@@ -726,15 +741,19 @@ bool CalcPoseSingle(
 		}
 		else
 		{
-			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
+		//	panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1]);
+		//	panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1 );
 			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
 
 			CalcRotations( pStudioHdr, pos,  q,  pseqdesc, panim0, cycle, boneMask );
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim1, cycle, boneMask );
-			
+
 			BlendBones( pStudioHdr, q, pos, pseqdesc, q2, pos2, s0, boneMask );
 			
-			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
+		//	panim0 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0  ][i1+1]);
+		//	panim1 = pStudioHdr->pAnimdesc(pseqdesc->anim[i0+1][i1+1]);
+			panim0 = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1+1 );
 			panim1 = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1+1 );
 
 			CalcRotations( pStudioHdr, pos2, q2, pseqdesc, panim0, cycle, boneMask );
@@ -832,7 +851,7 @@ void CalcPose(
 	float flWeight
 	)
 {
-	mstudioseqdesc_t  *pseqdesc = pStudioHdr->pSeqdesc( sequence );
+	mstudioseqdesc_t	*pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
 	Assert( flWeight >= 0.0f && flWeight <= 1.0f );
 	// This shouldn't be necessary, but the Assert should help us catch whoever is screwing this up
@@ -853,7 +872,7 @@ void CalcPose(
 		seq_ik.AddSequenceLocks( pseqdesc, pos, q );
 	}
 
-	AddSequenceLayers( pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
+	AddSequenceLayers( 	pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
 
 	if (pseqdesc->numiklocks)
 	{
@@ -888,7 +907,7 @@ void AccumulatePose(
 	if ( sequence < 0 )
 		return;
 
-	mstudioseqdesc_t  *pseqdesc = pStudioHdr->pSeqdesc( sequence );
+	mstudioseqdesc_t	*pseqdesc = pStudioHdr->pSeqdesc( sequence );
 
 	if (!CalcPoseSingle( pStudioHdr, pos2, q2, sequence, cycle, poseParameter, boneMask ))
 	{
@@ -899,8 +918,7 @@ void AccumulatePose(
 	CIKContext seq_ik;
 	if (pseqdesc->numiklocks)
 	{
-		// local space relative so absolute position doesn't mater
-		seq_ik.Init( pStudioHdr, QAngle( 0, 0, 0 ), Vector( 0, 0, 0 ), 0.0 );
+		seq_ik.Init( pStudioHdr, QAngle( 0, 0, 0 ), Vector( 0, 0, 0 ), 0.0 );  // local space relative so absolute position doesn't mater
 		seq_ik.AddSequenceLocks( pseqdesc, pos, q );
 	}
 
@@ -911,7 +929,7 @@ void AccumulatePose(
 
 	SlerpBones( pStudioHdr, q, pos, pseqdesc, q2, pos2, flWeight, boneMask );
 
-	AddSequenceLayers( pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
+	AddSequenceLayers( 	pStudioHdr, pIKContext, pos, q, sequence, cycle, poseParameter, boneMask, flWeight );
 
 	if (pseqdesc->numiklocks)
 	{
@@ -932,8 +950,8 @@ void CalcBoneAdj(
 	int boneMask
 	)
 {
-	int			i, j, k;
-	float			value;
+	int					i, j, k;
+	float				value;
 	mstudiobonecontroller_t *pbonecontroller;
 	Vector p0;
 	RadianEuler a0;
@@ -1000,11 +1018,20 @@ void CalcBoneDerivatives( Vector &velocity, AngularImpulse &angVel, const matrix
 	MatrixAngles( prev, startAngles, startPosition );
 	MatrixAngles( current, endAngles, endPosition );
 
-	velocity.x = (endPosition.x - startPosition.x) * scale;
-	velocity.y = (endPosition.y - startPosition.y) * scale;
-	velocity.z = (endPosition.z - startPosition.z) * scale;
+#ifdef ORIG_CODEBASE
+	velocity = (endPosition - startPosition) * scale;
+#else
+//	velocity.x = (endPosition.x - startPosition.x) * scale;
+//	velocity.y = (endPosition.y - startPosition.y) * scale;
+//	velocity.z = (endPosition.z - startPosition.z) * scale;
+	VectorScale( endPosition - startPosition, scale, velocity );
+#endif
 	RotationDeltaAxisAngle( startAngles, endAngles, deltaAxis, deltaAngle );
+#ifdef ORIG_CODEBASE
+	angVel = deltaAxis * (deltaAngle * scale);
+#else
 	VectorScale( deltaAxis, (deltaAngle * scale), angVel );
+#endif
 }
 
 void CalcBoneVelocityFromDerivative( const QAngle &vecAngles, Vector &velocity, AngularImpulse &angVel, const matrix3x4_t &current )
@@ -1030,7 +1057,7 @@ public:
 // Author: Ken Perlin
 //
 // Given a two link joint from [0,0,0] to end effector position P,
-// let link lengths be a and b, and let norm |P| = c.  Clearly a+b <= c.
+// let link lengths be a and b, and let norm |P| = c.  Clearly a+b >= c.
 //
 // Problem: find a "knee" position Q such that |Q| = a and |P-Q| = b.
 //
@@ -1049,7 +1076,11 @@ public:
 //    e = sqrt(a2-d2)
 
    static float findD(float a, float b, float c) {
+#ifdef ORIG_CODEBASE
+      return max(0, min(a, (c + (a*a-b*b)/c) / 2));
+#else
       return (c + (a*a-b*b)/c) / 2;
+#endif
    }
    static float findE(float a, float d) { return sqrt(a*a-d*d); } 
 
@@ -1067,11 +1098,16 @@ public:
       defineM(P,D);
       rot(Minv,P,R);
 	  float r = length(R);
-      float d = findD(A,B,r);
+      //float d = findD(A,B,length(R));
+	  float d = findD(A,B,r);
       float e = findE(A,d);
       float S[3] = {d,e,0};
       rot(Mfwd,S,Q);
+#ifdef ORIG_CODEBASE
+      return d > 0 && d < A;
+#else
       return d > (r - B) && d < A;
+#endif
    }
 
 // If "knee" position Q needs to be as close as possible to some point D,
@@ -1587,12 +1623,14 @@ bool CIKContext::Estimate(
 
 					deltaPos.Init();
 
+				//	AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code after this line" );
 					// hack in the contact point if the model hasn't been rebuilt
 					float contact = pRule->contact;
 					if (contact == 0.0 && pRule->peak != 0.0)
 					{
 						contact = pRule->peak;
 					}
+				//	AssertMsg( (STUDIO_VERSION == 35) || (STUDIO_VERSION == 36), "Remove the code before this line" );
 
 					float flCheck = flCycle;
 					if (flCheck < pRule->start)
@@ -2109,7 +2147,7 @@ void CalcAutoplaySequences(
 {
 	ASSERT_NO_REENTRY();
 	
-	int	i;
+	int			i;
 
 	if ( pIKContext )
 	{
@@ -2153,13 +2191,13 @@ void Studio_BuildMatrices(
 {
 	int i, j;
 
-	int	chain[MAXSTUDIOBONES];
-	int	chainlength = 0;
+	int					chain[MAXSTUDIOBONES];
+	int					chainlength = 0;
 
 	if (iBone < -1 || iBone >= pStudioHdr->numbones)
 		iBone = 0;
 
-	mstudiobone_t *pbones	= pStudioHdr->pBone( 0 );
+	mstudiobone_t *pbones		= pStudioHdr->pBone( 0 );
 
 	// build list of what bones to use
 	if (iBone == -1)
@@ -2331,8 +2369,8 @@ void DoQuatInterpBone(
 	matrix3x4_t *bonetoworld
 	)
 {
-	matrix3x4_t	bonematrix;
-	Vector		control;
+	matrix3x4_t			bonematrix;
+	Vector				control;
 
 	mstudioquatinterpbone_t *pProc = (mstudioquatinterpbone_t *)pbones[ibone].pProcedure( );
 	if (pProc && pbones[pProc->control].parent != -1)
@@ -2355,7 +2393,10 @@ void DoQuatInterpBone(
 		{
 			float dot = fabs( QuaternionDotProduct( pProc->pTrigger( i )->trigger, src ) );
 			// FIXME: a fast acos should be acceptable
+#ifdef ORIG_CODEBASE
+#else
 			dot = clamp( dot, -1, 1 );
+#endif
 			weight[i] = 1 - (2 * acos( dot ) * pProc->pTrigger( i )->inv_tolerance );
 			weight[i] = max( 0, weight[i] );
 			scale += weight[i];
@@ -2407,7 +2448,7 @@ bool CalcProceduralBone(
 	matrix3x4_t *bonetoworld
 	)
 {
-	mstudiobone_t	*pbones = pStudioHdr->pBone( 0 );
+	mstudiobone_t		*pbones = pStudioHdr->pBone( 0 );
 
 	if ( pbones[iBone].flags & BONE_ALWAYS_PROCEDURAL )
 	{
@@ -2560,7 +2601,7 @@ float Studio_GetPoseParameter( const studiohdr_t *pStudioHdr, int iParameter, fl
 //
 struct bonecache_t
 {
-	int			bone;
+	int				bone;
 	matrix3x4_t		matrix;
 	bonecache_t		*pnext;
 };
@@ -2568,11 +2609,11 @@ struct bonecache_t
 struct studiocache_t
 {
 	studiohdr_t		*pStudioHdr;
-	int			sequence;
+	int				sequence;
 	float			animtime;
 	QAngle			angles;
 	Vector			origin;
-	int			boneMask;
+	int				boneMask;
 	bonecache_t		*bones;	// points to a linked list of matrix transforms for each bone
 	
 	// FIXME:  Cache controllers and poseparameters, too???
@@ -2805,9 +2846,9 @@ void Studio_InvalidateBoneCache( studiocache_t *pcache )
 	g_StudioBoneCache.BoneCacheFree( pcache );
 }
 
-#ifdef _MSC_VER
+
 #pragma warning (disable : 4701)
-#endif
+
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -2815,31 +2856,42 @@ void Studio_InvalidateBoneCache( studiocache_t *pcache )
 static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& matrix, trace_t &tr )
 {
 	// scale by current t so hits shorten the ray and increase the likelihood of early outs
+#ifdef ORIG_CODEBASE
+	Vector delta2 = (0.5f * tr.fraction) * ray.m_Delta;
+#else
 	Vector delta2;
-	VectorScale( ray.m_Delta, (0.5f * tr.fraction), delta2 );
+	VectorScale( ray.m_Delta, 0.5f * tr.fraction, delta2 );
+#endif
 
 	// OPTIMIZE: Store this in the box instead of computing it here
 	// compute center in local space
+#ifdef ORIG_CODEBASE
+	Vector boxextents = (pbox->bbmin + pbox->bbmax) * 0.5; 
+#else
 	Vector boxextents;
-	boxextents.x = (pbox->bbmin.x + pbox->bbmax.x) * 0.5; 
-	boxextents.y = (pbox->bbmin.y + pbox->bbmax.y) * 0.5; 
-	boxextents.z = (pbox->bbmin.z + pbox->bbmax.z) * 0.5; 
+	VectorScale( pbox->bbmin + pbox->bbmax, 0.5, boxextents );
+#endif
 	Vector boxCenter;
 	// transform to world space
 	VectorTransform( boxextents, matrix, boxCenter );
 	// calc extents from local center
-	boxextents.x = pbox->bbmax.x - boxextents.x;
-	boxextents.y = pbox->bbmax.y - boxextents.y;
-	boxextents.z = pbox->bbmax.z - boxextents.z;
+#ifdef ORIG_CODEBASE
+	boxextents = pbox->bbmax - boxextents;
+#else
+	VectorSubtract( pbox->bbmax, boxextents, boxextents );
+#endif
 	// OPTIMIZE: This is optimized for world space.  If the transform is fast enough, it may make more
 	// sense to just xform and call UTIL_ClipToBox() instead.  MEASURE THIS.
 
 	// save the extents of the ray along 
 	Vector extent, uextent;
+#ifdef ORIG_CODEBASE
+	Vector segmentCenter = ray.m_Start + delta2 - boxCenter;
+#else
 	Vector segmentCenter;
-	segmentCenter.x = ray.m_Start.x + delta2.x - boxCenter.x;
-	segmentCenter.y = ray.m_Start.y + delta2.y - boxCenter.y;
-	segmentCenter.z = ray.m_Start.z + delta2.z - boxCenter.z;
+	VectorAdd( ray.m_Start, delta2, segmentCenter );
+	VectorSubtract( segmentCenter, boxCenter, segmentCenter );
+#endif
 
 	extent.Init();
 
@@ -2857,8 +2909,12 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 
 	// now check cross axes for separation
 	float tmp, cextent;
+#ifdef ORIG_CODEBASE
+	Vector cross = delta2.Cross( segmentCenter );
+#else
 	Vector cross;
 	CrossProduct( delta2, segmentCenter, cross );
+#endif
 	cextent = cross.x * matrix[0][0] + cross.y * matrix[1][0] + cross.z * matrix[2][0];
 	cextent = fabsf(cextent);
 	tmp = boxextents[1]*uextent[2] + boxextents[2]*uextent[1];
@@ -2883,7 +2939,18 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 	VectorITransform( ray.m_Start, matrix, start );
 	// extent is delta2 in bone space, recompute delta in bone space
 	VectorScale( extent, 2, extent );
-
+#ifdef ORIG_CODEBASE
+	int hitside;
+	// delta was prescaled by the current t, so no need to see if this intersection
+	// is closer
+	bool startsolid;
+	float fraction;
+	if ( !IntersectRayWithBox( start, extent, pbox->bbmin, pbox->bbmax, 0, fraction, hitside, startsolid ) )
+		return -1;
+	Assert( IsFinite(fraction) );
+	tr.fraction *= fraction;
+	tr.startsolid = startsolid;
+#else
 	// delta was prescaled by the current t, so no need to see if this intersection
 	// is closer
 	trace_t boxTrace;
@@ -2897,18 +2964,17 @@ static int ClipRayToHitbox( const Ray_t &ray, mstudiobbox_t *pbox, matrix3x4_t& 
 	{
 		hitside += 3;
 	}
+#endif
 	return hitside;
 }
 
-#ifdef _MSC_VER
 #pragma warning (default : 4701)
-#endif
 
-
+#ifndef ORIG_CODEBASE
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-bool SweepBoxToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_t *set, 
+bool SweepBoxToStudio( /*IPhysicsSurfaceProps *pProps, */const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_t *set, 
 				   matrix3x4_t **hitboxbones, int fContentsMask, trace_t &tr )
 {
 	tr.fraction = 1.0;
@@ -2948,14 +3014,19 @@ bool SweepBoxToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxs
 	{
 		tr.hitgroup = set->pHitbox(hitbox)->group;
 		tr.hitbox = hitbox;
-		tr.contents = pStudioHdr->pBone( set->pHitbox(hitbox)->bone )->contents | CONTENTS_HITBOX;
-		tr.physicsbone = pStudioHdr->pBone( set->pHitbox(hitbox)->bone )->physicsbone;
+		const mstudiobone_t *pBone = pStudioHdr->pBone( set->pHitbox(hitbox)->bone );
+		tr.contents = pBone->contents | CONTENTS_HITBOX;
+		tr.physicsbone = pBone->physicsbone;
+		tr.surface.name = "**studio**";
+		tr.surface.flags = SURF_HITBOX;
+	//	tr.surface.surfaceProps = pProps->GetSurfaceIndex( pBone->pszSurfaceProp() );
+
 		Assert( tr.physicsbone >= 0 );
 		return true;
 	}
 	return false;
 }
-
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -2963,10 +3034,13 @@ bool SweepBoxToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxs
 bool TraceToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_t *set, 
 				   matrix3x4_t **hitboxbones, int fContentsMask, trace_t &tr )
 {
+#ifdef ORIG_CODEBASE
+#else
 	if ( !ray.m_IsRay )
 	{
-		return SweepBoxToStudio( ray, pStudioHdr, set, hitboxbones, fContentsMask, tr );
+		return SweepBoxToStudio( /*pProps, */ray, pStudioHdr, set, hitboxbones, fContentsMask, tr );
 	}
+#endif
 
 	tr.fraction = 1.0;
 	tr.startsolid = false;
@@ -2984,7 +3058,7 @@ bool TraceToStudio( const Ray_t& ray, studiohdr_t *pStudioHdr, mstudiohitboxset_
 		int fBoneContents = pStudioHdr->pBone( pbox->bone )->contents;
 		if ( ( fBoneContents & fContentsMask ) == 0 )
 			continue;
-
+		
 		// columns are axes of the bones in world space, translation is in world space
 		matrix3x4_t& matrix = *hitboxbones[i];
 
@@ -3044,21 +3118,25 @@ void Studio_SeqAnims( const studiohdr_t *pStudioHdr, int iSequence, const float 
 
 	int i0 = 0, i1 = 0;
 	float s0 = 0, s1 = 0;
-
+	
 	mstudioseqdesc_t *pseqdesc = pStudioHdr->pSeqdesc( iSequence );
 
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 0, s0, i0 );
 	Studio_LocalPoseParameter( pStudioHdr, poseParameter, pseqdesc, 1, s1, i1 );
 
-	panim[0] = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1 );
+//	panim[0] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0  ][i1  ] );
+	panim[0] = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1   );
 	weight[0] = (1 - s0) * (1 - s1);
 
-	panim[1] = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1 );
+//	panim[1] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0+1][i1  ] );
+	panim[1] = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1   );
 	weight[1] = (s0) * (1 - s1);
 
-	panim[2] = GetAnimDesc( pStudioHdr, pseqdesc, i0, i1+1 );
+//	panim[2] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0  ][i1+1] );
+	panim[2] = GetAnimDesc( pStudioHdr, pseqdesc, i0  , i1+1 );
 	weight[2] = (1 - s0) * (s1);
 
+//	panim[3] = pStudioHdr->pAnimdesc( pseqdesc->anim[i0+1][i1+1] );
 	panim[3] = GetAnimDesc( pStudioHdr, pseqdesc, i0+1, i1+1 );
 	weight[3] = (s0) * (s1);
 
@@ -3087,9 +3165,12 @@ int Studio_MaxFrame( const studiohdr_t *pStudioHdr, int iSequence, const float p
 
 	if ( maxFrame > 1 )
 		maxFrame -= 1;
-
-	// FIXME: why does the weights sometimes not exactly add it 1.0 and this sometimes rounds down?
-	return static_cast<int>(maxFrame + 0.01);
+	
+#ifdef ORIG_CODEBASE
+	return maxFrame;
+#else
+	return (maxFrame + 0.01);
+#endif
 }
 
 
@@ -3190,7 +3271,7 @@ bool Studio_AnimPosition( mstudioanimdesc_t *panim, float flCycle, Vector &vecPo
 	}
 	else if (flCycle < 0.0)
 	{
-		iLoops = (int)flCycle - 1; // next statement to be executed
+		iLoops = (int)flCycle - 1;
 	}
 	flCycle = flCycle - iLoops;
 
@@ -3340,7 +3421,7 @@ bool Studio_SeqMovement( const studiohdr_t *pStudioHdr, int iSequence, float flC
 	float	weight[4];
 
 	Studio_SeqAnims( pStudioHdr, iSequence, poseParameter, panim, weight );
-
+	
 	deltaPos.Init( );
 	deltaAngles.Init( );
 
@@ -3437,7 +3518,7 @@ int Studio_FindAttachment( const studiohdr_t *pStudioHdr, const char *pAttachmen
 		// Extract the bone index from the name
 		for (int i = 0; i < pStudioHdr->numattachments; i++)
 		{
-			if (!Q_stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName()))
+			if (!stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName( ))) 
 			{
 				return i;
 			}
@@ -3485,7 +3566,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName )
 	mstudiobone_t *pbones = pStudioHdr->pBone( 0 );
 	for ( int i = 0; i < pStudioHdr->numbones; i++ )
 	{
-		if (!Q_stricmp(pName,pbones[i].pszName()))
+		if (!stricmp(pName,pbones[i].pszName( ))) 
 			return i;
 	}
 
@@ -3499,12 +3580,7 @@ const char *Studio_GetDefaultSurfaceProps( studiohdr_t *pstudiohdr )
 
 float Studio_GetMass( studiohdr_t *pstudiohdr )
 {
-	if ( pstudiohdr != 0 )
-	{
-		return pstudiohdr->mass;
-	}
-
-	return 0.0f;
+	return pstudiohdr->mass;
 }
 
 //-----------------------------------------------------------------------------

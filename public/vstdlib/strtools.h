@@ -88,10 +88,10 @@ inline void		Q_memmove (void *dest, const void *src, int count)	{ memmove( dest,
 inline int		Q_memcmp (void *m1, void *m2, int count)			{ return memcmp( m1, m2, count ); } 
 inline int		Q_strlen (const char *str)							{ return strlen ( str ); }
 inline void		Q_strcpy (char *dest, const char *src)				{ strcpy( dest, src ); }
-inline char*	Q_strrchr (const char *s, char c)					{ return strrchr( s, c ); }
+inline char*	Q_strrchr (const char *s, char c)					{ return (char*)strrchr( s, c ); }
 inline int		Q_strcmp (const char *s1, const char *s2)			{ return strcmp( s1, s2 ); }
 inline int		Q_stricmp( const char *s1, const char *s2 )			{ return stricmp( s1, s2 ); }
-inline char*	Q_strstr( const char *s1, const char *search )		{ return strstr( s1, search ); }
+inline char*	Q_strstr( const char *s1, const char *search )		{ return (char*)strstr( s1, search ); }
 inline char*	Q_strupr (char *start)								{ return strupr( start ); }
 inline char*	Q_strlower (char *start)							{ return strlwr( start ); }
 

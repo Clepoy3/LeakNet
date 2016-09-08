@@ -1,9 +1,9 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2001, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
-// 
+//
 // $NoKeywords: $
-//=============================================================================//
+//=============================================================================
 
 #ifndef BONE_SETUP_H
 #define BONE_SETUP_H

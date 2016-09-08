@@ -990,7 +990,7 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 	if( !VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) )
 		Warning( "CEngineTrace::TraceRay: Vectors are not equal!\n" );
 	VectorMA( vecOffset, pTrace->fraction, ray.m_Delta, vecEndTest );
-	Assert( VectorsAreEqual( vecEndTest, pTrace->endpos, 0.1f ) ); // VXP: When in HL1 you try to move a physics box by pressing E and moving (at least in the hazard course)
+	Assert( VectorsAreEqual( vecEndTest, pTrace->endpos, 0.1f ) ); // VXP: When in HL1 you try to move a physics box by pressing E and moving (at least in the hazard course, t0a0b1)
 //	Assert( !ray.m_IsRay || pTrace->allsolid || pTrace->fraction >= pTrace->fractionleftsolid );
 #endif
 
