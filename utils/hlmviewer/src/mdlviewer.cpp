@@ -30,12 +30,15 @@
 #include "FileAssociation.h"
 #include "vstdlib/strtools.h"
 #include "vstdlib/icommandline.h"
+#include "FileSystem.h"
 
 
 MDLViewer *g_MDLViewer = 0;
 char g_appTitle[] = "Half-Life Model Viewer v1.22";
 static char recentFiles[8][256] = { "", "", "", "", "", "", "", "" };
 extern int g_dxlevel;
+
+extern IFileSystem *filesystem;
 
 
 void
@@ -267,6 +270,66 @@ void MDLViewer::LoadModelFile( const char *pszFile )
 	setLabel( "%s", filename );
 }
 
+/*
+============
+COM_FileBase
+============
+*/
+// Extracts the base name of a file (no path, no extension, assumes '/' as path separator)
+void COM_FileBase (const char *in, char *out)
+{
+	int len, start, end;
+
+	len = strlen( in );
+	
+	// scan backward for '.'
+	end = len - 1;
+	while ( end && in[end] != '.' && in[end] != '/' && in[end] != '\\' )
+		end--;
+	
+	if ( in[end] != '.' )		// no '.', copy to end
+		end = len-1;
+	else 
+		end--;					// Found ',', copy to left of '.'
+
+
+	// Scan backward for '/'
+	start = len-1;
+	while ( start >= 0 && in[start] != '/' && in[start] != '\\' )
+		start--;
+
+	if ( start < 0 || ( in[start] != '/' && in[start] != '\\' ) )
+		start = 0;
+	else 
+		start++;
+
+	// Length of new sting
+	len = end - start + 1;
+
+	// Copy partial string
+	Q_strncpy( out, &in[start], len+1 );
+}
+
+/*
+===========
+COM_ExpandFilename
+
+Finds the file in the search path, copies over the name with the full path name.
+This doesn't search in the pak file.
+===========
+*/
+int COM_ExpandFilename( char *filename )
+{
+	char expanded[1024];
+
+	if ( filesystem->GetLocalPath( filename, expanded ) != NULL )
+	{
+		strcpy( filename, expanded );
+		return 1;
+	}
+
+	return 0;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Takes a TGA screenshot of the given filename and exits.
@@ -299,6 +362,30 @@ void MDLViewer::SaveScreenShot( const char *pszFile )
 		{
 			strcat(szScreenShot, ".tga");
 		}
+
+	//	mxMessageBox (this, szScreenShot, g_appTitle, MX_MB_OK | MX_MB_ERROR);
+
+	/*	char base[ 256 ];
+	//	COM_FileBase( szScreenShot, base );
+	//	COM_ExpandFilename( szScreenShot );
+		char expanded[1024];
+		filesystem->GetLocalPath( szScreenShot, expanded );
+	//	filesystem->FullPathToRelativePath( szScreenShot, expanded );
+	//	filesystem->GetCurrentDirectory( expanded, 1024 );
+		strcpy( szScreenShot, expanded );
+	//	strcat( szScreenShot, base );*/
+
+		char previous[ 1024 ];
+		COM_FileBase( szScreenShot, previous );
+
+		char name[256];
+		filesystem->GetCurrentDirectory( name, 256 );
+
+		Q_snprintf( szScreenShot, sizeof( szScreenShot ), "%s\\%s.tga", name, previous );
+
+	//	strcat( szScreenShot, previous );
+
+	//	mxMessageBox (this, szScreenShot, g_appTitle, MX_MB_OK | MX_MB_ERROR);
 
 		// Center the view and write the TGA.
 		d_cpl->centerView();

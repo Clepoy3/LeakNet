@@ -1,2 +1,2 @@
-call build_hlmv debug /rebuild
+call build_hlmv debug
 pause
