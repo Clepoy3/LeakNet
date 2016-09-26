@@ -331,6 +331,60 @@ void C_BaseAnimating::GetCachedBoneMatrix( int boneIndex, matrix3x4_t &out )
 	MatrixCopy( m_CachedBones[ boneIndex ], out );
 }
 
+char* replace_char(char* str, char find, char replace)
+{
+    char *current_pos = strchr(str,find);
+    while (current_pos){
+        *current_pos = replace;
+        current_pos = strchr(current_pos,find);
+    }
+    return str;
+}
+
+char *TranslateOldBones( char *boneName )
+{
+//	Msg( (!Q_strstr( boneName, "ValveBiped" ) ? "%s is an old bone\n" : "%s is a new bone\n"), boneName );
+//	Msg( ((strchr( boneName, ' ' ) && stricmp(boneName, "Bip01")) ? "%s is an old bone x2\n" : "%s is a new bone x2\n"), boneName ); // VXP: Wrong check
+//	return boneName;
+
+	if ( stricmp(boneName, "Bip01") == 0 ) // VXP: A little hack
+	{
+	//	return "ValveBiped.Bip01_Pelvis";
+		return "ValveBiped";
+	}
+
+	char *toReturn = boneName;
+
+	// VXP: Apparently, this is an old bone
+//	if ( strchr( boneName, ' ' ) != NULL )
+	if ( !Q_strstr( toReturn, "ValveBiped" ) )
+	{
+		char *newBoneName = replace_char( toReturn, ' ', '_' );
+		if ( newBoneName != NULL )
+		{
+			// VXP: Trying to add a "ValveBiped"
+			char str[256];
+			Q_snprintf(str, sizeof(str), "ValveBiped.%s", newBoneName);
+
+		//	return str;
+		//	return &str[0];
+			toReturn = &str[0];
+		}
+	}
+
+	/*if (	stricmp( toReturn, "ValveBiped.Beer_Bottle" ) == 0 ||
+			stricmp( toReturn, "ValveBiped.Weapon_bone" ) == 0 ) // VXP: And now some hacks
+	{
+	//	Msg( "Someone have a bottle here?!\n" );
+	//	return "ValveBiped.Bip01_R_Hand";
+	//	toReturn = "ValveBiped.Bip01_R_Hand";
+		toReturn = "ValveBiped.Bip01_R_Finger02";
+	}*/
+
+//	return boneName;
+	return toReturn;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose:	move position and rotation transforms into global matrices
 //-----------------------------------------------------------------------------
@@ -380,7 +434,11 @@ void C_BaseAnimating::BuildTransformations( Vector *pos, Quaternion *q, const ma
 
 				for (j = 0; j < fhdr->numbones; j++)
 				{
-					if ( stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
+					// VXP
+					char *weaponBone = TranslateOldBones( pbones[i].pszName() );
+
+				//	if ( stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
+					if ( stricmp(weaponBone, pfbones[j].pszName() ) == 0 )
 					{
 						MatrixCopy( follow->m_CachedBones[ j ], m_CachedBones[ i ] );
 						break;
