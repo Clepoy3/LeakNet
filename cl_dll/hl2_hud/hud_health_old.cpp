@@ -15,7 +15,7 @@
 //
 // Health.cpp
 //
-// implementation of CHudHealth class
+// implementation of CHudHealthOld class
 //
 #include "cbase.h"
 #include "hud.h"
@@ -38,7 +38,7 @@ using namespace vgui;
 
 #include "hudelement.h"
 
-#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
@@ -48,18 +48,18 @@ extern ConVar hud_enableoldhud;
 //-----------------------------------------------------------------------------
 // Purpose: Health panel
 //-----------------------------------------------------------------------------
-class CHudHealth : public CHudElement, public CHudNumericDisplay
+class CHudHealthOld : public CHudElement, public CHudBitmapNumericDisplay
 {
-	DECLARE_CLASS_SIMPLE( CHudHealth, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudHealthOld, CHudBitmapNumericDisplay );
 
 public:
-	CHudHealth( const char *pElementName );
+	CHudHealthOld( const char *pElementName );
 	virtual void Init( void );
 	virtual void VidInit( void );
 	virtual void Reset( void );
 	virtual void			OnThink();
-	void MsgFunc_Health(const char *pszName, int iSize, void *pbuf);
-	void MsgFunc_Damage(const char *pszName, int iSize, void *pbuf);
+	void MsgFunc_HealthOld(const char *pszName, int iSize, void *pbuf);
+	void MsgFunc_DamageOld(const char *pszName, int iSize, void *pbuf);
 
 private:
 	// old variables
@@ -70,13 +70,13 @@ private:
 	int		m_iGhostHealth;
 };	
 
-DECLARE_HUDELEMENT( CHudHealth );
-DECLARE_HUD_MESSAGE( CHudHealth, Damage );
+DECLARE_HUDELEMENT( CHudHealthOld );
+DECLARE_HUD_MESSAGE( CHudHealthOld, DamageOld );
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName ), CHudNumericDisplay(NULL, "HudHealth")
+CHudHealthOld::CHudHealthOld( const char *pElementName ) : CHudElement( pElementName ), CHudBitmapNumericDisplay(NULL, "HudHealth2") // VXP: change "HudHealth" to something else to prevent crash at shutdown
 {
 //	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
 }
@@ -84,16 +84,17 @@ CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudHealth::Init()
+void CHudHealthOld::Init()
 {
-	HOOK_MESSAGE(Damage);
+//	HOOK_MESSAGE(Damage);
+	HOOK_MESSAGE_EX(Damage, DamageOld);
 	Reset();
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudHealth::Reset()
+void CHudHealthOld::Reset()
 {
 	m_iHealth		= INIT_HEALTH;
 	m_iGhostHealth	= 100;
@@ -107,7 +108,7 @@ void CHudHealth::Reset()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudHealth::VidInit()
+void CHudHealthOld::VidInit()
 {
 	Reset();
 }
@@ -115,9 +116,9 @@ void CHudHealth::VidInit()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudHealth::OnThink()
+void CHudHealthOld::OnThink()
 {
-	if ( hud_enableoldhud.GetBool() )
+	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
 		SetPaintBackgroundEnabled( false );
@@ -172,7 +173,7 @@ void CHudHealth::OnThink()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudHealth::MsgFunc_Damage(const char *pszName, int iSize, void *pbuf )
+void CHudHealthOld::MsgFunc_DamageOld(const char *pszName, int iSize, void *pbuf )
 {
 	BEGIN_READ( pbuf, iSize );
 

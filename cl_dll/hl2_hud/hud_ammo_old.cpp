@@ -10,29 +10,28 @@
 #include "hud_macros.h"
 #include "parsemsg.h"
 
-#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 
 #include "iclientmode.h"
 
 #include <vgui_controls/AnimationController.h>
 
 #include "ConVar.h"
-
 extern ConVar hud_enableoldhud;
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays current ammunition level
 //-----------------------------------------------------------------------------
-class CHudAmmo : public CHudNumericDisplay, public CHudElement
+class CHudAmmoOld : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudAmmo, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudAmmoOld, CHudBitmapNumericDisplay );
 
 public:
-	CHudAmmo( const char *pElementName );
+	CHudAmmoOld( const char *pElementName );
 	void Init( void );
 	void VidInit( void );
 
-	void SetAmmo(int ammo, bool playAnimation);
+	void SetAmmo(int ammo, int maxammo, bool playAnimation);
 	void SetAmmo2(int ammo2, bool playAnimation);
 	
 		
@@ -45,19 +44,19 @@ private:
 	int		m_iAmmo2;
 };
 
-DECLARE_HUDELEMENT( CHudAmmo );
+DECLARE_HUDELEMENT( CHudAmmoOld );
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHudElement( pElementName )
+CHudAmmoOld::CHudAmmoOld( const char *pElementName ) : BaseClass(NULL, "HudAmmo2"), CHudElement( pElementName )
 {
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudAmmo::Init( void )
+void CHudAmmoOld::Init( void )
 {
 	m_iAmmo		= -1;
 	m_iAmmo2	= -1;
@@ -68,18 +67,18 @@ void CHudAmmo::Init( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudAmmo::VidInit( void )
+void CHudAmmoOld::VidInit( void )
 {
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: called every frame to get ammo info from the weapon
 //-----------------------------------------------------------------------------
-void CHudAmmo::OnThink()
+void CHudAmmoOld::OnThink()
 {
 	C_BaseCombatWeapon *wpn = GetActiveWeapon();
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
-	if (!wpn || !player || !wpn->UsesPrimaryAmmo() || hud_enableoldhud.GetBool())
+	if (!wpn || !player || !wpn->UsesPrimaryAmmo() || !hud_enableoldhud.GetBool())
 	{
 		SetPaintEnabled(false);
 		SetPaintBackgroundEnabled(false);
@@ -109,13 +108,13 @@ void CHudAmmo::OnThink()
 	if (wpn == m_hCurrentActiveWeapon)
 	{
 		// same weapon, just update counts
-		SetAmmo(ammo1, true);
+		SetAmmo(ammo1, wpn->GetMaxClip1(), true);
 		SetAmmo2(ammo2, true);
 	}
 	else
 	{
 		// diferent weapon, change without triggering
-		SetAmmo(ammo1, false);
+		SetAmmo(ammo1, wpn->GetMaxClip1(), false);
 		SetAmmo2(ammo2, false);
 
 		// update whether or not we show the total ammo display
@@ -147,7 +146,7 @@ void CHudAmmo::OnThink()
 //-----------------------------------------------------------------------------
 // Purpose: Updates ammo display
 //-----------------------------------------------------------------------------
-void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
+void CHudAmmoOld::SetAmmo(int ammo, int maxammo, bool playAnimation)
 {
 	if (ammo != m_iAmmo)
 	{
@@ -169,14 +168,14 @@ void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
 		m_iAmmo = ammo;
 	}
 
-	SetDisplayValue(ammo);
+	SetDisplayValue(ammo, maxammo);
 	
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Updates 2nd ammo display
 //-----------------------------------------------------------------------------
-void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
+void CHudAmmoOld::SetAmmo2(int ammo2, bool playAnimation)
 {
 	if (ammo2 != m_iAmmo2)
 	{
@@ -204,14 +203,16 @@ void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
 //-----------------------------------------------------------------------------
 // Purpose: Displays the secondary ammunition level
 //-----------------------------------------------------------------------------
-class CHudSecondaryAmmo : public CHudNumericDisplay, public CHudElement
+class CHudSecondaryAmmoOld : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmo, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmoOld, CHudBitmapNumericDisplay );
 
 public:
-	CHudSecondaryAmmo( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary" ), CHudElement( pElementName )
+	CHudSecondaryAmmoOld( const char *pElementName ) : BaseClass( NULL, "HudAmmoSecondary2" ), CHudElement( pElementName )	
 	{
 		m_iAmmo = -1;
+
+		SetLabelText(L"AMMO2");
 	}
 
 	void Init( void )
@@ -252,7 +253,7 @@ protected:
 		// set whether or not the panel draws based on if we have a weapon that supports secondary ammo
 		C_BaseCombatWeapon *wpn = GetActiveWeapon();
 		C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
-		if (!wpn || !player || hud_enableoldhud.GetBool())
+		if (!wpn || !player || !hud_enableoldhud.GetBool())
 		{
 			m_hCurrentActiveWeapon = NULL;
 			SetPaintEnabled(false);
@@ -304,5 +305,5 @@ private:
 	int		m_iAmmo;
 };
 
-DECLARE_HUDELEMENT( CHudSecondaryAmmo );
+DECLARE_HUDELEMENT( CHudSecondaryAmmoOld );
 

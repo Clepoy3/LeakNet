@@ -806,6 +806,11 @@ bool CGame::CreateGameWindow( void )
 	HWND hwnd = CreateWindow( CLASSNAME, "Half-Life", style, 
 		0, 0, w, h, NULL, NULL, m_hInstance, NULL );
 
+	if ( !videomode->IsBorderedMode() )
+	{
+		SetWindowLong(hwnd, GWL_STYLE, 0);
+	}
+
 	hwndEXT = hwnd;
 
 	g_Game.SetMainWindow( hwnd );

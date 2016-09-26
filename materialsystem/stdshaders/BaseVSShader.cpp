@@ -961,10 +961,14 @@ void CBaseVSShader::DrawModelBumpedSpecularLighting( int bumpMapVar, int bumpMap
 		s_pShaderShadow->VertexShaderVertexFormat( 
 			VERTEX_POSITION | VERTEX_NORMAL | VERTEX_BONE_INDEX, 
 			1, 0, numLights, 4 /* userDataSize */ );
+
+		bool bHasNormalMapAlphaEnvMapMask = IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK );
+
 		if( g_pHardwareConfig->SupportsPixelShaders_1_4() )
 		{
 			s_pShaderShadow->SetVertexShader( "VertexLitGeneric_EnvmappedBumpmap_NoLighting_ps14" );
-			if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
+		//	if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
+			if( bHasNormalMapAlphaEnvMapMask )
 			{
 				s_pShaderShadow->SetPixelShader( "VertexLitGeneric_EnvmappedBumpmapV2_MultByAlpha_ps14" );
 			}
@@ -978,7 +982,8 @@ void CBaseVSShader::DrawModelBumpedSpecularLighting( int bumpMapVar, int bumpMap
 			s_pShaderShadow->SetVertexShader( "VertexLitGeneric_EnvmappedBumpmap_NoLighting" );
 			// This version does not multiply by lighting.
 			// NOTE: We don't support multiplying by lighting for bumped specular stuff.
-			if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
+		//	if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
+			if( bHasNormalMapAlphaEnvMapMask )
 			{
 				s_pShaderShadow->SetPixelShader( "VertexLitGeneric_EnvmappedBumpmapV2_MultByAlpha" );
 			}

@@ -52,6 +52,7 @@ public:
 	virtual int			GetModeCount( void );
 
 	virtual bool		IsWindowedMode( void ) const;
+	virtual bool		IsBorderedMode( void ) const;
 
 	virtual bool		GetInitialized( void ) const;
 	virtual void		SetInitialized( bool init );
@@ -88,6 +89,7 @@ protected:
 	void				AdjustWindowForMode( void );
 
 	bool				m_bWindowed;
+	bool				m_bBordered;
 
 };
 
@@ -99,6 +101,7 @@ CVideoMode_Common::CVideoMode_Common( void )
 	m_nNumModes			= 0;
 	m_nGameMode			= 0;
 	m_bWindowed			= false;
+	m_bBordered			= true;
 	m_bInitialized		= false;
 	m_safeMode.width	= 640;
 	m_safeMode.height	= 480;
@@ -138,6 +141,15 @@ void CVideoMode_Common::SetInitialized( bool init )
 bool CVideoMode_Common::IsWindowedMode( void ) const
 {
 	return m_bWindowed;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CVideoMode_Common::IsBorderedMode( void ) const
+{
+	return m_bBordered;
 }
 
 //-----------------------------------------------------------------------------
@@ -571,7 +583,7 @@ class CVideoMode_MaterialSystem: public CVideoMode_Common
 public:
 	typedef CVideoMode_Common BaseClass;
 	
-	CVideoMode_MaterialSystem( bool windowed );
+	CVideoMode_MaterialSystem( bool windowed, bool bordered );
 
 	virtual char const	*GetName() { return "gl"; };
 
@@ -585,9 +597,10 @@ private:
 	virtual void		ChangeDisplaySettingsToFullscreen( void );
 };
 
-CVideoMode_MaterialSystem::CVideoMode_MaterialSystem( bool windowed )
+CVideoMode_MaterialSystem::CVideoMode_MaterialSystem( bool windowed, bool bordered )
 {
 	m_bWindowed = windowed;
+	m_bBordered = bordered;
 }
 
 bool CVideoMode_MaterialSystem::Init( void *pvInstance )
@@ -673,6 +686,7 @@ void VideoMode_Create()
 {
 	// Assume full screen
 	bool windowed = false;
+	bool bordered = true;
 
 	// Get last setting
 	windowed = registry->ReadInt( "ScreenWindowed", 0 ) ? true : false;
@@ -692,10 +706,16 @@ void VideoMode_Create()
 		windowed = false;
 	}
 
+	// VXP: Check for bordered mode command line override
+	if ( CommandLine()->FindParm( "-noborder" ) )
+	{
+		bordered = false;
+	}
+
 	// Store actual mode back out to registry
 	registry->WriteInt( "ScreenWindowed", windowed ? 1 : 0 );
 
-	videomode = new CVideoMode_MaterialSystem( windowed );
+	videomode = new CVideoMode_MaterialSystem( windowed, bordered );
 
 	assert( videomode );
 }

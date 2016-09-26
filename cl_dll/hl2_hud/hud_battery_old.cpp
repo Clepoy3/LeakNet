@@ -15,7 +15,7 @@
 //
 // battery.cpp
 //
-// implementation of CHudBattery class
+// implementation of CHudBatteryOld class
 //
 #include "cbase.h"
 #include "hud.h"
@@ -23,7 +23,7 @@
 #include "hud_macros.h"
 #include "parsemsg.h"
 
-#include "hud_numericdisplay.h"
+#include "hud_bitmapnumericdisplay.h"
 
 #include "iclientmode.h"
 
@@ -37,17 +37,17 @@ extern ConVar hud_enableoldhud;
 //-----------------------------------------------------------------------------
 // Purpose: Displays suit power (armor) on hud
 //-----------------------------------------------------------------------------
-class CHudBattery : public CHudNumericDisplay, public CHudElement
+class CHudBatteryOld : public CHudBitmapNumericDisplay, public CHudElement
 {
-	DECLARE_CLASS_SIMPLE( CHudBattery, CHudNumericDisplay );
+	DECLARE_CLASS_SIMPLE( CHudBatteryOld, CHudBitmapNumericDisplay );
 
 public:
-	CHudBattery( const char *pElementName );
+	CHudBatteryOld( const char *pElementName );
 	void Init( void );
 	void Reset( void );
 	void VidInit( void );
 	void OnThink( void );
-	void MsgFunc_Battery(const char *pszName,  int iSize, void *pbuf );
+	void MsgFunc_BatteryOld(const char *pszName,  int iSize, void *pbuf );
 	
 private:
 	int		m_iBat;	
@@ -56,29 +56,31 @@ private:
 	int		m_iGhostBat;
 };
 
-DECLARE_HUDELEMENT( CHudBattery );
-DECLARE_HUD_MESSAGE( CHudBattery, Battery );
+DECLARE_HUDELEMENT( CHudBatteryOld );
+DECLARE_HUD_MESSAGE( CHudBatteryOld, BatteryOld );
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudBattery::CHudBattery( const char *pElementName ) : BaseClass(NULL, "HudSuit"), CHudElement( pElementName )
+CHudBatteryOld::CHudBatteryOld( const char *pElementName ) : BaseClass(NULL, "HudSuit2"), CHudElement( pElementName )
 {
+//	SetActive( hud_enableoldhud.GetBool() );
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBattery::Init( void )
+void CHudBatteryOld::Init( void )
 {
-	HOOK_MESSAGE(Battery);
+//	HOOK_MESSAGE(Battery);
+	HOOK_MESSAGE_EX(Battery, BatteryOld);
 	Reset();
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBattery::Reset( void )
+void CHudBatteryOld::Reset( void )
 {
 	m_iBat		= INIT_BAT;
 	m_iNewBat   = 0;
@@ -92,7 +94,7 @@ void CHudBattery::Reset( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBattery::VidInit( void )
+void CHudBatteryOld::VidInit( void )
 {
 	Reset();
 }
@@ -100,9 +102,9 @@ void CHudBattery::VidInit( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBattery::OnThink( void )
+void CHudBatteryOld::OnThink( void )
 {
-	if ( hud_enableoldhud.GetBool() )
+	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
 		SetPaintBackgroundEnabled( false );
@@ -155,7 +157,7 @@ void CHudBattery::OnThink( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudBattery::MsgFunc_Battery( const char *pszName,  int iSize, void *pbuf )
+void CHudBatteryOld::MsgFunc_BatteryOld( const char *pszName,  int iSize, void *pbuf )
 {
 	BEGIN_READ( pbuf, iSize );
 	m_iNewBat = READ_SHORT();

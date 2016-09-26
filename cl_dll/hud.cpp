@@ -41,6 +41,7 @@ void __MsgFunc_ClearDecals(const char *pszName, int iSize, void *pbuf);
 static 	CClassMemoryPool< CHudTexture >	 g_HudTextureMemoryPool( 128 );
 
 ConVar hud_autoreloadscript("hud_autoreloadscript", "0", FCVAR_ARCHIVE, "Automatically reloads the animation script each time one is ran");
+ConVar hud_enableoldhud("hud_enableoldhud", "1", FCVAR_ARCHIVE, "Enables old HUD seen in early HL2 development screenshots"); // VXP
 
 //-----------------------------------------------------------------------------
 // Purpose: Parses the weapon txt files to get the sprites needed.
@@ -167,6 +168,12 @@ hudelement_hidden_t sHudHiddenArray[] =
 	{ "CHudShoppingCart", HIDEHUD_PLAYERDEAD },
 	{ "CHudC4", HIDEHUD_PLAYERDEAD },
 	{ "CHudArmor", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD },
+
+	// Old HL2 HUD elements
+	{ "CHudHealthOld", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT },
+	{ "CHudBatteryOld", HIDEHUD_HEALTH | HIDEHUD_NEEDSUIT },
+	{ "CHudAmmoOld", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT },
+	{ "CHudSecondaryAmmoOld", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT },
 
 	{ NULL, 0 },
 };

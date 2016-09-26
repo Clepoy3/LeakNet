@@ -260,8 +260,10 @@ void CWeaponBrickbat::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombat
 			// -----------------------------------------------------
 			// If owner has a hand, set position to the hand bone position
 			Vector launchPos;
-		//	int iBIndex = pNPC->LookupBone("Bip01 R Hand");
-			int iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
+			if ( iBIndex == -1 )
+				iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+
 			if (iBIndex != -1) {
 				Vector origin;
 				QAngle angles;
@@ -725,7 +727,8 @@ PRECACHE_WEAPON_REGISTER(weapon_beerbottle2);
 //-----------------------------------------------------------------------------
 CWeaponBeerbottle::CWeaponBeerbottle( void )
 {
-	m_iCurrentAmmoType = 1; // grenade_beerbottle
+//	m_iCurrentAmmoType = 1; // grenade_beerbottle
+	m_iCurrentAmmoType = BRICKBAT_BOTTLE;
 }
 
 void CWeaponBeerbottle::SecondaryAttack( void )

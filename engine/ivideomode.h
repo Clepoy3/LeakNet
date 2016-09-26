@@ -38,6 +38,7 @@ public:
 	virtual int				GetModeCount( void ) = 0;
 
 	virtual bool			IsWindowedMode( void ) const = 0;
+	virtual bool			IsBorderedMode( void ) const = 0;
 
 	virtual bool			GetInitialized( void ) const = 0;
 	virtual void			SetInitialized( bool init ) = 0;

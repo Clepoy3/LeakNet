@@ -54,3 +54,36 @@ void CNPC_CombineE::Precache()
 
 	BaseClass::Precache();
 }
+
+//-----------------------------------------------------------------------------
+// Purpose: Combine needs to check ammo
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+/*void CNPC_CombineE::CheckAmmo ( void ) // VXP
+{
+	if (GetActiveWeapon())
+	{
+		if (GetActiveWeapon()->UsesPrimaryAmmo())
+		{
+			GetActiveWeapon()->m_iClip1 = GetActiveWeapon()->GetMaxClip1(); 
+			GetActiveWeapon()->m_iClip2 = GetActiveWeapon()->GetMaxClip2();  
+
+			if (!GetActiveWeapon()->HasPrimaryAmmo() )
+			{
+				SetCondition(COND_NO_PRIMARY_AMMO);
+			}
+			else if (GetActiveWeapon()->UsesClipsForAmmo1() && GetActiveWeapon()->Clip1() < (GetActiveWeapon()->GetMaxClip1() / 4 + 1))
+			{
+				// don't check for low ammo if you're near the max range of the weapon
+
+				SetCondition(COND_LOW_PRIMARY_AMMO);
+			}
+		}
+		if (!GetActiveWeapon()->HasSecondaryAmmo() )
+		{
+			if ( GetActiveWeapon()->UsesClipsForAmmo2() )
+				SetCondition(COND_NO_SECONDARY_AMMO);
+		}
+	}
+}*/

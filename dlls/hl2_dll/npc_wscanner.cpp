@@ -1595,15 +1595,23 @@ void CNPC_WScanner::HandleAnimEvent( animevent_t *pEvent )
 				QAngle vShootAng;
 				GetAttachment( WSCANNER_ATTACHMENT_SHOOT, vShootPos, vShootAng );
 				
+				Vector vecVelocity = VecCheckToss( this, vShootPos, GetEnemy()->GetLocalOrigin(), -1, 0.5, true );
+				if ( vecVelocity == vec3_origin )
+				{
+					vecVelocity = (GetEnemy()->GetLocalOrigin() - vShootPos);
+					vecVelocity.z += 400; // VXP: Don't know what's this for, but okay
+				}
+				
 				EmitSound( "NPC_WScanner.ShootEvent" );
 
-				Vector vTargetDir = (GetEnemy()->GetLocalOrigin() - vShootPos);
-				vTargetDir.z += 400;
+			//	Vector vTargetDir = (GetEnemy()->GetLocalOrigin() - vShootPos);
+			//	vTargetDir.z += 400;
 				CBaseGrenade *pGrenade = (CBaseGrenade*)CreateNoSpawn( "grenade_scanner", vShootPos, vec3_angle, this );
-				pGrenade->KeyValue( "velocity", vTargetDir );
+			//	pGrenade->KeyValue( "velocity", vTargetDir );
 				pGrenade->Spawn( );
 				pGrenade->SetOwner( this );
 				pGrenade->SetOwnerEntity( this );
+				pGrenade->SetAbsVelocity( vecVelocity );
 
 				if (GetEnemy()->GetFlags() & FL_NPC)
 				{

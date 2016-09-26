@@ -15930,6 +15930,41 @@ SOURCE=.\hl2_hud\hud_ammo.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\hl2_hud\hud_ammo_old.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\hl2_hud\hud_battery.cpp
 
 !IF  "$(CFG)" == "client - Win32 Release TF2"
@@ -15947,6 +15982,41 @@ SOURCE=.\hl2_hud\hud_battery.cpp
 !ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
 
 !ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\hl2_hud\hud_battery_old.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
 
@@ -16069,6 +16139,41 @@ SOURCE=.\hl2_hud\hud_health.cpp
 !ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
 
 !ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\hl2_hud\hud_health_old.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
 

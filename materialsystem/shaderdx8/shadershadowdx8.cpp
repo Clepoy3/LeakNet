@@ -276,6 +276,9 @@ void CShaderShadowDX8::Init( )
 {
 	m_pHardwareConfig = HardwareConfig();
 	
+	// VXP: Clear out the shadow state
+	memset( &m_ShadowState, 0, sizeof(m_ShadowState) );
+
 	// No preprocessing
 	m_PreprocessVertexData = false;
 

@@ -14,7 +14,6 @@
 
 // uncomment this if you want to build for nv3x
 //#define NV3X 1
-#define HDR 1 // VXP: makes stupid texture-size bright blur - see BaseVSShader.cpp ("bool bBlendableOutput")
 
 // This is what all shaders include.
 // CBaseShader will become CShader in this file.

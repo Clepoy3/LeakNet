@@ -222,6 +222,15 @@ typedef void * HINSTANCE;
 #endif
 
 #ifdef _WIN32
+#define RESTRICT __restrict
+#define RESTRICT_FUNC __declspec(restrict)
+#else
+#define RESTRICT
+#define RESTRICT_FUNC
+#endif
+
+
+#ifdef _WIN32
 // Remove warnings from warning level 4.
 #pragma warning(disable : 4514) // warning C4514: 'acosl' : unreferenced inline function has been removed
 #pragma warning(disable : 4100) // warning C4100: 'hwnd' : unreferenced formal parameter

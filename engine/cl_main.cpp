@@ -164,7 +164,7 @@ void CL_HideHud_f( void )
 
 	if ( Cmd_Argc() != 2 )
 	{
-		Con_Printf( "Usage:  hud <on | off>\nShows or hides the hud\n" );
+		Con_Printf( "Usage:  cl_hud <on | off>\nShows or hides the hud\n" );
 	}
 
 	if ( !stricmp( Cmd_Argv(1), "off" ) )

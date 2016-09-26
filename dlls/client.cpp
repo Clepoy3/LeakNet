@@ -291,6 +291,85 @@ void ConsoleKillTarget( CBasePlayer *pPlayer, char *name)
 	KillTargets( name );
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class CPointClientCommand : public CPointEntity
+{
+public:
+	DECLARE_CLASS( CPointClientCommand, CPointEntity );
+	DECLARE_DATADESC();
+
+	void InputCommand( inputdata_t& inputdata );
+};
+
+void CPointClientCommand::InputCommand( inputdata_t& inputdata )
+{
+	if ( !inputdata.value.String()[0] )
+		return;
+
+	edict_t *pClient = NULL;
+	if ( gpGlobals->maxClients == 1 )
+	{
+		pClient = engine->PEntityOfEntIndex( 1 );
+	}
+	else
+	{
+		// In multiplayer, send it back to the activator
+		CBasePlayer *player = dynamic_cast< CBasePlayer * >( inputdata.pActivator );
+		if ( player )
+		{
+			pClient = player->edict();
+		}
+
+	//	if ( IsInCommentaryMode() && !pClient )
+	//	{
+			// Commentary is stuffing a command in. We'll pretend it came from the first player.
+	//		pClient = engine->PEntityOfEntIndex( 1 );
+	//	}
+	}
+
+//	if ( !pClient || !pClient->GetUnknown() )
+//		return;
+
+	engine->ClientCommand( pClient, UTIL_VarArgs( "%s\n", inputdata.value.String() ) );
+}
+
+BEGIN_DATADESC( CPointClientCommand )
+	DEFINE_INPUTFUNC( CPointClientCommand, FIELD_STRING, "Command", InputCommand ),
+END_DATADESC()
+
+LINK_ENTITY_TO_CLASS( point_clientcommand, CPointClientCommand );
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class CPointServerCommand : public CPointEntity
+{
+public:
+	DECLARE_CLASS( CPointServerCommand, CPointEntity );
+	DECLARE_DATADESC();
+	void InputCommand( inputdata_t& inputdata );
+};
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : inputdata - 
+//-----------------------------------------------------------------------------
+void CPointServerCommand::InputCommand( inputdata_t& inputdata )
+{
+	if ( !inputdata.value.String()[0] )
+		return;
+
+	engine->ServerCommand( UTIL_VarArgs( "%s\n", inputdata.value.String() ) );
+}
+
+BEGIN_DATADESC( CPointServerCommand )
+	DEFINE_INPUTFUNC( CPointServerCommand, FIELD_STRING, "Command", InputCommand ),
+END_DATADESC()
+
+LINK_ENTITY_TO_CLASS( point_servercommand, CPointServerCommand );
+
 //------------------------------------------------------------------------------
 // Purpose : Draw a line betwen two points.  White if no world collisions, red if collisions
 // Input   :

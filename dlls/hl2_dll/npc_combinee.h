@@ -31,6 +31,8 @@ class CNPC_CombineE : public CNPC_Combine
 public:
 	void		Spawn( void );
 	void		Precache( void );
+
+//	void		CheckAmmo( void ); // VXP: Invented and commented because we already have a proper combine_elite model with shooting animevents
 };
 
 #endif	//NPC_COMBINE_E_H

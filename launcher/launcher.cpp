@@ -505,6 +505,7 @@ extern "C" __declspec(dllexport) int LauncherMain( HINSTANCE hInstance, HINSTANC
 		CommandLine()->RemoveParm( "-window" );
 		CommandLine()->RemoveParm( "-full" );
 		CommandLine()->RemoveParm( "-fullscreen" );
+		CommandLine()->RemoveParm( "-noborder" );
 	};
 
 	registry->Shutdown();

@@ -45,6 +45,7 @@ public:
 	vmode_t				*GetCurrentMode( void );
 
 	bool				IsWindowedMode( void ) const;
+	bool				IsBorderedMode( void ) const;
 	void				ReleaseFullScreen( void ) const;
 
 	bool				GetInitialized( void ) const;
@@ -70,6 +71,7 @@ private:
 	int					m_nNumModes;
 	int					m_nGameMode;
 	bool				m_bWindowed;
+	bool				m_bBordered;
 	bool				m_bInitialized;
 	bool				m_bInModeChange;
 };
@@ -86,6 +88,7 @@ CVideoMode::CVideoMode( void )
 	m_nNumModes			= 0;
 	m_nGameMode			= 0;
 	m_bWindowed			= false;
+	m_bBordered			= true;
 	m_bInitialized		= false;
 	m_bInModeChange		= false;
 }
@@ -122,6 +125,15 @@ void CVideoMode::SetInitialized( bool init )
 bool CVideoMode::IsWindowedMode( void ) const
 {
 	return m_bWindowed;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CVideoMode::IsBorderedMode( void ) const
+{
+	return m_bBordered;
 }
 
 //-----------------------------------------------------------------------------
@@ -229,6 +241,12 @@ void CVideoMode::Init( void )
 		 CommandLine()->CheckParm( "-window" ) )
 	{
 		m_bWindowed = true;
+	}
+
+	// Check for bordered mode
+	if ( CommandLine()->CheckParm( "-noborder" ) )
+	{
+		m_bBordered = false;
 	}
 
 	if ( CommandLine()->CheckParm ( "-16bpp") )
