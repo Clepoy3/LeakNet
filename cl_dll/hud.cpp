@@ -41,7 +41,9 @@ void __MsgFunc_ClearDecals(const char *pszName, int iSize, void *pbuf);
 static 	CClassMemoryPool< CHudTexture >	 g_HudTextureMemoryPool( 128 );
 
 ConVar hud_autoreloadscript("hud_autoreloadscript", "0", FCVAR_ARCHIVE, "Automatically reloads the animation script each time one is ran");
+#if defined( HL2_CLIENT_DLL )
 ConVar hud_enableoldhud("hud_enableoldhud", "1", FCVAR_ARCHIVE, "Enables old HUD seen in early HL2 development screenshots"); // VXP
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Parses the weapon txt files to get the sprites needed.

@@ -31,8 +31,11 @@
 
 #define INIT_BAT	-1
 
+#if defined( HL2_CLIENT_DLL )
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
+#endif
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays suit power (armor) on hud
@@ -102,6 +105,7 @@ void CHudBattery::VidInit( void )
 //-----------------------------------------------------------------------------
 void CHudBattery::OnThink( void )
 {
+#if defined( HL2_CLIENT_DLL )
 	if ( hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
@@ -113,6 +117,7 @@ void CHudBattery::OnThink( void )
 		SetPaintEnabled(true);
 		SetPaintBackgroundEnabled(true);
 	}
+#endif
 
 	if ( m_iBat == m_iNewBat )
 		return;

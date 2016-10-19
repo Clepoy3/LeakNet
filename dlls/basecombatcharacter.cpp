@@ -959,18 +959,21 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 		else
 		{
 			// If I have a hand, set the weapon position to my hand bone position.
-		//	int iBIndex = LookupBone( "ValveBiped.Weapon_bone" );
+			int iBIndex = LookupBone( "ValveBiped.Weapon_bone" );
 		//	int iBIndex = LookupBone( "ValveBiped.Bip01_R_Wrist" );
-			int iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger02" );
 			if ( iBIndex != -1)  
 			{
-				Vector origin;
-				QAngle angles;
-				GetBonePosition( iBIndex, origin, angles);
-				//GetAttachment("gun", origin, angles);
-				pWeapon->SetAbsOrigin( origin );
-				pWeapon->SetAbsAngles( angles );
-				UTIL_Relink(pWeapon);
+				iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger02" );
+				if ( iBIndex != -1) 
+				{
+					Vector origin;
+					QAngle angles;
+					GetBonePosition( iBIndex, origin, angles);
+					//GetAttachment("gun", origin, angles);
+					pWeapon->SetAbsOrigin( origin );
+					pWeapon->SetAbsAngles( angles );
+					UTIL_Relink(pWeapon);
+				}
 			}
 			// Otherwise just set in front of me.
 			else 

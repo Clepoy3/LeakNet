@@ -49,6 +49,8 @@
 #include "procinfo.h"
 #endif
 
+#include "cbenchmark.h"
+
 void Linefile_Read_f(void);
 
 ConVar building_cubemaps( "building_cubemaps", "0" );
@@ -748,7 +750,11 @@ void R_TimeRefresh_f (void)
 
 	developer.SetValue( savedeveloper );
 
-	Con_Printf ("%f seconds (%f fps)\n", time, 128/time);
+//	Con_Printf ("%f seconds (%f fps)\n", time, 128/time);
+
+	char szOutput[256];
+	Q_snprintf( szOutput, sizeof( szOutput ), "%f seconds (%f fps)\n", time, 128/time );
+	GetBenchResultsMgr()->BenchmarkEcho( szOutput, true );
 }
 
 static ConCommand timerefresh("timerefresh", R_TimeRefresh_f);	

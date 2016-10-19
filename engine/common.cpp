@@ -1902,3 +1902,21 @@ void COM_Init ( void )
 	CharacterSetBuild( &g_BreakSetIncludingColons, "{}()':" );
 }
 
+bool COM_IsValidPath( const char *pszFilename )
+{
+	if ( !pszFilename )
+	{
+		return false;
+	}
+
+	if ( Q_strlen( pszFilename ) <= 0    ||
+		Q_strstr( pszFilename, "\\\\" ) ||	// to protect network paths
+		Q_strstr( pszFilename, ":" )    || // to protect absolute paths
+		Q_strstr( pszFilename, ".." ) )    // to protect relative paths
+	{
+		return false;
+	}
+
+	return true;
+}
+

@@ -377,6 +377,9 @@ public:
 
 	bool				IsRampOnly( void ) const;
 
+	// VXP
+	bool				GetSavedPath( char *path );
+
 private:
 	bool				FixupSequenceDurations( CChoreoScene *scene, bool checkonly );
 	bool				CheckSequenceLength( CChoreoEvent *e, bool checkonly );
@@ -585,6 +588,9 @@ private:
 
 	bool				m_bRampOnly;
 	float				m_flScrubberTimeOffset;
+
+	// VXP
+	char				m_szSavedPath[ 256 ];
 };
 
 extern CChoreoView		*g_pChoreoView;

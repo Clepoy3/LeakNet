@@ -198,7 +198,7 @@ void CGrenade_Brickbat::BrickbatThink( void )
 
 	if (vVelocity.Length() < 0.01)
 	{
-		SpawnBrickbatWeapon();
+	//	SpawnBrickbatWeapon(); // VXP: Commented - we don't need this to be here
 	}
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }

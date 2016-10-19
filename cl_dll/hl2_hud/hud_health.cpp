@@ -40,8 +40,10 @@ using namespace vgui;
 
 #include "hud_numericdisplay.h"
 
+#if defined( HL2_CLIENT_DLL )
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
+#endif
 
 #define INIT_HEALTH -1
 
@@ -117,6 +119,7 @@ void CHudHealth::VidInit()
 //-----------------------------------------------------------------------------
 void CHudHealth::OnThink()
 {
+#if defined( HL2_CLIENT_DLL )
 	if ( hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
@@ -128,6 +131,7 @@ void CHudHealth::OnThink()
 		SetPaintEnabled(true);
 		SetPaintBackgroundEnabled(true);
 	}
+#endif
 
 	int x = 0;
 	C_BasePlayer *local = C_BasePlayer::GetLocalPlayer();

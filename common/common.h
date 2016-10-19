@@ -264,6 +264,8 @@ char *COM_SkipPath (char *pathname);
 void COM_StripExtension ( const char *in, char *out, int outLen );
 void COM_DefaultExtension (char *path, const char *extension, int pathStringLength);
 
+bool COM_IsValidPath( const char *pszFilename ); // VXP
+
 // does a varargs printf into a temp buffer
 char	*va(char *format, ...);
 // prints a vector into a temp buffer.

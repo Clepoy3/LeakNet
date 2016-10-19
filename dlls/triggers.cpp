@@ -1280,7 +1280,7 @@ int CChangeLevel::ChangeList( levellist_t *pLevelList, int maxList )
 	return count;
 }
 
-
+//#define SRC2007_TRIGGER_PUSH
 //-----------------------------------------------------------------------------
 // Purpose: A trigger that pushes the player, NPCs, or objects.
 //-----------------------------------------------------------------------------
@@ -1290,12 +1290,18 @@ public:
 	DECLARE_CLASS( CTriggerPush, CBaseTrigger );
 
 	void Spawn( void );
+#ifdef SRC2007_TRIGGER_PUSH
+	void Activate( void );
+#endif
 	void Touch( CBaseEntity *pOther );
 	void Untouch( CBaseEntity *pOther );
 
 	Vector m_vecPushDir;
 
 	DECLARE_DATADESC();
+#ifdef SRC2007_TRIGGER_PUSH
+	float m_flPushSpeed;
+#endif
 };
 
 BEGIN_DATADESC( CTriggerPush )
@@ -1311,8 +1317,20 @@ LINK_ENTITY_TO_CLASS( trigger_push, CTriggerPush );
 void CTriggerPush::Spawn( )
 {
 	// Convert pushdir from angles to a vector
+#ifdef SRC2007_TRIGGER_PUSH
+	Vector vecAbsDir;
+#endif
 	QAngle angPushDir = QAngle(m_vecPushDir.x, m_vecPushDir.y, m_vecPushDir.z);
+#ifdef SRC2007_TRIGGER_PUSH
+	AngleVectors(angPushDir, &vecAbsDir);
+#else
 	AngleVectors(angPushDir, &m_vecPushDir);
+#endif
+
+#ifdef SRC2007_TRIGGER_PUSH
+	// Transform the vector into entity space
+	VectorIRotate( vecAbsDir, EntityToWorldTransform(), m_vecPushDir );
+#endif
 
 	Assert( !GetMoveParent() );
 	if ( GetMoveParent() )
@@ -1332,6 +1350,27 @@ void CTriggerPush::Spawn( )
 
 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#ifdef SRC2007_TRIGGER_PUSH
+void CTriggerPush::Activate()
+{
+	// Fix problems with triggers pushing too hard under sv_alternateticks.
+	// This is somewhat hacky, but it's simple and we're really close to shipping.
+//	ConVarRef sv_alternateticks( "sv_alternateticks" );
+//	if ( ( m_flAlternateTicksFix != 0 ) && sv_alternateticks.GetBool() )
+//	{
+//		m_flPushSpeed = m_flSpeed * m_flAlternateTicksFix;
+//	}
+//	else
+//	{
+		m_flPushSpeed = m_flSpeed;
+//	}
+	
+	BaseClass::Activate();
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *pOther - 
 //-----------------------------------------------------------------------------
@@ -1347,12 +1386,26 @@ void CTriggerPush::Touch( CBaseEntity *pOther )
 	if (pOther->GetMoveParent())
 		return;
 
+#ifdef SRC2007_TRIGGER_PUSH
+	// Transform the push dir into global space
+	Vector vecAbsDir;
+	VectorRotate( m_vecPushDir, EntityToWorldTransform(), vecAbsDir );
+#endif
+
 	// Instant trigger, just transfer velocity and remove
 	if (HasSpawnFlags(SF_TRIG_PUSH_ONCE))
 	{
+#ifdef SRC2007_TRIGGER_PUSH
+		pOther->ApplyAbsVelocityImpulse( m_flPushSpeed * vecAbsDir );
+#else
 		pOther->ApplyAbsVelocityImpulse( m_flSpeed * m_vecPushDir );
+#endif // SRC2007_TRIGGER_PUSH
 
+#ifdef SRC2007_TRIGGER_PUSH
+		if ( vecAbsDir.z > 0 )
+#else
 		if ( pOther->GetAbsVelocity().z > 0 )
+#endif // SRC2007_TRIGGER_PUSH
 			pOther->RemoveFlag( FL_ONGROUND );
 		UTIL_Remove( this );
 		return;
@@ -1371,7 +1424,11 @@ void CTriggerPush::Touch( CBaseEntity *pOther )
 			if ( pPhys )
 			{
 				// UNDONE: Assume the velocity is for a 100kg object, scale with mass
+#ifdef SRC2007_TRIGGER_PUSH
+				pPhys->ApplyForceCenter( m_flPushSpeed * vecAbsDir * 100.0f * gpGlobals->frametime );
+#else
 				pPhys->ApplyForceCenter( m_flSpeed * m_vecPushDir * 100.0f * gpGlobals->frametime );
+#endif // SRC2007_TRIGGER_PUSH
 				return;
 			}
 		}
@@ -1379,7 +1436,11 @@ void CTriggerPush::Touch( CBaseEntity *pOther )
 
 	default:
 		{
+#ifdef SRC2007_TRIGGER_PUSH
+			Vector vecPush = (m_flPushSpeed * vecAbsDir);
+#else
 			Vector vecPush = (m_flSpeed * m_vecPushDir);
+#endif // SRC2007_TRIGGER_PUSH
 			if ( pOther->GetFlags() & FL_BASEVELOCITY )
 			{
 				vecPush = vecPush + pOther->GetBaseVelocity();
@@ -1387,9 +1448,17 @@ void CTriggerPush::Touch( CBaseEntity *pOther )
 			if ( vecPush.z > 0 && (pOther->GetFlags() & FL_ONGROUND) )
 			{
 				pOther->RemoveFlag( FL_ONGROUND );
+#ifdef SRC2007_TRIGGER_PUSH
+				Vector origin = pOther->GetAbsOrigin();
+#else
 				Vector origin = pOther->GetLocalOrigin();
+#endif // SRC2007_TRIGGER_PUSH
 				origin.z += 1.0f;
+#ifdef SRC2007_TRIGGER_PUSH
+				pOther->SetAbsOrigin( origin );
+#else
 				pOther->SetLocalOrigin( origin );
+#endif // SRC2007_TRIGGER_PUSH
 			}
 
 			pOther->SetBaseVelocity( vecPush );

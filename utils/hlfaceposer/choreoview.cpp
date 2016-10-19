@@ -472,6 +472,8 @@ CChoreoView::CChoreoView( mxWindow *parent, int x, int y, int w, int h, int id )
 	m_bCanDraw = true;
 	m_bSuppressLayout = false;
 	m_flScrubberTimeOffset = 0.0f;
+
+	m_szSavedPath[0] = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -4830,6 +4832,51 @@ void CChoreoView::SaveAs( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+/* VXP: What the hell I did here? 0_o I don't remember
+bool CChoreoView::GetSavedPath( char *path )
+{
+	Q_strncpy( path, "ass", sizeof( path ) );
+
+	return false;
+}*/
+
+/*
+============
+COM_SkipPath
+============
+*/
+void COM_SkipPath (char *pathname, char *out)
+{
+	char    *last;
+	
+	last = pathname;
+	while (*pathname)
+	{
+		if (*pathname=='/')
+			last = pathname+1;
+		pathname++;
+	}
+//	return last;
+	Q_strncpy( out, last, sizeof( out ) );
+}
+/*#if defined( _WIN32 ) || defined( WIN32 )
+#define PATHSEPARATOR(c) ((c) == '\\' || (c) == '/')
+#else	//_WIN32
+#define PATHSEPARATOR(c) ((c) == '/')
+#endif	//_WIN32
+void    StripFilename (char *path)
+{
+	int             length;
+
+	length = strlen(path)-1;
+	while (length > 0 && !PATHSEPARATOR(path[length]))
+		length--;
+	path[length] = 0;
+}*/
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
 void CChoreoView::Load( void )
 {
 	const char *filename = NULL;
@@ -4837,7 +4884,8 @@ void CChoreoView::Load( void )
 	filename = mxGetOpenFileName( 
 		this, 
 		// mxGetOpenFilename likes backslashes instead
-		FacePoser_MakeWindowsSlashes( va( "%s/scenes/", GetGameDirectory() ) ),
+	//	FacePoser_MakeWindowsSlashes( va( "%s/scenes/", GetGameDirectory() ) ),
+		FacePoser_MakeWindowsSlashes( va( "%s/%s", GetGameDirectory(), ((m_szSavedPath[0] != NULL) ? m_szSavedPath : "scenes/") ) ),
 		"*.vcd" );
 
 	if ( !filename || !filename[ 0 ] )
@@ -4853,6 +4901,20 @@ void CChoreoView::Load( void )
 	}
 
 	LoadSceneFromFile( filename );
+
+	// VXP
+	char relative[ 512 ];
+	strcpy( relative, filename );
+	if ( strchr( filename, ':' ) )
+	{
+		filesystem->FullPathToRelativePath( filename, relative );
+	}
+//	COM_SkipPath( relative, cleaned );
+	StripFilename( relative );
+	Q_strncpy( m_szSavedPath, relative, sizeof( m_szSavedPath ) );
+#ifdef _DEBUG
+	Con_Printf( "New saved path is %s\n", m_szSavedPath );
+#endif
 }
 
 //-----------------------------------------------------------------------------
