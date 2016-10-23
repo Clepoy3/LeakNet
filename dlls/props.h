@@ -20,7 +20,6 @@
 #define	SF_PHYSPROP_TOUCH						0x0010		// can be 'crashed through' by running player (plate glass)
 #define SF_PHYSPROP_PRESSURE					0x0020		// can be broken by a player standing on it
 #define SF_PHYSPROP_ENABLE_ON_PHYSCANNON		0x0040		// enable motion only if the player grabs it with the physcannon
-#define SF_PHYSPROP_SHOOT						0x0080		// VXP: can be broken on shooting
 
 // ParsePropData returns
 enum
@@ -202,7 +201,6 @@ public:
 	}
 
 	virtual int OnTakeDamage( const CTakeDamageInfo &info );
-	void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	int DrawDebugTextOverlays(void);
 
 	DECLARE_DATADESC();

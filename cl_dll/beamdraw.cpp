@@ -454,7 +454,16 @@ void DrawSegs( int noise_divisions, float *prgNoise, const model_t* spritemodel,
 	length *= 0.01;
 
 	// UNDONE: Expose texture length scale factor to control "fuzziness"
-	vStep = length*div;	// Texture length texels per space pixel
+//	vStep = length*div;	// Texture length texels per space pixel
+	if ( flags & FBEAM_NOTILE )
+	{
+		// Don't tile
+		vStep = div;
+	}
+	else
+	{
+		vStep = length*div;	// Texture length texels per space pixel
+	}
 
 	// UNDONE: Expose this paramter as well(3.5)?  Texture scroll rate along beam
 	vLast = fmod(freq*speed,1);	// Scroll speed 3.5 -- initial texture position, scrolls 3.5/sec (1.0 is entire texture)

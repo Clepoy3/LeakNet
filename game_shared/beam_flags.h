@@ -32,6 +32,7 @@ enum
 	FBEAM_SHADEIN			= 0x00000040,
 	FBEAM_SHADEOUT			= 0x00000080,
 	FBEAM_ONLYNOISEONCE		= 0x00000100,		// Only calculate our noise once
+	FBEAM_NOTILE			= 0x00000200,		// VXP
 	FBEAM_STARTVISIBLE		= 0x10000000,		// Has this client actually seen this beam's start entity yet?
 	FBEAM_ENDVISIBLE		= 0x20000000,		// Has this client actually seen this beam's end entity yet?
 	FBEAM_ISACTIVE			= 0x40000000,

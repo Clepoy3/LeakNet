@@ -338,6 +338,10 @@ SOURCE=..\Public\bumpvects.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\cbenchmark.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\cd.cpp
 
 !IF  "$(CFG)" == "engine - Win32 Debug"
@@ -2445,6 +2449,10 @@ SOURCE=.\bugreporter.h
 # Begin Source File
 
 SOURCE=.\cache.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cbenchmark.h
 # End Source File
 # Begin Source File
 

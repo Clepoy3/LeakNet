@@ -29613,6 +29613,10 @@ SOURCE=.\point_playermoveconstraint.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\point_spotlight.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\point_template.cpp
 # End Source File
 # Begin Source File

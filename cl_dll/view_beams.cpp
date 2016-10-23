@@ -2033,7 +2033,8 @@ void CViewRenderBeams::DrawBeam( C_Beam* pbeam )
 			break;
 	}
 
-	beam.flags |= pbeam->GetBeamFlags() & (FBEAM_SINENOISE|FBEAM_SOLID|FBEAM_SHADEIN|FBEAM_SHADEOUT);
+//	beam.flags |= pbeam->GetBeamFlags() & (FBEAM_SINENOISE|FBEAM_SOLID|FBEAM_SHADEIN|FBEAM_SHADEOUT);
+	beam.flags |= pbeam->GetBeamFlags() & (FBEAM_SINENOISE|FBEAM_SOLID|FBEAM_SHADEIN|FBEAM_SHADEOUT|FBEAM_NOTILE);
 
 	// Draw it
 	UpdateBeam( &beam, gpGlobals->frametime );
