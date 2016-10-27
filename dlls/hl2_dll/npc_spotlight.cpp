@@ -393,8 +393,7 @@ void CNPC_Spotlight::Precache(void)
 	//
 	// Sprites.
 	//
-//	engine->PrecacheModel("sprites/spotlight.vmt");
-	engine->PrecacheModel("sprites/glow_test02.vmt");
+	engine->PrecacheModel("sprites/spotlight.vmt");
 	m_nHaloSprite		= engine->PrecacheModel("sprites/blueflare1.vmt");
 	
 	BaseClass::Precache();
@@ -1019,14 +1018,12 @@ void CNPC_Spotlight::SpotlightCreate(void)
 		m_pSpotlightTarget->m_flLightScale = 0.0;
 	}
 
-//	m_pSpotlight = CBeam::BeamCreate( "sprites/spotlight.vmt", 2.0 );
-	m_pSpotlight = CBeam::BeamCreate( "sprites/glow_test02.vmt", m_flSpotlightGoalWidth );
+	m_pSpotlight = CBeam::BeamCreate( "sprites/spotlight.vmt", 2.0 );
 	m_pSpotlight->SetColor( m_clrRender->r, m_clrRender->g, m_clrRender->b ); 
 	m_pSpotlight->SetHaloTexture(m_nHaloSprite);
 	m_pSpotlight->SetHaloScale(40);
 	m_pSpotlight->SetEndWidth(m_flSpotlightGoalWidth);
-//	m_pSpotlight->SetBeamFlags(FBEAM_SHADEOUT);
-	m_pSpotlight->SetBeamFlags( (FBEAM_SHADEOUT|FBEAM_NOTILE) );
+	m_pSpotlight->SetBeamFlags(FBEAM_SHADEOUT);
 	m_pSpotlight->SetBrightness( 80 );
 	m_pSpotlight->SetNoise( 0 );
 	m_pSpotlight->EntsInit( this, m_pSpotlightTarget );

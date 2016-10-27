@@ -31,10 +31,7 @@ public:
 	void	Spawn(void);
 	virtual void Activate();
 
-//	virtual void OnEntityEvent( EntityEvent_t event, void *pEventData );
-
 private:
-//	int 	UpdateTransmitState();
 	void	SpotlightThink(void);
 	void	SpotlightUpdate(void);
 	Vector	SpotlightCurrentPos(void);
@@ -47,15 +44,11 @@ private:
 	void InputLightOn( inputdata_t &inputdata );
 	void InputLightOff( inputdata_t &inputdata );
 
-	// Creates the efficient spotlight 
-//	void CreateEfficientSpotlight();
-
 	// Computes render info for a spotlight
 	void ComputeRenderInfo();
 
 private:
 	bool	m_bSpotlightOn;
-//	bool	m_bEfficientSpotlight;
 	Vector	m_vSpotlightTargetPos;
 	Vector	m_vSpotlightCurrentPos;
 	Vector	m_vSpotlightDir;
@@ -66,12 +59,12 @@ private:
 	float	m_flSpotlightMaxLength;
 	float	m_flSpotlightCurLength;
 	float	m_flSpotlightGoalWidth;
-//	float	m_flHDRColorScale;
-//	int		m_nMinDXLevel;
+
 	float	m_flBeamLength;
+
 	int		m_nBrightness;
-	float	m_flSpotlightMul;
-	string_t	m_iszMaterial;
+	float	m_flDlightWidth;
+	char*	m_iszMaterial;
 
 public:
 	COutputEvent m_OnOn, m_OnOff;     ///< output fires when turned on, off
@@ -81,7 +74,6 @@ BEGIN_DATADESC( CPointSpotlight )
 	DEFINE_FIELD( CPointSpotlight, m_flSpotlightCurLength, FIELD_FLOAT ),
 
 	DEFINE_FIELD( CPointSpotlight, m_bSpotlightOn,			FIELD_BOOLEAN ),
-//	DEFINE_FIELD( CPointSpotlight, m_bEfficientSpotlight,	FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPointSpotlight, m_vSpotlightTargetPos,	FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( CPointSpotlight, m_vSpotlightCurrentPos,	FIELD_POSITION_VECTOR ),
 
@@ -92,12 +84,13 @@ BEGIN_DATADESC( CPointSpotlight )
 	DEFINE_FIELD( CPointSpotlight, m_vSpotlightDir,			FIELD_VECTOR ),
 	DEFINE_FIELD( CPointSpotlight, m_nHaloSprite,			FIELD_INTEGER ),
 
+	DEFINE_FIELD( CPointSpotlight, m_flBeamLength,			FIELD_FLOAT ),
+
 	DEFINE_KEYFIELD( CPointSpotlight, m_flSpotlightMaxLength,FIELD_FLOAT, "SpotlightLength"),
 	DEFINE_KEYFIELD( CPointSpotlight, m_flSpotlightGoalWidth,FIELD_FLOAT, "SpotlightWidth"),
-//	DEFINE_KEYFIELD( CPointSpotlight, m_flHDRColorScale, FIELD_FLOAT, "HDRColorScale" ),
-//	DEFINE_KEYFIELD( CPointSpotlight, m_nMinDXLevel, FIELD_INTEGER, "mindxlevel" ),
+
 	DEFINE_KEYFIELD( CPointSpotlight, m_nBrightness, FIELD_INTEGER, "brightness" ),
-	DEFINE_KEYFIELD( CPointSpotlight, m_flSpotlightMul, FIELD_FLOAT, "spotlightbrightness" ),
+	DEFINE_KEYFIELD( CPointSpotlight, m_flDlightWidth, FIELD_FLOAT, "dynamiclightwidth" ),
 	DEFINE_KEYFIELD( CPointSpotlight, m_iszMaterial, FIELD_STRING, "material" ),
 
 	// Inputs
@@ -123,8 +116,11 @@ CPointSpotlight::CPointSpotlight()
 	m_vSpotlightCurrentPos.Init();
 	m_vSpotlightDir.Init();
 #endif
-//	m_flHDRColorScale = 1.0f;
-//	m_nMinDXLevel = 0;
+	m_flBeamLength = 1.0f;
+
+	m_nBrightness = 80;
+	m_flDlightWidth = 1.8f;
+//	*m_iszMaterial = NULL;
 }
 
 
@@ -136,10 +132,9 @@ void CPointSpotlight::Precache(void)
 	BaseClass::Precache();
 
 	// Sprites.
-//	m_nHaloSprite = PrecacheModel("sprites/light_glow03.vmt");
-	m_nHaloSprite = PrecacheModel("sprites/blueflare1.vmt");
+	m_nHaloSprite = PrecacheModel("sprites/light_glow03.vmt");
 //	PrecacheModel( "sprites/glow_test02.vmt" );
-	PrecacheModel( STRING( m_iszMaterial ) );
+	PrecacheModel( m_iszMaterial );
 }
 
 
@@ -148,12 +143,16 @@ void CPointSpotlight::Precache(void)
 //-----------------------------------------------------------------------------
 void CPointSpotlight::Spawn(void)
 {
+	if ( Q_strcmp( m_iszMaterial, "" ) == 0 )
+	{
+		Q_strcpy( m_iszMaterial, "sprites/glow_test02.vmt" );
+	}
+
 	Precache();
 
 	UTIL_SetSize( this,vec3_origin,vec3_origin );
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	SetMoveType( MOVETYPE_NONE );
-//	m_bEfficientSpotlight = true;
 
 	// Check for user error
 	if (m_flSpotlightMaxLength <= 0)
@@ -173,24 +172,6 @@ void CPointSpotlight::Spawn(void)
 		m_flSpotlightGoalWidth = MAX_BEAM_WIDTH; 
 	}*/
 
-	if ( m_nBrightness <= 0 )
-	{
-		DevMsg("%s (%s) has an invalid spotlight sprite brightness <= 0, setting to 64\n" );
-		m_nBrightness = 64;
-	}
-
-	if ( m_flSpotlightMul <= 0 )
-	{
-		DevMsg("%s (%s) has an invalid spotlight brightness brightness <= 0, setting to 1.8\n" );
-		m_flSpotlightMul = 1.8f;
-	}
-
-	if ( Q_strcmp(STRING( m_iszMaterial ), "") == 0 )
-	{
-		DevMsg("%s (%s) has an invalid spotlight brightness brightness <= 0, setting to 1.8\n" );
-		m_iszMaterial = "sprites/glow_test03.vmt";
-	}
-
 	// ------------------------------------
 	//	Init all class vars 
 	// ------------------------------------
@@ -205,6 +186,8 @@ void CPointSpotlight::Spawn(void)
 
 	SetThink( SpotlightThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
+
+	Relink();
 }
 
 
@@ -213,6 +196,7 @@ void CPointSpotlight::Spawn(void)
 //-----------------------------------------------------------------------------
 void CPointSpotlight::ComputeRenderInfo()
 {
+	Msg( "CPointSpotlight::ComputeRenderInfo()\n" );
 	// Fade out spotlight end if past max length.  
 	if ( m_flSpotlightCurLength > 2*m_flSpotlightMaxLength )
 	{
@@ -231,47 +215,25 @@ void CPointSpotlight::ComputeRenderInfo()
 	}
 
 	// Adjust end width to keep beam width constant
+//	Msg( "m_flBeamLength: %f\n", m_flBeamLength );
 	float flNewWidth = m_flSpotlightGoalWidth * (m_flSpotlightCurLength / m_flSpotlightMaxLength);
 //	float flNewWidth = m_flSpotlightGoalWidth * (m_flBeamLength / m_flSpotlightMaxLength);
-	flNewWidth = clamp(flNewWidth, 0, MAX_BEAM_WIDTH );
+//	flNewWidth = clamp(flNewWidth, 0, MAX_BEAM_WIDTH );
 	m_hSpotlight->SetEndWidth(flNewWidth);
 
 	// Adjust width of light on the end.  
 	if ( FBitSet (m_spawnflags, SF_SPOTLIGHT_NO_DYNAMIC_LIGHT) )
 	{
+		Msg( "No dynamic light!\n" );
 		m_hSpotlightTarget->m_flLightScale = 0.0;
 	}
 	else
 	{
 		// <<TODO>> - magic number 1.8 depends on sprite size
-	//	m_hSpotlightTarget->m_flLightScale = 1.8*flNewWidth;
-		m_hSpotlightTarget->m_flLightScale = m_flSpotlightMul*flNewWidth;
+		Msg( "m_flDlightWidth: %f\n", m_flDlightWidth );
+		m_hSpotlightTarget->m_flLightScale = m_flDlightWidth*flNewWidth;
 	}
 }
-
-
-//-----------------------------------------------------------------------------
-// Creates the efficient spotlight 
-//-----------------------------------------------------------------------------
-/*void CPointSpotlight::CreateEfficientSpotlight()
-{
-	if ( m_hSpotlightTarget.Get() != NULL )
-		return;
-
-	SpotlightCreate();
-	m_vSpotlightCurrentPos = SpotlightCurrentPos();
-	m_hSpotlightTarget->SetAbsOrigin( m_vSpotlightCurrentPos );
-	m_hSpotlightTarget->m_vSpotlightOrg = GetAbsOrigin();
-//	VectorSubtract( m_hSpotlightTarget->GetAbsOrigin(), m_hSpotlightTarget->m_vSpotlightOrg, m_hSpotlightTarget->m_vSpotlightDir );
-//	m_flSpotlightCurLength = VectorNormalize( m_hSpotlightTarget->m_vSpotlightDir );
-	m_hSpotlightTarget->m_vSpotlightDir = m_hSpotlightTarget->m_vSpotlightOrg - m_hSpotlightTarget->m_vSpotlightDir;
-	m_flSpotlightCurLength = VectorNormalize( m_hSpotlightTarget->m_vSpotlightDir.GetForModify() );
-	m_hSpotlightTarget->SetMoveType( MOVETYPE_NONE );
-	ComputeRenderInfo();
-
-	m_OnOn.FireOutput( this, this );
-}*/
-
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -279,74 +241,14 @@ void CPointSpotlight::ComputeRenderInfo()
 void CPointSpotlight::Activate(void)
 {
 	BaseClass::Activate();
-
-	/*if ( GetMoveParent() )
-	{
-		m_bEfficientSpotlight = false;
-	}*/
-
-	/*if ( m_bEfficientSpotlight )
-	{
-		if ( m_bSpotlightOn )
-		{
-			CreateEfficientSpotlight();
-		}
-
-		// Don't think
-		SetThink( NULL );
-	}*/
 }
-
-
-//-------------------------------------------------------------------------------------
-// Optimization to deal with spotlights
-//-------------------------------------------------------------------------------------
-/*void CPointSpotlight::OnEntityEvent( EntityEvent_t event, void *pEventData )
-{
-	if ( event == ENTITY_EVENT_PARENT_CHANGED )
-	{
-		if ( GetMoveParent() )
-		{
-			m_bEfficientSpotlight = false;
-			if ( m_hSpotlightTarget )
-			{
-				m_hSpotlightTarget->SetMoveType( MOVETYPE_FLY );
-			}
-			SetThink( SpotlightThink );
-			SetNextThink( gpGlobals->curtime + 0.1f );
-		}
-	}
-
-	BaseClass::OnEntityEvent( event, pEventData );
-}*/
-
-	
-//-------------------------------------------------------------------------------------
-// Purpose : Send even though we don't have a model so spotlight gets proper position
-// Input   :
-// Output  :
-//-------------------------------------------------------------------------------------
-/*int CPointSpotlight::UpdateTransmitState()
-{
-	if ( m_bEfficientSpotlight )
-		return SetTransmitState( FL_EDICT_DONTSEND );
-
-	return SetTransmitState( FL_EDICT_PVSCHECK );
-}*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Plays the engine sound.
 //-----------------------------------------------------------------------------
 void CPointSpotlight::SpotlightThink( void )
 {
-	if ( GetMoveParent() )
-	{
-		SetNextThink( gpGlobals->curtime + TICK_RATE );
-	}
-	else
-	{
-		SetNextThink( gpGlobals->curtime + 0.1f );
-	}
+	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	SpotlightUpdate();
 }
@@ -364,14 +266,11 @@ void CPointSpotlight::SpotlightCreate(void)
 	AngleVectors( GetAbsAngles(), &m_vSpotlightDir );
 
 	trace_t tr;
-	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + m_vSpotlightDir * m_flSpotlightMaxLength, 
-	//	MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);
-		MASK_OPAQUE, this, COLLISION_GROUP_NONE, &tr);
+	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + m_vSpotlightDir * m_flSpotlightMaxLength, MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);
 
 	m_hSpotlightTarget = (CSpotlightEnd*)CreateEntityByName( "spotlight_end" );
 	m_hSpotlightTarget->Spawn();
-//	m_hSpotlightTarget->SetAbsOrigin( tr.endpos );
-	m_hSpotlightTarget->SetLocalOrigin( tr.endpos );
+	m_hSpotlightTarget->SetAbsOrigin( tr.endpos );
 	m_hSpotlightTarget->SetOwnerEntity( this );
 	m_hSpotlightTarget->m_clrRender = m_clrRender;
 	m_hSpotlightTarget->m_Radius = m_flSpotlightMaxLength;
@@ -383,32 +282,18 @@ void CPointSpotlight::SpotlightCreate(void)
 
 	//m_hSpotlight = CBeam::BeamCreate( "sprites/spotlight.vmt", m_flSpotlightGoalWidth );
 //	m_hSpotlight = CBeam::BeamCreate( "sprites/glow_test02.vmt", m_flSpotlightGoalWidth );
-	m_hSpotlight = CBeam::BeamCreate( STRING( m_iszMaterial ), m_flSpotlightGoalWidth );
+	m_hSpotlight = CBeam::BeamCreate( m_iszMaterial, m_flSpotlightGoalWidth );
 	// Set the temporary spawnflag on the beam so it doesn't save (we'll recreate it on restore)
-//	m_hSpotlight->SetHDRColorScale( m_flHDRColorScale );
-//	m_hSpotlight->AddSpawnFlags( SF_BEAM_TEMPORARY );
+	m_hSpotlight->AddSpawnFlags( SF_BEAM_TEMPORARY );
 	m_hSpotlight->SetColor( m_clrRender->r, m_clrRender->g, m_clrRender->b ); 
 	m_hSpotlight->SetHaloTexture(m_nHaloSprite);
-	m_hSpotlight->SetHaloScale(60);
-//	m_hSpotlight->SetHaloScale(40);
+	m_hSpotlight->SetHaloScale(40);
 	m_hSpotlight->SetEndWidth(m_flSpotlightGoalWidth);
+//	m_hSpotlight->SetBeamFlags( (FBEAM_SHADEOUT|FBEAM_NOTILE) );
 	m_hSpotlight->SetBeamFlags( (FBEAM_SHADEOUT|FBEAM_NOTILE) );
-//	m_hSpotlight->SetBrightness( 64 );
 	m_hSpotlight->SetBrightness( m_nBrightness );
-//	m_hSpotlight->SetBrightness( 80 );
 	m_hSpotlight->SetNoise( 0 );
-//	m_hSpotlight->SetMinDXLevel( m_nMinDXLevel );
-
-	/*if ( m_bEfficientSpotlight )
-	{
-		m_hSpotlight->PointsInit( GetAbsOrigin(), m_hSpotlightTarget->GetAbsOrigin() );
-	}
-	else
-	{*/
-		m_hSpotlight->EntsInit( this, m_hSpotlightTarget );
-	//}
-
-	m_OnOn.FireOutput( this, this );
+	m_hSpotlight->EntsInit( this, m_hSpotlightTarget );
 }
 
 //------------------------------------------------------------------------------
@@ -437,14 +322,8 @@ void CPointSpotlight::SpotlightDestroy(void)
 	{
 		m_OnOff.FireOutput( this, this );
 
-	//	UTIL_Remove(m_hSpotlight);
-	//	UTIL_Remove(m_hSpotlightTarget);
-
-		UTIL_RemoveImmediate(m_hSpotlight);
-		m_hSpotlight = NULL;
-
-		UTIL_RemoveImmediate(m_hSpotlightTarget);
-		m_hSpotlightTarget = NULL;
+		UTIL_Remove(m_hSpotlight);
+		UTIL_Remove(m_hSpotlightTarget);
 	}
 }
 
@@ -455,6 +334,10 @@ void CPointSpotlight::SpotlightDestroy(void)
 //------------------------------------------------------------------------------
 void CPointSpotlight::SpotlightUpdate(void)
 {
+//	Msg( "Is spotlight created: %s. Is spotlight enabled: %s.\n",
+//			((m_hSpotlight != NULL) ? "YES" : "NO"),
+//			(m_bSpotlightOn ? "YES" : "NO") );
+
 	// ---------------------------------------------------
 	//  If I don't have a spotlight attempt to create one
 	// ---------------------------------------------------
@@ -484,6 +367,24 @@ void CPointSpotlight::SpotlightUpdate(void)
 		if ( !m_hSpotlightTarget )
 			return;
 	}
+	
+	/*if ( !m_hSpotlight && m_bSpotlightOn )
+	{
+		SpotlightCreate();
+	}
+	if ( !m_hSpotlight )
+	{
+		return;
+	}
+
+	if ( !m_bSpotlightOn )
+	{
+		if ( !m_hSpotlight )
+		{
+			SpotlightDestroy();
+			return;
+		}
+	}*/
 
 	m_vSpotlightCurrentPos = SpotlightCurrentPos();
 
@@ -516,9 +417,9 @@ void CPointSpotlight::SpotlightUpdate(void)
 
 	// Avoid sudden change in where beam fades out when cross disconinuities
 //	VectorSubtract( m_hSpotlightTarget->GetAbsOrigin(), m_hSpotlightTarget->m_vSpotlightOrg, m_hSpotlightTarget->m_vSpotlightDir );
-//	float flBeamLength	= VectorNormalize( m_hSpotlightTarget->m_vSpotlightDir );
-	m_hSpotlightTarget->m_vSpotlightDir = m_hSpotlightTarget->m_vSpotlightOrg - m_hSpotlightTarget->m_vSpotlightDir;
+	m_hSpotlightTarget->m_vSpotlightDir = m_hSpotlightTarget->GetAbsOrigin() - m_hSpotlightTarget->m_vSpotlightOrg;
 	m_flBeamLength	= VectorNormalize( m_hSpotlightTarget->m_vSpotlightDir.GetForModify() );
+//	Msg( "Setting m_flBeamLength to %f\n", m_flBeamLength );
 	m_flSpotlightCurLength = (0.60*m_flSpotlightCurLength) + (0.4*m_flBeamLength);
 
 	ComputeRenderInfo();
@@ -536,10 +437,6 @@ void CPointSpotlight::InputLightOn( inputdata_t &inputdata )
 	if ( !m_bSpotlightOn )
 	{
 		m_bSpotlightOn = true;
-		/*if ( m_bEfficientSpotlight )
-		{
-			CreateEfficientSpotlight();
-		}*/
 	}
 }
 
@@ -551,9 +448,5 @@ void CPointSpotlight::InputLightOff( inputdata_t &inputdata )
 	if ( m_bSpotlightOn )
 	{
 		m_bSpotlightOn = false;
-		/*if ( m_bEfficientSpotlight )
-		{
-			SpotlightDestroy();
-		}*/
 	}
 }
