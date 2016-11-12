@@ -6855,80 +6855,6 @@ SOURCE=.\hl2_dll\Scanner_Shield.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\hl2_dll\SpotlightEnd.cpp
-
-!IF  "$(CFG)" == "hl - Win32 Release HL2"
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=.\hl2_dll\SpotlightEnd.h
-
-!IF  "$(CFG)" == "hl - Win32 Release HL2"
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
 SOURCE=.\hl2_dll\vehicle_airboat.cpp
 
 !IF  "$(CFG)" == "hl - Win32 Release HL2"
@@ -29848,6 +29774,14 @@ SOURCE=.\splash.cpp
 # Begin Source File
 
 SOURCE=.\splash.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SpotlightEnd.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SpotlightEnd.h
 # End Source File
 # Begin Source File
 
