@@ -1370,6 +1370,11 @@ public:
 		return ::COM_LoadFile(path, usehunk, pLength);
 	}
 
+	virtual void COM_ChangeGameDir(const char *pszGameDir) // VXP
+	{
+		::COM_ChangeGameDir(pszGameDir);
+	}
+
 	virtual void AddOriginToPVS( const Vector& origin )
 	{
 		::SV_AddOriginToPVS(origin);

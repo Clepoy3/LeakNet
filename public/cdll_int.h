@@ -136,6 +136,8 @@ public:
 
 	virtual char				*COM_ParseFile( char *data, char *token ) = 0;
 
+	virtual void				COM_ChangeGameDir( const char *pszGameDir ) = 0; // VXP
+
 	// screen handlers
 	virtual void				GetScreenSize( int& width, int& height ) = 0;
 	virtual float				GetScreenAspectRatio( void ) = 0;

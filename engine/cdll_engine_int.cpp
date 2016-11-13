@@ -76,6 +76,7 @@
 IMaterial* BrushModel_GetLightingAndMaterial( const Vector &start, 
 	const Vector &end, Vector &diffuseLightColor, Vector &baseColor );
 char *COM_ParseFile(char *data, char *token);
+void COM_ChangeGameDir(const char *pszGameDir); // VXP
 const char *Key_NameForBinding( const char *pBinding );
 
 extern float scr_fov_value;
@@ -363,6 +364,11 @@ class CEngineClient : public IVEngineClient
 	char *COM_ParseFile( char *data, char *token )
 	{
 		return ::COM_ParseFile( data, token );
+	}
+
+	void COM_ChangeGameDir( const char *pszGameDir ) // VXP
+	{
+		::COM_ChangeGameDir( pszGameDir );
 	}
 
 	void GetScreenSize( int& w, int &h )

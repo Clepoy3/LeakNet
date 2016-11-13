@@ -179,6 +179,7 @@ public:
 	virtual char		*InfoKeyValue( char *infobuffer, const char *key ) = 0;
 	virtual void		SetClientKeyValue( int clientIndex, char *infobuffer, const char *key, const char *value ) = 0;
 	virtual char		*COM_ParseFile( char *data, char *token ) = 0;
+	virtual void		COM_ChangeGameDir( const char *pszGameDir ) = 0; // VXP
 	virtual byte		*COM_LoadFile( const char *path, int usehunk, int *pLength ) = 0;
 	// Set the pvs based on the specified origin ( not that the pvs has an 8 unit fudge factor )
 	// Reset the pvs ( call right before any calls to addorigintopvs

@@ -15,6 +15,10 @@
 #include <vgui_controls/ListPanel.h>
 #include <KeyValues.h>
 
+// VXP
+//#include "FileSystem.h"
+#include "vstdlib/icommandline.h"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
 
@@ -129,9 +133,14 @@ void CChangeGameDialog::OnCommand(const char *command)
 			if (kv)
 			{
 				// change the game dir and restart the engine
-				char szCmd[256];
-				sprintf(szCmd, "_setgamedir %s\n", kv->GetString("ModDir"));
-				engine->ClientCmd(szCmd);
+			//	char szCmd[256];
+			//	sprintf(szCmd, "_setgamedir %s\n", kv->GetString("ModDir"));
+			//	engine->ClientCmd(szCmd);
+			//	filesystem()->RemoveAllSearchPaths();
+			//	filesystem()->AddSearchPath( kv->GetString("ModDir"), "GAME", PATH_ADD_TO_HEAD );
+
+			//	engine->COM_ChangeGameDir( kv->GetString("ModDir") );
+				CommandLine()->AppendParm( "-game", kv->GetString("ModDir") );
 
 				// Force restart of entire engine
 				engine->ClientCmd("_restart\n");
