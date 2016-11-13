@@ -31,8 +31,10 @@
 
 #define INIT_BAT	-1
 
+#if defined( HL2_CLIENT_DLL )
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays suit power (armor) on hud
@@ -47,7 +49,7 @@ public:
 	void Reset( void );
 	void VidInit( void );
 	void OnThink( void );
-	void MsgFunc_BatteryOld(const char *pszName,  int iSize, void *pbuf );
+	void MsgFunc_BatteryOld(const char *pszName, int iSize, void *pbuf );
 	
 private:
 	int		m_iBat;	
@@ -64,7 +66,6 @@ DECLARE_HUD_MESSAGE( CHudBatteryOld, BatteryOld );
 //-----------------------------------------------------------------------------
 CHudBatteryOld::CHudBatteryOld( const char *pElementName ) : BaseClass(NULL, "HudSuit2"), CHudElement( pElementName )
 {
-//	SetActive( hud_enableoldhud.GetBool() );
 }
 
 //-----------------------------------------------------------------------------
@@ -104,6 +105,7 @@ void CHudBatteryOld::VidInit( void )
 //-----------------------------------------------------------------------------
 void CHudBatteryOld::OnThink( void )
 {
+#if defined( HL2_CLIENT_DLL )
 	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
@@ -115,6 +117,7 @@ void CHudBatteryOld::OnThink( void )
 		SetPaintEnabled(true);
 		SetPaintBackgroundEnabled(true);
 	}
+#endif
 
 	if ( m_iBat == m_iNewBat )
 		return;

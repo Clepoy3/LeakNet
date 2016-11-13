@@ -14,8 +14,10 @@
 
 // Macros to hook function calls into the HUD object
 #define HOOK_MESSAGE(x) usermessages->HookMessage(#x, __MsgFunc_##x );
+
 // VXP
 #define HOOK_MESSAGE_EX(y, x) usermessages->HookMessage(#y, __MsgFunc_##x );
+
 // Message declaration for non-CHudElement classes
 #define DECLARE_MESSAGE(y, x) void __MsgFunc_##x(const char *pszName, int iSize, void *pbuf) \
 	{											\

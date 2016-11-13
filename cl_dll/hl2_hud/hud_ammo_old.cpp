@@ -16,8 +16,10 @@
 
 #include <vgui_controls/AnimationController.h>
 
+#if defined( HL2_CLIENT_DLL )
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays current ammunition level
@@ -78,7 +80,11 @@ void CHudAmmoOld::OnThink()
 {
 	C_BaseCombatWeapon *wpn = GetActiveWeapon();
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
-	if (!wpn || !player || !wpn->UsesPrimaryAmmo() || !hud_enableoldhud.GetBool())
+	if (!wpn || !player || !wpn->UsesPrimaryAmmo() 
+#if defined( HL2_CLIENT_DLL )
+		|| !hud_enableoldhud.GetBool()
+#endif
+		)
 	{
 		SetPaintEnabled(false);
 		SetPaintBackgroundEnabled(false);
@@ -253,7 +259,11 @@ protected:
 		// set whether or not the panel draws based on if we have a weapon that supports secondary ammo
 		C_BaseCombatWeapon *wpn = GetActiveWeapon();
 		C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
-		if (!wpn || !player || !hud_enableoldhud.GetBool())
+		if (!wpn || !player || 
+#if defined( HL2_CLIENT_DLL )
+			!hud_enableoldhud.GetBool()
+#endif
+			)
 		{
 			m_hCurrentActiveWeapon = NULL;
 			SetPaintEnabled(false);

@@ -47,7 +47,7 @@ int CUserMessages::GetUserMessageSize( int index )
 		Error( "CUserMessages::GetUserMessageSize( %i ) out of range!!!\n", index );
 	}
 
-	UserMessage *e = &m_UserMessages[ index ];
+	CUserMessage *e = m_UserMessages[ index ];
 	return e->size;
 }
 
@@ -90,8 +90,8 @@ void CUserMessages::Register( const char *name, int size )
 		Error( "CUserMessages::Register '%' already registered\n", name );
 	}
 
-	UserMessage entry;
-	entry.size = size;
+	CUserMessage * entry = new CUserMessage;
+	entry->size = size;
 
 	m_UserMessages.Insert( name, entry );
 }
@@ -115,7 +115,8 @@ void CUserMessages::HookMessage( const char *name, pfnUserMsgHook hook )
 		return;
 	}
 
-	m_UserMessages[ idx ].clienthook = hook;
+	int i = m_UserMessages[ idx ]->clienthooks.AddToTail();
+	m_UserMessages[ idx ]->clienthooks[i] = hook;
 #else
 	Error( "CUserMessages::HookMessage called from server code!!!\n" );
 #endif
@@ -141,16 +142,20 @@ bool CUserMessages::DispatchUserMessage( const char *pszName, int iSize, void *p
 		return false;
 	}
 
-	UserMessage *entry = &m_UserMessages[ idx ];
+	CUserMessage *entry = m_UserMessages[ idx ];
 
-	if ( !entry->clienthook )
+	if ( entry->clienthooks.Count() == 0 )
 	{
 		DevMsg( "CUserMessages::DispatchUserMessage:  Missing client hook for %s\n", pszName );
 	//	Assert( 0 );
 		return false;
 	}
 
-	(*entry->clienthook)( pszName, iSize, pbuf );
+	for (int i = 0; i < entry->clienthooks.Count(); i++  )
+	{
+		pfnUserMsgHook hook = entry->clienthooks[i];
+		(*hook)( pszName, iSize, pbuf );
+	}
 	return true;
 #else
 	Error( "CUserMessages::DispatchUserMessage called from server code!!!\n" );

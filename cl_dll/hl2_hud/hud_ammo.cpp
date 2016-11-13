@@ -16,9 +16,8 @@
 
 #include <vgui_controls/AnimationController.h>
 
-#include "ConVar.h"
-
 #if defined( HL2_CLIENT_DLL )
+#include "ConVar.h"
 extern ConVar hud_enableoldhud;
 #endif
 
@@ -262,7 +261,7 @@ protected:
 #if defined( HL2_CLIENT_DLL )
 			|| hud_enableoldhud.GetBool()
 #endif
-		)
+			)
 		{
 			m_hCurrentActiveWeapon = NULL;
 			SetPaintEnabled(false);

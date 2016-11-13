@@ -16,6 +16,17 @@
 typedef void (*pfnUserMsgHook)(const char *pszName, int iSize, void *pbuf);
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+struct CUserMessage
+{
+	// byte size of message, or -1 for variable sized
+	int				size;	
+	// Client only dispatch function for message
+	CUtlVector<pfnUserMsgHook>	clienthooks;
+};
+
+//-----------------------------------------------------------------------------
 // Purpose: Interface for registering and dispatching usermessages
 // Shred code creates same ordered list on client/server
 //-----------------------------------------------------------------------------
@@ -39,18 +50,7 @@ public:
 
 private:
 
-	//-----------------------------------------------------------------------------
-	// Purpose: 
-	//-----------------------------------------------------------------------------
-	struct UserMessage
-	{
-		// byte size of message, or -1 for variable sized
-		int				size;	
-		// Client only dispatch function for message
-		pfnUserMsgHook	clienthook;
-	};
-
-	CUtlDict< UserMessage, int >	m_UserMessages;
+	CUtlDict< CUserMessage*, int >	m_UserMessages;
 };
 
 extern CUserMessages *usermessages;

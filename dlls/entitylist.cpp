@@ -234,12 +234,15 @@ void CGlobalEntityList::ReportEntityFlagsChanged( CBaseEntity *pEntity, unsigned
 
 bool CGlobalEntityList::IsEntityPtr( void *pTest )
 {
-	CBaseEntity *ent = NextEnt( NULL );
-
-	for ( ; ent != NULL; ent = NextEnt(ent) )
+	if ( pTest )
 	{
-		if ( ent == pTest )
-			return true;
+		CBaseEntity *ent = NextEnt( NULL );
+	
+		for ( ; ent != NULL; ent = NextEnt(ent) )
+		{
+			if ( ent == pTest )
+				return true;
+		}
 	}
 
 	return false; 

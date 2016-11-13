@@ -40,8 +40,10 @@ using namespace vgui;
 
 #include "hud_bitmapnumericdisplay.h"
 
+#if defined( HL2_CLIENT_DLL )
 #include "ConVar.h"
 extern ConVar hud_enableoldhud;
+#endif
 
 #define INIT_HEALTH -1
 
@@ -58,7 +60,7 @@ public:
 	virtual void VidInit( void );
 	virtual void Reset( void );
 	virtual void			OnThink();
-	void MsgFunc_HealthOld(const char *pszName, int iSize, void *pbuf);
+//	void MsgFunc_HealthOld(const char *pszName, int iSize, void *pbuf);
 	void MsgFunc_DamageOld(const char *pszName, int iSize, void *pbuf);
 
 private:
@@ -76,7 +78,7 @@ DECLARE_HUD_MESSAGE( CHudHealthOld, DamageOld );
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudHealthOld::CHudHealthOld( const char *pElementName ) : CHudElement( pElementName ), CHudBitmapNumericDisplay(NULL, "HudHealth2") // VXP: change "HudHealth" to something else to prevent crash at shutdown
+CHudHealthOld::CHudHealthOld( const char *pElementName ) : CHudElement( pElementName ), CHudBitmapNumericDisplay(NULL, "HudHealth2")
 {
 //	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
 }
@@ -118,6 +120,7 @@ void CHudHealthOld::VidInit()
 //-----------------------------------------------------------------------------
 void CHudHealthOld::OnThink()
 {
+#if defined( HL2_CLIENT_DLL )
 	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
@@ -129,6 +132,7 @@ void CHudHealthOld::OnThink()
 		SetPaintEnabled(true);
 		SetPaintBackgroundEnabled(true);
 	}
+#endif
 
 	int x = 0;
 	C_BasePlayer *local = C_BasePlayer::GetLocalPlayer();
