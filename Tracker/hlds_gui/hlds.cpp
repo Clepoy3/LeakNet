@@ -1,7 +1,7 @@
 #include <windows.h> 
 #include "hlds.h"
-#include <VGUI\ISystem.h>
-#include <vgui_controls\Controls.h>
+#include <VGUI/ISystem.h>
+#include <vgui_controls/Controls.h>
 #include "FileSystem.h"
 
 CHLDSServer server;
@@ -201,7 +201,7 @@ EXPOSE_SINGLE_INTERFACE( CDedicatedExports, IDedicatedExports, VENGINE_DEDICATED
 //-----------------------------------------------------------------------------
 DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 {
-/*	int		iret = DLL_NORMAL;
+//	int		iret = DLL_NORMAL;
 	IDedicatedServerAPI *engineAPI;
 
 	char cur[1024];
@@ -210,11 +210,12 @@ DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 	CSysModule *engineModule = NULL;
 	CreateInterfaceFn engineFactory = NULL;
 	
-	while(iret!=DLL_CLOSE )
+//	while(iret!=DLL_CLOSE )
+	while(true )
 	{
 	
 		//_chdir(UTIL_GetBaseDir());
-		vgui::filesystem()->Unmount();
+	//	vgui::filesystem()->Unmount();
 		
 		engineModule = Sys_LoadModule( g_pszengine );
 	
@@ -236,9 +237,10 @@ DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 		}
 		server.SetEngineAPI(engineAPI);
 	
-		engineAPI->Init( UTIL_GetBaseDir(),server.GetCmdline(), Sys_GetFactoryThis() );
+	//	engineAPI->Init( UTIL_GetBaseDir(),server.GetCmdline(), Sys_GetFactoryThis() );
+		engineAPI->Init( UTIL_GetBaseDir(), Sys_GetFactoryThis() );
 
-		vgui::filesystem()->Mount();
+	//	vgui::filesystem()->Mount();
 
 		if(strlen(server.GetCvars())>0)
 		{
@@ -261,7 +263,8 @@ DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 
 		server.SetEngineAPI(NULL);
 		server.SetInstance(NULL);
-		iret = engineAPI->Shutdown();
+	//	iret = engineAPI->Shutdown();
+		engineAPI->Shutdown();
 
 		Sys_UnloadModule( engineModule );
 
@@ -273,6 +276,5 @@ cleanup:
 
 	//return 0;
 	ExitThread(0);
-*/
-	return 0;
+
 }

@@ -11,6 +11,7 @@
 #include "AI_Squad.h"
 #include "grenade_homer.h"
 #include "grenade_pathfollower.h"
+//#include "weapon_rpg.h"
 #include "explode.h"
 #include "ndebugoverlay.h"
 #include "engine/IEngineSound.h"
@@ -290,6 +291,7 @@ void CNPC_Launcher::LaunchGrenade( CBaseEntity* pEnemy )
 		pGrenade->SetDamage(m_flDamage);
 		pGrenade->SetDamageRadius(m_flDamageRadius);
 		pGrenade->Launch(this,pEnemy,vLaunchVelocity,m_flHomingSpeed,GetGravity(),m_nSmokeTrail);
+	//	CMissile *pGrenade = CMissile::Create( GetAbsOrigin(), GetAbsAngles(), edict() );
 	}
 
 	CPASAttenuationFilter filter( this, 0.3 );

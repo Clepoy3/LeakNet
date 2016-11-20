@@ -22,43 +22,42 @@
 
 /*#include "..\common\winlite.h"
 // base vgui interfaces
-#include <vgui_controls\Controls.h>
-#include <VGUI\IInput.h>
-#include <VGUI\ISurface.h>
-#include <VGUI\IScheme.h>
-#include <VGUI\IVGui.h>
-#include <VGUI\MouseCode.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IInput.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/IVGui.h>
+#include <VGUI/MouseCode.h>
 #include "FileSystem.h"*/
 
 #include <VGUI\MouseCode.h>
 #include <VGUI\KeyCode.h>
+
 #include "interface.h"
-#include "..\common\winlite.h"
+#include "..\..\tracker\common\winlite.h"
 #include <vgui_controls\Controls.h>
 #include <vgui_controls\Panel.h>
-#include <VGUI\IInput.h>
 #include <VGUI\IScheme.h>
 #include <VGUI\ISurface.h>
 #include <VGUI\ILocalize.h>
 #include <VGUI\IVGui.h>
 #include "filesystem.h"
-//#include "CControlCatalog.h"
-#include <stdio.h>
 
 // vgui controls
-#include <vgui_controls\Button.h>
-#include <vgui_controls\CheckButton.h>
-#include <vgui_controls\ComboBox.h>
-#include <vgui_controls\FocusNavGroup.h>
-#include <vgui_controls\Frame.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/FocusNavGroup.h>
+#include <vgui_controls/Frame.h>
 #include <KeyValues.h>
-#include <vgui_controls\ListPanel.h>
-#include <vgui_controls\MessageBox.h>
-#include <vgui_controls\Panel.h>
-#include <vgui_controls\TextEntry.h>
-#include <vgui_controls\PropertySheet.h>
-#include <vgui_controls\PropertyPage.h>
-#include <vgui_controls\QueryBox.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/MessageBox.h>
+#include <vgui_controls/Panel.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/RichText.h> // VXP
+#include <vgui_controls/PropertySheet.h>
+#include <vgui_controls/PropertyPage.h>
+#include <vgui_controls/QueryBox.h>
 
 
 
@@ -78,20 +77,22 @@ CGameServer::CGameServer( vgui::Panel *parent, const char *name) : PropertyPage(
 
 	start=false;
 
-	m_ConsoleTextEntry = new TextEntry(this,"console");
+//	m_ConsoleTextEntry = new TextEntry(this,"console");
+	m_ConsoleTextEntry = new RichText(this,"console");
 	m_CommandTextEntry = new TextEntry(this,"commandentry");
 	m_SubmitButton = new Button(this,"submit","&Submit");
 	m_QuitButton = new Button(this,"quit","&Quit");
 
 	LoadControlSettings("Server/hlds.res");
 
-	m_ConsoleTextEntry->SetMultiline(true);
+//	m_ConsoleTextEntry->SetMultiline(true);
 	m_ConsoleTextEntry->SetEnabled(true);
 	m_ConsoleTextEntry->SetVerticalScrollbar(true);
-//	m_ConsoleTextEntry->SetRichEdit(true); // VXP: Maybe, remake this control as RichEdit
+//	m_ConsoleTextEntry->SetRichEdit(true);
+//	m_ConsoleTextEntry->setMaximumCharCount(8000);
 	m_ConsoleTextEntry->SetMaximumCharCount(8000);
-	m_ConsoleTextEntry->SetWrap(true);
-	m_ConsoleTextEntry->SetEditable(false);
+//	m_ConsoleTextEntry->SetWrap(true);
+//	m_ConsoleTextEntry->SetEditable(false);
 
 	m_CommandTextEntry->SetMultiline(false);
 	m_CommandTextEntry->SendNewLine(true);
@@ -153,10 +154,12 @@ void CGameServer::PerformLayout()
 void CGameServer::ConsoleText(const char *text)
 {
 	static int i=10;
-//	m_ConsoleTextEntry->InsertColorChange(Color(255-i,i,(i+125)%255)); // VXP
+//	m_ConsoleTextEntry->DoInsertColorChange(Color(255-i,i,(i+125)%255));
+	m_ConsoleTextEntry->InsertColorChange(Color(255-i,i,(i+125)%255));
 	i+=10;
 	if(i>255) i=0;
 
+//	m_ConsoleTextEntry->DoInsertString(text);
 	m_ConsoleTextEntry->InsertString(text);
 }
 

@@ -10,11 +10,10 @@
 
 using namespace vgui;
 
-#include <vgui_controls\Controls.h>
-#include <KeyValues.h>
-#include <vgui_controls\ListPanel.h>
-#include <vgui_controls\ComboBox.h>
-#include <vgui_controls\MessageBox.h>
+#include <vgui_controls/Controls.h>#include <KeyValues.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/MessageBox.h>
 
 #include "FileSystem.h"
 #include "vinternetdlg.h"
@@ -90,9 +89,10 @@ void CCreateMultiplayerGameServerPage::LoadMODList()
 		if( filesystem()->FindIsDirectory(findHandle)) 
 		{
 			char libname[1024];
-			_snprintf(libname,1024,"%s\\liblist.gam",filename);
+			_snprintf(libname,1024,"%s\\scripts\\liblist.gam",filename);
 			if(filesystem()->FileExists(libname))
 			{
+			//	m_pMODList->AddItem( filename);
 				m_pMODList->AddItem( filename, NULL);
 			}
 		}
@@ -151,6 +151,7 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 		}
 
 		// add to the map list
+	//	m_pMapList->AddItem(new KeyValues("data", "mapname", mapname));
 		m_pMapList->AddItem(new KeyValues("data", "mapname", mapname), NULL, false, false);
 
 		// get the next file
@@ -163,8 +164,8 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	if (m_pMapList->GetItemCount() > 0)
 	{
 	//	m_pMapList->SetSelectedRows(0, 0);
-		m_pMapList->ClearSelectedItems();
-		m_pMapList->AddSelectedItem(0);
+		m_pMapList->SetSelectedCell(0, 0);
+
 	}
 
 	vgui::filesystem()->RemoveSearchPath(basedir);

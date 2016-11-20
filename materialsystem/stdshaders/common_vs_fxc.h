@@ -480,13 +480,13 @@ float3 DoLighting( const float3 worldPos, const float3 worldNormal,
 	{
 		returnColor = float3( 0.0f, 0.0f, 0.0f );
 	}
-	else if( staticLightType == LIGHTTYPE_NONE && 
+/*	else if( staticLightType == LIGHTTYPE_NONE && 
 			 ambientLightType == LIGHTTYPE_AMBIENT &&
 			 localLightType0 == LIGHTTYPE_NONE &&
 			 localLightType1 == LIGHTTYPE_NONE )
 	{
 		returnColor = AmbientLight( worldNormal );
-	}
+	}*/
 	else if( staticLightType == LIGHTTYPE_STATIC && 
 			 ambientLightType == LIGHTTYPE_NONE &&
 			 localLightType0 == LIGHTTYPE_NONE &&

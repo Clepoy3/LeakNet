@@ -9,10 +9,10 @@
 #include "hlds_gui.h"
 
 
-#include <vgui_controls\Controls.h>
-#include <VGUI\ISystem.h>
-#include <VGUI\IPanel.h>
-#include <VGUI\IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IPanel.h>
+#include <VGUI/IVGui.h>
 #include <KeyValues.h>
 
 
@@ -52,7 +52,7 @@ bool CHLDS::Initialize(CreateInterfaceFn *factorylist, int factoryCount)
 {
 	// load the vgui interfaces
 //	return vgui::VGui_InitInterfacesList(factorylist, factoryCount);
-	return vgui::VGui_InitInterfacesList("HLDS_GUI", factorylist, factoryCount);
+	return vgui::VGui_InitInterfacesList("HLDS", factorylist, factoryCount);
 }
 
 //-----------------------------------------------------------------------------
@@ -84,25 +84,6 @@ bool CHLDS::Activate()
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: requests that the UI is temporarily disabled and all data files saved
-//-----------------------------------------------------------------------------
-void CHLDS::Deactivate()
-{
-//	CTrackerDialog::GetInstance()->ShutdownUI();
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: restart from a Deactivate()
-//-----------------------------------------------------------------------------
-void CHLDS::Reactivate()
-{
-//	if (GetDoc()->GetUserID() > 0)
-//	{
-//		CTrackerDialog::GetInstance()->StartTrackerWithUser(GetDoc()->GetUserID());
-//	}
-}
-
-//-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CHLDS::Open()
@@ -128,19 +109,8 @@ void CHLDS::Shutdown()
 	if (m_hInternetDlg.Get())
 	{
 	//	vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new vgui::KeyValues("Close"), NULL);
-		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new KeyValues("Close"), NULL);
+		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new ::KeyValues("Close"), NULL);
 		m_hInternetDlg->MarkForDeletion();
 	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: returns a handle to the main panel
-//-----------------------------------------------------------------------------
-void CHLDS::SetParent(vgui::VPANEL parent)
-{
-//	if (CTrackerDialog::GetInstance())
-//	{
-//		CTrackerDialog::GetInstance()->SetParent(parent);
-//	}
 }
 

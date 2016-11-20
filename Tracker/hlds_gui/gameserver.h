@@ -24,10 +24,10 @@
 
 #include "engine_hlds_api.h"
 
-#include <vgui_controls\Frame.h>
-#include <vgui_controls\ListPanel.h>
-#include <vgui_controls\PHandle.h>
-#include <vgui_controls\PropertyPage.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/PropertyPage.h>
 #include "UtlVector.h"
 
 
@@ -41,6 +41,7 @@ class Button;
 class ComboBox;
 class QueryBox;
 class TextEntry;
+class RichText; // VXP
 class CheckButton;
 class PropertySheet;
 }
@@ -90,7 +91,8 @@ private:
 
 
 	// GUI elements
-	vgui::TextEntry *m_ConsoleTextEntry;
+//	vgui::TextEntry *m_ConsoleTextEntry;
+	vgui::RichText *m_ConsoleTextEntry;
 	vgui::TextEntry *m_CommandTextEntry;
 	vgui::Button *m_SubmitButton;
 	vgui::Button *m_QuitButton;

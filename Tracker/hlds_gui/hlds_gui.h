@@ -14,14 +14,15 @@
 //#include "Server/IServer.h"
 #include "IVGuiModule.h"
 
-#include <vgui_controls\PHandle.h>
+#include <vgui_controls/PHandle.h>
 
 class VInternetDlg;
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles the UI and pinging of a half-life game server list
 //-----------------------------------------------------------------------------
-class CHLDS : /*public IServer, */public IVGuiModule
+//class CHLDS : public IServer, public IVGuiModule
+class CHLDS : public IVGuiModule
 {
 public:
 	CHLDS();
@@ -33,14 +34,16 @@ public:
 //	virtual vgui::VPanel *GetPanel();
 	virtual vgui::VPANEL GetPanel();
 	virtual bool Activate();
-	virtual void Deactivate();
-	virtual void Reactivate();
 	virtual bool IsValid();
 	virtual void Shutdown();
-	virtual void SetParent(vgui::VPANEL parent);
 
 	virtual void CreateDialog();
 	virtual void Open();
+
+	// VXP: Need to implement
+	virtual void Deactivate() {};
+	virtual void Reactivate() {};
+	virtual void SetParent(vgui::VPANEL parent) {};
 
 private:
 	vgui::DHANDLE<VInternetDlg> m_hInternetDlg;

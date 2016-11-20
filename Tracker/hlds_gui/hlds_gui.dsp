@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 wsock32.lib ..\..\vgui2\bin\vgui_controls.lib /nologo /dll /machine:I386 /nodefaultlib:"LIBCMTD" /nodefaultlib:"LIBC" /nodefaultlib:"LIBCD"
+# ADD LINK32 wsock32.lib ..\..\lib\public\vgui_controls.lib /nologo /dll /machine:I386 /nodefaultlib:"LIBCMTD" /nodefaultlib:"LIBC" /nodefaultlib:"LIBCD"
 # Begin Custom Build
 TargetPath=.\Release\hlds_gui.dll
 InputPath=.\Release\hlds_gui.dll
@@ -173,50 +173,6 @@ SOURCE=..\..\lib\public\vgui_controls.lib
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\lib\public\appframework.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\expdlln.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\game_controls.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\nvtristrip.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\shaderlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\tier0.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\trktooln.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\unitlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vgui_surfacelib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vstdlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vtf.lib
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\lib\common\havana_constraints.lib
 # End Source File
 # Begin Source File
@@ -258,6 +214,50 @@ SOURCE=..\..\lib\common\Steam.lib
 # Begin Source File
 
 SOURCE=..\..\lib\common\vtuneapi.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\appframework.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\expdlln.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\game_controls.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\nvtristrip.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\shaderlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\tier0.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\trktooln.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\unitlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vgui_surfacelib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vstdlib.lib
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\lib\public\vtf.lib
 # End Source File
 # Begin Source File
 
