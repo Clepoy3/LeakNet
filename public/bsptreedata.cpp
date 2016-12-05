@@ -308,7 +308,7 @@ int CBSPTreeData::CountElementsInLeaf( int leaf )
 //-----------------------------------------------------------------------------
 // Enumerate elements in a particular leaf
 //-----------------------------------------------------------------------------
-bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pEnum, int context )
+/*bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pEnum, int context )
 {
 	// VXP: Fix by Cath
 	if( leaf > m_Leaf.Size() )
@@ -348,6 +348,29 @@ bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pE
 		Warning( "CBSPTreeData::EnumerateElementsInLeaf: CountElementsInLeaf(leaf) != nCount (%i, %i)\n", CountElementsInLeaf(leaf), nCount );
 	}
 #endif // _DEBUG
+
+	return true;
+}*/
+bool CBSPTreeData::EnumerateElementsInLeaf( int leaf, IBSPTreeDataEnumerator* pEnum, int context )
+{
+#ifdef _DEBUG
+	// The enumeration method better damn well not change this list...
+	int nCount = CountElementsInLeaf(leaf);
+#endif
+
+	unsigned short idx = m_Leaf[leaf].m_FirstElement;
+	while (idx != m_LeafElements.InvalidIndex())
+	{
+		BSPTreeDataHandle_t handle = m_LeafElements[idx];
+		if (!pEnum->EnumerateElement( m_Handles[handle].m_UserId, context ))
+		{
+			Assert( CountElementsInLeaf(leaf) == nCount );
+			return false;
+		}
+		idx = m_LeafElements.Next(idx);
+	}
+
+	Assert( CountElementsInLeaf(leaf) == nCount );
 
 	return true;
 }

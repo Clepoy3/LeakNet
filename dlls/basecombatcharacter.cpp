@@ -1576,7 +1576,9 @@ Relationship_t *CBaseCombatCharacter::FindEntityRelationship( CBaseEntity *pTarg
 
 Disposition_t CBaseCombatCharacter::IRelationType ( CBaseEntity *pTarget )
 {
-	return FindEntityRelationship( pTarget )->disposition;
+	if ( pTarget )
+		return FindEntityRelationship( pTarget )->disposition;
+	return D_NU;
 }
 
 //-----------------------------------------------------------------------------
@@ -1586,7 +1588,9 @@ Disposition_t CBaseCombatCharacter::IRelationType ( CBaseEntity *pTarget )
 //-----------------------------------------------------------------------------
 int CBaseCombatCharacter::IRelationPriority( CBaseEntity *pTarget )
 {
-	return FindEntityRelationship( pTarget )->priority;
+	if ( pTarget )
+		return FindEntityRelationship( pTarget )->priority;
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1597,6 +1601,7 @@ int CBaseCombatCharacter::IRelationPriority( CBaseEntity *pTarget )
 Vector CBaseCombatCharacter::Weapon_ShootPosition( )
 {
 	// VXP: Need to remake this function with finding an "muzzle" attachment
+	// VXP: UPD: Or not.
 	Vector forward, right, up;
 
 	AngleVectors( GetAbsAngles(), &forward, &right, &up );

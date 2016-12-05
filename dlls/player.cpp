@@ -5550,7 +5550,7 @@ QAngle CBasePlayer::AutoaimDeflection( Vector &vecSrc, float flDist, float flDel
 
 	CBaseEntity *pEntHit = tr.m_pEnt;
 
-	if ( pEntHit && pEntHit->m_takedamage != DAMAGE_NO)
+	if ( pEntHit && pEntHit->m_takedamage != DAMAGE_NO && pEntHit->GetHealth() > 0 )
 	{
 		m_hAutoAimTarget = pEntHit;
 
@@ -5584,7 +5584,7 @@ QAngle CBasePlayer::AutoaimDeflection( Vector &vecSrc, float flDist, float flDel
 			if ( pEntity == this )
 				continue;
 
-			if (!pEntity->IsAlive() || !pEntity->edict() )
+			if ( (pEntity->MyNPCPointer() && !pEntity->IsAlive()) || !pEntity->edict() )
 				continue;
 
 			if ( !g_pGameRules->ShouldAutoAim( this, pEntity->edict() ) )
@@ -5594,15 +5594,20 @@ QAngle CBasePlayer::AutoaimDeflection( Vector &vecSrc, float flDist, float flDel
 			if ((GetWaterLevel() != 3 && pEntity->GetWaterLevel() == 3) || (GetWaterLevel() == 3 && pEntity->GetWaterLevel() == 0))
 				continue;
 
-			// Only shoot enemies!
-			if ( IRelationType( pEntity ) != D_HT )
+			if( pEntity->MyNPCPointer() )
 			{
-				if ( !pEntity->IsPlayer() && !g_pGameRules->IsDeathmatch())
-					// Msg( "friend\n");
-					continue;
+				// Only shoot enemies!
+				if ( IRelationType( pEntity ) != D_HT )
+				{
+					if ( !pEntity->IsPlayer() && !g_pGameRules->IsDeathmatch())
+						// Msg( "friend\n");
+						continue;
+				}
 			}
 
-			center = pEntity->BodyTarget( vecSrc );
+			// Don't autoaim at the noisy bodytarget, this makes the autoaim crosshair wobble.
+		//	center = pEntity->BodyTarget( vecSrc );
+			center = pEntity->WorldSpaceCenter();
 
 			dir = (center - vecSrc);
 			VectorNormalize( dir );
