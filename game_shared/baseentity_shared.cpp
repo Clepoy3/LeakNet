@@ -657,6 +657,11 @@ void CBaseEntity::VPhysicsUpdate( IPhysicsObject *pPhysics )
 	{
 	case MOVETYPE_VPHYSICS:
 		{
+			if ( GetMoveParent() ) // VXP
+			{
+				DevWarning("Updating physics on object in hierarchy %s!\n", GetClassname());
+				return;
+			}
 			Vector origin;
 			QAngle angles;
 
@@ -665,11 +670,20 @@ void CBaseEntity::VPhysicsUpdate( IPhysicsObject *pPhysics )
 		//	if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.x ) )
 			if ( !IsFinite( angles.x ) || !IsFinite( angles.y ) || !IsFinite( angles.z ) )
 			{
-				Msg( "Infinite values from vphysics!\n" ); // VXP: Happened on e3_techdemo_5 after headcrab
+				Msg( "Infinite angles from vphysics!\n" ); // VXP: Happened on e3_techdemo_5 after headcrab
 				// VXP: Maybe, after writing a valid check, this will not happen?
+				angles = vec3_angle; // VXP: From Source 2007
 			}
 
-			SetAbsOrigin( origin );
+			// VXP: Added extra check for this
+			if ( origin.IsValid() )
+			{
+				SetAbsOrigin( origin );
+			}
+			else
+			{
+				Msg( "Infinite origin from vphysics!\n" );
+			}
 			SetAbsAngles( angles );
 
 #ifndef CLIENT_DLL 
