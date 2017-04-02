@@ -31,7 +31,7 @@ void Host_Init( void );
 void Host_Shutdown(void);
 int  Host_Frame (float time, int iState );
 void Host_ShutdownServer(void);
-bool Host_NewGame( char *mapName, bool loadGame );
+bool Host_NewGame( char *mapName, bool loadGame, bool bBackgroundLevel );
 void Host_Changelevel( bool loadfromsavedgame, const char *mapname, const char *start );
 
 extern int  gHostSpawnCount;

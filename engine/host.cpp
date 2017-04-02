@@ -2133,7 +2133,7 @@ SERVER TRANSITIONS
 
 static ConVar map_bgtest( "map_bgtest", "0", 0, "Set to 1 to load up background maps only." );
 
-bool Host_NewGame( char *mapName, bool loadGame )
+bool Host_NewGame( char *mapName, bool loadGame, bool bBackgroundLevel )
 {
 	extern char	*CM_EntityString( void );
 	extern ConVar host_map;
@@ -2157,6 +2157,8 @@ bool Host_NewGame( char *mapName, bool loadGame )
 
 	if ( !SV_SpawnServer ( mapName, NULL ) )
 		return false;
+
+	sv.m_bIsLevelMainMenuBackground = bBackgroundLevel; // VXP
 
 	// make sure the time is set
 	g_ServerGlobalVariables.curtime = sv.gettime();

@@ -110,7 +110,8 @@ void CNPC_Citizen::Precache( void )
 		SetModelName( MAKE_STRING( "models/Humans/male_01.mdl" ) );
 	}
 
-//	engine->PrecacheModel( STRING( GetModelName() ) );
+	engine->PrecacheModel( STRING( GetModelName() ) );
+	/*
 	engine->PrecacheModel( "models/humans/male_01.mdl" );
 	engine->PrecacheModel( "models/humans/male_02.mdl" );
 	engine->PrecacheModel( "models/humans/male_03.mdl" );
@@ -118,6 +119,7 @@ void CNPC_Citizen::Precache( void )
 	engine->PrecacheModel( "models/humans/male_08.mdl" );
 	engine->PrecacheModel( "models/humans/male_09.mdl" );
 	engine->PrecacheModel( "models/humans/male_cheaple.mdl" );
+	*/
 
 	BaseClass::Precache();
 }

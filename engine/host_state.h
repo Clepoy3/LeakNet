@@ -14,7 +14,7 @@
 void	HostState_Init();
 void	HostState_RunGameInit();
 int		HostState_Frame( float time, int iState );
-void	HostState_NewGame( char const *pMapName );
+void	HostState_NewGame( char const *pMapName, bool background );
 void	HostState_LoadGame( char const *pSaveFileName );
 void	HostState_ChangeLevelSP( char const *pNewLevel, char const *pLandmarkName );
 void	HostState_ChangeLevelMP( char const *pNewLevel, char const *pLandmarkName );

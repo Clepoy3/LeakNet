@@ -173,6 +173,9 @@ public:
 
 	CUtlVector< CLogoRequest >		pending_logos;
 
+	// VXP
+	bool		m_bIsLevelMainMenuBackground;	// true if the level running only as the background to the main menu
+
 	// New style precache lists are done this way
 	void		CreateEngineStringTables( void );
 
@@ -200,6 +203,9 @@ public:
 	int			LookupDecalIndex( char const *name );
 
 	void		DumpPrecacheStats( TABLEID table );
+
+	// VXP
+	bool	IsLevelMainMenuBackground( void )	{ return m_bIsLevelMainMenuBackground; }
 
 private:
 	CPrecacheItem	model_precache[ MAX_MODELS ];

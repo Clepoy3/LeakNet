@@ -59,6 +59,9 @@ public:
 	char	m_landmarkName[256];
 	bool	m_activeGame;
 	char	m_saveName[256];
+
+	// VXP
+	bool	m_bBackgroundLevel;
 };
 
 static bool Host_ValidGame( void );
@@ -84,10 +87,11 @@ void HostState_RunGameInit()
 }
 
 // start a new game as soon as possible
-void HostState_NewGame( char const *pMapName )
+void HostState_NewGame( char const *pMapName, bool background )
 {
 	strcpy( g_HostState.m_levelName, pMapName );
 	g_HostState.m_landmarkName[0] = 0;
+	g_HostState.m_bBackgroundLevel = background; // VXP
 	g_HostState.SetNextState( HS_NEW_GAME );
 }
 
@@ -95,6 +99,7 @@ void HostState_NewGame( char const *pMapName )
 void HostState_LoadGame( char const *pSaveFileName )
 {
 	strcpy( g_HostState.m_saveName, pSaveFileName );
+	g_HostState.m_bBackgroundLevel = false; // VXP
 	g_HostState.SetNextState( HS_LOAD_GAME );
 }
 
@@ -164,6 +169,7 @@ void CHostState::Init()
 	m_levelName[0] = 0;
 	m_saveName[0] = 0;
 	m_landmarkName[0] = 0;
+	m_bBackgroundLevel = false; // VXP
 }
 
 void CHostState::SetState( HOSTSTATES newState, bool clearNext )
@@ -216,7 +222,8 @@ void CHostState::State_NewGame()
 		{
 			if ( modelloader->Map_IsValid( m_levelName ) )
 			{
-				if ( Host_NewGame( m_levelName, false ) )
+			//	if ( Host_NewGame( m_levelName, false ) )
+				if ( Host_NewGame( m_levelName, false, m_bBackgroundLevel ) ) // VXP
 				{
 					// succesfully started the new game
 					SetState( HS_RUN, true );

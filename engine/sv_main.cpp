@@ -220,6 +220,8 @@ void CServerState::Clear( void )
 	active = false;
 	paused = false;
 	loadgame = false;
+
+	m_bIsLevelMainMenuBackground = false; // VXP
 	
 	tickcount = 0;
 	
@@ -808,8 +810,17 @@ bool SV_BuildSoundMsg( edict_t *pEntity, int iChannel, const char *pSample, int 
 		sound_num = sv.LookupSoundIndex( pSample );
 		if ( !sound_num || !sv.GetSound( sound_num ) )
 		{
-			Con_Printf ("SV_StartSound: %s not precached (%d)\n", pSample, sound_num);
-			return false;
+		//	Con_Printf ("SV_StartSound: %s not precached (%d)\n", pSample, sound_num);
+		//	return false;
+
+			// VXP: Trying to precache
+			sv.PrecacheSound( pSample, 0 );
+			sound_num = sv.LookupSoundIndex( pSample );
+			if ( !sound_num || !sv.GetSound( sound_num ) )
+			{
+				Con_Printf ("SV_StartSound: %s not precached (%d)\n", pSample, sound_num);
+				return false;
+			}
 		}
     }
 

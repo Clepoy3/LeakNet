@@ -779,7 +779,7 @@ int CGameUI::ActivateGameUI()
 	g_pTaskbar->SetVisible(true);
 
 	// pause the game
-	if( !engine->IsBackGroundMap() )
+	if( !engine->IsLevelMainMenuBackground() )
 		engine->ClientCmd("setpause");
 	else
 		engine->ClientCmd("unpause");
@@ -821,7 +821,9 @@ void CGameUI::HideGameUI()
 //	TRACE_FUNCTION("CGameUI::HideGameUI");
 	// we can't hide the UI if we're not in a level
 	const char *levelName = engine->GetLevelName();
-	if (levelName && levelName[0])
+	bool bInNonBgLevel = levelName && levelName[0] && !engine->IsLevelMainMenuBackground();
+//	if (levelName && levelName[0])
+	if (bInNonBgLevel)
 	{
 		//show both the background panel and the taskbar 
 		staticPanel->SetVisible(false);
@@ -1149,5 +1151,31 @@ void CGameUI::GetSteamPassword( const char *szAccountName, const char *szUserNam
 	pSteamPasswordDialog->RequestFocus();
 
 	pSteamPasswordDialog->SetVisible(true);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: returns true if we're currently playing the game
+//-----------------------------------------------------------------------------
+bool CGameUI::IsInLevel()
+{
+	const char *levelName = engine->GetLevelName();
+	if (levelName && levelName[0] && !engine->IsLevelMainMenuBackground())
+	{
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: returns true if we're at the main menu and a background level is loaded
+//-----------------------------------------------------------------------------
+bool CGameUI::IsInBackgroundLevel()
+{
+	const char *levelName = engine->GetLevelName();
+	if (levelName && levelName[0] && engine->IsLevelMainMenuBackground())
+	{
+		return true;
+	}
+	return false;
 }
 

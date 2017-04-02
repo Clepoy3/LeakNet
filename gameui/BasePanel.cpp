@@ -22,6 +22,7 @@
 #include <vgui/IVGui.h>
 
 #include "GameConsole.h"
+#include "GameUI_Interface.h" // VXP
 
 #include "Sys_Utils.h"
 
@@ -61,10 +62,9 @@ void CBasePanel::OnChildAdded(VPANEL child)
 void CBasePanel::PaintBackground()
 {
 	const char *levelName = engine->GetLevelName();
-//	if (levelName && levelName[0])
-	if(engine->IsInGame())
+	if (levelName && levelName[0])
 	{
-		if( engine->IsBackGroundMap() && !GameConsole().IsConsoleVisible() )
+		if( engine->IsLevelMainMenuBackground() && !GameConsole().IsConsoleVisible() )
 			return;
 
 		// render filled background in game

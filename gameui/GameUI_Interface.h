@@ -64,6 +64,10 @@ public:
 	// prompts user for new key if the current key is invalid, force = true means force it to prompt
 	virtual void ValidateCDKey(bool force = false, bool inConnect = false);
 
+	// VXP
+	bool IsInLevel();
+	bool IsInBackgroundLevel();
+
 private:
 	bool FindPlatformDirectory(char *platformDir, int bufferSize);
 	void GetUpdateVersion( char *pszProd, char *pszVer);

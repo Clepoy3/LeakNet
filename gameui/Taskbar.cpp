@@ -409,34 +409,39 @@ void CTaskbar::UpdateGameMenus()
 		m_pPlatformMenu->SetVisible(true);
 	}
 
+	/*
 	// check our current state
 	bool isInGame = false, isMulti = false;
-	if( engine->IsBackGroundMap() )
-	{
-		m_pGameMenu->UpdateMenuItemState( false, false );
-	}
-	else
-	{
+//	if( engine->IsBackGroundMap() )
+//	{
+//		m_pGameMenu->UpdateMenuItemState( false, false );
+//	}
+//	else
+//	{
 		const char *lvl = engine->GetLevelName();
 		if (lvl && *lvl)
 		{
-		//	if( !engine->IsBackGroundMap( ) )
-		//	{
+			if( !engine->IsLevelMainMenuBackground() )
+			{
 				isInGame = true;
 				if (engine->GetMaxClients() > 1)
 				{
 					isMulti = true;
 				}
-		//	}
-		//	else
-		//	{
-		//		isInGame = false;
-		//	}
+			}
 		}
 
 		// iterate all the menu items
 		m_pGameMenu->UpdateMenuItemState(isInGame, isMulti);
-	}
+//	}
+	*/
+
+	// check our current state
+	bool isInGame = GameUI().IsInLevel();
+	bool isMulti = isInGame && (engine->GetMaxClients() > 1);
+
+	// iterate all the menu items
+	m_pGameMenu->UpdateMenuItemState( isInGame, isMulti );
 
 	// position the menu
 	m_pGameMenu->SetPos(m_iGameMenuInset, tall - m_pGameMenu->GetTall() - BLACK_BAR_SIZE);

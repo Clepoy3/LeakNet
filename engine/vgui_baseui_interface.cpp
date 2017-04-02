@@ -106,7 +106,6 @@ int VGui_ActivateGameUI();
 void ClearIOStates( void );
 
 extern IMatSystemSurface *g_pMatSystemSurface;
-extern bool	m_bBackGroundMap;
 
 //-----------------------------------------------------------------------------
 // Purpose: singleton accessor
@@ -461,14 +460,16 @@ void CBaseUI::CallEngineSurfaceProc(void *hwnd, unsigned int msg, unsigned int w
 //-----------------------------------------------------------------------------
 void CBaseUI::HideGameUI()
 {
-	if( m_bBackGroundMap )
-		return;
+//	if( m_bBackGroundMap )
+//		return;
 
 	staticGameUIFuncs->HideGameUI();
 //	staticGameConsole->Hide();
 	const char *levelName = engineClient->GetLevelName();
+	bool bInNonBgLevel = levelName && levelName[0] && !engineClient->IsLevelMainMenuBackground();
 
-	if (levelName && levelName[0])
+//	if (levelName && levelName[0])
+	if( bInNonBgLevel )
 	{
 		staticGameUIPanel->SetVisible(false);
 		staticGameUIPanel->SetPaintBackgroundEnabled(false);
@@ -476,6 +477,19 @@ void CBaseUI::HideGameUI()
 	
 		staticClientDLLPanel->SetVisible(true);
 		staticClientDLLPanel->SetMouseInputEnabled(true);
+	}
+	else
+	{
+		// Tracker 18820:  Pulling up options/console was perma-pausing the background levels, now we
+		//  unpause them when you hit the Esc key even though the UI remains...
+		if ( levelName && 
+			 levelName[0] && 
+			 ( engineClient->GetMaxClients() <= 1 ) && 
+			// engineClient->IsPaused() )
+			 cl.paused )
+		{
+			Cbuf_AddText("unpause\n");
+		}
 	}
 }
 

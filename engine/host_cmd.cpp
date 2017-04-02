@@ -48,8 +48,6 @@ void VideoMode_ChangeFullscreenMode( bool fullscreen );
 extern qboolean	g_bInEditMode;
 #endif
 
-extern bool	m_bBackGroundMap;
-
 extern qboolean allow_cheats;
 extern ConVar	pausable;
 
@@ -326,7 +324,7 @@ void Host_Ping_f (void)
 // Input  : editmode - 
 //-----------------------------------------------------------------------------
 extern void GetPlatformMapPath( const char *pMapPath, char *pPlatformMapPath, int maxLength );
-void Host_Map_Helper( bool editmode )
+void Host_Map_Helper( bool editmode, bool background )
 {
 	int		i;
 	char	name[MAX_QPATH];
@@ -379,7 +377,8 @@ void Host_Map_Helper( bool editmode )
 	Host_Disconnect();	// stop old game
 
 	// JAY: UNDONE: Remove this?
-	HostState_NewGame( name );
+//	HostState_NewGame( name );
+	HostState_NewGame( name, background );
 
 	// If any test scripts are running, make them wait until the map is loaded.
 	GetTestScriptMgr()->SetWaitCheckPoint( "FinishedMapLoad" );
@@ -396,8 +395,7 @@ command from the console.  Active clients are kicked off.
 */
 void Host_Map_f (void)
 {
-	m_bBackGroundMap = false;
-	Host_Map_Helper( false );
+	Host_Map_Helper( false, false );
 }
 
 /*
@@ -411,8 +409,7 @@ command from the console.  Active clients are kicked off.
 */
 void Host_BackgroundMap_f (void)
 {
-	m_bBackGroundMap = true;
-	Host_Map_Helper( false );
+	Host_Map_Helper( false, true );
 }
 
 /* 
@@ -427,7 +424,7 @@ command from the console.  Active clients are kicked off.
 */
 void Host_Map_Edit_f (void)
 {
-	Host_Map_Helper( true );
+	Host_Map_Helper( true, false );
 }
 
 
@@ -446,7 +443,8 @@ void Host_Restart_f (void)
 	if (cmd_source != src_command)
 		return;
 
-	HostState_NewGame( sv.name );
+//	HostState_NewGame( sv.name );
+	HostState_NewGame( sv.name, false );
 }
 
 /*
@@ -482,7 +480,8 @@ void Host_Reload_f (void)
 #endif
 	{
 	//	HostState_NewGame( host_map.GetString() );
-		HostState_NewGame( sv.name ); // VXP: Fix for disconnecting after death and there's no saves at all (host_map cvar contains file name with extension)
+	//	HostState_NewGame( sv.name ); // VXP: Fix for disconnecting after death and there's no saves at all (host_map cvar contains file name with extension)
+		HostState_NewGame( sv.name, false );
 	}
 }
 

@@ -683,7 +683,7 @@ bool CSaveRestore::LoadGame( const char *pName )
 	deathmatch.SetValue( 0 );
 	coop.SetValue( 0 );
 
-	return Host_NewGame( gameHeader.mapName, true );
+	return Host_NewGame( gameHeader.mapName, true, false );
 }
 
 //-----------------------------------------------------------------------------

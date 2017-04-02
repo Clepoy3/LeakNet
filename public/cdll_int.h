@@ -318,7 +318,7 @@ public:
 	// GR - returns the HDR support status
 	virtual bool        SupportsHDR() = 0;
 	
-	virtual bool		IsBackGroundMap ( void ) = 0;
+	virtual bool		IsLevelMainMenuBackground( void ) = 0;
 };
 
 
