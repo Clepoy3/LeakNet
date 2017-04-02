@@ -507,11 +507,12 @@ void CGrenadeHomer::AimThink( void )
 		{
 			Vector  vTravelDir	= GetAbsVelocity();
 			VectorNormalize(vTravelDir);
-		//	vTravelDir *= 50;
-			vTravelDir *= 1; // VXP: Fix for crazy rockets
+			vTravelDir *= 50;
+		//	vTravelDir *= 1; // VXP: Fix for crazy rockets
 
 			trace_t tr;
-			UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + vTravelDir, MASK_SHOT, m_hTarget, COLLISION_GROUP_NONE, &tr );
+		//	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + vTravelDir, MASK_SHOT, m_hTarget, COLLISION_GROUP_NONE, &tr );
+			UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + vTravelDir, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
 			if (tr.fraction != 1.0)
 			{
 				// Head off in normal 
