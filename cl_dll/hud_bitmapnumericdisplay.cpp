@@ -102,10 +102,27 @@ void CHudBitmapNumericDisplay::Paint()
 	if ( !PrepareTextures() || !PrepareSmallTextures() )
 		return;
 
+	SetFgColor( m_Color );
+
+	// VXP: Adding extra alpha, if override is present
+	/*
 	float alpha = m_flAlphaOverride / 255;
-	Color fgColor = GetFgColor();
+//	Color fgColor = GetFgColor();
+	Color fgColor = m_Color;
 	fgColor[3] *= alpha;
+
+	// VXP: Test values
+//	fgColor[0] = 0.0f;
+//	fgColor[1] = 255.0f;
+//	fgColor[2] = 0.0f;
+
+//	fgColor[0] = 177.0f;
+//	fgColor[1] = 150.0f;
+//	fgColor[2] = 70.0f;
+//	fgColor[3] = 255.0f;
+
 	SetFgColor( fgColor );
+	*/
 
 	if (m_bDisplayValue)
 	{
@@ -187,8 +204,8 @@ void CHudBitmapNumericDisplay::Paint()
 		//fgColor[3] *= alpha;
 	//	surface()->DrawSetTextColor(fgColor);
 	//	PaintDummies(digit2_xpos, digit2_ypos, fgColor, true);
-		PaintDummies(digit2_xpos, digit2_ypos, fgColor, true);
-		PaintNumbers(digit2_xpos, digit2_ypos, m_iSecondaryValue, fgColor, true);
+		PaintDummies(digit2_xpos, digit2_ypos, GetFgColor(), true);
+		PaintNumbers(digit2_xpos, digit2_ypos, m_iSecondaryValue, GetFgColor(), true);
 	}
 }
 

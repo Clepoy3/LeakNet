@@ -8,7 +8,7 @@
 #include "cbase.h"
 #include "hud.h"
 #include "parsemsg.h"
-#include "hud_suitpower.h"
+#include "hud_suitpower_old.h"
 #include "hud_macros.h"
 #include "c_basehlplayer.h"
 #include "iclientmode.h"
@@ -25,14 +25,14 @@ using namespace vgui;
 extern ConVar hud_enableoldhud;
 #endif
 
-DECLARE_HUDELEMENT( CHudSuitPower );
+DECLARE_HUDELEMENT( CHudSuitPowerOld );
 
 #define SUITPOWER_INIT -1
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudSuitPower::CHudSuitPower( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudSuitPower" )
+CHudSuitPowerOld::CHudSuitPowerOld( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudSuitPower2" )
 {
 	vgui::Panel *pParent = g_pClientMode->GetViewport();
 	SetParent( pParent );
@@ -41,7 +41,7 @@ CHudSuitPower::CHudSuitPower( const char *pElementName ) : CHudElement( pElement
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudSuitPower::Init( void )
+void CHudSuitPowerOld::Init( void )
 {
 	m_flSuitPower = SUITPOWER_INIT;
 	m_bSuitPowerLow = false;
@@ -50,7 +50,7 @@ void CHudSuitPower::Init( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudSuitPower::Reset( void )
+void CHudSuitPowerOld::Reset( void )
 {
 	Init();
 }
@@ -58,10 +58,10 @@ void CHudSuitPower::Reset( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudSuitPower::OnThink( void )
+void CHudSuitPowerOld::OnThink( void )
 {
 #if defined( HL2_CLIENT_DLL )
-	if ( hud_enableoldhud.GetBool() )
+	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
 		SetPaintBackgroundEnabled( false );
@@ -100,10 +100,24 @@ void CHudSuitPower::OnThink( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHudSuitPowerOld::PaintBackground( void )
+{
+	int alpha = m_flAlphaOverride / 255;
+	Color bgColor = GetBgColor();
+	bgColor[3] *= alpha;
+	SetBgColor( bgColor );
+
+	BaseClass::PaintBackground();
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: draws the power bar
 //-----------------------------------------------------------------------------
-void CHudSuitPower::Paint()
+void CHudSuitPowerOld::Paint()
 {
+	/*
 	// get bar chunks
 	int chunkCount = m_flBarWidth / (m_flBarChunkWidth + m_flBarChunkGap);
 	int enabledChunks = (int)((float)chunkCount * (m_flSuitPower / 100.0f) + 0.5f );
@@ -152,6 +166,15 @@ void CHudSuitPower::Paint()
 	{
 		surface()->DrawUnicodeChar(*wch);
 	}
+	*/
+
+//	SetFgColor( m_Color );
+
+	int xpos = m_flBarInsetX, ypos = m_flBarInsetY;
+//	PaintProgressBar(xpos, ypos, m_flSuitPower, 100, Color( m_AuxPowerColor[0], m_AuxPowerColor[1], m_AuxPowerColor[2], m_iAuxPowerDisabledAlpha ) );
+	float percentage = (float) m_flSuitPower / 100.0f;
+//	Color color = Color( m_AuxPowerColor[0], m_AuxPowerColor[1], m_AuxPowerColor[2], m_iAuxPowerDisabledAlpha );
+	gHUD.DrawProgressBar( xpos, ypos, m_flBarWidth, m_flBarHeight, percentage, m_AuxPowerColor, CHud::HUDPB_HORIZONTAL_INV );
 }
 
 

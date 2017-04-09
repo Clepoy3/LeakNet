@@ -57,6 +57,8 @@ protected:
 	CPanelAnimationVar( Color, m_TextColor, "TextColor", "FgColor" );
 	CPanelAnimationVar( float, m_flBlur, "Blur", "0" );
 
+	CPanelAnimationVar( Color, m_Color, "Color", "FgColor" );
+
 	CPanelAnimationVarAliasType( float, text_xpos, "text_xpos", "8", "proportional_float" );
 	CPanelAnimationVarAliasType( float, text_ypos, "text_ypos", "20", "proportional_float" );
 	CPanelAnimationVarAliasType( float, text_height, "text_height", "14", "proportional_float" );

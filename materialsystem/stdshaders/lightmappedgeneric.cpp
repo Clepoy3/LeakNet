@@ -312,12 +312,12 @@ BEGIN_VS_SHADER( LightmappedGeneric,
 			if( hasDetailTexture )
 			{
 				SetVertexShaderTextureScaledTransform( 92, BASETEXTURETRANSFORM, DETAILSCALE );
-				Assert( !hasBump );
+				Assert( !hasBump ); // VXP: Detail with bump error
 			}
 			if( hasBump )
 			{
 				SetVertexShaderTextureTransform( 92, BUMPTRANSFORM );
-				Assert( !hasDetailTexture );
+				Assert( !hasDetailTexture ); // VXP: Detail with bump error
 			}
 			if( hasEnvmapMask )
 			{
