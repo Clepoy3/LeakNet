@@ -16,6 +16,7 @@
 #include "AI_Motor.h"
 #include "ai_squad.h"
 #include "npc_citizen17.h"
+#include "ammodef.h" // VXP
 #include "soundent.h"
 #include "game.h"
 #include "NPCEvent.h"
@@ -27,6 +28,8 @@
 #include "vstdlib/random.h"
 #include "engine/IEngineSound.h"
 #include "BasePropDoor.h"
+
+
 
 #define		CIT_INSPECTED_DELAY_TIME 120  //How often I'm allowed to be inspected
 
@@ -86,6 +89,11 @@ BEGIN_DATADESC( CNPC_Citizen )
 	DEFINE_FIELD( CNPC_Citizen, m_flPlayerHealTime, FIELD_TIME ),
 	DEFINE_FIELD( CNPC_Citizen, m_flAllyHealTime, FIELD_TIME ),
 	DEFINE_FIELD( CNPC_Citizen, m_hCurLookTarget, FIELD_EHANDLE ),
+
+	DEFINE_FIELD( CNPC_Citizen, m_flPlayerGiveAmmoTime, FIELD_TIME ),
+	DEFINE_KEYFIELD( CNPC_Citizen, m_iszAmmoSupply, FIELD_STRING, "ammosupply" ),
+	DEFINE_KEYFIELD( CNPC_Citizen, m_iAmmoAmount, FIELD_INTEGER, "ammoamount" ),
+
 //	DEFINE_FIELD( CNPC_Citizen, m_nextHead, FIELD_INTEGER ),
 //	DEFINE_FIELD( CNPC_Citizen, m_AssaultBehavior, FIELD_EMBEDDED ),
 //	DEFINE_FIELD( CNPC_Citizen, m_FollowBehavior, FIELD_EMBEDDED ),
@@ -236,9 +244,15 @@ void CNPC_Citizen::Spawn( void )
 
 	SetModel( STRING( GetModelName() ) );
 
-	if( m_spawnflags & SF_CITIZEN_MEDIC )
+//	if( m_spawnflags & SF_CITIZEN_MEDIC )
+	if ( IsMedic() )
 	{
 		m_nSkin = 1;
+	}
+
+	if ( IsAmmoResupplier() ) // VXP
+	{
+		m_nSkin = 2;
 	}
 
 	SetHullType(HULL_HUMAN);
@@ -367,7 +381,8 @@ void CNPC_Citizen::LocateEnemySound()
 //------------------------------------------------------------------------------
 void CNPC_Citizen::DeathSound ( void )
 {
-	if ( ai_debug_medic.GetBool() && ( m_spawnflags & SF_CITIZEN_MEDIC ) )
+//	if ( ai_debug_medic.GetBool() && ( m_spawnflags & SF_CITIZEN_MEDIC ) )
+	if ( ai_debug_medic.GetBool() && IsMedic() )
 		Msg( "Medic died\n" );
 
 	// Sentences don't play on dead NPCs
@@ -402,7 +417,8 @@ void CNPC_Citizen::FearSound ( void )
 
 bool CNPC_Citizen::CanHeal( void )
 { 
-	if ( !( m_spawnflags & SF_CITIZEN_MEDIC ) )
+//	if ( !( m_spawnflags & SF_CITIZEN_MEDIC ) )
+	if ( !IsMedic() && !IsAmmoResupplier() )
 		return false;
 
 	if ( m_flHealTime > gpGlobals->curtime)
@@ -416,6 +432,7 @@ bool CNPC_Citizen::CanHeal( void )
 
 bool CNPC_Citizen::ShouldHealTarget( CBaseEntity *pTarget, bool bActiveUse )
 {
+	/*
 	if ( pTarget )
 	{
 		if ( pTarget->IsPlayer() )
@@ -442,6 +459,66 @@ bool CNPC_Citizen::ShouldHealTarget( CBaseEntity *pTarget, bool bActiveUse )
 		return ( ( bActiveUse || pTarget->m_iHealth <= requiredHealth ) && IRelationType( pTarget ) == D_LI );
 	}
 	return false;
+	*/
+
+	bool bTargetIsPlayer = pTarget->IsPlayer();
+
+	if ( pTarget )
+	{
+		if ( IsMedic() )
+		{
+			if ( bTargetIsPlayer )
+			{
+				if ( m_flPlayerHealTime > gpGlobals->curtime)
+				{
+					if ( ai_debug_medic.GetBool() )
+						Msg( this, AIMF_IGNORE_SELECTED, "Medic %f sec to heal player\n", gpGlobals->curtime - m_flPlayerHealTime );
+					return false;
+				}
+			}
+			else
+			{
+				if ( m_flAllyHealTime > gpGlobals->curtime)
+				{
+					if ( ai_debug_medic.GetBool() )
+						Msg( this, AIMF_IGNORE_SELECTED, "Medic %f sec to heal player\n", gpGlobals->curtime - m_flPlayerHealTime );
+					return false;
+				}
+			}
+			
+			float requiredHealthPct = ( pTarget->IsPlayer() ) ? sk_citizen_heal_player_min_pct.GetFloat() : sk_citizen_heal_ally_min_pct.GetFloat();
+			int requiredHealth = pTarget->m_iMaxHealth * requiredHealthPct;
+			return ( ( bActiveUse || pTarget->m_iHealth <= requiredHealth ) && IRelationType( pTarget ) == D_LI );
+		}
+
+		if ( IsAmmoResupplier() && bTargetIsPlayer )
+		{
+			if ( m_flPlayerGiveAmmoTime <= gpGlobals->curtime ) // VXP: TODO
+			{
+				int iAmmoType = GetAmmoDef()->Index( STRING(m_iszAmmoSupply) );
+				if ( iAmmoType == -1 )
+				{
+					DevMsg("ERROR: Citizen attempting to give unknown ammo type (%s)\n", STRING(m_iszAmmoSupply) );
+				}
+				else
+				{
+					// Does the player need the ammo we can give him?
+					int iMax = GetAmmoDef()->MaxCarry(iAmmoType);
+					int iCount = ((CBasePlayer*)pTarget)->GetAmmoCount(iAmmoType);
+					if ( !iCount || ((iMax - iCount) >= m_iAmmoAmount) )
+					{
+						// Only give the player ammo if he has a weapon that uses it
+						if ( ((CBasePlayer*)pTarget)->Weapon_GetWpnForAmmo( iAmmoType ) ) // VXP: There isn't in original leaked build
+						{
+						//	return true;
+							return bActiveUse;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void CNPC_Citizen::Heal( void )
@@ -452,24 +529,48 @@ void CNPC_Citizen::Heal( void )
 	CBaseEntity *pTarget = GetTarget();
 
 	Vector target = pTarget->GetAbsOrigin() - GetAbsOrigin();
-	if ( target.Length() > 100 )
+//	if ( target.Length() > 100 )
+	if ( target.Length() > HEAL_RANGE ) // VXP: * 2?
 		return;
 
 	m_flHealTime = gpGlobals->curtime + sk_citizen_heal_any_delay.GetFloat();
-	if ( pTarget->IsPlayer() )
+
+	if ( IsMedic() )
 	{
-		pTarget->TakeHealth( sk_citizen_heal_player.GetFloat(), DMG_GENERIC );
-		m_flPlayerHealTime = gpGlobals->curtime + sk_citizen_heal_player_delay.GetFloat();
-		if ( ai_debug_medic.GetBool() )
-			Msg( this, AIMF_IGNORE_SELECTED, "Medic healing player for %d points at %f, next at %f\n", sk_citizen_heal_player.GetInt(), gpGlobals->curtime, m_flPlayerHealTime );
+		if ( pTarget->IsPlayer() )
+		{
+			pTarget->TakeHealth( sk_citizen_heal_player.GetFloat(), DMG_GENERIC );
+			m_flPlayerHealTime = gpGlobals->curtime + sk_citizen_heal_player_delay.GetFloat();
+			if ( ai_debug_medic.GetBool() )
+				Msg( this, AIMF_IGNORE_SELECTED, "Medic healing player for %d points at %f, next at %f\n", sk_citizen_heal_player.GetInt(), gpGlobals->curtime, m_flPlayerHealTime );
+		}
+		else
+		{
+			pTarget->TakeHealth( sk_citizen_heal_ally.GetFloat(), DMG_GENERIC );
+			pTarget->RemoveAllDecals();
+			m_flAllyHealTime = gpGlobals->curtime + sk_citizen_heal_ally_delay.GetFloat();
+			if ( ai_debug_medic.GetBool() )
+				Msg( this, AIMF_IGNORE_SELECTED, "Medic healing ally NPC for %d points at %f, next at %f\n", sk_citizen_heal_player.GetInt(), gpGlobals->curtime, m_flAllyHealTime );
+		}
 	}
-	else
+
+	if ( IsAmmoResupplier() )
 	{
-		pTarget->TakeHealth( sk_citizen_heal_ally.GetFloat(), DMG_GENERIC );
-		pTarget->RemoveAllDecals();
-		m_flAllyHealTime = gpGlobals->curtime + sk_citizen_heal_ally_delay.GetFloat();
-		if ( ai_debug_medic.GetBool() )
-			Msg( this, AIMF_IGNORE_SELECTED, "Medic healing ally NPC for %d points at %f, next at %f\n", sk_citizen_heal_player.GetInt(), gpGlobals->curtime, m_flAllyHealTime );
+		// Non-players don't use ammo
+		if ( pTarget->IsPlayer() )
+		{
+			int iAmmoType = GetAmmoDef()->Index( STRING(m_iszAmmoSupply) );
+			if ( iAmmoType == -1 )
+			{
+				DevMsg("ERROR: Citizen attempting to give unknown ammo type (%s)\n", STRING(m_iszAmmoSupply) );
+			}
+			else
+			{
+				((CBasePlayer*)pTarget)->GiveAmmo( m_iAmmoAmount, iAmmoType, false );
+			}
+
+			m_flPlayerGiveAmmoTime = gpGlobals->curtime + sk_citizen_heal_any_delay.GetFloat(); // sk_citizen_giveammo_player_delay.GetFloat()
+		}
 	}
 }
 
@@ -990,7 +1091,23 @@ void CNPC_Citizen::StartTask( const Task_t *pTask )
 		break;
 
 	case TASK_CIT_HEAL:
-		Speak( "TLK_HEAL" );
+	//	Speak( "TLK_HEAL" );
+		if ( IsMedic() )
+		{
+			if ( GetTarget() && GetTarget()->IsPlayer() && GetTarget()->m_iMaxHealth == GetTarget()->m_iHealth )
+			{
+				// Doesn't need us anymore
+				TaskComplete();
+				break;
+			}
+
+			Speak( TLK_HEAL );
+		}
+		else if ( IsAmmoResupplier() )
+		{
+		//	Speak( TLK_GIVEAMMO ); // VXP: Isn't present
+			Speak( TLK_HEAL );
+		}
 		SetIdealActivity( (Activity)ACT_CIT_HEAL );
 		break;
 	

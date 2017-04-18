@@ -1167,6 +1167,25 @@ CBaseCombatWeapon *CBaseCombatCharacter::Weapon_GetSlot( int slot )
 	return NULL;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Get a pointer to a weapon this character has that uses the specified ammo
+//-----------------------------------------------------------------------------
+CBaseCombatWeapon *CBaseCombatCharacter::Weapon_GetWpnForAmmo( int iAmmoIndex ) // VXP
+{
+	for ( int i = 0; i < MAX_WEAPONS; i++ )
+	{
+		CBaseCombatWeapon *weapon = GetWeapon( i );
+		if ( !weapon )
+			continue;
+
+		if ( weapon->GetPrimaryAmmoType() == iAmmoIndex )
+			return weapon;
+		if ( weapon->GetSecondaryAmmoType() == iAmmoIndex )
+			return weapon;
+	}
+
+	return NULL;
+}
 
 
 //-----------------------------------------------------------------------------

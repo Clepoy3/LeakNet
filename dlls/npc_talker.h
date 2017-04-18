@@ -76,6 +76,10 @@
 #define TLK_TGCATCHUP 	"TLK_TGCATCHUP"
 #define TLK_TGENDTOUR 	"TLK_TGENDTOUR"
 
+// VXP
+#define TLK_HEAL			"TLK_HEAL" // healing someone
+#define TLK_GIVEAMMO		"TLK_GIVEAMMO" // giving ammo to someone
+
 //=========================================================
 // Talking NPC base class
 // Used for scientists and barneys

@@ -107,6 +107,13 @@ public:
 
 	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
+	//---------------------------------
+	// VXP: Special abilities
+	//---------------------------------
+	bool 			IsMedic() 			{ return HasSpawnFlags(SF_CITIZEN_MEDIC); }
+	bool 			IsAmmoResupplier() 	{ return HasSpawnFlags(SF_CITIZEN_AMMO_RESUPPLIER); }
+
+
 	// -------------------
 	//	Sounds
 	// -------------------
@@ -121,6 +128,10 @@ public:
 	float m_flHealTime;
 	float m_flPlayerHealTime;
 	float m_flAllyHealTime;
+	// VXP
+	float m_flPlayerGiveAmmoTime;
+	string_t m_iszAmmoSupply;
+	int m_iAmmoAmount;
 
 	static int m_nextHead;
 

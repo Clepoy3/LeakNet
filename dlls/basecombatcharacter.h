@@ -207,6 +207,7 @@ public:
 	bool				Weapon_CanSwitchTo(CBaseCombatWeapon *pWeapon);
 	virtual bool		Weapon_SlotOccupied( CBaseCombatWeapon *pWeapon );
 	virtual CBaseCombatWeapon *Weapon_GetSlot( int slot );
+	CBaseCombatWeapon	*Weapon_GetWpnForAmmo( int iAmmoIndex ); // VXP
 
 	//
 	// Catching on fire.
