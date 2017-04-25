@@ -843,7 +843,13 @@ static bool LoadThisDll( char *szDllFilename )
 	//	goto IgnoreThisDLL;
 		// VXP: Hack, if mod doesn't have own server.dll, we need to use hl2's server.dll instead
 		if ((pDLL = FileSystem_LoadModule("hl2\\bin\\server.dll")) == NULL)
-			goto IgnoreThisDLL;
+		{
+			if ((pDLL = FileSystem_LoadModule("..\\hl2\\bin\\server.dll")) == NULL) // VXP: For HLDS (???)
+			{
+				Con_Printf("Fallback to hl2's server.dll failed! Game will not start\n");
+				goto IgnoreThisDLL;
+			}
+		}
 	}
 
 	// Load interface factory and any interfaces exported by the game .dll

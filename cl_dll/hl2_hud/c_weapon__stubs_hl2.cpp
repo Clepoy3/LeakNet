@@ -51,4 +51,7 @@ STUB_WEAPON_CLASS( weapon_hopwire, WeaponHopWire, C_BaseHLCombatWeapon );
 
 //STUB_WEAPON_CLASS( weapon_physgun, WeaponGravityGun, C_BaseHLCombatWeapon );
 
+// VXP
+STUB_WEAPON_CLASS( weapon_alyxgun, WeaponAlyxGun, C_HLSelectFireMachineGun );
+
 
