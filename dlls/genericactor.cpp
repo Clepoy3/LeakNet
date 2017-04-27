@@ -108,8 +108,7 @@ void CGenericActor :: Spawn()
 		UTIL_SetSize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 */
 
-//	if ( FStrEq( STRING( GetModelName() ), "models/player.mdl" ) || FStrEq( STRING( GetModelName() ), "models/holo.mdl" ) )
-	if ( FStrEq( STRING( GetModelName() ), "models/humans/male_01.mdl" ) || FStrEq( STRING( GetModelName() ), "models/holo.mdl" ) )
+	if ( FStrEq( STRING( GetModelName() ), "models/player.mdl" ) || FStrEq( STRING( GetModelName() ), "models/holo.mdl" ) )
 		UTIL_SetSize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	else
 		UTIL_SetSize(this, NAI_Hull::Mins(HULL_HUMAN), NAI_Hull::Maxs(HULL_HUMAN));

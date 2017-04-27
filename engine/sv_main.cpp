@@ -110,9 +110,6 @@ ConVar  sv_VoiceCodec("sv_VoiceCodec", "voice_miles", 0, "Specifies which voice 
 ConVar  sv_deltatrace( "sv_deltatrace", "0", 0, "For debugging, print entity creation/deletion info to console." );
 ConVar  sv_packettrace( "sv_packettrace", "1", 0, "For debugging, print entity creation/deletion info to console." );
 
-//ConVar	sv_model( "model", "", 0, "Current model name" );
-extern ConVar cl_model;
-
 
 // Prints important entity creation/deletion events to console
 #if defined( _DEBUG )
@@ -4236,10 +4233,7 @@ void SV_CreateBaseline (void)
 		char const* pModelString;
 		if (entnum > 0 && entnum <= svs.maxclients)
 		{
-		//	pModelString = "models/player.mdl";
-		//	pModelString = "models/humans/male_01.mdl";
-		//	pModelString = "models/player/male_03.mdl";
-			pModelString = (Q_strcmp(cl_model.GetString(), "") == 0) ? "player.mdl" : cl_model.GetString();
+			pModelString = "models/player.mdl";
 		}
 		else
 		{

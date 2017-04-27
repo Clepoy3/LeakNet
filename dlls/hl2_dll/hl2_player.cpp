@@ -48,8 +48,6 @@ ConVar hl2_sprintspeed( "hl2_sprintspeed", "320" );
 ConVar player_showpredictedposition( "player_showpredictedposition", "0" );
 ConVar player_showpredictedposition_timestep( "player_showpredictedposition_timestep", "1.0" );
 
-ConVar	model( "model", "", 0, "Current model name" );
-
 LINK_ENTITY_TO_CLASS( player, CHL2_Player );
 PRECACHE_REGISTER(player);
 
@@ -473,8 +471,17 @@ void CHL2_Player::Touch( CBaseEntity *pOther )
 void CHL2_Player::Spawn(void)
 {
 //	SetModel( "models/player.mdl" );
-//	SetModel( "models/humans/male_01.mdl" );
-	SetModel( (Q_strcmp(model.GetString(), "") == 0) ? "models/player.mdl" : model.GetString() );
+//	SetModel( "models/player/male_03.mdl" );
+	
+	// VXP: Maybe it's a hack
+	char *mdl = engine->InfoKeyValue( engine->GetInfoKeyBuffer( this->edict() ), "model" );
+	if ( Q_strcmp( mdl, "" ) == 0 )
+	{
+		mdl = "models/player.mdl";
+	}
+	engine->PrecacheModel( mdl ); // VXP: Just in case it's not already precached - can cause a little lag I think
+	SetModel( mdl );
+
     g_ulModelIndexPlayer = GetModelIndex();
 
 	BaseClass::Spawn();

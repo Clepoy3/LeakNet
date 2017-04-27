@@ -39,8 +39,6 @@ void Host_Say( edict_t *pEdict, int teamonly );
 extern CBaseEntity*	FindPickerEntityClass( CBasePlayer *pPlayer, char *classname );
 extern bool			g_fGameOver;
 
-//ConVar	plymodel( "model", "", FCVAR_ARCHIVE | FCVAR_USERINFO, "Current model name" );
-
 /*
 ===========
 ClientPutInServer
@@ -98,34 +96,6 @@ CBaseEntity* FindEntity( edict_t *pEdict, char *classname)
 //-----------------------------------------------------------------------------
 void ClientGamePrecache( void )
 {
-//	engine->PrecacheModel("models/player.mdl");
-//	engine->PrecacheModel("models/humans/male_01.mdl");
-//	engine->PrecacheModel(plymodel.GetString());
-	/*
-	if (Q_strcmp(plymodel.GetString(), ""))
-	{
-		engine->PrecacheModel(plymodel.GetString());
-	}
-	else
-	{
-		plymodel.SetValue("player.mdl");
-		engine->PrecacheModel(plymodel.GetString());
-	}
-	*/
-/*
-	engine->PrecacheModel("models/combine_soldier.mdl");
-	engine->PrecacheModel("models/combine_soldier_prisonguard.mdl");
-	engine->PrecacheModel("models/combine_super_soldier.mdl");
-	engine->PrecacheModel("models/police.mdl");
-	engine->PrecacheModel("models/humans/Male_01.mdl");
-	engine->PrecacheModel("models/humans/Male_02.mdl");
-	engine->PrecacheModel("models/humans/Male_03.mdl");
-	engine->PrecacheModel("models/humans/Male_04.mdl");
-	engine->PrecacheModel("models/humans/Male_05.mdl");
-	engine->PrecacheModel("models/humans/Male_07.mdl");
-	engine->PrecacheModel("models/humans/Male_08.mdl");
-	engine->PrecacheModel("models/humans/Male_09.mdl");
-*/
 	engine->PrecacheModel("models/player.mdl");
 	engine->PrecacheModel("models/player/combine_soldier.mdl");
 	engine->PrecacheModel("models/player/gordon.mdl");
