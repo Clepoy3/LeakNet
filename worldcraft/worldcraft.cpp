@@ -1189,9 +1189,11 @@ void CWorldcraft::RunFrame(void)
 	//
 	// Only do realtime stuff when we are the active application.
 	//
-	if (CMapDoc::GetActiveMapDoc() && 
-		m_bActiveApp && 
-		m_bEnable3DRender )
+//	if (CMapDoc::GetActiveMapDoc() && 
+//		m_bActiveApp && 
+//		m_bEnable3DRender )
+	if ( CMapDoc::GetActiveMapDoc() && 
+		 ( m_bActiveApp || m_bForceRenderNextFrame ) && m_bEnable3DRender )
 	{
 		// get the time
 		CMapDoc::GetActiveMapDoc()->UpdateCurrentTime();

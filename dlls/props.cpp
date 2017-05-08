@@ -1685,10 +1685,11 @@ const char *GetMassEquivalent(float flMass)
 //=============================================================================================================
 // BASE PROP DOOR
 //=============================================================================================================
-#define	SF_DOOR_START_OPEN		1		// Door is initially open (by default, doors start closed).
-#define SF_DOOR_LOCKED			2048	// Door is initially locked.
-#define SF_DOOR_SILENT			4096	// Door makes no sounds, despite the settings for sound files.
-#define	SF_DOOR_USE_CLOSES		8192	// Door can be +used to close before its autoreturn delay has expired.
+#define	SF_DOOR_START_OPEN			1		// Door is initially open (by default, doors start closed).
+#define	SF_DOOR_ROTATE_BACKWARDS	2		// VXP: Door should rotate in player's way
+#define SF_DOOR_LOCKED				2048	// Door is initially locked.
+#define SF_DOOR_SILENT				4096	// Door makes no sounds, despite the settings for sound files.
+#define	SF_DOOR_USE_CLOSES			8192	// Door can be +used to close before its autoreturn delay has expired.
 
 //
 // Private activities.
@@ -1703,6 +1704,12 @@ enum
 {
 	AE_DOOR_OPEN = 1,	// The door should start opening.
 };
+
+//Default noises for rotating door noises
+#define	DEFAULT_DOOR_ROTATING_MOVING_NOISE		"doors/func_door_rotating/default_move.wav"
+#define	DEFAULT_DOOR_ROTATING_ARRIVE_NOISE		"doors/func_door_rotating/default_stop.wav" 
+#define	DEFAULT_DOOR_ROTATING_LOCKED_NOISE		"doors/func_door_rotating/default_locked.wav"
+#define	DEFAULT_DOOR_ROTATING_UNLOCKED_NOISE	"common/null.wav"
 
 
 void PlayLockSounds(CBaseEntity *pEdict, locksound_t *pls, int flocked, int fbutton);
@@ -1819,11 +1826,11 @@ void CBasePropDoor::Precache(void)
 
 	RegisterPrivateActivities();
 
-	UTIL_ValidateSoundName( m_SoundMoving, "common/null.wav" );
-	UTIL_ValidateSoundName( m_SoundOpen, "common/null.wav" );
-	UTIL_ValidateSoundName( m_SoundClose, "common/null.wav" );
-	UTIL_ValidateSoundName( m_ls.sLockedSound, "common/null.wav" );
-	UTIL_ValidateSoundName( m_ls.sUnlockedSound, "common/null.wav" );
+	UTIL_ValidateSoundName( m_SoundMoving, DEFAULT_DOOR_ROTATING_MOVING_NOISE );
+	UTIL_ValidateSoundName( m_SoundOpen, DEFAULT_DOOR_ROTATING_ARRIVE_NOISE );
+	UTIL_ValidateSoundName( m_SoundClose, DEFAULT_DOOR_ROTATING_ARRIVE_NOISE );
+	UTIL_ValidateSoundName( m_ls.sLockedSound, DEFAULT_DOOR_ROTATING_LOCKED_NOISE );
+	UTIL_ValidateSoundName( m_ls.sUnlockedSound, DEFAULT_DOOR_ROTATING_UNLOCKED_NOISE );
 
 	enginesound->PrecacheSound(STRING(m_SoundMoving));
 	enginesound->PrecacheSound(STRING(m_SoundOpen));
@@ -2343,10 +2350,15 @@ private:
 
 	void AngularMove(const QAngle &vecDestAngle, float flSpeed);
 
+	// VXP
+	void	CalcOpenAngles ( void );		// Subroutine to setup the m_angRotation QAngles based on the m_flDistance variable
+
 	Vector m_vecAxis;				// The axis of rotation.
 	float m_flDistance;				// How many degrees we rotate between open and closed.
 	QAngle m_angRotationClosed;		// Our angles when we are fully closed.
-	QAngle m_angRotationOpen;		// Our angles when we are fully open.
+//	QAngle m_angRotationOpen;		// Our angles when we are fully open.
+	QAngle	m_angRotationOpenForward;	// Our angles when we are fully open towards our forward vector.
+	QAngle	m_angRotationOpenBack;		// Our angles when we are fully open away from our forward vector.
 
 	QAngle m_angGoal;
 
@@ -2357,7 +2369,9 @@ BEGIN_DATADESC(CPropDoorRotating)
 	DEFINE_KEYFIELD(CPropDoorRotating, m_vecAxis, FIELD_VECTOR, "axis"),
 	DEFINE_KEYFIELD(CPropDoorRotating, m_flDistance, FIELD_FLOAT, "distance"),
 	DEFINE_FIELD( CPropDoorRotating, m_angRotationClosed, FIELD_VECTOR ),
-	DEFINE_FIELD( CPropDoorRotating, m_angRotationOpen, FIELD_VECTOR ),
+//	DEFINE_FIELD( CPropDoorRotating, m_angRotationOpen, FIELD_VECTOR ),
+	DEFINE_FIELD( CPropDoorRotating, m_angRotationOpenForward, FIELD_VECTOR ),
+	DEFINE_FIELD( CPropDoorRotating, m_angRotationOpenBack, FIELD_VECTOR ),
 	DEFINE_FIELD( CPropDoorRotating, m_angGoal, FIELD_VECTOR ),
 END_DATADESC()
 
@@ -2372,28 +2386,50 @@ void CPropDoorRotating::Spawn()
 
 	// The axis of rotation must be axial for now.
 	// dvs: TODO: finalize data definition of hinge axis
-	// HACK: convert the axis of rotation to dPitch dYaw dRoll
 	m_vecAxis = Vector(0, 0, 1);
 	VectorNormalize(m_vecAxis);
 	ASSERT((m_vecAxis.x == 0 && m_vecAxis.y == 0) ||
 			(m_vecAxis.y == 0 && m_vecAxis.z == 0) ||
 			(m_vecAxis.z == 0 && m_vecAxis.x == 0));
-	Vector vecMoveDir(m_vecAxis.y, m_vecAxis.z, m_vecAxis.x);
 
-	if (m_flDistance == 0)
-	{
-		m_flDistance = 90;
-	}
-
-	// Calculate our orientation when we are fully open.
-	m_angRotationOpen.x = m_angRotationClosed.x + (vecMoveDir.x * m_flDistance);
-	m_angRotationOpen.y = m_angRotationClosed.y + (vecMoveDir.y * m_flDistance);
-	m_angRotationOpen.z = m_angRotationClosed.z + (vecMoveDir.z * m_flDistance);
+	CalcOpenAngles();
 
 	SetLocalAngularVelocity(QAngle(0, 100, 0));
 
 	// Call this last! It relies on stuff we calculated above.
 	BaseClass::Spawn();
+
+	// VXP: We have to call this after we call the base Spawn because it requires
+	// that the model already be set.
+//	if ( IsHingeOnLeft() )
+//	{
+//		swap( m_angRotationOpenForward, m_angRotationOpenBack );
+//	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Setup the m_angRotationOpenForward and m_angRotationOpenBack variables based on
+//			the m_flDistance variable. Also restricts m_flDistance > 0.
+//-----------------------------------------------------------------------------
+void CPropDoorRotating::CalcOpenAngles()
+{
+	// HACK: convert the axis of rotation to dPitch dYaw dRoll
+	Vector vecMoveDir(m_vecAxis.y, m_vecAxis.z, m_vecAxis.x); 
+
+	if (m_flDistance == 0)
+	{
+		m_flDistance = 90;
+	}
+	m_flDistance = fabs(m_flDistance);
+
+	// Calculate our orientation when we are fully open.
+	m_angRotationOpenForward.x = m_angRotationClosed.x - (vecMoveDir.x * m_flDistance);
+	m_angRotationOpenForward.y = m_angRotationClosed.y - (vecMoveDir.y * m_flDistance);
+	m_angRotationOpenForward.z = m_angRotationClosed.z - (vecMoveDir.z * m_flDistance);
+
+	m_angRotationOpenBack.x = m_angRotationClosed.x + (vecMoveDir.x * m_flDistance);
+	m_angRotationOpenBack.y = m_angRotationClosed.y + (vecMoveDir.y * m_flDistance);
+	m_angRotationOpenBack.z = m_angRotationClosed.z + (vecMoveDir.z * m_flDistance);
 }
 
 
@@ -2402,7 +2438,12 @@ void CPropDoorRotating::Spawn()
 //-----------------------------------------------------------------------------
 void CPropDoorRotating::SetDoorOpen()
 {
-	SetLocalAngles(m_angRotationOpen);
+//	SetLocalAngles(m_angRotationOpen);
+	if ( m_angGoal == m_angRotationOpenForward )
+		SetLocalAngles(m_angRotationOpenForward);
+	else if ( m_angGoal == m_angRotationOpenBack )
+		SetLocalAngles(m_angRotationOpenForward);
+
 	m_eDoorState = DOOR_STATE_OPEN;
 
 	// Doesn't relink; that's done in Spawn.
@@ -2471,6 +2512,16 @@ void CPropDoorRotating::AngularMove(const QAngle &vecDestAngle, float flSpeed)
 //-----------------------------------------------------------------------------
 void CPropDoorRotating::BeginOpening()
 {
+	QAngle angOpen;
+	if ( !HasSpawnFlags(SF_DOOR_ROTATE_BACKWARDS) )
+	{
+		angOpen = m_angRotationOpenBack;
+	}
+	else
+	{
+		angOpen = m_angRotationOpenForward;
+	}
+
 	if (m_hActivator != NULL)
 	{
 		// dvs: TODO: two-way doors should use their forward vector to determine open dir
@@ -2489,9 +2540,36 @@ void CPropDoorRotating::BeginOpening()
 		//		sign = -1.0;
 		//	}
 		//}
+
+		// HACK: convert the axis of rotation to dPitch dYaw dRoll
+		Vector vecMoveDir(m_vecAxis.y, m_vecAxis.z, m_vecAxis.x); 
+
+		if ( /*!HasSpawnFlags( SF_DOOR_ONEWAY ) &&*/ vecMoveDir.y ) 		// Y axis rotation, move away from the player
+		{
+			Vector vec = m_hActivator->GetLocalOrigin() - GetLocalOrigin();
+			QAngle angles = m_hActivator->GetLocalAngles();
+			angles.x = 0;
+			angles.z = 0;
+			Vector forward;
+			AngleVectors( angles, &forward );
+			Vector vnext = (m_hActivator->GetLocalOrigin() + (forward * 10)) - GetLocalOrigin();
+			if ( (vec.x*vnext.y - vec.y*vnext.x) < 0 )
+			{
+			//	sign = -1.0;
+				if ( !HasSpawnFlags(SF_DOOR_ROTATE_BACKWARDS) )
+				{
+					angOpen = m_angRotationOpenForward;
+				}
+				else
+				{
+					angOpen = m_angRotationOpenBack;
+				}
+			}
+		}
 	}
 
-	AngularMove(m_angRotationOpen, m_flSpeed);
+//	AngularMove(m_angRotationOpen, m_flSpeed);
+	AngularMove(angOpen, m_flSpeed);
 }
 
 
@@ -2548,7 +2626,7 @@ void CPropDoorRotating::GetNPCOpenData(CAI_BaseNPC *pNPC, opendata_t &opendata)
 float CPropDoorRotating::GetOpenInterval()
 {
 	// set destdelta to the vector needed to move
-	QAngle vecDestDelta = m_angRotationOpen - GetLocalAngles();
+	QAngle vecDestDelta = m_angRotationOpenForward - GetLocalAngles();
 	
 	// divide by speed to get time to reach dest
 	return vecDestDelta.Length() / m_flSpeed;

@@ -1211,7 +1211,7 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 	//
 	if (g_pMaterialImageCache == NULL)
 	{
-		g_pMaterialImageCache = new CMaterialImageCache(500);
+		g_pMaterialImageCache = new CMaterialImageCache(500); // VXP: Should I increase this? http://leaknet.tk/mantisbt/view.php?id=48
 		if (g_pMaterialImageCache == NULL)
 		{
 			return(false);
@@ -1237,7 +1237,7 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 	//
 	if ( !FileSystem_Init( g_pGameConfig->m_szModDir, g_pGameConfig->m_szGameDir ))
 	{
-		Msg( mwError,"ERROR: Failed to initialize materials file system. GameDir=%s, ModDir=%", g_pGameConfig->m_szGameDir, g_pGameConfig->m_szModDir );
+		Msg( mwError,"ERROR: Failed to initialize materials file system. GameDir=%s, ModDir=%s", g_pGameConfig->m_szGameDir, g_pGameConfig->m_szModDir );
 		return false;
 	}
 
@@ -1249,6 +1249,11 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 		g_MaterialSystemClientFactory( MATERIALSYSTEM_HARDWARECONFIG_INTERFACE_VERSION, 0 );
 	if ( !g_pMaterialSystemHardwareConfig )
 		return false;
+
+	// VXP
+	g_materialSystemConfig.m_bForceTrilinear = false;
+	g_materialSystemConfig.m_nForceAnisotropicLevel = g_pMaterialSystemHardwareConfig->MaximumAnisotropicLevel();
+	g_materialSystemConfig.m_bForceBilinear = false;
 
 	g_pMaterialSystemInterface->UpdateConfig( &g_materialSystemConfig, false );
 	g_pMaterialSystemInterface->AddReleaseFunc( ReleaseMaterialSystemObjects );
