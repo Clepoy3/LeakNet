@@ -285,9 +285,11 @@ void CHud::Init( void )
 	{
 		if ( kv->LoadFromFile( filesystem, "scripts/HudLayout.res" ) )
 		{
-			for ( int i = 0; i < m_HudList.Size(); i++ )
+			int numelements = m_HudList.Size();
+			for ( int i = 0; i < numelements; i++ )
 			{
-				vgui::Panel *pPanel = dynamic_cast<vgui::Panel*>(m_HudList[i]);
+				CHudElement *element = m_HudList[i];
+				vgui::Panel *pPanel = dynamic_cast<vgui::Panel*>(element);
 				if ( !pPanel )
 				{
 					Msg( "Non-vgui hud element %s\n", m_HudList[i]->GetName() );
@@ -559,7 +561,7 @@ void CHud::RefreshHudTextures()
 			continue;
 
 		// Update file
-		strcpy( icon->szTextureFile, tex->szTextureFile );
+		Q_strncpy( icon->szTextureFile, tex->szTextureFile, sizeof( icon->szTextureFile ) );
 		
 		// Update subrect
 		icon->rc = tex->rc;

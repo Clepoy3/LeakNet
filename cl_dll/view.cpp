@@ -857,7 +857,8 @@ void CViewRender::Render( vrect_t *rect )
 	{
 		render->VguiPaint();
 	}
-/* VXP: Not needed and buggy
+
+	/* VXP
 	if ( cl_leveloverview.GetInt() )
 	{
 		// draw a 1024x1024 pixel box
@@ -865,7 +866,8 @@ void CViewRender::Render( vrect_t *rect )
 		vgui::surface()->DrawLine( 1024, 0, 1024, 1024 );
 		vgui::surface()->DrawLine( 0, 1024, 1024, 1024 );
 	}
-*/
+	*/
+
 	AllowCurrentViewAccess( false );
 }
 

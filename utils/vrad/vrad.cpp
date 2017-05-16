@@ -1737,12 +1737,19 @@ void VRAD_LoadBSP( char const *pFilename )
 	strcat( strcpy( global_lights, gamedir ), "lights.rad" );
 	if ( !g_pFileSystem->FileExists( global_lights ) )
 	{
-		// Otherwise, try looking in the BIN directory from which we were run from
-		Msg( "Could not find lights.rad in %s.\nTrying VRAD BIN directory instead...\n", 
-			    global_lights );
-		GetModuleFileName( NULL, global_lights, sizeof( global_lights ) );
-		ExtractFilePath( global_lights, global_lights );
-		strcat( global_lights, "lights.rad" );
+		Msg( "Could not find lights.rad in %s.\nTrying HL2 directory instead...\n", 
+					global_lights );
+		// Try looking in the HL2 directory from which we were run from
+		strcat( strcpy( global_lights, gamedir ), "..\\hl2\\lights.rad" );
+		if ( !g_pFileSystem->FileExists( global_lights ) )
+		{
+			// Otherwise, try looking in the BIN directory from which we were run from
+			Msg( "Could not find lights.rad in %s.\nTrying VRAD BIN directory instead...\n", 
+					global_lights );
+			GetModuleFileName( NULL, global_lights, sizeof( global_lights ) );
+			ExtractFilePath( global_lights, global_lights );
+			strcat( global_lights, "lights.rad" );
+		}
 	}
 
 	// Set the optional level specific lights filename
