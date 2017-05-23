@@ -4694,10 +4694,8 @@ int SV_SpawnServer( char *mapname, char *startspot )
 
 	KeyValues * event = new KeyValues( "server_spawn" );
 	event->SetString( "hostname", host_name.GetString() );
-//	event->SetString( "address", "127.0.0.1" ); // TODO
-//	event->SetInt(    "port", 27015 );				// TODO
-	event->SetString( "address", NET_AdrToString( net_local_adr ) ); // VXP
-	event->SetInt(    "port", (unsigned short)Q_atoi( PORT_CLIENT ) ); // VXP: May be error here
+	event->SetString( "address", "127.0.0.1" ); // TODO
+	event->SetInt(    "port", 27015 );				// TODO
 	event->SetString( "game", com_gamedir );
 	event->SetString( "mapname", mapname );
 	event->SetString( "startdate", "yy.mm.dd" );	// TODO

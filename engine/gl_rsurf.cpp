@@ -443,14 +443,11 @@ void Shader_DrawSurfaceDynamic( int surfID )
 #ifdef _DEBUG
 		int primType = pPrim->type;
 #endif
+		if ( !pPrim->vertCount )
+			return;
+
 		for( int i = 0; i < MSurf_NumPrims( surfID ); i++, pPrim++ )
 		{
-			// VXP: Cath
-			if( pPrim->vertCount == NULL )
-			{
-				continue;
-			}
-
 			// Can't have heterogeneous primitive lists
 			Assert( primType == pPrim->type );
 			switch( pPrim->type )
@@ -784,7 +781,7 @@ void Shader_DrawWireframePolygons( int surfID )
 		int nCount = MSurf_VertCount( i );
 		if (nCount >= 3)
 		{
-			nLineCount += MSurf_VertCount( i );
+			nLineCount += nCount;
 		}
 	}
 
@@ -1080,6 +1077,7 @@ static void DrawDebugInformation( int surfListID )
 }
 
 
+// VXP: AddProjectedTextureDecalsToList from Source 2007
 //-----------------------------------------------------------------------------
 // Draws all of the opaque non-displacement surfaces queued up previously
 //-----------------------------------------------------------------------------
