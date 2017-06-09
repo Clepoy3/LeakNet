@@ -154,7 +154,7 @@ string_t CNPC_Citizen::GetModelName( void ) const
 
 	if ( !strnicmp(STRING(iszModelName), "random", 6) )
 	{
-		string_t rndmodel = GetRandomCitizenModel( random->RandomInt(0, 5) );
+		string_t rndmodel = GetRandomCitizenModel( random->RandomInt(0, 7) );
 		return rndmodel;
 	}
 
@@ -175,12 +175,18 @@ string_t CNPC_Citizen::GetRandomCitizenModel( int number ) const
 		return MAKE_STRING("models/humans/male_03.mdl");
 		break;
 	case 3:
-		return MAKE_STRING("models/humans/male_07.mdl");
+		return MAKE_STRING("models/humans/male_04.mdl"); // VXP
 		break;
 	case 4:
-		return MAKE_STRING("models/humans/male_08.mdl");
+		return MAKE_STRING("models/humans/male_05.mdl"); // VXP
 		break;
 	case 5:
+		return MAKE_STRING("models/humans/male_07.mdl");
+		break;
+	case 6:
+		return MAKE_STRING("models/humans/male_08.mdl");
+		break;
+	case 7:
 		return MAKE_STRING("models/humans/male_09.mdl");
 		break;
 	}
@@ -223,7 +229,7 @@ void CNPC_Citizen::SelectCitizenModel()
 
 		m_nextHead++;
 
-		if( m_nextHead > 5 )
+		if( m_nextHead > 7 )
 		{
 			m_nextHead = 0;
 		}

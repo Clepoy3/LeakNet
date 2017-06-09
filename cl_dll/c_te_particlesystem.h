@@ -78,6 +78,8 @@ public:
 	void					SetParticleLifetime( StandardParticle_t *pParticle, float lifetime );
 	float					GetParticleLifetime( StandardParticle_t *pParticle );
 
+	// VXP
+	void					SetMaterial( char *materialName );
 
 // IParticleEffect overrides.	
 public:

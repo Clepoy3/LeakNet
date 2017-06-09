@@ -474,13 +474,26 @@ void CHL2_Player::Spawn(void)
 //	SetModel( "models/player/male_03.mdl" );
 	
 	// VXP: Maybe it's a hack
-	char *mdl = engine->InfoKeyValue( engine->GetInfoKeyBuffer( this->edict() ), "model" );
-	if ( Q_strcmp( mdl, "" ) == 0 )
+	const char *szModelName = NULL;
+	szModelName = engine->InfoKeyValue( engine->GetInfoKeyBuffer( this->edict() ), "model" );
+
+	int modelIndex = modelinfo->GetModelIndex( szModelName );
+
+	if ( ( modelIndex == -1 ) || ( Q_strcmp( szModelName, "" ) == 0 ) )
 	{
-		mdl = "models/player.mdl";
+		szModelName = "models/player.mdl";
 	}
-	engine->PrecacheModel( mdl ); // VXP: Just in case it's not already precached - can cause a little lag I think
-	SetModel( mdl );
+
+#ifdef _DEBUG
+	if ( Q_strncmp( szModelName, "models/player.mdl", 17 ) == 0 )
+	{
+		Warning( "Player model is set to PLAYER.MDL!\n" );
+	}
+	DevMsg( "Player's model set to %s\n", szModelName );
+#endif
+
+	engine->PrecacheModel( szModelName ); // VXP: Just in case it's not already precached - can cause a little lag I think, but we're good to go with it
+	SetModel( szModelName );
 
     g_ulModelIndexPlayer = GetModelIndex();
 

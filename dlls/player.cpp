@@ -3984,7 +3984,7 @@ void CBasePlayer::Spawn( void )
 		StopObserverMode();
 	}
 
-//	Relink(); // VXP
+	Relink();
 	// Clear any screenfade
 //	color32 nothing = {0,0,0,0};
 //	UTIL_ScreenFade( this, nothing, 0, 0, FFADE_OUT );
@@ -4790,7 +4790,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
         GiveAmmo( 255,    "Grenade");
         GiveAmmo( 255,    "GaussEnergy");
 
-	//	GiveNamedItem( "weapon_alyxgun" );
+		GiveNamedItem( "weapon_alyxgun" );
         GiveNamedItem( "weapon_ar1" );
         GiveNamedItem( "weapon_binoculars" );
 		GiveNamedItem( "weapon_brickbat" );

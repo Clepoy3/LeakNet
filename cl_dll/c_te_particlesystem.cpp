@@ -97,6 +97,15 @@ CTEParticleRenderer::~CTEParticleRenderer()
 }
 
 
+// VXP
+void CTEParticleRenderer::SetMaterial( char *materialName )
+{
+	if ( Q_strcmp( materialName, "" ) == 0 )
+		return;
+
+	m_MaterialHandle = m_ParticleEffect.FindOrAddMaterial( materialName );
+}
+
 CSmartPtr<CTEParticleRenderer> CTEParticleRenderer::Create( const char *pDebugName, const Vector &vOrigin )
 {
 	CTEParticleRenderer *pRet = new CTEParticleRenderer( pDebugName );

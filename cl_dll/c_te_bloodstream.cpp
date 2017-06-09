@@ -58,6 +58,14 @@ void TE_BloodStream( IRecipientFilter& filter, float delay,
 	if( !pRen )
 		return;
 
+//	pRen->SetMaterial( "Effects/blood_drop" ); // VXP
+
+	// VXP: A little conversion
+	float fR = r / 255.0f;
+	float fG = g / 255.0f;
+	float fB = b / 255.0f;
+	float fA = a / 255.0f;
+
 	// Add our particles.
 	Vector		dirCopy;
 	float		arc = 0.05;
@@ -74,8 +82,8 @@ void TE_BloodStream( IRecipientFilter& filter, float delay,
 		StandardParticle_t *p = pRen->AddParticle();
 		if(p)
 		{
-			p->SetColor(r * random->RandomFloat(0.7, 1.0), g, b);
-			p->SetAlpha(a);
+			p->SetColor(fR * random->RandomFloat(0.7, 1.0), fG, fB);
+			p->SetAlpha(fA);
 			p->m_Pos = *org;
 			pRen->SetParticleLifetime(p, 2);
 			pRen->SetParticleType(p, pt_vox_grav);
@@ -99,8 +107,8 @@ void TE_BloodStream( IRecipientFilter& filter, float delay,
 		if(p)
 		{
 			pRen->SetParticleLifetime(p, 3);
-			p->SetColor(r * random->RandomFloat(0.7, 1.0), g, b);
-			p->SetAlpha(a);
+			p->SetColor(fR * random->RandomFloat(0.7, 1.0), fG, fB);
+			p->SetAlpha(fA);
 			p->m_Pos = *org;
 			pRen->SetParticleType(p, pt_vox_slowgrav);
 			
@@ -126,8 +134,10 @@ void TE_BloodStream( IRecipientFilter& filter, float delay,
 				if(p)
 				{
 					pRen->SetParticleLifetime(p, 3);
-					p->SetColor(random->RandomFloat(0.7, 1.0), g, b);
-					p->SetAlpha(a);
+				//	p->SetColor(random->RandomFloat(0.7, 1.0), g, b);
+					p->SetColor(random->RandomFloat(0.7, 1.0), fG, fB);
+				//	p->SetColor(fR * random->RandomFloat(0.7, 1.0), fG, fB);
+					p->SetAlpha(fA);
 					p->m_Pos.Init(
 						(*org)[0] + random->RandomFloat(-1,1),
 						(*org)[1] + random->RandomFloat(-1,1),

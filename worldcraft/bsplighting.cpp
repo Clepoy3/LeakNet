@@ -844,9 +844,9 @@ bool CBSPLighting::LoadVRADDLL( char const *pFilename )
 
 void CBSPLighting::CreateDisplacements( CBSPInfo &file, CUtlVector<CFace> &faces, CUtlVector<CDispInfoFaces> &dispInfos )
 {
+/*
 	IMaterialSystem *pMatSys = MaterialSystemInterface();
 
-/*
 	dispInfos.SetSize( file.g_numdispinfo );
 	for( int iFace=0; iFace < faces.Size(); iFace++ )
 	{

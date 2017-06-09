@@ -1836,6 +1836,10 @@ public:
 	float m_initialSpeed;
 	float m_acceleration;
 	float m_deceleration;
+
+	// VXP
+	float m_flFollowSpeed;
+
 	int	  m_state;
 	Vector m_vecMoveDir;
 	
@@ -1861,6 +1865,7 @@ BEGIN_DATADESC( CTriggerCamera )
 	DEFINE_FIELD( CTriggerCamera, m_initialSpeed, FIELD_FLOAT ),
 	DEFINE_FIELD( CTriggerCamera, m_acceleration, FIELD_FLOAT ),
 	DEFINE_FIELD( CTriggerCamera, m_deceleration, FIELD_FLOAT ),
+	DEFINE_FIELD( CTriggerCamera, m_flFollowSpeed, FIELD_FLOAT ), // VXP
 	DEFINE_FIELD( CTriggerCamera, m_state, FIELD_INTEGER ),
 	DEFINE_FIELD( CTriggerCamera, m_vecMoveDir, FIELD_VECTOR ),
 	
@@ -1893,6 +1898,11 @@ void CTriggerCamera::Spawn( void )
 		m_acceleration = 500;
 	if ( m_deceleration == 0 )
 		m_deceleration = 500;
+
+	// VXP
+	if ( m_flFollowSpeed == 0 )
+		m_flFollowSpeed = 40;
+
 	Relink();
 
 	// set manual mode on networking because these ents never change
@@ -1917,6 +1927,10 @@ bool CTriggerCamera::KeyValue( const char *szKeyName, const char *szValue )
 	else if (FStrEq(szKeyName, "deceleration"))
 	{
 		m_deceleration = atof( szValue );
+	}
+	else if (FStrEq(szKeyName, "followspeed"))
+	{
+		m_flFollowSpeed = atof( szValue );
 	}
 	else
 		return BaseClass::KeyValue( szKeyName, szValue );
@@ -2025,6 +2039,8 @@ void CTriggerCamera::Enable( void )
 	engine->SetView( m_hPlayer->edict(), edict() );
 
 	SetModel( STRING(m_hPlayer->GetModelName()) );
+//	SetModel( (const char *)m_hPlayer->GetModel() ); // VXP
+//	SetModel( modelinfo->GetModelName( m_hPlayer->GetModel() ) ); // VXP
 	
 	// Hide the player's viewmodel?
 
@@ -2152,7 +2168,8 @@ void CTriggerCamera::FollowTarget( )
 			dy = dy - 360;
 
 		QAngle vecAngVel;
-		vecAngVel.Init( dx * 40 * gpGlobals->frametime, dy * 40 * gpGlobals->frametime, GetLocalAngularVelocity().z );
+	//	vecAngVel.Init( dx * 40 * gpGlobals->frametime, dy * 40 * gpGlobals->frametime, GetLocalAngularVelocity().z );
+		vecAngVel.Init( dx * m_flFollowSpeed * gpGlobals->frametime, dy * m_flFollowSpeed * gpGlobals->frametime, GetLocalAngularVelocity().z );
 		SetLocalAngularVelocity(vecAngVel);
 	}
 

@@ -874,11 +874,19 @@ void UTIL_SetModel( CBaseEntity *pEntity, const char *pModelName )
 	int i = modelinfo->GetModelIndex( pModelName );
 	if ( i < 0 )
 	{
-		Error("no precache: %s\n", pModelName);
+	//	Error("no precache: %s\n", pModelName);
+		Error("%i/%s - %s:  UTIL_SetModel:  not precached: %s\n", pEntity->entindex(),
+			STRING( pEntity->GetEntityName() ),
+			pEntity->GetClassname(), pModelName);
+
+		// VXP
+	//	Warning( "no precache: %s\n", pModelName );
+	//	Assert( 0 );
 	}
 
 	pEntity->SetModelIndex( i ) ;
-	pEntity->SetModelName( MAKE_STRING( pModelName ) );
+//	pEntity->SetModelName( MAKE_STRING( pModelName ) );
+	pEntity->SetModelName( AllocPooledString( pModelName ) ); // VXP: Fix for setting up model at CHL2_Player::Spawn
 
 	// brush model
 	const model_t *mod = modelinfo->GetModel( i );
@@ -1004,8 +1012,31 @@ void UTIL_BloodStream( const Vector &origin, const Vector &direction, int color,
 	if ( g_Language == LANGUAGE_GERMAN && color == BLOOD_COLOR_RED )
 		color = 0;
 
+//	CPVSFilter filter( origin );
+//	te->BloodStream( filter, 0.0, &origin, &direction, 247, 63, 14, 255, min( amount, 255 ) );
+
+	int	r, g, b, a;
+
+	switch ( color )
+	{
+	default:
+	case BLOOD_COLOR_RED:
+		r = 247;
+		g = 63;
+		b = 14;
+		a = 255;
+		break;
+
+	case BLOOD_COLOR_YELLOW:
+		r = 128;
+		g = 128;
+		b = 0;
+		a = 255;
+		break;
+	}
+
 	CPVSFilter filter( origin );
-	te->BloodStream( filter, 0.0, &origin, &direction, 247, 63, 14, 255, min( amount, 255 ) );
+	te->BloodStream( filter, 0.0, &origin, &direction, r, g, b, a, min( amount, 255 ) );
 }				
 
 
