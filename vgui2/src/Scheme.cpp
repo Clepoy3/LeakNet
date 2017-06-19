@@ -530,7 +530,8 @@ int CSchemeManager::GetProportionalScaledValue(int normalizedValue)
 	surface()->GetScreenSize( wide, tall );
 	int proH, proW;
 	surface()->GetProportionalBase( proW, proH );
-	float scale = (float)tall / (float)proH;
+//	float scale = (float)tall / (float)proH;
+	float scale = (double)tall / (double)proH;
 
 	return (int)( normalizedValue * scale );
 }

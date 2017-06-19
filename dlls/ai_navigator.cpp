@@ -1364,7 +1364,7 @@ AIMoveResult_t CAI_Navigator::MoveNormal()
 	{
 		if ( GetActivity() == ACT_TRANSITION )
 			return AIMR_OK;
-		Msg( "%s moving with speed <= 0 (%s)\n", GetEntClassname(), GetOuter()->GetSequenceName( GetSequence() ) );
+		DevMsg( "%s moving with speed <= 0 (%s)\n", GetEntClassname(), GetOuter()->GetSequenceName( GetSequence() ) );
 	}
 			
 	// --------------------------------
@@ -1407,7 +1407,7 @@ bool CAI_Navigator::PreMove()
 	
 	if ( goalType == NAV_GROUND && curType != NAV_GROUND )
 	{
-		Msg( "Warning: %s(%s) appears to have wrong nav type in CAI_Navigator::MoveGround()\n", GetOuter()->GetClassname(), STRING( GetOuter()->GetEntityName() ) );
+		DevMsg( "Warning: %s(%s) appears to have wrong nav type in CAI_Navigator::MoveGround()\n", GetOuter()->GetClassname(), STRING( GetOuter()->GetEntityName() ) );
 		switch ( curType )
 		{
 			case NAV_CLIMB:

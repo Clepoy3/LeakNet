@@ -2064,7 +2064,16 @@ void CMatSystemSurface::PaintTraverse(VPANEL panel)
 		StartDrawing();
 	}
 
+//	m_flZPos = 0.0f; // VXP: Original value
 	m_flZPos = 1.0f; // VXP: HACK HACK: For new old HUD
+
+//	static int T = 0;
+//	T++;
+//	m_flZPos = sin(T * 0.01);
+//	Msg("%f\n", m_flZPos);
+
+//	m_flZPos = 0.5f;
+	
 	if (panel == GetEmbeddedPanel())
 	{
 		if ( m_pRestrictedPanel ) // only paint the restricted panel

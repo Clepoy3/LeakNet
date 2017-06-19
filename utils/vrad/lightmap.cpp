@@ -1436,6 +1436,10 @@ void CreateDirectLights (void)
 		{
 			ParseLightSpot( e, dl );
 		}
+		else if (!strcmp (name, "light_glspot")) // VXP
+		{
+			ParseLightSpot( e, dl );
+		}
 		else if (!strcmp(name, "light_environment")) 
 		{
 			ParseLightEnvironment( e, dl );

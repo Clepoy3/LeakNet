@@ -508,7 +508,7 @@ CBaseCombatCharacter *CBaseGrenade::GetOwner( void )
 {
 	CBaseCombatCharacter *pResult = ToBaseCombatCharacter( m_hOwner );
 	if ( !pResult )
-		Msg( "Warning: grenade has no owner\n" );
+		DevMsg( "Warning: grenade has no owner\n" );
 	if ( !pResult && GetOwnerEntity() != NULL )
 	{
 		pResult = ToBaseCombatCharacter( GetOwnerEntity() );

@@ -3301,11 +3301,21 @@ class CTriggerRPGFire : public CTriggerMultiple
 {
 	DECLARE_CLASS( CTriggerRPGFire, CTriggerMultiple );
 public:
+	~CTriggerRPGFire(); // VXP
+
 	void Spawn( void );
 	void OnRestore( void );
 };
 
 LINK_ENTITY_TO_CLASS( trigger_rpgfire, CTriggerRPGFire );
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+CTriggerRPGFire::~CTriggerRPGFire( void )
+{
+	g_hWeaponFireTriggers.FindAndRemove( this );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Called when spawning, after keyvalues have been handled.

@@ -4953,7 +4953,10 @@ void CAI_BaseNPC::SetDefaultEyeOffset ( void )
 
 	if ( m_vDefaultEyeOffset == vec3_origin )
 	{
-		Msg( "WARNING: %s has no eye offset in .qc!\n", GetClassname() );
+		if ( Classify() != CLASS_NONE )
+		{
+			DevMsg( "WARNING: %s(%s) has no eye offset in .qc!\n", GetClassname(), STRING(GetModelName()) );
+		}
 		VectorAdd( WorldAlignMins(), WorldAlignMaxs(), m_vDefaultEyeOffset );
 		m_vDefaultEyeOffset *= 0.75;
 	}
