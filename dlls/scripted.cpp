@@ -394,7 +394,7 @@ CAI_BaseNPC *CAI_ScriptedSequence::FindScriptEntity( )
 			else if (!(m_spawnflags & SF_SCRIPT_NO_COMPLAINTS))
 			{
 				// They cannot play the script.
-				Msg( "Found %s, but can't play!\n", STRING( m_iszEntity ));
+				DevMsg( "Found %s, but can't play!\n", STRING( m_iszEntity ));
 			}
 		}
 

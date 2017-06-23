@@ -92,6 +92,7 @@ public:
 	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	void	UpdateOnRemove( void );
 	virtual int	OnTakeDamage( const CTakeDamageInfo &info );
+	virtual bool	CanBecomeServerRagdoll( void ) { return false; } // VXP
 
 	bool	ShouldSavePhysics() { return true; }
 

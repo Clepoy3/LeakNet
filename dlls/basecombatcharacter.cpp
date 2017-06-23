@@ -35,6 +35,8 @@
 
 extern ConVar weapon_showproficiency;
 
+ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" ); // VXP
+
 // Weapon proficiency table. Keep this in sync with WeaponProficiency_t enum in the header!!
 proficiencyinfo_t g_WeaponProficiencyTable[] =
 {
@@ -73,6 +75,7 @@ BEGIN_DATADESC( CBaseCombatCharacter )
 	DEFINE_AUTO_ARRAY( CBaseCombatCharacter, m_iAmmo, FIELD_INTEGER ),
 	DEFINE_AUTO_ARRAY( CBaseCombatCharacter, m_hMyWeapons, FIELD_EHANDLE ),
 	DEFINE_FIELD( CBaseCombatCharacter, m_hActiveWeapon, FIELD_EHANDLE ),
+	DEFINE_FIELD( CBaseCombatCharacter, m_bForceServerRagdoll, FIELD_BOOLEAN ), // VXP
 
 	DEFINE_INPUTFUNC( CBaseCombatCharacter, FIELD_VOID, "KilledNPC", InputKilledNPC ),
 
@@ -364,6 +367,8 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 
 	// reset all ammo values to 0
 	RemoveAllAmmo();
+
+	m_bForceServerRagdoll = ai_force_serverside_ragdoll.GetBool(); // VXP
 }
 
 //------------------------------------------------------------------------------
@@ -834,12 +839,27 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 		UTIL_Remove(this);
 		return true;
 	}
-	else
-	{
-		return BecomeRagdollOnClient( forceVector );
-	}
 
-	return false;
+	//Fix up the force applied to server side ragdolls. This fixes magnets not affecting them.
+	CTakeDamageInfo newinfo = info;
+	newinfo.SetDamageForce( forceVector );
+
+#ifdef HL2_DLL
+//	if ( m_bForceServerRagdoll == true || ( HL2GameRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
+//	if ( m_bForceServerRagdoll == true || ( !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY ) )
+	if ( m_bForceServerRagdoll == true )
+	{
+		if ( CanBecomeServerRagdoll() == false )
+			return false;
+
+		//FIXME: This is fairly leafy to be here, but time is short!
+		CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_INTERACTIVE_DEBRIS );
+		UTIL_Remove(this);
+		return true;
+	}
+#endif // HL2_DLL
+
+	return BecomeRagdollOnClient( forceVector );
 }
 
 

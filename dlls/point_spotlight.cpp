@@ -121,6 +121,9 @@ CPointSpotlight::CPointSpotlight()
 	m_nBrightness = 80;
 	m_flDlightWidth = 1.8f;
 //	*m_iszMaterial = NULL;
+//	m_iszMaterial = NULL;
+//	*m_iszMaterial = '\0';
+	m_iszMaterial = "sprites/glow_test02.vmt";
 }
 
 
@@ -143,10 +146,12 @@ void CPointSpotlight::Precache(void)
 //-----------------------------------------------------------------------------
 void CPointSpotlight::Spawn(void)
 {
-	if ( Q_strcmp( m_iszMaterial, "" ) == 0 )
+/*
+	if ( m_iszMaterial == NULL || Q_strcmp( m_iszMaterial, "" ) == 0 ) // VXP: I'm not sure with it
 	{
 		Q_strcpy( m_iszMaterial, "sprites/glow_test02.vmt" );
 	}
+*/
 
 	Precache();
 

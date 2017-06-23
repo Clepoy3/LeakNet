@@ -3342,6 +3342,57 @@ void CTriggerRPGFire::OnRestore()
 	g_hWeaponFireTriggers.AddToTail( this );
 }
 
+class CServerRagdollTrigger : public CBaseTrigger // VXP
+{
+	DECLARE_CLASS( CServerRagdollTrigger, CBaseTrigger );
+
+public:
+
+	virtual void StartTouch( CBaseEntity *pOther );
+	virtual void EndTouch( CBaseEntity *pOther );
+	virtual void Spawn( void );
+
+};
+
+LINK_ENTITY_TO_CLASS( trigger_serverragdoll, CServerRagdollTrigger );
+
+void CServerRagdollTrigger::Spawn( void )
+{
+	BaseClass::Spawn();
+
+	InitTrigger();
+}
+
+void CServerRagdollTrigger::StartTouch(CBaseEntity *pOther)
+{
+	BaseClass::StartTouch( pOther );
+
+	if ( pOther->IsPlayer() )
+		return;
+
+	CBaseCombatCharacter *pCombatChar = pOther->MyCombatCharacterPointer();
+
+	if ( pCombatChar )
+	{
+		pCombatChar->m_bForceServerRagdoll = true;
+	}
+}
+
+void CServerRagdollTrigger::EndTouch(CBaseEntity *pOther)
+{
+	BaseClass::EndTouch( pOther );
+
+	if ( pOther->IsPlayer() )
+		return;
+
+	CBaseCombatCharacter *pCombatChar = pOther->MyCombatCharacterPointer();
+
+	if ( pCombatChar )
+	{
+		pCombatChar->m_bForceServerRagdoll = false;
+	}
+}
+
 #ifdef HL1_DLL
 //----------------------------------------------------------------------------------
 // func_friction

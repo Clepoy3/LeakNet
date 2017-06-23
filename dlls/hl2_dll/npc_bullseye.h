@@ -42,6 +42,7 @@ public:
 	void	SetPainPartner( CBaseEntity *pOther );
 	void	InputTargeted( inputdata_t &inputdata );
 	void	InputReleased( inputdata_t &inputdata );
+	bool	CanBecomeServerRagdoll( void ) { return false;	} // VXP
 
 protected:
 

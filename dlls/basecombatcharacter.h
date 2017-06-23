@@ -218,6 +218,8 @@ public:
 	virtual bool			AddPlayerItem( CBaseCombatWeapon *pItem ) { return false; }
 	virtual bool			RemovePlayerItem( CBaseCombatWeapon *pItem ) { return false; }
 
+	virtual bool			CanBecomeServerRagdoll( void ) { return true; } // VXP
+
 	// -----------------------
 	// Damage
 	// -----------------------
@@ -324,6 +326,8 @@ public:
 
 	float				GetNextAttack() const { return m_flNextAttack; }
 	void				SetNextAttack( float flWait ) { m_flNextAttack = flWait; }
+
+	bool				m_bForceServerRagdoll; // VXP
 
 #ifdef TF2_DLL
 public:

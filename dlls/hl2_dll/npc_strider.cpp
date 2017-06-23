@@ -617,6 +617,8 @@ public:
 	int		OnTakeDamage_Alive( const CTakeDamageInfo &info );
 	virtual bool BecomeRagdoll( const CTakeDamageInfo &info, const Vector &forceVector ) { return false; }
 
+	virtual bool	CanBecomeServerRagdoll( void ) { return false;	} // VXP
+
 	Vector	BodyTarget( const Vector &posSrc, bool bNoisy );
 	void	NPCThink();
 	Disposition_t IRelationType( CBaseEntity *pTarget );
