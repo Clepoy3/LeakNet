@@ -19,6 +19,7 @@
 #pragma warning( disable : 4305 )
 
 
+#include <io.h> // VXP: _access
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -1465,6 +1466,44 @@ void WriteSeqKeyValues( mstudioseqdesc_t *pseqdesc, CUtlVector< char > *pKeyValu
 }
 
 
+#ifdef _WIN32
+#define CORRECT_PATH_SEPARATOR '\\'
+#define INCORRECT_PATH_SEPARATOR '/'
+#elif defined(_LINUX)
+#define CORRECT_PATH_SEPARATOR '/'
+#define INCORRECT_PATH_SEPARATOR '\\'
+#endif
+
+void EnsureFileDirectoryExists( const char *pFilename )
+{
+	char dirName[MAX_PATH];
+	Q_strncpy( dirName, pFilename, sizeof( dirName ) );
+	COM_FixSlashes( dirName );
+//	char *pLastSlash = strrchr( dirName, CORRECT_PATH_SEPARATOR );
+	char *pLastSlash;
+	char *pLastSlash2;
+	pLastSlash = strrchr( dirName, CORRECT_PATH_SEPARATOR );
+	pLastSlash2 = strrchr( dirName, INCORRECT_PATH_SEPARATOR );
+	if ( pLastSlash2 > pLastSlash )
+	{
+		pLastSlash = pLastSlash2;
+	}
+	printf( "EnsureFileDirectoryExists: filename - %s, dirName: %s, lastSlash: %s\n", pFilename, dirName, pLastSlash );
+	if ( pLastSlash )
+	{
+		*pLastSlash = 0;
+
+		if ( _access( dirName, 0 ) != 0 )
+		{
+			char cmdLine[512];
+			Q_snprintf( cmdLine, sizeof( cmdLine ), "md \"%s\"", dirName );
+			printf( "Executing %s\n", cmdLine );
+			system( cmdLine );
+		}
+	}
+}
+
+
 void WriteFile (void)
 {
 	FileHandle_t modelouthandle;
@@ -1540,6 +1579,9 @@ void WriteFile (void)
 	}
 	strcat( filename, "models/" );	
 	strcat( filename, outname );	
+
+	// VXP: Create the directory.
+	EnsureFileDirectoryExists( filename );
 
 	if( !g_quiet )
 	{
