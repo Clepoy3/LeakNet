@@ -12,6 +12,7 @@
 #include "physdll.h"
 #include "phyfile.h"
 #include "vphysics_interface.h"
+#include "utlbuffer.h"
 
 HDC		camdc;
 HGLRC	baseRC;
@@ -83,8 +84,8 @@ void Error (char *error, ...)
 float	origin[3] = {32, 32, 48};
 float	angles[3];
 float	forward[3], right[3], vup[3], vpn[3], vright[3];
-float	width = 640;
-float	height = 480;
+float	width = 1024;
+float	height = 768;
 
 #define	SPEED_MOVE	320		// Units / second (run speed of HL)
 #define	SPEED_TURN	90		// Degrees / second
@@ -377,6 +378,9 @@ void ReadPolyFileType(char *name, int nList, BOOL drawLines)
 		if (!r || r == EOF)
 			break;
 		
+		if ( c > 65534*8)
+			break;
+
 		if (drawLines || numverts == 2)
 			glBegin(GL_LINE_LOOP);
 		else
@@ -406,9 +410,9 @@ void ReadPolyFileType(char *name, int nList, BOOL drawLines)
 				}
 				else 
 				{
-					v[3] = pow( v[3], 1.0 / 2.2 );
-					v[4] = pow( v[4], 1.0 / 2.2 );
-					v[5] = pow( v[5], 1.0 / 2.2 );
+					v[3] = pow( v[3], (float)(1.0f / 2.2f) );
+					v[4] = pow( v[4], (float)(1.0f / 2.2f) );
+					v[5] = pow( v[5], (float)(1.0f / 2.2f) );
 
 					glColor4f (v[3]/divisor, v[4]/divisor, 	v[5]/divisor, 0.6);   // divisor is one, bright colors
 				};
@@ -662,7 +666,7 @@ void DrawDisplacementData( void )
 
 	halfCount = dispPointCount / 2;
 
-	width = sqrt( halfCount );
+	width = sqrt( (float)halfCount );
 
 	glDisable( GL_CULL_FACE );
 
@@ -941,8 +945,10 @@ void WCam_Create (HINSTANCE hInstance)
 
 	WCam_Register (hInstance);
 
-	w = 640;
-	h = 480;
+//	w = 640;
+//	h = 480;
+	w = ::width;
+	h = ::height;
 
 	nScx = GetSystemMetrics(SM_CXSCREEN);
 	nScy = GetSystemMetrics(SM_CYSCREEN);

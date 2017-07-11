@@ -169,12 +169,14 @@ void CHud::DrawIconProgressBar( int x, int y, int width, int height, CHudTexture
 		int	barOfs = height * percentage;
 
 		icon->DrawSelfCropped( 
-			x, y,  // Pos
+		//	x, y,  // Pos
+			x, y, width, height,  // Pos
 			0, 0, width, barOfs, // Cropped subrect
 			darkClr );
 
 		icon->DrawSelfCropped( 
-			x, y + barOfs, 
+		//	x, y + barOfs, 
+			x, y + barOfs, width, height,
 			0, barOfs, width, height - barOfs, // Cropped subrect
 			clr );
 	}

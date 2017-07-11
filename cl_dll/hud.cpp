@@ -410,12 +410,12 @@ CHud::~CHud()
 	m_Icons.Purge();
 }
 
-void CHudTexture::DrawSelf( int x, int y, Color& clr ) const
+void CHudTexture::DrawSelf( float x, float y, Color& clr ) const
 {
 	DrawSelf( x, y, Width(), Height(), clr );
 }
 
-void CHudTexture::DrawSelf( int x, int y, int w, int h, Color& clr ) const
+void CHudTexture::DrawSelf( float x, float y, float w, float h, Color& clr ) const
 {
 	if ( textureId == -1 )
 		return;
@@ -426,13 +426,16 @@ void CHudTexture::DrawSelf( int x, int y, int w, int h, Color& clr ) const
 		texCoords[ 0 ], texCoords[ 1 ], texCoords[ 2 ], texCoords[ 3 ] );
 }
 
-void CHudTexture::DrawSelfCropped( int x, int y, int cropx, int cropy, int cropw, int croph, Color& clr ) const
+//void CHudTexture::DrawSelfCropped( float x, float y, float cropx, float cropy, float cropw, float croph, Color& clr ) const
+void CHudTexture::DrawSelfCropped( float x, float y, float width, float height, float cropx, float cropy, float cropw, float croph, Color& clr ) const
 {
 	if ( textureId == -1 )
 		return;
 
-	float fw = (float)Width();
-	float fh = (float)Height();
+//	float fw = (float)Width();
+//	float fh = (float)Height();
+	float fw = width;
+	float fh = height;
 
 	float twidth	= texCoords[ 2 ] - texCoords[ 0 ];
 	float theight	= texCoords[ 3 ] - texCoords[ 1 ];

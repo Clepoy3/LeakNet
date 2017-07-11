@@ -123,6 +123,13 @@ CMapStudioModel *CMapStudioModel::CreateMapStudioModel(const char *pszModelPath,
 		{
 			delete pModel;
 			pModel = NULL;
+
+			if ( Q_strncmp( pszModelPath, "models/error.mdl", 16 ) != 0 ) // VXP: If model is not set to error.mdl
+			{
+				return CreateMapStudioModel( "models/error.mdl", bOrientedBounds, bReversePitch );
+			}
+
+			Warning("Unable to load error model (models/error.mdl)\n");
 		}
 	}
 

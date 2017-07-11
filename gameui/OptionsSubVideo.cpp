@@ -25,11 +25,23 @@ using namespace vgui;
 	
 inline bool IsWideScreen ( int width, int height )
 {
+	// VXP: Passes 1360x768 and 1366x768
 	// 16:9 or 16:10 is widescreen :)
-	if ( (width * 9) == ( height * 16.0f ) || (width * 5.0) == ( height * 8.0 ))
-		return true;
+//	if ( (width * 9) == ( height * 16.0f ) || (width * 5.0) == ( height * 8.0 ))
+//		return true;
+//
+//	return false;
 
-	return false;
+	// VXP: Passes 1360x768 and 1366x768
+//	float screenaspect = ( float )width / ( float ) height;
+//	if ( screenaspect == ( 16.0f / 9.0f ) || screenaspect == ( 16.0f / 10.0f ) )
+//		return true;
+//
+//	return false;
+
+	float aspectRatio = (float)width/(float)height;
+	bool bIsWidescreen = aspectRatio >= 1.5999f;
+	return bIsWidescreen;
 }
 
 //-----------------------------------------------------------------------------

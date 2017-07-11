@@ -34,7 +34,8 @@ static int g_physgunBeam;
 #define PHYSGUN_BEAM_SPRITE		"sprites/physbeam.vmt"
 
 //#define MAX_PELLETS	16
-#define MAX_PELLETS	160
+//#define MAX_PELLETS	160
+#define MAX_PELLETS	60
 
 class CWeaponGravityGun;
 

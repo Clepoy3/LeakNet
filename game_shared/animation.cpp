@@ -279,8 +279,13 @@ void GetSequenceLinearMotion( studiohdr_t *pstudiohdr, int iSequence, const floa
 		// Don't spam on bogus model
 		if ( pstudiohdr->numseq > 0 )
 		{
-			Msg( "Bad sequence (%i out of %i max) in GetSequenceLinearMotion() for model '%s'!\n", iSequence, pstudiohdr->numseq, pstudiohdr->name );
+			static int msgCount = 0;
+			while ( ++msgCount < 10 )
+			{
+				Msg( "Bad sequence (%i out of %i max) in GetSequenceLinearMotion() for model '%s'!\n", iSequence, pstudiohdr->numseq, pstudiohdr->name );
+			}
 		}
+		pVec->Init(); // VXP
 		return;
 	}
 

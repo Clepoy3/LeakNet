@@ -132,7 +132,7 @@ END_DATADESC()
 
 CGrabController::CGrabController( void )
 {
-	m_shadow.dampFactor = 1;
+	m_shadow.dampFactor = 1.0f;
 	m_shadow.teleportDistance = 0;
 	m_errorTime = 0;
 	m_error = 0;
@@ -338,7 +338,8 @@ void CPlayerPickupController::Init( CBasePlayer *pPlayer, CBaseEntity *pObject )
 	// Holster player's weapon
 	if ( m_pPlayer->GetActiveWeapon() )
 	{
-		if ( !m_pPlayer->GetActiveWeapon()->Holster() )
+	//	if ( !m_pPlayer->GetActiveWeapon()->Holster() )
+		if ( !m_pPlayer->GetActiveWeapon()->CanHolster() || !m_pPlayer->GetActiveWeapon()->Holster() )
 		{
 			Shutdown();
 			return;
@@ -521,6 +522,10 @@ void CPlayerPickupController::Use( CBaseEntity *pActivator, CBaseEntity *pCaller
 
 void PlayerPickupObject( CBasePlayer *pPlayer, CBaseEntity *pObject )
 {
+	// VXP: Don't pick up if we don't have a phys object.
+	if ( pObject->VPhysicsGetObject() == NULL )
+		 return;
+
 	CPlayerPickupController *pController = (CPlayerPickupController *)CBaseEntity::Create( "player_pickup", pObject->GetAbsOrigin(), vec3_angle, pPlayer );
 	if ( !pController )
 		return;
@@ -646,6 +651,8 @@ void CWeaponPhysCannon::OnRestore()
 	{
 		m_grabController.m_controller->SetEventHandler( &m_grabController );
 	}
+
+	// VXP: Tracker 8106 from Source 2007?
 }
 
 //-----------------------------------------------------------------------------
@@ -1306,6 +1313,12 @@ void CWeaponPhysCannon::LaunchObject( const Vector &vecDir, float flForce )
 		}
 		
 		IPhysicsObject *pPhysObject = pObject->VPhysicsGetObject();
+
+		if ( !pPhysObject )
+		{
+			Assert( 0 );
+			return;
+		}
 		
 		//pPhysObject->ApplyForceCenter( vecDir * ( flForce * pPhysObject->GetMass() ) );
 		

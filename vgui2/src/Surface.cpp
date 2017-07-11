@@ -228,7 +228,7 @@ public:
 	virtual void DrawTexturedLine( const Vertex_t &a, const Vertex_t &b );
 	virtual void DrawOutlinedCircle(int x, int y, int radius, int segments) ;
 	virtual void DrawTexturedPolyLine( const Vertex_t *p,int n ) ; // (Note: this connects the first and last points).
-	virtual void DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 );
+	virtual void DrawTexturedSubRect( float x0, float y0, float x1, float y1, float texs0, float text0, float texs1, float text1 );
 	virtual void DrawTexturedPolygon(int n, Vertex_t *pVertices);
 	virtual const wchar_t *GetTitle(VPANEL panel);
 	virtual void LockCursor( bool state );
@@ -710,7 +710,7 @@ VPANEL CWin32Surface::GetEmbeddedPanel()
  void CWin32Surface::DrawTexturedPolyLine( const Vertex_t *p,int n )
  {
  }
- void CWin32Surface::DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 )
+ void CWin32Surface::DrawTexturedSubRect( float x0, float y0, float x1, float y1, float texs0, float text0, float texs1, float text1 )
  {
  }
  void CWin32Surface::DrawTexturedPolygon(int n, Vertex_t *pVertices)

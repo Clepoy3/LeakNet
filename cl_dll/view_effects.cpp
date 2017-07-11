@@ -13,6 +13,9 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+// VXP: Arbitrary limit so that bad entity logic on the server can't consume tons of memory on the client.
+#define MAX_SHAKES		32
+
 //-----------------------------------------------------------------------------
 // Purpose: Screen fade variables
 //-----------------------------------------------------------------------------
@@ -37,8 +40,8 @@ struct screenshake_t
 	float	nextShake;
 	Vector	offset;
 	float	angle;
-	Vector	appliedOffset;
-	float	appliedAngle;
+//	Vector	appliedOffset;
+//	float	appliedAngle;
 };
 
 //-----------------------------------------------------------------------------
@@ -66,8 +69,18 @@ public:
 	virtual void	ClearAllFades( void );
 
 private:
+	// VXP
+	void ClearAllShakes();
+	screenshake_t *FindLongestShake();
+
 	CUtlVector< screenfade_t* >	m_FadeList;
-	screenshake_t				m_Shake;
+//	screenshake_t				m_Shake;
+
+	// VXP
+	CUtlVector< screenshake_t* > m_ShakeList;
+	Vector m_vecShakeAppliedOffset;
+	float m_flShakeAppliedAngle;
+
 	int							m_FadeColorRGBA[4];
 	bool						m_bModulate;
 };
@@ -119,7 +132,8 @@ void CViewEffects::Init( void )
 void CViewEffects::LevelInit( void )
 {
 	// Clear out any screen shake
-	memset( &m_Shake, 0, sizeof(m_Shake) );
+//	memset( &m_Shake, 0, sizeof(m_Shake) );
+	ClearAllShakes(); // VXP
 
 	ClearAllFades();
 }
@@ -134,64 +148,85 @@ void CViewEffects::CalcShake( void )
 	int		i;
 	float	fraction, freq;
 
-	if ( m_Shake.time == 0 )
-		return;
+	// VXP: We'll accumulate the aggregate shake for this frame into these data members.
+	m_vecShakeAppliedOffset.Init(0, 0, 0);
+	m_flShakeAppliedAngle = 0;
 
-	if ( ( gpGlobals->curtime > m_Shake.time ) || 
-		m_Shake.duration <= 0 || 
-		m_Shake.amplitude <= 0 || 
-		m_Shake.frequency <= 0 )
+	int nShakeCount = m_ShakeList.Count();
+
+	for ( int nShake = nShakeCount - 1; nShake >= 0; nShake-- )
 	{
-		memset( &m_Shake, 0, sizeof(m_Shake) );
-		return;
-	}
+		screenshake_t *pShake = m_ShakeList.Element( nShake );
 
-	frametime = gpGlobals->frametime;
-
-	if ( gpGlobals->curtime > m_Shake.nextShake )
-	{
-		// Higher frequency means we recalc the extents more often and perturb the display again
-		m_Shake.nextShake = gpGlobals->curtime + (1.0f / m_Shake.frequency);
-
-		// Compute random shake extents (the shake will settle down from this)
-		for (i = 0; i < 3; i++ )
+		if ( pShake->time == 0 )
 		{
-			m_Shake.offset[i] = random->RandomFloat( -m_Shake.amplitude, m_Shake.amplitude );
+		//	return;
+			continue;
 		}
 
-		m_Shake.angle = random->RandomFloat( -m_Shake.amplitude*0.25, m_Shake.amplitude*0.25 );
-	}
+		if ( ( gpGlobals->curtime > pShake->time ) || 
+			pShake->duration <= 0 || 
+			pShake->amplitude <= 0 || 
+			pShake->frequency <= 0 )
+		{
+		//	memset( &m_Shake, 0, sizeof(m_Shake) );
+		//	return;
 
-	// Ramp down amplitude over duration (fraction goes from 1 to 0 linearly with slope 1/duration)
-	fraction = ( m_Shake.time - gpGlobals->curtime ) / m_Shake.duration;
-
-	// Ramp up frequency over duration
-	if ( fraction )
-	{
-		freq = (m_Shake.frequency / fraction);
-	}
-	else
-	{
-		freq = 0;
-	}
-
-	// square fraction to approach zero more quickly
-	fraction *= fraction;
-
-	// Sine wave that slowly settles to zero
-	fraction = fraction * sin( gpGlobals->curtime * freq );
+			// Retire this shake.
+			delete m_ShakeList.Element( nShake );
+			m_ShakeList.FastRemove( nShake );
+			continue;
+		}
+		frametime = gpGlobals->frametime;
 	
-	// Add to view origin
-	for ( i = 0; i < 3; i++ )
-	{
-		m_Shake.appliedOffset[i] = m_Shake.offset[i] * fraction;
-	}
-	
-	// Add to roll
-	m_Shake.appliedAngle = m_Shake.angle * fraction;
+		if ( gpGlobals->curtime > pShake->nextShake )
+		{
+			// Higher frequency means we recalc the extents more often and perturb the display again
+			pShake->nextShake = gpGlobals->curtime + (1.0f / pShake->frequency);
+			// Compute random shake extents (the shake will settle down from this)
+			for (i = 0; i < 3; i++ )
+			{
+				pShake->offset[i] = random->RandomFloat( -pShake->amplitude, pShake->amplitude );
+			}
+			pShake->angle = random->RandomFloat( -pShake->amplitude*0.25, pShake->amplitude*0.25 );
+		}
+		// Ramp down amplitude over duration (fraction goes from 1 to 0 linearly with slope 1/duration)
+		fraction = ( pShake->time - gpGlobals->curtime ) / pShake->duration;
 
-	// Drop amplitude a bit, less for higher frequency shakes
-	m_Shake.amplitude -= m_Shake.amplitude * ( frametime / (m_Shake.duration * m_Shake.frequency) );
+		// Ramp up frequency over duration
+		if ( fraction )
+		{
+			freq = (pShake->frequency / fraction);
+		}
+		else
+		{
+			freq = 0;
+		}
+
+		// square fraction to approach zero more quickly
+		fraction *= fraction;
+
+		// Sine wave that slowly settles to zero
+		float angle = gpGlobals->curtime * freq;
+		if ( angle > 1e8 )
+		{
+			angle = 1e8;
+		}
+		fraction = fraction * sin( angle );
+		
+		// Add to view origin
+	//	for ( i = 0; i < 3; i++ )
+	//	{
+	//		m_Shake.appliedOffset[i] = m_Shake.offset[i] * fraction;
+	//	}
+		m_vecShakeAppliedOffset = pShake->offset * fraction;
+		
+		// Add to roll
+		m_flShakeAppliedAngle = pShake->angle * fraction;
+	
+		// Drop amplitude a bit, less for higher frequency shakes
+		pShake->amplitude -= pShake->amplitude * ( frametime / (pShake->duration * pShake->frequency) );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -203,8 +238,47 @@ void CViewEffects::CalcShake( void )
 //-----------------------------------------------------------------------------
 void CViewEffects::ApplyShake( Vector& origin, QAngle& angles, float factor )
 {
-	VectorMA( origin, factor, m_Shake.appliedOffset, origin );
-	angles.z += m_Shake.appliedAngle * factor;
+	VectorMA( origin, factor, m_vecShakeAppliedOffset, origin );
+	angles.z += m_flShakeAppliedAngle * factor;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Zeros out all active screen shakes.
+//-----------------------------------------------------------------------------
+void CViewEffects::ClearAllShakes()
+{
+	int nShakeCount = m_ShakeList.Count();
+	for ( int i = 0; i < nShakeCount; i++ )
+	{
+		delete m_ShakeList.Element( i );
+	}
+
+	m_ShakeList.Purge();
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Returns the shake with the longest duration. This is the shake we
+//			use anytime we get an amplitude or frequency command, because the
+//			most likely case is that we're modifying a shake with a long
+//			duration rather than a brief shake caused by an explosion, etc.
+//-----------------------------------------------------------------------------
+screenshake_t *CViewEffects::FindLongestShake()
+{
+	screenshake_t *pLongestShake = NULL;
+
+	int nShakeCount = m_ShakeList.Count();
+	for ( int i = 0; i < nShakeCount; i++ )
+	{
+		screenshake_t *pShake = m_ShakeList.Element( i );
+		if ( pShake && ( !pLongestShake || ( pShake->duration > pLongestShake->duration ) ) )
+		{
+			pLongestShake = pShake;
+		}
+	}
+
+	return pLongestShake;
 }
 
 
@@ -223,7 +297,7 @@ int CViewEffects::Shake( const char *pszName, int iSize, void *pbuf )
 	float amplitude = READ_FLOAT();
 	float frequency = READ_FLOAT();
 	float duration = READ_FLOAT();
-
+/*
 	if (eCommand == SHAKE_STOP)
 	{
 		m_Shake.amplitude = 0;
@@ -256,6 +330,42 @@ int CViewEffects::Shake( const char *pszName, int iSize, void *pbuf )
 			m_Shake.duration = duration;
 			m_Shake.nextShake = 0;
 			m_Shake.time = gpGlobals->curtime + duration;
+		}
+	}
+*/
+
+	if ( eCommand == SHAKE_START && ( m_ShakeList.Count() < MAX_SHAKES ) )
+	{
+		screenshake_t *pNewShake = new screenshake_t;
+		
+		pNewShake->amplitude = amplitude;
+		pNewShake->frequency = frequency;
+		pNewShake->duration = duration;
+		pNewShake->nextShake = 0;
+		pNewShake->time = gpGlobals->curtime + duration;
+
+		m_ShakeList.AddToTail( pNewShake );
+	}
+	else if (eCommand == SHAKE_STOP)
+	{
+		ClearAllShakes();
+	}
+	else if ( eCommand == SHAKE_AMPLITUDE )
+	{
+		// VXP: Look for the most likely shake to modify.
+		screenshake_t *pShake = FindLongestShake();
+		if ( pShake )
+		{
+			pShake->amplitude = amplitude;
+		}
+	}
+	else if ( eCommand == SHAKE_FREQUENCY )
+	{
+		// Look for the most likely shake to modify.
+		screenshake_t *pShake = FindLongestShake();
+		if ( pShake )
+		{
+			pShake->frequency = frequency;
 		}
 	}
 

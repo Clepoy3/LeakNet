@@ -137,6 +137,10 @@ SOURCE=..\..\public\interface.cpp
 
 SOURCE=..\..\public\physdll.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\public\utlbuffer.cpp
+# End Source File
 # End Group
 # Begin Source File
 
@@ -161,6 +165,10 @@ SOURCE=.\glos.h
 # Begin Source File
 
 SOURCE=..\..\Public\MATHLIB.H
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\public\utlbuffer.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

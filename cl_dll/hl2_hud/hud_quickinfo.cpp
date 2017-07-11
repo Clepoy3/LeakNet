@@ -270,6 +270,9 @@ void CHUDQuickInfo::Paint()
 		scalar = 48;
 	}
 
+	// VXP
+	scalar = -1.0f * scalar;
+
 	Color clrNormal = gHUD.m_clrNormal;
 	clrNormal[3] = 255 * scalar;
 	icon_c->DrawSelf( xCenter, yCenter, clrNormal );

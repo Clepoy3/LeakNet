@@ -1056,7 +1056,7 @@ void CMatSystemSurface::DrawTexturedRect( int x0, int y0, int x1, int y1 )
 //-----------------------------------------------------------------------------
 // Draws a textured rectangle
 //-----------------------------------------------------------------------------
-void CMatSystemSurface::DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 )
+void CMatSystemSurface::DrawTexturedSubRect( float x0, float y0, float x1, float y1, float texs0, float text0, float texs1, float text1 )
 {
 	MEASURE_TIMED_STAT( VGUIMATSURFACE_STATS_DRAWTEXTUREDRECT_TIME );
 

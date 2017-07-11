@@ -106,7 +106,7 @@ public:
 	virtual void DrawSetTextureRGBA(int id, const unsigned char *rgba, int wide, int tall, int hardwareFilter, bool forceReload);
 
 	virtual void DrawTexturedRect(int x0, int y0, int x1, int y1);
-	virtual void DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 );
+	virtual void DrawTexturedSubRect( float x0, float y0, float x1, float y1, float texs0, float text0, float texs1, float text1 );
 
 	virtual void DrawTexturedPolygon(int n, vgui::Vertex_t *pVertices);
 

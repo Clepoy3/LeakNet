@@ -281,7 +281,7 @@ public:
 	virtual void DrawTexturedLine( const Vertex_t &a, const Vertex_t &b ) = 0;
 	virtual void DrawOutlinedCircle(int x, int y, int radius, int segments) = 0;
 	virtual void DrawTexturedPolyLine( const Vertex_t *p,int n ) = 0; // (Note: this connects the first and last points).
-	virtual void DrawTexturedSubRect( int x0, int y0, int x1, int y1, float texs0, float text0, float texs1, float text1 ) = 0;
+	virtual void DrawTexturedSubRect( float x0, float y0, float x1, float y1, float texs0, float text0, float texs1, float text1 ) = 0;
 	virtual void DrawTexturedPolygon(int n, Vertex_t *pVertices) = 0;
 	virtual const wchar_t *GetTitle(VPANEL panel) = 0;
 	virtual bool IsCursorLocked( void ) const = 0;

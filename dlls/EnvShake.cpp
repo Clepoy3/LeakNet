@@ -194,7 +194,7 @@ void CEnvShake::ApplyShake( ShakeCommand_t command )
 					// Only shake physics entities that players can see. This is one frame out of date
 					// so it's possible that we could miss objects if a player changed PVS this frame.
 					//
-					if ( ( list[i]->GetMoveType() == MOVETYPE_VPHYSICS ) && list[i]->GetSentLastFrame() )
+					if ( ( list[i]->GetMoveType() == MOVETYPE_VPHYSICS ) /*&& list[i]->GetSentLastFrame()*/ )
 					{
 						IPhysicsObject *pPhys = list[i]->VPhysicsGetObject();
 						if ( pPhys && pPhys->IsMoveable() )
@@ -276,7 +276,8 @@ void CEnvShake::Think( void )
 		// make the force it point mostly up
 		m_maxForce.z = 4;
 		VectorNormalize( m_maxForce );
-		m_maxForce *= m_currentAmp * 10;	// amplitude is the acceleration of a 10kg object
+		//m_maxForce *= m_currentAmp * 10;	// amplitude is the acceleration of a 10kg object
+		m_maxForce *= m_currentAmp * 400;
 	}
 
 	float fraction = ( m_stopTime - gpGlobals->curtime ) / Duration();

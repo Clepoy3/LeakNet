@@ -105,6 +105,8 @@ void CHudHealthOld::Reset()
 
 	SetLabelText(L"HEALTH");
 	SetDisplayValue(m_iHealth);
+
+	SetPaintBackgroundEnabled( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -124,13 +126,13 @@ void CHudHealthOld::OnThink()
 	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
-		SetPaintBackgroundEnabled( false );
+	//	SetPaintBackgroundEnabled( false );
 		return;
 	}
 	else
 	{
 		SetPaintEnabled(true);
-		SetPaintBackgroundEnabled(true);
+	//	SetPaintBackgroundEnabled(true);
 	}
 #endif
 

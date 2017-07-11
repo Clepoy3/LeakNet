@@ -64,6 +64,7 @@ void CHudAmmoOld::Init( void )
 	m_iAmmo2	= -1;
 
 	SetLabelText(L"AMMO");
+	SetPaintBackgroundEnabled( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -86,14 +87,14 @@ void CHudAmmoOld::OnThink()
 #endif
 		)
 	{
-		SetPaintEnabled(false);
-		SetPaintBackgroundEnabled(false);
+		SetPaintEnabled( false );
+	//	SetPaintBackgroundEnabled( false );
 		return;
 	}
 	else
 	{
-		SetPaintEnabled(true);
-		SetPaintBackgroundEnabled(true);
+		SetPaintEnabled( true );
+	//	SetPaintBackgroundEnabled( true );
 	}
 
 	// get the ammo in our clip
@@ -266,15 +267,17 @@ protected:
 			)
 		{
 			m_hCurrentActiveWeapon = NULL;
-			SetPaintEnabled(false);
-			SetPaintBackgroundEnabled(false);
+			SetPaintEnabled( false );
+		//	SetPaintBackgroundEnabled( false );
 			return;
 		}
 		else
 		{
-			SetPaintEnabled(true);
-			SetPaintBackgroundEnabled(true);
+			SetPaintEnabled( true );
+		//	SetPaintBackgroundEnabled( true );
 		}
+		
+		SetShouldDisplaySecondaryValue(true); // VXP: Test
 
 		if (wpn->UsesSecondaryAmmo())
 		{

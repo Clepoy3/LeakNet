@@ -72,9 +72,13 @@ public:
 		return rc.bottom - rc.top;
 	}
 
-	void DrawSelf( int x, int y, Color& clr ) const;
-	void DrawSelf( int x, int y, int w, int h, Color& clr ) const;
-	void DrawSelfCropped( int x, int y, int cropx, int cropy, int cropw, int croph, Color& clr ) const;
+	void DrawSelf( float x, float y, Color& clr ) const;
+	void DrawSelf( float x, float y, float w, float h, Color& clr ) const;
+	void DrawSelfCropped( float x, float y, float width, float height, float cropx, float cropy, float cropw, float croph, Color& clr ) const; // VXP
+	void DrawSelfCropped( float x, float y, float cropx, float cropy, float cropw, float croph, Color& clr ) const/*;*/
+	{
+		DrawSelfCropped( x, y, Width(), Height(), cropx, cropy, cropw, croph, clr );
+	}
 
 	char		szShortName[ 64 ];
 	char		szTextureFile[ 64 ];

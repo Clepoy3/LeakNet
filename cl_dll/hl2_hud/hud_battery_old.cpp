@@ -90,6 +90,8 @@ void CHudBatteryOld::Reset( void )
 
 	SetLabelText(L"SUIT");
 	SetDisplayValue(m_iBat);
+
+	SetPaintBackgroundEnabled( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -109,13 +111,13 @@ void CHudBatteryOld::OnThink( void )
 	if ( !hud_enableoldhud.GetBool() )
 	{
 		SetPaintEnabled( false );
-		SetPaintBackgroundEnabled( false );
+	//	SetPaintBackgroundEnabled( false );
 		return;
 	}
 	else
 	{
-		SetPaintEnabled(true);
-		SetPaintBackgroundEnabled(true);
+		SetPaintEnabled( true );
+	//	SetPaintBackgroundEnabled( true );
 	}
 #endif
 

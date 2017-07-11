@@ -123,7 +123,7 @@ ConVar	cl_updaterate( "cl_updaterate","20", FCVAR_ARCHIVE | FCVAR_USERINFO, "Num
 
 
 ConVar  cl_forcepreload( "cl_forcepreload", "0", FCVAR_ARCHIVE, "Whether we should force preloading.");
-static ConVar cl_logofile( "cl_logofile", "smscorch1", FCVAR_ARCHIVE, "Spraypoint logo decal." );
+static ConVar cl_logofile( "cl_logofile", "Spray_lambda", FCVAR_ARCHIVE, "Spraypoint logo decal." );
 ConVar cl_LocalNetworkBackdoor( "cl_LocalNetworkBackdoor", "1", 0, "Enable network optimizations for single player games." );
 
 client_static_t	cls;

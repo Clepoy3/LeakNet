@@ -38,38 +38,41 @@ protected:
 	virtual void Paint();
 	bool PrepareTextures(); // VXP
 	bool PrepareSmallTextures(); // VXP
-	void PaintNumbers(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
-	virtual void PaintNumbers(int xpos, int ypos, int value, Color col, bool isSmallFont = false)
+	void PaintNumbers(float xpos, float ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
+	virtual void PaintNumbers(float xpos, float ypos, int value, Color col, bool isSmallFont = false)
 	{
 		PaintNumbers(xpos, ypos, value, col, 1, isSmallFont);
 	}
 
 	// VXP
-	void PaintLabel(int xpos, int ypos, CHudTexture *label, Color col);
-	void PaintProgressBar(int xpos, int ypos, int value, Color col);
-	void PaintDummies(int xpos, int ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
-	virtual void PaintDummies(int xpos, int ypos, Color col, bool isSmallFont = false)
+	void PaintLabel(float xpos, float ypos, CHudTexture *label, Color col);
+	void PaintProgressBar(float xpos, float ypos, int value, Color col);
+	void PaintDummies(float xpos, float ypos, int value, Color col, int numSigDigits, bool isSmallFont = false);
+	virtual void PaintDummies(float xpos, float ypos, Color col, bool isSmallFont = false)
 	{
 		PaintDummies(xpos, ypos, 999, col, 3, isSmallFont);
 	}
 
 	CPanelAnimationVar( float, m_flAlphaOverride, "Alpha", "255" );
-	CPanelAnimationVar( Color, m_TextColor, "TextColor", "FgColor" );
+//	CPanelAnimationVar( Color, m_TextColor, "TextColor", "FgColor" );
 	CPanelAnimationVar( float, m_flBlur, "Blur", "0" );
 
-	CPanelAnimationVar( Color, m_Color, "Color", "FgColor" );
+//	CPanelAnimationVar( Color, m_Color, "Color", "FgColor" );
 
 	CPanelAnimationVarAliasType( float, text_xpos, "text_xpos", "8", "proportional_float" );
 	CPanelAnimationVarAliasType( float, text_ypos, "text_ypos", "20", "proportional_float" );
+	CPanelAnimationVarAliasType( float, text_width, "text_width", "7", "proportional_float" );
 	CPanelAnimationVarAliasType( float, text_height, "text_height", "14", "proportional_float" );
+//	CPanelAnimationVarAliasType(   int, text_height, "text_height", "14", "proportional_int" );
 	CPanelAnimationVarAliasType( float, digit_xpos, "digit_xpos", "0", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit_ypos, "digit_ypos", "0", "proportional_float" );
+	CPanelAnimationVarAliasType( float, digit_width, "digit_width", "8", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit_height, "digit_height", "16", "proportional_float" );
 //	CPanelAnimationVarAliasType( float, digit_xpos, "digit_xpos", "50", "proportional_float" );
 //	CPanelAnimationVarAliasType( float, digit_ypos, "digit_ypos", "2", "proportional_float" );
-//	CPanelAnimationVarAliasType( float, digit_height, "digit_height", "25", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit2_xpos, "digit2_xpos", "0", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit2_ypos, "digit2_ypos", "0", "proportional_float" );
+	CPanelAnimationVarAliasType( float, digit2_width, "digit2_width", "8", "proportional_float" );
 	CPanelAnimationVarAliasType( float, digit2_height, "digit2_height", "8", "proportional_float" );
 
 private:
