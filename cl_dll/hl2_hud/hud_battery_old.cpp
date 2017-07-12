@@ -126,17 +126,17 @@ void CHudBatteryOld::OnThink( void )
 
 	if ( !m_iNewBat )
 	{
-	 	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerZero");
+	 	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerZeroOld");
 	}
 	else if ( m_iNewBat < m_iBat )
 	{
 		// battery power has decreased, so play the damaged animation
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitDamageTaken");
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitDamageTakenOld");
 
 		// play an extra animation if we're super low
 		if ( m_iNewBat < 20 )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitArmorLow");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitArmorLowOld");
 		}
 	}
 	else
@@ -144,11 +144,11 @@ void CHudBatteryOld::OnThink( void )
 		// battery power has increased (if we had no previous armor, or if we just loaded the game, don't use alert state)
 		if ( m_iBat == INIT_BAT || m_iBat == 0 || m_iNewBat >= 20)
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerIncreasedAbove20");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerIncreasedAbove20Old");
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerIncreasedBelow20");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitPowerIncreasedBelow20Old");
 		}
 	}
 

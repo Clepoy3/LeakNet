@@ -88,12 +88,12 @@ void CHudSuitPowerOld::OnThink( void )
 	if ( flCurrentPower >= 100.0f && m_flSuitPower < 100.0f )
 	{
 		// we've reached max power
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerMax");
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerMaxOld");
 	}
 	else if ( flCurrentPower < 100.0f && m_flSuitPower >= 100.0f )
 	{
 		// we've lost power
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerNotMax");
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerNotMaxOld");
 	}
 
 	m_flSuitPower = flCurrentPower;
@@ -132,11 +132,11 @@ void CHudSuitPowerOld::Paint()
 	{
 		if (lowPower)
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerDecreasedBelow25");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerDecreasedBelow25Old");
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerIncreasedAbove25");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("SuitAuxPowerIncreasedAbove25Old");
 		}
 
 		m_bSuitPowerLow = lowPower;

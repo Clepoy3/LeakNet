@@ -165,12 +165,12 @@ void CHudHealthOld::OnThink()
 		// Don't flash on save/load restoration
 		if ( !restored )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedAbove20");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedAbove20Old");
 		}
 	}
 	else
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedBelow20");
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedBelow20Old");
 	}
 
 	SetDisplayValue(m_iHealth);
@@ -200,12 +200,12 @@ void CHudHealthOld::MsgFunc_DamageOld(const char *pszName, int iSize, void *pbuf
 		if ( damageTaken > 0 )
 		{
 			// start the animation
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthDamageTaken");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthDamageTakenOld");
 
 			// see if our health is low
 			if ( m_iHealth < 20 )
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthLow");
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthLowOld");
 			}
 		}
 	}

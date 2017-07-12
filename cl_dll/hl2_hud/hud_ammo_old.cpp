@@ -128,23 +128,23 @@ void CHudAmmoOld::OnThink()
 		if (wpn->UsesClipsForAmmo1())
 		{
 			SetShouldDisplaySecondaryValue(true);
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponUsesClips");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponUsesClipsOld");
 
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponDoesNotUseClips");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponDoesNotUseClipsOld");
 			SetShouldDisplaySecondaryValue(false);
 		}
 
 		if ( GetGameRestored() )
 		{
 			SetGameRestored( false );
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponChangedRestore");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponChangedRestoreOld");
 		}
 		else
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponChanged");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("WeaponChangedOld");
 		}
 		m_hCurrentActiveWeapon = wpn;
 	}
@@ -159,17 +159,17 @@ void CHudAmmoOld::SetAmmo(int ammo, int maxammo, bool playAnimation)
 	{
 		if (ammo == 0)
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoEmpty");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoEmptyOld");
 		}
 		else if (ammo < m_iAmmo)
 		{
 			// ammo has decreased
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoDecreased");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoDecreasedOld");
 		}
 		else
 		{
 			// ammunition has increased
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoIncreased");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoIncreasedOld");
 		}
 
 		m_iAmmo = ammo;
@@ -188,17 +188,17 @@ void CHudAmmoOld::SetAmmo2(int ammo2, bool playAnimation)
 	{
 		if (ammo2 == 0)
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2Empty");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2EmptyOld");
 		}
 		else if (ammo2 < m_iAmmo2)
 		{
 			// ammo has decreased
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2Decreased");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2DecreasedOld");
 		}
 		else
 		{
 			// ammunition has increased
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2Increased");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("Ammo2IncreasedOld");
 		}
 
 		m_iAmmo2 = ammo2;
@@ -236,17 +236,17 @@ public:
 		{
 			if (ammo == 0)
 			{
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryEmpty");
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryEmptyOld");
 			}
 			else if (ammo < m_iAmmo)
 			{
 				// ammo has decreased
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryDecreased");
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryDecreasedOld");
 			}
 			else
 			{
 				// ammunition has increased
-				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryIncreased");
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("AmmoSecondaryIncreasedOld");
 			}
 
 			m_iAmmo = ammo;
@@ -298,16 +298,16 @@ protected:
 				// we've changed to a weapon that uses secondary ammo
 				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(
 					restored ?
-					"WeaponUsesSecondaryAmmoRestore" : 
-					"WeaponUsesSecondaryAmmo");
+					"WeaponUsesSecondaryAmmoRestoreOld" : 
+					"WeaponUsesSecondaryAmmoOld");
 			}
 			else 
 			{
 				// we've changed away from a weapon that uses secondary ammo
 				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence(
 					restored ?
-					"WeaponDoesNotUseSecondaryAmmoRestore" :
-					"WeaponDoesNotUseSecondaryAmmo" );
+					"WeaponDoesNotUseSecondaryAmmoRestoreOld" :
+					"WeaponDoesNotUseSecondaryAmmoOld" );
 			}
 			m_hCurrentActiveWeapon = wpn;
 		}
