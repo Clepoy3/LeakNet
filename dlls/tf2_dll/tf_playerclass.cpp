@@ -632,12 +632,7 @@ void CPlayerClass::SetMaxSpeed( float flMaxSpeed )
 int CPlayerClass::GetMaxHealthCVarValue()
 {
 	int val = GetTFClassInfo( GetTFClass() )->m_pMaxHealthCVar->GetInt();
-//	Assert( val > 0 );	// If you hit this assert, then you probably didn't add an entry to skill?.cfg
-	if( val <= 0 )
-	{
-		Warning( "Couldn't find right class health! Using the default..." );
-		val = 100;
-	}
+	Assert( val > 0 );	// If you hit this assert, then you probably didn't add an entry to skill?.cfg
 	return val;
 }
 
@@ -1140,14 +1135,6 @@ void CPlayerClass::CheckDeterioratingObjects( void )
 //-----------------------------------------------------------------------------
 CBaseEntity *CPlayerClass::SelectSpawnPoint( void )
 {
-//	return NULL;
-	CBaseEntity *pSpot;
-	if( m_pPlayer->GetTeamNumber() == TEAM_HUMANS )
-		pSpot = gEntList.FindEntityByClassname( NULL, "info_player_humans");
-	else if( m_pPlayer->GetTeamNumber() == TEAM_ALIENS )
-		pSpot = gEntList.FindEntityByClassname( NULL, "info_player_aliens");
-	if( pSpot )
-		return pSpot;
 	return NULL;
 }
 

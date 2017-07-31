@@ -113,8 +113,7 @@ void CFireDamageMgr::FrameUpdatePostEntityThink()
 
 	//   													   (-kt)
 	// Figure out how much all the damage decays this frame:  e
-//	float flFrameDecay = pow( 2.718281828459045235360, -m_flDecayConstant * frametime );
-	float flFrameDecay = pow( (float)2.718281828459045235360, (float)-m_flDecayConstant * frametime ); // VXP
+	float flFrameDecay = pow( 2.718281828459045235360, -m_flDecayConstant * frametime );
 
 
 	int iNext;

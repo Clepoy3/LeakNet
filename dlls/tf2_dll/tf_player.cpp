@@ -420,24 +420,12 @@ void CBaseTFPlayer::Spawn( void )
 			else
 			{
 				// Let players choose their team
-			//	m_pCurrentMenu = gMenus[MENU_TEAM];
-				CSingleUserRecipientFilter user( this );
-				user.MakeReliable();
-
-				UserMessageBegin( user, "ShowTFTeamPanel" );
-					WRITE_STRING( "" );
-				MessageEnd();
+				m_pCurrentMenu = gMenus[MENU_TEAM];
 			}
 		}
 		else // Bring up the Class Menu
 		{
-		//	m_pCurrentMenu = gMenus[MENU_CLASS];
-			CSingleUserRecipientFilter user( this );
-			user.MakeReliable();
-
-			UserMessageBegin( user, "ShowTFClassPanel" );
-				WRITE_STRING( "" );
-			MessageEnd();
+			m_pCurrentMenu = gMenus[MENU_CLASS];
 		}
 
 		m_MenuRefreshTime = gpGlobals->curtime;
@@ -899,9 +887,8 @@ void CBaseTFPlayer::PreThink(void)
 			}
 		}
 
-		// VXP: Re-enabled
 		// ROBIN: Maps will define whether or not teams reinforce
-		/**/
+		/*
 		// Aliens respawn in waves
 		if ( GetTeamNumber() == TEAM_ALIENS )
 		{
@@ -912,7 +899,7 @@ void CBaseTFPlayer::PreThink(void)
 				ClientPrint( this, HUD_PRINTCENTER, UTIL_VarArgs("\nReinforcing in %d %s\n", iSecondsToGo, iSecondsToGo > 1 ? "seconds" : "second" ) );
 			}
 		}
-		/**/
+		*/
 
 		TFPlayerDeathThink();
 	}
@@ -1022,15 +1009,6 @@ CBaseEntity *CBaseTFPlayer::EntSelectSpawnPoint( void )
 		if ( entity )
 			return entity;
 	}
-
-	// VXP
-/*	CBaseEntity *pSpot;
-	pSpot = gEntList.FindEntityByClassname( g_pLastSpawn, "info_player_humans");
-	if( pSpot )
-		return pSpot;
-	pSpot = gEntList.FindEntityByClassname( g_pLastSpawn, "info_player_aliens");
-	if( pSpot )
-		return pSpot;*/
 
 	// If we're not in a team, or the team didn't have a spawnpoint for us,
 	// fall back to the basic spawnpoint code.
@@ -1674,109 +1652,6 @@ bool CBaseTFPlayer::ClientCommand(const char *cmd)
 			Msg( "Hitboxset forced to %i %s\n", GetHitboxSet(), GetHitboxSetName() );
 		}
 
-		return true;
-	}
-	
-	if ( FStrEq( cmd, "jointeam_humans" ) )
-	{
-		ChangeTeam( TEAM_HUMANS );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Switched to team Humans\n" );
-		ForceRespawn();
-
-		return true;
-
-	}
-
-	if ( FStrEq( cmd, "jointeam_aliens" ) )
-	{
-		if ( !this ) return true;
-		ChangeTeam( TEAM_ALIENS );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Switched to team Aliens\n" );
-		ForceRespawn();
-
-		return true;
-	}
-
-	if ( FStrEq( cmd, "jointeam_auto" ) )
-	{
-		PlacePlayerInTeam();
-		if ( GetTeamNumber() == TEAM_HUMANS )
-		{
-			ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Switched to team Humans\n" );
-		}
-		else
-		{
-			ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Switched to team Aliens\n" );
-		}
-
-
-		ForceRespawn();
-
-		return true;
-	}
-
-	if ( FStrEq( cmd, "changeclass_commando" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_COMMANDO );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Commando\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-	if ( FStrEq( cmd, "changeclass_defender" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_DEFENDER );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Defender\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-
-	if ( FStrEq( cmd, "changeclass_escort" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_ESCORT );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Escort\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-	if ( FStrEq( cmd, "changeclass_medic" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_MEDIC );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Medic\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-	if ( FStrEq( cmd, "changeclass_pyro" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_PYRO );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Pyro\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-	if ( FStrEq( cmd, "changeclass_recon" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_RECON );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Recon\n" );
-		//ForceRespawn();
-		
-		return true;
-	}
-	if ( FStrEq( cmd, "changeclass_sapper" ) )
-	{
-		if ( !this ) return true;
-		ChangeClass( TFCLASS_SAPPER );
-		ClientPrint( ToBasePlayer( this ), HUD_PRINTTALK, "Changed to class Sapper\n" );
-		//ForceRespawn();
-		
 		return true;
 	}
 

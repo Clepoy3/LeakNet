@@ -126,10 +126,6 @@ void CPlayerClassCommando::CreateClass( void )
 	// Create our two handed weapon layout
 	m_hWpnShield = m_pPlayer->GetCombatShield();
 
-	// VXP
-	m_hWpnPlasma = static_cast< CBaseTFCombatWeapon * >( m_pPlayer->GiveNamedItem( "weapon_rocket_launcher" ) );
-	m_hWpnGrenade = static_cast< CBaseTFCombatWeapon *>( m_pPlayer->GiveNamedItem( "weapon_combat_grenade" ));
-
 	CWeaponTwoHandedContainer *p = ( CWeaponTwoHandedContainer * )m_pPlayer->Weapon_OwnsThisType( "weapon_twohandedcontainer" );
 	if ( !p )
 	{
@@ -564,9 +560,9 @@ void CPlayerClassCommando::ResetViewOffset( void )
 //-----------------------------------------------------------------------------
 void CPlayerClassCommando::InitVCollision( void )
 {
-/*	CPhysCollide *pStandModel = */PhysCreateBbox( COMMANDOCLASS_HULL_STAND_MIN, COMMANDOCLASS_HULL_STAND_MAX );
-/*	CPhysCollide *pCrouchModel = */PhysCreateBbox( COMMANDOCLASS_HULL_DUCK_MIN, COMMANDOCLASS_HULL_DUCK_MAX );
-//	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_commando_stand", pCrouchModel, "tfplayer_commando_crouch" );
+	CPhysCollide *pStandModel = PhysCreateBbox( COMMANDOCLASS_HULL_STAND_MIN, COMMANDOCLASS_HULL_STAND_MAX );
+	CPhysCollide *pCrouchModel = PhysCreateBbox( COMMANDOCLASS_HULL_DUCK_MIN, COMMANDOCLASS_HULL_DUCK_MAX );
+	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_commando_stand", pCrouchModel, "tfplayer_commando_crouch" );
 }
 
 //-----------------------------------------------------------------------------

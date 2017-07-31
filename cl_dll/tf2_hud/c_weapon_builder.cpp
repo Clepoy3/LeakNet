@@ -269,31 +269,14 @@ CHumanPDAPanel::CHumanPDAPanel( vgui::Panel *parent, const char *panelName )
 	m_pObjectImage = NULL;
 
 	m_pObjectName = new vgui::Label( this, "ObjectName", "" );
-	m_pObjectName->SetPos( 5, 0 );
-	m_pObjectName->SetSize( 240, 20 );
-	m_pObjectName->SetPaintBackgroundEnabled(false);
-
 	m_pObjectCost = new vgui::Label( this, "ObjectCost", "" );
-	m_pObjectCost->SetPos( 5, 25 );
-	m_pObjectCost->SetSize( 240, 20 );
-	m_pObjectCost->SetPaintBackgroundEnabled(false);
-
 	m_pObjectOnTeamCount = new vgui::Label( this, "ObjectOnTeamCount", "" );
-	m_pObjectOnTeamCount->SetPos( 5, 50 );
-	m_pObjectOnTeamCount->SetSize( 240, 20 );
-	m_pObjectOnTeamCount->SetPaintBackgroundEnabled(false);
-
 	m_pObjectPlacementDetails = new vgui::Label( this, "ObjectPlacementDetails", "" );
-	m_pObjectPlacementDetails->SetPos( 5, 75 );
-	m_pObjectPlacementDetails->SetSize( 240, 20 );
-	m_pObjectPlacementDetails->SetPaintBackgroundEnabled(false);
 
 	m_pBitmapPanel = new CBitmapPanel( this, "ObjectImage" );
 	m_pObjectImage = new BitmapImage();
 	m_pObjectImage->UsePanelRenderSize( m_pBitmapPanel->GetVPanel() );
 	m_pBitmapPanel->SetImage( m_pObjectImage );
-	m_pBitmapPanel->SetPos( 185, 5 ); 
-	m_pBitmapPanel->SetZPos( 5 );
 
 	m_nLastObjectID = -1;
 	m_nLastObjectCount = -1;
@@ -389,10 +372,6 @@ void CHumanPDAPanel::OnTick()
 	Q_snprintf( buf, sizeof( buf ), "hud/menu/%s", info->m_pClassName );
 	m_pObjectImage->SetImageFile( buf );
 	m_pObjectImage->SetColor( GetFgColor() );
-	int wide = 60;
-	int tall = 60;
-	m_pObjectImage->SetRenderSize( wide, tall );
-	m_pBitmapPanel->SetSize( wide, tall );
 	
 	Q_snprintf( buf, 256, "%s", info->m_pStatusName );
 	m_pObjectName->SetText( buf );

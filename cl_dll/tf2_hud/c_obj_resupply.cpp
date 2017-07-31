@@ -85,28 +85,9 @@ bool CResupplyControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_t* p
 {
 	// Grab ahold of certain well-known controls
 	m_pBuyAmmoButton = new CBitmapButton( GetActivePanel(), "BuyAmmoButton", "" );
-	m_pBuyAmmoButton->SetPos( 0, 100 );
-	m_pBuyAmmoButton->SetSize( 110, 20 );
-	m_pBuyAmmoButton->SetText("Ammo");
-	m_pBuyAmmoButton->SetCommand("BuyAmmo");
-
 	m_pBuyGrenadesButton = new CBitmapButton( GetActivePanel(), "BuyGrenadesButton", "" );
-	m_pBuyGrenadesButton->SetPos( 130, 100 );
-	m_pBuyGrenadesButton->SetSize( 110, 20 );
-	m_pBuyGrenadesButton->SetText("Grenades");
-	m_pBuyGrenadesButton->SetCommand("BuyGrenades");
-
 	m_pBuyHealthButton = new CBitmapButton( GetActivePanel(), "BuyHealthButton", "" );
-	m_pBuyHealthButton->SetPos( 0, 125 );
-	m_pBuyHealthButton->SetSize( 110, 20 );
-	m_pBuyHealthButton->SetText("Health");
-	m_pBuyHealthButton->SetCommand("BuyHealth");
-
 	m_pBuyAllButton = new CBitmapButton( GetActivePanel(), "BuyAllButton", "" );
-	m_pBuyAllButton->SetPos( 130, 125 );
-	m_pBuyAllButton->SetSize( 110, 20 );
-	m_pBuyAllButton->SetText("All");
-	m_pBuyAllButton->SetCommand("BuyAll");
 
 	return BaseClass::Init( pKeyValues, pInitData );
 }

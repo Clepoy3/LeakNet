@@ -147,7 +147,7 @@ CObjectRespawnStation* CObjectRespawnStation::Create(const Vector &vOrigin, cons
 void PlayRespawnEffect(CBaseEntity *pRespawnStation)
 {
 	// ROBIN: Removed this for now
-//	return; // VXP: Re-enabled
+	return;
 
 	// Check last respawn time; wait a couple seconds
 	if (!FClassnameIs(pRespawnStation, "obj_respawn_station"))

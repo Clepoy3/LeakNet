@@ -98,8 +98,6 @@ protected:
 	bool			RedirectAirVelocity( const trace_t &trace );
 	inline int		BlockerType( const Vector &vImpactNormal );
 
-	float			GetClassSpecificSpeed( CBasePlayer *pPlayer );
-
 protected:
 
 	// Per movement collision data cache(s)

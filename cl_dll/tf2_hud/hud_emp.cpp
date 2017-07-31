@@ -69,7 +69,6 @@ protected:
 };
 
 //DECLARE_HUDELEMENT( CHudEMP );
-DECLARE_HUDELEMENT( CHudEMP ); // VXP
 
 //-----------------------------------------------------------------------------
 // Purpose: 

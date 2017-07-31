@@ -130,9 +130,9 @@ void CPlayerClassPyro::ResetViewOffset()
 //-----------------------------------------------------------------------------
 void CPlayerClassPyro::InitVCollision()
 {
-/*	CPhysCollide *pStandModel =*/ PhysCreateBbox( PYROCLASS_HULL_STAND_MIN, PYROCLASS_HULL_STAND_MAX );
-/*	CPhysCollide *pCrouchModel =*/ PhysCreateBbox( PYROCLASS_HULL_DUCK_MIN, PYROCLASS_HULL_DUCK_MAX );
-//	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_medic_stand", pCrouchModel, "tfplayer_medic_crouch" );
+	CPhysCollide *pStandModel = PhysCreateBbox( PYROCLASS_HULL_STAND_MIN, PYROCLASS_HULL_STAND_MAX );
+	CPhysCollide *pCrouchModel = PhysCreateBbox( PYROCLASS_HULL_DUCK_MIN, PYROCLASS_HULL_DUCK_MAX );
+	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_medic_stand", pCrouchModel, "tfplayer_medic_crouch" );
 }
 
 

@@ -197,13 +197,7 @@ CBuffStationControlPanel::CBuffStationControlPanel( vgui::Panel *parent, const c
 bool CBuffStationControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData )
 {
 	m_pSocketsLabel = new vgui::Label( this, "SocketReadout", "" );
-	m_pSocketsLabel->SetPos( 0, 100 );
-	m_pSocketsLabel->SetSize( 240, 20 );
-
 	m_pConnectButton = new CBitmapButton( this, "ConnectButton", "Connect" );
-	m_pConnectButton->SetPos( 0, 125 );
-	m_pConnectButton->SetSize( 240, 20 );
-	m_pConnectButton->SetCommand("Connect");
 
 	if (!BaseClass::Init(pKeyValues, pInitData))
 		return false;

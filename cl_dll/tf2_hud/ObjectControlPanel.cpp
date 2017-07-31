@@ -61,23 +61,10 @@ bool CObjectControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pIn
 {
 	// Grab ahold of certain well-known controls
 	m_pHealthLabel = new vgui::Label( this, "HealthReadout", "" );
-	m_pHealthLabel->SetPos( 0, 0 );
-	m_pHealthLabel->SetSize( 240, 20 );
-
 	m_pOwnerLabel = new vgui::Label( this, "OwnerReadout", "" );
-	m_pOwnerLabel->SetPos( 0, 25 );
-	m_pOwnerLabel->SetSize( 240, 20 );
-
 	m_pDismantleButton = new CBitmapButton( this, "DismantleButton", "Dismantle" );
-	m_pDismantleButton->SetPos( 0, 50 );
-	m_pDismantleButton->SetSize( 240, 20 );
-	m_pDismantleButton->SetCommand("dismantle");
-
 	m_pAssumeControlButton = new CBitmapButton( GetDeterioratingPanel(), "AssumeControl", "" );
-
 	m_pDismantleTimeLabel = new vgui::Label( GetDismantlingPanel(), "DismantleTime", "" );
-	m_pDismantleTimeLabel->SetPos( 0, 75 );
-	m_pDismantleTimeLabel->SetSize( 240, 20 );
 
 	m_flDismantleTime = -1;
 
@@ -169,12 +156,7 @@ void CObjectControlPanel::OnTickActive( C_BaseObject *pObj, C_BaseTFPlayer *pLoc
 
 void CObjectControlPanel::OnTickDismantling( C_BaseObject *pObj, C_BaseTFPlayer *pLocalPlayer )
 {
-//	ShowDismantleButton( false );
-	// VXP
-	m_pDismantleButton->SetVisible( true );
-	m_pDismantleButton->SetText("Cancel Dismantle");
-	m_pDismantleButton->SetCommand("CancelDismantle");
-
+	ShowDismantleButton( false );
 	if ( !m_bDismantled && (gpGlobals->curtime >= m_flDismantleTime))
 	{
 		Dismantle();
@@ -323,11 +305,6 @@ void CObjectControlPanel::StartDismantling()
 void CObjectControlPanel::StopDismantling()
 {
 	m_flDismantleTime = -1.0f;
-
-	// VXP
-	m_pDismantleButton->SetVisible( true );
-	m_pDismantleButton->SetText("Dismantle");
-	m_pDismantleButton->SetCommand("dismantle");
 }
 
 bool CObjectControlPanel::IsDismantling() const

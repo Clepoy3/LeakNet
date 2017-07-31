@@ -176,16 +176,15 @@ void CTFTeam::Think( void )
 	*/
 
 	UpdateTechnologies();
-	
-	// VXP: Re-enabled	    
-	/**/ // FIXME: Re-enable once we figure out what the correct orders should be
+		    
+	/* FIXME: Re-enable once we figure out what the correct orders should be
 	// Create new personal orders
 	if ( m_flPersonalOrderUpdateTime < gpGlobals->curtime )
 	{
 		CreatePersonalOrders();
 		m_flPersonalOrderUpdateTime = gpGlobals->curtime + PERSONAL_ORDER_UPDATE_TIME;
 	}
-	/**/
+	*/
 }
 
 //-----------------------------------------------------------------------------

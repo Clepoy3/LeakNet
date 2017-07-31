@@ -382,7 +382,7 @@ void ImpactCreateHurtShards( Vector &vecOrigin, trace_t &tr, Vector &shotDir, in
 		Assert( pModel );			
 
 		// ROBIN: Removed until optimized
-		return;
+		// return; // VXP: Re-enabled
 
 		// Throw it out
 		tempents->SpawnTempModel( pModel, vecSpawnOrigin, vecAngles, vecForceDir, random->RandomFloat(0.5,1.5), iFlags );

@@ -90,7 +90,7 @@ bool CResourcePumpControlPanel::Init( KeyValues* pKeyValues, VGuiScreenInitData_
 		return false;
 
 	// ROBIN: Removed upgrading for now
-	m_pUpgradeButton->SetVisible( false );
+//	m_pUpgradeButton->SetVisible( false ); // VXP: Re-enabled
 
 	return true;
 }
