@@ -247,7 +247,31 @@ static bool LoadFile( char const* pFileName, CUtlBuffer& buf )
 static char const* ConstructFileName( char const* pModelName )
 {
 	static char buf[1024];
+
+	// VXP: Dirty hack: check if model is present in mod folder. If not - search at basegamedir
 	sprintf( buf, "%s%s", gamedir, pModelName );
+
+	if ( Q_strcmp( gamedir, basegamedir ) != 0 ) // VXP: If gamedir is not equal with basegamedir
+	{
+		FILE *fp;
+		fp = fopen( buf, "rb" );
+		if ( !fp )
+		{
+			// VXP: Try to open this model from basegamedir then
+			sprintf( buf, "%s%s", basegamedir, pModelName );
+			fp = fopen( buf, "rb" );
+			if ( !fp )
+			{
+				// VXP: Can't find a model - leave a string as it should be
+				sprintf( buf, "%s%s", gamedir, pModelName );
+			}
+		}
+
+		if ( fp )
+			fclose( fp );
+	}
+
+
 	return buf;
 }
 
