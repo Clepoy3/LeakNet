@@ -16,6 +16,7 @@
 #include "EntityList.h"
 #include "globalstate.h"
 #include "basecombatweapon.h"
+#include "beam_shared.h" // VXP
 #include "rope.h"
 #include "rope_shared.h"
 #include "npc_metropolice.h"
@@ -902,6 +903,14 @@ void CNPC_MetroPolice::RunTask( const Task_t *pTask )
 	switch( pTask->iTask )
 	{
 	case TASK_METROPOLICE_RAPPEL:
+
+		// VXP: If we don't do this, the beam won't show up sometimes. Ideally, all beams would update their
+		// bboxes correctly, but we're close to shipping and we can't change that now.
+		if ( m_hRappelLine )
+		{
+			m_hRappelLine->RelinkBeam();
+		}
+
 		if( GetAbsVelocity().z == 0.0 )
 		{
 			// something stopped us, try to get started again
@@ -916,6 +925,11 @@ void CNPC_MetroPolice::RunTask( const Task_t *pTask )
 			m_OnRappelTouchdown.FireOutput( this, this, 0 );
 			RemoveFlag( FL_FLY );
 			TaskComplete();
+
+			if( m_hRappelLine )
+			{
+				UTIL_Remove( m_hRappelLine );
+			}
 		}
 		break;
 
@@ -966,6 +980,12 @@ void CNPC_MetroPolice::CreateDropLine( void )
 		pHook1->SetOwnerEntity( this );
 		pHook2->SetOwnerEntity( this );
 
+		// VXP: The first hook should stay at spawn position
+		pHook1->SetMoveType( MOVETYPE_NONE );
+
+		// VXP: The second hook should move down, but not collide with NPC, only with world
+	//	pHook2->AddSolidFlags( FSOLID_NOT_SOLID ); // VXP: Not collide with anything
+
 		m_hRappelLine = CRopeKeyframe::Create(pHook1, pHook2,0,0);
 		if (m_hRappelLine)
 		{
@@ -977,9 +997,38 @@ void CNPC_MetroPolice::CreateDropLine( void )
 			//EmitSound( filter, entindex(), CHAN_BODY, "weapons/tripwire/ropeshoot.wav", 1.0, ATTN_NORM, 1.0, 100 );
 		}
 
-		pHook2->m_vecVelocity.z = -200;
+	//	pHook2->m_vecVelocity.z = -200;
+
+	//	pHook2->SetAbsVelocity( Vector( 0, 0, -200 ) );
+		pHook2->SetLocalVelocity( Vector( 0, 0, -200 ) );
 	}
 */
+//	m_hRappelLine = CRopeKeyframe::Create(pHook1, pHook2,0,0);
+//	CRopeKeyframe::CreateWithSecondPointDetached(
+//		CBaseEntity *pStartEnt,
+//		int iStartAttachment,
+//		int ropeLength,
+//		int ropeWidth,
+//		const char *pMaterialName,
+//		int numSegments
+//		)
+
+//	int attachment = LookupAttachment( "zipline" );
+	int attachment = LookupAttachment( "LHand" );
+	if ( attachment != -1 )
+	{
+		CBeam *pBeam;
+		pBeam = CBeam::BeamCreate( "cable/cable.vmt", 1 );
+		pBeam->SetColor( 150, 150, 150 );
+		pBeam->SetWidth( 1 );
+		pBeam->SetEndWidth( 1 );
+
+		pBeam->PointEntInit( GetAbsOrigin() + Vector( 0, 0, 80 ), this );
+
+		pBeam->SetEndAttachment( attachment );
+
+		m_hRappelLine.Set( pBeam );
+	}
 }
 
 //-----------------------------------------------------------------------------

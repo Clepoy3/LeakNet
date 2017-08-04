@@ -616,7 +616,8 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 		}
 
 		// Do this so inherited classes looking for 'angles' don't have to bother with 'angle'
-		return KeyValue( szKeyName, szBuf );
+	//	return KeyValue( szKeyName, szBuf );
+		return KeyValue( "angles", szBuf ); // VXP: https://github.com/ValveSoftware/source-sdk-2013/pull/380 . Maybe this fixes old maps
 	}
 
 	// NOTE: Have to do these separate because they set two values instead of one
@@ -1085,14 +1086,25 @@ void CBaseEntity::SetParent( string_t newParent, CBaseEntity *pActivator )
 //-----------------------------------------------------------------------------
 void CBaseEntity::SetParent( const CBaseEntity *pParentEntity, int iAttachment )
 {
+	// VXP: If they didn't specify an attachment, use our current
+	if ( iAttachment == -1 )
+	{
+		iAttachment = m_iParentAttachment;
+	}
 	// notify the old parent of the loss
 	UnlinkFromParent( this );
 	NetworkStateChanged();
 
 	// set the new name
 	m_pParent = pParentEntity;
-	Assert( m_pParent != this );
-	if ( !m_pParent )
+//	Assert( m_pParent != this );
+	if ( m_pParent == this )
+	{
+		// should never set parent to 'this' - makes no sense
+		Assert(0);
+		m_pParent = NULL;
+	}
+	if ( m_pParent == NULL )
 	{
 		m_iParent = NULL_STRING;
 		return;
@@ -1109,7 +1121,7 @@ void CBaseEntity::SetParent( const CBaseEntity *pParentEntity, int iAttachment )
 		}
 	}
 	// set the move parent if we have one
-	if ( pev )
+	if ( edict() )
 	{
 		// add ourselves to the list
 		LinkChild( m_pParent, this );
@@ -1255,7 +1267,7 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( inputInfo.GetDamageForce() != vec3_origin && inputInfo.GetDamagePosition() != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
-		if ( (inputInfo.GetDamageForce() == vec3_origin) || (inputInfo.GetDamagePosition() == vec3_origin) )
+		if ( (inputInfo.GetDamageForce() == vec3_origin) || (inputInfo.GetDamagePosition() == vec3_origin) ) // VXP: Fix this then!
 		{
 			DevWarning( "TakeDamage: .GetDamageForce() == vec3_origin\n" );
 		}
@@ -1333,7 +1345,7 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		return 1;
 
 //	Assert(VPhysicsGetObject() != NULL); // VXP: When you crash the manhack
-	if( VPhysicsGetObject() == NULL )
+	if( VPhysicsGetObject() == NULL ) // VXP: TODO: Fix this then!
 		Warning( "VPhysicsTakeDamage: can't get object\n" );
 
 	if ( VPhysicsGetObject() )
@@ -1349,7 +1361,7 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( force != vec3_origin && offset != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
-		if ( (force == vec3_origin) || (offset == vec3_origin) )
+		if ( (force == vec3_origin) || (offset == vec3_origin) ) // VXP: TODO: Fix this then!
 			Warning( "VPhysicsTakeDamage: origin error!\n" );
 
 		VPhysicsGetObject()->ApplyForceOffset( force, offset );
@@ -1599,6 +1611,11 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 	DEFINE_INPUTFUNC( CBaseEntity, FIELD_INTEGER, "Alpha", InputAlpha ),
 	DEFINE_INPUTFUNC( CBaseEntity, FIELD_COLOR32, "Color", InputColor ),
 	DEFINE_INPUTFUNC( CBaseEntity, FIELD_STRING, "SetParent", InputSetParent ),
+
+	// VXP
+	DEFINE_INPUTFUNC( CBaseEntity, FIELD_STRING, "SetParentAttachment", InputSetParentAttachment ),
+	DEFINE_INPUTFUNC( CBaseEntity, FIELD_STRING, "SetParentAttachmentMaintainOffset", InputSetParentAttachmentMaintainOffset ),
+
 	DEFINE_INPUTFUNC( CBaseEntity, FIELD_VOID, "ClearParent", InputClearParent ),
 	DEFINE_INPUTFUNC( CBaseEntity, FIELD_STRING, "SetDamageFilter", InputSetDamageFilter ),
 
@@ -3262,6 +3279,62 @@ void CBaseEntity::InputSetParent( inputdata_t &inputdata )
 	SetParent( inputdata.value.StringID(), inputdata.pActivator );
 }
 
+//------------------------------------------------------------------------------
+// Purpose: 
+//------------------------------------------------------------------------------
+void CBaseEntity::SetParentAttachment( const char *szInputName, const char *szAttachment, bool bMaintainOffset )
+{
+	// Must have a parent
+	if ( !m_pParent )
+	{
+		Warning("ERROR: Tried to %s for entity %s (%s), but it has no parent.\n", szInputName, GetClassname(), GetDebugName() );
+		return;
+	}
+
+	// Valid only on CBaseAnimating
+	CBaseAnimating *pAnimating = m_pParent->GetBaseAnimating();
+	if ( !pAnimating )
+	{
+		Warning("ERROR: Tried to %s for entity %s (%s), but its parent has no model.\n", szInputName, GetClassname(), GetDebugName() );
+		return;
+	}
+
+	// Lookup the attachment
+	int iAttachment = pAnimating->LookupAttachment( szAttachment );
+	if ( !iAttachment )
+	{
+		Warning("ERROR: Tried to %s for entity %s (%s), but it has no attachment named %s.\n", szInputName, GetClassname(), GetDebugName(), szAttachment );
+		return;
+	}
+
+	m_iParentAttachment = iAttachment;
+	SetParent( m_pParent, m_iParentAttachment );
+
+	// Now move myself directly onto the attachment point
+	SetMoveType( MOVETYPE_NONE );
+
+	if ( !bMaintainOffset )
+	{
+		SetLocalOrigin( vec3_origin );
+		SetLocalAngles( vec3_angle );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Input handler for changing this entity's movement parent's attachment point
+//-----------------------------------------------------------------------------
+void CBaseEntity::InputSetParentAttachment( inputdata_t &inputdata )
+{
+	SetParentAttachment( "SetParentAttachment", inputdata.value.String(), false );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Input handler for changing this entity's movement parent's attachment point
+//-----------------------------------------------------------------------------
+void CBaseEntity::InputSetParentAttachmentMaintainOffset( inputdata_t &inputdata )
+{
+	SetParentAttachment( "SetParentAttachmentMaintainOffset", inputdata.value.String(), true );
+}
 
 //------------------------------------------------------------------------------
 // Purpose: Input handler for clearing this entity's movement parent.

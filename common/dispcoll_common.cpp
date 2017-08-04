@@ -241,7 +241,8 @@ void CDispCollTree::Leafs_Create()
 	}
 
 	int nWidth = GetWidth() - 1;
-	int nHeight = nWidth;
+//	int nHeight = nWidth;
+	int nHeight = GetHeight() - 1;
 
 	for ( int iHgt = 0; iHgt < nHeight; ++iHgt )
 	{
@@ -714,6 +715,19 @@ void CDispCollTree::ApplyTerrainMod( ITerrainMod *pMod )
 	{
 		Vector &vPos = m_pVerts[i];
 		pMod->ApplyMod( vPos, m_pOriginalVerts[i] );
+	}
+
+	// VXP: TAP: Recalculate all triangle planes (we just modified the verts)
+//	for ( int iTri = 0; iTri < m_nTriCount; ++iTri)
+//		Tri_CalcPlane( iTri );
+
+	// Copy the triangle flags data.
+	for ( int iTri = 0; iTri < m_nTriCount; ++iTri )
+	{
+		// Add the displacement surface flag!
+	//	m_pTris[iTri].m_nFlags |= DISPSURF_FLAG_SURFACE;
+
+		Tri_CalcPlane( iTri );
 	}
 
 	// create leaf nodes
@@ -2865,7 +2879,7 @@ bool CDispCollTree::SeparatingAxisAABoxTriangle( const Vector &boxCenter, const 
 //-----------------------------------------------------------------------------
 CDispCollTree *DispCollTrees_Alloc( int count )
 {
-	CDispCollTree *pTrees;
+	CDispCollTree *pTrees = NULL;
 
 	pTrees = new CDispCollTree[count];
 	if( !pTrees )

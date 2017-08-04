@@ -71,6 +71,7 @@ IMPLEMENT_SERVERCLASS_ST(CWeaponHMG1, DT_WeaponHMG1)
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_hmg1, CWeaponHMG1 );
+PRECACHE_WEAPON_REGISTER( weapon_hmg1 ); // VXP: Fix for precache
 
 acttable_t	CWeaponHMG1::m_acttable[] = 
 {

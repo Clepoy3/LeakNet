@@ -153,8 +153,26 @@ void CBaseCombatWeapon::Precache( void )
 		gWR.LoadWeaponSprites( this );
 #endif
 		// Precache models
-		m_iViewModelIndex = PrecacheModel( GetViewModel() );
-		m_iWorldModelIndex = PrecacheModel( GetWorldModel() );
+		m_iViewModelIndex = 0;
+		m_iWorldModelIndex = 0;
+		if ( GetViewModel() && GetViewModel()[0] )
+		{
+			m_iViewModelIndex = CBaseEntity::PrecacheModel( GetViewModel() ); // VXP: CBaseEntity::PrecacheModel?
+		}
+		if ( GetWorldModel() && GetWorldModel()[0] )
+		{
+			m_iWorldModelIndex = CBaseEntity::PrecacheModel( GetWorldModel() ); // VXP: CBaseEntity::PrecacheModel?
+		}
+
+		// Precache sounds, too
+		for ( int i = 0; i < NUM_SHOOT_SOUND_TYPES; ++i )
+		{
+			const char *shootsound = GetShootSound( i );
+			if ( shootsound && shootsound[0] )
+			{
+				CBaseEntity::PrecacheScriptSound( shootsound );
+			}
+		}
 	}
 	else
 	{
@@ -265,7 +283,7 @@ int CBaseCombatWeapon::GetWeight( void ) const
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CBaseCombatWeapon::GetFlags( void ) const
+int CBaseCombatWeapon::GetFlags( void ) const // VXP: Replace with GetWeaponFlags?
 {
 	return GetWpnData().iFlags;
 }
@@ -471,6 +489,9 @@ void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 	// world.
 	SetRemoveable( true );
 
+	// VXP: If it was dropped then there's no need to respawn it.
+	AddSpawnFlags( SF_NORESPAWN );
+
 	StopAnimation();
 	StopFollowingEntity( );
 	SetMoveType( MOVETYPE_FLYGRAVITY );
@@ -496,9 +517,22 @@ void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 		SetAbsVelocity( vecVelocity );
 	}
 
+	CBaseEntity *pOwner = GetOwnerEntity();
+
 	SetNextThink( gpGlobals->curtime + 1.0f );
 	SetOwnerEntity( NULL );
 	m_hOwner = NULL;
+
+	// VXP: If we're not allowing to spawn due to the gamerules,
+	// remove myself when I'm dropped by an NPC.
+	if ( pOwner && pOwner->MyNPCPointer() )
+	{
+		if ( g_pGameRules->IsAllowedToSpawn( this ) == false )
+		{
+			UTIL_Remove( this );
+			return;
+		}
+	}
 #endif
 }
 
@@ -593,6 +627,7 @@ void CBaseCombatWeapon::SetObjectCollisionBox( void )
 void CBaseCombatWeapon::Equip( CBaseCombatCharacter *pOwner )
 {
 	// Attach the weapon to an owner
+	SetAbsVelocity( vec3_origin );
 	RemoveSolidFlags( FSOLID_TRIGGER );
 	FollowEntity( pOwner );
 	m_hOwner = pOwner;
@@ -613,6 +648,9 @@ void CBaseCombatWeapon::Equip( CBaseCombatCharacter *pOwner )
 	}
 	else
 	{
+		// VXP: Make the weapon ready as soon as any NPC picks it up.
+		m_flNextPrimaryAttack = gpGlobals->curtime;
+		m_flNextSecondaryAttack = gpGlobals->curtime;
 		SetModel( GetWorldModel() );
 	}
 }
@@ -650,20 +688,27 @@ void CBaseCombatWeapon::SetActivity( Activity act, float duration )
 //====================================================================================
 int CBaseCombatWeapon::UpdateClientData( CBasePlayer *pPlayer )
 {
+	int iNewState = WEAPON_IS_CARRIED_BY_PLAYER;
+
 	if ( pPlayer->GetActiveWeapon() == this )
 	{
 		if ( pPlayer->m_fOnTarget ) 
 		{
-			m_iState = WEAPON_IS_ONTARGET;
+			iNewState = WEAPON_IS_ONTARGET;
 		}
 		else
 		{
-			m_iState = WEAPON_IS_ACTIVE;
+			iNewState = WEAPON_IS_ACTIVE;
 		}
 	}
 	else
 	{
-		m_iState = WEAPON_IS_CARRIED_BY_PLAYER;
+		iNewState = WEAPON_IS_CARRIED_BY_PLAYER;
+	}
+
+	if ( m_iState != iNewState )
+	{
+		m_iState = iNewState;
 	}
 	return 1;
 }
@@ -702,10 +747,30 @@ void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
 	if ( vm == NULL )
 		return;
 
+	SetViewModel();
 	Assert( vm->ViewModelIndex() == m_nViewModelIndex );
 
-	vm->SetWeaponModel( GetViewModel( m_nViewModelIndex ), this );
+//	vm->SetWeaponModel( GetViewModel( m_nViewModelIndex ), this );
 	vm->SendViewModelMatchingSequence( nSequence );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseCombatWeapon::SetViewModel()
+{
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+
+	if ( pOwner == NULL )
+		return;
+
+	CBaseViewModel *vm = pOwner->GetViewModel( m_nViewModelIndex );
+
+	if ( vm == NULL )
+		return;
+
+	Assert( vm->ViewModelIndex() == m_nViewModelIndex );
+	vm->SetWeaponModel( GetViewModel( m_nViewModelIndex ), this );
 }
 
 //-----------------------------------------------------------------------------
@@ -842,18 +907,28 @@ bool CBaseCombatWeapon::DefaultDeploy( char *szViewModel, char *szWeaponModel, i
 		return false;
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	if ( !pOwner )
+//	if ( !pOwner )
+//	{
+//		return false;
+//	}
+
+	if ( pOwner )
 	{
-		return false;
+		// VXP: Dead men deploy no weapons
+		if ( pOwner->IsAlive() == false )
+			return false;
+
+		pOwner->SetAnimationExtension( szAnimExt );
+
+		SetViewModel();
+		SendWeaponAnim( iActivity );
+
+		pOwner->SetNextAttack( gpGlobals->curtime + SequenceDuration() );
 	}
 
-	pOwner->SetAnimationExtension( szAnimExt );
-
-	SendWeaponAnim( iActivity );
-
-	pOwner->SetNextAttack( gpGlobals->curtime + SequenceDuration() );
-	m_flNextPrimaryAttack	= gpGlobals->curtime;
-	m_flNextSecondaryAttack	= gpGlobals->curtime;
+	// VXP: Can't shoot again until we've finished deploying
+	m_flNextPrimaryAttack	= gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack	= gpGlobals->curtime + SequenceDuration();
 
 	SetWeaponVisible( true );
 
@@ -883,13 +958,23 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 	//SendWeaponAnim( ACT_VM_HOLSTER );
 	SendWeaponAnim( ACT_VM_HOLSTER ); // VXP: Let's try
 
+	// VXP: Some weapon's don't have holster anims yet, so detect that
+	float flSequenceDuration = 0;
+	if ( GetActivity() == ACT_VM_HOLSTER )
+	{
+		flSequenceDuration = SequenceDuration();
+	}
+
 	CBaseCombatCharacter *pOwner = GetOwner();
 	if (pOwner)
 	{
+	//	pOwner->SetNextAttack( gpGlobals->curtime + SequenceDuration() );
 		pOwner->SetNextAttack( gpGlobals->curtime + SequenceDuration() );
 	}
 
 	// Hide it now
+	// VXP: Source 2007: If we don't have a holster anim, hide immediately to avoid timing issues
+//	if ( !flSequenceDuration )
 	SetWeaponVisible( false );
 
 	return true;
@@ -1195,7 +1280,9 @@ bool CBaseCombatWeapon::DefaultReload( int iClipSize1, int iClipSize2, int iActi
 	if ( !bReload )
 		return false;
 
-//#ifdef CLIENT_DLL // VXP: Not playable on client
+// VXP: Not playable on client
+// Need to fix it
+//#ifdef CLIENT_DLL
 	// Play reload
 	WeaponSound( RELOAD );
 //#endif
@@ -1365,7 +1452,9 @@ void CBaseCombatWeapon::FinishReload( void )
 //-----------------------------------------------------------------------------
 void CBaseCombatWeapon::AbortReload( void )
 {
-//#ifdef CLIENT_DLL // VXP: Thought, need to disable too
+// VXP: Not playable on client
+// Need to fix it
+//#ifdef CLIENT_DLL
 	StopWeaponSound( RELOAD ); 
 //#endif
 	m_bInReload = false;
@@ -1392,7 +1481,8 @@ void CBaseCombatWeapon::PrimaryAttack( void )
 	}
 
 	// MUST call sound before removing a round from the clip of a CMachineGun
-	WeaponSound(SINGLE);
+//	WeaponSound(SINGLE);
+	// VXP: Now it's below
 
 	pPlayer->m_fEffects |= EF_MUZZLEFLASH;
 
@@ -1411,6 +1501,9 @@ void CBaseCombatWeapon::PrimaryAttack( void )
 
 	while ( m_flNextPrimaryAttack <= gpGlobals->curtime )
 	{
+
+		// MUST call sound before removing a round from the clip of a CMachineGun
+		WeaponSound(SINGLE, m_flNextPrimaryAttack);
 
 		m_flNextPrimaryAttack = m_flNextPrimaryAttack + fireRate;
 		iBulletsToFire++;
@@ -1804,7 +1897,6 @@ void* SendProxy_SendActiveLocalWeaponDataTable( const void *pStruct, const void 
 		// Only send this chunk of data to the player carrying this weapon
 		CBasePlayer *pPlayer = ToBasePlayer( pWeapon->GetOwner() );
 		if ( pPlayer /*&& pPlayer->GetActiveWeapon() == pWeapon*/ )
-	//	if ( pPlayer && pPlayer->GetActiveWeapon() == pWeapon )
 		{
 			pRecipients->SetOnly( pPlayer->GetClientIndex() );
 			return (void*)pVarData;

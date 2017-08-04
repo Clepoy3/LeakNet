@@ -121,6 +121,8 @@ public:
 	virtual void			SendWeaponAnim( int iActivity );
 	virtual void			SendViewModelAnim( int nSequence );
 
+	virtual void			SetViewModel(); // VXP
+
 	virtual bool			HasWeaponIdleTimeElapsed( void );
 	virtual void			SetWeaponIdleTime( float time );
 	virtual float			GetWeaponIdleTime( void );

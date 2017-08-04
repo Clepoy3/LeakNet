@@ -456,6 +456,7 @@ public:
 	// are relative to the attachment on this entity.
 	void		SetParent( const CBaseEntity* pNewParent, int iAttachment = 0 );
 	CBaseEntity* GetParent();
+	int			GetParentAttachment(); // VXP
 
 	string_t	GetEntityName();
 
@@ -505,6 +506,12 @@ public:
 	void InputAlpha( inputdata_t &inputdata );
 	void InputColor( inputdata_t &inputdata );
 	void InputSetParent( inputdata_t &inputdata );
+
+	// VXP
+	void SetParentAttachment( const char *szInputName, const char *szAttachment, bool bMaintainOffset );
+	void InputSetParentAttachment( inputdata_t &inputdata );
+	void InputSetParentAttachmentMaintainOffset( inputdata_t &inputdata );
+
 	void InputClearParent( inputdata_t &inputdata );
 	void InputSetTeam( inputdata_t &inputdata );
 	void InputUse( inputdata_t &inputdata );
@@ -1572,6 +1579,11 @@ inline CBaseEntity *CBaseEntity::NextMovePeer( void )
 inline CBaseEntity* CBaseEntity::GetParent()
 {
 	return m_pParent.Get();
+}
+
+inline int CBaseEntity::GetParentAttachment() // VXP
+{
+	return m_iParentAttachment;
 }
 
 //-----------------------------------------------------------------------------

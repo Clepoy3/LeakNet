@@ -72,7 +72,13 @@ static bool LoadSrcVTFFiles( IVTFTexture *pSrcVTFTextures[6], const char *pSkybo
 		fp = fopen( srcVTFFileName, "rb" );
 		if( !fp )
 		{
-			return false;
+			sprintf( srcVTFFileName, "%smaterials/skybox/%s%s.vtf", basegamedir, pSkyboxBaseName, facingName[i] );
+			fp = fopen( srcVTFFileName, "rb" );
+			if ( !fp ) // VXP: Dirty hack - trying to find skybox texture in base hl2 folder
+			{
+				Warning( "*** Error opening skybox texture: %s\n", srcVTFFileName );
+				return false;
+			}
 		}
 		fseek( fp, 0, SEEK_END );
 		int srcVTFLength = ftell( fp );
@@ -209,7 +215,9 @@ static CUtlVector<IntVector_t> s_EnvCubemapToBrushSides;
 
 void Cubemap_SaveBrushSides( const char *pSideListStr )
 {
-	IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[s_EnvCubemapToBrushSides.AddToTail()];
+	int iCubemapID = s_EnvCubemapToBrushSides.AddToTail();
+//	Warning( "Saving %i cubemap with %s name\n", iCubemapID, pSideListStr );
+	IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[iCubemapID];
 	char *pTmp = ( char * )_alloca( strlen( pSideListStr ) + 1 );
 	strcpy( pTmp, pSideListStr );
 	const char *pScan = strtok( pTmp, " " );
@@ -229,6 +237,7 @@ void Cubemap_SaveBrushSides( const char *pSideListStr )
 
 static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 {
+	Warning( "Cubemap_CreateTexInfo\n" );
 	texinfo_t *pTexInfo = &texinfo[originalTexInfo];
 	dtexdata_t *pTexData = GetTexData( pTexInfo->texdata );
 
@@ -301,9 +310,10 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		sprintf( textureName, "maps/%s/c%d_%d_%d", mapbase, ( int )origin[0], 
 			( int )origin[1], ( int )origin[2] );
 
+	//	Msg( "Cubemap_CreateTexInfo: Generating material patch...\n" );
 		CreateMaterialPatch( originalMatName, generatedMatName, "$envmap",
 			textureName );
-		
+
 		// Store off the name of the cubemap that we need to create.
 		char fileName[1024];
 		sprintf( fileName, "materials/%s.vtf", textureName );
@@ -371,6 +381,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 
 static void Cubemap_CreateMaterialForBrushSide( int sideIndex, int origin[3] )
 {
+	Warning( "Cubemap_CreateMaterialForBrushSide\n" );
 	side_t *pSide = &brushsides[sideIndex];
 	int originalTexInfoID = pSide->texinfo;
 	pSide->texinfo = Cubemap_CreateTexInfo( originalTexInfoID, origin );
@@ -399,9 +410,11 @@ void Cubemap_FixupBrushSidesMaterials( void )
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
 	{
 		IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[cubemapID];
+	//	Warning( "Cubemap_FixupBrushSidesMaterials loop\nbrushSidesVector = %i\ns_EnvCubemapToBrushSides = %i\n", brushSidesVector.Count(), s_EnvCubemapToBrushSides.Count() );
 		int i;
 		for( i = 0; i < brushSidesVector.Count(); i++ )
 		{
+		//	Warning( "Cubemap_FixupBrushSidesMaterials second loop\n" );
 			int brushSideID = brushSidesVector[i];
 			int sideIndex = SideIDToIndex( brushSideID );
 			if( sideIndex < 0 )
@@ -477,7 +490,14 @@ void Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials( void )
 		{
 			continue;
 		}
+
+		if( stricmp( oldEnvmapName, "env_cubemap" ) != 0 )
+		{
+			Warning( "Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials: Ignoring env_cubemap on \"%s\" which uses envmap \"%s\"\n", originalMaterialName, oldEnvmapName );
+			continue;
+		}
 		
+	//	Msg( "Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials: Generating material patch... %s, %s\n", originalMaterialName, patchMaterialName );
 		CreateMaterialPatch( originalMaterialName, patchMaterialName,
 							 "$envmap", defaultVTFFileName );
 		// FIXME!:  Should really remove the old name from the string table

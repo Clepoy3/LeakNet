@@ -769,6 +769,7 @@ void VGui_NotifyOfServerDisconnect()
 	// NOTE:  This calls ActivateGameUI internally, so we need to clear IO states below to debounce any keys
 	//  that triggered the disconnect
 	staticGameUIFuncs->DisconnectFromServer();
+	staticUIFuncs->ActivateGameUI();
 
 	ClearIOStates();
 }

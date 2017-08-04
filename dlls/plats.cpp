@@ -128,9 +128,6 @@ void CBasePlatTrain::Precache( void )
 	UTIL_ValidateSoundName( m_NoiseMoving, DEFAULT_PLAT_MOVING_NOISE );
 	UTIL_ValidateSoundName( m_NoiseArrived, DEFAULT_PLAT_ARRIVE_NOISE );
 
-	//Precache them all
-	enginesound->PrecacheSound( (char *) STRING(m_NoiseMoving) );
-	enginesound->PrecacheSound( (char *) STRING(m_NoiseArrived) );
 
 #ifdef HL1_DLL
 // set the plat's "in-motion" sound
@@ -236,6 +233,9 @@ void CBasePlatTrain::Precache( void )
 	}
 #endif // HL1_DLL
 
+	//Precache them all
+	enginesound->PrecacheSound( (char *) STRING(m_NoiseMoving) );
+	enginesound->PrecacheSound( (char *) STRING(m_NoiseArrived) );
 }
 
 

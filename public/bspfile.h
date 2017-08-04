@@ -15,6 +15,10 @@
 
 #include "bumpvects.h"
 
+//============================================================
+//#define OLD_ENT_COUNT // VXP: How is this should impact a poor stability of engine?
+//============================================================
+
 #define IDBSPHEADER	(('P'<<24)+('S'<<16)+('B'<<8)+'V')
 		// little-endian "VBSP"
 
@@ -47,7 +51,11 @@
 // 16 bit short limits
 #define	MAX_MAP_MODELS		1024
 #define	MAX_MAP_BRUSHES		8192
-#define	MAX_MAP_ENTITIES	4096
+#ifdef OLD_ENT_COUNT
+	#define	MAX_MAP_ENTITIES	4096
+#else
+	#define	MAX_MAP_ENTITIES	8192
+#endif
 #define	MAX_MAP_ENTSTRING	(256*1024)
 
 #define	MAX_MAP_TEXINFO		12288

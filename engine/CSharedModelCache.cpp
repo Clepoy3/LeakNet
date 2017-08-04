@@ -9,6 +9,7 @@
 #include "utllinkedlist.h"
 #include "filesystem.h"
 #include "server.h"
+#include "modelgen.h" // VXP
 
 //-----------------------------------------------------------------------------
 // Interface access
@@ -105,7 +106,8 @@ int CSharedModelCache::Load( const char* pszFileLocation )
 	node.pStudioShareHeader = (studiosharehdr_t*)node.sharedModelMemory.Base();
 	
 	// Check ID for "IDAG"
-	if(LittleLong(node.pStudioShareHeader->id) != 1195459657)
+//	if(LittleLong(node.pStudioShareHeader->id) != 1195459657)
+	if(LittleLong(node.pStudioShareHeader->id) != IDSTUDIOSHAREHEADER)
 	{
 		Warning("CSharedModelCache::Load( %s ): invalid ID, not a shared model file\n", pszFileLocation);
 		return Cache_Invalid;

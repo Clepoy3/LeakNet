@@ -44,4 +44,8 @@ typedef enum {ST_SYNC=0, ST_RAND } synctype_t;
 
 #define IDSTUDIOSEQHEADER	(('Q'<<24)+('S'<<16)+('D'<<8)+'I')
 
+
+#define IDSTUDIOSHAREHEADER	(('G'<<24)+('A'<<16)+('D'<<8)+'I')
+														// VXP: little-endian "IDAG"
+
 #endif // !MODELGEN_H

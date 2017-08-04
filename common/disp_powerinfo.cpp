@@ -338,7 +338,7 @@ static void InitPowerInfoTriInfos_R(
 	}
 	else
 	{
-		unsigned short indices[3];
+		unsigned short indices[3] = {0, 0, 0};
 		
 		int vertInc = 1 << ((iMaxPower - iLevel) - 1);
 

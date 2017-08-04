@@ -94,6 +94,22 @@ public:
 	KeyValues *GetNextKey();		// returns the next subkey
 	void SetNextKey( KeyValues * pDat);
 
+	//
+	// VXP: These functions can be used to treat it like a true key/values tree instead of 
+	// confusing values with keys.
+	//
+	// So if you wanted to iterate all subkeys, then all values, it would look like this:
+	//     for ( KeyValues *pKey = pRoot->GetFirstTrueSubKey(); pKey; pKey = pKey->GetNextTrueSubKey() )
+	//     {
+	//		   Msg( "Key name: %s\n", pKey->GetName() );
+	//     }
+	//     for ( KeyValues *pValue = pRoot->GetFirstValue(); pKey; pKey = pKey->GetNextValue() )
+	//     {
+	//         Msg( "Int value: %d\n", pValue->GetInt() );  // Assuming pValue->GetDataType() == TYPE_INT...
+	//     }
+	KeyValues* GetFirstTrueSubKey();
+	KeyValues* GetNextTrueSubKey();
+
 	// Data access
 	int   GetInt( const char *keyName = NULL, int defaultValue = 0 );
 	float GetFloat( const char *keyName = NULL, float defaultValue = 0.0f );

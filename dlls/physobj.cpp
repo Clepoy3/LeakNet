@@ -430,7 +430,7 @@ void CPhysBox::Spawn( void )
 	}
   
 	SetMoveType( MOVETYPE_NONE );
-//	SetSolid( SOLID_VPHYSICS );
+	SetSolid( SOLID_VPHYSICS );
 
 	SetAbsVelocity( vec3_origin );
 	SetModel( STRING( GetModelName() ) );

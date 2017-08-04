@@ -116,7 +116,10 @@ void CWeaponAR2::ItemPostFrame( void )
 	//	Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
 	}
 	
-	NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 ); // VXP: Moved to Think
+	if ( !m_bZoomed )
+	{
+		NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 ); // VXP: Moved to Think
+	}
 	
 	//Zoom in
 	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) )

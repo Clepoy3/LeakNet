@@ -25,11 +25,6 @@
 #include <vgui_controls/Panel.h>
 #include <KeyValues.h>
 
-#ifdef TF2_CLIENT_DLL
-#include <tf2_hud/tfteammenu.h>
-#include <tf2_hud/tfclassmenu.h>
-#endif
-
 #include "iviewrender.h"
 
 using namespace vgui;
@@ -159,12 +154,6 @@ void VGui_CreateGlobalPanels( void )
 	connectmsg->Create( gameParent );
 	downloadslider->Create( gameParent );
 	messagechars->Create( gameParent );
-	
-	//omg tf2
-#ifdef TF2_CLIENT_DLL
-	tf2teampanel->Create( gameParent );
-	tf2classpanel->Create( gameParent );
-#endif
 
 	// Debugging or related tool
 	fps->Create( toolParent );
@@ -195,11 +184,6 @@ void VGui_Shutdown()
 	internalCenterPrint->Destroy();
 	textmessage->Destroy();
 	//console->Destroy();
-	
-#ifdef TF2_CLIENT_DLL
-	tf2teampanel->Destroy();
-	tf2classpanel->Destroy();
-#endif
 
 	// Make sure anything "marked for deletion"
 	//  actually gets deleted before this dll goes away

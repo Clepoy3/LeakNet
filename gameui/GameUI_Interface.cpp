@@ -953,7 +953,7 @@ void CGameUI::ConnectToServer(const char *game, int IP, int port)
 //-----------------------------------------------------------------------------
 void CGameUI::DisconnectFromServer()
 {
-	ActivateGameUI();
+//	ActivateGameUI(); // VXP: Calls two times if fired from engine's VGui_NotifyOfServerDisconnect, so commented
 
 	m_iGameIP = 0;
 	m_iGamePort = 0;

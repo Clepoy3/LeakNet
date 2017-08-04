@@ -1555,7 +1555,7 @@ void C_BaseEntity::HierarchySetParent( C_BaseEntity *pNewParent )
 //-----------------------------------------------------------------------------
 // Unlinks from hierarchy
 //-----------------------------------------------------------------------------
-void C_BaseEntity::SetParent( C_BaseEntity *pParentEntity )
+void C_BaseEntity::SetParent( C_BaseEntity *pParentEntity, int iParentAttachment )
 {
 	// NOTE: This version is meant to be called *outside* of PostDataUpdate
 	// as it assumes the moveparent has a valid handle
@@ -1580,7 +1580,12 @@ void C_BaseEntity::SetParent( C_BaseEntity *pParentEntity )
 	{
 		LinkChild( pParentEntity, this );
 	}
-	
+
+	// VXP
+	m_iParentAttachment = iParentAttachment;
+	m_vecAbsOrigin.Init( FLT_MAX, FLT_MAX, FLT_MAX );
+	m_angAbsRotation.Init( FLT_MAX, FLT_MAX, FLT_MAX );
+	m_vecAbsVelocity.Init( FLT_MAX, FLT_MAX, FLT_MAX );
 	SetAbsOrigin(vecAbsOrigin);
 	SetAbsAngles(angAbsRotation);
 	SetAbsVelocity(vecAbsVelocity);

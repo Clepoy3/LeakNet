@@ -827,6 +827,24 @@ void KeyValues::SetNextKey( KeyValues *pDat )
 	m_pPeer = pDat;
 }
 
+KeyValues* KeyValues::GetFirstTrueSubKey()
+{
+	KeyValues *pRet = m_pSub;
+	while ( pRet && pRet->m_iDataType != TYPE_NONE )
+		pRet = pRet->m_pPeer;
+
+	return pRet;
+}
+
+KeyValues* KeyValues::GetNextTrueSubKey()
+{
+	KeyValues *pRet = m_pPeer;
+	while ( pRet && pRet->m_iDataType != TYPE_NONE )
+		pRet = pRet->m_pPeer;
+
+	return pRet;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Get the integer value of a keyName. Default value is returned
 //			if the keyName can't be found.

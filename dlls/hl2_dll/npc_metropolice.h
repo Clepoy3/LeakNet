@@ -83,7 +83,8 @@ private:
 	int				m_LastShootSlot;
 	CRandSimTimer	m_TimeYieldShootSlot;
 
-	CHandle<CRopeKeyframe>	m_hRappelLine;
+//	CHandle<CRopeKeyframe>	m_hRappelLine;
+	CHandle<CBeam>	m_hRappelLine;
 
 	// Outputs
 	COutputEvent	m_OnRappelTouchdown;

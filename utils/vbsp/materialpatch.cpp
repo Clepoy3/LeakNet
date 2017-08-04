@@ -61,13 +61,14 @@ const char *GetOriginalMaterialNameForPatchedMaterial( const char *pPatchMateria
 void CreateMaterialPatch( const char *pOriginalMaterialName, const char *pNewMaterialName,
 						 const char *pNewKey, const char *pNewValue )
 {
+//	Warning( "CreateMaterialPatch for %s: mat %s, %s = %s\n", pOriginalMaterialName, pNewMaterialName, pNewKey, pNewValue );
 	char oldVMTFile[ 512 ];
 	char newVMTFile[ 512 ];
 
 	AddNewTranslation( pOriginalMaterialName, pNewMaterialName );
 	
-	sprintf( oldVMTFile, "materials/%s.vmt", pOriginalMaterialName );
-	sprintf( newVMTFile, "materials/%s.vmt", pNewMaterialName );
+	Q_snprintf( oldVMTFile, 512, "materials/%s.vmt", pOriginalMaterialName );
+	Q_snprintf( newVMTFile, 512, "materials/%s.vmt", pNewMaterialName );
 
 //	printf( "Creating material patch file %s which points at %s\n", newVMTFile, oldVMTFile );
 
@@ -96,7 +97,7 @@ void CreateMaterialPatch( const char *pOriginalMaterialName, const char *pNewMat
 bool GetValueFromMaterial( const char *pMaterialName, const char *pKey, char *pValue, int len )
 {
 	char name[512];
-	sprintf( name, "materials/%s.vmt", GetOriginalMaterialNameForPatchedMaterial( pMaterialName ) );
+	Q_snprintf( name, 512, "materials/%s.vmt", GetOriginalMaterialNameForPatchedMaterial( pMaterialName ) );
 	KeyValues *kv = new KeyValues( "blah" );
 	// Load the underlying file so that we can check if env_cubemap is in there.
 	if ( !kv->LoadFromFile( g_pFileSystem, name ) )
@@ -114,14 +115,7 @@ bool GetValueFromMaterial( const char *pMaterialName, const char *pKey, char *pV
 	}
 
 	kv->deleteThis();
-	if( pTmpValue )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return ( pTmpValue != NULL );
 }
 
 MaterialSystemMaterial_t FindOriginalMaterial( const char *materialName, bool *pFound, bool bComplain )

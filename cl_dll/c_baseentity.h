@@ -735,6 +735,10 @@ public:
 
 public:
 
+	// VXP: Returns the attachment point index on our parent that our transform is relative to.
+	// 0 if we're relative to the parent's absorigin and absangles.
+	unsigned char			GetParentAttachment() const;
+
 	// Determine approximate velocity based on updates from server
 	void					EstimateAbsVelocity( Vector& vel );
 
@@ -1177,7 +1181,8 @@ private:
 	void PhysicsCheckSweep( const Vector& vecAbsStart, const Vector &vecAbsDelta, trace_t *pTrace );
 
 	// Unlinks from hierarchy
-	void SetParent( C_BaseEntity *pParentEntity );
+//	void SetParent( C_BaseEntity *pParentEntity );
+	void SetParent( C_BaseEntity *pParentEntity, int iParentAttachment=0 ); // VXP: Why 0 and not -1 like at server.dll?
 
 	// FIXME: REMOVE!!!
 	void MoveToAimEnt( );
@@ -1724,6 +1729,11 @@ inline void C_BaseEntity::RemoveEFlags( int nEFlagMask )
 inline bool CBaseEntity::IsEFlagSet( int nEFlagMask ) const
 {
 	return (m_iEFlags & nEFlagMask) != 0;
+}
+
+inline unsigned char CBaseEntity::GetParentAttachment() const // VXP
+{
+	return m_iParentAttachment;
 }
 
 C_BaseEntity *CreateEntityByName( const char *className );

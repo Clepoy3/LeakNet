@@ -392,7 +392,7 @@ int	BrushContents (mapbrush_t *b)
 	}
 
 
-	int transparentContents = unionContents & (CONTENTS_WINDOW|CONTENTS_GRATE|CONTENTS_WATER);
+	int transparentContents = unionContents & (CONTENTS_WINDOW|CONTENTS_GRATE|CONTENTS_WATER); // VXP: TODO: Add CONTENTS_SLIME
 	if ( transparentContents )
 	{
 		contents |= transparentContents | CONTENTS_TRANSLUCENT;
@@ -1097,7 +1097,7 @@ ChunkFileResult_t LoadEntityCallback(CChunkFile *pFile, int nParam)
 			{
 				max = 90;
 			}
-			if( g_nDXLevel < min || g_nDXLevel > max )
+			if( ( g_nDXLevel != 0 ) && ( g_nDXLevel < min || g_nDXLevel > max ) )
 			{
 				mapent->numbrushes = 0;
 				mapent->epairs = NULL;
@@ -1144,7 +1144,7 @@ ChunkFileResult_t LoadEntityCallback(CChunkFile *pFile, int nParam)
 		
 		if( !strcmp( "env_cubemap", pClassName ) )
 		{
-			if( g_nDXLevel >= 70 )
+			if( ( g_nDXLevel == 0 ) || ( g_nDXLevel >= 70 ) )
 			{
 				const char *pSideListStr = ValueForKey( mapent, "sides" );
 				int size;

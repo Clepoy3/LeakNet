@@ -118,12 +118,14 @@ private:
 		GET_OVERFLOW = 0x2,
 	};
 
+public: // VXP
 	// flags
 	enum
 	{
 		TEXT_BUFFER = 0x1,
 	};
 
+private: // VXP
 	// Checks if a get/put is ok
 	bool CheckPut( int size );
 	bool CheckGet( int size );
