@@ -27,11 +27,18 @@ float RateOfFire[ MAX_SETTINGS ] =
 
 float Damage[ MAX_SETTINGS ] =
 {
+	/*
 	2,
 	4,
 	10,
 	14,
 	20,
+	*/
+	5,
+	8,
+	15,
+	20,
+	35,
 };
 
 
