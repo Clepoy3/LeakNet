@@ -3713,6 +3713,19 @@ void Studio_TranslateOldBones( char boneName[] )
 //-----------------------------------------------------------------------------
 void Studio_TranslateOldBones( char boneName[] )
 {
+	// VXP: Well, there's two ways to do things right now
+	//		Compatible way: you just leave all the changes you've made, and I remove my code. The issue is - beer bottles, AR1 and other stuff need that fix too
+	// Sergeant Stacker: I think the compatible way would be good
+	//		And I could probably fix the beer bottles/molotov stuff if I can get the model sources
+	// VXP: The second way: you're rotating right bone like the citizen did, I leave the code. The issue - in original beta your models will be fucked up
+	//		Yeah, I prefer the compatibility way too
+	//		Because I think my code can slow down engine a little bit
+	//		Little bit
+	//		But with other crap it can make sense
+	// Sergeant Stacker: Yeah I get the gist of it
+	// VXP: So, I'm removing my code then now
+	return;
+
 	if ( boneName == NULL )
 	{
 		return;
@@ -3793,8 +3806,8 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 	mstudiobone_t *pbones = pStudioHdr->pBone( 0 );
 	for ( int i = 0; i < pStudioHdr->numbones; i++ )
 	{
-	//	if (!stricmp(pName,pbones[i].pszName( ))) 
-	//		return i;
+		if (!stricmp(pName,pbones[i].pszName( ))) 
+			return i;
 
 #ifdef _DEBUG
 	//	if (!stricmp( GiveMeBone(pName), GiveMeBone(pbones[i].pszName() )))
@@ -3804,6 +3817,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 	//	if (!stricmp( Studio_TranslateOldBones(pName), Studio_TranslateOldBones(pbones[i].pszName() )))
 	//		return i;
 
+	/*	VXP: Commented - see Studio_TranslateOldBones function
 		char szBufNeedle[256];
 		strcpy( szBufNeedle, pName );
 		Studio_TranslateOldBones( szBufNeedle );
@@ -3814,6 +3828,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 
 		if (!stricmp( szBufNeedle, szBufHaystack ))
 			return i;
+	*/
 	}
 
 	return -1;

@@ -258,6 +258,7 @@ extern  qboolean	g_DumpStaticProps;
 extern	vec_t		microvolume;
 extern	bool		g_snapAxialPlanes;
 extern	char		outbase[32];
+extern  bool		g_bNoEnvmapFix; // VXP
 
 extern	char	source[1024];
 extern char		mapbase[ 64 ];

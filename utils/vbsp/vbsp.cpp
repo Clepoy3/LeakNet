@@ -45,6 +45,7 @@ qboolean	nodetailcuts = true;
 qboolean	g_bLowPriority = false;
 qboolean	g_DumpStaticProps = false;
 bool		g_bLightIfMissing = false;
+bool		g_bNoEnvmapFix = false; // VXP
 bool		g_snapAxialPlanes = false;
 
 float		g_defaultLuxelSize = DEFAULT_LUXEL_SIZE;
@@ -855,6 +856,10 @@ int main (int argc, char **argv)
 		else if( !stricmp( argv[i], "-lightifmissing" ) )
 		{
 			g_bLightIfMissing = true;
+		}
+		else if( !stricmp( argv[i], "-noenvmapfix" ) ) // VXP
+		{
+			g_bNoEnvmapFix = true;
 		}
 		else if (argv[i][0] == '-')
 			Error ("Unknown option \"%s\"", argv[i]);

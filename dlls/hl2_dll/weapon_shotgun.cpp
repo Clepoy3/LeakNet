@@ -87,6 +87,10 @@ acttable_t	CWeaponShotgun::m_acttable[] =
 	{ ACT_RUN_CROUCH,		ACT_RUN_CROUCH_RIFLE,			false },
 	{ ACT_RUN_CROUCH_AIM,	ACT_RUN_CROUCH_AIM_RIFLE,		false },
 	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_SHOTGUN,	false },
+
+	// VXP: Sergeant Stacker's
+	{ ACT_IDLE,						ACT_IDLE_SMG1,					false },
+	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_SMG1,			false },
 };
 
 IMPLEMENT_ACTTABLE(CWeaponShotgun);

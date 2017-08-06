@@ -491,7 +491,7 @@ void Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials( void )
 			continue;
 		}
 
-		if( stricmp( oldEnvmapName, "env_cubemap" ) != 0 )
+		if( !g_bNoEnvmapFix && stricmp( oldEnvmapName, "env_cubemap" ) != 0 )
 		{
 			Warning( "Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials: Ignoring env_cubemap on \"%s\" which uses envmap \"%s\"\n", originalMaterialName, oldEnvmapName );
 			continue;

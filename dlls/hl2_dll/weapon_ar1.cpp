@@ -111,6 +111,19 @@ PRECACHE_WEAPON_REGISTER(weapon_ar1);
 acttable_t	CWeaponAR1::m_acttable[] = 
 {
 	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_AR1, true },
+
+	// VXP: Sergeant Stacker's
+	{ ACT_IDLE,						ACT_IDLE_SMG1,					false },
+	{ ACT_IDLE_ANGRY,				ACT_IDLE_ANGRY_SMG1,			false },
+	{ ACT_WALK,						ACT_WALK_RIFLE,					false },
+	{ ACT_WALK_AIM,					ACT_WALK_AIM_RIFLE,				false },
+	{ ACT_WALK_CROUCH,				ACT_WALK_CROUCH_RIFLE,			false },
+	{ ACT_WALK_CROUCH_AIM,			ACT_WALK_CROUCH_AIM_RIFLE,		false },
+	{ ACT_RUN,						ACT_RUN_RIFLE,					false },
+	{ ACT_RUN_AIM,					ACT_RUN_AIM_RIFLE,				false },
+	{ ACT_RUN_CROUCH,				ACT_RUN_CROUCH_RIFLE,			false },
+	{ ACT_RUN_CROUCH_AIM,			ACT_RUN_CROUCH_AIM_RIFLE,		false },
+	{ ACT_GESTURE_RANGE_ATTACK1,	ACT_GESTURE_RANGE_ATTACK_SMG1,	true },
 };
 
 IMPLEMENT_ACTTABLE(CWeaponAR1);

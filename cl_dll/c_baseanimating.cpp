@@ -384,6 +384,7 @@ void C_BaseAnimating::BuildTransformations( Vector *pos, Quaternion *q, const ma
 				//	char *weaponBone = Studio_TranslateOldBones( pbones[i].pszName() );
 				//	char *weaponFBone = Studio_TranslateOldBones( pfbones[j].pszName() );
 
+				/*	VXP: Commented - see Studio_TranslateOldBones function
 					char weaponBone[256];
 					strcpy( weaponBone, pbones[i].pszName() );
 					Studio_TranslateOldBones( weaponBone );
@@ -391,10 +392,11 @@ void C_BaseAnimating::BuildTransformations( Vector *pos, Quaternion *q, const ma
 					char weaponFBone[256];
 					strcpy( weaponFBone, pfbones[j].pszName() );
 					Studio_TranslateOldBones( weaponFBone );
+				*/
 
-				//	if ( stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
+					if ( stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
 				//	if ( stricmp(weaponBone, pfbones[j].pszName() ) == 0 )
-					if ( stricmp(weaponBone, weaponFBone ) == 0 )
+				//	if ( stricmp(weaponBone, weaponFBone ) == 0 )
 					{
 						MatrixCopy( follow->m_CachedBones[ j ], m_CachedBones[ i ] );
 						break;

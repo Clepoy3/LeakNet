@@ -289,7 +289,8 @@ void CNPC_Conscript::Spawn()
 {
 	Precache( );
 
-	SetModel( "models/conscript.mdl" );
+//	SetModel( "models/conscript.mdl" );
+	SetModel( STRING( GetModelName() ) );
 	SetHullType(HULL_HUMAN);
 	SetHullSizeNormal();
 
@@ -323,7 +324,15 @@ void CNPC_Conscript::Spawn()
 //=========================================================
 void CNPC_Conscript::Precache()
 {
+	// VXP: Custom models
+	if( !GetModelName() )
+	{
+		// Level designer has not provided a default
+		SetModelName( MAKE_STRING( "models/conscript.mdl" ) );
+	}
+
 	engine->PrecacheModel("models/conscript.mdl");
+	engine->PrecacheModel( STRING( GetModelName() ) ); // VXP: Is it nice?
 
 	enginesound->PrecacheSound("barney/ba_pain1.wav");
 	enginesound->PrecacheSound("barney/ba_pain2.wav");
