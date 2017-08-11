@@ -86,6 +86,7 @@ EXTERN	bool		g_staticprop;
 EXTERN	bool		g_centerstaticprop;
 
 EXTERN	bool		g_realignbones;
+EXTERN	bool		g_definebones; // VXP
 
 struct s_includemodel_t
 {
@@ -169,14 +170,18 @@ struct s_bonetable_t
 	Vector			rotscale;	// rotation values scale
 	int				group;		// hitgroup
 	Vector			bmin, bmax;	// bounding box
+	bool			bPreDefined; // VXP
+	matrix3x4_t		rawLocalOriginal; // VXP: original transform of preDefined bone
 	matrix3x4_t		rawLocal;
 	matrix3x4_t		srcRealign;
+	bool			bPreAligned; // VXP
 	matrix3x4_t		boneToPose;
 	int				flags;
 	int				proceduralindex;
 	int				physicsBoneIndex;
 	int				surfacePropIndex;
 	Quaternion		qAlignment;
+	bool			bDontCollapse; // VXP
 };
 EXTERN	s_bonetable_t g_bonetable[MAXSTUDIOSRCBONES];
 extern int findGlobalBone( const char *name );	// finds a named bone in the global bone table
@@ -190,6 +195,17 @@ struct s_renamebone_t
 EXTERN s_renamebone_t g_renamedbone[MAXSTUDIOSRCBONES];
 const char *RenameBone( const char *pName ); // returns new name if available, else return pName.
 
+// VXP
+EXTERN int g_numimportbones;
+struct s_importbone_t
+{
+	char			name[MAXSTUDIONAME];
+	char			parent[MAXSTUDIONAME];
+	matrix3x4_t		rawLocal;
+	bool			bPreAligned;
+	matrix3x4_t		srcRealign;
+};
+EXTERN s_importbone_t g_importbone[MAXSTUDIOSRCBONES];
 struct s_bbox_t
 {
 	char			name[MAXSTUDIONAME];		// bone name
@@ -260,6 +276,14 @@ struct s_attachment_t
 
 EXTERN s_attachment_t g_attachment[MAXSTUDIOSRCBONES];
 EXTERN int g_numattachments;
+
+// VXP
+struct s_bonemerge_t
+{
+	char			bonename[MAXSTUDIONAME];
+};
+
+EXTERN	CUtlVector< s_bonemerge_t > g_BoneMerge;
 
 struct s_mouth_t
 {
@@ -351,6 +375,7 @@ struct s_animcmd_t
 			int				motiontype;
 			int				srcframe;
 			int				destframe;
+			char			*pBonename; // VXP
 		} ao;
 
 		struct
@@ -432,6 +457,10 @@ struct s_ikrule_t
 	int		contact;
 	int		numerror;
 	s_ikerror_t	*pError;	
+
+	// VXP
+	bool	usesequence;
+	bool	usesource;
 };
 
 EXTERN int g_numikrules;
@@ -559,6 +588,9 @@ struct s_sequence_t
 	int				paramcontrol[2];
 	float			param0[MAXSTUDIOBLENDS]; // [MAXSTUDIOBLENDS];
 	float			param1[MAXSTUDIOBLENDS]; // [MAXSTUDIOBLENDS];
+	s_animation_t	*paramanim; // VXP
+	s_animation_t	*paramcompanim; // VXP
+	s_animation_t	*paramcenter; // VXP
 
 	// Vector			automovepos[MAXSTUDIOANIMATIONS];
 	// Vector			automoveangle[MAXSTUDIOANIMATIONS];
@@ -1021,6 +1053,7 @@ bool CompareBoneWeights( const s_boneweight_t &b1, const s_boneweight_t &b2 );
 bool CompareBoneWeightsFuzzy( const s_boneweight_t &b1, const s_boneweight_t &b2 );
 
 void CalcBoneTransforms( s_animation_t *panimation, int frame, matrix3x4_t* pBoneToWorld );
+void CalcBoneTransforms( s_animation_t *panimation, s_animation_t *pbaseanimation, int frame, matrix3x4_t* pBoneToWorld ); // VXP
 
 // Returns surface property for a given joint
 char* GetSurfaceProp ( char const* pJointName );
@@ -1186,6 +1219,8 @@ extern bool g_bCheckLengths;
 extern bool g_bPrintBones;
 extern bool g_bPerf;
 extern bool g_bFast;
+extern bool g_bLockBoneLengths; // VXP
+extern bool g_bOverridePreDefinedBones; // VXP
 
 EXTERN int g_numcollapse;
 EXTERN char *g_collapse[MAXSTUDIOSRCBONES];

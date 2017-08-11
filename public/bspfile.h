@@ -17,6 +17,7 @@
 
 //============================================================
 //#define OLD_ENT_COUNT // VXP: How is this should impact a poor stability of engine?
+// VXP: I'll try to leave only this now...
 //============================================================
 
 #define IDBSPHEADER	(('P'<<24)+('S'<<16)+('B'<<8)+'V')

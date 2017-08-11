@@ -21,6 +21,7 @@
 
 //============================================================
 //#define OLD_ENT_COUNT // VXP: How is this should impact a poor stability of engine?
+// VXP: Yes, this affects multiplayer - it crashes engine.dll when killing someone
 //============================================================
 
 #define TICK_RATE		(0.015)  // 15 msec ticks
@@ -33,21 +34,27 @@
 #define MAX_CLIENTS					(1<<MAX_CLIENT_BITS)
 
 // How many bits to use to encode an edict.
+/*
 #ifdef OLD_ENT_COUNT
 	#define	MAX_EDICT_BITS				10			// # of bits needed to represent max edicts
 #else
 	#define	MAX_EDICT_BITS				11			// # of bits needed to represent max edicts
 #endif
+*/
+#define	MAX_EDICT_BITS				10			// # of bits needed to represent max edicts
 // Max # of edicts in a level (1024)
 #define	MAX_EDICTS					(1<<MAX_EDICT_BITS)
 
 
 // Used for networking ehandles.
+/*
 #ifdef OLD_ENT_COUNT
 	#define NUM_ENT_ENTRY_BITS		(MAX_EDICT_BITS + 2)
 #else
 	#define NUM_ENT_ENTRY_BITS		(MAX_EDICT_BITS + 1)
 #endif
+*/
+#define NUM_ENT_ENTRY_BITS		(MAX_EDICT_BITS + 2)
 #define NUM_ENT_ENTRIES			(1 << NUM_ENT_ENTRY_BITS)
 #define ENT_ENTRY_MASK			(NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX	0xFFFFFFFF

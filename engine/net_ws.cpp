@@ -14,6 +14,10 @@
 
 #include <winsock.h>
 
+// VXP
+//#include <windows.h>
+#include <wininet.h>
+
 typedef int socklen_t;
 
 #else
@@ -2028,3 +2032,39 @@ void	NET_Shutdown (void)
 	// Clear out any messages that are left over.
 	NET_FlushQueues();
 }
+
+
+/*
+====================
+VXP: NET_GetExternalIP
+
+====================
+*/
+void NET_GetExternalIP ( char ip[ 32 ] )
+{
+	HINTERNET hInternet, hFile;
+    DWORD rSize;
+	char buffer[32];
+
+    hInternet = InternetOpen(NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+   // hFile = InternetOpenUrl(hInternet, "http://automation.whatismyip.com/n09230945.asp", NULL, 0, INTERNET_FLAG_RELOAD, 0);
+	hFile = InternetOpenUrl(hInternet, "http://myexternalip.com/raw", NULL, 0, INTERNET_FLAG_RELOAD, 0);
+    InternetReadFile(hFile, &buffer, sizeof(buffer), &rSize);
+//	buffer[rSize] = '\0';
+	buffer[rSize - 1] = '\0'; // VXP: Remove \n also
+
+    InternetCloseHandle(hFile);
+    InternetCloseHandle(hInternet);
+
+//	Msg( "Function returns %s", buffer );
+
+//	return &buffer[0];
+
+//	char *ip = ( char * )buffer;
+//	return ip;
+
+//	return (char *)buffer;
+
+	strcpy( ip, buffer );
+}
+

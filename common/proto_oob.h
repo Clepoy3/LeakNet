@@ -140,4 +140,7 @@
 
 #define S2C_CONNREJECT			'9'  // Special protocol for rejected connections.
 
+// VXP
+#define S2M_HEARTBEAT3			'L' // LeakNet style heartbeat
+
 #endif

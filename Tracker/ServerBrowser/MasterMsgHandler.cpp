@@ -40,6 +40,8 @@ bool CMasterMsgHandler::Process( netadr_t *from, CMsgBuffer *msg )
 	// Each address is 6 bytes long
 	nNumAddresses /= 6;
 
+	DevMsg("CMasterMsgHandler::Process: nNumAddresses = %i\n", nNumAddresses);
+
 	while (nNumAddresses-- > 0)
 	{
 		serveritem_t server;

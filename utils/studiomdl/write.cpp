@@ -115,7 +115,7 @@ static void AddToStringTable( void *base, int *ptr, char *string )
 // Purpose: Write out stringtable
 //			fixup local pointers
 //-----------------------------------------------------------------------------
-static void WriteStringTable( )
+static byte *WriteStringTable( byte *pData )
 {
 	// force null at first address
 	strings[0].addr = pData;
@@ -145,6 +145,7 @@ static void WriteStringTable( )
 		}
 	}
 	ALIGN4( pData );
+	return pData;
 }
 
 
@@ -1488,7 +1489,7 @@ void EnsureFileDirectoryExists( const char *pFilename )
 	{
 		pLastSlash = pLastSlash2;
 	}
-	printf( "EnsureFileDirectoryExists: filename - %s, dirName: %s, lastSlash: %s\n", pFilename, dirName, pLastSlash );
+//	printf( "EnsureFileDirectoryExists: filename - %s, dirName: %s, lastSlash: %s\n", pFilename, dirName, pLastSlash );
 	if ( pLastSlash )
 	{
 		*pLastSlash = 0;
@@ -1497,7 +1498,7 @@ void EnsureFileDirectoryExists( const char *pFilename )
 		{
 			char cmdLine[512];
 			Q_snprintf( cmdLine, sizeof( cmdLine ), "md \"%s\"", dirName );
-			printf( "Executing %s\n", cmdLine );
+		//	printf( "Executing %s\n", cmdLine );
 			system( cmdLine );
 		}
 	}
@@ -1546,7 +1547,8 @@ void WriteFile (void)
 		strcpy( pseqhdr->name, g_sequencegroup[i].name );
 		pseqhdr->length = pData - pStart;
 
-		WriteStringTable( );
+	//	WriteStringTable( );
+		pData = WriteStringTable( pData );
 
 		printf("total     %6d\n", pseqhdr->length );
 
@@ -1656,7 +1658,8 @@ void WriteFile (void)
 	}
 	total  = pData - pStart;
 
-	WriteStringTable( );
+//	WriteStringTable( );
+	pData = WriteStringTable( pData );
 
 	total  = pData - pStart;
 

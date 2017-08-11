@@ -26,6 +26,12 @@ typedef struct
 	char	filename[1024];
 	char    *buffer,*script_p,*end_p;
 	int     line;
+
+	char	macrobuffer[4096];
+	char	*macroparam[64];
+	char	*macrovalue[64];
+	int		nummacroparams;
+
 } script_t;
 
 #define	MAX_INCLUDES	8
@@ -75,6 +81,200 @@ void LoadScriptFile (char *filename)
 	endofscript = false;
 	tokenready = false;
 }
+
+
+/*
+==============
+==============
+*/
+
+script_t	*macrolist[64];
+int nummacros;
+
+void DefineMacro( char *macroname )
+{
+	script_t	*pmacro = (script_t *)malloc( sizeof( script_t ) );
+
+	strcpy( pmacro->filename, macroname );
+	pmacro->line = script->line;
+	pmacro->nummacroparams = 0;
+
+	char *mp = pmacro->macrobuffer;
+	char *cp = script->script_p;
+
+	while (TokenAvailable( ))
+	{
+		GetToken( false );
+
+		if (token[0] == '\\' && token[1] == '\\')
+		{
+			break;
+		}
+		cp = script->script_p;
+
+		pmacro->macroparam[pmacro->nummacroparams++] = mp;
+
+		strcpy( mp, token );
+		mp += strlen( token ) + 1;
+
+		if (mp >= pmacro->macrobuffer + sizeof( pmacro->macrobuffer ))
+			Error("Macro buffer overflow\n");
+	}
+	// roll back script_p to previous valid location
+	script->script_p = cp;
+
+	// find end of macro def
+	while (*cp && *cp != '\n')
+	{
+		//Msg("%d ", *cp );
+		if (*cp == '\\' && *(cp+1) == '\\')
+		{
+			// skip till end of line
+			while (*cp && *cp != '\n')
+			{
+				*cp = ' '; // replace with spaces
+				cp++;
+			}
+
+			if (*cp)
+			{
+				cp++;
+			}
+		}
+		else
+		{
+			cp++;
+		}
+	}
+
+	int size = (cp - script->script_p);
+
+	pmacro->buffer = (char *)malloc( size + 1);
+	memcpy( pmacro->buffer, script->script_p, size );
+	pmacro->buffer[size] = '\0';
+	pmacro->end_p = &pmacro->buffer[size]; 
+
+	macrolist[nummacros++] = pmacro;
+
+	script->script_p = cp;
+}
+
+
+/*
+==============
+==============
+*/
+bool AddMacroToStack( char *macroname )
+{
+	// lookup macro
+	if (macroname[0] != '$')
+		return false;
+
+	int i;
+	for (i = 0; i < nummacros; i++)
+	{
+		if (strcmpi( macrolist[i]->filename, &macroname[1] ) == 0)
+		{
+			break;
+		}
+	}
+	if (i == nummacros)
+		return false;
+
+	script_t *pmacro = macrolist[i];
+
+	// get tokens
+	script_t	*pnext = script + 1;
+
+	pnext++;
+	if (pnext == &scriptstack[MAX_INCLUDES])
+		Error ("script file exceeded MAX_INCLUDES");
+
+	// get tokens
+	char *cp = pnext->macrobuffer;
+
+	pnext->nummacroparams = pmacro->nummacroparams;
+
+	for (i = 0; i < pnext->nummacroparams; i++)
+	{
+		GetToken(false);
+
+		strcpy( cp, token );
+		pnext->macroparam[i] = pmacro->macroparam[i];
+		pnext->macrovalue[i] = cp;
+
+		cp += strlen( token ) + 1;
+
+		if (cp >= pnext->macrobuffer + sizeof( pnext->macrobuffer ))
+			Error("Macro buffer overflow\n");
+	}
+
+	script = pnext;
+	strcpy( script->filename, pmacro->filename );
+
+	int size = pmacro->end_p - pmacro->buffer;
+	script->buffer = (char *)malloc( size + 1 );
+	memcpy( script->buffer, pmacro->buffer, size );
+	pmacro->buffer[size] = '\0';
+	script->script_p = script->buffer;
+	script->end_p = script->buffer + size;
+	script->line = pmacro->line;
+
+	return true;
+}
+
+
+
+bool ExpandMacroToken( char *&token_p )
+{
+	if ( script->nummacroparams && *script->script_p == '$' )
+	{
+		char *cp = script->script_p + 1;
+
+		while ( *cp > 32 && *cp != '$' )
+		{
+			cp++;
+		}
+
+		// found a word with $'s on either end?
+		if (*cp != '$')
+			return false;
+
+		// get token pointer
+		char *tp = script->script_p + 1;
+		int len = (cp - tp);
+		*(tp + len) = '\0';
+
+		// lookup macro parameter
+		int index = 0;
+		for (index = 0; index < script->nummacroparams; index++)
+		{
+			if (stricmp( script->macroparam[index], tp ) == 0)
+				break;
+		}
+		if (index >= script->nummacroparams)
+		{
+			Error("unknown macro token \"%s\" in %s\n", tp, script->filename );
+		}
+
+		// paste token into 
+		len = strlen( script->macrovalue[index] );
+		strcpy( token_p, script->macrovalue[index] );
+		token_p += len;
+		
+		script->script_p = cp + 1;
+
+		if (script->script_p >= script->end_p)
+			Error ("Macro expand overflow\n");
+
+		if (token_p >= &token[MAXTOKEN])
+			Error ("Token too large on line %i\n",scriptline);
+
+		return true;
+	}
+	return false;
+}
+
 
 
 /*
@@ -238,11 +438,14 @@ skipspace:
 	else	// regular token
 	while ( *script->script_p > 32 && *script->script_p != ';')
 	{
-		*token_p++ = *script->script_p++;
-		if (script->script_p == script->end_p)
-			break;
-		if (token_p == &token[MAXTOKEN])
-			Error ("Token too large on line %i\n",scriptline);
+		if ( !ExpandMacroToken( token_p ) )
+		{
+			*token_p++ = *script->script_p++;
+			if (script->script_p == script->end_p)
+				break;
+			if (token_p == &token[MAXTOKEN])
+				Error ("Token too large on line %i\n",scriptline);
+		}
 	}
 
 	*token_p = 0;
@@ -251,6 +454,16 @@ skipspace:
 	{
 		GetToken (false);
 		AddScriptToStack (token);
+		return GetToken (crossline);
+	}
+	else if (!stricmp (token, "$definemacro"))
+	{
+		GetToken (false);
+		DefineMacro(token);
+		return GetToken (crossline);
+	}
+	else if (AddMacroToStack( token ))
+	{
 		return GetToken (crossline);
 	}
 

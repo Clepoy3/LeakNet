@@ -827,8 +827,11 @@ void CFourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOri
 	CBasePlayer *pPlayer = GetPassenger( VEHICLE_DRIVER );
 	Assert( pPlayer );
 
-	*pAbsAngles = pPlayer->EyeAngles(); // yuck. this is an in/out parameter.
-	GetFourWheelVehiclePhysics()->GetVehicleViewPosition( "vehicle_driver_eyes", 1.0f, pAbsOrigin, pAbsAngles );
+	if ( pPlayer )
+	{
+		*pAbsAngles = pPlayer->EyeAngles(); // yuck. this is an in/out parameter.
+		GetFourWheelVehiclePhysics()->GetVehicleViewPosition( "vehicle_driver_eyes", 1.0f, pAbsOrigin, pAbsAngles );
+	}
 }
 
 //-----------------------------------------------------------------------------

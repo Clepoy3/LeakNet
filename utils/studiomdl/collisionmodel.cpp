@@ -116,6 +116,15 @@ struct mergelist_t
 	char		*pChild;
 };
 
+struct collisionpair_t // VXP
+{
+	int obj0;
+	int obj1;
+	const char *pName0;
+	const char *pName1;
+	collisionpair_t *pNext;
+};
+
 //-----------------------------------------------------------------------------
 // Purpose: Search a source for a bone with a specified name
 // Input  : *pSource - 
@@ -163,6 +172,7 @@ public:
 	s_source_t				*m_pModel;
 	int						m_collisionCount;
 	CPhysCollisionModel		*m_pCollisionList;
+	collisionpair_t			*m_pCollisionPairs; // VXP
 	float					m_totalMass;
 	int						m_bonemap[MAXSTUDIOSRCBONES];
 	CJointConstraint		*m_pConstraintList;
@@ -193,6 +203,7 @@ public:
 	void AppendCollisionModel( CPhysCollisionModel *pCollide );
 	void UnlinkCollisionModel( CPhysCollisionModel *pCollide );
 	CPhysCollisionModel *GetCollisionModel( const char *pName );
+	void AppendCollisionPair( const char *pName0, const char *pName1 ); // VXP
 	void AddConstraint( const char *pJointName, int axis, jointlimit_t jointType, float limitMin, float limitMax, float friction );
 	int CollisionIndex( const char *pName );
 	void SortCollisionList( void );
@@ -222,6 +233,13 @@ public:
 	}
 	void ComputeMass( void );
 
+	// VXP
+	float					m_flFrictionTimeIn;
+	float					m_flFrictionTimeOut;
+	float					m_flFrictionTimeHold;
+	int						m_iMinAnimatedFriction;
+	int						m_iMaxAnimatedFriction;
+	bool					m_bHasAnimatedFriction;
 };
 
 
@@ -234,6 +252,7 @@ CJointedModel::CJointedModel( void )
 
 	m_collisionCount = 0;
 	m_pCollisionList = NULL;
+	m_pCollisionPairs = NULL;
 	m_totalMass = 1.0;
 
 	memset( m_bonemap, 0, sizeof(m_bonemap) );
@@ -249,6 +268,12 @@ CJointedModel::CJointedModel( void )
 	m_defaultDrag = -1;
 	m_defaultRollingDrag = -1;
 	m_allowConcave = false;
+
+	m_flFrictionTimeIn = 0.0f;
+	m_flFrictionTimeOut = 0.0f;
+	m_iMinAnimatedFriction = 1.0f;
+	m_iMaxAnimatedFriction = 1.0f;
+	m_bHasAnimatedFriction = false;
 }
 
 
@@ -448,6 +473,20 @@ void CJointedModel::SortCollisionList( void )
 
 	// delete the working array
 	delete[] pArray;
+}
+
+void CJointedModel::AppendCollisionPair( const char *pName0, const char *pName1 ) // VXP
+{
+	collisionpair_t *pPair = new collisionpair_t;
+	pPair->obj0 = -1;
+	pPair->obj1 = -1;
+	int jointIndex0 = FindLocalBoneNamed( m_pModel, pName0 );
+	pPair->pName0 = (jointIndex0 >= 0) ? m_pModel->localBone[jointIndex0].name : NULL;
+	int jointIndex1 = FindLocalBoneNamed( m_pModel, pName1 );
+	pPair->pName1 = (jointIndex1 >= 0) ? m_pModel->localBone[jointIndex1].name : NULL;
+
+	pPair->pNext = m_pCollisionPairs;
+	m_pCollisionPairs = pPair;
 }
 
 // called before processing, after the model has been simplified.
@@ -1617,6 +1656,17 @@ void CCmd_JointRoot( CJointedModel &joints, const char *pBone )
 }
 
 
+void CCmd_JoinAnimatedFriction( CJointedModel &joints, const char *pMinFriction, const char *pMaxFriction, const char *pTimeIn, const char *pTimeHold, const char *pTimeOut ) // VXP
+{
+	joints.m_flFrictionTimeIn = Safe_atof( pTimeIn );
+	joints.m_flFrictionTimeOut = Safe_atof( pTimeOut );
+	joints.m_flFrictionTimeHold = Safe_atof( pTimeHold );
+	joints.m_iMinAnimatedFriction = Safe_atoi( pMinFriction );
+	joints.m_iMaxAnimatedFriction = Safe_atoi( pMaxFriction );
+	joints.m_bHasAnimatedFriction = true;
+}
+
+
 //-----------------------------------------------------------------------------
 // Purpose: Parses all legal commands inside the $collisionjoints {} block
 // Input  : &joints - 
@@ -1720,6 +1770,20 @@ void ParseCollisionCommands( CJointedModel &joints )
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.JointMassBias( args[0], Safe_atof( args[1] ) );
+		}
+		else if ( !stricmp( command, "$jointcollide" ) ) // VXP
+		{
+			argCount = ReadArgs( args, 2 );
+			joints.AppendCollisionPair( args[0], args[1] );
+		}
+		else if ( !stricmp( command, "$animatedfriction" ) )
+		{
+			argCount = ReadArgs( args, 5 );
+
+			if ( argCount == 5 )
+			{
+				CCmd_JoinAnimatedFriction( joints, args[0], args[1], args[2], args[3], args[4] );
+			}
 		}
 		else
 		{
@@ -1910,6 +1974,10 @@ void KeyWriteInt( FILE *fp, const char *pKeyName, int outputData )
 	fprintf( fp, "\"%s\" \"%d\"\n", pKeyName, outputData );
 }
 
+void KeyWriteIntPair( FILE *fp, const char *pKeyName, int outputData0, int outputData1 ) // VXP
+{
+	fprintf( fp, "\"%s\" \"%d,%d\"\n", pKeyName, outputData0, outputData1 );
+}
 void KeyWriteString( FILE *fp, const char *pKeyName, const char *outputData )
 {
 	fprintf( fp, "\"%s\" \"%s\"\n", pKeyName, outputData );
@@ -2216,6 +2284,37 @@ void WriteCollisionModel( long checkSum )
 				}
 				pPhys = pPhys->m_pNext;
 
+			}
+			if ( g_JointedModel.m_pCollisionPairs )
+			{
+				fprintf(fp, "collisionrules {\n" );
+				collisionpair_t *pPair = g_JointedModel.m_pCollisionPairs;
+				while ( pPair )
+				{
+					pPair->obj0 = g_JointedModel.CollisionIndex( pPair->pName0 );
+					pPair->obj1 = g_JointedModel.CollisionIndex( pPair->pName1 );
+					if ( pPair->obj0 >= 0 && pPair->obj1 >= 0 && pPair->obj0 != pPair->obj1 )
+					{
+						KeyWriteIntPair( fp, "collisionpair", pPair->obj0, pPair->obj1 );
+					}
+					else
+					{
+						printf("Invalid collision pair (%s, %s)\n", pPair->pName0, pPair->pName1 );
+					}
+					pPair = pPair->pNext;
+				}
+				fprintf(fp, "}\n");
+			}
+
+			if ( g_JointedModel.m_bHasAnimatedFriction == true )
+			{
+				fprintf( fp, "animatedfriction {\n" );
+				KeyWriteFloat( fp, "animfrictionmin", g_JointedModel.m_iMinAnimatedFriction );
+				KeyWriteFloat( fp, "animfrictionmax", g_JointedModel.m_iMaxAnimatedFriction );
+				KeyWriteFloat( fp, "animfrictiontimein", g_JointedModel.m_flFrictionTimeIn );
+				KeyWriteFloat( fp, "animfrictiontimeout", g_JointedModel.m_flFrictionTimeOut );
+				KeyWriteFloat( fp, "animfrictiontimehold", g_JointedModel.m_flFrictionTimeHold );
+				fprintf( fp, "}\n" );
 			}
 
 			// block that is only parsed by the editor

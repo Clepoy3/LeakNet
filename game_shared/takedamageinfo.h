@@ -70,6 +70,8 @@ protected:
 	float			m_flMaxDamage;
 	int				m_bitsDamageType;
 	int				m_iCustomKillType;
+
+	DECLARE_SIMPLE_DATADESC(); // VXP
 };
 
 //-----------------------------------------------------------------------------
@@ -89,6 +91,8 @@ public:
 
 protected:
 	EHANDLE			m_hTarget;
+
+	DECLARE_SIMPLE_DATADESC(); // VXP
 };
 
 extern CMultiDamage g_MultiDamage;

@@ -1047,6 +1047,9 @@ void CNPC_Manhack::Slice( CBaseEntity *pHitEntity, float flInterval, trace_t &tr
 //-----------------------------------------------------------------------------
 void CNPC_Manhack::Bump( CBaseEntity *pHitEntity, float flInterval, trace_t &tr )
 {
+	if ( !VPhysicsGetObject() )
+		return;
+
 	if ( pHitEntity->GetMoveType() == MOVETYPE_VPHYSICS && pHitEntity->Classify()!=CLASS_MANHACK )
 	{
 		HitPhysicsObject( pHitEntity );
@@ -1731,9 +1734,10 @@ void CNPC_Manhack::Spawn(void)
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 
 	// VXP: Fixed(?) transition between two canals maps (assert in CBaseEntity::SetMoveType - no VPhysicsGetObject()->GetShadowController())
-	IPhysicsObject *pPhysicsObject = VPhysicsInitNormal( SOLID_VPHYSICS, FSOLID_NOT_STANDABLE, false );
-	if ( pPhysicsObject == NULL )
-		return;
+	// VXP: WTF is that?
+//	IPhysicsObject *pPhysicsObject = VPhysicsInitNormal( SOLID_VPHYSICS, FSOLID_NOT_STANDABLE, false );
+//	if ( pPhysicsObject == NULL )
+//		return;
 
 	SetMoveType( MOVETYPE_VPHYSICS );
 
@@ -1743,10 +1747,10 @@ void CNPC_Manhack::Spawn(void)
 	m_NPCState			= NPC_STATE_NONE;
 	// SetNavType(NAV_FLY);
 	SetBloodColor( DONT_BLEED );
-	SetCurrentVelocity( Vector(0, 0, 0) );
-	m_vForceVelocity	= Vector(0, 0, 0);
-	m_vCurrentBanking	= Vector(0, 0, 0);
-	m_vTargetBanking	= Vector(0, 0, 0);
+	SetCurrentVelocity( vec3_origin );
+	m_vForceVelocity.Init();
+	m_vCurrentBanking.Init();
+	m_vTargetBanking.Init();
 
 	m_flNextBurstTime	= gpGlobals->curtime;
 

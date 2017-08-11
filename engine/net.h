@@ -277,4 +277,8 @@ qboolean Netchan_IsSending( netchan_t *chan );
 qboolean Netchan_IsReceiving( netchan_t *chan );
 // Is data ready
 qboolean Netchan_IncomingReady( netchan_t *chan );
+
+// VXP
+// Gets external IP of server
+void	NET_GetExternalIP ( char ip[ 32 ] );
 #endif // !NET_H

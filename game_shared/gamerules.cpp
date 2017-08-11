@@ -266,7 +266,8 @@ END_NETWORK_TABLE()
 							adjustedInfo.SetDamagePosition( vecSrc );
 						}
 
-						if (tr.fraction != 1.0)
+					//	if (tr.fraction != 1.0)
+						if (tr.fraction != 1.0 && pEntity == tr.m_pEnt)
 						{
 							ClearMultiDamage( );
 							pEntity->DispatchTraceAttack( adjustedInfo, dir, &tr );

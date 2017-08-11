@@ -119,6 +119,7 @@ public:
 	void							GetSeqAnims( int iSequence, mstudioanimdesc_t *panim[4], float *pweights );
 	void							GetSeqAnims( mstudioanimdesc_t *panim[4], float *pweights );
 	float							GetGroundSpeed( void );
+	bool							IsHidden( int iSequence ); // VXP
 
 	float							SetController( int iController, float flValue );
 

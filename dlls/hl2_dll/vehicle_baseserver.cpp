@@ -275,7 +275,8 @@ void CBaseServerVehicle::GetPassengerStartPoint( int nRole, Vector *pPoint, QAng
 	if ( pAnimating )
 	{
 		char pAttachmentName[32];
-		Q_snprintf( pAttachmentName, 32, "vehicle_feet_passenger%d", nRole );
+	//	Q_snprintf( pAttachmentName, 32, "vehicle_feet_passenger%d", nRole );
+		Q_snprintf( pAttachmentName, sizeof( pAttachmentName ), "vehicle_feet_passenger%d", nRole );
 		int nFeetAttachmentIndex = pAnimating->LookupAttachment(pAttachmentName);
 		if ( nFeetAttachmentIndex > 0 )
 		{
@@ -603,8 +604,20 @@ void CBaseServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, 
 	CBasePlayer *pPlayer = GetPassenger( VEHICLE_DRIVER );
 	Assert( pPlayer );
 
-	*pAbsAngles = pPlayer->EyeAngles();
-	*pAbsOrigin = m_pVehicle->GetAbsOrigin();
+	if ( pPlayer != NULL )
+	{
+		// Call through the player to resolve the actual position (if available)
+		if ( pAbsOrigin != NULL )
+		{
+		//	*pAbsOrigin = m_pVehicle->GetAbsOrigin();
+			*pAbsOrigin = pPlayer->EyePosition();
+		}
+
+		if ( pAbsAngles != NULL )
+		{
+			*pAbsAngles = pPlayer->EyeAngles();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

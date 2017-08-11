@@ -829,6 +829,19 @@ float StudioModel::GetGroundSpeed( void )
 }
 
 
+//-----------------------------------------------------------------------------
+// Purpose: Returns the the sequence should be hidden or not
+//-----------------------------------------------------------------------------
+bool StudioModel::IsHidden( int iSequence )
+{
+	if (m_pstudiohdr->pSeqdesc( iSequence )->flags & STUDIO_HIDDEN)
+		return true;
+
+	return false;
+}
+
+
+
 void StudioModel::GetSeqAnims( int iSequence, mstudioanimdesc_t *panim[4], float *weight )
 {
 	if (!m_pstudiohdr)

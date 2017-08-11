@@ -284,7 +284,7 @@ void CNetworkStringTableClient::DirectUpdate( int entryIndex, char const *string
 	//	Assert( entryIndex == GetNumStrings() );
 		if( entryIndex != GetNumStrings() )
 		{
-			DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings() (%i != %i)\n", entryIndex, GetNumStrings() );
+			DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings() (%i != %i) in table %s\n", entryIndex, GetNumStrings(), GetTableName() );
 		}
 		AddString( pName, nBytes, pUserData );
 	}

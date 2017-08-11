@@ -27,6 +27,20 @@ int linksallocated = 0;
 ConVar think_limit( "think_limit", DEF_THINK_LIMIT, FCVAR_REPLICATED, "Maximum think time in milliseconds, warning is printed if this is exceeded." );
 
 //-----------------------------------------------------------------------------
+// Returns the actual gravity
+//-----------------------------------------------------------------------------
+static inline float GetActualGravity( CBaseEntity *pEnt )
+{
+	float ent_gravity = pEnt->GetGravity();
+	if ( ent_gravity == 0.0f )
+	{
+		ent_gravity = 1.0f;
+	}
+
+	return ent_gravity * sv_gravity.GetFloat();
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 // Output : inline touchlink_t
 //-----------------------------------------------------------------------------
@@ -40,7 +54,7 @@ inline touchlink_t *AllocTouchLink( void )
 	else
 	{
 	//	Error( "AllocTouchLink:  Progamming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
-		DevWarning( "AllocTouchLink:  Programming error, failed to allocate touchlink_t.  Touchlinks not being freed correctly!!!\n" );
+		DevMsg( "AllocTouchLink:  failed to allocate touchlink_t.\n" );
 	}
 
 	return link;
@@ -78,7 +92,8 @@ void CBaseEntity::PhysicsCheckForEntityUntouch( void )
 {
 	Assert( g_pNextLink == NULL );
 
-	touchlink_t *link/*, *nextLink*/;
+//	touchlink_t *link, *nextLink;
+	touchlink_t *link;
 
 	link = m_EntitiesTouched.nextLink;
 	while ( link != &m_EntitiesTouched )
@@ -153,9 +168,9 @@ void CBaseEntity::PhysicsRemoveToucher( CBaseEntity *other, touchlink_t *link )
 	//	CBaseEntity *otherEntity = other;
 	//	if ( linkEntity && otherEntity )
 	//	{
-		//	otherEntity->EndTouch( linkEntity );
-			other->EndTouch( link->entityTouched );
+	//		otherEntity->EndTouch( linkEntity );
 	//	}
+		other->EndTouch( link->entityTouched );
 	}
 
 	link->nextLink->prevLink = link->prevLink;
@@ -415,7 +430,7 @@ bool CBaseEntity::PhysicsCheckWater( void )
 
 	// If we're not in water + don't have a current, we're done
 //	if ( cont & (MASK_WATER | MASK_CURRENT) != (MASK_WATER | MASK_CURRENT) )
-	if ( (cont & (MASK_WATER | MASK_CURRENT)) != (MASK_WATER | MASK_CURRENT) )
+	if ( ( cont & (MASK_WATER | MASK_CURRENT) ) != (MASK_WATER | MASK_CURRENT) )
 		return GetWaterLevel() > 1;
 
 	// Compute current direction
@@ -509,6 +524,7 @@ void CBaseEntity::PhysicsCheckVelocity( void )
 //-----------------------------------------------------------------------------
 void CBaseEntity::PhysicsAddGravityMove( Vector &move )
 {
+/* VXP: Already in GetActualGravity
 	float	ent_gravity;
 
 	if ( GetGravity() )
@@ -519,6 +535,7 @@ void CBaseEntity::PhysicsAddGravityMove( Vector &move )
 	{
 		ent_gravity = 1.0;
 	}
+*/
 
 	Vector vecAbsVelocity = GetAbsVelocity();
 
@@ -532,7 +549,7 @@ void CBaseEntity::PhysicsAddGravityMove( Vector &move )
 	}
 
 	// linear acceleration due to gravity
-	float newZVelocity = vecAbsVelocity.z - ent_gravity * sv_gravity.GetFloat() * gpGlobals->frametime;
+	float newZVelocity = vecAbsVelocity.z - GetActualGravity( this ) * gpGlobals->frametime;
 
 	move.z = ((vecAbsVelocity.z + newZVelocity) / 2.0 + GetBaseVelocity().z ) * gpGlobals->frametime;
 
@@ -609,27 +626,33 @@ void CBaseEntity::ResolveFlyCollisionBounce( trace_t &trace, Vector &vecVelocity
 	PhysicsClipVelocity( GetAbsVelocity(), trace.plane.normal, vecAbsVelocity, 2.0f );
 	vecAbsVelocity *= flTotalElasticity;
 
-	// Stop if on ground.
-	if ( trace.plane.normal.z > 0.7 )			// Floor
-	{
-		// Get the total velocity (player + conveyors, etc.)
-		VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
-		float flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
+	// Get the total velocity (player + conveyors, etc.)
+	VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
+	float flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
 
+	// Stop if on ground.
+	if ( trace.plane.normal.z > 0.7f )			// Floor
+	{
 		// Verify that we have an entity.
 		CBaseEntity *pEntity = trace.m_pEnt;
 		Assert( pEntity );
 
 		// Are we on the ground?
-		if ( vecVelocity.z < ( sv_gravity.GetFloat() * gpGlobals->frametime ) )
+		if ( vecVelocity.z < ( GetActualGravity( this ) * gpGlobals->frametime ) )
 		{
+		/* VXP: Fix for gibs
 			if ( pEntity->IsStandable() )
 			{
 				AddFlag( FL_ONGROUND );
 				SetGroundEntity( pEntity );
 			}
+		*/
 
 			vecAbsVelocity.z = 0.0f;
+
+			// VXP: Recompute speedsqr based on the new absvel
+			VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
+			flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
 		}
 		SetAbsVelocity( vecAbsVelocity );
 
@@ -659,7 +682,18 @@ void CBaseEntity::ResolveFlyCollisionBounce( trace_t &trace, Vector &vecVelocity
 	}
 	else
 	{
-		SetAbsVelocity( vecAbsVelocity );
+		// VXP: If we get *too* slow, we'll stick without ever coming to rest because
+		// we'll get pushed down by gravity faster than we can escape from the wall.
+		if ( flSpeedSqr < ( 30 * 30 ) )
+		{
+			// Reset velocities.
+			SetAbsVelocity( vec3_origin );
+			SetLocalAngularVelocity( vec3_angle );
+		}
+		else
+		{
+			SetAbsVelocity( vecAbsVelocity );
+		}
 	}
 }
 
@@ -677,54 +711,57 @@ void CBaseEntity::ResolveFlyCollisionSlide( trace_t &trace, Vector &vecVelocity 
 	Vector vecAbsVelocity;
 	PhysicsClipVelocity( GetAbsVelocity(), trace.plane.normal, vecAbsVelocity, flBackOff );
 
-	// Stop if on ground.
-	if ( trace.plane.normal.z > 0.7 )			// Floor
+	if ( trace.plane.normal.z <= 0.7f )			// Floor
 	{
-		// Get the total velocity (player + conveyors, etc.)
-		VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
-		float flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
-
-		// Verify that we have an entity.
-		CBaseEntity *pEntity = trace.m_pEnt;
-		Assert( pEntity );
-
-		// Are we on the ground?
-		if ( vecVelocity.z < ( sv_gravity.GetFloat() * gpGlobals->frametime ) )
-		{
-			if ( pEntity->IsStandable() )
-			{
-				AddFlag( FL_ONGROUND );
-				SetGroundEntity( pEntity );
-			}
-
-			vecAbsVelocity.z = 0.0f;
-		}
 		SetAbsVelocity( vecAbsVelocity );
+		return;
+	}
 
-		if ( flSpeedSqr < ( 30 * 30 ) )
+	// Stop if on ground.
+	// Get the total velocity (player + conveyors, etc.)
+	VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
+	float flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
+
+	// Verify that we have an entity.
+	CBaseEntity *pEntity = trace.m_pEnt;
+	Assert( pEntity );
+
+	// Are we on the ground?
+	if ( vecVelocity.z < ( GetActualGravity( this ) * gpGlobals->frametime ) )
+	{
+		if ( pEntity->IsStandable() )
 		{
-			if ( pEntity->IsStandable() )
-			{
-				AddFlag( FL_ONGROUND );
-				SetGroundEntity( pEntity );
-			}
-
-			// Reset velocities.
-			SetAbsVelocity( vec3_origin );
-			SetLocalAngularVelocity( vec3_angle );
+			AddFlag( FL_ONGROUND );
+			SetGroundEntity( pEntity );
 		}
-		else
+
+		vecAbsVelocity.z = 0.0f;
+
+		// VXP: Recompute speedsqr based on the new absvel
+		VectorAdd( vecAbsVelocity, GetBaseVelocity(), vecVelocity );
+		flSpeedSqr = DotProduct( vecVelocity, vecVelocity );
+	}
+	SetAbsVelocity( vecAbsVelocity );
+
+	if ( flSpeedSqr < ( 30 * 30 ) )
+	{
+		if ( pEntity->IsStandable() )
 		{
-			VectorScale ( vecAbsVelocity, ( 1.0f - trace.fraction ) * gpGlobals->frametime * flSurfaceFriction, vecAbsVelocity );
-			VectorMA( vecAbsVelocity, ( 1.0f - trace.fraction ) * gpGlobals->frametime * flSurfaceFriction, GetBaseVelocity(), vecVelocity );
-
-			SetAbsVelocity( vecAbsVelocity );
-			trace = PhysicsPushEntity( vecVelocity );
+			AddFlag( FL_ONGROUND );
+			SetGroundEntity( pEntity );
 		}
+
+		// Reset velocities.
+		SetAbsVelocity( vec3_origin );
+		SetLocalAngularVelocity( vec3_angle );
 	}
 	else
 	{
+		VectorScale ( vecAbsVelocity, ( 1.0f - trace.fraction ) * gpGlobals->frametime * flSurfaceFriction, vecAbsVelocity );
+		VectorMA( vecAbsVelocity, ( 1.0f - trace.fraction ) * gpGlobals->frametime * flSurfaceFriction, GetBaseVelocity(), vecVelocity );
+
 		SetAbsVelocity( vecAbsVelocity );
+		trace = PhysicsPushEntity( vecVelocity );
 	}
 }
 
@@ -744,7 +781,7 @@ void CBaseEntity::ResolveFlyCollisionCustom( trace_t &trace, Vector &vecVelocity
 		Assert( pEntity );
 
 		// Are we on the ground?
-		if ( vecVelocity.z < ( sv_gravity.GetFloat() * gpGlobals->frametime ) )
+		if ( vecVelocity.z < ( GetActualGravity( this ) * gpGlobals->frametime ) )
 		{
 			Vector vecAbsVelocity = GetAbsVelocity();
 			vecAbsVelocity.z = 0.0f;

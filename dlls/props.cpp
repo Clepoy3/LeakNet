@@ -572,8 +572,13 @@ int CBreakableProp::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		return ret;
 	}
 
+	// VXP: TODO: Would be cool to implement Source 2007 feature that appears at this place
+
 	int ret = BaseClass::OnTakeDamage( info );
-	m_OnHealthChanged.Set( m_iHealth, info.GetAttacker(), this );
+
+	// VXP: Output the new health as a percentage of max health [0..1]
+	float flRatio = clamp( (float)m_iHealth / (float)m_iMaxHealth, 0, 1 );
+	m_OnHealthChanged.Set( flRatio, info.GetAttacker(), this );
 
 	return ret;
 }

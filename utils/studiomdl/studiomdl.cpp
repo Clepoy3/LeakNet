@@ -46,6 +46,8 @@ bool g_IHVTest = false;
 bool g_bCheckLengths = false;
 bool g_bPrintBones = false;
 bool g_bPerf = false;
+bool g_bLockBoneLengths = false; // VXP
+bool g_bOverridePreDefinedBones = true; // VXP
 
 CUtlVector< s_hitboxset > g_hitboxsets;
 CUtlVector< char >	g_KeyValueText;
@@ -145,13 +147,19 @@ void Cmd_PoseParameter( )
 	GetToken (false);
 	strcpyn( g_pose[g_numposeparameters].name, token );
 
-	// min
-	GetToken (false);
-	g_pose[g_numposeparameters].min = atof (token);
+	if (TokenAvailable())
+	{
+		// min
+		GetToken (false);
+		g_pose[g_numposeparameters].min = atof (token);
+	}
 
-	// max
-	GetToken (false);
-	g_pose[g_numposeparameters].max = atof (token);
+	if (TokenAvailable())
+	{
+		// max
+		GetToken (false);
+		g_pose[g_numposeparameters].max = atof (token);
+	}
 
 	while (TokenAvailable())
 	{
@@ -1027,6 +1035,16 @@ void Option_IKRule( s_ikrule_t *pRule )
 			GetToken( false );
 			pRule->contact = atoi( token );
 		}
+		else if (stricmp( token, "usesequence" ) == 0) // VXP
+		{
+			pRule->usesequence = true;
+			pRule->usesource = false;
+		}
+		else if (stricmp( token, "usesource" ) == 0) // VXP
+		{
+			pRule->usesequence = false;
+			pRule->usesource = true;
+		}
 		else
 		{
 			UnGetToken();
@@ -1294,6 +1312,20 @@ s_source_t *Load_Source( char const *name, const char *ext, bool reverse )
 }
 
 
+s_sequence_t *LookupSequence( char *name ) // VXP
+{
+	int i;
+	for (i = 0; i < g_numseq; i++)
+	{
+		if (stricmp( g_sequence[i].name, token ) == 0)
+		{
+			return &g_sequence[i];
+		}
+	}
+	return NULL;
+}
+
+
 s_animation_t *LookupAnimation( char *name )
 {
 	int i;
@@ -1391,6 +1423,8 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 	{
 		pcmd->cmd = CMD_AO;
 
+		pcmd->u.ao.pBonename = NULL; // VXP
+
 		GetToken( false );
 
 		s_animation_t *extanim = LookupAnimation( token );
@@ -1407,6 +1441,8 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 	else if (stricmp( "align", token ) == 0)
 	{
 		pcmd->cmd = CMD_AO;
+
+		pcmd->u.ao.pBonename = NULL; // VXP
 
 		GetToken( false );
 
@@ -1438,6 +1474,25 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		// against what frame of the current animation
 		GetToken( false );
 		pcmd->u.ao.destframe = atoi( token );
+	}
+	else if (stricmp( "alignboneto", token ) == 0)
+	{
+		pcmd->cmd = CMD_AO;
+
+		GetToken( false );
+		pcmd->u.ao.pBonename = strdup( token );
+		
+		GetToken( false );
+		s_animation_t *extanim = LookupAnimation( token );
+		if (extanim == NULL)
+		{
+			Error( "unknown alignboneto animation '%s\'\n", token );
+		}
+
+		pcmd->u.ao.ref = extanim;
+		pcmd->u.ao.motiontype = STUDIO_X | STUDIO_Y;
+		pcmd->u.ao.srcframe = 0;
+		pcmd->u.ao.destframe = 0;
 	}
 	else if (stricmp( "match", token ) == 0)
 	{
@@ -1593,7 +1648,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 			}
 			else
 			{
-				UnGetToken();
+			//	UnGetToken(); // VXP: Fix?
 				break;
 			}
 		}
@@ -1847,10 +1902,11 @@ int Cmd_Cmdlist( )
 	return 0;
 }
 
+int ParseAnimation( s_animation_t *panim, bool isAppend ); // VXP
 
 int Cmd_Animation( )
 {
-	int depth = 0;
+//	int depth = 0;
 
 	// allocate animation entry
 	g_panimation[g_numani] = (s_animation_t *)kalloc( 1, sizeof( s_animation_t ) );
@@ -1880,6 +1936,19 @@ int Cmd_Animation( )
 	panim->scale = 1.0f;
 	panim->fps = 30.0;
 	panim->weightlist = 0;
+
+	panim->numframes = panim->endframe - panim->startframe + 1;
+
+	return ParseAnimation( panim, false ); // VXP
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: wrapper for parsing $animation tokens
+//-----------------------------------------------------------------------------
+
+int ParseAnimation( s_animation_t *panim, bool isAppend )
+{
+	int depth = 0;
 
 	while (1)
 	{
@@ -1935,7 +2004,7 @@ int Cmd_Animation( )
 		}
 	};
 
-	panim->numframes = panim->endframe - panim->startframe + 1;
+	
 
 	return 0;
 }
@@ -2014,12 +2083,13 @@ void CopyAnimationSettings( s_animation_t *pdest, s_animation_t *psrc )
 	}
 }
 
+int ParseSequence( s_sequence_t *pseq, bool isAppend ); // VXP
 
 int Cmd_Sequence( )
 {
 	int depth = 0;
-	s_animation_t *animations[64];
-	int i, j, k, n;
+//	s_animation_t *animations[64];
+//	int i, j, k, n;
 	int numblends = 0;
 
 	if (!GetToken(false)) return 0;
@@ -2031,6 +2101,7 @@ int Cmd_Sequence( )
 	}
 	s_sequence_t *pseq = &g_sequence[g_numseq];
 	g_numseq++;
+//	memset( pseq, 0, sizeof( s_sequence_t ) );
 
 	// initialize sequence
 	strcpyn( pseq->name, token );
@@ -2048,6 +2119,26 @@ int Cmd_Sequence( )
 
 	pseq->fadeintime = 0.2;
 	pseq->fadeouttime = 0.2;
+
+	return ParseSequence( pseq, false );
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: parse options unique to $sequence
+//-----------------------------------------------------------------------------
+
+int ParseSequence( s_sequence_t *pseq, bool isAppend )
+{
+	int depth = 0;
+	s_animation_t *animations[64];
+	int i, j, k, n;
+	int numblends = 0;
+
+	if (isAppend)
+	{
+		animations[0] = pseq->panim[0][0];
+	}
 
 	while (1)
 	{
@@ -2163,6 +2254,33 @@ int Cmd_Sequence( )
 			GetToken( false );
 			pseq->paramcontrol[i] = lookupControl( token );
 		}
+		else if (stricmp("blendref", token ) == 0) // VXP
+		{
+			GetToken( false );
+			pseq->paramanim = LookupAnimation( token );
+			if (pseq->paramanim == NULL)
+			{
+				Error( "Unknown blendref animation \"%s\"\n", token );
+			}
+		}
+		else if (stricmp("blendcomp", token ) == 0) // VXP
+		{
+			GetToken( false );
+			pseq->paramcompanim = LookupAnimation( token );
+			if (pseq->paramcompanim == NULL)
+			{
+				Error( "Unknown blendcomp animation \"%s\"\n", token );
+			}
+		}
+		else if (stricmp("blendcenter", token ) == 0) // VXP
+		{
+			GetToken( false );
+			pseq->paramcenter = LookupAnimation( token );
+			if (pseq->paramcenter == NULL)
+			{
+				Error( "Unknown blendcenter animation \"%s\"\n", token );
+			}
+		}
 		else if (stricmp("node", token ) == 0)
 		{
 			GetToken( false );
@@ -2220,6 +2338,14 @@ int Cmd_Sequence( )
 		{
 			GetToken( false );
 			pseq->fadeouttime = atof( token );
+		}
+		else if (stricmp( "realtime", token ) == 0) // VXP
+		{
+			pseq->flags |= STUDIO_REALTIME;
+		}
+		else if (stricmp( "hidden", token ) == 0) // VXP
+		{
+			pseq->flags |= STUDIO_HIDDEN;
 		}
 		else if (stricmp( "addlayer", token ) == 0)
 		{
@@ -2283,11 +2409,11 @@ int Cmd_Sequence( )
 
 			pseq->numautolayers++;
 		}
-		else if (numblends && ParseAnimationToken( animations[0] ))
+		else if ((numblends || isAppend) && ParseAnimationToken( animations[0] ))
 		{
 
 		}
-		else
+		else if (!isAppend)
 		{
 			// assume it's an animation reference
 			// first look up an existing animation
@@ -2312,6 +2438,10 @@ int Cmd_Sequence( )
 			}
 
 		}
+		else
+		{
+			Error( "unknown command \"%s\"\n", token );
+		}
 
 		if (depth < 0)
 		{
@@ -2319,6 +2449,11 @@ int Cmd_Sequence( )
 			exit(1);
 		}
 	};
+
+	if (isAppend)
+	{
+		return 0;
+	}
 
 	if (numblends == 0)
 	{
@@ -2335,8 +2470,8 @@ int Cmd_Sequence( )
 		}
 		else
 		{
-		//	i = sqrt( numblends );
-			i = sqrt( (float)numblends );
+			i = sqrt( numblends );
+		//	i = sqrt( (float)numblends );
 			if (i * i == numblends)
 			{
 				pseq->groupsize[0] = i;
@@ -2378,6 +2513,104 @@ int Cmd_Sequence( )
 	return 0;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: append commands to either a sequence or an animation
+//-----------------------------------------------------------------------------
+void Cmd_Append( )
+{
+	GetToken(false);
+
+
+	s_sequence_t *pseq = LookupSequence( token );
+
+	if (pseq)
+	{
+		ParseSequence( pseq, true );
+		return;
+	}
+	else
+	{
+		s_animation_t *panim = LookupAnimation( token );
+
+		if (panim)
+		{
+			ParseAnimation( panim, true );
+			return;
+		}
+	}
+	Error( "unknown append animation %s\n", token );
+}
+
+
+
+void Cmd_Prepend( )
+{
+	GetToken(false);
+
+	s_sequence_t *pseq = LookupSequence( token );
+	int count = 0;
+	s_animation_t *panim = NULL;
+	int iRet =  false;
+
+	if (pseq)
+	{
+		panim = pseq->panim[0][0];
+		count = panim->numcmds;
+		iRet = ParseSequence( pseq, true );
+	}
+	else
+	{
+		panim = LookupAnimation( token );
+		if (panim)
+		{
+			count = panim->numcmds;
+			iRet = ParseAnimation( panim, true );
+		}
+	}
+	if (panim && count != panim->numcmds)
+	{
+		s_animcmd_t tmp;
+		tmp = panim->cmds[panim->numcmds - 1];
+		int i;
+		for (i = panim->numcmds - 1; i > 0; i--)
+		{
+			panim->cmds[i] = panim->cmds[i-1];
+		}
+		panim->cmds[0] = tmp;
+		return;
+	}
+	Error( "unknown prepend animation \"%s\"\n", token );
+}
+
+void Cmd_Continue( )
+{
+	GetToken(false);
+
+	s_sequence_t *pseq = LookupSequence( token );
+
+	if (pseq)
+	{
+		GetToken(true);
+		UnGetToken();
+		if (token[0] != '$')
+			ParseSequence( pseq, true );
+		return;
+	}
+	else
+	{
+		s_animation_t *panim = LookupAnimation( token );
+
+		if (panim)
+		{
+			GetToken(true);
+			UnGetToken();
+			if (token[0] != '$')
+				ParseAnimation( panim, true );
+			return;
+		}
+	}
+	Error( "unknown continue animation %s\n", token );
+}
 
 
 int Cmd_Weightlist( )
@@ -3958,6 +4191,19 @@ void ConsistencyCheckContents( )
 =================
 =================
 */
+void Cmd_BoneMerge( )
+{
+	int nIndex = g_BoneMerge.AddToTail();
+
+	// bone name
+	GetToken (false);
+	strcpyn( g_BoneMerge[nIndex].bonename, token );
+}
+
+/*
+=================
+=================
+*/
 int Cmd_Attachment( )
 {
 	// name
@@ -4417,6 +4663,22 @@ void Cmd_TranslucentTwoPass( )
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Indicates the model should keep pre-defined bone lengths regardless of animation changes
+//-----------------------------------------------------------------------------
+void Cmd_LockBoneLengths()
+{
+	g_bLockBoneLengths = true;
+}
+
+//-----------------------------------------------------------------------------
+// Indicates the model should keep pre-defined bone lengths regardless of animation changes
+//-----------------------------------------------------------------------------
+void Cmd_LockDefineBones()
+{
+	g_bOverridePreDefinedBones = false;
+}
+
 
 //-----------------------------------------------------------------------------
 // Key value block!
@@ -4568,6 +4830,66 @@ void Cmd_LimitRotation( )
 	}
 
 	g_numlimitrotation++;
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: specify bones to store, even if nothing references them
+//-----------------------------------------------------------------------------
+
+void Cmd_DefineBone( )
+{
+	// bone name
+	GetToken (false);
+	strcpyn( g_importbone[g_numimportbones].name, token );
+
+	// parent name
+	GetToken (false);
+	strcpyn( g_importbone[g_numimportbones].parent, token );
+
+	Vector pos;
+	QAngle angles;
+
+	// default pos
+	GetToken (false);
+	pos.x = atof( token );
+	GetToken (false);
+	pos.y = atof( token );
+	GetToken (false);
+	pos.z = atof( token );
+	GetToken (false);
+	angles.x = atof( token );
+	GetToken (false);
+	angles.y = atof( token );
+	GetToken (false);
+	angles.z = atof( token );
+	AngleMatrix( angles, pos, g_importbone[g_numimportbones].rawLocal );
+
+	if (TokenAvailable())
+	{
+		g_importbone[g_numimportbones].bPreAligned = true;
+		// realign pos
+		GetToken (false);
+		pos.x = atof( token );
+		GetToken (false);
+		pos.y = atof( token );
+		GetToken (false);
+		pos.z = atof( token );
+		GetToken (false);
+		angles.x = atof( token );
+		GetToken (false);
+		angles.y = atof( token );
+		GetToken (false);
+		angles.z = atof( token );
+
+		AngleMatrix( angles, pos, g_importbone[g_numimportbones].srcRealign );
+	}
+	else
+	{
+		SetIdentityMatrix( g_importbone[g_numimportbones].srcRealign );
+	}
+
+	g_numimportbones++;
 }
 
 /*
@@ -5264,6 +5586,34 @@ void ParseScript (void)
 		else if (!stricmp (token, "$keyvalues"))
 		{
 			Option_KeyValues( &g_KeyValueText );
+		}
+		else if (!stricmp (token, "$bonemerge")) // VXP
+		{
+			Cmd_BoneMerge();
+		}
+		else if (!stricmp (token, "$definebone")) // VXP
+		{
+			Cmd_DefineBone();
+		}
+		else if (!stricmp (token, "$lockbonelengths")) // VXP
+		{
+			Cmd_LockBoneLengths();
+		}
+		else if (!stricmp (token, "$lockdefinebones")) // VXP
+		{
+			Cmd_LockDefineBones();
+		}
+		else if (!stricmp (token, "$continue")) // VXP
+		{
+			Cmd_Continue();
+		}
+		else if (!stricmp (token, "$append")) // VXP
+		{
+			Cmd_Append();
+		}
+		else if (!stricmp (token, "$prepend")) // VXP
+		{
+			Cmd_Prepend();
 		}
 		else
 		{

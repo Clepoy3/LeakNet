@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir ".\GLDebug"
 # PROP Intermediate_Dir ".\GLDebug"
-# PROP Ignore_Export_Lib 1
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /G5 /MT /GX /Zi /Od /I "..\scitech\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "THIRDPERSON" /D "~NEWPHYSICS" /D "QUAKE2" /FR /YX /c
 # ADD CPP /nologo /G6 /W4 /Gm /GR /ZI /Od /Op /I ".\audio\public" /I "..\public" /I "..\common" /I "..\vgui2\include" /I "..\vgui2\controls" /D "_DEBUG" /D fopen=dont_use_fopen /D "USE_CONVARS" /D "WIN32" /D "VOICE_OVER_IP" /D "BUMPMAP" /D "_WINDOWS" /D "__USEA3D" /D "_ADD_EAX_" /D "ENGINE_DLL" /D "_WIN32" /D "PROTECTED_THINGS_ENABLE" /FR /FD /GM /c
@@ -57,7 +57,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\scitech\lib\win32\vc\mglfx.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib /nologo /subsystem:windows /incremental:no /debug /machine:I386 /nodefaultlib:"LIBC"
 # SUBTRACT BASE LINK32 /nodefaultlib
-# ADD LINK32 vgui_controls.lib oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
+# ADD LINK32 vgui_controls.lib oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib Ws2_32.lib wininet.lib /nologo /base:"0x20000000" /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # SUBTRACT LINK32 /pdb:none /incremental:no /map
 # Begin Custom Build - Copying to game dir
 TargetDir=.\GLDebug
@@ -97,7 +97,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\scitech\lib\win32\vc\mglfx.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /subsystem:windows /incremental:no /debug /machine:I386 /nodefaultlib:"LIBC" /out:"debuggl/enginegl.exe"
 # SUBTRACT BASE LINK32 /nodefaultlib
-# ADD LINK32 dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /incremental:no /map /debug /machine:I386 /nodefaultlib:"LIBCD" /nodefaultlib:"libcmt" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
+# ADD LINK32 dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib Ws2_32.lib wininet.lib /nologo /base:"0x20000000" /subsystem:windows /dll /incremental:no /map /debug /machine:I386 /nodefaultlib:"LIBCD" /nodefaultlib:"libcmt" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # SUBTRACT LINK32 /pdb:none
 # Begin Custom Build - Copying to game dir
 TargetDir=.\GLRelease
@@ -140,7 +140,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 vgui_controls.lib oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # SUBTRACT BASE LINK32 /pdb:none /incremental:no /map
-# ADD LINK32 oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /map /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /out:"engine_Dedicated_Debug/swds.dll" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
+# ADD LINK32 oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib Ws2_32.lib wininet.lib /nologo /base:"0x20000000" /subsystem:windows /dll /map /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /out:"engine_Dedicated_Debug/swds.dll" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # SUBTRACT LINK32 /pdb:none /incremental:no
 # Begin Custom Build - Copying to game dir
 TargetDir=.\engine_Dedicated_Debug
@@ -183,7 +183,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 vgui_controls.lib oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"LIBC" /nodefaultlib:"libcmtd.lib" /nodefaultlib:"libcmt.lib" /out:"engine_Dedicated_Debug/swds.dll" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # SUBTRACT BASE LINK32 /pdb:none /incremental:no /map
-# ADD LINK32 oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib /nologo /base:"0x20000000" /subsystem:windows /dll /pdb:none /map /debug /machine:I386 /nodefaultlib:"LIBCD" /nodefaultlib:"libcmt" /out:"engine_Dedicated_Release/swds.dll" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
+# ADD LINK32 oleaut32.lib dinput8.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib uuid.lib Ws2_32.lib wininet.lib /nologo /base:"0x20000000" /subsystem:windows /dll /pdb:none /map /debug /machine:I386 /nodefaultlib:"LIBCD" /nodefaultlib:"libcmt" /out:"engine_Dedicated_Release/swds.dll" /libpath:"..\lib\public" /libpath:"..\lib\common" /libpath:"..\dx8sdk\lib"
 # Begin Custom Build - Copying to game dir
 TargetDir=.\engine_Dedicated_Release
 TargetPath=.\engine_Dedicated_Release\swds.dll

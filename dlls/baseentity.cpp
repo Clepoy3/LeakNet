@@ -1201,10 +1201,17 @@ int CBaseEntity::OnTakeDamage( const CTakeDamageInfo &info )
 {
 	Vector			vecTemp;
 
-	if ( !pev || !m_takedamage )
+	if ( !edict() || !m_takedamage )
 		return 0;
 
-	vecTemp = info.GetInflictor()->GetAbsOrigin() - ( WorldSpaceCenter() );
+	if ( info.GetInflictor() )
+	{
+		vecTemp = info.GetInflictor()->GetAbsOrigin() - ( WorldSpaceCenter() );
+	}
+	else
+	{
+		vecTemp.Init( 1, 0, 0 );
+	}
 
 // this global is still used for glass and other non-NPC killables, along with decals.
 	g_vecAttackDir = vecTemp;
@@ -1267,9 +1274,20 @@ void CBaseEntity::TakeDamage( const CTakeDamageInfo &inputInfo )
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( inputInfo.GetDamageForce() != vec3_origin && inputInfo.GetDamagePosition() != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
-		if ( (inputInfo.GetDamageForce() == vec3_origin) || (inputInfo.GetDamagePosition() == vec3_origin) ) // VXP: Fix this then!
+		if ( inputInfo.GetDamageForce() == vec3_origin || inputInfo.GetDamagePosition() == vec3_origin ) // VXP: Fix this then!
 		{
-			DevWarning( "TakeDamage: .GetDamageForce() == vec3_origin\n" );
+			static int warningCount = 0;
+			if ( ++warningCount < 10 )
+			{
+				if ( inputInfo.GetDamageForce() == vec3_origin )
+				{
+					DevWarning( "CBaseEntity::TakeDamage:  with inputInfo.GetDamageForce() == vec3_origin\n" );
+				}
+				if ( inputInfo.GetDamagePosition() == vec3_origin )
+				{
+					DevWarning( "CBaseEntity::TakeDamage:  with inputInfo.GetDamagePosition() == vec3_origin\n" );
+				}
+			}
 		}
 	}
 
@@ -1344,9 +1362,9 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 	if ( info.GetDamageType() & DMG_NO_PHYSICS_FORCE || info.GetDamageType() == DMG_GENERIC )
 		return 1;
 
-//	Assert(VPhysicsGetObject() != NULL); // VXP: When you crash the manhack
-	if( VPhysicsGetObject() == NULL ) // VXP: TODO: Fix this then!
-		Warning( "VPhysicsTakeDamage: can't get object\n" );
+	Assert(VPhysicsGetObject() != NULL); // VXP: When you crash the manhack
+//	if( VPhysicsGetObject() == NULL ) // VXP: TODO: Fix this then!
+//		Warning( "VPhysicsTakeDamage: can't get object\n" );
 
 	if ( VPhysicsGetObject() )
 	{
@@ -1359,10 +1377,10 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		// setup the damage force & position inside the CTakeDamageInfo (Utility functions for this are in
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
-	//	Assert( force != vec3_origin && offset != vec3_origin );
+		Assert( force != vec3_origin && offset != vec3_origin );
 		// VXP: Thought, this is for static explosives, and not for moving, like sticky bulbs
-		if ( (force == vec3_origin) || (offset == vec3_origin) ) // VXP: TODO: Fix this then!
-			Warning( "VPhysicsTakeDamage: origin error!\n" );
+	//	if ( (force == vec3_origin) || (offset == vec3_origin) ) // VXP: TODO: Fix this then!
+	//		Warning( "VPhysicsTakeDamage: origin error!\n" );
 
 		VPhysicsGetObject()->ApplyForceOffset( force, offset );
 	}

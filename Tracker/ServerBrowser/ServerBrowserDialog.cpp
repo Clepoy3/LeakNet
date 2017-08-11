@@ -288,13 +288,21 @@ void CServerBrowserDialog::UpdateStatusText(const char *fmt, ...)
 	if ( !m_pStatusLabel )
 		return;
 
-	char str[ 1024 ];
-	va_list argptr;
-	va_start( argptr, fmt );
-	vsprintf( str, fmt, argptr );
-	va_end( argptr );
+	if ( fmt && strlen(fmt) > 0 )
+	{
+		char str[ 1024 ];
+		va_list argptr;
+		va_start( argptr, fmt );
+		vsprintf( str, fmt, argptr );
+		va_end( argptr );
 
-	m_pStatusLabel->SetText( str );
+		m_pStatusLabel->SetText( str );
+	}
+	else
+	{
+		// clear
+		m_pStatusLabel->SetText( "" );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -306,7 +314,15 @@ void CServerBrowserDialog::UpdateStatusText(wchar_t *unicode)
 	if ( !m_pStatusLabel )
 		return;
 
-	m_pStatusLabel->SetText( unicode );
+	if ( unicode && wcslen(unicode) > 0 )
+	{
+		m_pStatusLabel->SetText( unicode );
+	}
+	else
+	{
+		// clear
+		m_pStatusLabel->SetText( "" );
+	}
 }
 
 //-----------------------------------------------------------------------------

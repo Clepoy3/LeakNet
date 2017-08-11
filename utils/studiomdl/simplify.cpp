@@ -87,7 +87,7 @@ void extractUnusedMotion( s_animation_t *panim );
 // TODO: psrc and pdest as terms are ambigious, replace with something better
 void setAnimationWeight( s_animation_t *panim, int index );
 void processMatch( s_animation_t *psrc, s_animation_t *pdest );
-void processAutoorigin( s_animation_t *psrc, s_animation_t *pdest, int flags, int srcframe, int destframe );
+void processAutoorigin( s_animation_t *psrc, s_animation_t *pdest, int flags, int srcframe, int destframe, int bone );
 void subtractBaseAnimations( s_animation_t *psrc, s_animation_t *pdest, int srcframe, int flags );
 void fixupLoopingDiscontinuities( s_animation_t *panim, int start, int end );
 void makeAngle( s_animation_t *panim, float angle );
@@ -151,7 +151,18 @@ void processAnimations()
 				subtractBaseAnimations( pcmd->u.subtract.ref, panim, pcmd->u.subtract.frame, pcmd->u.subtract.flags );
 				break;
 			case CMD_AO:
-				processAutoorigin( pcmd->u.ao.ref, panim, pcmd->u.ao.motiontype, pcmd->u.ao.srcframe, pcmd->u.ao.destframe );
+				{
+					int bone = g_rootIndex;
+					if (pcmd->u.ao.pBonename != NULL)
+					{
+						bone = findGlobalBone( pcmd->u.ao.pBonename );
+						if (bone == -1)
+						{
+							Error("unable to find bone %s to alignbone\n", pcmd->u.ao.pBonename );
+						}
+					}
+					processAutoorigin( pcmd->u.ao.ref, panim, pcmd->u.ao.motiontype, pcmd->u.ao.srcframe, pcmd->u.ao.destframe, bone );
+				}
 				break;
 			case CMD_MATCH:
 				processMatch( pcmd->u.match.ref, panim );
@@ -754,21 +765,33 @@ void processMatch( s_animation_t *psrc, s_animation_t *pdest )
 // Purpose: match one animations position/orientation to another animations position/orientation
 //-----------------------------------------------------------------------------
 
-void processAutoorigin( s_animation_t *psrc, s_animation_t *pdest, int motiontype, int srcframe, int destframe )
+void processAutoorigin( s_animation_t *psrc, s_animation_t *pdest, int motiontype, int srcframe, int destframe, int bone )
 {	
 	int j, k;
 	matrix3x4_t adjmatrix;
 
+	matrix3x4_t srcBoneToWorld[MAXSTUDIOBONES];
+	matrix3x4_t destBoneToWorld[MAXSTUDIOBONES];
+
+	CalcBoneTransforms( psrc, srcframe, srcBoneToWorld );
+	CalcBoneTransforms( pdest, destframe, destBoneToWorld );
+
 	// find rotation
 	RadianEuler	rot( 0, 0, 0 );
 
+	Quaternion q0;
+	Quaternion q2;
+	Vector srcPos;
+	Vector destPos;
+
+	MatrixAngles( srcBoneToWorld[bone], q0, srcPos );
+	MatrixAngles( destBoneToWorld[bone], q2, destPos );
+
 	if (motiontype & (STUDIO_LXR | STUDIO_LYR | STUDIO_LZR | STUDIO_XR | STUDIO_YR | STUDIO_ZR))
 	{
-		Quaternion q0;
-		Quaternion q2;
 
-		AngleQuaternion( psrc->sanim[srcframe][g_rootIndex].rot, q0 );
-		AngleQuaternion( pdest->sanim[destframe][g_rootIndex].rot, q2 );
+	//	AngleQuaternion( psrc->sanim[srcframe][g_rootIndex].rot, q0 );
+	//	AngleQuaternion( pdest->sanim[destframe][g_rootIndex].rot, q2 );
 
 		Quaternion deltaQ2;
 		QuaternionMA( q2, -1, q0, deltaQ2 );
@@ -799,14 +822,21 @@ void processAutoorigin( s_animation_t *psrc, s_animation_t *pdest, int motiontyp
 			QuaternionAngles( q4, a3 );
 			rot.z = a3.z;
 		}
+		if ((motiontype & STUDIO_XR) && (motiontype & STUDIO_YR) && (motiontype & STUDIO_ZR)) // VXP
+		{
+			QuaternionAngles( deltaQ2, rot );
+		}
 	}
 
 
 	// find movement
-	Vector p0 = psrc->sanim[srcframe][g_rootIndex].pos;
+//	Vector p0 = psrc->sanim[srcframe][g_rootIndex].pos;
+	Vector p0 = srcPos;
 	Vector p2;
 	AngleMatrix(rot, adjmatrix );
-	VectorRotate( pdest->sanim[destframe][g_rootIndex].pos, adjmatrix, p2 );
+//	VectorRotate( pdest->sanim[destframe][g_rootIndex].pos, adjmatrix, p2 );
+	MatrixInvert( adjmatrix, adjmatrix );
+	VectorRotate( destPos, adjmatrix, p2 );
 
 	Vector adj = p0 - p2;
 
@@ -1174,6 +1204,10 @@ void BuildRawTransforms( s_source_t const *psource, int frame, float scale, Vect
 
 	AngleMatrix( rotate, rootxform );
 
+	if ( frame ) // VXP
+	{
+		frame = frame % psource->numframes;
+	}
 	// build source space local to world transforms
 	for (k = 0; k < psource->numbones; k++)
 	{
@@ -2349,6 +2383,9 @@ void limitIKChainLength( void )
 			if (panim->flags & STUDIO_DELTA)
 				continue;
 
+			if (panim->flags & STUDIO_HIDDEN) // VXP
+				continue;
+
 			for (j = 0; j < panim->numframes; j++)
 			{
 				CalcBoneTransforms( panim, j, boneToWorld );
@@ -2697,7 +2734,8 @@ void CollapseBones( void )
 
 	for (k = 0; k < g_numbones; k++)
 	{
-		bool collapse = true;
+	//	bool collapse = true;
+		bool collapse = !g_bonetable[k].bDontCollapse; // VXP
 
 		for (i = 0; collapse && i < g_numsources; i++)
 		{
@@ -2934,6 +2972,19 @@ void TagUsedBones( )
 			}
 		}
 
+		// Tag all bones marked as being used by bonemerge
+		int nBoneMergeCount = g_BoneMerge.Count(); 
+		for ( k = 0; k < nBoneMergeCount; ++k )
+		{
+			for ( j = 0; j < psource->numbones; j++ )
+			{
+				if ( stricmp( g_BoneMerge[k].bonename, psource->localBone[j].name ) )
+					continue;
+
+				psource->boneref[j] |= BONE_USED_BY_BONE_MERGE;
+			}
+		}
+
 		for (k = 0; k < MAXSTUDIOSRCBONES; k++)
 		{
 			// tag parent bones as used if child has been used
@@ -2999,6 +3050,31 @@ const char *RenameBone( const char *pName )
 	return pName;
 }
 
+
+//-----------------------------------------------------------------------------
+// Tags bones in the global bone table
+//-----------------------------------------------------------------------------
+void TagUsedImportedBones()
+{
+	// NOTE: This has to happen because some bones referenced by bonemerge
+	// can be set up using the importbones feature
+	int k, j;
+
+	// Tag all bones marked as being used by bonemerge
+	int nBoneMergeCount = g_BoneMerge.Count(); 
+	for ( k = 0; k < nBoneMergeCount; ++k )
+	{
+		for ( j = 0; j < g_numbones; j++ )
+		{
+			if ( stricmp( g_BoneMerge[k].bonename, g_bonetable[j].name ) )
+				continue;
+
+			g_bonetable[j].flags |= BONE_USED_BY_BONE_MERGE;
+		}
+	}
+}
+
+
 //-----------------------------------------------------------------------------
 // Purpose: look through all the sources and build a table of used bones
 //-----------------------------------------------------------------------------
@@ -3010,9 +3086,51 @@ int BuildGobalBonetable( )
 
 	// union of all used bones
 	g_numbones = 0;
+
+	// insert predefined bones first
+	for (i = 0; i < g_numimportbones; i++)
+	{
+		k = findGlobalBone( g_importbone[i].name );
+		if (k == -1)
+		{
+			k = g_numbones;
+			strcpyn( g_bonetable[k].name, g_importbone[i].name );
+			if ( strlen( g_importbone[i].parent ) == 0 )
+			{
+				g_bonetable[k].parent = -1;
+			}
+			else
+			{
+				// FIXME: This won't work if the imported bone refers to
+				// another imported bone which is further along in the list
+				g_bonetable[k].parent = findGlobalBone( g_importbone[i].parent );
+				if ( g_bonetable[k].parent == -1 )
+				{
+					Warning("Imported bone %s tried to access parent bone %s and failed!\n",
+						g_importbone[i].name, g_importbone[i].parent );
+				}
+			}
+			// VXP
+			g_bonetable[k].rawLocal = g_importbone[i].rawLocal;
+			g_bonetable[k].rawLocalOriginal = g_bonetable[k].rawLocal;
+			g_numbones++;
+		}
+		// VXP
+		g_bonetable[k].bDontCollapse = true;
+		g_bonetable[k].srcRealign = g_importbone[i].srcRealign;
+		g_bonetable[k].bPreAligned = true;
+	}
+
+	TagUsedImportedBones(); // VXP
+
 	for (i = 0; i < g_numsources; i++)
 	{
 		s_source_t *psource = g_source[i];
+
+		// VXP
+		matrix3x4_t srcBoneToWorld[MAXSTUDIOSRCBONES];
+		BuildRawTransforms( psource, 0, srcBoneToWorld );
+
 		for (j = 0; j < psource->numbones; j++)
 		{
 			if (psource->boneref[j])
@@ -3030,8 +3148,33 @@ int BuildGobalBonetable( )
 					g_bonetable[k].bonecontroller	= 0;
 					g_bonetable[k].flags			|= psource->boneref[j];
 					AngleMatrix( psource->rawanim[0][j].rot, psource->rawanim[0][j].pos, g_bonetable[k].rawLocal );
+
+					// VXP
+					g_bonetable[k].rawLocalOriginal = g_bonetable[k].rawLocal;
+					MatrixCopy( srcBoneToWorld[j], g_bonetable[k].boneToPose );
+
 					// printf("%d : %s (%s)\n", k, g_bonetable[k].name, g_bonetable[g_bonetable[k].parent].name );
 					g_numbones++;
+				}
+				// VXP: Did I do this right?
+				else if (g_bOverridePreDefinedBones && g_bonetable[k].bPreDefined)
+				{
+					g_bonetable[k].bPreDefined  = false;
+					g_bonetable[k].flags			|= psource->boneref[j];
+					// look up original in heirarchy?
+
+					MatrixCopy( srcBoneToWorld[j], g_bonetable[k].boneToPose );
+
+					if (g_bonetable[k].parent == -1)
+					{
+						MatrixCopy( srcBoneToWorld[j], g_bonetable[k].rawLocal );
+					}
+					else
+					{
+						matrix3x4_t tmp;
+						MatrixInvert( g_bonetable[g_bonetable[k].parent].boneToPose, tmp );
+						ConcatTransforms( tmp, srcBoneToWorld[ j ], g_bonetable[k].rawLocal ); 
+					}
 				}
 				else
 				{
@@ -3520,7 +3663,7 @@ void RealignBones( )
 	for (k = 0; k < g_numbones; k++)
 	{
 		// printf("%s  %.4f %.4f %.4f  (%d)\n", g_bonetable[k].name, g_bonetable[k].pos.x, g_bonetable[k].pos.y, g_bonetable[k].pos.z, children[k] );
-		if (childbone[k] != -1)
+		if (!g_bonetable[k].bPreAligned && childbone[k] != -1)
 		{
 			float d = g_bonetable[childbone[k]].pos.Length();
 
@@ -3613,12 +3756,15 @@ void RealignBones( )
 	// build realignment transforms
 	for (k = 0; k < g_numbones; k++)
 	{
-		matrix3x4_t poseToBone;
+		if (!g_bonetable[k].bPreAligned)
+		{
+			matrix3x4_t poseToBone;
 
-		MatrixInvert( g_bonetable[k].boneToPose, poseToBone );
-		ConcatTransforms( poseToBone, boneToPose[k], g_bonetable[k].srcRealign );
+			MatrixInvert( g_bonetable[k].boneToPose, poseToBone );
+			ConcatTransforms( poseToBone, boneToPose[k], g_bonetable[k].srcRealign );
 
-		MatrixCopy( boneToPose[k], g_bonetable[k].boneToPose );
+			MatrixCopy( boneToPose[k], g_bonetable[k].boneToPose );
+		}
 	}
 
 	// printf("\n");
@@ -3626,20 +3772,23 @@ void RealignBones( )
 	// rebuild default angles, position, etc.
 	for (k = 0; k < g_numbones; k++)
 	{
-		matrix3x4_t bonematrix;
-		if (g_bonetable[k].parent == -1)
+		if (!g_bonetable[k].bPreAligned)
 		{
-			MatrixCopy( g_bonetable[k].boneToPose, bonematrix );
-		}
-		else
-		{
-			matrix3x4_t poseToBone;
-			// convert my transform into parent relative space
-			MatrixInvert( g_bonetable[g_bonetable[k].parent].boneToPose, poseToBone );
-			ConcatTransforms( poseToBone, g_bonetable[k].boneToPose, bonematrix );
-		}
+			matrix3x4_t bonematrix;
+			if (g_bonetable[k].parent == -1)
+			{
+				MatrixCopy( g_bonetable[k].boneToPose, bonematrix );
+			}
+			else
+			{
+				matrix3x4_t poseToBone;
+				// convert my transform into parent relative space
+				MatrixInvert( g_bonetable[g_bonetable[k].parent].boneToPose, poseToBone );
+				ConcatTransforms( poseToBone, g_bonetable[k].boneToPose, bonematrix );
+			}
 
-		MatrixAngles( bonematrix, g_bonetable[k].rot, g_bonetable[k].pos );
+			MatrixAngles( bonematrix, g_bonetable[k].rot, g_bonetable[k].pos );
+		}
 	}
 
 	// exit(0);
@@ -3694,6 +3843,21 @@ void RemapBones( )
 
 	BuildGlobalBoneToPose( );
 
+	// VXP
+	{
+		int k, n;
+		for (k = 0; k < g_numbones; k++)
+		{
+			// tag parent bones as being in the same way as their children
+			n = g_bonetable[k].parent;
+			while (n != -1)
+			{
+				g_bonetable[n].flags |= g_bonetable[k].flags;
+				n = g_bonetable[n].parent;
+			}
+		}
+	}
+
 	if (g_collapse_bones)
 	{
 		CollapseBones( );
@@ -3737,7 +3901,23 @@ void RemapBones( )
 //-----------------------------------------------------------------------------
 void CalcBoneTransforms( s_animation_t *panimation, int frame, matrix3x4_t* pBoneToWorld )
 {
-	frame = frame % panimation->numframes;
+	CalcBoneTransforms( panimation, g_panimation[0], frame, pBoneToWorld );
+}
+
+void CalcBoneTransforms( s_animation_t *panimation, s_animation_t *pbaseanimation, int frame, matrix3x4_t* pBoneToWorld )
+{
+//	frame = frame % panimation->numframes;
+	if ((panimation->flags & STUDIO_LOOPING) && panimation->numframes > 1)
+	{
+		while (frame >= (panimation->numframes - 1))
+		{
+			frame = frame - (panimation->numframes - 1);
+		}
+	}
+	if (frame < 0 || frame >= panimation->numframes)
+	{
+		Error("requested out of range frame on animation \"%s\" : %d (%d)\n", panimation->name, frame, panimation->numframes );
+	}
 
 	for (int k = 0; k < g_numbones; k++)
 	{
@@ -3754,14 +3934,14 @@ void CalcBoneTransforms( s_animation_t *panimation, int frame, matrix3x4_t* pBon
 			Vector p3;
 
 			//AngleQuaternion( g_bonetable[k].rot, q1 );
-			AngleQuaternion( g_panimation[0]->sanim[0][k].rot, q1 );
+			AngleQuaternion( pbaseanimation->sanim[0][k].rot, q1 );
 			AngleQuaternion( panimation->sanim[frame][k].rot, q2 );
 
 			float s = panimation->weight[k];
 
 			QuaternionMA( q1, s, q2, q3 );
 			//p3 = g_bonetable[k].pos + s * panimation->sanim[frame][k].pos;
-			p3 = g_panimation[0]->sanim[0][k].pos + s * panimation->sanim[frame][k].pos;
+			p3 = pbaseanimation->sanim[0][k].pos + s * panimation->sanim[frame][k].pos;
 
 			AngleMatrix( q3, p3, bonematrix );
 		}
@@ -4327,18 +4507,53 @@ static void CalcPoseParameters( void )
 
 					// printf("%s\n", pseq->name );
 
+					if (pseq->paramanim == NULL)
+					{
+						pseq->paramanim = g_panimation[0];
+					}
+
+					if (pseq->paramcompanim == NULL)
+					{
+						pseq->paramcompanim = pseq->paramanim;
+					}
+
 					// FIXME: the $calcblend should set what animation to use as a reference
-					CalcBoneTransforms( g_panimation[0], 0, boneToWorld );
+
+					// calculate what "zero" looks like to the attachment
+				//	CalcBoneTransforms( g_panimation[0], 0, boneToWorld );
+					CalcBoneTransforms( pseq->paramanim, 0, boneToWorld );
+
 					ConcatTransforms( boneToWorld[k0], g_attachment[n0].local, boneToWorldMid );
 					MatrixAngles( boneToWorldMid, angles, pos );
 					// printf("%6.2f %6.2f %6.2f : %6.2f %6.2f %6.2f\n", RAD2DEG( angles.x ), RAD2DEG( angles.y ), RAD2DEG( angles.z ), pos.x, pos.y, pos.z );
 					MatrixInvert( boneToWorldMid, worldToBoneMid );
 
 					int m[2];
-					m[1-iPose] = (pseq->groupsize[1-iPose] - 1) / 2;
+					bool found = false;
+					if (pseq->paramcenter != NULL)
+					{
+						for (int i0 = 0; !found && i0 < pseq->groupsize[0]; i0++)
+						{
+							for (int i1 = 0; !found && i1 < pseq->groupsize[1]; i1++)
+							{
+								if (pseq->panim[i0][i1] == pseq->paramcenter)
+								{
+									m[0] = i0;
+									m[1] = i1;
+									found = true;
+								}
+							}
+						}
+					}
+					if (!found)
+					{
+					//	m[1-iPose] = (pseq->groupsize[1-iPose] - 1) / 2;
+						m[1-iPose] = (pseq->groupsize[1-iPose] - 1) / 2; // VXP: Source 2007
+					}
 					for (m[iPose] = 0; m[iPose] < pseq->groupsize[iPose]; m[iPose]++)
 					{
-						CalcBoneTransforms( pseq->panim[m[0]][m[1]], 0, boneToWorld );
+					//	CalcBoneTransforms( pseq->panim[m[0]][m[1]], 0, boneToWorld );
+						CalcBoneTransforms( pseq->panim[m[0]][m[1]], pseq->paramcompanim, 0, boneToWorld );
 						ConcatTransforms( boneToWorld[k0], g_attachment[n0].local, boneToWorldRel );
 						ConcatTransforms( worldToBoneMid, boneToWorldRel, boneRel );
 						MatrixAngles( boneRel, angles, pos );
@@ -4522,6 +4737,98 @@ s_ikrule_t *FindNextIKRule( s_animation_t *panim, int iRule )
 	return pRule;
 }
 
+
+
+//-----------------------------------------------------------------------------
+// Purpose: don't allow bones to change their length if they're predefined.
+//			go through all the animations and reset them, but move anything on an ikchain back to where it was.
+//-----------------------------------------------------------------------------
+
+static void LockBoneLengths()
+{
+	int i, j, k;
+
+	int n;
+
+	if (!g_bLockBoneLengths)
+		return;
+
+	Vector origLocalPos[MAXSTUDIOBONES];
+
+	bool bHasPredefined = false;
+
+	// find original lengths
+	for (k = 0; k < g_numbones; k++)
+	{
+		MatrixPosition( g_bonetable[k].rawLocalOriginal, origLocalPos[k] );
+
+	/*
+		if ( g_verbose )
+		{
+			Vector prev, delta;
+			MatrixPosition( g_bonetable[k].rawLocal, prev );
+			delta = prev - origLocalPos[k];
+			printf("%s - %f %f %f\n", g_bonetable[k].name, delta.x, delta.y, delta.z );
+		}
+	*/
+	}
+
+	for (i = 0; i < g_numani; i++)
+	{
+		s_animation_t *panim = g_panimation[i];
+
+		if (panim->flags & STUDIO_DELTA)
+			continue;
+
+		for (j = 0; j < panim->numframes; j++)
+		{
+			matrix3x4_t boneToWorldOriginal[MAXSTUDIOBONES];
+			matrix3x4_t boneToWorld[MAXSTUDIOBONES];
+
+			// calc original transformations
+			CalcBoneTransforms( panim, j, boneToWorldOriginal );
+
+			// force bones back to original lengths
+			for (k = 0; k < g_numbones; k++)
+			{
+				if (g_bonetable[k].parent != -1)
+				{
+					//Vector delta = panim->sanim[j][k].pos - origLocalPos[k];
+					//printf("%f %f %f\n", delta.x, delta.y, delta.z );
+					panim->sanim[j][k].pos = origLocalPos[k];
+				}
+			}
+
+			// calc new transformations
+			CalcBoneTransforms( panim, j, boneToWorld );
+
+			for (n = 0; n < g_numikchains; n++)
+			{
+				if (panim->weight[g_ikchain[n].link[2]] > 0)
+				{
+					Vector worldPos;
+					MatrixPosition( boneToWorldOriginal[g_ikchain[n].link[2]], worldPos );
+
+					Studio_SolveIK(
+						g_ikchain[n].link[0],
+						g_ikchain[n].link[1],
+						g_ikchain[n].link[2],
+						worldPos,
+						boneToWorld );
+
+					solveBone( panim, j, g_ikchain[n].link[0], boneToWorld );  
+					solveBone( panim, j, g_ikchain[n].link[1], boneToWorld );  
+					solveBone( panim, j, g_ikchain[n].link[2], boneToWorld );
+				}
+			}
+		}
+	}
+
+}
+
+
+
+
 //-----------------------------------------------------------------------------
 // Purpose: go through all the IK rules and calculate the animated path the IK'd 
 //			end point moves relative to its IK target.
@@ -4559,6 +4866,25 @@ static void ProcessIKRules( )
 			{
 				pRule->tail = panim->numframes - 1;
 				pRule->end = panim->numframes - 1;
+			}
+
+			// VXP
+			if (pRule->start != -1 && pRule->peak == -1 && pRule->tail == -1 && pRule->end != -1)
+			{
+				pRule->peak = (pRule->start + pRule->end) / 2;
+				pRule->tail = (pRule->start + pRule->end) / 2;
+			}
+
+			// VXP
+			if (pRule->start != -1 && pRule->peak == -1 && pRule->tail != -1)
+			{
+				pRule->peak = (pRule->start + pRule->tail) / 2;
+			}
+
+			// VXP
+			if (pRule->peak != -1 && pRule->tail == -1 && pRule->end != -1)
+			{
+				pRule->tail = (pRule->peak + pRule->end) / 2;
 			}
 
 			if (pRule->peak == -1)
@@ -4656,6 +4982,21 @@ static void ProcessIKRules( )
 
 			pRule->pError = (s_ikerror_t *)kalloc( pRule->numerror, sizeof( s_ikerror_t ));
 
+			int n = 0;
+
+			if (pRule->usesequence)
+			{
+				// VXP: FIXME: bah, this is horrendously hacky, add a damn back pointer
+			/*
+				for (n = 0; n < g_sequence.Count(); n++) // VXP: g_numseq
+				{
+					if (g_sequence[n].panim[0][0] == panim)
+						break;
+				}
+			*/
+				printf( "TODO: usesequence currently not supported\n" );
+			}
+
 			switch( pRule->type )
 			{
 			case IK_SELF:
@@ -4672,15 +5013,20 @@ static void ProcessIKRules( )
 
 					for (k = 0; k < pRule->numerror; k++)
 					{
-						if (1)
+						if (pRule->usesequence)
 						{
-							CalcBoneTransforms( panim, k + pRule->start, boneToWorld );
+						//	CalcSeqTransforms( n, k + pRule->start, boneToWorld );
+							printf( "TODO: usesequence currently not supported\n" );
 						}
-						else
+						else if (pRule->usesource)
 						{
 							matrix3x4_t srcBoneToWorld[MAXSTUDIOBONES];
 							BuildRawTransforms( panim->source, k + pRule->start + panim->startframe - panim->source->startframe, srcBoneToWorld );
 							TranslateAnimations( panim->source, srcBoneToWorld, boneToWorld );
+						}
+						else
+						{
+							CalcBoneTransforms( panim, k + pRule->start, boneToWorld );
 						}
 
 						MatrixInvert( boneToWorld[pRule->bone], worldToBone );
@@ -4706,11 +5052,27 @@ static void ProcessIKRules( )
 					matrix3x4_t local;
 
 					int bone = g_ikchain[pRule->chain].link[2];
-					CalcBoneTransforms( panim, pRule->contact, boneToWorld );
+					if (pRule->usesequence)
+					{
+					//	CalcSeqTransforms( n, pRule->contact, boneToWorld );
+						printf( "TODO: usesequence currently not supported\n" );
+					}
+					else if (pRule->usesource)
+					{
+						matrix3x4_t srcBoneToWorld[MAXSTUDIOSRCBONES];
+						BuildRawTransforms( panim->source, pRule->contact + panim->startframe - panim->source->startframe, panim->scale, panim->adjust, panim->rotation, srcBoneToWorld );
+						TranslateAnimations( panim->source, srcBoneToWorld, boneToWorld );
+					}
+					else 
+					{
+						CalcBoneTransforms( panim, pRule->contact, boneToWorld );
+					}
+
 					// FIXME: add in motion
 
 					Vector footfall;
 					MatrixGetColumn( boneToWorld[bone], 3, footfall );
+				//	VectorTransform( g_ikchain[pRule->chain].center, boneToWorld[bone], footfall ); // VXP: From Source 2007
 					footfall.z = pRule->floor;
 
 					AngleMatrix( RadianEuler( 0, 0, 0 ), footfall, local );
@@ -4725,11 +5087,58 @@ static void ProcessIKRules( )
 						pRule->pos.x, pRule->pos.y, pRule->pos.z );
 #endif
 
+				//	float s;
 					for (k = 0; k < pRule->numerror; k++)
 					{
-						CalcBoneTransforms( panim, k + pRule->start, boneToWorld );
+						int t = k + pRule->start;
+						if (pRule->usesequence)
+						{
+						//	CalcSeqTransforms( n, t, boneToWorld );
+							printf( "TODO: usesequence currently not supported\n" );
+						}
+						else if (pRule->usesource)
+						{
+							matrix3x4_t srcBoneToWorld[MAXSTUDIOSRCBONES];
+							BuildRawTransforms( panim->source, pRule->contact + panim->startframe - panim->source->startframe, panim->scale, panim->adjust, panim->rotation, srcBoneToWorld );
+							TranslateAnimations( panim->source, srcBoneToWorld, boneToWorld );
+						}
+						else
+						{
+							CalcBoneTransforms( panim, t, boneToWorld );
+						}
+						Vector pos = pRule->pos + calcMovement( panim, t, pRule->contact );
+					/*
+						s = 0.0;
 
-						Vector pos = pRule->pos + calcMovement( panim, pRule->start + k, pRule->contact );
+						Vector cur;
+						VectorTransform( g_ikchain[pRule->chain].center, boneToWorld[bone], cur );
+						cur.z = pos.z;
+
+						if (t < pRule->start || t >= pRule->end)
+						{
+							// s = (float)(t - pRule->start) / (pRule->peak - pRule->start);
+							// pos = startPos * (1 - s) + pos * s;
+							pos = cur;
+						}
+						else if (t < pRule->peak)
+						{
+							s = (float)(pRule->peak - t) / (pRule->peak - pRule->start);
+							s = 3 * s * s - 2 * s * s * s;
+							pos = pos * (1 - s) + cur * s;
+						}
+						else if (t > pRule->tail)
+						{
+							s = (float)(t - pRule->tail) / (pRule->end - pRule->tail);
+							s = 3 * s * s - 2 * s * s * s;
+							pos = pos * (1 - s) + cur * s;
+							//pos = endPos - calcMovement( panim, t, pRule->tail );
+						}
+
+						//MatrixPosition( boneToWorld[bone], pos );
+						//pos.z = pRule->floor;
+
+						// printf("%2d : %2d : %4.2f %6.1f %6.1f %6.1f\n", k, t, s, pos.x, pos.y, pos.z );
+					*/
 
 						AngleMatrix( pRule->q, pos, local );
 						MatrixInvert( local, worldToBone );
@@ -5102,6 +5511,8 @@ void SimplifyModel (void)
 	LinkMouths();
 
 	RemapProceduralBones();
+
+	LockBoneLengths(); // VXP
 
 	ProcessIKRules();
 

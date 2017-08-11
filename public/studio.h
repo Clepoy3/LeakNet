@@ -200,6 +200,8 @@ namespace OptimizedModel
 #define STUDIO_SPLINE	0x0080		// 
 #define STUDIO_REALTIME	0x0100		// cycle index is taken from a real-time clock, not the animations cycle index
 
+#define STUDIO_HIDDEN	0x0400		// VXP: don't show in default selection views
+
 //-----------------------------------------------------------------------------
 // Studio model structures
 //-----------------------------------------------------------------------------

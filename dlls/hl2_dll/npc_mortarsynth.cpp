@@ -562,6 +562,7 @@ void CNPC_MSynth::Precache(void)
 	//
 	engine->PrecacheModel("models/mortarsynth.mdl");
 	engine->PrecacheModel("models/gibs/mortarsynth_gibs.mdl");
+	engine->PrecacheModel("models/computergibs.mdl");
 	
 	engine->PrecacheModel("sprites/physbeam.vmt");	
 	engine->PrecacheModel("sprites/glow01.vmt");
@@ -599,6 +600,7 @@ void CNPC_MSynth::Gib(void)
 
 	// Throw mortar synth gibs
 //	CGib::SpawnSpecificGibs( this, MSYNTH_GIB_COUNT, 800, 1000, "models/gibs/mortarsynth_gibs.mdl"); // VXP: Empty gibs model for mortarsynth
+	CGib::SpawnSpecificGibs( this, MSYNTH_GIB_COUNT, 800, 1000, "models/computergibs.mdl");
 
 	ExplosionCreate(GetAbsOrigin(), GetAbsAngles(), NULL, random->RandomInt(30, 40), 0, true);
 

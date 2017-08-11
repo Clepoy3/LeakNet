@@ -245,6 +245,8 @@ void CServerList::UpdateServer(netadr_t *adr, bool proxy, const char *serverName
 	if (queryIndex == m_Queries.InvalidIndex())
 		return;
 
+	DevMsg("CServerList::UpdateServer: Updating \"%s\" server\n", serverName);
+
 	query_t &query = m_Queries[queryIndex];
 	int serverIndex = query.serverID;
 	float sendTime = query.sendTime;

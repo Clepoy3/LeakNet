@@ -2190,7 +2190,11 @@ ControlPanel::initSequences ()
 			cSequence[i]->removeAll ();
 			for (int j = 0; j < hdr->numseq; j++)
 			{
-				cSequence[i]->add( hdr->pSeqdesc(j)->pszLabel() );
+				// VXP: TODO: Implement proper Source 2007 "Show Hidden" HLMV option
+				if ( !(hdr->pSeqdesc(j)->flags & STUDIO_HIDDEN) )
+				{
+					cSequence[i]->add( hdr->pSeqdesc(j)->pszLabel() );
+				}
 			}
 			cSequence[i]->select( 0 );
 			slSequence[i]->setValue( 0 );

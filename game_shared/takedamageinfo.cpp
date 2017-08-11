@@ -11,6 +11,18 @@
 
 ConVar phys_pushscale( "phys_pushscale", "1", FCVAR_REPLICATED );
 
+BEGIN_SIMPLE_DATADESC( CTakeDamageInfo )
+	DEFINE_FIELD( CTakeDamageInfo, m_vecDamageForce, FIELD_VECTOR ),
+	DEFINE_FIELD( CTakeDamageInfo, m_vecDamagePosition, FIELD_POSITION_VECTOR),
+	DEFINE_FIELD( CTakeDamageInfo, m_vecReportedPosition, FIELD_POSITION_VECTOR),
+	DEFINE_FIELD( CTakeDamageInfo, m_hInflictor, FIELD_EHANDLE),
+	DEFINE_FIELD( CTakeDamageInfo, m_hAttacker, FIELD_EHANDLE),
+	DEFINE_FIELD( CTakeDamageInfo, m_flDamage, FIELD_FLOAT),
+	DEFINE_FIELD( CTakeDamageInfo, m_flMaxDamage, FIELD_FLOAT),
+	DEFINE_FIELD( CTakeDamageInfo, m_bitsDamageType, FIELD_INTEGER),
+	DEFINE_FIELD( CTakeDamageInfo, m_iCustomKillType, FIELD_INTEGER),
+END_DATADESC()
+
 void CTakeDamageInfo::Init( CBaseEntity *pInflictor, CBaseEntity *pAttacker, const Vector &damageForce, const Vector &damagePosition, const Vector &reportedPosition, float flDamage, int bitsDamageType, int iKillType )
 {
 	m_hInflictor = pInflictor;
@@ -58,6 +70,10 @@ CTakeDamageInfo::CTakeDamageInfo( CBaseEntity *pInflictor, CBaseEntity *pAttacke
 // MultiDamage
 // Collects multiple small damages into a single damage
 // -------------------------------------------------------------------------------------------------- //
+BEGIN_SIMPLE_DATADESC_( CMultiDamage, CTakeDamageInfo ) // VXP
+	DEFINE_FIELD( CMultiDamage, m_hTarget, FIELD_EHANDLE),
+END_DATADESC()
+
 CMultiDamage g_MultiDamage;
 
 CMultiDamage::CMultiDamage()
@@ -131,8 +147,24 @@ void AddMultiDamage( const CTakeDamageInfo &info, CBaseEntity *pEntity )
 		// takedamageinfo.cpp. If you think the damage shouldn't cause force (unlikely!) then you can set the 
 		// damage type to DMG_GENERIC, or | DMG_CRUSH if you need to preserve the damage type for purposes of HUD display.
 	//	Assert( g_MultiDamage.GetDamageForce() != vec3_origin && g_MultiDamage.GetDamagePosition() != vec3_origin );
-		if ( (g_MultiDamage.GetDamageForce() == vec3_origin) || (g_MultiDamage.GetDamagePosition() == vec3_origin) )
-			Warning( "AddMultiDamage:  g_MultiDamage.GetDamageForce() == vec3_origin\n" );
+	//	if ( (g_MultiDamage.GetDamageForce() == vec3_origin) || (g_MultiDamage.GetDamagePosition() == vec3_origin) )
+	//		Warning( "AddMultiDamage:  g_MultiDamage.GetDamageForce() == vec3_origin\n" );
+		if ( g_MultiDamage.GetDamageForce() == vec3_origin || g_MultiDamage.GetDamagePosition() == vec3_origin )
+		{
+			static int warningCount = 0;
+			if ( ++warningCount < 10 )
+			{
+				if ( g_MultiDamage.GetDamageForce() == vec3_origin )
+				{
+					Warning( "AddMultiDamage:  g_MultiDamage.GetDamageForce() == vec3_origin\n" );
+				}
+
+				if ( g_MultiDamage.GetDamagePosition() == vec3_origin)
+				{
+					Warning( "AddMultiDamage:  g_MultiDamage.GetDamagePosition() == vec3_origin\n" );
+				}
+			}
+		}
 	//	ASSERT( g_MultiDamage.GetDamageForce() != vec3_origin && g_MultiDamage.GetDamagePosition() != vec3_origin );
 	}
 }
@@ -158,11 +190,16 @@ void CalculateExplosiveDamageForce( CTakeDamageInfo *info, const Vector &vecDir,
 {
 	info->SetDamagePosition( vecForceOrigin );
 
+	float flClampForce = ImpulseScale( 75, 400 ); // VXP
+
 	// Calculate an impulse large enough to push a 75kg man 4 in/sec per point of damage
 	float flForceScale = info->GetDamage() * ImpulseScale( 75, 4 );
 
 	// Exaggerate the force from explosions a little (50%)
-	flForceScale *= 1.5;
+//	flForceScale *= 1.5; // VXP: Commented
+
+	if( flForceScale > flClampForce )
+		flForceScale = flClampForce;
 
 	// Fudge blast forces a little bit, so that each
 	// victim gets a slightly different trajectory. 

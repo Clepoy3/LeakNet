@@ -21,8 +21,6 @@
 
 extern Vector			g_vecAttackDir;		// In globals.cpp
 
-#define TEST_GIB_PHYSICS 1
-
 BEGIN_DATADESC( CGib )
 
 	// gibs are not saved/restored
@@ -231,11 +229,29 @@ void CGib::InitGib( CBaseEntity *pVictim, float fMinVelocity, float fMaxVelocity
 		SetBloodColor( pVictim->BloodColor() );
 		
 		AdjustVelocityBasedOnHealth( pVictim->m_iHealth, vecNewVelocity );
-		SetAbsVelocity( vecNewVelocity );
+	//	SetAbsVelocity( vecNewVelocity ); // VXP: Commented
 
+		// Attempt to be physical if we can
+		if ( VPhysicsInitNormal( SOLID_BBOX, 0, false ) )
+		{
+			IPhysicsObject *pObj = VPhysicsGetObject();
+
+			if ( pObj != NULL )
+			{
+				AngularImpulse angImpulse = RandomAngularImpulse( -500, 500 );
+				pObj->AddVelocity( &vecNewVelocity, &angImpulse );
+			}
+		}
+		else
+		{
+			SetSolid( SOLID_BBOX );
+			SetCollisionBounds( vec3_origin, vec3_origin );
+			SetAbsVelocity( vecNewVelocity );
+		}
+	
 		SetCollisionGroup( COLLISION_GROUP_DEBRIS );
-		SetSolid( SOLID_BBOX );
-		SetCollisionBounds( vec3_origin, vec3_origin );
+	//	SetSolid( SOLID_BBOX ); // VXP: Commented
+	//	SetCollisionBounds( vec3_origin, vec3_origin ); // VXP: Commented
 	}
 	Relink();
 	LimitVelocity();
@@ -325,7 +341,10 @@ void CGib :: WaitTillLand ( void )
 	{
 		SetRenderColorA( 255 );
 		m_nRenderMode = kRenderTransTexture;
-		AddSolidFlags( FSOLID_NOT_SOLID );
+		if ( GetMoveType() != MOVETYPE_VPHYSICS )
+		{
+			AddSolidFlags( FSOLID_NOT_SOLID );
+		}
 		if ( VPhysicsGetObject() )
 		{
 			VPhysicsGetObject()->RecheckCollisionFilter();
@@ -340,11 +359,14 @@ void CGib :: WaitTillLand ( void )
 		{
 			CSprite *pSprite = (CSprite*)GetSprite();
 
-			//Adrian - Why am I doing this? Check InitPointGib for the answer!
-			if ( m_lifeTime == 0 )
-				 m_lifeTime = random->RandomFloat( 1, 3 );
+			if ( pSprite )
+			{
+				//Adrian - Why am I doing this? Check InitPointGib for the answer!
+				if ( m_lifeTime == 0 )
+					 m_lifeTime = random->RandomFloat( 1, 3 );
 
-			pSprite->FadeAndDie( m_lifeTime );
+				pSprite->FadeAndDie( m_lifeTime );
+			}
 		}
 
 		// If you bleed, you stink!
@@ -370,6 +392,11 @@ void CGib :: BounceGibTouch ( CBaseEntity *pOther )
 	Vector	vecSpot;
 	trace_t	tr;
 	
+	IPhysicsObject *pPhysics = VPhysicsGetObject();
+
+	if ( pPhysics )
+		 return;
+	
 	//if ( random->RandomInt(0,1) )
 	//	return;// don't bleed everytime
 	if (GetFlags() & FL_ONGROUND)
@@ -383,11 +410,8 @@ void CGib :: BounceGibTouch ( CBaseEntity *pOther )
 		QAngle angVel = GetLocalAngularVelocity();
 		angVel.x = 0;
 		angVel.z = 0;
-#ifndef TEST_GIB_PHYSICS
+	//	SetLocalAngularVelocity( vec3_angle );
 		SetLocalAngularVelocity( angVel );
-#else
-		SetLocalAngularVelocity( vec3_angle );
-#endif
 	}
 	else
 	{
@@ -448,11 +472,7 @@ void CGib :: StickyGibTouch ( CBaseEntity *pOther )
 //
 void CGib :: Spawn( const char *szGibModel )
 {
-#ifndef TEST_GIB_PHYSICS
 	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
-#else
-	SetMoveType( MOVETYPE_STEP, MOVECOLLIDE_FLY_BOUNCE ); // VXP: Good, just sliding down the slope, but hitting first assert at SetMoveType
-#endif
 	SetFriction(0.55); // deading the bounce a bit
 	
 	// sometimes an entity inherits the edict from a former piece of glass,
@@ -462,12 +482,16 @@ void CGib :: Spawn( const char *szGibModel )
 	m_nRenderFX = kRenderFxNone;
 	
 	// hopefully this will fix the VELOCITY TOO LOW crap
+	m_takedamage = DAMAGE_EVENTS_ONLY; // VXP
 	SetSolid( SOLID_BBOX );
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetCollisionGroup( COLLISION_GROUP_DEBRIS );
 
 	SetModel( szGibModel );
+#ifdef HL1_DLL
+	SetElasticity( 1.0 ); // VXP
 	UTIL_SetSize(this, vec3_origin, vec3_origin);
+#endif//HL1_DLL
 
 	SetNextThink( gpGlobals->curtime + 4 );
 	m_lifeTime = 25;

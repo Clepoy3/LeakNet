@@ -253,6 +253,7 @@ void CInternetGames::GetNewServerList()
 	Assert( m_pMaster );
 	if ( !m_pMaster )
 	{
+		DevMsg("CInternetGames::GetNewServerList: No master socket!\n");
 		return;
 	}
 
@@ -275,6 +276,13 @@ void CInternetGames::GetNewServerList()
 //-----------------------------------------------------------------------------
 void CInternetGames::AddNewServer(serveritem_t &server)
 {
+	// VXP: TODO: Remove!
+//	server.ip[0] = 94;
+//	server.ip[1] = 158;
+//	server.ip[2] = 153;
+//	server.ip[3] = 11;
+
+	DevMsg("CInternetGames::AddNewServer: Adding IP %i.%i.%i.%i:%i\n", server.ip[0], server.ip[1], server.ip[2], server.ip[3], server.port);
 	// add to main server list
 	unsigned int index = m_Servers.AddNewServer(server);
 

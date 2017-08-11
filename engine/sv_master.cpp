@@ -18,6 +18,9 @@
 #include "vstdlib/ICommandLine.h"
 
 
+extern ConVar sv_lan;
+//extern ConVar defport; // VXP
+ConVar defport( "port", PORT_SERVER );
 
 //-----------------------------------------------------------------------------
 // Purpose: List of master servers and some state info about them
@@ -66,6 +69,8 @@ private:
 	adrlist_t *m_pMasterAddresses;
 	// If nomaster is true, the server will not send heartbeats to the master server
 	bool	m_bNoMasters;
+
+	char	szExternalIP[ 32 ];
 };
 
 static CMaster g_MasterServer;
@@ -73,6 +78,8 @@ IMaster *master = (IMaster *)&g_MasterServer;
 
 #define	HEARTBEAT_SECONDS	300
 #define MASTER_PARSE_FILE "scripts/woncomm.lst"
+
+#define MAX_SINFO 2048
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -97,6 +104,9 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 	int			active;          // Number of active client connections
 	char        szGD[ MAX_OSPATH ];
 
+	// VXP
+	char		info[ MAX_SINFO ];
+	char		szOS[2];
 
 //	if ( gfUseLANAuthentication )  // No HB on lan games
 //		return;
@@ -126,13 +136,57 @@ void CMaster::SendHeartbeat ( adrlist_t *p )
 	// Send to master
 	Msg( "challenge: %i, gamedir: %s\n", p->heartbeatchallenge, szGD );
 	// VXP: Old protocol
-	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
-		1, active, PROTOCOL_VERSION, szGD );
+//	Q_snprintf (string, sizeof( string ), "%c\n%i\n%i\n%i\n%i\n%s\n", S2M_HEARTBEAT, p->heartbeatchallenge,
+//		1, active, PROTOCOL_VERSION, szGD );
+
+
+	bool bHasPW = false;
+
+#if _WIN32
+	Q_strcpy( szOS, "w" );
+#else
+	Q_strcpy( szOS, "l" );
+#endif
+
+	char basemap[ 512 ];
+	COM_FileBase( sv.modelname, basemap );
+
+	char ipport[ 64 ];
+//	Q_snprintf( ipport, sizeof( ipport ), "%s:%i", szExternalIP, net_local_adr.port );
+	Q_snprintf( ipport, sizeof( ipport ), "%s:%i", szExternalIP, defport.GetInt() );
+	Msg( "Your external IP is %s\n", ipport );
+
+	info[0]='\0';
+
+	Info_SetValueForKey( info, "address", ipport, MAX_SINFO );
+	Info_SetValueForKey( info, "protocol", va( "%i", PROTOCOL_VERSION ), MAX_SINFO );
+	Info_SetValueForKey( info, "challenge", va( "%i", p->heartbeatchallenge ), MAX_SINFO );
+	Info_SetValueForKey( info, "players", va( "%i", active ), MAX_SINFO );
+	Info_SetValueForKey( info, "max", va( "%i", svs.maxclients ), MAX_SINFO );
+//	Info_SetValueForKey( info, "bots", va( "%i", pServer->GetNumFakeClients() ), MAX_SINFO ); // VXP: TODO
+	Info_SetValueForKey( info, "bots", "0", MAX_SINFO );
+	Info_SetValueForKey( info, "dedicated", cls.state == ca_dedicated ? "d" : "l"  , MAX_SINFO );
+	Info_SetValueForKey( info, "password", bHasPW?"1":"0", MAX_SINFO );
+	Info_SetValueForKey( info, "secure", "1", MAX_SINFO );
+
+	Info_SetValueForKey( info, "gamedir", szGD, MAX_SINFO );
+	Info_SetValueForKey( info, "map", basemap, MAX_SINFO );
+	Info_SetValueForKey( info, "os", szOS , MAX_SINFO );
+
+	Info_SetValueForKey( info, "lan", sv_lan.GetInt() ?"1":"0", MAX_SINFO ); 
+	Info_SetValueForKey( info, "proxy", "0", MAX_SINFO );
+	Info_SetValueForKey( info, "proxytarget", "0", MAX_SINFO );
+	Info_SetValueForKey( info, "proxyaddress", "127.0.0.1", MAX_SINFO );
+//	Info_SetValueForKey( info, "proxyaddress", "192.168.1.100", MAX_SINFO );
+
+	Info_SetValueForKey( info, "version", gpszVersionString, MAX_SINFO );
 	
 	// VXP: New protocol
 //	Q_snprintf (string, sizeof( string ), "%c\\protocol\\%i\\challenge\\%i\\players\\%i\\max\\%i\\bots\\%i\\dedicated\\%i\\password\\%i\\secure\\%i\\gamedir\\%s\\map\\%s\\os\\%s\\lan\\%i\\proxy\\%i\\proxytarget\\%i\\proxyaddress\\%s\\version\\%s", S2M_HEARTBEAT2, PROTOCOL_VERSION, p->heartbeatchallenge, active, 100, 0, 1, 0, 0, szGD, "MAP", "w",
 //		0, 0, 0, "", "hl2" );
 	
+//	Q_snprintf (string, sizeof(string), "%c\n%s\n", S2M_HEARTBEAT2, info );
+	Q_snprintf (string, sizeof(string), "%c\n%s\n", S2M_HEARTBEAT3, info ); // VXP: LeakNet protocol
 
 	NET_SendPacket (NS_SERVER, strlen(string), string,  p->adr );
 }
@@ -150,7 +204,9 @@ void CMaster::CheckHeartbeat (void)
 		sv_lan.GetInt() ||           // Lan servers don't heartbeat
 		(svs.maxclients <= 1) ||  // not a multiplayer server.
 		!sv.active )			  // only heartbeat if a server is running.
+	{
 		return;
+	}
 
 	InitConnection();
 
@@ -200,7 +256,9 @@ void CMaster::ShutdownConnection( void )
 		sv_lan.GetInt() ||           // Lan servers don't heartbeat
 		(svs.maxclients <= 1) || // not a multiplayer server.
 		!sv.active )
+	{
 		return;
+	}
 
 	InitConnection();
 
@@ -636,6 +694,10 @@ static ConCommand heartbeat("heartbeat", Heartbeat_f );
 //-----------------------------------------------------------------------------
 void CMaster::Init( void )
 {
+	// VXP
+	strcpy( szExternalIP, "127.0.0.1" );
+	Msg( "Getting external IP...\n" );
+	NET_GetExternalIP( szExternalIP );
 }
 
 //-----------------------------------------------------------------------------
