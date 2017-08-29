@@ -86,12 +86,46 @@ BEGIN_DATADESC( CItem )
 END_DATADESC()
 
 
+bool CItem::CreateItemVPhysicsObject( void )
+{
+	//Create the object in the physics system
+	int nSolidFlags = GetSolidFlags() | FSOLID_NOT_STANDABLE;
+//	if ( !m_bActivateWhenAtRest )
+//	{
+		nSolidFlags |= FSOLID_TRIGGER;
+//	}
+
+//	if ( VPhysicsInitNormal( SOLID_BBOX, nSolidFlags, false ) == NULL )
+	if ( VPhysicsInitNormal( SOLID_VPHYSICS, nSolidFlags, false ) == NULL )
+	{
+	//	AddSolidFlags( FSOLID_NOT_STANDABLE );
+	//	AddSolidFlags( FSOLID_TRIGGER );
+		SetSolid( SOLID_BBOX );
+		AddSolidFlags( nSolidFlags );
+
+		// If it's not physical, drop it to the floor
+		if (UTIL_DropToFloor(this, MASK_SOLID) == 0)
+		{
+			Warning( "Item %s fell out of level at %f,%f,%f\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z);
+			UTIL_Remove( this );
+			return false;
+		}
+	}
+
+	return true;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CItem::Spawn( void )
 {
+	if ( g_pGameRules->IsAllowedToSpawn( this ) == false )
+	{
+		UTIL_Remove( this );
+		return;
+	}
+
 	SetMoveType( MOVETYPE_FLYGRAVITY );
 	SetSolid( SOLID_BBOX );
 	
@@ -101,20 +135,10 @@ void CItem::Spawn( void )
 	UTIL_SetSize(this, Vector(-16, -16, 0), Vector(16, 16, 16));
 	SetTouch(&CItem::ItemTouch);
 
-	//Create the object in the physics system
-	if ( VPhysicsInitNormal( SOLID_BBOX, FSOLID_NOT_STANDABLE | FSOLID_TRIGGER, false ) == NULL )
-	{
-		AddSolidFlags( FSOLID_NOT_STANDABLE );
-		AddSolidFlags( FSOLID_TRIGGER );
+	if ( CreateItemVPhysicsObject() == false )
+		return;
 
-		// If it's not physical, drop it to the floor
-		if (UTIL_DropToFloor(this, MASK_SOLID) == 0)
-		{
-			Warning( "Item %s fell out of level at %f,%f,%f\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z);
-			UTIL_Remove( this );
-			return;
-		}
-	}
+	m_takedamage = DAMAGE_EVENTS_ONLY;
 	Relink();
 }
 

@@ -17,6 +17,7 @@
 #include "fx.h"
 #include "tier0/vprof.h"
 #include "c_world.h"
+#include "soundenvelope.h" // VXP
 
 // file system interface
 extern IFileSystem *filesystem;
@@ -27,25 +28,6 @@ extern ConVar phys_rolling_drag;
 
 //FIXME: Replicated from server end, consolidate?
 
-enum
-{
-	TOUCH_START=0,
-	TOUCH_END,
-};
-
-struct touchevent_t
-{
-	CBaseEntity *pEntity0;
-	CBaseEntity *pEntity1;
-	int			touchType;
-};
-
-const float FLUID_TIME_MAX = 2.0f; // keep track of last time hitting fluid for up to 2 seconds 
-struct fluidevent_t
-{
-	CBaseEntity		*pEntity;
-	float			impactTime;
-};
 
 extern IVEngineClient *engine;
 
@@ -81,14 +63,14 @@ public:
 	int		ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1, void *pGameData0, void *pGameData1 );
 	int		ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObject *pObj1, void *pGameData0, void *pGameData1, float dt );
 
-#if 0
-	friction_t *FindFriction( CBaseEntity *pObject )
-	void ShutdownFriction( friction_t &friction )
-	void UpdateFriction( void )
+//#if 0
+	friction_t *FindFriction( CBaseEntity *pObject );
+	void ShutdownFriction( friction_t &friction );
+	void UpdateFriction( void );
 
 private:
 	friction_t	m_current[8];
-#endif
+//#endif
 
 private:
 	
@@ -122,7 +104,8 @@ void PhysicsLevelInit( void )
 	assert( physenv );
 
 	physenv->SetGravity( Vector(0, 0, -sv_gravity.GetFloat() ) );
-	physenv->SetSimulationTimestep( 0.015 ); // 15 ms per tick
+//	physenv->SetSimulationTimestep( 0.015 ); // 15 ms per tick
+	physenv->SetSimulationTimestep( TICK_RATE );
 	physenv->SetCollisionEventHandler( &g_Collisions );
 	physenv->SetCollisionSolver( &g_Collisions );
 
@@ -163,9 +146,9 @@ int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1
 		return 1;
 	}
 	// Obey collision group rules
-//	Assert(GameRules());
-	if( !GameRules() )
-		return 0; // VXP: Yes, we can
+	Assert(GameRules());
+//	if( !GameRules() )
+//		return 0; // VXP: Yes, we can
 
 	if ( GameRules() )
 	{
@@ -190,7 +173,7 @@ int CCollisionEvent::ShouldSolvePenetration( IPhysicsObject *pObj0, IPhysicsObje
 
 
 // This just encloses a change I (MikeD) made, in case it causes problems.
-//#define DECAL_FIX
+#define DECAL_FIX
 
 
 // A class that implements an IClientSystem for physics
@@ -391,68 +374,12 @@ void CCollisionEvent::PostCollision( vcollisionevent_t *pEvent )
 	}
 }
 
-void CCollisionEvent::Friction( IPhysicsObject *pObject, float energy, int surfaceProps, int surfacePropsHit, IPhysicsCollisionData * )
-{
-#if 0
-	if ( energy < 0.05f || surfaceProps < 0 )
-		return;
-
-	CBaseEntity *pEntity = (CBaseEntity *)pObject->GetGameData();
-	if ( pEntity )
-	{
-		energy *= energy;
-		float volume = energy * (1.0f/(10.0f*10.0f));
-		
-		// cut out the quiet sounds
-		// UNDONE: Separate threshold for starting a sound vs. continuing?
-		if ( volume > (1.0f/128.0f) )
-		{
-			friction_t *pFriction = FindFriction( pEntity );
-			if ( !pFriction )
-				return;
-
-			if ( volume > 1.0f )
-				volume = 1.0f;
-			else if ( volume < 0.05f )
-				volume = 0.05f;
-
-			surfacedata_t *psurf = physprops->GetSurfaceData( surfaceProps );
-			int offset = 0;
-			if ( psurf->scrapeCount )
-			{
-				offset = random->RandomLong(0, psurf->scrapeCount-1);
-			}
-			const char *pSound = physprops->GetString( psurf->scrape, offset );
-
-			CSoundParameters params;
-			if ( !CBaseEntity::GetSoundParameters( pSound, params ) )
-				return;
-
-			if ( !pFriction->pObject )
-			{
-				pFriction->pObject = pEntity;
-				pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( pEntity->pev, CHAN_BODY, params.soundname, ATTN_STATIC );
-				CSoundEnvelopeController::GetController().Play( pFriction->patch, params.volume * volume, params.pitch );
-//					engine->AlertMessage( at_console, "Scrape Start %s \n", STRING(pEntity->m_iClassname) );
-			}
-			else
-			{
-				float pitch = (volume * (params.pitchhigh - params.pitchlow)) + params.pitchlow;
-				CSoundEnvelopeController::GetController().SoundChangeVolume( pFriction->patch, params.volume * volume, 0.1f );
-				CSoundEnvelopeController::GetController().SoundChangePitch( pFriction->patch, pitch, 0.1f );
-			}
-
-			pFriction->update = gpGlobals->time;
-		}
-	}
-#endif
-}
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CCollisionEvent::FrameUpdate( void )
 {
+	UpdateFriction(); // VXP
 	UpdateTouchEvents();
 	UpdateFluidEvents();
 }
@@ -573,7 +500,68 @@ void CCollisionEvent::DispatchEndTouch( C_BaseEntity *pEntity0, C_BaseEntity *pE
 	pEntity1->PhysicsNotifyOtherOfUntouch( pEntity1, pEntity0 );
 }
 
-#if 0
+//#if 0
+void CCollisionEvent::Friction( IPhysicsObject *pObject, float energy, int surfaceProps, int surfacePropsHit, IPhysicsCollisionData * )
+{
+	if ( energy < 0.05f || surfaceProps < 0 )
+		return;
+
+	CBaseEntity *pEntity = (CBaseEntity *)pObject->GetGameData();
+	if ( pEntity )
+	{
+		energy *= energy;
+		float volume = energy * (1.0f/(10.0f*10.0f));
+		
+		// cut out the quiet sounds
+		// UNDONE: Separate threshold for starting a sound vs. continuing?
+		if ( volume > (1.0f/128.0f) )
+		{
+			friction_t *pFriction = FindFriction( pEntity );
+			if ( !pFriction )
+				return;
+
+			if ( volume > 1.0f )
+				volume = 1.0f;
+			else if ( volume < 0.05f )
+				volume = 0.05f;
+
+			surfacedata_t *psurf = physprops->GetSurfaceData( surfaceProps );
+			int offset = 0;
+			if ( psurf->scrapeCount )
+			{
+			//	offset = random->RandomLong(0, psurf->scrapeCount-1);
+				offset = random->RandomInt(0, psurf->scrapeCount-1);
+			}
+			const char *pSound = physprops->GetString( psurf->scrape, offset );
+
+			CSoundParameters params;
+		//	if ( !CBaseEntity::GetSoundParameters( pSound, params ) )
+			if ( !CBaseEntity::GetParametersForSound( pSound, params ) )
+				return;
+
+			if ( !pFriction->pObject )
+			{
+				pFriction->pObject = pEntity;
+			//	pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( pEntity->pev, CHAN_BODY, params.soundname, ATTN_STATIC );
+				CPASAttenuationFilter filter( pEntity );
+				pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( filter, pEntity->entindex(), CHAN_BODY, params.soundname, ATTN_STATIC );
+				CSoundEnvelopeController::GetController().Play( pFriction->patch, params.volume * volume, params.pitch );
+//					engine->AlertMessage( at_console, "Scrape Start %s \n", STRING(pEntity->m_iClassname) );
+				DevMsg( "Scrape Start %s \n", pEntity->GetClassname() );
+			}
+			else
+			{
+				float pitch = (volume * (params.pitchhigh - params.pitchlow)) + params.pitchlow;
+				CSoundEnvelopeController::GetController().SoundChangeVolume( pFriction->patch, params.volume * volume, 0.1f );
+				CSoundEnvelopeController::GetController().SoundChangePitch( pFriction->patch, pitch, 0.1f );
+			}
+
+		//	pFriction->update = gpGlobals->time;
+			pFriction->update = gpGlobals->curtime;
+		}
+	}
+}
+
 friction_t *CCollisionEvent::FindFriction( CBaseEntity *pObject )
 {
 	friction_t *pFree = NULL;
@@ -593,6 +581,7 @@ friction_t *CCollisionEvent::FindFriction( CBaseEntity *pObject )
 void CCollisionEvent::ShutdownFriction( friction_t &friction )
 {
 //		engine->AlertMessage( at_console, "Scrape Stop %s \n", STRING(friction.pObject->m_iClassname) );
+	DevMsg( "Scrape Stop %s \n", STRING(friction.pObject->GetClassname()) );
 	CSoundEnvelopeController::GetController().Shutdown( friction.patch );
 	friction.patch = NULL;
 	friction.pObject = NULL;
@@ -603,7 +592,8 @@ void CCollisionEvent::UpdateFriction( void )
 	{
 		if ( m_current[i].patch )
 		{
-			if ( m_current[i].update < (gpGlobals->time-0.1f) )
+		//	if ( m_current[i].update < (gpGlobals->time-0.1f) )
+			if ( m_current[i].update < (gpGlobals->curtime-0.1f) )
 			{
 				ShutdownFriction( m_current[i] );
 			}
@@ -612,7 +602,7 @@ void CCollisionEvent::UpdateFriction( void )
 	}
 }
 
-#endif
+//#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 

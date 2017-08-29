@@ -167,6 +167,15 @@ END_DATADESC()
 //=========================================================
 void CNodeEnt::Spawn( void )
 {
+	Spawn( NULL );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pMapData - 
+//-----------------------------------------------------------------------------
+int CNodeEnt::Spawn( const char *pMapData ) // VXP: TODO: No usage of pMapData!
+{
 	// ---------------------------------------------------------------------------------
 	//  If just a hint node (not used for navigation) just create a hint and bail
 	// ---------------------------------------------------------------------------------
@@ -181,7 +190,7 @@ void CNodeEnt::Spawn( void )
 			Msg("WARNING: Hint node with no hint type!\n");
 		}
 		UTIL_RemoveImmediate( this );
-		return;
+		return -1;
 	}
 	
 	// ---------------------------------------------------------------------------------
@@ -208,12 +217,12 @@ void CNodeEnt::Spawn( void )
 				pNode->SetHint( pHint );
 			else
 			{
-				Msg("AI node graph corrupt\n");
+				DevMsg("AI node graph corrupt\n");
 			}
 		}
 		m_nNodeCount++;
 		UTIL_RemoveImmediate( this );
-		return;
+		return -1;
 	}	
 	else
 	{
@@ -278,6 +287,8 @@ void CNodeEnt::Spawn( void )
 	}
 
 	UTIL_RemoveImmediate( this );
+
+	return -1;
 }
 
 //-----------------------------------------------------------------------------

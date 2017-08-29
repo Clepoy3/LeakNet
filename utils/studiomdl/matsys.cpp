@@ -12,12 +12,12 @@
 #include <windows.h>
 #include "FileSystem.h"
 #include "FileSystem_Tools.h"
-#include "engine/ISharedModelCache.h"
+//#include "engine/ISharedModelCache.h"
 
 IMaterialSystem *g_pMaterialSystem = NULL;
 CreateInterfaceFn g_MatSysFactory = NULL;
 CreateInterfaceFn g_ShaderAPIFactory = NULL;
-ISharedModelCache *g_pSharedModelCache = NULL;
+//ISharedModelCache *g_pSharedModelCache = NULL;
 
 static void LoadMaterialSystem( void )
 {

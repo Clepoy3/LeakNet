@@ -28,7 +28,8 @@ enum SpitSize_e
 	SPIT_LARGE,
 };
 
-#define SPIT_GRAVITY 0.5
+//#define SPIT_GRAVITY 0.5
+#define SPIT_GRAVITY 400 // VXP
 
 class CGrenadeSpit : public CBaseGrenade
 {

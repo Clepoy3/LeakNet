@@ -383,6 +383,8 @@ void UTIL_StripToken( const char *pKey, char *pDest );// for redundant keynames
 // Misc functions
 int BuildChangeList( levellist_t *pLevelList, int maxList );
 
+// VXP: computes gravity scale for an absolute gravity.  Pass the result into CBaseEntity::SetGravity()
+float UTIL_ScaleForGravity( float desiredGravity );
 //
 // How did I ever live without ASSERT?
 //

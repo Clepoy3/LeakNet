@@ -674,6 +674,71 @@ void CBaseFileSystem::AddSearchPath( const char *pPath, const char *pathID, Sear
 }
 
 //-----------------------------------------------------------------------------
+// Returns the search path, each path is separated by ;s. Returns the length of the string returned
+// Pack search paths include the pack name, so that callers can still form absolute paths
+// and that absolute path can be sent to the filesystem, and mounted as a file inside a pack.
+//-----------------------------------------------------------------------------
+int CBaseFileSystem::GetSearchPath( const char *pathID, bool bGetPackFiles, char *pPath, int nMaxLen )
+{
+//	AUTO_LOCK( m_SearchPathsMutex );
+
+	int nLen = 0;
+	if ( nMaxLen )
+	{
+		pPath[0] = 0;
+	}
+
+//	CSearchPathsIterator iter( this, pathID, bGetPackFiles ? FILTER_NONE : FILTER_CULLPACK );
+//	for ( CSearchPath *pSearchPath = iter.GetFirst(); pSearchPath != NULL; pSearchPath = iter.GetNext() )
+	for (int i = 0; i < m_SearchPaths.Count(); i++)
+	{
+		CSearchPath *pSearchPath = &m_SearchPaths[i];
+
+	//	CPackFile *pPackFile = pSearchPath->GetPackFile();
+
+		if ( nLen >= nMaxLen )
+		{
+			// Add 1 for the semicolon if our length is not 0
+			nLen += (nLen > 0) ? 1 : 0;
+
+		//	if ( !pPackFile )
+			if ( true )
+			{
+				nLen += Q_strlen( pSearchPath->GetPathString() );
+			}
+			else
+			{
+				// full path and slash
+			//	nLen += Q_strlen( pPackFile->m_ZipName.String() ) + 1;
+			}
+			continue;
+		}
+
+		if ( nLen != 0 )
+		{
+			pPath[nLen++] = ';';
+		}
+
+	//	if ( !pPackFile )
+		if ( true )
+		{
+			Q_strncpy( &pPath[nLen], pSearchPath->GetPathString(), nMaxLen - nLen );
+			nLen += Q_strlen( pSearchPath->GetPathString() );
+		}
+		else
+		{
+			// full path and slash
+		//	Q_strncpy( &pPath[nLen], pPackFile->m_ZipName.String(), nMaxLen - nLen );
+		//	V_AppendSlash( &pPath[nLen], nMaxLen - nLen );
+		//	nLen += Q_strlen( pPackFile->m_ZipName.String() ) + 1;
+		}
+	}
+
+	// Return 1 extra for the NULL terminator
+	return nLen + 1;
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *pPath - 
 // Output : Returns true on success, false on failure.

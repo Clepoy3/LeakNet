@@ -124,6 +124,10 @@ public:
 	// Add paths in priority order (mod dir, game dir, ....)
 	// Can also add pak files (errr, NOT YET!)
 	virtual void				AddSearchPath( const char *pPath, const char *pathID, SearchPathAdd_t addType );
+
+	// VXP: Returns the search path, each path is separated by ;s. Returns the length of the string returned
+	virtual int					GetSearchPath( const char *pathID, bool bGetPackFiles, char *pPath, int nMaxLen );
+
 	virtual bool				RemoveSearchPath( const char *pPath, const char *pathID );
 
 	virtual bool				FileExists( const char *pFileName, const char *pPathID = NULL );

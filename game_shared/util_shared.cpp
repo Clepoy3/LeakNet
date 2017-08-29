@@ -316,6 +316,7 @@ private:
 
 class CTraceFilterEntityIgnoreOther : public CTraceFilterEntity
 {
+	DECLARE_CLASS( CTraceFilterEntityIgnoreOther, CTraceFilterEntity ); // VXP
 public:
 	CTraceFilterEntityIgnoreOther( CBaseEntity *pEntity, const IHandleEntity *pIgnore, int nCollisionGroup ) : 
 		CTraceFilterEntity( pEntity, nCollisionGroup ), m_pIgnoreOther( pIgnore )
@@ -339,9 +340,16 @@ private:
 //-----------------------------------------------------------------------------
 void UTIL_TraceEntity( CBaseEntity *pEntity, const Vector &vecAbsStart, const Vector &vecAbsEnd, unsigned int mask, trace_t *ptr )
 {
+//	ICollideable *pCollision = pEntity->GetCollideable();
+
+	// Adding this assertion here so game code catches it, but really the assertion belongs in the engine
+	// because one day, rotated collideables will work!
+//	Assert( pCollision->GetCollisionAngles() == vec3_angle );
+
 	Ray_t ray;
 	ray.Init( vecAbsStart, vecAbsEnd, pEntity->WorldAlignMins(), pEntity->WorldAlignMaxs() );
 	CTraceFilterEntity traceFilter( pEntity, pEntity->GetCollisionGroup() );
+//	CTraceFilterEntity traceFilter( pEntity, pCollision->GetCollisionGroup() ); // VXP: From Source 2007
 	enginetrace->TraceRay( ray, mask, &traceFilter, ptr );
 }
 

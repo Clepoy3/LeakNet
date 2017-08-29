@@ -74,8 +74,7 @@ private:
 	bool ClipRayToCustom( const Ray_t& ray, unsigned int fMask, ICollideable *pCollideable, trace_t* pTrace );
 
 	// Perform vphysics trace
-//	bool ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pCollideable, trace_t *pTrace );
-	bool ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pCollideable, studiohdr_t *pStudioHdr, trace_t *pTrace );
+	bool ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pCollideable, trace_t *pTrace );
 
 	// Perform hitbox trace
 	bool ClipRayToHitboxes( const Ray_t& ray, unsigned int fMask, ICollideable *pCollideable, trace_t* pTrace );
@@ -440,77 +439,31 @@ private:
 	CCollisionBSPData *m_pBSPData;
 };
 
-class CStudioConvexInfo : public IConvexInfo
-{
-public:
-	CStudioConvexInfo( studiohdr_t *pStudioHdr )
-	{
-		m_pStudioHdr = pStudioHdr;
-	}
-
-	virtual unsigned int GetContents( int convexGameData )
-	{
-		if ( convexGameData == 0 )
-		{
-			return m_pStudioHdr->contents;
-		}
-
-		Assert( convexGameData <= m_pStudioHdr->numbones );
-		mstudiobone_t *pBone = m_pStudioHdr->pBone(convexGameData - 1);
-		return pBone->contents;
-	}
-
-private:
-	studiohdr_t *m_pStudioHdr;
-};
-
-
 //-----------------------------------------------------------------------------
 // Perform vphysics trace
 //-----------------------------------------------------------------------------
-//bool CEngineTrace::ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pEntity, trace_t *pTrace )
-bool CEngineTrace::ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pEntity, studiohdr_t *pStudioHdr, trace_t *pTrace )
+bool CEngineTrace::ClipRayToVPhysics( const Ray_t &ray, unsigned int fMask, ICollideable *pEntity, trace_t *pTrace )
 {
-	if ( pEntity->GetSolid() != SOLID_VPHYSICS )
-		return false;
-
 	bool bTraced = false;
 
 	// use the vphysics model for rotated brushes and vphysics simulated objects
-	const model_t *pModel = pEntity->GetCollisionModel();
-	if ( pStudioHdr )
+	if ( pEntity->GetSolid() == SOLID_VPHYSICS )
 	{
-		CStudioConvexInfo studioConvex( pStudioHdr );
-		vcollide_t *pCollide = modelinfo->GetVCollide( pModel );
-		if ( pCollide && pCollide->solidCount )
-		{
-			physcollision->TraceBox( 
-				ray,
-				fMask,
-				&studioConvex,
-				pCollide->solids[0], // UNDONE: Support other solid indices?!?!?!? (forced zero)
-				pEntity->GetCollisionOrigin(), 
-				pEntity->GetCollisionAngles(), 
-				pTrace );
-			bTraced = true;
-		}
-	}
-	else
-	{
+		const model_t *pModel = pEntity->GetCollisionModel();
 		// use the regular code for raytraces against brushes
 		// do ray traces with normal code, but use vphysics to do box traces
 		if ( !ray.m_IsRay || pModel->type != mod_brush )
 		{
 			int nModelIndex = pEntity->GetCollisionModelIndex();
-	
+
 			// BUGBUG: This only works when the vcollide in question is the first solid in the model
 			vcollide_t *pCollide = CM_VCollideForModel( nModelIndex, (model_t*)pModel );
-	
+
 			if ( pCollide && pCollide->solidCount )
 			{
 				CBrushConvexInfo brushConvex;
 				IConvexInfo *pConvexInfo = ( pModel->type == mod_brush ) ? &brushConvex : NULL;
-	
+
 				physcollision->TraceBox( 
 					ray,
 					fMask,
@@ -620,7 +573,7 @@ void CEngineTrace::ClipRayToCollideable( const Ray_t &ray, unsigned int fMask, I
 	VectorAdd( pTrace->startpos, ray.m_Delta, pTrace->endpos );
 
 	const model_t *pModel = pEntity->GetCollisionModel();
-/*	bool bIsStudioModel = pModel && pModel->type == mod_studio;
+	bool bIsStudioModel = pModel && pModel->type == mod_studio;
 
 	// Cull if the collision mask isn't set + we're not testing hitboxes.
 	if ( bIsStudioModel && (( fMask & CONTENTS_HITBOX ) == 0) )
@@ -628,19 +581,6 @@ void CEngineTrace::ClipRayToCollideable( const Ray_t &ray, unsigned int fMask, I
 		studiohdr_t *pStudioHdr = ( studiohdr_t * )modelloader->GetExtraData( (model_t*)pModel );
 		if ( ( fMask & pStudioHdr->contents ) == 0)
 			return;
-	}*/
-	bool bIsStudioModel = false;
-	studiohdr_t *pStudioHdr = NULL;
-	if ( pModel && pModel->type == mod_studio )
-	{
-		bIsStudioModel = true;
-		pStudioHdr = ( studiohdr_t * )modelloader->GetExtraData( (model_t*)pModel );
-		// Cull if the collision mask isn't set + we're not testing hitboxes.
-		if ( (( fMask & CONTENTS_HITBOX ) == 0) )
-		{
-			if ( ( fMask & pStudioHdr->contents ) == 0)
-				return;
-		}
 	}
 
 	bool bTraced = false;
@@ -653,13 +593,10 @@ void CEngineTrace::ClipRayToCollideable( const Ray_t &ray, unsigned int fMask, I
 	}
 	else
 	{
-	//	bTraced = ClipRayToVPhysics( ray, fMask, pEntity, pTrace );	
-		bTraced = ClipRayToVPhysics( ray, fMask, pEntity, pStudioHdr, pTrace );	
+		bTraced = ClipRayToVPhysics( ray, fMask, pEntity, pTrace );	
 	}
 
-//	if ( !bTraced )
-	// FIXME: Why aren't we using solid type to check what kind of collisions to test against?!?!
-	if ( !bTraced && pModel && pModel->type == mod_brush )
+	if ( !bTraced )
 	{
 		bTraced = ClipRayToBSP( ray, fMask, pEntity, pTrace );
 	}
@@ -686,10 +623,9 @@ void CEngineTrace::ClipRayToCollideable( const Ray_t &ray, unsigned int fMask, I
 		ClipRayToBBox( ray, fMask, pEntity, pTrace );
 	}
 
-//	if ( bIsStudioModel && !bTracedHitboxes && pTrace->DidHit() )
-	if ( bIsStudioModel && !bTracedHitboxes && pTrace->DidHit() && (!bCustomPerformed || pTrace->surface.surfaceProps == 0) )
+	if ( bIsStudioModel && !bTracedHitboxes && pTrace->DidHit() )
 	{
-	//	studiohdr_t *pStudioHdr = ( studiohdr_t * )modelloader->GetExtraData( (model_t*)pModel );
+		studiohdr_t *pStudioHdr = ( studiohdr_t * )modelloader->GetExtraData( (model_t*)pModel );
 		pTrace->contents = pStudioHdr->contents;
 		// use the default surface properties
 		pTrace->surface.name = "**studio**";
@@ -697,8 +633,7 @@ void CEngineTrace::ClipRayToCollideable( const Ray_t &ray, unsigned int fMask, I
 		pTrace->surface.surfaceProps = physprop->GetSurfaceIndex( pStudioHdr->pszSurfaceProp() );
 	}
 
-//	if (pTrace->DidHit())
-	if (!pTrace->m_pEnt && pTrace->DidHit())
+	if (pTrace->DidHit())
 	{
 		SetTraceEntity( pEntity, pTrace );
 	}
@@ -986,9 +921,7 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 	Vector vecOffset, vecEndTest;
 	VectorAdd( ray.m_Start, ray.m_StartOffset, vecOffset );
 	VectorMA( vecOffset, pTrace->fractionleftsolid, ray.m_Delta, vecEndTest );
-//	Assert( VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) );
-	if( !VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) )
-		Warning( "CEngineTrace::TraceRay: Vectors are not equal!\n" );
+	Assert( VectorsAreEqual( vecEndTest, pTrace->startpos, 0.1f ) );
 	VectorMA( vecOffset, pTrace->fraction, ray.m_Delta, vecEndTest );
 	Assert( VectorsAreEqual( vecEndTest, pTrace->endpos, 0.1f ) ); // VXP: When in HL1 you try to move a physics box by pressing E and moving (at least in the hazard course, t0a0b1)
 //	Assert( !ray.m_IsRay || pTrace->allsolid || pTrace->fraction >= pTrace->fractionleftsolid );

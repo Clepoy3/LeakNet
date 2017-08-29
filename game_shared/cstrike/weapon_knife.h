@@ -61,6 +61,7 @@ public:
 public:
 	
 	trace_t m_trHit;
+	EHANDLE m_pTraceHitEnt; // VXP
 	CNetworkVar( int, m_iSwing );
 
 

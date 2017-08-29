@@ -55,31 +55,6 @@ static float g_PhysAverageSimTime;
 static IPhysicsObject *PhysCreateWorld( CBaseEntity *pWorld );
 static void PhysFrame( float deltaTime );
 
-//-----------------------------------------------------------------------------
-// Purpose: A little cache of current objects making noises
-//-----------------------------------------------------------------------------
-struct friction_t
-{
-	CSoundPatch	*patch;
-	CBaseEntity	*pObject;
-	float		update;
-};
-
-enum
-{
-	TOUCH_START=0,
-	TOUCH_END,
-};
-
-struct touchevent_t
-{
-	CBaseEntity *pEntity0;
-	CBaseEntity *pEntity1;
-	int			touchType;
-	Vector		endPoint;
-	Vector		normal;
-};
-
 struct damageevent_t
 {
 	CBaseEntity		*pEntity;
@@ -104,13 +79,6 @@ struct penetrateevent_t
 	float			startTime;
 	float			timeStamp;
 	int				collisionState;
-};
-
-const float FLUID_TIME_MAX = 2.0f; // keep track of last time hitting fluid for up to 2 seconds 
-struct fluidevent_t
-{
-	CBaseEntity		*pEntity;
-	float			impactTime;
 };
 
 class CCollisionEvent : public IPhysicsCollisionEvent, public IPhysicsCollisionSolver

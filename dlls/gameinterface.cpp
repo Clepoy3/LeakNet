@@ -580,7 +580,12 @@ void CServerGameDLL::GameFrame( bool simulating )
     // FIXME:  Should this only occur on the final tick?
     UpdateAllClientData();
 
-    g_pGameRules->EndGameFrame();
+	if ( g_pGameRules )
+	{
+		g_pGameRules->EndGameFrame();
+	}
+
+//	gpGlobals->frametime = oldframetime; // VXP: From Source 2007... Should I add it?
 }
 
 

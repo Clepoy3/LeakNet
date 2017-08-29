@@ -41,7 +41,7 @@ CTeamplayRules :: CTeamplayRules()
 void CTeamplayRules::Precache( void )
 {
 	// Call the Team Manager's precaches
-	for ( int i = 1; i <= GetNumberOfTeams(); i++ )
+	for ( int i = 0; i < GetNumberOfTeams(); i++ )
 	{
 		CTeam *pTeam = GetGlobalTeam( i );
 		pTeam->Precache();
@@ -121,7 +121,7 @@ void CTeamplayRules :: UpdateGameMode( CBasePlayer *pPlayer )
 }
 
 
-const char *CTeamplayRules::SetDefaultPlayerTeam( CBasePlayer *pPlayer )
+const char *CTeamplayRules::SetDefaultPlayerTeam( CBasePlayer *pPlayer ) // VXP: TODO: Do this properly
 {
 	// copy out the team name from the model
 	char *mdls = engine->InfoKeyValue( engine->GetInfoKeyBuffer( pPlayer->edict() ), "model" );
@@ -212,6 +212,7 @@ void CTeamplayRules::ClientDisconnected( edict_t *pClient )
 	CBasePlayer *pPlayer = (CBasePlayer *)CBaseEntity::Instance( pClient );
 	if ( pPlayer )
 	{
+		pPlayer->SetConnected( false ); // VXP
 		// Remove the player from his team
 		if ( pPlayer->GetTeam() )
 		{
@@ -401,7 +402,7 @@ int CTeamplayRules::IPointsForKill( CBasePlayer *pAttacker, CBasePlayer *pKilled
 //=========================================================
 const char *CTeamplayRules::GetTeamID( CBaseEntity *pEntity )
 {
-	if ( pEntity == NULL || pEntity->pev == NULL )
+	if ( pEntity == NULL || pEntity->edict() == NULL )
 		return "";
 
 	// return their team name

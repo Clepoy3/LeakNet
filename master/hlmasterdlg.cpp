@@ -24,7 +24,7 @@ static double		curtime = 0.0;
 static double		lastcurtime = 0.0;
 static int			lowshift;
 
-int CURRENT_PROTOCOL_M = PROTOCOL_VERSION;
+int CURRENT_PROTOCOL2 = PROTOCOL_VERSION;
 
 #define LOAD_MIN		2000
 #define SV_PER_PKT ( 1500 / 6 )
@@ -322,7 +322,8 @@ void CHLMasterDlg::Peer_GetHeartbeat( void )
 
 	nusers = (int)MSG_ReadShort();
 
-	sprintf( gamedir, "valve" );
+//	sprintf( gamedir, "valve" ); // VXP: Should this be "hl2"?
+	sprintf( gamedir, "hl2" );
 	
 	pgamedir = MSG_ReadString();
 	if ( pgamedir && pgamedir[0] )
@@ -355,6 +356,10 @@ void CHLMasterDlg::Peer_GetHeartbeat( void )
 	sv->time = (int)Sys_FloatTime();
 
 	SetCriteria( &sv->gamedir, gamedir );
+
+	// VXP
+	// UTIL_VPrintf
+//	UTIL_Printf( "CHLMasterDlg::Peer_GetHeartbeat: %s with gamedir %s\r\n", szAddress, gamedir );
 	
 	sv->players = nusers;
 	
@@ -440,7 +445,7 @@ void CHLMasterDlg::Peer_GetHeartbeat2( void )
 	strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
-	if ( !islan && !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL_M ) && ( protocol != 1 ) ) 
+	if ( !islan && !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) ) 
 	{
 		return;
 	}
@@ -487,6 +492,10 @@ void CHLMasterDlg::Peer_GetHeartbeat2( void )
 	{
 		SetCriteria( &sv->proxyTarget, proxyaddress );
 	}
+
+	// VXP
+	// UTIL_VPrintf
+//	UTIL_Printf( "CHLMasterDlg::Peer_GetHeartbeat2: %s with gamedir %s\r\n", szAddress, gamedir );
 }
 
 void CHLMasterDlg::Peer_GetShutdown( void )
@@ -1168,9 +1177,9 @@ BOOL CHLMasterDlg::OnInitDialog()
 	char szText[256];
 
 #if defined( _STEAM_HLMASTER )
-	sprintf(szText, "Steam HLMaster %i/HL:%s/CS:%s/TFC:%s/DMC:%s/DOD:%s/Ricochet:%s/OpFor:%s", CURRENT_PROTOCOL_M, m_szHLVersion, m_szCSVersion, m_szTFCVersion, m_szDMCVersion, m_szDODVersion, m_szRicochetVersion, m_szOpForVersion );
+	sprintf(szText, "Steam HLMaster %i/HL:%s/CS:%s/TFC:%s/DMC:%s/DOD:%s/Ricochet:%s/OpFor:%s", CURRENT_PROTOCOL2, m_szHLVersion, m_szCSVersion, m_szTFCVersion, m_szDMCVersion, m_szDODVersion, m_szRicochetVersion, m_szOpForVersion );
 #else
-	sprintf(szText, "HL Master %s - %i/HL:%s/CS:%s ("__DATE__")", AdrToString(net_local_adr ), CURRENT_PROTOCOL_M, m_szHLVersion, m_szCSVersion );	
+	sprintf(szText, "HL Master %s - %i/HL:%s/CS:%s ("__DATE__")", AdrToString(net_local_adr ), CURRENT_PROTOCOL2, m_szHLVersion, m_szCSVersion );	
 #endif
 
 	SetWindowText(szText);
@@ -1182,6 +1191,7 @@ BOOL CHLMasterDlg::OnInitDialog()
 	if ( strstr( GetCommandLine(), "-fake" ) )
 	{
 		GenerateFakeServers();
+	//	GenerateFakeTestmodServers();
 	}
 
 	UpdateCount();
@@ -1634,7 +1644,7 @@ void CHLMasterDlg::Packet_Heartbeat (void)
 
 	info = MSG_ReadString();
 
-	if ( !m_bAllowOldProtocols && ( nprotocol != CURRENT_PROTOCOL_M ) )
+	if ( !m_bAllowOldProtocols && ( nprotocol != CURRENT_PROTOCOL2 ) )
 	{
 		RejectConnection(&packet_from, "Outdated protocol.");
 		return;
@@ -1657,6 +1667,9 @@ void CHLMasterDlg::Packet_Heartbeat (void)
 
 /*  find the server */
 	sv = FindServerByAddress( &packet_from );
+
+	// UTIL_VPrintf
+	UTIL_Printf( "CHLMasterDlg::Packet_Heartbeat: %s:%i\r\n", inet_ntoa(packet_from.sin_addr), htons(packet_from.sin_port) );
 
 	if (!sv)
 	{
@@ -1802,7 +1815,7 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 	strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
-	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL_M ) && ( protocol != 1 ) )
+	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) )
 	{
 		RejectConnection(&packet_from, "Outdated protocol.");
 
@@ -1934,6 +1947,246 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 		sv->next = servers[ h ];
 		servers[ h ] = sv;
 		bNewServer = TRUE; // Try and send it the master's public key
+
+		UTIL_Printf( "Packet_Heartbeat2 - Added new server %s:%i\r\n", inet_ntoa(packet_from.sin_addr), htons(packet_from.sin_port) );
+	}
+
+	/*  update the current data */
+	sv->time = m_curtime;
+
+	SetCriteria( &sv->gamedir, gamedir );
+	SetCriteria( &sv->map, map );
+	strcpy( sv->os, os );
+
+	sv->islan		= islan;
+	sv->players		= num;
+	sv->max			= maxplayers;
+	sv->bots		= bots;
+	sv->password	= password;
+	sv->dedicated	= dedicated;
+	sv->secure		= secure;
+	strcpy( sv->info, info );
+	sv->info_length = strlen( sv->info ) + 1;
+	sv->isproxy		= isproxy;
+	sv->isProxyTarget = isproxytarget;
+	if ( isproxytarget )
+	{
+		SetCriteria( &sv->proxyTarget, proxyaddress );
+	}
+
+	Peer_Heartbeat2( sv );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHLMasterDlg::Packet_Heartbeat3 (void)
+{
+	static char szSName[2048];
+	
+	sv_t	*sv;
+	int num;
+	int maxplayers;
+	int bots;
+
+	int challenge;
+	char gamedir[ 64 ];
+	char map[ 64 ];
+	char os[ 2 ];
+	int  dedicated;
+	int	 password;
+	int	 secure;
+	int islan = 0;
+	char	proxyaddress[ 128 ];
+	int isproxytarget;
+	int isproxy = 0;
+	char version[ 32 ];
+
+	char info[ MAX_SINFO ];
+
+	BOOL bNewServer = FALSE;
+	int protocol;
+
+	char address[ 32 ];
+
+	//UpdateData( TRUE );
+
+	strncpy( info, MSG_ReadString(), 2047 );
+	info[ 2047 ] = '\0';
+
+	if ( !info || !info[0] )
+	{
+		RejectConnection(&packet_from, "Outdated protocol.");
+		return;
+	}
+
+	strncpy( address, Info_ValueForKey( info, "address" ), 32 );
+	protocol   = atoi( Info_ValueForKey( info, "protocol" ) );
+	challenge  = atoi( Info_ValueForKey( info, "challenge" ) );
+	num		   = atoi( Info_ValueForKey( info, "players" ) );
+	maxplayers = atoi( Info_ValueForKey( info, "max" ) );
+	bots	   = atoi( Info_ValueForKey( info, "bots" ) );
+	dedicated  = atoi( Info_ValueForKey( info, "dedicated" ) );
+	password   = atoi( Info_ValueForKey( info, "password" ) );
+	secure	   = atoi( Info_ValueForKey( info, "secure" ) );
+	strncpy( gamedir, Info_ValueForKey( info, "gamedir" ), 63 );
+	strncpy( map, Info_ValueForKey( info, "map" ), 63 );
+	strncpy( os, Info_ValueForKey( info, "os" ), 1 );
+	islan = atoi( Info_ValueForKey( info, "lan" ) );
+	isproxy = atoi( Info_ValueForKey( info, "proxy" ) ) ? 1 : 0;
+	isproxytarget = atoi( Info_ValueForKey( info, "proxytarget" ) ) ? 1 : 0;
+	strncpy( proxyaddress, Info_ValueForKey( info, "proxyaddress" ), 127 );
+	strncpy( version, Info_ValueForKey( info, "version" ), 31 );
+
+	proxyaddress[ 127 ] = 0;
+	gamedir[ 63 ]	= 0;
+	map[ 63 ]		= 0;
+	os[ 1 ]			= 0;
+	version[ 31 ]   = 0;
+
+	strlwr( gamedir );
+	strlwr( map );
+	strlwr( os );
+
+	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
+	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) )
+	{
+		RejectConnection(&packet_from, "Outdated protocol.");
+
+		if ( !islan )
+		{
+			return;
+		}
+	}
+
+	// everyone in the current release sends up a version, so we know they're outdated if we don't get one.
+	if ( version[0] == 0 )
+	{
+		RejectConnection(&packet_from, "Outdated Version. Please update your server.");
+		return;
+	}
+
+#if defined( _STEAM_HLMASTER )
+
+	// We need to check the version of the server based on the mod it's running.
+	int reject = 0;
+
+	// If they didn't send a version we already know they're out of date.
+	if ( version[0] == 0 )
+	{
+		reject = 1;
+	}
+	else
+	{
+		// Steam appends its own version to the Mod version...we need to remove it.
+		if ( strstr( version, "/" ) )
+		{
+			version[ strcspn( version, "/" ) ] = '\0';
+		}
+
+		// Check the version against the Mod version
+	//	if ( !stricmp( gamedir, "valve" ) )
+		if ( !stricmp( gamedir, "hl2" ) )
+		{
+			if ( stricmp( version, m_szHLVersion ) )
+			{
+				reject = 1;
+			}
+		}
+		else if ( !stricmp( gamedir, "cstrike" ) )
+		{
+			if ( stricmp( version, m_szCSVersion ) )
+			{
+				reject = 1;
+			}
+		}
+	//	else if ( !stricmp( gamedir, "tfc" ) )
+		else if ( !stricmp( gamedir, "tf2" ) )
+		{
+			if ( stricmp( version, m_szTFCVersion ) )
+			{
+				reject = 1;
+			}
+		}
+		else if ( !stricmp( gamedir, "dmc" ) )
+		{
+			if ( stricmp( version, m_szDMCVersion ) )
+			{
+				reject = 1;
+			}
+		}
+		else if ( !stricmp( gamedir, "opfor" ) )
+		{
+			if ( stricmp( version, m_szOpForVersion ) )
+			{
+				reject = 1;
+			}
+		}
+		else if ( !stricmp( gamedir, "ricochet" ) )
+		{
+			if ( stricmp( version, m_szRicochetVersion ) )
+			{
+				reject = 1;
+			}
+		}
+		else if ( !stricmp( gamedir, "dod" ) )
+		{
+			if ( stricmp( version, m_szDODVersion ) )
+			{
+				reject = 1;
+			}
+		}
+	}
+
+	// are they different?
+	if ( reject )
+	{
+		RequestRestart(&packet_from);
+		return;
+	}
+
+#endif
+
+	int challenge_result = CheckChallenge( challenge, &packet_from );
+
+	switch ( challenge_result )
+	{
+	case 1:
+		RejectConnection(&packet_from, "Bad challenge.");
+		return;
+	case 2:
+		RejectConnection(&packet_from, "No challenge for your address.");
+		return;
+	case 0:
+	default:
+		break;
+	}
+
+	/*  find the server */
+	sv = FindServerByAddress( &packet_from );
+	if (!sv)
+	{
+		int h;
+		
+		sv = (sv_t *)malloc(sizeof(*sv));
+		memset (sv, 0, sizeof(*sv));
+		
+	//	sv->address = packet_from;
+
+		struct sockaddr_in	dummyAddr;
+		NET_StringToSockaddr( address, (sockaddr*)(&dummyAddr) );
+		sv->address = dummyAddr;
+
+		// Assign the unique id.
+		sv->uniqueid = m_nUniqueID++;
+
+		h = HashServer( &packet_from );
+
+		sv->next = servers[ h ];
+		servers[ h ] = sv;
+		bNewServer = TRUE; // Try and send it the master's public key
+
+		UTIL_Printf( "Packet_Heartbeat3 - Added new server %s:%i\r\n", inet_ntoa(packet_from.sin_addr), htons(packet_from.sin_port) );
 	}
 
 	/*  update the current data */
@@ -2542,10 +2795,14 @@ void CHLMasterDlg::PacketCommand (void)
 	{
 // obseleted by S2M_HEARTBEAT2
 	case S2M_HEARTBEAT:
-		Packet_Heartbeat ();
+	//	Packet_Heartbeat ();
+		UTIL_VPrintf ("Someone tried to call an old HEARTBEAT\r\n", packet_length);
 		break;
-	case S2M_HEARTBEAT2:
-		Packet_Heartbeat2 ();
+//	case S2M_HEARTBEAT2:
+//		Packet_Heartbeat2 ();
+//		break;
+	case S2M_HEARTBEAT3:
+		Packet_Heartbeat3 ();
 		break;
 	case S2M_SHUTDOWN:
 		Packet_Shutdown ();
@@ -2916,6 +3173,17 @@ void CHLMasterDlg::GetPacketCommand (void)
 	}
 	packet_data[packet_length] = 0;		// so it can be printed as a string
 
+	// VXP
+/*
+	const int NI_MAXHOST = 1024;
+	const int NI_MAXSERV = 32;
+	char host[NI_MAXHOST];
+	int s = getnameinfo((struct sockaddr *) &packet_from,
+                        fromlen, host, NI_MAXHOST,
+                        service, NI_MAXSERV, NI_NUMERICSERV);
+	UTIL_VPrintf ("CHLMasterDlg::GetPacketCommand: Host - %s\n", host);
+*/
+
 	if (packet_length)
 	{
 		m_fBytesProcessed += (float)packet_length;
@@ -3163,6 +3431,7 @@ void CHLMasterDlg::HexConvert( char *pszInput, int nInputLength, unsigned char *
 }
 
 #define NUM_FAKE 10000
+#define NUM_TESTMOD_FAKE 100
 
 char *keys[] =
 {
@@ -3227,10 +3496,6 @@ void CHLMasterDlg::GenerateFakeServers( void )
 
 		//if ( !(rand() % 3) )
 			//sprintf( szModName, "tfc" );
-		if ( !(rand() % 3) )
-			sprintf( szModName, "testmod" );
-		else if ( !(rand() % 2) )
-			sprintf( szModName, "hl2" );
 
 		SetCriteria( &sv->gamedir, szModName );
 
@@ -3254,6 +3519,111 @@ void CHLMasterDlg::GenerateFakeServers( void )
 
 		strcpy( sv->os, (int)( rand() %2 ) == 0 ? "l" : "w" );
 		sprintf( temp, "map%03i", rand() % 10 );
+		SetCriteria( &sv->map, temp );
+		sv->dedicated = (int)( rand() %2 ) == 0 ? 1 : 0;
+
+		c = rand() & 7;
+		for ( j = 0; j < c; j++ )
+		{
+			sprintf( value, "%i", rand() % 100 );
+			sprintf( info, "\\%s\\%s", keys[ j ], value );
+			strcat( sv->info, info );
+		}
+		if ( strlen( sv->info ) > 0 )
+		{
+			strcat( sv->info, "\\" );
+		}
+		else
+		{
+			strcpy( sv->info, "" );
+		}
+		sv->info_length = strlen( sv->info ) + 1;
+
+		sv->time = (int)( m_curtime - (double)( rand() % 1000 ) );
+
+		int h;
+
+		h = HashServer( &sv->address );
+
+		sv->next = servers[ h ];
+		servers[ h ] = sv;
+	}
+}
+
+void CHLMasterDlg::GenerateFakeTestmodServers( void )
+{
+	sv_t	*sv;
+	netadr_t adr;
+	int i, j;
+	char szModName[ 32 ];
+	int c;
+	char value[ 32 ];
+
+	char info[ 1024 ];
+	char temp[1024];
+
+	memset( &adr, 0, sizeof( netadr_t ) );
+
+	adr.sin_family = AF_INET;
+	adr.sin_port   = ntohs( 27015 );
+	
+	for ( i = 0; i < NUM_TESTMOD_FAKE; i++ )
+	{
+		sv = (sv_t *)malloc( sizeof(*sv) );
+		
+		memset (sv, 0, sizeof(*sv));
+
+		// Create a fake internet address
+		adr.sin_addr.S_un.S_un_b.s_b1 = (unsigned char)( rand() & 255 );
+		adr.sin_addr.S_un.S_un_b.s_b2 = (unsigned char)( rand() & 255 );
+		adr.sin_addr.S_un.S_un_b.s_b3 = (unsigned char)( rand() & 255 );
+		adr.sin_addr.S_un.S_un_b.s_b4 = (unsigned char)( rand() & 255 );
+		
+		if ( i < 20 )
+		{
+	// Create a fake internet address
+		adr.sin_addr.S_un.S_un_b.s_b1 = 192;
+		adr.sin_addr.S_un.S_un_b.s_b2 = 168;
+		adr.sin_addr.S_un.S_un_b.s_b3 = 1;
+		adr.sin_addr.S_un.S_un_b.s_b4 = 100;
+
+		}
+
+		sv->address = adr;
+		// Assign the unique id.
+		sv->uniqueid = m_nUniqueID++;
+
+		sv->islan = 0;
+
+		sv->isproxy = 0;
+
+		sprintf( szModName, "testmod" );
+
+		if ( !(rand() % 3) )
+			sprintf( szModName, "hl2" );
+
+		SetCriteria( &sv->gamedir, szModName );
+
+		sv->max = rand() % 30 + 2;
+		sv->players = rand() % sv->max;
+		if ( sv->isproxy )
+		{
+			sv->bots = 0;
+		}
+		else
+		{
+			if (  sv->players )
+			{
+				sv->bots = rand() % sv->players;
+			}
+			else
+			{
+				sv->bots = 0;
+			}
+		}
+
+		strcpy( sv->os, (int)( rand() %2 ) == 0 ? "l" : "w" );
+		sprintf( temp, "d1_trainstation_%03i", rand() % 10 );
 		SetCriteria( &sv->map, temp );
 		sv->dedicated = (int)( rand() %2 ) == 0 ? 1 : 0;
 
@@ -3880,14 +4250,14 @@ void CHLMasterDlg::ParseVersion( void )
 	token.ParseNextToken();
 
 	// Get the protocol version
-/*	if ( strlen(token.token) > 0 )
+	if ( strlen(token.token) > 0 )
 	{
-		CURRENT_PROTOCOL_M = atoi( token.token );
-		if ( CURRENT_PROTOCOL_M <= 0 )
+		CURRENT_PROTOCOL2 = atoi( token.token );
+		if ( CURRENT_PROTOCOL2 <= 0 )
 		{
-			CURRENT_PROTOCOL_M = PROTOCOL_VERSION;
+			CURRENT_PROTOCOL2 = PROTOCOL_VERSION;
 		}
-	}*/
+	}
 
 	delete[] pszBuffer;
 }

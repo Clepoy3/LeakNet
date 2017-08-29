@@ -305,7 +305,12 @@ void CUtlLinkedList<T, I>::EnsureCapacity( int num )
 template <class T, class I>
 void  CUtlLinkedList<T,I>::Purge()
 {
-	RemoveAll();
+	// Prevent reentrant calls to Purge()
+	if( m_ElementCount )
+	{
+		RemoveAll();
+	}
+
 	m_Memory.Purge( );
 	m_FirstFree = InvalidIndex();
 	m_TotalElements = 0;

@@ -1272,12 +1272,16 @@ void CWeaponPhysCannon::ItemPostFrame()
 		WeaponIdle();
 	}
 
-	//Make the end points flicker as fast as possible
-	//FIXME: Make this a property of the CSprite class!
-	for ( int i = 0; i < 2; i++ )
+	// Flicker the end sprites
+	if ( ( m_pEndSprites[0] != NULL ) && ( m_pEndSprites[1] != NULL ) )
 	{
-		m_pEndSprites[i]->SetBrightness( random->RandomInt( 200, 255 ) );
-		m_pEndSprites[i]->SetScale( random->RandomFloat( 0.15, 0.2 ) );
+		//Make the end points flicker as fast as possible
+		//FIXME: Make this a property of the CSprite class!
+		for ( int i = 0; i < 2; i++ )
+		{
+			m_pEndSprites[i]->SetBrightness( random->RandomInt( 200, 255 ) );
+			m_pEndSprites[i]->SetScale( random->RandomFloat( 0.15, 0.2 ) );
+		}
 	}
 }
 

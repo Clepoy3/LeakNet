@@ -251,9 +251,6 @@ const QAngle& CCollisionProperty::GetCollisionAngles()
 //-----------------------------------------------------------------------------
 void CCollisionProperty::SetCollisionBounds( const Vector& mins, const Vector &maxs )
 {
-	if ( (m_vecMins == mins) && (m_vecMaxs == maxs) )
-		return;
-
 	m_vecMins = mins;
 	m_vecMaxs = maxs;
 

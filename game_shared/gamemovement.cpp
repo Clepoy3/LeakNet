@@ -1251,7 +1251,7 @@ void CGameMovement::AirMove( void )
 	//
 	// clamp to server defined max speed
 	//
-	if (wishspeed > mv->m_flMaxSpeed)
+	if ( wishspeed != 0 && (wishspeed > mv->m_flMaxSpeed))
 	{
 		VectorScale (wishvel, mv->m_flMaxSpeed/wishspeed, wishvel);
 		wishspeed = mv->m_flMaxSpeed;
@@ -1263,6 +1263,10 @@ void CGameMovement::AirMove( void )
 	VectorAdd(mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
 
 	TryPlayerMove();
+
+	// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like
+	//  a conveyor (or maybe another monster?)
+	VectorSubtract (mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
 }
 
 
@@ -1592,10 +1596,6 @@ void CGameMovement::FullWalkMove( const bool bOnLadder )
 
 		// Set final flags.
 		CategorizePosition();
-
-		// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like
-		//  a conveyor (or maybe another monster?)
-		VectorSubtract (mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
 
 		// Make sure velocity is valid.
 		CheckVelocity();
@@ -3272,7 +3272,8 @@ void CGameMovement::PlayerMove( void )
 	CheckParameters();
 	
 	// clear output applied velocity
-	mv->m_outWishVel = vec3_origin;
+//	mv->m_outWishVel = vec3_origin;
+	mv->m_outWishVel.Init();
 
 	MoveHelper( )->ResetTouchList();                    // Assume we don't touch anything
 

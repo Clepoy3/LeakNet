@@ -626,13 +626,22 @@ bool CMaterial::LoadMaterial()
 		IMaterial *pMat = g_pMaterialSystemInterface->FindMaterial(m_szFileName, &bFound);
 		Assert( pMat );
 
+		if (!pMat)
+		{
+			return false;
+		}
+
 		if (!LoadMaterialHeader(pMat))
 		{
 			Msg( mwError,"Load material header failed: %s", m_szFileName );
 
 			bFound = false;
 			pMat = g_pMaterialSystemInterface->FindMaterial("debug/debugempty", NULL);
-			LoadMaterialHeader(pMat);
+
+			if (pMat)
+			{
+				LoadMaterialHeader(pMat);
+			}
 		}
 	}
 
@@ -1211,7 +1220,8 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 	//
 	if (g_pMaterialImageCache == NULL)
 	{
-		g_pMaterialImageCache = new CMaterialImageCache(500); // VXP: Should I increase this? http://leaknet.tk/mantisbt/view.php?id=48
+	//	g_pMaterialImageCache = new CMaterialImageCache(500); // VXP: Should I increase this? http://leaknet.tk/mantisbt/view.php?id=48
+		g_pMaterialImageCache = new CMaterialImageCache(2000);
 		if (g_pMaterialImageCache == NULL)
 		{
 			return(false);
@@ -1240,6 +1250,16 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 		Msg( mwError,"ERROR: Failed to initialize materials file system. GameDir=%s, ModDir=%s", g_pGameConfig->m_szGameDir, g_pGameConfig->m_szModDir );
 		return false;
 	}
+
+	// VXP: TODO: This is not the best solution, but... Better than it was
+	// Anyways, I'm going to disable it for some time.
+/*
+	for (int i = 0; i < Options.configs.nConfigs; i++)
+	{
+		CGameConfig *pConfig = Options.configs.Configs[i];
+		g_pFileSystem->AddSearchPath( pConfig->m_szModDir, "GAME", PATH_ADD_TO_TAIL );
+	}
+*/
 
 	if (!( g_MaterialSystemClientFactory = 
 		g_pMaterialSystemInterface->Init( pShader, GetWorldcraftMaterialProxyFactory(), FileSystem_GetFactory() )))

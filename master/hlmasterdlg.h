@@ -43,6 +43,7 @@ public:
 	void FreeServers();
 
 	void GenerateFakeServers( void );
+	void GenerateFakeTestmodServers( void ); // VXP
 
 // Mod info
 	modsv_t *FindMod( const char *pszGameDir );
@@ -70,6 +71,7 @@ public:
 	void Packet_GetMasterServers ();
 	void Packet_Heartbeat();
 	void Packet_Heartbeat2();
+	void Packet_Heartbeat3(); // VXP
 	void Packet_Shutdown();
 	void Packet_GetServers();
 	void Packet_GetBatch();

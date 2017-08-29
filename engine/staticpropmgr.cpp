@@ -70,7 +70,7 @@ static const objectparams_t g_PhysDefaultObjectParams =
 	1.0, // inertia
 	0.1f, // damping
 	0.1f, // rotdamping
-	0.5, // rotIntertiaLimit
+	0.5f, // rotIntertiaLimit
 	"DEFAULT",
 	NULL,// game data
 	0.f, // volume (leave 0 if you don't have one or call physcollision->CollideVolume() to compute it)
@@ -342,6 +342,39 @@ bool CStaticProp::Init( int index, StaticPropLump_t &lump, model_t *pModel )
 	m_FirstLeaf = lump.m_FirstLeaf;
 	m_LeafCount = lump.m_LeafCount;
 	m_nSolidType = lump.m_Solid;
+
+	studiohdr_t *pStudioHdr = modelinfo->GetStudiomodel( m_pModel );
+
+	if ( pStudioHdr )
+	{
+		if ( !( pStudioHdr->flags & STUDIOHDR_FLAGS_STATIC_PROP ) )
+		{
+			static int nBitchCount = 0;
+			if( nBitchCount < 100 )
+			{
+				Warning( "model %s used as a static prop, but not compiled as a static prop\n", pStudioHdr->name );
+				nBitchCount++;
+			}
+		}
+	}
+	switch ( m_nSolidType )
+	{
+		// These are valid
+	case SOLID_VPHYSICS:
+	case SOLID_BBOX:
+	case SOLID_NONE:
+		break;
+
+	default:
+		{
+			char szModel[MAX_PATH];
+			Q_strncpy( szModel, m_pModel ? modelloader->GetName( m_pModel ) : "unknown model", sizeof( szModel ) );
+			Warning( "CStaticProp::Init:  Map error, static_prop with bogus SOLID_ flag (%d)! (%s)\n", m_nSolidType, szModel );
+			m_nSolidType = SOLID_NONE;
+		}
+		break;
+	}
+
 	m_Alpha = 255;
 	m_Skin = (unsigned char)lump.m_Skin;
 
@@ -618,7 +651,13 @@ const Vector& CStaticProp::GetCollisionOrigin()
 
 const QAngle& CStaticProp::GetCollisionAngles()
 {
-	return m_Angles;
+//	return m_Angles;
+	if ( GetSolid() == SOLID_VPHYSICS )
+	{
+		return m_Angles;
+	}
+
+	return vec3_angle;
 }
 
 
@@ -790,9 +829,9 @@ int CStaticProp::DrawModel( int flags )
 
 	modelrender->UseLightcache();
 
-	if ( vcollide_wireframe.GetBool() )
+	if ( m_pModel && vcollide_wireframe.GetBool() )
 	{
-		if ( m_pModel && m_nSolidType == SOLID_VPHYSICS )
+		if ( m_nSolidType == SOLID_VPHYSICS )
 		{
 			// This works because VCollideForModel only uses modelindex for mod_brush
 			// and props are always mod_Studio.
@@ -824,16 +863,28 @@ void CStaticProp::InsertPropIntoKDTree()
 	// Compute the bbox of the prop
 	// FIXME: mins/maxs isn't an absbox, right?
 	Vector mins, maxs;
-	VectorAdd( m_pModel->mins, m_Origin, mins );
-	VectorAdd( m_pModel->maxs, m_Origin, maxs );
+//	VectorAdd( m_pModel->mins, m_Origin, mins );
+//	VectorAdd( m_pModel->maxs, m_Origin, maxs );
+	// VXP: From Source 2007
+	matrix3x4_t propToWorld;
+	AngleMatrix( m_Angles, m_Origin, propToWorld );
+	TransformAABB( propToWorld, m_pModel->mins, m_pModel->maxs, mins, maxs ); 
 
 	// If it's using vphysics, get a good AABB
 	if ( m_nSolidType == SOLID_VPHYSICS )
 	{
 		vcollide_t *pCollide = CM_VCollideForModel( -1, m_pModel );
-		if ( pCollide )
+		if ( pCollide && pCollide->solidCount )
 		{
 			physcollision->CollideGetAABB( mins, maxs, pCollide->solids[0], m_Origin, m_Angles );
+		}
+		else
+		{
+			char szModel[MAX_PATH];
+			Q_strncpy( szModel, m_pModel ? modelloader->GetName( m_pModel ) : "unknown model", sizeof( szModel ) );
+			Warning( "SOLID_VPHYSICS static prop with no vphysics model! (%s)\n", szModel );
+			m_nSolidType = SOLID_NONE;
+			return;
 		}
 	}
 
@@ -880,6 +931,15 @@ void CStaticProp::CreateVPhysics( IPhysicsEnvironment *pPhysEnv, IVPhysicsKeyHan
 	// If there's no collide, we need a bbox...
 	if (!pVCollide)
 	{
+		if ( m_nSolidType != SOLID_BBOX  )
+		{
+			char szModel[MAX_PATH];
+			Q_strncpy( szModel, m_pModel ? modelloader->GetName( m_pModel ) : "unknown model", sizeof( szModel ) );
+			Warning( "Map Error:  Static prop with bogus solid type %d! (%s)\n", m_nSolidType, szModel );
+			m_nSolidType = SOLID_NONE;
+			return;
+		}
+
 		temp.solidCount = 1;
 		temp.pKeyValues = "";
 		temp.solids = &pTempStorage;
@@ -969,6 +1029,7 @@ void CStaticPropMgr::Shutdown()
 void CStaticPropMgr::UnserializeModelDict( CUtlBuffer& buf )
 {
 	int count = buf.GetInt();
+/*
 	while ( --count >= 0 )
 	{
 		StaticPropDictLump_t lump;
@@ -978,6 +1039,18 @@ void CStaticPropMgr::UnserializeModelDict( CUtlBuffer& buf )
 		dict.m_pModel = (model_t *)modelloader->GetModelForName(
 			lump.m_Name, IModelLoader::FMODELLOADER_STATICPROP );
 		m_StaticPropDict.AddToTail( dict );
+	}
+*/
+	m_StaticPropDict.AddMultipleToTail( count );
+	for ( int i=0; i < count; i++ )
+	{
+		StaticPropDictLump_t lump;
+		buf.Get( &lump, sizeof(StaticPropDictLump_t) );
+
+		StaticPropDict_t &dict = m_StaticPropDict[i];
+
+		dict.m_pModel = (model_t *)modelloader->GetModelForName(
+			lump.m_Name, IModelLoader::FMODELLOADER_STATICPROP );
 	}
 }
 
@@ -1203,7 +1276,19 @@ inline int CStaticPropMgr::HandleEntityToIndex( IHandleEntity *pHandleEntity ) c
 
 ICollideable *CStaticPropMgr::GetStaticProp( IHandleEntity *pHandleEntity )
 {
+	if ( !IsStaticProp( pHandleEntity ) )
+	{
+		return NULL;
+	}
+
 	int nIndex = pHandleEntity ? pHandleEntity->GetRefEHandle().ToInt() : 0;
+
+	// VXP: Copied from Source 2007 and then commented - sadly, I don't think this is working properly
+//	if ( nIndex < 0 || nIndex > m_StaticProps.Count() )
+//	{
+//		return NULL;
+//	}
+
 	return ( nIndex & STATICPROP_EHANDLE_MASK ) ? &m_StaticProps[nIndex & (~STATICPROP_EHANDLE_MASK)] : 0;
 }
 
@@ -1235,6 +1320,8 @@ void CStaticPropMgr::PrecacheLighting( )
 	int i = m_StaticProps.Count();
 	while ( --i >= 0 )
 	{
+		if ( !m_StaticProps[i].ShouldDraw() ) // VXP
+			continue;
 		m_StaticProps[i].PrecacheLighting( );
 	}
 }
@@ -1244,6 +1331,8 @@ void CStaticPropMgr::RecomputeStaticLighting( )
 	int i = m_StaticProps.Count();
 	while ( --i >= 0 )
 	{
+		if ( !m_StaticProps[i].ShouldDraw() ) // VXP
+			continue;
 		m_StaticProps[i].RecomputeStaticLighting();
 	}
 }

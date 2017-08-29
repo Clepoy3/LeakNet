@@ -218,7 +218,7 @@ END_NETWORK_TABLE()
 			if ( !pCurrentWeapon->CanHolster() )
 			{
 				// can't put this gun away right now, so can't switch.
-				return false;
+				return NULL;
 			}
 
 			iCurrentWeight = pCurrentWeapon->GetWeight();
@@ -386,7 +386,7 @@ END_NETWORK_TABLE()
 		
 		addDefault = true;
 
-		while ( pWeaponEntity = gEntList.FindEntityByClassname( pWeaponEntity, "game_player_equip" ))
+		while ( (pWeaponEntity = gEntList.FindEntityByClassname( pWeaponEntity, "game_player_equip" )) != NULL)
 		{
 			pWeaponEntity->Touch( pPlayer );
 			addDefault = false;
@@ -562,12 +562,7 @@ END_NETWORK_TABLE()
 						// If the inflictor is the killer,  then it must be their current weapon doing the damage
 						if ( pScorer->GetActiveWeapon() )
 						{
-						//	killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName();
-							killer_weapon_name = pScorer->GetActiveWeapon()->GetClassname();
-						}
-						else
-						{
-							killer_weapon_name = "\bout weapons";
+							killer_weapon_name = pScorer->GetActiveWeapon()->GetDeathNoticeName();
 						}
 					}
 					else
@@ -588,7 +583,7 @@ END_NETWORK_TABLE()
 			}
 			else if ( strncmp( killer_weapon_name, "NPC_", 4 ) == 0 )
 			{
-				killer_weapon_name += 8;
+				killer_weapon_name += 4;
 			}
 			else if ( strncmp( killer_weapon_name, "func_", 5 ) == 0 )
 			{
@@ -874,8 +869,7 @@ END_NETWORK_TABLE()
 	{
 		char szNextMap[32];
 		char szFirstMapInList[32];
-	//	Q_strncpy( szFirstMapInList, "hldm1" ,sizeof(szFirstMapInList));  // the absolute default level is hldm1
-		Q_strncpy( szFirstMapInList, "testroom_commander" ,sizeof(szFirstMapInList));  // the absolute default level is testroom_commander
+		Q_strncpy( szFirstMapInList, "hldm1" ,sizeof(szFirstMapInList));  // the absolute default level is hldm1
 
 		// find the map to change to
 

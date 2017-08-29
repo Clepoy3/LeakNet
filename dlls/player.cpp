@@ -2602,14 +2602,14 @@ void CBasePlayer::AdjustPlayerTimeBase( int simulation_ticks )
 		if ( estimated_end_time > too_fast_limit )
 		{
 		//	Msg( "client too fast by %f msec\n", 1000.0f * ( estimated_end_time - end_of_frame ) );
-			Msg( "client %s too fast by %f msec\n", PlayerData()->netname, 1000.0f * ( estimated_end_time - end_of_frame ) );
+			DevMsg( "client %s too fast by %f msec\n", PlayerData()->netname, 1000.0f * ( estimated_end_time - end_of_frame ) );
 			m_nTickBase = end_of_frame_ticks - simulation_ticks + 1;
 		}
 		// Or to slow
 		else if ( estimated_end_time < too_slow_limit )
 		{
 		//	Msg( "client too slow by %f msec\n", 1000.0f * ( end_of_frame - estimated_end_time ) );
-			Msg( "client %s too slow by %f msec\n", PlayerData()->netname, 1000.0f * ( end_of_frame - estimated_end_time ) );
+			DevMsg( "client %s too slow by %f msec\n", PlayerData()->netname, 1000.0f * ( end_of_frame - estimated_end_time ) );
 			m_nTickBase = end_of_frame_ticks - simulation_ticks + 1;
 		}
 	}
@@ -2703,26 +2703,28 @@ void CBasePlayer::PhysicsSimulate( void )
 		// If we haven't dropped too many packets, then run some commands
 		if ( ctx->dropped_packets < 24 )                
 		{
-			if ( ctx->dropped_packets > numbackup )
+			int droppedcmds = ctx->dropped_packets;
+
+			if ( droppedcmds > numbackup )
 			{
 				// Msg( "lost %i cmds\n", dropped_packets - numbackup );
 			}
 
 			// Rerun the last valid command a bunch of times.
-			while ( ctx->dropped_packets > numbackup )           
+			while ( droppedcmds > numbackup )           
 			{
 				PlayerRunCommand( &m_LastCmd, MoveHelperServer()  );
 				// For this scenario packets, just use the start time over and over again
 				m_nTickBase = starttick;
-				ctx->dropped_packets--;
+				droppedcmds--;
 			}
 
 			// Now run the "history" commands if we still have dropped packets
-			while ( ctx->dropped_packets > 0 )
+			while ( droppedcmds > 0 )
 			{
-				int cmdnum = ctx->dropped_packets + ctx->numcmds - 1;
+				int cmdnum = ctx->numcmds + droppedcmds - 1;
 				PlayerRunCommand( &ctx->cmds[ cmdnum ], MoveHelperServer()  );
-				ctx->dropped_packets--;
+				droppedcmds--;
 			}
 		}
 
@@ -2794,6 +2796,7 @@ void CBasePlayer::PlayerRunCommand(CUserCmd *ucmd, IMoveHelper *moveHelper)
 	m_touchedPhysObject = false;
 
 	// Handle FL_FROZEN.
+	// VXP: Here we can add preventing player from moving for a few seconds at the beginning of the map
 	if(GetFlags() & FL_FROZEN)
 	{
 		ucmd->frametime = 0.0;

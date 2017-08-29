@@ -1285,7 +1285,10 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 	//---------------------------------
 	// Read the header
 	SaveFileHeaderTag_t tag;
-	g_pFileSystem->Read( &tag, sizeof(tag), pFile );
+//	g_pFileSystem->Read( &tag, sizeof(tag), pFile );
+	if ( g_pFileSystem->Read( &tag, sizeof(tag), pFile ) != sizeof(tag) )
+		return NULL;
+
 	// Is this a valid save?
 	if ( tag != CURRENT_SAVEFILE_HEADER_TAG )
 		return NULL;
@@ -1295,7 +1298,9 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 	//
 	SaveFileSectionsInfo_t sectionsInfo;
 	
-	g_pFileSystem->Read( &sectionsInfo, sizeof(sectionsInfo), pFile );
+//	g_pFileSystem->Read( &sectionsInfo, sizeof(sectionsInfo), pFile );
+	if ( g_pFileSystem->Read( &sectionsInfo, sizeof(sectionsInfo), pFile ) != sizeof(sectionsInfo) )
+		return NULL;
 
 //	CSaveRestoreData *pSaveData = MakeSaveRestoreData( SaveAllocMemory( sizeof(CSaveRestoreData) + sectionsInfo.SumBytes(), sizeof(char) ) );
 	void *pSaveMemory = SaveAllocMemory( sizeof(CSaveRestoreData) + sectionsInfo.SumBytes(), sizeof(char) );
@@ -1306,7 +1311,14 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 	CSaveRestoreData *pSaveData = MakeSaveRestoreData( pSaveMemory );
 	strcpy( pSaveData->levelInfo.szCurrentMapName, level );
 	
-	g_pFileSystem->Read( (char *)(pSaveData + 1), sectionsInfo.SumBytes(), pFile );
+//	g_pFileSystem->Read( (char *)(pSaveData + 1), sectionsInfo.SumBytes(), pFile );
+	if ( g_pFileSystem->Read( (char *)(pSaveData + 1), sectionsInfo.SumBytes(), pFile ) != sectionsInfo.SumBytes() )
+	{
+		// Free the memory and give up
+		Finish( pSaveData );
+		return NULL;
+	}
+
 	g_pFileSystem->Close( pFile );
 	
 	//---------------------------------
@@ -1315,7 +1327,19 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 
 	if ( sectionsInfo.nBytesSymbols > 0 )
 	{
-	//	pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
+	/*
+		pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
+
+		// Make sure the token strings pointed to by the pToken hashtable.
+		for( int i = 0; i<sectionsInfo.nSymbols; i++ )
+		{
+			if ( *pszTokenList )
+			{
+				Verify( pSaveData->DefineSymbol( pszTokenList, i ) );
+			}
+			while( *pszTokenList++ );				// Find next token (after next null)
+		}
+	*/
 		pSaveMemory = SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) );
 		if ( !pSaveMemory )
 		{
@@ -1875,6 +1899,8 @@ void Host_Savegame_f (void)
 		Con_DPrintf ("Relative pathnames are not allowed.\n");
 		return;
 	}
+
+	// VXP: TODO: Put here check for background maps
 
 	serverGameDLL->GetSaveComment( comment, sizeof( comment ) );
 	saverestore->SaveGameSlot( Cmd_Argv(1), comment );

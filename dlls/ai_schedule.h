@@ -31,6 +31,7 @@ struct	Task_t;
 
 #ifndef MAX_CONDITIONS
 #define	MAX_CONDITIONS 32*3
+//#define	MAX_CONDITIONS 32*8 // VXP: This breaks old save files! (changes type of CAI_ScheduleBits)
 #endif
 typedef CFixedBitString<MAX_CONDITIONS> CAI_ScheduleBits;
 

@@ -1638,7 +1638,7 @@ void Physics_SimulateEntity( CBaseEntity *pEntity )
 	if ( pEntity->GetFlags() & FL_STATICPROP )
 		return;
 
-	if ( pEntity->pev )
+	if ( pEntity->edict() )
 	{
 		// Player drives simulation of this entity
 		if ( pEntity->IsPlayerSimulated() )

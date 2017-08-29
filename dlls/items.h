@@ -26,6 +26,8 @@ public:
 	void	Materialize( void );
 	virtual bool MyTouch( CBasePlayer *pPlayer ) { return false; };
 
+	bool	CreateItemVPhysicsObject( void ); // VXP
+
 private:
 
 	COutputEvent m_OnPlayerTouch;

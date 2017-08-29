@@ -148,7 +148,7 @@ extern "C"
 // NOTE:  Is there a perf issue with double<->float conversion?
 inline float FloatMakePositive( vec_t f )
 {
-	return fabs( f );
+	return (float)fabs( f );
 }
 #else
 inline float FloatMakePositive( vec_t f )

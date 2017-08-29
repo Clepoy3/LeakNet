@@ -15,6 +15,7 @@ class IPhysicsEnvironment;
 class IPhysicsSurfaceProps;
 class IPhysicsCollision;
 class IPhysicsObject;
+class CSoundPatch; // VXP
 
 extern IPhysicsObject		*g_PhysWorldObject;
 extern IPhysics				*physics;
@@ -33,6 +34,37 @@ extern const objectparams_t g_PhysDefaultObjectParams;
 #define FVPHYSICS_MULTIOBJECT_ENTITY	0x0010		// object is part of a multi-object entity
 #define FVPHYSICS_NO_SELF_COLLISIONS	0x8000		// don't collide with other objects that are part of the same entity
 
+//-----------------------------------------------------------------------------
+// Purpose: A little cache of current objects making noises
+//-----------------------------------------------------------------------------
+struct friction_t
+{
+	CSoundPatch	*patch;
+	CBaseEntity	*pObject;
+	float		update;
+};
+
+enum
+{
+	TOUCH_START=0,
+	TOUCH_END,
+};
+
+struct touchevent_t
+{
+	CBaseEntity *pEntity0;
+	CBaseEntity *pEntity1;
+	int			touchType;
+	Vector		endPoint; // VXP: sv
+	Vector		normal; // VXP: sv
+};
+
+const float FLUID_TIME_MAX = 2.0f; // keep track of last time hitting fluid for up to 2 seconds 
+struct fluidevent_t
+{
+	CBaseEntity		*pEntity;
+	float			impactTime;
+};
 // Convenience routine
 // ORs gameFlags with the physics object's current game flags
 inline unsigned short PhysSetGameFlags( IPhysicsObject *pPhys, unsigned short gameFlags )

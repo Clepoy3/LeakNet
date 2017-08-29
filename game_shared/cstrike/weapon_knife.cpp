@@ -183,8 +183,18 @@ void CKnife::SecondaryAttack()
 
 void CKnife::Smack()
 {
-	UTIL_ImpactTrace( &m_trHit, DMG_BULLET );
-	//DecalGunshot( &m_trHit, BULLET_PLAYER_CROWBAR, false, pPlayer->pev, false );
+	m_trHit.m_pEnt = m_pTraceHitEnt;
+	if ( !m_trHit.m_pEnt || (m_trHit.surface.flags & SURF_SKY) )
+		return;
+
+	if ( m_trHit.fraction == 1.0 )
+		return;
+
+	if ( m_trHit.m_pEnt )
+	{
+		UTIL_ImpactTrace( &m_trHit, DMG_BULLET );
+		//DecalGunshot( &m_trHit, BULLET_PLAYER_CROWBAR, false, pPlayer->pev, false );
+	}
 }
 
 
@@ -540,6 +550,10 @@ int CKnife::Stab( int fFirst )
 #endif
 		// delay the decal a bit
 		m_trHit = tr;
+
+		// VXP: Store the ent in an EHANDLE, just in case it goes away by the time we get into our think function.
+		m_pTraceHitEnt = tr.m_pEnt;
+
 		SetThink( &CKnife::Smack );
 		SetNextThink( gpGlobals->curtime + 0.2 );
 

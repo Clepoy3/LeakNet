@@ -261,7 +261,8 @@ void CNPC_Bullsquid::HandleAnimEvent( animevent_t *pEvent )
 				Vector			vTarget = GetEnemy()->GetAbsOrigin();
 				Vector			vToss;
 				CBaseEntity*	pBlocker;
-				float flGravity  = sv_gravity.GetFloat() * SPIT_GRAVITY;
+			//	float flGravity  = sv_gravity.GetFloat() * SPIT_GRAVITY;
+				float flGravity  = SPIT_GRAVITY;
 				ThrowLimit(vSpitPos, vTarget, flGravity, 3, Vector(0,0,0), Vector(0,0,0), GetEnemy(), &vToss, &pBlocker);
 
 				CGrenadeSpit *pGrenade = (CGrenadeSpit*)CreateNoSpawn( "grenade_spit", vSpitPos, vec3_angle, this );
@@ -300,6 +301,7 @@ void CNPC_Bullsquid::HandleAnimEvent( animevent_t *pEvent )
 				AngleVectors( GetAbsAngles(), &forward, NULL, &up );
 				pHurt->SetAbsVelocity( pHurt->GetAbsVelocity() - (forward * 100) );
 				pHurt->SetAbsVelocity( pHurt->GetAbsVelocity() + (up * 100) );
+			//	pHurt->ApplyAbsVelocityImpulse( 100 * (up-forward) ); // VXP: Here's Source 2007 version
 				pHurt->RemoveFlag( FL_ONGROUND );
 			}
 		}
@@ -350,6 +352,7 @@ void CNPC_Bullsquid::HandleAnimEvent( animevent_t *pEvent )
 			// jump into air for 0.8 (24/30) seconds
 			Vector vecVel = GetAbsVelocity();
 			vecVel.z += ( 0.625 * flGravity ) * 0.5;
+		//	vecVel.z += sqrt( flGravity * 2.0 * 40 ); // VXP: Here's Source 2007 version
 			SetAbsVelocity( vecVel );
 		}
 		break;
@@ -466,7 +469,7 @@ bool CNPC_Bullsquid::FValidateHintType ( CAI_Hint *pHint )
 	if ( pHint->HintType() == HINT_HL1_WORLD_HUMAN_BLOOD )
 		 return true;
 
-	Msg ( "Couldn't validate hint type" );
+	DevMsg ( "Couldn't validate hint type" );
 
 	return false;
 }

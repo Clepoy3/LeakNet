@@ -32,6 +32,7 @@ public:
 	string_t			m_strGroup;				// Group name for hint nodes
 
 	void				Spawn( void );
+	int					Spawn( const char *pMapData );
 
 	DECLARE_DATADESC();
 

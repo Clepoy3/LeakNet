@@ -28,6 +28,7 @@
 #include "te_effect_dispatch.h"
 #include "utldict.h"
 #include "studio.h" // VXP: Am I doing this right?
+#include "movevars_shared.h" // VXP
 
 
 extern short		g_sModelIndexSmoke;			// (in combatweapon.cpp) holds the index for the smoke cloud
@@ -266,6 +267,8 @@ private:
 //-----------------------------------------------------------------------------
 int UTIL_DropToFloor( CBaseEntity *pEntity, unsigned int mask)
 {
+	// VXP: Assume no ground
+//	pEntity->SetGroundEntity( NULL );
 	Assert( pEntity );
 
 	trace_t	trace;
@@ -1606,6 +1609,14 @@ void UTIL_StripToken( const char *pKey, char *pDest )
 		i++;
 	}
 	pDest[i] = 0;
+}
+
+
+// VXP: computes gravity scale for an absolute gravity.  Pass the result into CBaseEntity::SetGravity()
+float UTIL_ScaleForGravity( float desiredGravity )
+{
+	float worldGravity = sv_gravity.GetFloat();
+	return worldGravity > 0 ? desiredGravity / worldGravity : 0;
 }
 
 

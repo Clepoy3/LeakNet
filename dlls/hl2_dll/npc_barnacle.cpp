@@ -359,7 +359,10 @@ void CNPC_Barnacle::BarnacleThink ( void )
 			else
 			{
 				// Restore the hanging spring constant 
-				m_hTongueTip->m_pSpring->SetSpringConstant( BARNACLE_TONGUE_SPRING_CONSTANT_HANGING );
+				if ( m_hTongueTip )
+				{
+					m_hTongueTip->m_pSpring->SetSpringConstant( BARNACLE_TONGUE_SPRING_CONSTANT_HANGING );
+				}
 
 				m_flAltitude = flLength;
 				m_fTongueExtended = true;
@@ -832,6 +835,9 @@ void CNPC_Barnacle::LostPrey( bool bRemoveRagdoll )
 //-----------------------------------------------------------------------------
 void CNPC_Barnacle::UpdateTongue( void )
 {
+	if ( m_hTongueTip == NULL )
+		return;
+
 	// Set the spring's length to that of the tongue's extension
 	m_hTongueTip->m_pSpring->SetSpringLength( m_flAltitude );
 
