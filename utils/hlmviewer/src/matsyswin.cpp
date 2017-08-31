@@ -792,6 +792,18 @@ MatSysWindow::draw ()
 
 	g_ControlPanel->updatePoseParameters( );
 
+	// VXP: draw what ever else is loaded
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		if (g_pStudioExtraModel[i] != NULL)
+		{
+			g_pStudioModel->GetStudioRender()->BeginFrame();
+			g_pStudioExtraModel[i]->DrawModel( true );
+			g_pStudioModel->GetStudioRender()->EndFrame();
+		}
+	}
+
 	// g_vright[0] = g_vright[1] = g_viewerSettings.trans[2];
 
 	/*

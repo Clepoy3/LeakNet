@@ -287,6 +287,53 @@ bool RegWriteFloat( HKEY hKey, const char *szSubKey, float value )
 	return true;
 }
 
+bool RegReadString( HKEY hKey, const char *szSubKey, char *string, int size ) // VXP
+{
+	LONG lResult;           // Registry function result code
+	DWORD dwType;           // Type of key
+	DWORD dwSize;           // Size of element data
+
+	dwSize = size;
+
+	lResult = RegQueryValueEx(
+		hKey,		// handle to key
+		szSubKey,	// value name
+		0,			// reserved
+		&dwType,    // type buffer
+		(LPBYTE)string,    // data buffer
+		&dwSize );  // size of data buffer
+
+	if (lResult != ERROR_SUCCESS)  // Failure
+		return false;
+
+	if (dwType != REG_SZ)
+		return false;
+
+	return true;
+}
+
+
+bool RegWriteString( HKEY hKey, const char *szSubKey, char *string ) // VXP
+{
+	LONG lResult;           // Registry function result code
+	DWORD dwSize;           // Size of element data
+
+	dwSize = strlen( string );
+
+	lResult = RegSetValueEx(
+		hKey,		// handle to key
+		szSubKey,	// value name
+		0,			// reserved
+		REG_SZ,		// type buffer
+		(LPBYTE)string,    // data buffer
+		dwSize );  // size of data buffer
+
+	if (lResult != ERROR_SUCCESS)  // Failure
+		return false;
+
+	return true;
+}
+
 
 
 
@@ -418,6 +465,12 @@ bool LoadViewerSettings (const char *filename)
 
 	RegReadInt( hModelKey, "speechapiindex", &g_viewerSettings.speechapiindex );
 
+	// VXP
+	RegReadString( hModelKey, "merge0", g_viewerSettings.mergeModelFile[0], sizeof( g_viewerSettings.mergeModelFile[0] ) );
+	RegReadString( hModelKey, "merge1", g_viewerSettings.mergeModelFile[1], sizeof( g_viewerSettings.mergeModelFile[1] ) );
+	RegReadString( hModelKey, "merge2", g_viewerSettings.mergeModelFile[2], sizeof( g_viewerSettings.mergeModelFile[2] ) );
+	RegReadString( hModelKey, "merge3", g_viewerSettings.mergeModelFile[3], sizeof( g_viewerSettings.mergeModelFile[3] ) );
+
 	return true;
 }
 
@@ -456,6 +509,12 @@ bool SaveViewerSettings (const char *filename)
 	RegWriteInt( hModelKey, "viewermode", g_viewerSettings.application_mode );
 	RegWriteInt( hModelKey, "thumbnailsize", g_viewerSettings.thumbnailsize );
 	RegWriteInt( hModelKey, "speechapiindex", g_viewerSettings.speechapiindex );
+
+	// VXP
+	RegWriteString( hModelKey, "merge0", g_viewerSettings.mergeModelFile[0] );
+	RegWriteString( hModelKey, "merge1", g_viewerSettings.mergeModelFile[1] );
+	RegWriteString( hModelKey, "merge2", g_viewerSettings.mergeModelFile[2] );
+	RegWriteString( hModelKey, "merge3", g_viewerSettings.mergeModelFile[3] );
 
 
 

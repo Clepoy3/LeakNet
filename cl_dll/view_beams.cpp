@@ -1804,11 +1804,8 @@ void CViewRenderBeams::DrawBeam( Beam_t *pbeam )
 		VectorCopy( srcColor, color );
 	}
 
-//	VectorScale( color, ((float)pbeam->brightness / 255.0), color );
-//	VectorScale( color, (1/255.0), color );
-	VectorScale( color, (1/255.0), color );
-	VectorCopy( color, srcColor );
 	VectorScale( color, ((float)pbeam->brightness / 255.0), color );
+	VectorScale( color, (1/255.0), color );
 
 	switch( pbeam->type )
 	{

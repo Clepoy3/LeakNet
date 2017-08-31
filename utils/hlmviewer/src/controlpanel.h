@@ -276,6 +276,7 @@ public:
 
 	void dumpModelInfo ();
 	LoadModelResult_t loadModel(const char *filename);
+	LoadModelResult_t loadModel(const char *filename, int slot);
 
 	void resetControlPanel( void );
 	void setRenderMode (int mode);

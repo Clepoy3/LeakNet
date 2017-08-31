@@ -43,6 +43,8 @@ int g_dxlevel = 0;
 
 ////////////////////////////////////////////////////////////////////////
 
+studiohdr_t		*g_pCacheHdr = NULL; // VXP
+
 Vector			g_flexedverts[MAXSTUDIOVERTS];
 Vector			g_flexednorms[MAXSTUDIOVERTS];
 int				g_flexages[MAXSTUDIOVERTS];
@@ -327,7 +329,30 @@ void StudioModel::OverrideBones( bool *override )
 static CIKContext ik;
 
 
-void StudioModel::SetUpBones ( void )
+int StudioModel::BoneMask( void )
+{
+	int lod = g_viewerSettings.autoLOD ? 0 : g_viewerSettings.lod;
+
+	int mask = BONE_USED_BY_VERTEX_AT_LOD(lod);
+	if (g_viewerSettings.showAttachments || g_viewerSettings.m_iEditAttachment != -1 || g_viewerSettings.solveHeadTurn != 0 || LookupAttachment( "eyes" ) != -1)
+	{
+		mask |= BONE_USED_BY_ATTACHMENT;
+	}
+
+	if (g_viewerSettings.showHitBoxes)
+	{
+		mask |= BONE_USED_BY_HITBOX;
+	}
+
+	mask |= BONE_USED_BY_BONE_MERGE;
+
+	return mask;
+	// return BONE_USED_BY_ANYTHING_AT_LOD( lod );
+
+	// return BONE_USED_BY_ANYTHING;
+}
+
+void StudioModel::SetUpBones ( bool mergeBones )
 {
 	int					i, j;
 
@@ -337,6 +362,8 @@ void StudioModel::SetUpBones ( void )
 	matrix3x4_t			bonematrix;
 	static Quaternion	q[MAXSTUDIOBONES];
 	bool				override[MAXSTUDIOBONES];
+
+	static matrix3x4_t	boneCache[MAXSTUDIOBONES]; // VXP
 
 	// For blended transitions
 	static Vector		pos2[MAXSTUDIOBONES];
@@ -355,6 +382,9 @@ void StudioModel::SetUpBones ( void )
 		pIK = &ik;
 		ik.Init( m_pstudiohdr, a1, p1, 0.0 );
 	}
+
+	// VXP: TODO: Should I do this here???
+	m_pBoneToWorld = m_pStudioRender->GetBoneToWorldArray();
 
 	InitPose(  m_pstudiohdr, pos, q );
 	
@@ -434,11 +464,25 @@ void StudioModel::SetUpBones ( void )
 
 	for (i = 0; i < m_pstudiohdr->numbones; i++) 
 	{
+		if ( !(m_pstudiohdr->pBone( i )->flags & BoneMask()))
+		{
+			int j, k;
+			for (j = 0; j < 3; j++)
+			{
+				for (k = 0; k < 4; k++)
+				{
+					m_pBoneToWorld[i][j][k] = VEC_T_NAN;
+				}
+			}
+			continue;
+		}
+
 		if ( override[i] )
 		{
 			continue;
 		}
-		else if (CalcProceduralBone( m_pstudiohdr, i, m_pStudioRender->GetBoneToWorldArray() ))
+	//	else if (CalcProceduralBone( m_pstudiohdr, i, m_pStudioRender->GetBoneToWorldArray() ))
+		else if (CalcProceduralBone( m_pstudiohdr, i, m_pBoneToWorld ))
 		{
 			continue;
 		}
@@ -457,6 +501,24 @@ void StudioModel::SetUpBones ( void )
 			else 
 			{
 				ConcatTransforms (*m_pStudioRender->GetBoneToWorld( pbones[i].parent ), bonematrix, *m_pStudioRender->GetBoneToWorld( i ) );
+			}
+		}
+
+		if (!mergeBones)
+		{
+			g_pCacheHdr = m_pstudiohdr;
+			MatrixCopy( m_pBoneToWorld[ i ], boneCache[i] );
+		}
+		else if (g_pCacheHdr)
+		{
+			for (j = 0; j < g_pCacheHdr->numbones; j++)
+			{
+				if ( Q_stricmp( m_pstudiohdr->pBone( i )->pszName(), g_pCacheHdr->pBone( j )->pszName() ) == 0 )
+					break;
+			}
+			if (j < g_pCacheHdr->numbones)
+			{
+				MatrixCopy( boneCache[j], m_pBoneToWorld[ i ] );
 			}
 		}
 	}
@@ -1420,7 +1482,8 @@ void StudioModel::SetHeadPosition( Vector pos[], Quaternion q[] )
 		}
 
 		CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, m_poseparameter, BONE_USED_BY_ANYTHING, GetAutoPlayTime() );
-		UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
+	//	UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
+		UpdateBoneChain( pos2, q2, patt->bone, m_pBoneToWorld );
 		matrix3x4_t attToWorld;
 		ConcatTransforms( *m_pStudioRender->GetBoneToWorld( patt->bone ), patt->local, attToWorld );
 
@@ -1551,7 +1614,8 @@ void StudioModel::CalcDefaultView( mstudioattachment_t *patt, Vector pos[], Quat
 
 	CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, tmpPoseParameter, BONE_USED_BY_ANYTHING, GetAutoPlayTime() );
 
-	UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
+//	UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
+	UpdateBoneChain( pos2, q2, patt->bone, m_pBoneToWorld );
 
 	matrix3x4_t attToWorld;
 	ConcatTransforms( *m_pStudioRender->GetBoneToWorld( patt->bone ), patt->local, attToWorld );
@@ -1567,7 +1631,7 @@ inputs:
 	r_entorigin
 ================
 */
-int StudioModel::DrawModel( )
+int StudioModel::DrawModel( bool mergeBones )
 {
 	if (!m_pstudiohdr)
 		return 0;
@@ -1595,7 +1659,7 @@ int StudioModel::DrawModel( )
 
 	//	m_pStudioRender->SetEyeViewTarget( viewOrigin );
 	
-	SetUpBones ( );
+	SetUpBones ( mergeBones );
 
 	SetViewTarget( );
 

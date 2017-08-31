@@ -326,24 +326,62 @@ void CEnvBeam::Strike( void )
 	CBaseEntity *pStart = RandomTargetname( STRING(m_iszStartEntity) );
 	CBaseEntity *pEnd = RandomTargetname( STRING(m_iszEndEntity) );
 
-	if ( pStart != NULL && pEnd != NULL )
+	if ( pStart == NULL || pEnd == NULL )
+		return;
+	int pointStart = IsStaticPointEntity( pStart );
+	int pointEnd = IsStaticPointEntity( pEnd );
+
+	if ( pointStart || pointEnd )
 	{
-		int pointStart = IsStaticPointEntity( pStart );
-		int pointEnd = IsStaticPointEntity( pEnd );
-
-		if ( pointStart || pointEnd )
+		if ( m_spawnflags & SF_BEAM_RING )
 		{
-			if ( m_spawnflags & SF_BEAM_RING )
-			{
-				// don't work
-				return;
-			}
+			// don't work
+			return;
+		}
 
-			te->BeamEntPoint( filter, 0.0,
-				pointStart ? 0 : pStart->entindex(),
-				pointStart ? &pStart->GetAbsOrigin() : NULL,
-				pointEnd ? 0 : pEnd->entindex(),
-				pointEnd ? &pEnd->GetAbsOrigin() : NULL,
+		te->BeamEntPoint( filter, 0.0,
+			pointStart ? 0 : pStart->entindex(),
+			pointStart ? &pStart->GetAbsOrigin() : NULL,
+			pointEnd ? 0 : pEnd->entindex(),
+			pointEnd ? &pEnd->GetAbsOrigin() : NULL,
+			m_spriteTexture,
+			0,	// No halo
+			m_frameStart,
+			(int)m_flFrameRate,
+			m_life,
+			m_boltWidth,
+			m_boltWidth,	// End width
+			0,				// No fade
+			m_noiseAmplitude,
+			m_clrRender->r,	m_clrRender->g,	m_clrRender->b,	m_clrRender->a,
+			m_speed );
+	}
+	else
+	{
+		if ( m_spawnflags & SF_BEAM_RING)
+		{
+			te->BeamRing( filter, 0.0,
+				pStart->entindex(), 
+				pEnd->entindex(), 
+				m_spriteTexture, 
+				0,	// No halo
+				m_frameStart,
+				(int)m_flFrameRate,
+				m_life,
+				m_boltWidth,
+				0,	// No spread
+				m_noiseAmplitude,
+				m_clrRender->r,
+				m_clrRender->g,
+				m_clrRender->b,
+				m_clrRender->a,
+				m_speed );
+		}
+		else
+		{
+			te->BeamEnts( filter, 0.0,
+				pStart->entindex(), 
+				pEnd->entindex(), 
 				m_spriteTexture,
 				0,	// No halo
 				m_frameStart,
@@ -353,60 +391,21 @@ void CEnvBeam::Strike( void )
 				m_boltWidth,	// End width
 				0,				// No fade
 				m_noiseAmplitude,
-				m_clrRender->r,	m_clrRender->g,	m_clrRender->b,	m_clrRender->a,
+				m_clrRender->r,
+				m_clrRender->g,
+				m_clrRender->b,
+				m_clrRender->a,
 				m_speed );
-		}
-		else
-		{
-			if ( m_spawnflags & SF_BEAM_RING)
-			{
-				te->BeamRing( filter, 0.0,
-					pStart->entindex(), 
-					pEnd->entindex(), 
-					m_spriteTexture, 
-					0,	// No halo
-					m_frameStart,
-					(int)m_flFrameRate,
-					m_life,
-					m_boltWidth,
-					0,	// No spread
-					m_noiseAmplitude,
-					m_clrRender->r,
-					m_clrRender->g,
-					m_clrRender->b,
-					m_clrRender->a,
-					m_speed );
-			}
-			else
-			{
-				te->BeamEnts( filter, 0.0,
-					pStart->entindex(), 
-					pEnd->entindex(), 
-					m_spriteTexture,
-					0,	// No halo
-					m_frameStart,
-					(int)m_flFrameRate,
-					m_life,
-					m_boltWidth,
-					m_boltWidth,	// End width
-					0,				// No fade
-					m_noiseAmplitude,
-					m_clrRender->r,
-					m_clrRender->g,
-					m_clrRender->b,
-					m_clrRender->a,
-					m_speed );
 
-			}
 		}
+	}
 
-		DoSparks( pStart->GetAbsOrigin(), pEnd->GetAbsOrigin() );
-		if ( m_flDamage > 0 )
-		{
-			trace_t tr;
-			UTIL_TraceLine( pStart->GetAbsOrigin(), pEnd->GetAbsOrigin(), MASK_SOLID, NULL, COLLISION_GROUP_NONE, &tr );
-			BeamDamageInstant( &tr, m_flDamage );
-		}
+	DoSparks( pStart->GetAbsOrigin(), pEnd->GetAbsOrigin() );
+	if ( m_flDamage > 0 )
+	{
+		trace_t tr;
+		UTIL_TraceLine( pStart->GetAbsOrigin(), pEnd->GetAbsOrigin(), MASK_SOLID, NULL, COLLISION_GROUP_NONE, &tr );
+		BeamDamageInstant( &tr, m_flDamage );
 	}
 }
 

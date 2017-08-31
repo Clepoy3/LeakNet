@@ -6,46 +6,17 @@
 
 #include "cbase.h"
 #include "grenade_hopwire.h"
-#include "rope.h"
-#include "rope_shared.h"
-#include "beam_shared.h"
+//#include "rope.h"
+//#include "rope_shared.h"
+//#include "beam_shared.h"
 #include "physics.h"
 #include "physics_saverestore.h"
 
+// VXP
+#include "explode.h"
 
-#define TETHERHOOK_MODEL	"models/Weapons/w_hopwire.mdl"
+//#define HOOK_JOKE
 
-//-----------------------------------------------------------------------------
-// Tether hook
-//-----------------------------------------------------------------------------
-
-class CTetherHook : public CBaseAnimating
-{
-	DECLARE_CLASS( CTetherHook, CBaseAnimating );
-public:
-	typedef CBaseAnimating BaseClass;
-
-	bool	CreateVPhysics( void );
-	void	Spawn( void );
-
-	void	SetVelocity( const Vector &velocity, const AngularImpulse &angVelocity );
-	void	StartTouch( CBaseEntity *pOther );
-
-	static CTetherHook	*Create( const Vector &origin, const QAngle &angles, CGrenadeHopWire *pOwner );
-
-	void	CreateRope( void );
-	void	HookThink( void );
-
-	DECLARE_DATADESC();
-
-private:
-	CHandle<CGrenadeHopWire>	m_hTetheredOwner;
-	IPhysicsSpring				*m_pSpring;
-	CRopeKeyframe				*m_pRope;
-	CSprite						*m_pGlow;
-	CBeam						*m_pBeam;
-	bool						m_bAttached;
-};
 
 BEGIN_DATADESC( CTetherHook )
 	DEFINE_FIELD( CTetherHook, m_hTetheredOwner, FIELD_EHANDLE ),
@@ -205,6 +176,80 @@ void CTetherHook::HookThink( void )
 			m_pGlow->SetScale( 0.5f, 0.1f );
 		}
 	}
+
+	if ( m_bAttached && m_hTetheredOwner != NULL )
+	{
+		trace_t tr;
+		Vector m_vecEnd = m_hTetheredOwner->GetAbsOrigin();
+
+		// NOT MASK_SHOT because we want only simple hit boxes
+		UTIL_TraceLine( GetAbsOrigin(), m_vecEnd, MASK_SOLID, this, COLLISION_GROUP_NONE, &tr );
+	//	Msg( "Fraction is: %f\n", tr.fraction );
+
+		CBaseEntity *pEntity = tr.m_pEnt;
+		if ( pEntity && pEntity != (CBaseEntity*)m_hTetheredOwner && tr.fraction != 1.0f )
+		{
+		//	CBaseCombatCharacter *pBCC  = ToBaseCombatCharacter( pEntity );
+		//	if (pBCC)
+#ifndef HOOK_JOKE
+			if ( tr.fraction > 0.001f && tr.fraction < 0.9f ) // VXP: Works fine!
+#else
+			if ( false )
+#endif // HOOK_JOKE
+			{
+				if ( m_hTetheredOwner )
+				{
+					m_hTetheredOwner->Event_Killed( CTakeDamageInfo( (CBaseEntity*)m_hTetheredOwner, this, 100, GIB_NORMAL ) );
+#ifdef _DEBUG
+				//	DevMsg("Something should just explode my owner, grenade_hopwire!\n");
+#endif // _DEBUG
+
+					return;
+				}
+			}
+		}
+	}
+
+	SetNextThink( gpGlobals->curtime + 0.1f );
+}
+
+void CTetherHook::KillHook()
+{
+	// VXP: First of all Think hook should never be called anymore
+	SetNextThink( TICK_NEVER_THINK );
+	SetThink( NULL );
+
+	// Then we remove all the effects
+	if ( m_pRope )
+	{
+		UTIL_Remove( m_pRope );
+		m_pRope = NULL;
+	}
+	if ( m_pGlow )
+	{
+		UTIL_Remove( m_pGlow );
+		m_pGlow = NULL;
+	}
+	if ( m_pBeam )
+	{
+		UTIL_Remove( m_pBeam );
+		m_pBeam = NULL;
+	}
+
+	// Stopping sounds
+	StopSound( entindex(), "TripwireGrenade.Hook" );
+	StopSound( entindex(), "TripwireGrenade.ShootRope" );
+
+	// And remove itself
+	UTIL_Remove( this );
+}
+
+void CTetherHook::Detonate()
+{
+	ExplosionCreate( GetAbsOrigin(), GetAbsAngles(), m_hTetheredOwner, 100, 250, true );
+	UTIL_ScreenShake( GetAbsOrigin(), 25.0, 150.0, 1.0, 250, SHAKE_START );
+
+	KillHook();
 }
 
 //-----------------------------------------------------------------------------
@@ -338,7 +383,13 @@ void CGrenadeHopWire::TetherThink( void )
 
 	m_nHooksShot++;
 
-	if ( m_nHooksShot == 8 )
+	m_hooksList.AddToTail( pHook ); // VXP
+
+#ifndef HOOK_JOKE
+	if ( m_nHooksShot == MAX_HOOKS )
+#else
+	if ( false )
+#endif // HOOK_JOKE
 	{
 		//TODO: Play a startup noise
 		SetThink( CombatThink );
@@ -347,7 +398,15 @@ void CGrenadeHopWire::TetherThink( void )
 	else
 	{
 		SetThink( TetherThink );
+#ifndef HOOK_JOKE
 		SetNextThink( gpGlobals->curtime + random->RandomFloat( 0.1f, 0.3f ) );
+#else
+		SetNextThink( gpGlobals->curtime + 0.1f );
+
+		Msg( "m_nHooksShot = %i\n", m_nHooksShot );
+		if ( m_nHooksShot >= 180 )
+			Event_Killed( CTakeDamageInfo( this, this, 100, GIB_NORMAL ) );
+#endif // HOOK_JOKE
 	}
 }
 
@@ -384,6 +443,40 @@ void CGrenadeHopWire::Detonate( void )
 	//Shoot 4-8 cords out to grasp the surroundings
 	SetThink( TetherThink );
 	SetNextThink( gpGlobals->curtime + 0.6f );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+void CGrenadeHopWire::Event_Killed( const CTakeDamageInfo &info )
+{
+	m_takedamage		= DAMAGE_NO;
+
+	// VXP: We don't need a delay
+//	SetThink( DelayDeathThink );
+//	SetNextThink( gpGlobals->curtime + random->RandomFloat( 0.1, 0.3 ) );
+
+	if ( m_pGlow )
+	{
+		UTIL_Remove( m_pGlow );
+		m_pGlow = NULL;
+	}
+
+	for ( int i = 0; i < m_hooksList.Count(); i++ )
+	{
+		m_hooksList[i]->Detonate();
+	}
+
+	trace_t tr;
+	UTIL_TraceLine ( GetAbsOrigin() + RandomVector( -8, 8 ), GetAbsOrigin() - RandomVector( -64, 64 ),  MASK_SOLID, this, COLLISION_GROUP_NONE, & tr);
+	UTIL_ScreenShake( GetAbsOrigin(), 25.0, 150.0, 1.0, 750, SHAKE_START );
+	Explode( &tr, DMG_BLAST ); // VXP: TODO: Maybe use ExplosionCreate just like at tether hooks?
+
+//	EmitSound( "TripmineGrenade.StopSound" );
+
+	UTIL_Remove( this );
 }
 
 //-----------------------------------------------------------------------------

@@ -17,6 +17,7 @@
 // VXP
 //#include <windows.h>
 #include <wininet.h>
+#include "stun_request.h"
 
 typedef int socklen_t;
 
@@ -2040,6 +2041,7 @@ VXP: NET_GetExternalIP
 
 ====================
 */
+/* VXP: Old, but working solution based on TCP HTTP-request
 void NET_GetExternalIP ( char ip[ 32 ] )
 {
 	HINTERNET hInternet, hFile;
@@ -2066,5 +2068,88 @@ void NET_GetExternalIP ( char ip[ 32 ] )
 //	return (char *)buffer;
 
 	strcpy( ip, buffer );
+}
+*/
+
+// VXP: New solution based on UDP STUN request
+void NET_GetExternalIP ( char ip[ 32 ] )
+{
+	// VXP: Does WSA already started up at launcher.dll?
+//	WSADATA wsaData;
+//	if (WSAStartup(MAKEWORD(2,1),&wsaData) != 0)
+//	{
+//		Warning("Couldn't initialize Winsock\n");
+//		return;
+//	}
+
+	char buffer[ 32 ];
+
+#ifdef STUN_DUMP_TO_FILE
+	ofstream myfile;
+	myfile.open ("srvlist.txt");
+	//myfile.open ("srvlist.txt", (ios::out | ios::app | ios::ate));
+	int successcount = 0;
+
+	for ( int i = 0; i < StunSrvListQty; i++ )
+	{
+		int rc = stun_xor_addr(StunSrvList[i].name, StunSrvList[i].port, 8080, return_ip_port);
+		if(rc == 0)
+		{
+			cout << "IP: - " << return_ip_port << endl;
+			cout << rc << endl;
+
+		//	break;
+			myfile << "{\"" << StunSrvList[i].name << "\", " << StunSrvList[i].port << "}," << endl;
+			successcount++;
+		}
+		else
+		{
+			myfile << "//{\"" << StunSrvList[i].name << "\", " << StunSrvList[i].port << "}," << endl;
+		}
+	}
+
+	myfile << endl<< successcount << endl;
+	myfile.close();
+
+#else
+
+/*	int rnd = rand() % StunSrvListQty;
+
+	int rc = stun_xor_addr(StunSrvList[rnd].name, StunSrvList[rnd].port, 8080, return_ip_port);
+	if(rc == 0)
+	{
+		cout << "IP: - " << return_ip_port << endl;
+		cout << rc << endl;
+	}
+	else
+	{
+		cout << "Can't get your IP" << endl;
+	}*/
+
+	int rc = -1, attempts = 0, rnd = 0;
+	/*do
+	{
+		attempts++;
+
+		rnd = RandomInt( 0, StunSrvListQty );
+		rc = stun_xor_addr(StunSrvList[rnd].name, StunSrvList[rnd].port, 8080, ip);
+	}
+	while ( rc != 0 && attempts <= 50 );*/
+
+	while ( rc != 0 && attempts <= 50 )
+	{
+		attempts++;
+
+		rnd = RandomInt( 0, StunSrvListQty );
+		rc = stun_xor_addr(StunSrvList[rnd].name, StunSrvList[rnd].port, 8080, buffer);
+	}
+
+	// VXP: Successfully get external IP address
+	if ( rc == 0 )
+	{
+		strcpy( ip, buffer );
+	}
+
+#endif // STUN_DUMP_TO_FILE
 }
 

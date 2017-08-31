@@ -44,6 +44,10 @@
 #define IDC_FILE_EXIT				1016
 #define IDC_FILE_REFRESH			1017
 
+// VXP
+#define IDC_FILE_LOADMERGEDMODEL			1018
+#define IDC_FILE_UNLOADMERGEDMODEL			1019
+
 #define IDC_OPTIONS_COLORBACKGROUND	1101
 #define IDC_OPTIONS_COLORGROUND		1102
 #define IDC_OPTIONS_COLORLIGHT		1103
@@ -92,7 +96,7 @@ public:
 	void redraw ();
 
 	void Refresh( void );
-	void LoadModelFile( const char *pszFile );
+	void LoadModelFile( const char *pszFile, int slot = -1 );
 	void SaveScreenShot( const char *pszFile );
 
 	// ACCESSORS

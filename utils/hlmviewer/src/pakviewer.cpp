@@ -300,7 +300,7 @@ PAKViewer::OnLoadModel ()
 		return 1;
 	}
 
-	g_pStudioModel->FreeModel ();
+	g_pStudioModel->FreeModel ( false );
 	if( !g_pStudioModel->LoadModel (str2) )
 	{
 		mxMessageBox (this, "Error reading model header.", g_appTitle, MX_MB_OK | MX_MB_ERROR);

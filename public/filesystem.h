@@ -137,6 +137,10 @@ public:
 	//  and this file becomes the highest priority search path ( i.e., it's looked at first
 	//   even before the mod's file system path ).
 	virtual void			AddSearchPath( const char *pPath, const char *pathID, SearchPathAdd_t addType = PATH_ADD_TO_TAIL ) = 0;
+
+	// Returns the search path, each path is separated by ;s. Returns the length of the string returned
+	virtual int				GetSearchPath( const char *pathID, bool bGetPackFiles, char *pPath, int nMaxLen ) = 0;
+
 	virtual bool			RemoveSearchPath( const char *pPath, const char *pathID = 0 ) = 0;
 
 	// Deletes a file (on the WritePath)

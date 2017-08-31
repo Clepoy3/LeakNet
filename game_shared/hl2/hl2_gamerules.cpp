@@ -1290,7 +1290,8 @@ bool CHalfLife2::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 #define BULLET_MASS_GRAINS_TO_KG(grains)	lbs2kg(BULLET_MASS_GRAINS_TO_LB(grains))
 
 // exaggerate all of the forces, but use real numbers to keep them consistent
-#define BULLET_IMPULSE_EXAGGERATION			3
+//#define BULLET_IMPULSE_EXAGGERATION			3
+#define BULLET_IMPULSE_EXAGGERATION			3.5 // VXP: Slightly increased as in Source 2007
 // convert a velocity in ft/sec and a mass in grains to an impulse in kg in/s
 #define BULLET_IMPULSE(grains, ftpersec)	((ftpersec)*12*BULLET_MASS_GRAINS_TO_KG(grains)*BULLET_IMPULSE_EXAGGERATION)
 
@@ -1303,6 +1304,7 @@ CAmmoDef *GetAmmoDef()
 	if ( !bInitted )
 	{
 		bInitted = true;
+	/*
 		def.AddAmmoType("SmallRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_small_round",	"sk_npc_dmg_small_round",	"sk_max_small_round",	BULLET_IMPULSE(125, 1325) );
 		def.AddAmmoType("MediumRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_medium_round",	"sk_npc_dmg_medium_round",	"sk_max_medium_round",	BULLET_IMPULSE(200, 1225) );
 		def.AddAmmoType("LargeRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_large_round",	"sk_npc_dmg_large_round",	"sk_max_large_round",	BULLET_IMPULSE(250, 1180) );
@@ -1323,6 +1325,31 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("Extinguisher",		DMG_BURN,					TRACER_NONE, 0,	0, 100, 0 );
 		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE, NULL,	NULL, NULL, 0 );
 		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE, 0,	0, 150, 10 * 400 ); // hit like a 10kg weight at 400 in/s
+		def.AddAmmoType("Hopwire",			DMG_BLAST,					TRACER_NONE, 1,	1, 5, 0);
+		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE, 5, 5, 15, 1.5 * 750 * 12 ); // hit like a 1.5kg weight at 750 ft/s
+	*/
+
+		// VXP: Slightly improved physics damage forces
+		def.AddAmmoType("SmallRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_small_round",	"sk_npc_dmg_small_round",	"sk_max_small_round",	BULLET_IMPULSE(125, 1325) );
+		def.AddAmmoType("MediumRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_medium_round",	"sk_npc_dmg_medium_round",	"sk_max_medium_round",	BULLET_IMPULSE(200, 1225) ); // VXP: Pistol
+		def.AddAmmoType("LargeRound",		DMG_BULLET,					TRACER_LINE, "sk_plr_dmg_large_round",	"sk_npc_dmg_large_round",	"sk_max_large_round",	BULLET_IMPULSE(250, 1180) );
+		def.AddAmmoType("FlareRound",		DMG_BURN,					TRACER_LINE, "sk_plr_dmg_flare_round",	"sk_npc_dmg_flare_round",	"sk_max_flare_round",	BULLET_IMPULSE(1500, 600) );
+		def.AddAmmoType("Buckshot",			DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE, "sk_plr_dmg_buckshot",		"sk_npc_dmg_buckshot",		"sk_max_buckshot",		BULLET_IMPULSE(400, 1200) );
+		def.AddAmmoType("ML_Grenade",		DMG_BURN,					TRACER_NONE, "sk_plr_dmg_ml_grenade",	"sk_npc_dmg_ml_grenade",	"sk_max_ml_grenade",	0 ); // VXP: RPG_Round
+		def.AddAmmoType("AR2_Grenade",		DMG_BURN,					TRACER_NONE, "sk_plr_dmg_ar2_grenade",	"sk_npc_dmg_ar2_grenade",	"sk_max_ar2_grenade",	0 );
+		def.AddAmmoType("SniperRound",		DMG_BULLET | DMG_SNIPER,	TRACER_NONE, "sk_plr_dmg_sniper_round",	"sk_npc_dmg_sniper_round",	"sk_max_sniper_round",	BULLET_IMPULSE(650, 6000));
+		def.AddAmmoType("SniperPenetratedRound", DMG_BULLET | DMG_SNIPER, TRACER_NONE, "sk_dmg_sniper_penetrate_plr", "sk_dmg_sniper_penetrate_npc", "sk_max_sniper_round", BULLET_IMPULSE(150, 6000));
+		def.AddAmmoType("Slam",				DMG_BURN,					TRACER_NONE, NULL,						NULL,						"sk_max_slam",			0);
+		def.AddAmmoType("Tripwire",			DMG_BURN,					TRACER_NONE, NULL,						NULL,						"sk_max_tripwire",		0);
+		def.AddAmmoType("Molotov",			DMG_BURN,					TRACER_NONE, "sk_plr_dmg_molotov",		"sk_npc_dmg_molotov",		"sk_max_molotov",		0);
+		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE, "sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",		0);
+		def.AddAmmoType("Brickbat",			DMG_CLUB,					TRACER_NONE, "sk_plr_dmg_brickbat",		"sk_npc_dmg_brickbat",		"sk_max_brickbat",		0);
+		def.AddAmmoType("Rock",				DMG_CLUB,					TRACER_NONE, "sk_plr_dmg_brickbat",		"sk_npc_dmg_brickbat",		"sk_max_brickbat",		0);
+		def.AddAmmoType("Thumper",			DMG_SONIC,					TRACER_NONE, 10, 10, 2, 0 );
+		def.AddAmmoType("Gravity",			DMG_CLUB,					TRACER_NONE, 0,	0, 8, 0 );
+		def.AddAmmoType("Extinguisher",		DMG_BURN,					TRACER_NONE, 0,	0, 100, 0 );
+		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE, NULL,	NULL, NULL, 0 );
+		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE, 0,	0, 150, BULLET_IMPULSE(650, 8000) ); // hit like a 10kg weight at 400 in/s
 		def.AddAmmoType("Hopwire",			DMG_BLAST,					TRACER_NONE, 1,	1, 5, 0);
 		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE, 5, 5, 15, 1.5 * 750 * 12 ); // hit like a 1.5kg weight at 750 ft/s
 	}

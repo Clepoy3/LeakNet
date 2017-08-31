@@ -113,6 +113,8 @@ typedef struct
 	int	thumbnailsize;
 
 	int	speechapiindex;
+
+	char mergeModelFile[4][256]; // VXP
 } ViewerSettings;
 
 extern ViewerSettings g_viewerSettings;

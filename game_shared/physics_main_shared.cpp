@@ -1090,11 +1090,11 @@ void CBaseEntity::PhysicsSimulate( void )
 	VPROF( "CBaseEntity::PhysicsSimulate" );
 	// NOTE:  Players override PhysicsSimulate and drive through their CUserCmds at that point instead of
 	//  processng through this function call!!!  They shouldn't chain to here ever.
-	Assert( !IsPlayer() );
-	if (IsPlayer())
-	{
-		return;
-	}
+//	Assert( !IsPlayer() );
+//	if (IsPlayer())
+//	{
+//		return;
+//	}
 
 	// Make sure not to simulate this guy twice per frame
 	if (m_nSimulationTick == gpGlobals->tickcount)
@@ -1102,9 +1102,24 @@ void CBaseEntity::PhysicsSimulate( void )
 
 	m_nSimulationTick = gpGlobals->tickcount;
 
+	Assert( !IsPlayer() );
+
 	// If we've got a moveparent, we must simulate that first.
 	CBaseEntity *pMoveParent = GetMoveParent();
 	bool bHasMoveParent = pMoveParent != NULL;
+
+	if ( (GetMoveType() == MOVETYPE_NONE && !pMoveParent) || (GetMoveType() == MOVETYPE_VPHYSICS ) )
+	{
+		PhysicsNone();
+		return;
+	}
+
+	// If ground entity goes away, make sure FL_ONGROUND is valid
+	if ( !GetGroundEntity() )
+	{
+		RemoveFlag( FL_ONGROUND );
+	}
+
 	if (pMoveParent)
 	{
 		pMoveParent->PhysicsSimulate();
@@ -1132,13 +1147,14 @@ void CBaseEntity::PhysicsSimulate( void )
 		break;
 
 	case MOVETYPE_VPHYSICS:
-		PhysicsNone();
+	//	PhysicsNone();
 		break;
 
 	case MOVETYPE_NONE:
-		if (!bHasMoveParent)
-			PhysicsNone();
-		else
+	//	if (!bHasMoveParent)
+	//		PhysicsNone();
+	//	else
+		Assert(pMoveParent);
 			PhysicsRigidChild();
 		break;
 

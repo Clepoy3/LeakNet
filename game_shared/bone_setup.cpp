@@ -3711,6 +3711,7 @@ void Studio_TranslateOldBones( char boneName[] )
 //-----------------------------------------------------------------------------
 // Purpose: Translates old bone names (i.e. Bip01 Neck) to new ones (ValveBiped.Bip01_Neck1)
 //-----------------------------------------------------------------------------
+#ifdef TRANSLATE_OLD_BONES
 void Studio_TranslateOldBones( char boneName[] )
 {
 	// VXP: Well, there's two ways to do things right now
@@ -3724,7 +3725,7 @@ void Studio_TranslateOldBones( char boneName[] )
 	//		But with other crap it can make sense
 	// Sergeant Stacker: Yeah I get the gist of it
 	// VXP: So, I'm removing my code then now
-	return;
+//	return;
 
 	if ( boneName == NULL )
 	{
@@ -3795,6 +3796,7 @@ char *GiveMeBone( const char *boneName )
 */
 }
 #endif // _DEBUG
+#endif // TRANSLATE_OLD_BONES
 
 //-----------------------------------------------------------------------------
 // Purpose: lookup bone by name
@@ -3806,8 +3808,10 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 	mstudiobone_t *pbones = pStudioHdr->pBone( 0 );
 	for ( int i = 0; i < pStudioHdr->numbones; i++ )
 	{
+#ifndef TRANSLATE_OLD_BONES
 		if (!stricmp(pName,pbones[i].pszName( ))) 
 			return i;
+#else
 
 #ifdef _DEBUG
 	//	if (!stricmp( GiveMeBone(pName), GiveMeBone(pbones[i].pszName() )))
@@ -3817,7 +3821,6 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 	//	if (!stricmp( Studio_TranslateOldBones(pName), Studio_TranslateOldBones(pbones[i].pszName() )))
 	//		return i;
 
-	/*	VXP: Commented - see Studio_TranslateOldBones function
 		char szBufNeedle[256];
 		strcpy( szBufNeedle, pName );
 		Studio_TranslateOldBones( szBufNeedle );
@@ -3828,7 +3831,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 
 		if (!stricmp( szBufNeedle, szBufHaystack ))
 			return i;
-	*/
+#endif // TRANSLATE_OLD_BONES
 	}
 
 	return -1;

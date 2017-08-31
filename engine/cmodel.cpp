@@ -321,12 +321,18 @@ cmodel_t *CM_LoadMap( const char *name, qboolean clientload, unsigned *checksum 
 //-----------------------------------------------------------------------------
 vcollide_t* CM_VCollideForModel( int modelindex, model_t* pModel )
 {
+	// VXP
+//	Assert( pModel );
+	if ( !pModel ) // VXP: Why is this can happen? GetCollisionModel is NULL, so m_pModel in CStaticProp doesn't set
+		return 0;
+
 	extern vcollide_t *Mod_VCollide( model_t* pModel );
 	switch( pModel->type )
 	{
 	case mod_brush:
 		return CM_GetVCollide( modelindex-1 );
 	case mod_studio:
+	//	Assert( (pModel->needload & FMODELLOADER_LOADED) );
 		return Mod_VCollide( pModel );
 	}
 

@@ -219,19 +219,6 @@ bool ClientModeHLNormal::ShouldDrawCrosshair( void )
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: Don't draw the current view entity if we are not in 3rd person
-//-----------------------------------------------------------------------------
-/* // VXP: Do I need to implement this here? I think not
-bool ClientModeShared::ShouldDrawLocalPlayer( C_BasePlayer *pPlayer )
-{
-	if ( ( pPlayer->index == render->GetViewEntity() ) && !C_BasePlayer::ShouldDrawLocalPlayer() )
-		return false;
-
-	return true;
-}
-*/
-
 void ClientModeHLNormal::OverrideView( CViewSetup *pSetup )
 {
 	// Let the player override the view.

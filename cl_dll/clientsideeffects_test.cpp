@@ -284,18 +284,16 @@ void FX_Tracer( Vector& start, Vector& end, int velocity, bool makeWhiz )
 	dist = VectorNormalize( dir );
 
 	// Don't make short tracers.
-//	if ( dist < 256 )
-//	{
-//		return;
-//	}
-	if ( dist >= 256 )
+	if ( dist < 256 )
 	{
-		float length = random->RandomFloat( 64.0f, 128.0f );
-		float life = ( dist + length ) / velocity;	//NOTENOTE: We want the tail to finish its run as well
-		
-		//Add it
-		FX_AddDiscreetLine( start, dir, velocity, length, dist, random->RandomFloat( 0.75f, 0.9f ), life, "effects/spark" );
+		return;
 	}
+
+	float length = random->RandomFloat( 64.0f, 128.0f );
+	float life = ( dist + length ) / velocity;	//NOTENOTE: We want the tail to finish its run as well
+	
+	//Add it
+	FX_AddDiscreetLine( start, dir, velocity, length, dist, random->RandomFloat( 0.75f, 0.9f ), life, "effects/spark" );
 
 	if( makeWhiz )
 	{

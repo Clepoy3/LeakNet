@@ -694,7 +694,7 @@ static ConCommand heartbeat("heartbeat", Heartbeat_f );
 //-----------------------------------------------------------------------------
 void CMaster::Init( void )
 {
-	// VXP
+	// VXP: Only once
 	strcpy( szExternalIP, "127.0.0.1" );
 	Msg( "Getting external IP...\n" );
 	NET_GetExternalIP( szExternalIP );

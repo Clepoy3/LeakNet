@@ -668,9 +668,6 @@ void CHLClient::View_Render( vrect_t *rect )
 {
 	VPROF( "View_Render" );
 
-	if ( rect->width == 0 || rect->height == 0 )
-		return;
-
 	// This is the main render entry point... 
 	g_SmokeFogOverlayAlpha = 0;	// Reset the overlay alpha.
 

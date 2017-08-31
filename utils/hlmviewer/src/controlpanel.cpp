@@ -99,7 +99,7 @@ bool PopulateBoneList( mxChoice* pChoice )
 	if ( g_pStudioModel )
 	{
 		studiohdr_t* pHdr = g_pStudioModel->getStudioHeader();
-		if (pHdr->numbones)
+		if (pHdr && pHdr->numbones)
 		{
 			for ( int i = 0; i < pHdr->numbones; i++ )
 			{
@@ -1966,7 +1966,7 @@ LoadModelResult_t ControlPanel::loadModel(const char *filename)
 {
 	SaveViewerSettings( g_viewerSettings.modelFile );
 
-	g_pStudioModel->FreeModel();
+	g_pStudioModel->FreeModel( false );
 
 	if (g_pStudioModel->LoadModel( filename ))
 	{
@@ -2005,6 +2005,21 @@ LoadModelResult_t ControlPanel::loadModel(const char *filename)
 			m_pAttachmentsWindow->OnLoadModel();
 
 			mx_setcwd (mx_getpath (filename));
+
+			// VXP
+			for (i = 0; i < 4; i++)
+			{
+				if (g_pStudioExtraModel[i])
+				{
+					g_pStudioExtraModel[i]->FreeModel( false );
+					delete g_pStudioExtraModel[i];
+					g_pStudioExtraModel[i] = NULL;
+				}
+				if (strlen( g_viewerSettings.mergeModelFile[i] ) != 0)
+				{
+					loadModel( g_viewerSettings.mergeModelFile[i], i );
+				}
+			}
 		}
 		else
 		{
@@ -2019,6 +2034,37 @@ LoadModelResult_t ControlPanel::loadModel(const char *filename)
 	return LoadModel_Success;
 }
 
+
+LoadModelResult_t ControlPanel::loadModel(const char *filename, int slot ) // VXP
+{
+	if (slot == -1)
+	{
+		return loadModel( filename );
+	}
+
+	if (g_pStudioExtraModel[slot] == NULL)
+	{
+		g_pStudioExtraModel[slot] = new StudioModel;
+	}
+	else
+	{
+		g_pStudioExtraModel[slot]->FreeModel( false );
+	}
+
+	if (g_pStudioExtraModel[slot]->LoadModel( filename ))
+	{
+		if (g_pStudioExtraModel[slot]->PostLoadModel( filename ))
+		{
+			return LoadModel_Success;
+		}
+		else
+		{
+			return LoadModel_PostLoadFail;
+		}
+	}
+
+	return LoadModel_LoadFail;
+}
 
 
 void

@@ -223,14 +223,14 @@ ScorePanel::ScorePanel( const char *pElementName ) : CHudElement( pElementName )
 	int xpos = XRES( g_ColumnInfo[0].m_Width + 3 );
 	m_TitleLabel.SetBounds(xpos + XRES( 10 ) , 4, wide - XRES( 20 ), SBOARD_TITLE_SIZE_Y);
 
-/*	SetPaintBorderEnabled(true);
-
+	SetPaintBorderEnabled(true);
+	
 	m_pCloseButton = new Button( this, "Close", "x" );
 	m_pCloseButton->SetPaintBackgroundEnabled( false );
 	m_pCloseButton->SetFgColor( Color( 255, 255, 255, 255 ) );
 	m_pCloseButton->AddActionSignalTarget( this );
 	m_pCloseButton->SetBounds( wide-XRES(12 + 6), YRES(2), XRES( 12 ) , YRES( 12 ) );
-	m_pCloseButton->SetCommand( "close" );*/
+	m_pCloseButton->SetCommand( "close" );
 
 	memset( m_PlayerGrids, 0, sizeof( m_PlayerGrids ) );
 	memset( m_PlayerEntries, 0, sizeof( m_PlayerEntries ) );

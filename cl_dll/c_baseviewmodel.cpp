@@ -99,9 +99,6 @@ void C_BaseViewModel::FireEvent( const Vector& origin, const QAngle& angles, int
 
 bool C_BaseViewModel::Interpolate( float currentTime )
 {
-	// Make sure we reset our animation information if we've switch sequences
-	UpdateAnimationParity();
-
 	bool bret = BaseClass::Interpolate( currentTime );
 
 	// Hack to extrapolate cycle counter for view model
@@ -116,12 +113,6 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 		elapsed_time = curtime - m_flAnimTime;
 		// Adjust for interpolated partial frame
 		elapsed_time += ( gpGlobals->interpolation_amount * TICK_RATE );
-	}
-
-	// Prediction errors?	
-	if ( elapsed_time < 0 )
-	{
-		elapsed_time = 0;
 	}
 
 	float dt = elapsed_time * GetSequenceCycleRate( GetSequence() );
@@ -175,7 +166,6 @@ int C_BaseViewModel::DrawModel( int flags )
 
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
 
-/*	// VXP: Moved to UpdateAnimationParity()
 	if ( m_nOldAnimationParity != m_nAnimationParity )
 	{
 		float curtime = (pPlayer && IsIntermediateDataAllocated()) ? pPlayer->GetFinalPredictedTime() : gpGlobals->curtime;
@@ -187,7 +177,6 @@ int C_BaseViewModel::DrawModel( int flags )
 		m_flAnimTime			= curtime;
 		m_iv_flAnimTime.Reset();
 	}
-*/
 
 	int ret;
 	// If the local player's overriding the viewmodel rendering, let him do it
@@ -256,30 +245,6 @@ bool C_BaseViewModel::IsTransparent( void )
 	}
 
 	return BaseClass::IsTransparent();
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: If the animation parity of the weapon has changed, we reset cycle to avoid popping
-//-----------------------------------------------------------------------------
-void C_BaseViewModel::UpdateAnimationParity( void )
-{
-	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-	if ( !pPlayer )
-		return;
-	
-	// If we're predicting, then we don't use animation parity because we change the animations on the clientside
-	// while predicting. When not predicting, only the server changes the animations, so a parity mismatch
-	// tells us if we need to reset the animation.
-	if ( m_nOldAnimationParity != m_nAnimationParity && !GetPredictable() )
-	{
-		float curtime = (pPlayer && IsIntermediateDataAllocated()) ? pPlayer->GetFinalPredictedTime() : gpGlobals->curtime;
-		// FIXME: this is bad
-		// Simulate a networked m_flAnimTime and m_flCycle
-		// FIXME:  Do we need the magic 0.1?
-		m_flCycle = 0.0f; // GetSequenceCycleRate( GetSequence() ) * 0.1;
-		m_flAnimTime = curtime;
-		m_iv_flAnimTime.Reset();
-	}
 }
 
 //-----------------------------------------------------------------------------

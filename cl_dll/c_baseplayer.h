@@ -146,8 +146,6 @@ public:
 
 	// Global/static methods
 	static C_BasePlayer			*GetLocalPlayer( void );
-	
-	static bool					ShouldDrawLocalPlayer();
 
 	// Called by the view model if its rendering is being overridden.
 	virtual bool		ViewModel_IsTransparent( void );

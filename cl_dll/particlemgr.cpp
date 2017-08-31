@@ -909,9 +909,8 @@ void CParticleMgr::RemoveEffect( CParticleEffectBinding *pEffect )
 	if ( pEffect->m_pSim )
 	{
 		pEffect->m_pSim->NotifyRemove();
-		m_Effects.Remove( listIndex ); // VXP: Was after this "if"
 	}
-//	m_Effects.Remove( listIndex );
+	m_Effects.Remove( listIndex );
 }
 
 

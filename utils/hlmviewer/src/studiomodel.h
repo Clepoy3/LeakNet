@@ -74,12 +74,14 @@ public:
 
 	bool							IsModelLoaded() const { return m_pstudiohdr != 0; }
 
-	void							FreeModel ();
+	const matrix3x4_t				*BoneToWorld( int nBoneIndex ) const { return &m_pBoneToWorld[nBoneIndex]; } // VXP
+
+	void							FreeModel ( bool bReleasing );
 	bool							LoadModel( const char *modelname );
 	virtual bool					PostLoadModel ( const char *modelname );
 	bool							SaveModel ( const char *modelname );
 
-	virtual int						DrawModel( void );
+	virtual int						DrawModel( bool mergeBones = false );
 
 	virtual void					AdvanceFrame( float dt );
 	float							GetCycle( void );
@@ -272,10 +274,13 @@ private:
 
 private:
 	float							m_flexweight[MAXSTUDIOFLEXCTRL];
+//	matrix3x4_t						m_pBoneToWorld[MAXSTUDIOBONES]; // VXP
+	matrix3x4_t						*m_pBoneToWorld; // VXP
 public:
 	virtual int						FlexVerts( mstudiomesh_t *pmesh );
 	virtual void					RunFlexRules( void );
-	virtual void					SetUpBones ( void );
+	virtual int						BoneMask( void ); // VXP
+	virtual void					SetUpBones ( bool mergeBones );
 
 	int								GetLodUsed( void );
 	float							GetLodMetric( void );
@@ -305,6 +310,7 @@ private:
 
 extern Vector g_vright;		// needs to be set to viewer's right in order for chrome to work
 extern StudioModel *g_pStudioModel;
+extern StudioModel *g_pStudioExtraModel[4]; // VXP
 
 
 

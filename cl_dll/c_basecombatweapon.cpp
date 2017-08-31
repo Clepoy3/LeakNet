@@ -68,14 +68,6 @@ void C_BaseCombatWeapon::OnPreDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-static inline bool ShouldDrawLocalPlayer( void )
-{
-	return C_BasePlayer::ShouldDrawLocalPlayer();
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
 void C_BaseCombatWeapon::OnRestore()
 {
 	BaseClass::OnRestore();
@@ -83,16 +75,11 @@ void C_BaseCombatWeapon::OnRestore()
 	m_bJustRestored = true;
 }
 
-int C_BaseCombatWeapon::GetWorldModelIndex( void )
-{
-	return m_iWorldModelIndex;
-}
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : bnewentity - 
 //-----------------------------------------------------------------------------
-/*void C_BaseCombatWeapon::OnDataChanged( DataUpdateType_t updateType )
+void C_BaseCombatWeapon::OnDataChanged( DataUpdateType_t updateType )
 {
 	BaseClass::OnDataChanged(updateType);
 
@@ -131,56 +118,6 @@ int C_BaseCombatWeapon::GetWorldModelIndex( void )
 			pPlayer->EmitSound( "Player.PickupWeapon" );
 		}
 	}
-
-	m_bJustRestored = false;
-}*/
-void C_BaseCombatWeapon::OnDataChanged( DataUpdateType_t updateType )
-{
-	BaseClass::OnDataChanged(updateType);
-
-	bool bnewentity = (updateType == DATA_UPDATE_CREATED);
-
-	CHandle< C_BaseCombatWeapon > handle;
-	handle = this;
-
-	// If it's being carried by the *local* player, on the first update,
-	// find the registered weapon for this ID
-
-	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-	C_BaseCombatCharacter *pOwner = GetOwner();
-
-	// check if weapon is carried by local player
-	bool bIsLocalPlayer = pPlayer && pPlayer == pOwner;
-//	if (!pPlayer || !IsBeingCarried() || (GetOwner() != pPlayer) )
-	if ( bIsLocalPlayer && !ShouldDrawLocalPlayer() )
-	{
-		// If I was just picked up, or created & immediately carried, add myself to this client's list of weapons
-		if ( (m_iState != WEAPON_NOT_CARRIED ) && 
-			( bnewentity || m_iOldState == WEAPON_NOT_CARRIED ) )
-		{
-			// Tell the HUD this weapon's been picked up
-			if ( ShouldDrawPickup() )
-			{
-				CBaseHudWeaponSelection *pHudSelection = GetHudWeaponSelection();
-				if ( pHudSelection )
-				{
-					pHudSelection->OnWeaponPickup( this );
-				}
-	
-				pPlayer->EmitSound( "Player.PickupWeapon" );
-			}
-		}
-	}
-	// VXP: From Source 2007
-	else // weapon carried by other player or not at all?
-	{
-		// See comment below
-		EnsureCorrectRenderingModel();
-	}
-
-//	UpdateVisibility(); // VXP: Not implemented yet
-
-//	m_iOldState = m_iState; // VXP: PreDataChanged?
 
 	m_bJustRestored = false;
 }
@@ -487,55 +424,5 @@ int C_BaseCombatWeapon::DrawModel( int flags )
 		return 0;
 
 //	model = modelinfo->GetModel( m_iWorldModelIndex );
-
-	// check if local player chases owner of this weapon in first person
-	C_BasePlayer *localplayer = C_BasePlayer::GetLocalPlayer();
-
-	if ( localplayer && localplayer->IsObserver() && GetOwner() )
-	{
-		// don't draw weapon if chasing this guy as spectator
-		// we don't check that in ShouldDraw() since this may change
-		// without notification 
-		
-		if ( localplayer->GetObserverMode() == OBS_MODE_IN_EYE &&
-			 localplayer->GetObserverTarget() == GetOwner() ) 
-			return false;
-	}
-
-	// See comment below
-	EnsureCorrectRenderingModel();
-
 	return BaseClass::DrawModel( flags );
-}
-
-// If the local player is visible (thirdperson mode, tf2 taunts, etc., then make sure that we are using the 
-//  w_ (world) model not the v_ (view) model or else the model can flicker, etc.
-// Otherwise, if we're not the local player, always use the world model
-void C_BaseCombatWeapon::EnsureCorrectRenderingModel()
-{
-	C_BasePlayer *localplayer = C_BasePlayer::GetLocalPlayer();
-	if ( localplayer && 
-		localplayer == GetOwner() &&
-		!ShouldDrawLocalPlayer() )
-	//	!input->CAM_IsThirdPerson() )
-	{
-		return;
-	}
-
-	// BRJ 10/14/02
-	// FIXME: Remove when Yahn's client-side prediction is done
-	// It's a hacky workaround for the model indices fighting
-	// (GetRenderBounds uses the model index, which is for the view model)
-	SetModelIndex( GetWorldModelIndex() );
-	SetModelPointer( modelinfo->GetModel( GetWorldModelIndex() ) ); // VXP: From old code (not Source 2007)
-
-	// Validate our current sequence just in case ( in theory the view and weapon models should have the same sequences for sequences that overlap at least )
-//	CStudioHdr *pStudioHdr = GetModelPtr();
-	studiohdr_t *pStudioHdr = GetModelPtr();
-	if ( pStudioHdr && 
-	//	GetSequence() >= pStudioHdr->GetNumSeq() )
-		GetSequence() >= pStudioHdr->numseq )
-	{
-		SetSequence( 0 );
-	}
 }

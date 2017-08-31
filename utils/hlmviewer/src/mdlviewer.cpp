@@ -124,6 +124,12 @@ MDLViewer::MDLViewer ()
 	menuFile->add ("Load Model...", IDC_FILE_LOADMODEL);
 	menuFile->add( "Refresh (F5)", IDC_FILE_REFRESH );
 	menuFile->addSeparator ();
+
+	// VXP
+	menuFile->add ("Load Weapon...", IDC_FILE_LOADMERGEDMODEL);
+	menuFile->add ("Unload Weapon", IDC_FILE_UNLOADMERGEDMODEL);
+	menuFile->addSeparator ();
+
 	menuFile->add ("Load Background Texture...", IDC_FILE_LOADBACKGROUNDTEX);
 	menuFile->add ("Load Ground Texture...", IDC_FILE_LOADGROUNDTEX);
 	menuFile->addSeparator ();
@@ -222,13 +228,13 @@ void MDLViewer::Refresh( void )
 // Purpose: Loads the file and updates the MRU list.
 // Input  : pszFile - File to load.
 //-----------------------------------------------------------------------------
-void MDLViewer::LoadModelFile( const char *pszFile )
+void MDLViewer::LoadModelFile( const char *pszFile, int slot )
 {
 	// copy off name, pszFile may be point into recentFiles array
 	char filename[1024];
 	strcpy( filename, pszFile );
 
-	LoadModelResult_t eLoaded = d_cpl->loadModel( filename );
+	LoadModelResult_t eLoaded = d_cpl->loadModel( filename, slot );
 
 	if ( eLoaded != LoadModel_Success )
 	{
@@ -250,24 +256,27 @@ void MDLViewer::LoadModelFile( const char *pszFile )
 		return;
 	}
 
-	int i;
-	for (i = 0; i < 4; i++)
+	if (slot == -1)
 	{
-		if (!mx_strcasecmp( recentFiles[i], filename ))
-			break;
+		int i;
+		for (i = 0; i < 4; i++)
+		{
+			if (!mx_strcasecmp( recentFiles[i], filename ))
+				break;
+		}
+
+		// shift down existing recent files
+		for (i = ((i > 3) ? 3 : i); i > 0; i--)
+		{
+			strcpy (recentFiles[i], recentFiles[i-1]);
+		}
+
+		strcpy( recentFiles[0], filename );
+
+		initRecentFiles ();
+
+		setLabel( "%s", filename );
 	}
-
-	// shift down existing recent files
-	for (i = ((i > 3) ? 3 : i); i > 0; i--)
-	{
-		strcpy (recentFiles[i], recentFiles[i-1]);
-	}
-
-	strcpy( recentFiles[0], filename );
-
-	initRecentFiles ();
-
-	setLabel( "%s", filename );
 }
 
 /*
@@ -415,6 +424,30 @@ MDLViewer::handleEvent (mxEvent *event)
 			if (ptr)
 			{
 				LoadModelFile( ptr );
+			}
+		}
+		break;
+
+		case IDC_FILE_LOADMERGEDMODEL:
+		{
+			const char *ptr = mxGetOpenFileName (this, 0, "*.mdl");
+			if (ptr)
+			{
+				strcpy( g_viewerSettings.mergeModelFile[0], ptr );
+				LoadModelFile( ptr, 0 );
+			}
+		}
+		break;
+
+		case IDC_FILE_UNLOADMERGEDMODEL:
+		{
+			// FIXME: move to d_cpl
+			if (g_pStudioExtraModel[0])
+			{
+				strcpy( g_viewerSettings.mergeModelFile[0], "" );
+				g_pStudioExtraModel[0]->FreeModel( false );
+				delete g_pStudioExtraModel[0];
+				g_pStudioExtraModel[0] = NULL;
 			}
 		}
 		break;

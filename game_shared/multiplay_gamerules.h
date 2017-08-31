@@ -137,7 +137,7 @@ protected:
 	
 	virtual void			InitDefaultAIRelationships( void );
 	virtual const char*		AIClassText(int classType);
-	virtual const char *GetGameDescription( void ) { return "Half-Life 2: Deathmatch"; }
+	virtual const char *GetGameDescription( void ) { return "Deathmatch"; }
 
 #endif
 };

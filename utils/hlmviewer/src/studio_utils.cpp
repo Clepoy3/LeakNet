@@ -46,6 +46,7 @@ static StudioModel g_studioModel;
 
 // Expose it to the rest of the app
 StudioModel *g_pStudioModel = &g_studioModel;
+StudioModel *g_pStudioExtraModel[4]; // VXP
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -128,7 +129,7 @@ void StudioModel::Init()
 
 void StudioModel::Shutdown( void )
 {
-	g_pStudioModel->FreeModel();
+	g_pStudioModel->FreeModel( false );
 	if( m_pStudioRender )
 	{
 		m_pStudioRender->Shutdown();
@@ -141,7 +142,7 @@ void StudioModel::Shutdown( void )
 
 void StudioModel::ReleaseStudioModel()
 {
-	g_pStudioModel->FreeModel(); 
+	g_pStudioModel->FreeModel( true ); 
 }
 
 void StudioModel::RestoreStudioModel()
@@ -157,7 +158,7 @@ void StudioModel::RestoreStudioModel()
 //-----------------------------------------------------------------------------
 // Purpose: Frees the model data and releases textures from OpenGL.
 //-----------------------------------------------------------------------------
-void StudioModel::FreeModel ()
+void StudioModel::FreeModel ( bool bReleasing )
 {
 	if (!m_pStudioRender)
 		return;
@@ -167,7 +168,7 @@ void StudioModel::FreeModel ()
 	if (m_pstudiohdr)
 		free (m_pstudiohdr);
 
-	m_pstudiohdr = 0;
+	m_pstudiohdr = NULL;
 
 	int i;
 	for (i = 0; i < 32; i++)
@@ -191,6 +192,15 @@ void StudioModel::FreeModel ()
 #endif
 
 	memset( &m_HardwareData, 0, sizeof( m_HardwareData ) );
+
+	if ( !bReleasing )
+	{
+		if (m_pModelName)
+		{
+			delete[] m_pModelName;
+			m_pModelName = NULL;
+		}
+	}
 
 	m_SurfaceProps.Purge();
 	// BUG: Jay, when I call this it crashes
