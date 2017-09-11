@@ -25,6 +25,7 @@
 #include "ai_basenpc.h"		
 #include "weapon_physcannon.h"
 #include "globals.h"
+#include "vehicle_base.h" // VXP
 
 extern ConVar weapon_showproficiency;
 extern proficiencyinfo_t g_WeaponProficiencyTable[];
@@ -342,7 +343,6 @@ void CHL2_Player::PreThink(void)
 	UpdateWeaponPosture();
 }
 
-
 //------------------------------------------------------------------------------
 // Purpose :
 // Input   :
@@ -360,8 +360,9 @@ Class_T  CHL2_Player::Classify ( void )
 		if(IsInAVehicle())
 		{
 			// VXP:
-			// IDrivableVehicle *m_pDrivableVehicle = dynamic_cast<IDrivableVehicle*>(m_pVehicle);
-			IServerVehicle *pVehicle = GetVehicle();
+		//	IDrivableVehicle *m_pDrivableVehicle = dynamic_cast<IDrivableVehicle*>(m_pVehicle);
+		//	IServerVehicle *pVehicle = GetVehicle();
+			CPropVehicleDriveable *pVehicle = dynamic_cast<CPropVehicleDriveable*>(GetVehicleEntity());
 			return pVehicle->ClassifyPassenger( this, CLASS_PLAYER );
 		}
 		else
@@ -1343,15 +1344,18 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 	return BaseClass::ClientCommand( cmd );
 }
 
-void CHL2_Player::GetInVehicle( IServerVehicle *pVehicle, int nRole )
+bool CHL2_Player::GetInVehicle( IServerVehicle *pVehicle, int nRole )
 {
-	BaseClass::GetInVehicle( pVehicle, nRole );
+	bool done = BaseClass::GetInVehicle( pVehicle, nRole );
 
+	// VXP: TODO: Maybe, this code can help in npc_strider.cpp
 	// Orient the player to face forward! While we're in hierarchy,
 	// the player's view angles are *relative*
 	QAngle qRelativeAngles = GetLocalAngles();
 	qRelativeAngles[ROLL] = 0;
 	SnapEyeAngles( qRelativeAngles );
+
+	return done;
 }
 
 
@@ -1397,6 +1401,8 @@ void CHL2_Player::PlayerUse ( void )
 
 	CBaseEntity *pUseEntity = FindUseEntity();
 
+	bool usedSomething = false; // VXP
+
 	// Found an object
 	if ( pUseEntity )
 	{
@@ -1423,11 +1429,15 @@ void CHL2_Player::PlayerUse ( void )
 				m_afPhysicsFlags |= PFLAG_USING;
 
 			pUseEntity->AcceptInput( "Use", this, this, emptyVariant, USE_TOGGLE );
+
+			usedSomething = true;
 		}
 		// UNDONE: Send different USE codes for ON/OFF.  Cache last ONOFF_USE object to send 'off' if you turn away
 		else if ( (m_afButtonReleased & IN_USE) && (pUseEntity->ObjectCaps() & FCAP_ONOFF_USE) )	// BUGBUG This is an "off" use
 		{
 			pUseEntity->AcceptInput( "Use", this, this, emptyVariant, USE_TOGGLE );
+
+			usedSomething = true;
 		}
 
 #if	HL2_SINGLE_PRIMARY_WEAPON_MODE
@@ -1449,6 +1459,8 @@ void CHL2_Player::PlayerUse ( void )
 					Weapon_DropSlot( pWeapon->GetSlot() );
 					Weapon_Equip( pWeapon );
 				}
+
+				usedSomething = true;
 			}
 		}
 #endif
@@ -1456,6 +1468,13 @@ void CHL2_Player::PlayerUse ( void )
 	else if ( m_afButtonPressed & IN_USE )
 	{
 		EmitSound( "HL2Player.UseDeny" );
+	}
+
+	// Debounce the use key
+	if ( usedSomething && pUseEntity )
+	{
+		m_Local.m_nOldButtons |= IN_USE;
+		m_afButtonPressed &= ~IN_USE;
 	}
 }
 

@@ -374,21 +374,24 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 	Vector	forward;
 	AngleVectors( angles, &forward, NULL, NULL );
 
-	Vector vDifference;
-	VectorSubtract( forward, m_vecLastFacing, vDifference );
-
-	if ( fabs( vDifference.x ) > MAX_VIEWMODEL_LAG ||
-		 fabs( vDifference.y ) > MAX_VIEWMODEL_LAG ||
-		 fabs( vDifference.z ) > MAX_VIEWMODEL_LAG )
+	if ( gpGlobals->frametime != 0.0f )
 	{
-		m_vecLastFacing = forward;
+		Vector vDifference;
+		VectorSubtract( forward, m_vecLastFacing, vDifference );
+	
+		if ( fabs( vDifference.x ) > MAX_VIEWMODEL_LAG ||
+			 fabs( vDifference.y ) > MAX_VIEWMODEL_LAG ||
+			 fabs( vDifference.z ) > MAX_VIEWMODEL_LAG )
+		{
+			m_vecLastFacing = forward;
+		}
+	
+		// FIXME:  Needs to be predictable?
+		VectorMA( m_vecLastFacing, 5.0f * gpGlobals->frametime, vDifference, m_vecLastFacing );
+		// Make sure it doesn't grow out of control!!!
+		VectorNormalize( m_vecLastFacing );
+		VectorMA( origin, 5, vDifference * -1, origin );
 	}
-
-	// FIXME:  Needs to be predictable?
-	VectorMA( m_vecLastFacing, 5.0f * gpGlobals->frametime, vDifference, m_vecLastFacing );
-	// Make sure it doesn't grow out of control!!!
-	VectorNormalize( m_vecLastFacing );
-	VectorMA( origin, 5, vDifference * -1, origin );
 
 	Vector right, up;
 	AngleVectors( original_angles, &forward, &right, &up );

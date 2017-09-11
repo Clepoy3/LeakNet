@@ -178,6 +178,9 @@ hudelement_hidden_t sHudHiddenArray[] =
 	{ "CHudSecondaryAmmoOld", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT },
 	{ "CHudSuitPowerOld", HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT },
 
+	// LeakNet elements
+	{ "CHudAR2Mode", HIDEHUD_PLAYERDEAD },
+
 	{ NULL, 0 },
 };
 

@@ -157,12 +157,16 @@ public:
 	virtual void		FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *move ) { return; }
 	virtual bool		CanEnterVehicle( CBaseEntity *pEntity );
 	virtual bool		CanExitVehicle( CBaseEntity *pEntity );
+	virtual void		SetVehicleEntryAnim( bool bOn ) { m_bEnterAnimOn = bOn; } // VXP
+	virtual void		SetVehicleExitAnim( bool bOn, Vector vecEyeExitEndpoint ) { m_bExitAnimOn = bOn; /*if ( bOn ) m_vecEyeExitEndpoint = vecEyeExitEndpoint;*/ } // VXP
 	virtual void		EnterVehicle( CBasePlayer *pPlayer );
 	virtual void		ExitVehicle( int iRole );
 	virtual bool		PlayExitAnimation( void );
 
 	// If this is a vehicle, returns the vehicle interface
 	virtual IServerVehicle *GetServerVehicle() { return &m_ServerVehicle; }
+	
+	virtual Class_T		ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
 
 protected:
 	// Contained IServerVehicle

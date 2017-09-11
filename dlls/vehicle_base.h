@@ -30,7 +30,9 @@ class CSoundPatch;
 class CBaseServerVehicle : public IServerVehicle
 {
 public:
-	DECLARE_DATADESC();
+//	DECLARE_DATADESC();
+	DECLARE_SIMPLE_DATADESC();
+	DECLARE_CLASS_NOBASE( CBaseServerVehicle );
 
 	CBaseServerVehicle( void );
 	~CBaseServerVehicle( void );
@@ -56,9 +58,11 @@ public:
 	virtual bool			IsPassengerDamagable( int nRole  = VEHICLE_DRIVER ) { return true; }
 	virtual bool			IsVehicleUpright( void ) { return true; }
 	virtual void			GetPassengerStartPoint( int nRole, Vector *pPoint, QAngle *pAngles );
-	virtual void			GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles );
-	// VXP: make here dynamic_cast to
-	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
+	virtual bool			GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles );
+
+	// VXP: Moved to CPropVehicleDriveable
+//	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
+
 	virtual float			DamageModifier ( CTakeDamageInfo &info ) { return 1.0; }
 	virtual const vehicleparams_t	*GetVehicleParams( void ) { return NULL; }
 
@@ -95,7 +99,7 @@ public:
 	virtual bool			CheckExitPoint( float yaw, int distance, Vector *pEndPoint );
 	virtual int				GetEntryAnimForPoint( const Vector &vecPoint );
 	virtual int				GetExitAnimToUse( void );
-	virtual void			HandleEntryExitFinish( bool bExitAnimOn );
+	virtual void			HandleEntryExitFinish( bool bExitAnimOn, bool bResetAnim );
 
 	virtual void			SetVehicle( CBaseEntity *pVehicle );
 	IDrivableVehicle 		*GetDrivableVehicle( void );
@@ -159,7 +163,9 @@ public:
 //-----------------------------------------------------------------------------
 class CFourWheelServerVehicle : public CBaseServerVehicle
 {
-	typedef CBaseServerVehicle BaseClass;
+	DECLARE_CLASS( CFourWheelServerVehicle, CBaseServerVehicle );
+//	typedef CBaseServerVehicle BaseClass;
+
 // IServerVehicle
 public:
 	virtual ~CFourWheelServerVehicle( void )
@@ -176,6 +182,8 @@ public:
 
 public:
 	virtual void	SetVehicle( CBaseEntity *pVehicle );
+	
+	DECLARE_SIMPLE_DATADESC();
 
 private:
 	CPropVehicleDriveable		*GetFourWheelVehicle( void );
@@ -287,9 +295,14 @@ public:
 	virtual void		FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *move ) { return; }
 	virtual bool		CanEnterVehicle( CBaseEntity *pEntity );
 	virtual bool		CanExitVehicle( CBaseEntity *pEntity );
+	virtual void		SetVehicleEntryAnim( bool bOn ) { m_bEnterAnimOn = bOn; } // VXP
+	virtual void		SetVehicleExitAnim( bool bOn, Vector vecEyeExitEndpoint ) { m_bExitAnimOn = bOn; /*if ( bOn ) m_vecEyeExitEndpoint = vecEyeExitEndpoint;*/ } // VXP
 	virtual void		EnterVehicle( CBasePlayer *pPlayer );
 	virtual void		ExitVehicle( int iRole );
 	virtual bool		PlayExitAnimation( void );
+
+	// VXP: I suppose this should be here
+	virtual Class_T		ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
 
 	// If this is a vehicle, returns the vehicle interface
 	virtual IServerVehicle *GetServerVehicle() { return m_pServerVehicle; }

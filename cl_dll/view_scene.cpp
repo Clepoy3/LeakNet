@@ -47,7 +47,7 @@ static bool s_bCanAccessCurrentView = false;
 
 static ConVar r_WaterDrawRefraction( "r_WaterDrawRefraction", "1", 0, "Enable water refraction" );
 static ConVar r_WaterDrawReflection( "r_WaterDrawReflection", "1", 0, "Enable water reflection" );
-static ConVar r_WaterEntReflection( "r_WaterEntReflection", "0", FCVAR_ARCHIVE | FCVAR_USERINFO, "Enable water entity reflection" );
+static ConVar r_WaterEntReflection( "r_WaterEntReflection", "0", FCVAR_ARCHIVE, "Enable water entity reflection" );
 static ConVar r_ForceWaterLeaf( "r_ForceWaterLeaf", "1", 0, "Enable for optimization to water - considers view in leaf under water for purposes of culling" );
 static ConVar cl_copyframebuffertotexture( "cl_copyframebuffertotexture", "1" );
 static ConVar cl_alwayscopyframebuffertotexture( "cl_alwayscopyframebuffertotexture", "1" );
@@ -98,8 +98,7 @@ CViewRender::CViewRender()
 	m_AnglesHistoryCounter = 0;
 	memset(m_AnglesHistory, 0, sizeof(m_AnglesHistory));
 	m_flCheapWaterStartDistance = 0.0f;
-//	m_flCheapWaterEndDistance = 0.1f;
-	m_flCheapWaterEndDistance = 5000.0f; // VXP
+	m_flCheapWaterEndDistance = 0.1f;
 }
 
 

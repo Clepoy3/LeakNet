@@ -36,4 +36,7 @@ void RegisterUserMessages( void )
 	usermessages->Register( "RequestState", 0 );
 
 	usermessages->Register( "TerrainMod", -1 );
+
+	// LeakNet
+	usermessages->Register( "AR2ModeChanged", -1 );
 }

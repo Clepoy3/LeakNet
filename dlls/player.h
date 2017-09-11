@@ -305,7 +305,7 @@ public:
 
 	// Vehicles
 	bool					IsInAVehicle( void ) const;
-	virtual void			GetInVehicle( IServerVehicle *pVehicle, int nRole );
+	virtual bool			GetInVehicle( IServerVehicle *pVehicle, int nRole );
 	void					LeaveVehicle( const Vector &vecExitPoint = vec3_origin, const QAngle &vecExitAngles = vec3_angle );
 	
 	// override these for 

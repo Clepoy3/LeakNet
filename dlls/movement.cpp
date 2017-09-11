@@ -278,6 +278,8 @@ public:
 	virtual void StopMoving( void );
 	virtual int	IsMoving( void );
 
+	virtual void InputForceStart( inputdata_t &inputdata ); // VXP
+
 	// derived classes should override this to get notification of arriving at new keyframes
 //	virtual void ArrivedAtKeyFrame( CPathKeyFrame * ) {}
 
@@ -324,8 +326,18 @@ BEGIN_DATADESC( CBaseMoveBehavior )
 	DEFINE_FIELD( CBaseMoveBehavior, m_flTimeIntoFrame, FIELD_FLOAT ),
 	DEFINE_FIELD( CBaseMoveBehavior, m_iDirection, FIELD_INTEGER ),
 
+	// VXP
+	DEFINE_INPUTFUNC( CBaseMoveBehavior, FIELD_VOID, "ForceStart", InputForceStart ),
+
 END_DATADESC()
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBaseMoveBehavior::InputForceStart( inputdata_t &inputdata )
+{
+	StartMoving( 1 );
+}
 
 void CBaseMoveBehavior::Spawn( void )
 {

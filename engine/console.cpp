@@ -846,8 +846,7 @@ void CConPanel::PaintBackground()
 
 	int wide = GetWide();
 	char ver[ 100 ];
-//	Q_snprintf(ver, sizeof( ver ), "Source Engine %i/%s (build %d - days until 9/30/03)", PROTOCOL_VERSION, gpszVersionString, build_number() );
-	Q_snprintf(ver, sizeof( ver ), "Source Engine %i (build %d)", PROTOCOL_VERSION,  build_number() );
+	Q_snprintf(ver, sizeof( ver ), "Source Engine %i/%s (build %d - days until 9/30/03)", PROTOCOL_VERSION, gpszVersionString, build_number() );
 
 	vgui::surface()->DrawSetTextColor( Color( 255, 255, 255, 255 ) );
 	int x = wide - DrawTextLen( m_hFont, ver ) - 2;

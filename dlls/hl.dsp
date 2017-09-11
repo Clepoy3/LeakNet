@@ -7145,6 +7145,41 @@ SOURCE=.\hl2_dll\vehicle_jeep.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\hl2_dll\vehicle_jetski.cpp
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\hl2_dll\WaterLODControl.cpp
 
 !IF  "$(CFG)" == "hl - Win32 Release HL2"

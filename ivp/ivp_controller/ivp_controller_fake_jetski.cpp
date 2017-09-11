@@ -39,7 +39,7 @@ void IVP_Controller_Raycast_Fake_Jetski::do_simulation_controller( IVP_Event_Sim
 	SetupWheelRaycasts( raySolverTemplates, matWorldFromCore, wheelsTemp );
     do_raycasts( pEventSim, n_wheels, raySolverTemplates, rayHits, flFrictions );
 
-#if 1
+#if 0
 	//
 
 
@@ -480,8 +480,8 @@ void IVP_Controller_Raycast_Fake_Jetski::ApplySteeringForces( IVP_Raycast_Fake_J
 		
 		int nAxis = iWheel / wheels_per_axis;
 
-		IVP_DOUBLE flForceRotational = pForcesNeededToDriveStraight[nAxis];
-//		IVP_DOUBLE flForceRotational = GetSteeringForceRotational( iWheel, pTempWheels, pCarCore, pEventSim, pForcesNeededToDriveStraight );
+//		IVP_DOUBLE flForceRotational = pForcesNeededToDriveStraight[nAxis]; // VXP: Making jetski rotate while driving
+		IVP_DOUBLE flForceRotational = GetSteeringForceRotational( iWheel, pTempWheels, pCarCore, pEventSim, pForcesNeededToDriveStraight );
 
 		IVP_FLOAT flQuadSumForce = flFrForce * flFrForce + flForceRotational * flForceRotational;
 		if ( flQuadSumForce > flMaxForce * flMaxForce )
@@ -494,6 +494,7 @@ void IVP_Controller_Raycast_Fake_Jetski::ApplySteeringForces( IVP_Raycast_Fake_J
 			if ( !pWheel->wheel_is_fixed )
 			{
 				//wheel_angular_velocity += fr_force / (max_force + P_FLOAT_EPS);
+			//	pWheel->wheel_angular_velocity += flFrForce / (flMaxForce + P_FLOAT_EPS);
 			}
 		}
 
@@ -521,9 +522,9 @@ void IVP_Controller_Raycast_Fake_Jetski::TurnInPlaceHack( IVP_Raycast_Fake_Jetsk
 	// Check to see if any of the wheels are fixed or thta we are applying torque.
 	for ( int iWheel = 0; iWheel < n_wheels; ++iWheel )
 	{
-		IVP_Raycast_Fake_Jetski_Wheel *pWheel = get_wheel( IVP_POS_WHEEL( iWheel ) );
-		if ( pWheel->wheel_is_fixed || ( pWheel->torque != 0.0f ) )
-			return;
+	//	IVP_Raycast_Fake_Jetski_Wheel *pWheel = get_wheel( IVP_POS_WHEEL( iWheel ) );
+	//	if ( pWheel->wheel_is_fixed || ( pWheel->torque != 0.0f ) )
+	//		return;
 	}
 
 	IVP_FLOAT flSpeed = pCarCore->speed.fast_real_length();
@@ -532,7 +533,8 @@ void IVP_Controller_Raycast_Fake_Jetski::TurnInPlaceHack( IVP_Raycast_Fake_Jetsk
 	// Check to see if we are going slow enough and want to turn to turn in place.
 	if ( flSpeed < 1.0f )
 	{
-		for ( int iWheel = 0; iWheel < 4; ++iWheel )
+	//	for ( int iWheel = 0; iWheel < 4; ++iWheel )
+		for ( int iWheel = 0; iWheel < n_wheels; ++iWheel )
 		{
 			IVP_Raycast_Fake_Jetski_Wheel *pWheel = get_wheel( IVP_POS_WHEEL( iWheel ) );
 			IVP_Raycast_Fake_Jetski_Wheel_Temp *pTempWheel = &pTempWheels[iWheel];
@@ -683,7 +685,11 @@ IVP_FLOAT IVP_Controller_Raycast_Fake_Jetski::get_booster_delay()
 void IVP_Controller_Raycast_Fake_Jetski::do_steering( IVP_FLOAT steering_angle_in )
 {
 	// Check for a change.
-    if (  m_SteeringAngle == steering_angle_in) 
+	// VXP: Commenting this actually makes front left wheel rotating as needed.
+	// Before commenting if you steering a wheel (press A or D), the wheel can steer as needed,
+	// but if you unpress the button - it returns to it fucked up angle.
+	// I still don't know what to do with wrong rear right wheel position
+    if (  m_SteeringAngle == steering_angle_in)  
 		return;
 
 	// Set the new steering angle.
@@ -781,6 +787,19 @@ void IVP_Controller_Raycast_Fake_Jetski::InitRaycastCarEnvironment( IVP_Environm
     index_z = pCarSystemTemplate->index_z;
     is_left_handed = pCarSystemTemplate->is_left_handed;
 
+	// Remove the old gravity controller and add a different one.
+	IVP_Controller *pGravity = pEnvironment->get_gravity_controller();
+	if ( pGravity )
+	{
+		m_pJetskiBody->get_core()->rem_core_controller( pGravity );
+	}
+
+	IVP_Standard_Gravity_Controller *pGravityController = new IVP_Standard_Gravity_Controller();
+	IVP_U_Point vecGravity( 0.0f, 7.0f, 0.0f );
+	pGravityController->grav_vec.set( &vecGravity );
+
+	m_pJetskiBody->get_core()->add_core_controller( pGravityController );
+	
 	// Add this controller to the physics environment and setup the objects gravity.
     pEnvironment->get_controller_manager()->announce_controller_to_environment( this );
     extra_gravity = pCarSystemTemplate->extra_gravity_force_value;    
@@ -852,6 +871,11 @@ void IVP_Controller_Raycast_Fake_Jetski::InitRaycastCarWheels( const IVP_Templat
 //		pRaycastWheel->spring_len = gravity_y_direction * ( pRaycastWheel->distance_orig_hp_to_hp - pCarSystemTemplate->spring_pre_tension[iWheel] );
 		pRaycastWheel->spring_len = -pCarSystemTemplate->spring_pre_tension[iWheel];
 //		pRaycastWheel->hp_cs.k[index_y] = -gravity_y_direction * pCarSystemTemplate->raycast_startpoint_height_offset;
+/*
+		pRaycastWheel->distance_orig_hp_to_hp = pRaycastWheel->hp_cs.k[index_y] + ( gravity_y_direction * pCarSystemTemplate->raycast_startpoint_height_offset );
+		pRaycastWheel->spring_len = gravity_y_direction * ( pRaycastWheel->distance_orig_hp_to_hp - pCarSystemTemplate->spring_pre_tension[iWheel] );
+		pRaycastWheel->hp_cs.k[index_y] = -gravity_y_direction * pCarSystemTemplate->raycast_startpoint_height_offset;
+*/
 
 		pRaycastWheel->spring_direction_cs.set_to_zero();
 		pRaycastWheel->spring_direction_cs.k[index_y] = gravity_y_direction;
@@ -864,6 +888,12 @@ void IVP_Controller_Raycast_Fake_Jetski::InitRaycastCarWheels( const IVP_Templat
 		pRaycastWheel->friction_of_wheel = 1.0f;//pCarSystemTemplate->friction_of_wheel[iWheel];
 		pRaycastWheel->wheel_radius = pCarSystemTemplate->wheel_radius[iWheel];
 		pRaycastWheel->inv_wheel_radius = 1.0f / pCarSystemTemplate->wheel_radius[iWheel];
+
+/*
+		pRaycastWheel->friction_of_wheel = pCarSystemTemplate->friction_of_wheel[iWheel];
+		pRaycastWheel->wheel_radius = pCarSystemTemplate->wheel_radius[iWheel];
+		pRaycastWheel->inv_wheel_radius = 1.0f / pCarSystemTemplate->wheel_radius[iWheel];
+*/
 
 		do_steering_wheel( IVP_POS_WHEEL( iWheel ), 0.0f );
 		

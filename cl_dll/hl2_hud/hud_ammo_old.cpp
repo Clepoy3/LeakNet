@@ -277,7 +277,7 @@ protected:
 		//	SetPaintBackgroundEnabled( true );
 		}
 		
-		SetShouldDisplaySecondaryValue(true); // VXP: Test
+	//	SetShouldDisplaySecondaryValue(true); // VXP: Test
 
 		if (wpn->UsesSecondaryAmmo())
 		{

@@ -93,7 +93,8 @@ void CEnvFade::InputFade( inputdata_t &inputdata )
 	}
 	else
 	{
-		UTIL_ScreenFadeAll( m_clrRender, Duration(), HoldTime(), fadeFlags );
+	//	UTIL_ScreenFadeAll( m_clrRender, Duration(), HoldTime(), fadeFlags );
+		UTIL_ScreenFadeAll( m_clrRender, Duration(), HoldTime(), fadeFlags|FFADE_PURGE ); // VXP: Source 2007
 	}
 
 	m_OnBeginFade.FireOutput( inputdata.pActivator, this );

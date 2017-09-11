@@ -147,6 +147,8 @@ void CPropAPC::Spawn( void )
 
 	m_flHandbrakeTime = gpGlobals->curtime + 0.1;
 	m_bInitialHandbrake = false;
+
+	m_bCoverBlown = false;
 }
 
 //-----------------------------------------------------------------------------

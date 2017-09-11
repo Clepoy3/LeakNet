@@ -2042,6 +2042,14 @@ SOURCE=.\StaticPropMgr.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\stun_request.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\stun_request.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\sv_ents_write.cpp
 # End Source File
 # Begin Source File

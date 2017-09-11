@@ -397,7 +397,8 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 	//	gpGlobals->tickcount,
 	//	commands_acknowledged - 1 );
 
-	m_nServerCommandsAcknowledged = commands_acknowledged;
+//	m_nServerCommandsAcknowledged = commands_acknowledged;
+	m_nServerCommandsAcknowledged += commands_acknowledged;
 	m_bPreviousAckHadErrors = false;
 
 	bool entityDumped = false;
@@ -433,7 +434,8 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 
 			if ( ent->GetPredictable() )
 			{
-				if ( ent->PostNetworkDataReceived( commands_acknowledged ) )
+			//	if ( ent->PostNetworkDataReceived( commands_acknowledged ) )
+				if ( ent->PostNetworkDataReceived( m_nServerCommandsAcknowledged ) )
 				{
 					m_bPreviousAckHadErrors = true;
 				}
@@ -483,7 +485,8 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 				ShouldDumpEntity( ent ) )
 			{
 				entityDumped = true;
-				dump->DumpEntity( ent, commands_acknowledged );
+			//	dump->DumpEntity( ent, commands_acknowledged );
+				dump->DumpEntity( ent, m_nServerCommandsAcknowledged );
 			}
 		}
 
@@ -516,7 +519,8 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 
 		if ( error_check && cl_showerror.GetBool() )
 		{
-			CheckError( commands_acknowledged );
+		//	CheckError( commands_acknowledged );
+			CheckError( m_nServerCommandsAcknowledged );
 		}
 	}
 
@@ -530,7 +534,8 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 			C_BaseEntity *ent = ClientEntityList().GetBaseEntity( dumpentindex );
 			if ( ent )
 			{
-				dump->DumpEntity( ent, commands_acknowledged );
+			//	dump->DumpEntity( ent, commands_acknowledged );
+				dump->DumpEntity( ent, m_nServerCommandsAcknowledged );
 				entityDumped = true;
 			}
 		}
@@ -1041,7 +1046,7 @@ void CPrediction::RestoreOriginalEntityState( void )
 			EFL_DIRTY_ABSVELOCITY | EFL_DIRTY_ABSANGVELOCITY;
 
 		// FIXME: This is a hack, we need to figure out where this should go...
-	//	ent->MoveAimEnt(); // VXP: Code above is clearly describes this function
+		ent->MoveAimEnt();
 		ent->Relink();
 	}
 
@@ -1165,6 +1170,19 @@ void CPrediction::Untouch( void )
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void InvalidateEFlagsRecursive( C_BaseEntity *pEnt, int nDirtyFlags, int nChildFlags = 0 )
+{
+	pEnt->AddEFlags( nDirtyFlags );
+	nDirtyFlags |= nChildFlags;
+	for (CBaseEntity *pChild = pEnt->FirstMoveChild(); pChild; pChild = pChild->NextMovePeer())
+	{
+		InvalidateEFlagsRecursive( pChild, nDirtyFlags );
+	}
+}
+
 void CPrediction::StorePredictionResults( int predicted_frame )
 {
 	VPROF( "CPrediction::StorePredictionResults" );
@@ -1183,7 +1201,7 @@ void CPrediction::StorePredictionResults( int predicted_frame )
 		// VXP: Maybe, do this recursively: Source 2007: InvalidateEFlagsRecursive
 		entity->m_iEFlags |= EFL_DIRTY_ABSTRANSFORM | EFL_DIRTY_ABSVELOCITY | EFL_DIRTY_ABSANGVELOCITY;
 		// FIXME: This is a hack, we need to figure out where this should go...
-	//	entity->MoveAimEnt();  // VXP: Code above is clearly describes this function
+		entity->MoveAimEnt();
 		entity->Relink();
 
 		// Certain entities can be created locally and if so created, should be 
@@ -1329,35 +1347,6 @@ int CPrediction::ComputeFirstCommandToExecute( bool received_new_world_update, i
 			//	gpGlobals->tickcount,
 			//	skipahead,
 			//	m_nCommandsPredicted - 1 );
-		}
-		// VXP: From Source 2007
-		else
-		{
-			if ( m_bPreviousAckHadErrors )
-			{
-				C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
-				
-				// If an entity gets a prediction error, then we want to clear out its interpolated variables
-				// so we don't mix different samples at the same timestamps. We subtract 1 tick interval here because
-				// if we don't, we'll have 3 interpolation entries with the same timestamp as this predicted
-				// frame, so we won't be able to interpolate (which leads to jerky movement in the player when
-	
-	
-				// ANY entity like your gun gets a prediction error).
-				float flPrev = gpGlobals->curtime;
-				gpGlobals->curtime = pLocalPlayer->GetTimeBase() - TICK_RATE;
-				
-				for ( int i = 0; i < predictables->GetPredictableCount(); i++ )
-				{
-					C_BaseEntity *entity = predictables->GetPredictable( i );
-					if ( entity )
-					{
-						entity->ResetLatched();
-					}
-				}
-	
-				gpGlobals->curtime = flPrev;
-			}
 		}
 	}
 

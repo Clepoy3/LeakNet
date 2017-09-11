@@ -137,6 +137,8 @@ public:
     void							change_wheel_torque(IVP_POS_WHEEL pos, IVP_FLOAT torque);
     
     void							update_body_countertorque(){;};
+	
+	void							update_throttle( IVP_FLOAT flThrottle ){;}; // VXP: TODO: I think this should work
     
     void							change_body_downforce(IVP_FLOAT force);												// extra force to keep flipped objects flipped over
 

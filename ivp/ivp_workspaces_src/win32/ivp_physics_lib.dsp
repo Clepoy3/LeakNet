@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP Output_Dir "..\..\obj\win32_sdk_singlethreaded\ivp_physics"
 # PROP Intermediate_Dir "..\..\obj\win32_sdk_singlethreaded\ivp_physics"
 # PROP Target_Dir ""
-MTL=midl.exe
 LINK32=link.exe
+MTL=midl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD CPP /nologo /W3 /GX /O2 /I "../../ivp_collision" /I "../../ivp_controller" /I "../../ivp_intern" /I "../../ivp_physics" /I "../../ivp_surface_manager" /I "../../ivp_utility" /I "../../../havok/source" /I "../../../havana/havok" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "WIN32" /D "IVP_VERSION_SDK" /D "HAVANA_CONSTRAINTS" /D "HAVOK_MOPP" /Yu"ivp_physics.hxx" /FD /c
 # SUBTRACT CPP /Fr
@@ -68,8 +68,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\..\obj\win32_sdk_multithreaded\ivp_physics"
 # PROP Intermediate_Dir "..\..\obj\win32_sdk_multithreaded\ivp_physics"
 # PROP Target_Dir ""
-MTL=midl.exe
 LINK32=link.exe
+MTL=midl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD CPP /nologo /MT /W3 /GX /O2 /I "../../ivp_collision" /I "../../ivp_controller" /I "../../ivp_intern" /I "../../ivp_physics" /I "../../ivp_surface_manager" /I "../../ivp_utility" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "WIN32" /D "IVP_VERSION_SDK" /D "HAVANA_CONSTRAINTS" /D "HAVOK_MOPP" /Yu"ivp_physics.hxx" /FD /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG"
@@ -93,8 +93,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\..\obj\win32_debug\ivp_physics"
 # PROP Intermediate_Dir "..\..\obj\win32_debug\ivp_physics"
 # PROP Target_Dir ""
-MTL=midl.exe
 LINK32=link.exe
+MTL=midl.exe
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
 # ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "../../ivp_collision" /I "../../ivp_controller" /I "../../ivp_intern" /I "../../ivp_physics" /I "../../ivp_surface_manager" /I "../../ivp_utility" /D "DEBUG" /D "HAVOK_MOPP" /D "_MBCS" /D "_LIB" /D "WIN32" /D "IVP_VERSION_SDK" /D "HAVANA_CONSTRAINTS" /FR /FD /GZ /c
 # SUBTRACT CPP /YX /Yc /Yu
@@ -107,8 +107,8 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo /out:"..\..\ivp_library\win32_debug\ivp_physics_d.lib"
 # Begin Custom Build
-TargetPath=\dev\src_main\ivp\ivp_library\win32_debug\ivp_physics_d.lib
-InputPath=\dev\src_main\ivp\ivp_library\win32_debug\ivp_physics_d.lib
+TargetPath=\AHL2_R\src_main\ivp\ivp_library\win32_debug\ivp_physics_d.lib
+InputPath=\AHL2_R\src_main\ivp\ivp_library\win32_debug\ivp_physics_d.lib
 SOURCE="$(InputPath)"
 
 "..\..\..\lib\common\ivp_physics.lib" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -129,8 +129,8 @@ SOURCE="$(InputPath)"
 # PROP Output_Dir "..\..\obj\win32_release\ivp_physics"
 # PROP Intermediate_Dir "..\..\obj\win32_release\ivp_physics"
 # PROP Target_Dir ""
-MTL=midl.exe
 LINK32=link.exe
+MTL=midl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /I "../../ivp_collision" /I "../../ivp_controller" /I "../../ivp_intern" /I "../../ivp_physics" /I "../../ivp_surface_manager" /I "../../ivp_utility" /D "_MBCS" /D "_LIB" /D "NDEBUG" /D "WIN32" /D "IVP_VERSION_SDK" /YX /FD /c
 # SUBTRACT BASE CPP /Fr
 # ADD CPP /nologo /W3 /GX /O2 /I "../../ivp_collision" /I "../../ivp_controller" /I "../../ivp_intern" /I "../../ivp_physics" /I "../../ivp_surface_manager" /I "../../ivp_utility" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "WIN32" /D "IVP_VERSION_SDK" /D "HAVANA_CONSTRAINTS" /D "HAVOK_MOPP" /Fr /Yu"ivp_physics.hxx" /FD /c
@@ -143,8 +143,8 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"../../IVP_Library/ivp_physics.lib"
 # ADD LIB32 /nologo /out:"..\..\ivp_library\win32_release\ivp_physics.lib"
 # Begin Custom Build
-TargetPath=\dev\src_main\ivp\ivp_library\win32_release\ivp_physics.lib
-InputPath=\dev\src_main\ivp\ivp_library\win32_release\ivp_physics.lib
+TargetPath=\AHL2_R\src_main\ivp\ivp_library\win32_release\ivp_physics.lib
+InputPath=\AHL2_R\src_main\ivp\ivp_library\win32_release\ivp_physics.lib
 SOURCE="$(InputPath)"
 
 "..\..\..\lib\common\ivp_physics.lib" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -419,6 +419,14 @@ SOURCE=..\..\Ivp_controller\ivp_controller_buoyancy.cxx
 # Begin Source File
 
 SOURCE=..\..\IVP_CONTROLLER\ivp_controller_buoyancy.hxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\ivp_controller\ivp_controller_fake_jetski.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\ivp_controller\ivp_controller_fake_jetski.h
 # End Source File
 # Begin Source File
 

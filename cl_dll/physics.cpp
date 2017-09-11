@@ -547,7 +547,7 @@ void CCollisionEvent::Friction( IPhysicsObject *pObject, float energy, int surfa
 				pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( filter, pEntity->entindex(), CHAN_BODY, params.soundname, ATTN_STATIC );
 				CSoundEnvelopeController::GetController().Play( pFriction->patch, params.volume * volume, params.pitch );
 //					engine->AlertMessage( at_console, "Scrape Start %s \n", STRING(pEntity->m_iClassname) );
-				DevMsg( "Scrape Start %s \n", pEntity->GetModel() );
+			//	DevMsg( "Scrape Start %s \n", pEntity->GetModel() );
 			}
 			else
 			{
@@ -581,7 +581,7 @@ friction_t *CCollisionEvent::FindFriction( CBaseEntity *pObject )
 void CCollisionEvent::ShutdownFriction( friction_t &friction )
 {
 //		engine->AlertMessage( at_console, "Scrape Stop %s \n", STRING(friction.pObject->m_iClassname) );
-	DevMsg( "Scrape Stop %s \n", STRING(friction.pObject->GetModel()) );
+//	DevMsg( "Scrape Stop %s \n", STRING(friction.pObject->GetModel()) ); // VXP: Sometimes crashes at this moment..?
 	CSoundEnvelopeController::GetController().Shutdown( friction.patch );
 	friction.patch = NULL;
 	friction.pObject = NULL;
@@ -599,7 +599,7 @@ void CCollisionEvent::UpdateFriction( void )
 			}
 
 		}
-	} // VXP: Sometimes crashes at this moment..?
+	}
 }
 
 //#endif

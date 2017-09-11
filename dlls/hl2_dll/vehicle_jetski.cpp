@@ -17,6 +17,7 @@
 #include "decals.h"
 #include "soundent.h"
 #include "te_effect_dispatch.h"
+#include "physics_saverestore.h" // VXP
 
 #define	VEHICLE_HITBOX_DRIVER	1
 
@@ -322,11 +323,11 @@ bool CPropJetski::UpdateLean( CUserCmd *ucmd )
 	// Are we leaning back?
 	if ( ucmd->buttons & IN_JUMP )
 	{
-		m_pVehicle->SetLeanBack( true );
+	//	m_pVehicle->SetLeanBack( true ); // VXP: TODO
 		return true;
 	}
 
-	m_pVehicle->SetLeanBack( false );
+//	m_pVehicle->SetLeanBack( false ); // VXP: TODO
 	return false;
 }
 
@@ -371,12 +372,17 @@ float CPropJetski::CalculateDrag( CUserCmd *ucmd )
 	if ( bLean )
 	{
 		flDrag += JETSKI_DRAG_LEAN_ADD;
-	}
+//	}
 		float flNormalizedRatio = ( flRatio - 0.4f ) * 1.667f;
 		float flSplineRatio = SimpleSpline( flNormalizedRatio );
 
-		flFriction = JETSKI_FRICTION_MAX + ( JETSKI_FRICTION_MIN - JETSKI_FRICTION_MAX ) * flSplineRatio;
+// VXP: TODO
+#define JETSKI_DRAG_IN_WATER (JETSKI_DRAG_NO_THRUST_IN_WATER)
+#define JETSKI_DRAG_ON_WATER (JETSKI_DRAG_NO_THRUST_ON_WATER)
+
+	//	flFriction = JETSKI_FRICTION_MAX + ( JETSKI_FRICTION_MIN - JETSKI_FRICTION_MAX ) * flSplineRatio;
 		flDrag = JETSKI_DRAG_IN_WATER + ( JETSKI_DRAG_ON_WATER - JETSKI_DRAG_IN_WATER ) * flNormalizedRatio;
+	//	flDrag = JETSKI_DRAG_NO_THRUST_IN_WATER + ( JETSKI_DRAG_NO_THRUST_ON_WATER - JETSKI_DRAG_NO_THRUST_IN_WATER ) * flNormalizedRatio; // VXP: Probably not right
 
 		// Leaning backwards.
 		if ( bLean )
@@ -385,11 +391,11 @@ float CPropJetski::CalculateDrag( CUserCmd *ucmd )
 		}
 	}
 
-#define JETSKI_DRAG_NO_THRUST_IN_WATER		10.0f
-#define JETSKI_DRAG_NO_THRUST_ON_WATER		30.0f
-#define JETSKI_DRAG_LEAN_ADD				10.0f
-#define JETSKI_DRAG_IN_REVERSE				10.0f
-#define JETSKI_DRAG_IN_THRUST				5.0f
+//#define JETSKI_DRAG_NO_THRUST_IN_WATER		10.0f
+//#define JETSKI_DRAG_NO_THRUST_ON_WATER		30.0f
+//#define JETSKI_DRAG_LEAN_ADD				10.0f
+//#define JETSKI_DRAG_IN_REVERSE				10.0f
+//#define JETSKI_DRAG_IN_THRUST				5.0f
 #endif
 
 	// Debug
@@ -421,7 +427,12 @@ void CPropJetski::OnSpeed( CUserCmd *ucmd )
 	float flZero = 0.0f;
 	pPhysJetski->SetDragCoefficient( &flDrag, &flZero );
 
-#if 0
+#if 1
+	// VXP
+	float flSpeed = m_VehiclePhysics.GetSpeed();
+	float flMaxSpeed = m_VehiclePhysics.GetMaxSpeed();
+	float flRatio = flSpeed / flMaxSpeed;
+
 	// Splash effects.
 	if ( flRatio > 0.1f )
 	{

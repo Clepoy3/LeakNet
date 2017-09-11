@@ -42,6 +42,9 @@
 #define JEEP_STEERING_FAST_FRAC		0.677f
 #define JEEP_STEERING_FAST_ANGLE	10.0f
 
+#define	JEEP_AMMO_CRATE_CLOSE_DELAY	2.0f // VXP
+
+
 ConVar	jeep_use_mortar( "jeep_use_mortar", "0" );
 
 //-----------------------------------------------------------------------------
@@ -141,6 +144,8 @@ private:
 	};
 	
 	JeepWaterData_t	m_WaterData;
+
+	float		m_flAmmoCrateCloseTime; // VXP
 };
 
 BEGIN_DATADESC( CPropJeep )
@@ -158,6 +163,8 @@ BEGIN_DATADESC( CPropJeep )
 	DEFINE_FIELD( CPropJeep, m_flHandbrakeTime, FIELD_TIME ),
 	DEFINE_FIELD( CPropJeep, m_bInitialHandbrake, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPropJeep, m_flOverturnedTime, FIELD_TIME ),
+
+	DEFINE_FIELD( CPropJeep, m_flAmmoCrateCloseTime, FIELD_FLOAT ), // VXP
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST( CPropJeep, DT_PropJeep )
@@ -177,6 +184,8 @@ CPropJeep::CPropJeep( void )
 	m_flOverturnedTime = 0.0f;
 
 	InitWaterData();
+
+	m_flAmmoCrateCloseTime = 0; // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -550,7 +559,8 @@ void CPropJeep::Think(void)
 	}
 
 	// aim gun based on where player is looking
-	if ( m_hPlayer != NULL )
+//	if ( m_hPlayer != NULL )
+	if ( m_hPlayer != NULL && !m_bExitAnimOn && !m_bEnterAnimOn )
 	{
 		Vector	eyeDir;
 		m_hPlayer->EyeVectors( &eyeDir, NULL, NULL );
@@ -573,11 +583,36 @@ void CPropJeep::Think(void)
 	StudioFrameAdvance();
 
 	// If the exit anim has finished, move the player to the right spot and stop animating
-	if ( IsSequenceFinished() )
+//	if ( IsSequenceFinished() )
+	if ( IsSequenceFinished() && (m_bExitAnimOn || m_bEnterAnimOn) )
 	{
-		GetServerVehicle()->HandleEntryExitFinish( m_bExitAnimOn );
+		if ( m_bEnterAnimOn )
+		{
+			StartEngine();
+		}
+		GetServerVehicle()->HandleEntryExitFinish( m_bExitAnimOn, m_bExitAnimOn );
 		m_bExitAnimOn = false;
 		m_bEnterAnimOn = false;
+
+	}
+
+	// See if the ammo crate needs to close
+	if ( ( m_flAmmoCrateCloseTime < gpGlobals->curtime ) && ( GetSequence() == LookupSequence( "ammo_open" ) ) )
+	{
+		m_flAnimTime = gpGlobals->curtime;
+		m_flPlaybackRate = 0.0;
+		m_flCycle = 0;
+		ResetSequence( LookupSequence( "ammo_close" ) );
+	}
+	else if ( ( GetSequence() == LookupSequence( "ammo_close" ) ) && IsSequenceFinished() )
+	{
+		m_flAnimTime = gpGlobals->curtime;
+		m_flPlaybackRate = 0.0;
+		m_flCycle = 0;
+		ResetSequence( LookupSequence( "idle" ) );
+
+		CPASAttenuationFilter sndFilter( this, "PropJeep.AmmoClose" );
+		EmitSound( sndFilter, entindex(), "PropJeep.AmmoClose" );
 	}
 }
 
@@ -919,6 +954,21 @@ void CPropJeep::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE use
 		// Player's using the crate.
 		// Fill up his SMG ammo.
 		pPlayer->GiveAmmo( 200, "MediumRound");
+
+		// VXP
+		if ( ( GetSequence() != LookupSequence( "ammo_open" ) ) && ( GetSequence() != LookupSequence( "ammo_close" ) ) )
+		{
+			// Open the crate
+			m_flAnimTime = gpGlobals->curtime;
+			m_flPlaybackRate = 0.0;
+			m_flCycle = 0;
+			ResetSequence( LookupSequence( "ammo_open" ) );
+			
+			CPASAttenuationFilter sndFilter( this, "PropJeep.AmmoOpen" );
+			EmitSound( sndFilter, entindex(), "PropJeep.AmmoOpen" );
+		}
+
+		m_flAmmoCrateCloseTime = gpGlobals->curtime + JEEP_AMMO_CRATE_CLOSE_DELAY;
 		return;
 	}
 
@@ -1050,8 +1100,9 @@ void CPropJeep::CreateDangerSounds( void )
 	QAngle dummy;
 	GetAttachment( "Muzzle", m_vecGunOrigin, dummy );
 
-//	if ( m_flDangerSoundTime > gpGlobals->curtime )
-//		return;
+	// VXP: Re-enabled
+	if ( m_flDangerSoundTime > gpGlobals->curtime )
+		return;
 
 	QAngle vehicleAngles = GetLocalAngles();
 	Vector vecStart = GetAbsOrigin();

@@ -421,7 +421,9 @@ void CAPCController::TrackTarget( void )
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
 		if ( pPlayer && pPlayer->IsInAVehicle() )
 		{
-			IServerVehicle *pVehicle = pPlayer->GetVehicle();
+		//	IServerVehicle *pVehicle = pPlayer->GetVehicle();
+		//	CPropVehicleDriveable *pVehicle = dynamic_cast<CPropVehicleDriveable*>(pPlayer->GetVehicleEntity()); // VXP: TODO: I know it's ugly, but working
+			IDrivableVehicle *pVehicle = dynamic_cast<IDrivableVehicle*>(pPlayer->GetVehicleEntity()); // VXP: TODO: Ugly too
 			if ( pVehicle->ClassifyPassenger( pPlayer, CLASS_PLAYER ) == CLASS_PLAYER)
 			{
 				if ( !m_bFireDelayed )

@@ -1292,6 +1292,8 @@ void TextEntry::OnKeyCodeTyped(KeyCode code)
 		case KEY_A:
 			{
 				SelectAllText( false );
+				// VXP: move the cursor to the end
+				_cursorPos = _select[1];
 				break;
 			}
 		case KEY_RIGHT:

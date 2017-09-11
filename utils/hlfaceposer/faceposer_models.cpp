@@ -29,7 +29,7 @@ IFaceposerModels::CFacePoserModel::CFacePoserModel( char const *modelfile, Studi
 
 void IFaceposerModels::CFacePoserModel::Release( void )
 {
-	m_pModel->FreeModel();
+	m_pModel->FreeModel( true );
 }
 
 void IFaceposerModels::CFacePoserModel::Restore( void )
@@ -163,7 +163,7 @@ void IFaceposerModels::FreeModel( int index  )
 		return;
 
 	StudioModel *m = entry->GetModel();
-	m->FreeModel();
+	m->FreeModel( false );
 	delete m;
 
 	m_Models.Remove( index );

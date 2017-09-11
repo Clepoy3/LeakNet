@@ -110,6 +110,49 @@ ConVar	sk_player_stomach( "sk_player_stomach","1" );
 ConVar	sk_player_arm( "sk_player_arm","1" );
 ConVar	sk_player_leg( "sk_player_leg","1" );
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CC_GiveCurrentAmmo( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+
+	CBaseCombatWeapon *pWeapon = pPlayer->GetActiveWeapon();
+	if ( !pWeapon )
+		return;
+
+	if( pWeapon->UsesPrimaryAmmo() )
+	{
+		int ammoIndex = pWeapon->GetPrimaryAmmoType();
+
+		if( ammoIndex != -1 )
+		{
+			int giveAmount;
+			giveAmount = GetAmmoDef()->MaxCarry(ammoIndex);
+			pPlayer->GiveAmmo( giveAmount, GetAmmoDef()->GetAmmoOfIndex(ammoIndex)->pName );
+		}
+	}
+	if( pWeapon->UsesSecondaryAmmo() && pWeapon->HasSecondaryAmmo() )
+	{
+		// Give secondary ammo out, as long as the player already has some
+		// from a presumeably natural source. This prevents players on XBox
+		// having Combine Balls and so forth in areas of the game that
+		// were not tested with these items.
+		int ammoIndex = pWeapon->GetSecondaryAmmoType();
+
+		if( ammoIndex != -1 )
+		{
+			int giveAmount;
+			giveAmount = GetAmmoDef()->MaxCarry(ammoIndex);
+			pPlayer->GiveAmmo( giveAmount, GetAmmoDef()->GetAmmoOfIndex(ammoIndex)->pName );
+		}
+	}
+}
+
+static ConCommand givecurrentammo("givecurrentammo", CC_GiveCurrentAmmo, "Give a supply of ammo for current weapon..\n", FCVAR_CHEAT);
+
 // pl
 BEGIN_SIMPLE_DATADESC( CPlayerState )
 	DEFINE_FIELD( CPlayerState, netname, FIELD_STRING ),
@@ -3986,6 +4029,10 @@ void CBasePlayer::Spawn( void )
 	{
 		StopObserverMode();
 	}
+	else // VXP: From Source 2007
+	{
+		StartObserverMode( GetAbsOrigin(), GetAbsAngles() );
+	}
 
 	Relink();
 	// Clear any screenfade
@@ -4199,13 +4246,13 @@ void CBasePlayer::VelocityPunch( const Vector &vecForce )
 //-----------------------------------------------------------------------------
 // Purpose: Put this player in a vehicle 
 //-----------------------------------------------------------------------------
-void CBasePlayer::GetInVehicle( IServerVehicle *pVehicle, int nRole )
+bool CBasePlayer::GetInVehicle( IServerVehicle *pVehicle, int nRole )
 {
 	Assert( NULL == m_hVehicle.Get() );
 	Assert( nRole >= 0 );
 
 	if ( pVehicle->GetPassenger( nRole ) )
-		return;
+		return false;
 
 	CBaseEntity *pEnt = pVehicle->GetVehicleEnt();
 	Assert( pEnt );
@@ -4218,7 +4265,7 @@ void CBasePlayer::GetInVehicle( IServerVehicle *pVehicle, int nRole )
 
 		//Must be able to stow our weapon
 		if ( ( pWeapon != NULL ) && ( pWeapon->Holster( NULL ) == false ) )
-			return;
+			return false;
 
 		m_Local.m_iHideHUD |= HIDEHUD_WEAPONS;
 	}
@@ -4256,6 +4303,8 @@ void CBasePlayer::GetInVehicle( IServerVehicle *pVehicle, int nRole )
 	g_pNotify->ReportNamedEvent( this, "PlayerEnteredVehicle" );
 
 	OnVehicleStart();
+
+	return true;
 }
 
 
@@ -4280,6 +4329,7 @@ void CBasePlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExi
 	QAngle qAngles = GetAbsAngles();
 	if ( vecExitPoint == vec3_origin )
 	{
+		// VXP: FIXME: this might fail to find a safe exit point!!
 		pVehicle->GetPassengerExitPoint( nRole, &vNewPos, &qAngles );
 	}
 	else

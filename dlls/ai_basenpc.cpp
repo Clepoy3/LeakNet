@@ -1849,7 +1849,7 @@ CSound* CAI_BaseNPC::GetBestSound( void )
 {
 	CSound *pResult = GetSenses()->GetClosestSound();
 	if ( pResult == NULL)
-		Msg( "Warning: NULL Return from GetBestSound\n" ); // condition previously set now no longer true. Have seen this when play too many sounds...
+		DevMsg( "Warning: NULL Return from GetBestSound\n" ); // condition previously set now no longer true. Have seen this when play too many sounds...
 	return pResult;
 }
 

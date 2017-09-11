@@ -156,6 +156,10 @@ SOURCE=.\physics_constraint.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\physics_controller_raycast_fake_jetski.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\physics_controller_raycast_vehicle.cpp
 # End Source File
 # Begin Source File
@@ -237,6 +241,10 @@ SOURCE=.\physics_airboat.h
 # Begin Source File
 
 SOURCE=.\physics_constraint.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\physics_controller_raycast_fake_jetski.h
 # End Source File
 # Begin Source File
 

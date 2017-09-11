@@ -50,8 +50,7 @@
 #include "tier0/memdbgon.h"
 
 
-//#define FIFTEEN_MB				(15 * 1024 * 1024)
-#define ONE_HUNDRED_TWENTY_EIGHT_MB	(128 * 1024 * 1024)
+#define FIFTEEN_MB				(15 * 1024 * 1024)
 
 //#define MINIMUM_WIN_MEMORY		0x0e00000 
 //#define WARNING_MEMORY          0x0200000
@@ -510,13 +509,9 @@ void Sys_InitMemory( void )
 		host_parms.memsize = lpBuffer.dwTotalPhys;
 	}	
 		
-//	if ( host_parms.memsize < FIFTEEN_MB )
-//	{
-//		Sys_Error( "Available memory less than 15MB!!! %i\n", host_parms.memsize );
-//	}
-	if ( host_parms.memsize < ONE_HUNDRED_TWENTY_EIGHT_MB )
+	if ( host_parms.memsize < FIFTEEN_MB )
 	{
-		Sys_Error( "Available memory less than 128MB!!! %i\n", host_parms.memsize );
+		Sys_Error( "Available memory less than 15MB!!! %i\n", host_parms.memsize );
 	}
 
 	// take one quarter the physical memory
@@ -690,7 +685,12 @@ SpewRetval_t Sys_SpewFunc( SpewType_t spewType, const char *pMsg )
 		return SPEW_ABORT;
 	}
 	if (spewType == SPEW_ASSERT) 
-		return SPEW_DEBUGGER;
+	{
+		if ( CommandLine()->FindParm( "-noassert" ) == 0 )
+			return SPEW_DEBUGGER;
+		else
+			return SPEW_CONTINUE;
+	}
 	return SPEW_CONTINUE;
 }
 

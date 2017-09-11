@@ -226,6 +226,7 @@ public:
 	virtual const CBaseHandle& GetRefEHandle() const;
 
 	virtual void					Release();
+	virtual ICollideable*			GetCollideable()	{ return &m_Collision; } // VXP: For convenience
 	virtual ICollideable*			GetClientCollideable()	{ return &m_Collision; }
 	virtual IClientNetworkable*		GetClientNetworkable()	{ return this; }
 	virtual IClientRenderable*		GetClientRenderable()	{ return this; }

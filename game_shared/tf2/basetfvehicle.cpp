@@ -754,7 +754,7 @@ int CBaseTFVehicle::GetExitAnimToUse( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseTFVehicle::HandleEntryExitFinish( bool bExitAnimOn )
+void CBaseTFVehicle::HandleEntryExitFinish( bool bExitAnimOn, bool bResetAnim )
 {
 }
 

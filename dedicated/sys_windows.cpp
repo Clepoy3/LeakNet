@@ -1029,7 +1029,10 @@ SpewRetval_t DedicatedSpewOutputFunc( SpewType_t spewType, char const *pMsg )
 	printf( "%s", pMsg );
 	if( spewType == SPEW_ASSERT )
 	{
-		return SPEW_DEBUGGER;
+		if ( CommandLine()->FindParm( "-noassert" ) == 0 )
+			return SPEW_DEBUGGER;
+		else
+			return SPEW_CONTINUE;
 	}
 	else if( spewType == SPEW_ERROR )
 	{
@@ -1138,13 +1141,13 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 #if defined ( _WIN32 )
 		MSG msg;
 
-	/*	{
+		{
 			// Running really fast, yield some time to other apps
 			if ( g_pVCR->GetMode() != VCR_Playback )
 			{
 				Sleep( 1 );
 			}
-		}*/
+		}
 		
 		while( g_pVCR->Hook_PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
 		{

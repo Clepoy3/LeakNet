@@ -20,6 +20,10 @@
 ConVar g_debug_vehiclebase( "g_debug_vehiclebase", "0", FCVAR_CHEAT );
 extern ConVar g_debug_vehicledriver;
 
+// CFourWheelServerVehicle
+BEGIN_SIMPLE_DATADESC_( CFourWheelServerVehicle, CBaseServerVehicle )
+END_DATADESC()
+
 BEGIN_DATADESC( CPropVehicle )
 
 	DEFINE_EMBEDDED( CPropVehicle, m_VehiclePhysics ),
@@ -242,7 +246,7 @@ BEGIN_DATADESC( CPropVehicleDriveable )
 	DEFINE_FIELD( CPropVehicleDriveable, m_vecGunCrosshair, FIELD_VECTOR ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_nScannerDisabledWeapons, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_nScannerDisabledVehicle, FIELD_BOOLEAN ),
-	DEFINE_FIELD( CPropVehicleDriveable, m_savedViewOffset, FIELD_VECTOR ),
+//	DEFINE_FIELD( CPropVehicleDriveable, m_savedViewOffset, FIELD_VECTOR ),
 
 	DEFINE_FIELD( CPropVehicleDriveable, m_bLocked, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_flMinimumSpeedToEnterExit, FIELD_FLOAT ),
@@ -304,7 +308,10 @@ void CPropVehicleDriveable::DestroyServerVehicle()
 void CPropVehicleDriveable::Precache( void )
 {
 	BaseClass::Precache();
-	m_pServerVehicle->Precache( );
+	if ( m_pServerVehicle )
+	{
+		m_pServerVehicle->Precache( );
+	}
 }
 
 
@@ -397,14 +404,15 @@ void CPropVehicleDriveable::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, 
 		// Check to see if this vehicle can be controlled or if it's locked
 		if ( CanControlVehicle() && CanEnterVehicle(pPlayer) )
 		{
-			pPlayer->GetInVehicle( GetServerVehicle(), VEHICLE_DRIVER);
-
-			// Setup the "enter" vehicle sequence and skip the animation if it isn't present.
-			m_flCycle = 0;
-			m_flAnimTime = gpGlobals->curtime;
-			ResetSequence( iEntryAnim );
-			ResetClientsideFrame();
-			m_bEnterAnimOn = true;
+			if ( pPlayer->GetInVehicle( GetServerVehicle(), VEHICLE_DRIVER) )
+			{
+				// Setup the "enter" vehicle sequence and skip the animation if it isn't present.
+				m_flCycle = 0;
+				m_flAnimTime = gpGlobals->curtime;
+				ResetSequence( iEntryAnim );
+				ResetClientsideFrame();
+				m_bEnterAnimOn = true;
+			}
 		}
 	}
 }
@@ -429,7 +437,10 @@ void CPropVehicleDriveable::EnterVehicle( CBasePlayer *pPlayer )
 		return;
 
 	// Remove any player who may be in the vehicle at the moment
-	ExitVehicle(VEHICLE_DRIVER);
+	if ( m_hPlayer )
+	{
+		ExitVehicle(VEHICLE_DRIVER);
+	}
 
 	m_VehiclePhysics.ReleaseHandbrake();
 	m_hPlayer = pPlayer;
@@ -437,7 +448,13 @@ void CPropVehicleDriveable::EnterVehicle( CBasePlayer *pPlayer )
 	pPlayer->SetViewOffset( vec3_origin );
 
 	m_playerOn.FireOutput( pPlayer, this, 0 );
-	StartEngine();
+
+	// Don't start the engine if the player's using an entry animation,
+	// because we want to start the engine once the animation is done.
+	if ( !m_bEnterAnimOn )
+	{
+		StartEngine();
+	}
 
 	// Start Thinking
 	SetNextThink( gpGlobals->curtime );
@@ -586,7 +603,7 @@ void CPropVehicleDriveable::Think()
 //	Msg( "GetSequence: %i, IsValidSequence: %s, IsSequenceFinished: %s\n", GetSequence(), (IsValidSequence(GetSequence()) ? "Yes" : "No"), (IsSequenceFinished() ? "Yes" : "No") );
 
 	// Always think if we have any driver in us
-	if ( GetDriver() )
+	if ( GetDriver() != NULL )
 	{
 		SetNextThink( gpGlobals->curtime );
 	//	m_bEnterAnimOn = false; // VXP: Fix for not controllable digger
@@ -677,7 +694,8 @@ bool CPropVehicleDriveable::CanEnterVehicle( CBaseEntity *pEntity )
 bool CPropVehicleDriveable::CanExitVehicle( CBaseEntity *pEntity )
 {
 	// Prevent exiting if the vehicle's locked, or if it's moving too fast.
-	return ( !m_bLocked && (m_nSpeed <= m_flMinimumSpeedToEnterExit) );
+//	return ( !m_bLocked && (m_nSpeed <= m_flMinimumSpeedToEnterExit) );
+	return ( !m_bEnterAnimOn && !m_bExitAnimOn && !m_bLocked && (m_nSpeed <= m_flMinimumSpeedToEnterExit) );
 }
 
 //-----------------------------------------------------------------------------
@@ -827,7 +845,7 @@ void CFourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOri
 	CBasePlayer *pPlayer = GetPassenger( VEHICLE_DRIVER );
 	Assert( pPlayer );
 
-	if ( pPlayer )
+	if ( pPlayer != NULL )
 	{
 		*pAbsAngles = pPlayer->EyeAngles(); // yuck. this is an in/out parameter.
 		GetFourWheelVehiclePhysics()->GetVehicleViewPosition( "vehicle_driver_eyes", 1.0f, pAbsOrigin, pAbsAngles );

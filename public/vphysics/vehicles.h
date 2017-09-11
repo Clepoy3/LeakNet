@@ -87,6 +87,9 @@ public:
 
 	// Debug
 	virtual void GetCarSystemDebugData( vehicle_debugcarsystem_t &debugCarSystem ) = 0;
+
+	// VXP
+//	virtual void SetLeanBack( bool bLean ) = 0;
 };
 
 

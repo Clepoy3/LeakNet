@@ -87,7 +87,7 @@ public:
 
 	virtual bool		ClientCommand(const char *cmd);
 
-	virtual void		GetInVehicle( IServerVehicle *pVehicle, int nRole );
+	virtual bool		GetInVehicle( IServerVehicle *pVehicle, int nRole );
 
 	// from cbasecombatcharacter
 	void				InitVCollision( void );

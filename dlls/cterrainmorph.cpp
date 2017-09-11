@@ -92,7 +92,9 @@ void CTerrainMorph::Start( void )
 	// trace backwards along the normal and find the point under myself that is going to be pulled.
 	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() + m_Params.m_vecNormal * -4096, MASK_OPAQUE, this, COLLISION_GROUP_NONE, &tr );
 
-	//NDebugOverlay::Line( tr.startpos, tr.endpos, 0,255,0, true, 30 );
+#ifdef _DEBUG
+	NDebugOverlay::Line( tr.startpos, tr.endpos, 0,255,0, true, 30 );
+#endif // _DEBUG
 	
 	// Get that distance.
 	float flDist;
@@ -174,8 +176,10 @@ void CTerrainMorph::MorphThink( void )
 			m_iIterations += params.m_flStrength;
 		}
 #if 0
-		NDebugOverlay::Line( m_Params.m_vecLocation, m_Params.m_vecLocation + Vector( 200, 200, 0 ), 0,255,0, true, 3 );
-		NDebugOverlay::Line( m_Params.m_vecLocation + Vector( m_Params.m_flRadius, 0, 0 ), m_Params.m_vecLocation + Vector( m_Params.m_flRadius, 0 , 200 ), 0,255,0, true, 3 );
+	//	NDebugOverlay::Line( m_Params.m_vecLocation, m_Params.m_vecLocation + Vector( 200, 200, 0 ), 0,255,0, true, 3 );
+	//	NDebugOverlay::Line( m_Params.m_vecLocation + Vector( m_Params.m_flRadius, 0, 0 ), m_Params.m_vecLocation + Vector( m_Params.m_flRadius, 0 , 200 ), 0,255,0, true, 3 );
+		NDebugOverlay::Line( GetAbsOrigin(), GetAbsOrigin() + Vector( 200, 200, 0 ), 0,255,0, true, 3 );
+		NDebugOverlay::Line( GetAbsOrigin() + Vector( m_Params.m_flRadius, 0, 0 ), GetAbsOrigin() + Vector( m_Params.m_flRadius, 0 , 200 ), 0,255,0, true, 3 );
 #endif
 
 #endif

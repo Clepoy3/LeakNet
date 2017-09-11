@@ -559,7 +559,7 @@ class CStriderServerVehicle : public CBaseServerVehicle
 // IServerVehicle
 public:
 	void	GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles );
-	void	GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles );
+	bool	GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles );
 	bool	IsPassengerUsingStandardWeapons( int nRole = VEHICLE_DRIVER ) { return true; }
 
 protected:
@@ -679,6 +679,11 @@ public:
 
 	// If this is a vehicle, returns the vehicle interface
 	virtual IServerVehicle	*GetServerVehicle() { return &m_ServerVehicle; }
+	
+	// VXP
+	virtual Class_T		ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
+	virtual void		SetVehicleEntryAnim( bool bOn ) { ; };
+	virtual void		SetVehicleExitAnim( bool bOn, Vector vecEyeExitEndpoint ) { ; };
 
 protected:
 	// Contained IServerVehicle
@@ -2615,7 +2620,7 @@ void CStriderServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigi
 //-----------------------------------------------------------------------------
 // Purpose: Where does this passenger exit the vehicle?
 //-----------------------------------------------------------------------------
-void CStriderServerVehicle::GetPassengerExitPoint( int nRole, Vector *pExitPoint, QAngle *pAngles )
+bool CStriderServerVehicle::GetPassengerExitPoint( int nRole, Vector *pExitPoint, QAngle *pAngles )
 { 
 	Assert( nRole == VEHICLE_DRIVER ); 
 
@@ -2631,7 +2636,7 @@ void CStriderServerVehicle::GetPassengerExitPoint( int nRole, Vector *pExitPoint
 	if ( !tr.startsolid )
 	{
 		*pExitPoint = tr.endpos;
-		return;
+		return true;
 	}
 
 	// Worst case, jump out on top
@@ -2642,4 +2647,6 @@ void CStriderServerVehicle::GetPassengerExitPoint( int nRole, Vector *pExitPoint
 	Vector forward;
 	GetStrider()->GetVectors( &forward, NULL, NULL );
 	*pExitPoint -= forward * 64;
+
+	return false;
 }

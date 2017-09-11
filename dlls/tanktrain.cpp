@@ -21,7 +21,7 @@ void UTIL_RemoveHierarchy( CBaseEntity *pDead )
 	if ( !pDead )
 		return;
 
-	if ( pDead->pev )
+	if ( pDead->edict() )
 	{
 		CBaseEntity *pChild = pDead->FirstMoveChild();
 		while ( pChild )

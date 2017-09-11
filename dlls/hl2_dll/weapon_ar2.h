@@ -41,6 +41,8 @@ public:
 	void	Precache( void );
 	void	PrimaryAttack( void );
 	void	SecondaryAttack( void );
+	void	SendGrenageUsageState( void ); // VXP
+	void	UseGrenade( bool use ); // VXP
 	void	AddViewKick( void );
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 
@@ -76,8 +78,9 @@ protected:
 
 	int				m_nShotsFired;
 	bool			m_bZoomed;
-	
+
 	bool			m_bUseGrenade;
+//	CNetworkVar( bool, m_bUseGrenade );
 
 	static const char *pShootSounds[];
 

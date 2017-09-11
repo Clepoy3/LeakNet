@@ -270,6 +270,7 @@ bool CFourWheelVehiclePhysics::ParseVehicleScript( const char *pScriptName, soli
 
 void CFourWheelVehiclePhysics::CalcWheelData( vehicleparams_t &vehicle )
 {
+	const char *pWheelAttachments[4] = { "wheel_fl", "wheel_fr", "wheel_rl", "wheel_rr" }; // VXP
 	Vector left, right;
 	QAngle dummy;
 	SetPoseParameter( m_poseParameters[VEH_FL_WHEEL_HEIGHT], 0 );
@@ -324,6 +325,15 @@ void CFourWheelVehiclePhysics::CalcWheelData( vehicleparams_t &vehicle )
 		m_wheelTotalHeight[3] = m_wheelBaseHeight[1] - right.z;
 		vehicle.axles[1].wheels.springAdditionalLength = m_wheelTotalHeight[2];
 	}
+	for ( int i = 0; i < 4; i++ )
+	{
+		if ( m_wheelTotalHeight[i] == 0.0f )
+		{
+			DevWarning("Vehicle %s has invalid wheel attachment for %s - no movement\n", STRING(m_pOuter->GetModelName()), pWheelAttachments[i]);
+			m_wheelTotalHeight[i] = 1.0f;
+		}
+	}
+
 	SetPoseParameter( m_poseParameters[VEH_FL_WHEEL_HEIGHT], 0 );
 	SetPoseParameter( m_poseParameters[VEH_FR_WHEEL_HEIGHT], 0 );
 	SetPoseParameter( m_poseParameters[VEH_RL_WHEEL_HEIGHT], 0 );
@@ -405,13 +415,14 @@ bool CFourWheelVehiclePhysics::Initialize( const char *pVehicleScript, unsigned 
 	m_flMaxSpeed = vehicle.engine.maxSpeed;
 
 	IPhysicsObject *pBody = m_pOuter->VPhysicsInitNormal( SOLID_VPHYSICS, 0, false, &solid );
+	PhysSetGameFlags( pBody, FVPHYSICS_NO_SELF_COLLISIONS | FVPHYSICS_MULTIOBJECT_ENTITY ); // VXP: Was after CreateVehicleController
 	m_pVehicle = physenv->CreateVehicleController( pBody, vehicle, nVehicleType, physgametrace );
-	PhysSetGameFlags( pBody, FVPHYSICS_MULTIOBJECT_ENTITY );
+//	PhysSetGameFlags( pBody, FVPHYSICS_MULTIOBJECT_ENTITY );
 	m_wheelCount = m_pVehicle->GetWheelCount();
 	for ( int i = 0; i < m_wheelCount; i++ )
 	{
 		m_pWheels[i] = m_pVehicle->GetWheel( i );
-		PhysSetGameFlags( m_pWheels[i], FVPHYSICS_MULTIOBJECT_ENTITY );
+	//	PhysSetGameFlags( m_pWheels[i], FVPHYSICS_MULTIOBJECT_ENTITY );
 	}
 	return true;
 }
@@ -550,7 +561,7 @@ void CFourWheelVehiclePhysics::Teleport( matrix3x4_t& relativeTransform )
 
 }
 
-#if 0
+#if 1
 // For the #if 0 debug code below!
 #define HL2IVP_FACTOR	METERS_PER_INCH
 #define IVP2HL(x)		(float)(x * (1.0f/HL2IVP_FACTOR))
@@ -579,7 +590,7 @@ void CFourWheelVehiclePhysics::DrawDebugGeometryOverlays()
 		NDebugOverlay::BoxAngles( vecPos, -vecRad, vecRad, vecRot, 0, 255, 45, 0 ,0 );
 	}
 
-#if 0
+#if 1
 	// Render vehicle data.
 	IPhysicsObject *pBody = m_pOuter->VPhysicsGetObject();
 	if ( pBody )
@@ -671,7 +682,7 @@ int CFourWheelVehiclePhysics::DrawDebugTextOverlays( int nOffset )
 	Q_snprintf( tempstr,sizeof(tempstr), "Speed %.1f  T/S/B (%.0f/%.0f/%.1f)", params.speed, m_controls.throttle, m_controls.steering, m_controls.brake );
 	NDebugOverlay::EntityText( m_pOuter->entindex(), nOffset, tempstr, 0 );
 	nOffset++;
-	Msg( tempstr );
+	Msg( "%s", tempstr );
 
 	Q_snprintf( tempstr,sizeof(tempstr), "Gear: %d, RPM %4d", params.gear, (int)params.engineRPM );
 	NDebugOverlay::EntityText( m_pOuter->entindex(), nOffset, tempstr, 0 );
@@ -773,6 +784,10 @@ bool CFourWheelVehiclePhysics::Think()
 			// Randomly place it under two wheels
 			PlaceWheelDust( RandomInt(0,3) );
 			PlaceWheelDust( RandomInt(0,3) );
+		//	for ( int i = 0; i < 4; i++ ) // VXP: From Source 2007
+		//	{
+		//		PlaceWheelDust( i );
+		//	}
 		}
 	}
 
@@ -782,8 +797,11 @@ bool CFourWheelVehiclePhysics::Think()
 	SetPoseParameter( m_poseParameters[VEH_ACTION], m_actionValue );
 
 	// setup speedometer
-	float displaySpeed = m_nSpeed / MAX_GUAGE_SPEED;
-	SetPoseParameter( m_poseParameters[VEH_SPEEDO], displaySpeed );
+	if ( m_bIsOn == true )
+	{
+		float displaySpeed = m_nSpeed / MAX_GUAGE_SPEED;
+		SetPoseParameter( m_poseParameters[VEH_SPEEDO], displaySpeed );
+	}
 
 	return m_bIsOn;
 }

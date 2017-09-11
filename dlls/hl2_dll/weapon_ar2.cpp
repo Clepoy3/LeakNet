@@ -40,6 +40,7 @@ BEGIN_DATADESC( CWeaponAR2 )
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponAR2, DT_WeaponAR2)
+//	SendPropBool( SENDINFO( m_bUseGrenade ) )
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_ar2, CWeaponAR2 );
@@ -75,6 +76,8 @@ CWeaponAR2::CWeaponAR2( )
 	m_fMaxRange2	= 1024;
 
 	m_nShotsFired	= 0;
+
+	m_bUseGrenade = false;
 }
 
 void CWeaponAR2::Precache( void )
@@ -92,6 +95,8 @@ bool CWeaponAR2::Deploy( void )
 	
 //	SetThink( ScreenTextThink );
 //	SetNextThink( gpGlobals->curtime + 0.1f );
+
+	SendGrenageUsageState();
 
 	return BaseClass::Deploy();
 }
@@ -112,7 +117,7 @@ void CWeaponAR2::ItemPostFrame( void )
 
 	if ( pOwner->m_afButtonPressed & IN_ALT1 )
 	{
-		m_bUseGrenade = !m_bUseGrenade;
+		UseGrenade( !m_bUseGrenade );
 		if ( m_bZoomed )
 		{
 			Zoom();
@@ -120,10 +125,10 @@ void CWeaponAR2::ItemPostFrame( void )
 	//	Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
 	}
 	
-	if ( !m_bZoomed )
-	{
-		NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 ); // VXP: Moved to Think
-	}
+//	if ( !m_bZoomed )
+//	{
+//		NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 ); // VXP: Moved to Think
+//	}
 	
 	//Zoom in
 	if ( (pOwner->m_afButtonPressed & IN_ATTACK2) )
@@ -159,13 +164,38 @@ void CWeaponAR2::ItemPostFrame( void )
 //		NDebugOverlay::ScreenText( 0.85, 0.9, (m_bUseGrenade ? "Grenade" : "Zoom"), 255, 127, 0, 255, 0.0 );
 // }
 
+void CWeaponAR2::SendGrenageUsageState()
+{
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+	if ( !pPlayer )
+		return;
+
+	CSingleUserRecipientFilter user( pPlayer );
+	user.MakeReliable();
+	UserMessageBegin( user, "AR2ModeChanged" );
+		WRITE_BOOL( m_bUseGrenade );
+	MessageEnd();
+}
+
+void CWeaponAR2::UseGrenade( bool use ) // Do this at Spawn too
+{
+	if ( m_bUseGrenade == use )
+		return;
+
+	m_bUseGrenade = use;
+	SendGrenageUsageState();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CWeaponAR2::SecondaryAttack( void )
 {
 	if( !m_bUseGrenade )
+	{
+	//	BaseClass::SecondaryAttack();
 		return;
+	}
 
 	// Only the player fires this way so we can cast
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );

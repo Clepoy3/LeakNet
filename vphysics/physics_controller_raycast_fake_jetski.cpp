@@ -94,8 +94,9 @@ void CPhysics_System_Raycast_Fake_Jetski::do_raycasts( IVP_Event_Sim *es,
     IVP_Ray_Solver_Group rs_group( n_wheels, (IVP_Ray_Solver **)solvers );
 
 	// Debug!
-#if 0
-	{
+//#if 1
+#ifdef _DEBUG
+//	{
 		IVP_CarSystemDebugData_t carSystemDebugData;
 		GetCarSystemDebugData( carSystemDebugData );
 		carSystemDebugData.wheelRaycasts[0][0] = ray_solver0.ray_start_point;
@@ -106,7 +107,7 @@ void CPhysics_System_Raycast_Fake_Jetski::do_raycasts( IVP_Event_Sim *es,
 		carSystemDebugData.wheelRaycasts[2][1] = ray_solver2.ray_end_point;
 		carSystemDebugData.wheelRaycasts[3][0] = ray_solver3.ray_start_point;
 		carSystemDebugData.wheelRaycasts[3][1] = ray_solver3.ray_end_point;
-	}
+//	}
 #endif
 
     // check which objects are hit	    
@@ -121,7 +122,8 @@ void CPhysics_System_Raycast_Fake_Jetski::do_raycasts( IVP_Event_Sim *es,
 			friction_of_object_out[i] = hit->hit_real_object->l_default_material->get_friction_factor();
 
 			// Debug!
-#if 0
+//#if 1
+#ifdef _DEBUG
 			{
 				if ( solvers[i]->ray_length != 0.0f )
 				{
@@ -140,7 +142,8 @@ void CPhysics_System_Raycast_Fake_Jetski::do_raycasts( IVP_Event_Sim *es,
 			friction_of_object_out[i] = 0;
 
 			// Debug!
-#if 0
+//#if 1
+#ifdef _DEBUG
 			{
 				carSystemDebugData.wheelRaycastImpacts[i] = 0.0f;
 			}
@@ -149,7 +152,8 @@ void CPhysics_System_Raycast_Fake_Jetski::do_raycasts( IVP_Event_Sim *es,
     }
 
 	// Debug!
-#if 0
+//#if 1
+#ifdef _DEBUG
 	{	
 		SetCarSystemDebugData( carSystemDebugData );
 	}
@@ -222,6 +226,7 @@ void CPhysics_System_Raycast_Fake_Jetski::update_leanback_force( void )
 			IVP_U_Float_Point vecPoint;
 
 			
+			// VXP: TODO: Missing code? Also this function isn't called anywhere
 		}
 	}
 }

@@ -14904,25 +14904,6 @@ SOURCE=.\hl2_hud\c_rotorwash.cpp
 # Begin Source File
 
 SOURCE=.\hl2_hud\c_spotlight_end.cpp
-
-!IF  "$(CFG)" == "client - Win32 Release TF2"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
-
-!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -15150,6 +15131,41 @@ SOURCE=.\hl2_hud\c_weapon__stubs_hl2.cpp
 !ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
 
 # PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\hl2_hud\c_weapon_ar2.cpp
+
+!IF  "$(CFG)" == "client - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL2"
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "client - Win32 Release CounterStrike"
+
 # PROP Exclude_From_Build 1
 
 !ENDIF 

@@ -23,6 +23,7 @@
 #include "vphysics/vehicles.h"
 #include "physics_vehicle.h"
 #include "physics_controller_raycast_vehicle.h"
+#include "physics_controller_raycast_fake_jetski.h"
 #include "physics_airboat.h"
 #include "physics_object.h"
 #include "tier0/dbg.h"
@@ -232,6 +233,9 @@ public:
 	void OnVehicleEnter( void )								{ m_bOccupied = true; }
 	void OnVehicleExit( void )								{ m_bOccupied = false; }
 
+	// VXP: Need connection between CPhysics_System_Raycast_Fake_Jetski and CPropJetski
+//	virtual void SetLeanBack( bool bLean ){;};
+
 protected:
 	float CreateIVPObjects( );
 	void ShutdownCarSystem();
@@ -299,7 +303,7 @@ CVehicleController::CVehicleController( const vehicleparams_t &params, CPhysicsE
 	memset( m_tracePosition_Bs, 0, sizeof(m_tracePosition_Bs) );
 
 	m_bTraceData = false;
-	if ( m_nVehicleType == VEHICLE_TYPE_AIRBOAT_RAYCAST )
+	if ( m_nVehicleType == VEHICLE_TYPE_AIRBOAT_RAYCAST || m_nVehicleType == VEHICLE_TYPE_JETSKI_RAYCAST )
 	{
 		m_bTraceData = true;
 	}
@@ -327,6 +331,11 @@ IPhysicsObject* CVehicleController::GetWheel( int index )
 	else if ( m_nVehicleType == VEHICLE_TYPE_AIRBOAT_RAYCAST && m_pCarSystem )
 	{
 		return static_cast<CPhysics_Airboat*>( m_pCarSystem )->GetWheel( index );
+	}
+	// VXP
+	else if ( m_nVehicleType == VEHICLE_TYPE_JETSKI_RAYCAST && m_pCarSystem )
+	{
+		return static_cast<CPhysics_System_Raycast_Fake_Jetski*>( m_pCarSystem )->GetWheel( index );
 	}
 
 	return NULL;
@@ -501,6 +510,8 @@ float CVehicleController::CreateIVPObjects( )
 	case VEHICLE_TYPE_CAR_WHEELS: { m_pCarSystem = new IVP_Car_System_Real_Wheels( m_pEnv->GetIVPEnvironment(), &ivpVehicleData ); break; }
 	case VEHICLE_TYPE_CAR_RAYCAST: { m_pCarSystem = new CPhysics_Car_System_Raycast_Wheels( m_pEnv->GetIVPEnvironment(), &ivpVehicleData ); break; }
 	case VEHICLE_TYPE_AIRBOAT_RAYCAST: { m_pCarSystem = new CPhysics_Airboat( m_pEnv->GetIVPEnvironment(), &ivpVehicleData, m_pGameTrace ); break; }
+
+	case VEHICLE_TYPE_JETSKI_RAYCAST: { m_pCarSystem = new CPhysics_System_Raycast_Fake_Jetski( m_pEnv->GetIVPEnvironment(), &ivpVehicleData ); break; } // VXP
 	}
 
 	AttachListener();
@@ -733,7 +744,7 @@ void CVehicleController::UpdateSteering( vehicle_controlparams_t &controls, floa
 {
    // Steering - IVP steering is in radians.
     float flSteeringAngle = CalcSteering( flDeltaTime, controls.steering );
-    m_pCarSystem->do_steering( DEG2RAD( flSteeringAngle ) );
+	m_pCarSystem->do_steering( DEG2RAD( flSteeringAngle ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -849,7 +860,7 @@ void CVehicleController::UpdateExtraForces( void )
 	co->remove_reference();
 
 	// Counter-torque.
-	if ( m_nVehicleType == VEHICLE_TYPE_CAR_WHEELS )
+	if ( m_nVehicleType == VEHICLE_TYPE_CAR_WHEELS /*|| m_nVehicleType == VEHICLE_TYPE_JETSKI_RAYCAST*/ )
 	{
 	    m_pCarSystem->update_body_countertorque();
 	}
@@ -861,7 +872,7 @@ void CVehicleController::UpdateExtraForces( void )
 //-----------------------------------------------------------------------------
 void CVehicleController::UpdateWheelPositions( void )
 {
-	if ( m_nVehicleType == VEHICLE_TYPE_CAR_RAYCAST )
+	if ( m_nVehicleType == VEHICLE_TYPE_CAR_RAYCAST || m_nVehicleType == VEHICLE_TYPE_JETSKI_RAYCAST )
 	{
 		m_pCarSystem->update_wheel_positions();
 	}

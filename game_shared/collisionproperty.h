@@ -147,13 +147,13 @@ inline const Vector& CCollisionProperty::EntitySpaceSize( ) const
 //-----------------------------------------------------------------------------
 inline bool CCollisionProperty::IsBoundsDefinedInEntitySpace() const
 {
-	return ( m_Solid == SOLID_BSP || m_Solid == SOLID_OBB || m_Solid == SOLID_VPHYSICS );
+//	return ( m_Solid == SOLID_BSP || m_Solid == SOLID_OBB || m_Solid == SOLID_VPHYSICS );
 	// VXP: ???
 //	return ( m_Solid == SOLID_BSP ||
 //				m_Solid == SOLID_OBB ||
 //				((m_Solid == SOLID_VPHYSICS) && (m_usSolidFlags & FSOLID_NOT_SOLID) == 0) );
 
-//	return ( m_Solid != SOLID_BBOX ) && ( m_Solid != SOLID_NONE );
+	return ( m_Solid != SOLID_BBOX ) && ( m_Solid != SOLID_NONE );
 }
 
 inline void CCollisionProperty::ClearSolidFlags( void )

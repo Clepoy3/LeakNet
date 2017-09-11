@@ -43,12 +43,12 @@ public:
 	virtual void			GetPassengerStartPoint( int nRole, Vector *pPoint, QAngle *pAngles ) = 0;
 
 	// Get a point in *world space* to leave the vehicle from (may be in solid)
-	virtual void			GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles ) = 0;
+	virtual bool			GetPassengerExitPoint( int nRole, Vector *pPoint, QAngle *pAngles ) = 0;
 	virtual int				GetEntryAnimForPoint( const Vector &vecPoint ) = 0;
 	virtual int				GetExitAnimToUse( void ) = 0;
-	virtual void			HandleEntryExitFinish( bool bExitAnimOn ) = 0;
+	virtual void			HandleEntryExitFinish( bool bExitAnimOn, bool bResetAnim ) = 0;
 
-	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) = 0;
+//	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) = 0; // VXP: Moved to CPropVehicleDriveable
 	virtual float			DamageModifier ( CTakeDamageInfo &info ) = 0;
 
 	// Get me the parameters for this vehicle
@@ -95,9 +95,13 @@ public:
 	// Entering / Exiting
 	virtual bool			CanEnterVehicle( CBaseEntity *pEntity ) = 0;
 	virtual bool			CanExitVehicle( CBaseEntity *pEntity ) = 0;
+	virtual void			SetVehicleEntryAnim( bool bOn ) = 0; // VXP
+	virtual void			SetVehicleExitAnim( bool bOn, Vector vecEyeExitEndpoint ) = 0; // VXP
 	virtual void			EnterVehicle( CBasePlayer *pPlayer ) = 0;
 	virtual void			ExitVehicle( int iRole ) = 0;
 	virtual bool			PlayExitAnimation( void ) = 0;
+
+	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) = 0; // VXP
 };
 
 #endif // IVEHICLE_H
