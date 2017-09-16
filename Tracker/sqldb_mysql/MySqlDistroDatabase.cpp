@@ -78,7 +78,8 @@ bool CMySqlDistroDatabase::GetUserDistribution(CUtlVector<trackerserver_t> &serv
 
 	// get the new userID
 	query << "select serverName, catalogName, backupServerName, backupCatalogName, useridminimum, useridmaximum, nextValidUserId "
-			<< "from UserDistribution where 1";
+		//	<< "from UserDistribution where 1";
+			<< "from userdistribution where 1";
 
 	Result res = query.store();
 	if (!query.success())
@@ -255,7 +256,7 @@ public:
 				userID = row[0];
 
 				// update database
-				query << "update UserDistribution set nextValidUserId = nextValidUserId + 1, userIDMaximum = userIDMaximum + 1 where nextValidUserID > 0";
+				query << "update UserDistribution set nextValidUserId = nextValidUserId + 1, userIDMaximum = userIDMaximum + 1 where nextValidUserID > 0 and dbtype = 0 LIMIT 1";
 				query.execute();
 				if (!query.success())
 				{

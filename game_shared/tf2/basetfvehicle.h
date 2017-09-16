@@ -76,9 +76,11 @@ public:
 	virtual void SetPassenger( int nRole, CBasePlayer *pEnt );
 
 	// Where do we get out of the vehicle?
-	virtual void GetPassengerExitPoint( int nRole, Vector *pExitPoint, QAngle *pAngles );
+	virtual bool GetPassengerExitPoint( int nRole, Vector *pExitPoint, QAngle *pAngles );
 
+	// VXP: Will this work after I moved ClassifyPassenger to IDrivableVehicle?
 	virtual Class_T			ClassifyPassenger( CBasePlayer *pPassenger, Class_T defaultClassification ) { return defaultClassification; }
+
 	virtual float			DamageModifier ( CTakeDamageInfo &info ) { return 1.0; }
 	virtual const vehicleparams_t	*GetVehicleParams( void ) { return NULL; }
 
@@ -120,10 +122,10 @@ public:
 	int GetParentVehicleRole();
 
 	// Purpose: 
-	void GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vector *pAbsPosition, QAngle *pAbsAngles );
+	bool GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vector *pAbsPosition, QAngle *pAbsAngles );
 	int	 GetEntryAnimForPoint( const Vector &vecPoint );
 	int	 GetExitAnimToUse( void );
-	void HandleEntryExitFinish( bool bExitAnimOn );
+	void HandleEntryExitFinish( bool bExitAnimOn, bool bResetAnim );
 
 	// Deterioration
 	void	VehicleDeteriorationThink( void );

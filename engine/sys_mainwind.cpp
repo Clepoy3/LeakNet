@@ -36,6 +36,7 @@
 #include "gl_matsysiface.h"
 #include "filesystem_engine.h"
 #include "keydefs.h"
+#include "vengineserver_impl.h" // VXP: For GAME_LIST_FILE
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -744,9 +745,82 @@ static LONG WINAPI HLEngineWindowProc (
 	return g_Game.WindowProc( hWnd, uMsg, wParam, lParam );
 }
 
+void GetModInfoGameName( char windowName[] )
+{
+	// vars for .gam file loading:
+	char *pszInputStream = NULL;
+	char *pStreamPos = NULL;
+	char szDllListFile[ MAX_PATH ];
+	int  nFileSize = -1;
+	int  nBytesRead;
+	FileHandle_t  hLibListFile;
+	char szKey[64];
+	char szValue[256];
+
+	Q_snprintf(szDllListFile					// Listing file for this game.
+		, sizeof( szDllListFile )
+		, "scripts\\%s"
+		, GAME_LIST_FILE );
+
+	hLibListFile = g_pFileSystem->Open( szDllListFile, "rb" );
+	if ( hLibListFile )
+	{
+		nFileSize = g_pFileSystem->Size( hLibListFile );
+	}
+
+	if (nFileSize != -1)
+	{
+		if ((nFileSize == 0) ||
+			(nFileSize > 1024*256))				// 0 or 256K .gam file is probably bogus
+			return;
+
+		pszInputStream = (char *)malloc(nFileSize + 1);  // Leave room for terminating 0 just in case
+		if (!pszInputStream)
+			return;
+		
+		nBytesRead = g_pFileSystem->Read(
+			(void *)pszInputStream,
+			nFileSize,
+			hLibListFile );
+
+		if (nBytesRead != nFileSize)			// Check amound actually read
+			return;
+		
+		pszInputStream[nFileSize] = '\0';		// Prevent overrun
+		pStreamPos = pszInputStream;			// File loaded ok.
+		
+		// Skip the first two tokens:  game "Half-Life" which are used by the front end to determine the game type for this liblist.gam
+		com_ignorecolons = true;
+
+		while ( 1 )
+		{
+			pStreamPos = COM_Parse(pStreamPos);        // Read a key
+			if ( strlen ( com_token ) <= 0 )  // Done
+				break;
+
+			strcpy( szKey, com_token );
+
+			pStreamPos = COM_Parse(pStreamPos);			// Read key value
+
+			// Second token can be "blank"
+			strcpy( szValue, com_token );
+
+			if ( Q_strcmp( szKey, "game" ) == 0 ) // VXP: Sets window title from liblist.gam
+			{
+				Q_strcpy( windowName, szValue );
+				break;
+			}
+		}	
+		
+		com_ignorecolons = false;
+
+		free(pszInputStream);		            // Clean up
+		g_pFileSystem->Close(hLibListFile);
+	}
+}
+
 #define DEFAULT_EXE_ICON		101
 
-HWND hwndEXT;
 bool CGame::CreateGameWindow( void )
 {
 #ifndef SWDS
@@ -773,6 +847,14 @@ bool CGame::CreateGameWindow( void )
 	else
 	{
 		wc.hIcon = (HICON)LoadIcon( GetModuleHandle( 0 ), MAKEINTRESOURCE( DEFAULT_EXE_ICON ) );
+	}
+
+	char windowName[256];
+	windowName[0] = 0;
+	GetModInfoGameName( windowName );
+	if (!windowName[0])
+	{
+		Q_strncpy( windowName, "Half-Life", sizeof(windowName) );
 	}
 
 	// Oops, we didn't clean up the class registration from last cycle which
@@ -803,15 +885,13 @@ bool CGame::CreateGameWindow( void )
 	h = GetSystemMetrics( SM_CYSCREEN );
 
 	// Create the window
-	HWND hwnd = CreateWindow( CLASSNAME, "Half-Life", style, 
+	HWND hwnd = CreateWindow( CLASSNAME, windowName, style, 
 		0, 0, w, h, NULL, NULL, m_hInstance, NULL );
 
 	if ( !videomode->IsBorderedMode() )
 	{
 		SetWindowLong(hwnd, GWL_STYLE, 0);
 	}
-
-	hwndEXT = hwnd;
 
 	g_Game.SetMainWindow( hwnd );
 

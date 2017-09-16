@@ -670,7 +670,7 @@ bool CBaseTFVehicle::IsValidExitPoint( int nRole, Vector *pExitPoint, QAngle *pA
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vector *pAbsPosition, QAngle *pAbsAngles )
+bool CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vector *pAbsPosition, QAngle *pAbsAngles )
 {
 
 	// Deal with vehicles built on other vehicles
@@ -681,7 +681,7 @@ void CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vec
 		if (nParentVehicleRole >= 0)
 		{
 			pParentVehicle->GetPassengerExitPoint( pPlayer, nParentVehicleRole, pAbsPosition, pAbsAngles );
-			return;
+			return true;
 		}
 	}
 
@@ -693,7 +693,7 @@ void CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vec
 		if (nBuildPoint >= 0)
 		{
 			pMount->GetExitPoint( pPlayer, nBuildPoint, pAbsPosition, pAbsAngles );
-			return;
+			return true;
 		}
 	}
 
@@ -702,7 +702,7 @@ void CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vec
 	if ( EntityPlacementTest(pPlayer, *pAbsPosition, vNewPos, true) )
 	{
 		*pAbsPosition = vNewPos;
-		return;
+		return true;
 	}
 
 	// Find the first valid exit point
@@ -715,24 +715,26 @@ void CBaseTFVehicle::GetPassengerExitPoint( CBasePlayer *pPlayer, int nRole, Vec
 		if ( EntityPlacementTest(pPlayer, *pAbsPosition, vNewPos, true) )
 		{
 			*pAbsPosition = vNewPos;
-			return;
+			return true;
 		}
 	}
 
 	// Worst case, we will be returning the vehicle's origin + 50z here
 	*pAbsPosition = GetAbsOrigin();
 	pAbsPosition->z = WorldAlignMaxs()[2] + 150.0f;
+
+	return false;
 }
 
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseTFVehicle::GetPassengerExitPoint( int nRole, Vector *pAbsPosition, QAngle *pAbsAngles )
+bool CBaseTFVehicle::GetPassengerExitPoint( int nRole, Vector *pAbsPosition, QAngle *pAbsAngles )
 {
 	// FIXME: Clean this up
 	CBasePlayer *pPlayer = GetPassenger(nRole);
-	GetPassengerExitPoint( pPlayer, nRole, pAbsPosition, pAbsAngles );
+	return GetPassengerExitPoint( pPlayer, nRole, pAbsPosition, pAbsAngles );
 }
 
 //-----------------------------------------------------------------------------

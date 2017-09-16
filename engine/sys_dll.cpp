@@ -88,8 +88,6 @@ qboolean			Win32AtLeastV4;
 
 #ifdef _WIN32
 extern HWND			*pmainwindow;
-//extern HWND			hwndEXT;
-extern HWND			hwndEXT;
 #endif
 
 // 0 = not active, 1 = active, 2 = pause
@@ -1022,10 +1020,6 @@ void LoadEntityDLLs( char *szBaseDir )
 			strcpy( szValue, com_token );
 
 			DLL_SetModKey( &gmodinfo, szKey, szValue );
-		//	Msg( "ModKey: %s, value: %s\n", szKey, szValue );
-		//	if(szKey == "game")
-			if(Q_strcmp (szKey, "game") == 0) // VXP: Sets window title from liblist.gam
-				SetWindowText(hwndEXT, szValue);
 		}	
 		
 		com_ignorecolons = false;

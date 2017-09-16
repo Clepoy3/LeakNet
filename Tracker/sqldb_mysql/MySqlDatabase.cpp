@@ -52,15 +52,15 @@ static DWORD WINAPI staticThreadFunc(void *param)
 bool CMySqlDatabase::Initialize(const char *serverName, const char *catalogName)
 {
 	// attempt to connect to the database via named pipes
-//	m_Connection.connect("newtracker", "127.0.0.1", "root", "25voPGnBmq");
-	m_Connection.connect("look", "at the", "lastbsesrc", "folder");
+//	m_Connection.connect(catalogName, serverName, "", "");
+	m_Connection.connect("newtracker", "leaknet.tk", "tracker", "");
 
 	// check the connection
 	if (!m_Connection.connected())
 	{
 		// try again
-	//	m_Connection.connect("newtracker", "127.0.0.1", "root", "25voPGnBmq");
-		m_Connection.connect("look", "at the", "lastbsesrc", "folder");
+	//	m_Connection.connect(catalogName, serverName, "", "");
+		m_Connection.connect("leaknet.tk", "newtracker", "tracker", "");
 
 		if (!m_Connection.connected())
 		{
