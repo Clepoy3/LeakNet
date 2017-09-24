@@ -133,6 +133,8 @@ public:
 	bool	CreateVPhysics( void );
 	void	AnimThink( void );
 	void	PropSetSequence( int nSequence );
+	void	OnRestore( void ); // VXP
+	bool	OverridePropdata( void ); // VXP
 
 	// Input handlers
 	void InputSetAnimation( inputdata_t &inputdata );
@@ -165,6 +167,7 @@ public:
 
 	void Spawn( void );
 	bool CreateVPhysics( void );
+	bool OverridePropdata( void ); // VXP
 
 	virtual void VPhysicsUpdate( IPhysicsObject *pPhysics )
 	{

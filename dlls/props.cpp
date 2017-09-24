@@ -244,6 +244,7 @@ void CBaseProp::Spawn( void )
 		return;
 	}
 
+	PrecacheModel( szModel );
 	Precache();
 	SetModel( szModel );
 
@@ -253,7 +254,7 @@ void CBaseProp::Spawn( void )
 	{
 		if ( iResult == PARSE_FAILED_BAD_DATA )
 		{
-			Warning( "%s at %.0f %.0f %0.f uses model %s, which has an invalid prop_data type. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
+			DevWarning( "%s at %.0f %.0f %0.f uses model %s, which has an invalid prop_data type. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
 			UTIL_Remove( this );
 			return;
 		}
@@ -262,7 +263,7 @@ void CBaseProp::Spawn( void )
 			// If we don't have data, but we're a prop_physics, fail
 			if ( FClassnameIs( this, "prop_physics" ) )
 			{
-				Warning( "%s at %.0f %.0f %0.f uses model %s, which requires that it be used on a prop_static. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
+				DevWarning( "%s at %.0f %.0f %0.f uses model %s, which requires that it be used on a prop_static. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
 				UTIL_Remove( this );
 				return;
 			}
@@ -270,16 +271,20 @@ void CBaseProp::Spawn( void )
 		else if ( iResult == PARSE_SUCCEEDED )
 		{
 			// If we have data, and we're a static prop, fail
-			if ( !FClassnameIs( this, "prop_physics" ) && !FClassnameIs( this, "prop_physics_override" ) && !FClassnameIs( this, "prop_dynamic_override" ) )
+		//	if ( !FClassnameIs( this, "prop_physics" ) && !FClassnameIs( this, "prop_physics_override" ) && !FClassnameIs( this, "prop_dynamic_override" ) )
+
+			// If we have data, and we're not a physics prop, fail
+			if ( !dynamic_cast<CPhysicsProp*>(this) ) // VXP: From Source 2007
 			{
-				Warning( "%s at %.0f %.0f %0.f uses model %s, which requires that it be used on a prop_physics. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
+				DevWarning( "%s at %.0f %.0f %0.f uses model %s, which requires that it be used on a prop_physics. DELETED.\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z, szModel );
 				UTIL_Remove( this );
 				return;
 			}
 		}
 	}
 
-	SetMoveType( MOVETYPE_NONE );
+//	SetMoveType( MOVETYPE_NONE );
+	SetMoveType( MOVETYPE_PUSH );
 	m_takedamage = DAMAGE_NO;
 	SetNextThink( TICK_NEVER_THINK );
 
@@ -294,7 +299,14 @@ void CBaseProp::Spawn( void )
 //-----------------------------------------------------------------------------
 void CBaseProp::Precache( void )
 {
+	if ( GetModelName() == NULL_STRING )
+	{
+		Msg( "%s at (%.3f, %.3f, %.3f) has no model name!\n", GetClassname(), GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z );
+		SetModelName( AllocPooledString( "models/error.mdl" ) );
+	}
+
 	engine->PrecacheModel( STRING( GetModelName() ) );
+
 	BaseClass::Precache();
 }
 
@@ -575,10 +587,7 @@ int CBreakableProp::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	// VXP: TODO: Would be cool to implement Source 2007 feature that appears at this place
 
 	int ret = BaseClass::OnTakeDamage( info );
-
-	// VXP: Output the new health as a percentage of max health [0..1]
-	float flRatio = clamp( (float)m_iHealth / (float)m_iMaxHealth, 0, 1 );
-	m_OnHealthChanged.Set( flRatio, info.GetAttacker(), this );
+	m_OnHealthChanged.Set( m_iHealth, info.GetAttacker(), this );
 
 	return ret;
 }
@@ -800,13 +809,25 @@ void CDynamicProp::Spawn( )
 		SetClassname( "prop_dynamic" );
 	}
 
+	// If the prop is not-solid, the bounding box needs to be 
+	// OBB to correctly surround the prop as it rotates.
+	// Check the classname so we don't mess with doors & other derived classes.
+	if ( GetSolid() == SOLID_NONE && FClassnameIs( this, "prop_dynamic" ) )
+	{
+		SetSolid( SOLID_OBB );
+		AddSolidFlags( FSOLID_NOT_SOLID );
+	}
+
 	BaseClass::Spawn();
 
 	if ( IsMarkedForDeletion() )
 		return;
 
 	// Now condense all classnames to one
-	SetClassname("prop_dynamic");
+	if ( FClassnameIs( this, "dynamic_prop" ) || FClassnameIs( this, "prop_dynamic_override" )  ) // VXP: From Source 2007
+	{
+		SetClassname("prop_dynamic");
+	}
 
 	AddFlag( FL_STATICPROP );
 	Relink();
@@ -821,6 +842,28 @@ void CDynamicProp::Spawn( )
 	}
 
 	CreateVPhysics();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CDynamicProp::OnRestore( void )
+{
+	BaseClass::OnRestore();
+
+	// We may need to recreate our bone followers.
+	if ( !VPhysicsGetObject() )
+	{
+		CreateVPhysics();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CDynamicProp::OverridePropdata( void )
+{
+	return ( FClassnameIs(this, "prop_dynamic_override" ) );
 }
 
 
@@ -879,7 +922,11 @@ void CDynamicProp::AnimThink( void )
 //------------------------------------------------------------------------------
 void CDynamicProp::InputSetAnimation( inputdata_t &inputdata )
 {
-	int nSequence = LookupSequence ( inputdata.value.String() );
+	const char *szAnim = inputdata.value.String();
+	if ( !szAnim )
+		return;
+
+	int nSequence = LookupSequence ( szAnim );
 
 	// Set to the desired anim, or default anim if the desired is not present
 	if ( nSequence > ACTIVITY_NOT_AVAILABLE )
@@ -892,7 +939,7 @@ void CDynamicProp::InputSetAnimation( inputdata_t &inputdata )
 	else
 	{
 		// Not available try to get default anim
-		Msg( "Dynamic prop no sequence named:%s\n", inputdata.value.String() );
+		Msg( "Dynamic prop %s no sequence named:%s\n", GetDebugName(), szAnim );
 		SetSequence( 0 );
 	}
 }
@@ -905,6 +952,7 @@ void CDynamicProp::InputSetAnimation( inputdata_t &inputdata )
 void CDynamicProp::PropSetSequence( int nSequence )
 {
 	m_flCycle = 0;
+	m_flAnimTime = gpGlobals->curtime; // VXP
 	ResetSequence( nSequence );
 	ResetClientsideFrame();
 
@@ -1057,7 +1105,10 @@ void CPhysicsProp::Spawn( )
 		return;
 
 	// Now condense all classnames to one
-	SetClassname( "prop_physics" );
+	if ( FClassnameIs( this, "prop_physics_override") ) // VXP: From Source 2007
+	{
+		SetClassname( "prop_physics" );
+	}
 
 	if ( HasSpawnFlags( SF_PHYSPROP_DEBRIS ) )
 	{
@@ -1118,6 +1169,14 @@ bool CPhysicsProp::CreateVPhysics()
 		}
 	}
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CPhysicsProp::OverridePropdata( void )
+{
+	return ( FClassnameIs(this, "prop_physics_override" ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -1515,6 +1574,7 @@ static CBreakModelsPrecached g_BreakModelsPrecached;
 
 void PropBreakablePrecacheAll( string_t modelName )
 {
+	int iBreakables = 0;
 	if ( g_BreakModelsPrecached.IsInList( modelName ) )
 		return;
 
@@ -1524,7 +1584,9 @@ void PropBreakablePrecacheAll( string_t modelName )
 	CUtlVector<breakmodel_t> list;
 
 	BreakModelList( list, modelIndex, COLLISION_GROUP_NONE, 0 );
-	for ( int i = 0; i < list.Count(); i++ )
+	iBreakables = list.Count();
+
+	for ( int i = 0; i < iBreakables; i++ )
 	{
 		string_t modelName = AllocPooledString(list[i].modelName);
 		PropBreakablePrecacheAll( modelName );
@@ -1895,7 +1957,7 @@ void CBasePropDoor::UpdateAreaPortals(bool isOpen)
 		return;
 	
 	CBaseEntity *pPortal = NULL;
-	while (pPortal = gEntList.FindEntityByClassname(pPortal, "func_areaportal"))
+	while ((pPortal = gEntList.FindEntityByClassname(pPortal, "func_areaportal")) != NULL)
 	{
 		if (pPortal->HasTarget(name))
 		{

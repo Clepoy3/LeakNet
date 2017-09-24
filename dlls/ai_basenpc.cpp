@@ -2624,7 +2624,7 @@ void CAI_BaseNPC::GatherAttackConditions( CBaseEntity *pTarget, float flDist )
 		condition = GetActiveWeapon()->WeaponRangeAttack1Condition(flDot, flDist);
 
 		if ( condition == COND_NOT_FACING_ATTACK && FInAimCone( targetPos ) )
-			Msg( "Warning: COND_NOT_FACING_ATTACK set but FInAimCone is true\n" );
+			DevMsg( "Warning: COND_NOT_FACING_ATTACK set but FInAimCone is true\n" );
 
 		if (condition != COND_CAN_RANGE_ATTACK1 || bWeaponHasLOS)
 		{

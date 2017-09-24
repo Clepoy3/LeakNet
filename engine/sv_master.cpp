@@ -696,7 +696,7 @@ void CMaster::Init( void )
 {
 	// VXP: Only once
 	strcpy( szExternalIP, "127.0.0.1" );
-	Msg( "Getting external IP...\n" );
+//	Msg( "Getting external IP...\n" );
 	NET_GetExternalIP( szExternalIP );
 }
 
