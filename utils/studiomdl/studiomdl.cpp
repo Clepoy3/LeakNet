@@ -38,6 +38,7 @@
 #include "vstdlib/strtools.h"
 #include "bspflags.h"
 
+void LoadSharedModelCacheInterface();
 
 bool g_collapse_bones = false;
 bool g_quiet = false;
@@ -136,51 +137,6 @@ int lookupControl( char *string )
 =================
 */
 
-void Cmd_PoseParameter( )
-{
-	if (g_numposeparameters >= MAXSTUDIOPOSEPARAM)
-	{
-		Error( "too many pose parameters (max %d)\n", MAXSTUDIOPOSEPARAM );
-	}
-
-	// name
-	GetToken (false);
-	strcpyn( g_pose[g_numposeparameters].name, token );
-
-	if (TokenAvailable())
-	{
-		// min
-		GetToken (false);
-		g_pose[g_numposeparameters].min = atof (token);
-	}
-
-	if (TokenAvailable())
-	{
-		// max
-		GetToken (false);
-		g_pose[g_numposeparameters].max = atof (token);
-	}
-
-	while (TokenAvailable())
-	{
-		GetToken (false);
-
-		if (!stricmp( token, "wrap" ))
-		{
-			g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
-			g_pose[g_numposeparameters].loop = g_pose[g_numposeparameters].max - g_pose[g_numposeparameters].min;
-		}
-		else if (!stricmp( token, "loop" ))
-		{
-			g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
-			GetToken (false);
-			g_pose[g_numposeparameters].loop = atof( token );
-		}
-	}
-	g_numposeparameters++;
-}
-
-
 int LookupPoseParameter( char *name )
 {
 	int i;
@@ -201,6 +157,60 @@ int LookupPoseParameter( char *name )
 
 	return i;
 }
+
+void Cmd_PoseParameter( )
+{
+	if (g_numposeparameters >= MAXSTUDIOPOSEPARAM)
+	{
+		Error( "too many pose parameters (max %d)\n", MAXSTUDIOPOSEPARAM );
+	}
+
+	int i = LookupPoseParameter( token );
+
+	// name
+	GetToken (false);
+//	strcpyn( g_pose[g_numposeparameters].name, token );
+	strcpyn( g_pose[i].name, token );
+
+	if (TokenAvailable())
+	{
+		// min
+		GetToken (false);
+	//	g_pose[g_numposeparameters].min = atof (token);
+		g_pose[i].min = atof (token);
+	}
+
+	if (TokenAvailable())
+	{
+		// max
+		GetToken (false);
+	//	g_pose[g_numposeparameters].max = atof (token);
+		g_pose[i].max = atof (token);
+	}
+
+	while (TokenAvailable())
+	{
+		GetToken (false);
+
+		if (!stricmp( token, "wrap" ))
+		{
+		//	g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
+		//	g_pose[g_numposeparameters].loop = g_pose[g_numposeparameters].max - g_pose[g_numposeparameters].min;
+			g_pose[i].flags |= STUDIO_LOOPING;
+			g_pose[i].loop = g_pose[i].max - g_pose[i].min;
+		}
+		else if (!stricmp( token, "loop" ))
+		{
+		//	g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
+			g_pose[i].flags |= STUDIO_LOOPING;
+			GetToken (false);
+		//	g_pose[g_numposeparameters].loop = atof( token );
+			g_pose[i].loop = atof( token );
+		}
+	}
+//	g_numposeparameters++;
+}
+
 
 /*
 =================
@@ -2470,8 +2480,8 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 		}
 		else
 		{
-			i = sqrt( numblends );
-		//	i = sqrt( (float)numblends );
+		//	i = sqrt( numblends );
+			i = sqrt( (float)numblends );
 			if (i * i == numblends)
 			{
 				pseq->groupsize[0] = i;
@@ -5772,6 +5782,7 @@ int main (int argc, char **argv)
 	strcpy( path, argv[i] );
 
 	CmdLib_InitFileSystem( path, true );
+	LoadSharedModelCacheInterface(); // VXP
 
 	if (!g_quiet)
 		printf("%s, %s, %s\n", qdir, gamedir, basegamedir );

@@ -23,7 +23,14 @@ extern void ComputeController( IVP_U_Float_Point &currentSpeed, const IVP_U_Floa
 
 struct shadowcontrol_params_t
 {
-	shadowcontrol_params_t() { lastPosition.set_to_zero(); }
+	shadowcontrol_params_t()
+	{
+		// VXP: Missing initializations
+		dampFactor = 0.0f;
+		teleportDistance = 0.0f;
+
+		lastPosition.set_to_zero();
+	}
 
 	IVP_U_Point			targetPosition;
 	IVP_U_Quat			targetRotation;

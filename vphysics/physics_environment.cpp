@@ -177,6 +177,9 @@ public:
 	CSleepObjects( void ) : IVP_Listener_Object() 
 	{
 		m_pCallback = NULL;
+
+		// VXP: Missing initializations
+		m_lastScrapeTime = 0.0f;
 	}
 
 	void SetHandler( IPhysicsObjectEvent *pListener )
@@ -677,6 +680,9 @@ private:
 
 CPhysicsListenerCollision::CPhysicsListenerCollision() : IVP_Listener_Collision( ALL_COLLISION_FLAGS ), m_pCallback(&g_EmptyCollisionListener) 
 {
+	// VXP: Missing initializations
+	m_pairListOldestTime = 0.0f;
+
 	m_pairList.SetLessFunc( CorePairLessFunc );
 }
 
@@ -977,6 +983,9 @@ public:
 CPhysicsEnvironment::CPhysicsEnvironment( void )
 // assume that these lists will have at least one object
 {
+	// VXP: Missing initializations
+	m_simPSIcurrent = 0;
+
 	// set this to true to force the 
 	m_deleteQuick = false;
 	m_queueDeleteObject = false;

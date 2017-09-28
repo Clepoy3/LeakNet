@@ -4842,6 +4842,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
         GiveAmmo( 255,    "ML_Grenade");
         GiveAmmo( 255,    "Grenade");
         GiveAmmo( 255,    "GaussEnergy");
+		GiveAmmo( 99,    "Gasoline");
 
 		GiveNamedItem( "weapon_alyxgun" );
         GiveNamedItem( "weapon_ar1" );

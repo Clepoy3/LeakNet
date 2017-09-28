@@ -1352,6 +1352,8 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE, 0,	0, 150, BULLET_IMPULSE(650, 8000) ); // hit like a 10kg weight at 400 in/s
 		def.AddAmmoType("Hopwire",			DMG_BLAST,					TRACER_NONE, 1,	1, 5, 0);
 		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE, 5, 5, 15, 1.5 * 750 * 12 ); // hit like a 1.5kg weight at 750 ft/s
+
+		def.AddAmmoType("Gasoline",			DMG_BURN,					TRACER_NONE, 0,	0, 100, 0 );
 	}
 
 	return &def;

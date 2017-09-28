@@ -319,8 +319,7 @@ public:
 					vcollide_t *pCollide = modelinfo->GetVCollide( modelIndex );
 					if ( pCollide )
 					{
-						if ( pCollide->solidCount > 0 && pCollide->solids )
-							pPhysCollide = pCollide->solids[0];
+						pPhysCollide = pCollide->solids[0];
 					}
 				}
 			}
@@ -421,30 +420,29 @@ public:
 			// Don't doing the box thing for things like wheels on cars
 			IPhysicsObject *pPhysObj = (IPhysicsObject *)(*ppPhysObj);
 
-			if ( pPhysObj )
+			if ( !pPhysObj )
+				return;
+
+			item.header.modelName = GetModelName( pPhysObj );
+			if ( item.header.modelName == NULL_STRING )
 			{
-				item.header.modelName = GetModelName( pPhysObj );
-				if ( item.header.modelName == NULL_STRING )
+				BBox_t *pBBox = GetBBox( pPhysObj );
+				if ( pBBox != NULL )
 				{
-					BBox_t *pBBox = GetBBox( pPhysObj );
-					if ( pBBox != NULL )
-	
+					item.header.bbox = *pBBox;
+				}
+				else 
+				{
+				//	IPhysicsObject *pPhys = (IPhysicsObject *)(*ppPhysObj);
+				//	if ( pPhys && pPhys->GetSphereRadius() != 0 )
+					if ( pPhysObj && pPhysObj->GetSphereRadius() != 0 )
 					{
-						item.header.bbox = *pBBox;
+					//	item.header.sphere.radius = pPhys->GetSphereRadius();
+						item.header.sphere.radius = pPhysObj->GetSphereRadius();
 					}
-					else 
+					else
 					{
-					//	IPhysicsObject *pPhys = (IPhysicsObject *)(*ppPhysObj);
-					//	if ( pPhys && pPhys->GetSphereRadius() != 0 )
-						if ( pPhysObj && pPhysObj->GetSphereRadius() != 0 )
-						{
-					//		item.header.sphere.radius = pPhys->GetSphereRadius();
-							item.header.sphere.radius = pPhysObj->GetSphereRadius();
-						}
-						else
-						{
-							DevMsg( "Don't know how to save model for physics object (class \"%s\")\n", pOwner->GetClassname() );
-						}
+						DevMsg( "Don't know how to save model for physics object (class \"%s\")\n", pOwner->GetClassname() );
 					}
 				}
 			}
@@ -706,16 +704,10 @@ class CPhysObjSaveRestoreOps : public CDefSaveRestoreOps
 public:
 	virtual void Save( const SaveRestoreFieldInfo_t &fieldInfo, ISave *pSave )
 	{
-	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
-		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
-		{
-			Warning( "CPhysObjSaveRestoreOps::Save: Physics save/load is only suitable for entities\n" );
-			return;
-		}
+		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
 		if ( m_type == PIID_UNKNOWN )
 		{
-		//	AssertMsg( 0, "Unknown physics save/load type");
-			Warning( "CPhysObjSaveRestoreOps::Save: Unknown physics save/load type\n" );
+			AssertMsg( 0, "Unknown physics save/load type");
 			return;
 		}
 		g_PhysSaveRestoreBlockHandler.QueueSave( (CBaseEntity *)fieldInfo.pOwner, fieldInfo.pTypeDesc, (void **)fieldInfo.pField, m_type );
@@ -723,16 +715,10 @@ public:
 	
 	virtual void Restore( const SaveRestoreFieldInfo_t &fieldInfo, IRestore *pRestore )
 	{
-	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
-		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
-		{
-			Warning( "CPhysObjSaveRestoreOps::Restore: Physics save/load is only suitable for entities\n" );
-			return;
-		}
+		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
 		if ( m_type == PIID_UNKNOWN )
 		{
-		//	AssertMsg( 0, "Unknown physics save/load type");
-			Warning( "CPhysObjSaveRestoreOps::Restore: Unknown physics save/load type\n" );
+			AssertMsg( 0, "Unknown physics save/load type");
 			return;
 		}
 		
@@ -741,23 +727,13 @@ public:
 	
 	virtual void MakeEmpty( const SaveRestoreFieldInfo_t &fieldInfo )
 	{
-	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
-		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
-		{
-			Warning( "CPhysObjSaveRestoreOps::MakeEmpty: Physics save/load is only suitable for entities\n" );
-			return;
-		}
+		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
 		memset( fieldInfo.pField, 0, fieldInfo.pTypeDesc->fieldSize * sizeof( void * ) );
 	}
 	
 	virtual bool IsEmpty( const SaveRestoreFieldInfo_t &fieldInfo )
 	{
-	//	AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
-		if( !fieldInfo.pOwner || !IsValidEntityPointer(fieldInfo.pOwner) )
-		{
-			Warning( "CPhysObjSaveRestoreOps::IsEmpty: Physics save/load is only suitable for entities\n" );
-			return false;
-		}
+		AssertMsg( fieldInfo.pOwner && IsValidEntityPointer(fieldInfo.pOwner), "Physics save/load is only suitable for entities" );
 		
 		void **ppPhysObj = (void **)fieldInfo.pField;
 		int nObjects = fieldInfo.pTypeDesc->fieldSize;

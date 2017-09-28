@@ -689,7 +689,7 @@ void IVP_Controller_Raycast_Fake_Jetski::do_steering( IVP_FLOAT steering_angle_i
 	// Before commenting if you steering a wheel (press A or D), the wheel can steer as needed,
 	// but if you unpress the button - it returns to it fucked up angle.
 	// I still don't know what to do with wrong rear right wheel position
-    if (  m_SteeringAngle == steering_angle_in)  
+    if (  m_SteeringAngle == steering_angle_in) 
 		return;
 
 	// Set the new steering angle.

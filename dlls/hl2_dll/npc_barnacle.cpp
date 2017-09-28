@@ -340,11 +340,14 @@ void CNPC_Barnacle::BarnacleThink ( void )
 			// tongue is fully extended, and is touching someone.
 			CBaseCombatCharacter *pBCC = dynamic_cast<CBaseCombatCharacter *>(pTouchEnt);
 
-			// FIXME: humans should return neck position
-			Vector vecGrabPos = pTouchEnt->EyePosition();
-			if ( pBCC && pBCC->HandleInteraction( g_interactionBarnacleVictimGrab, &vecGrabPos, this ) )
+			if( CanPickup( pBCC ) )
 			{
-				AttachTongueToTarget( pTouchEnt, vecGrabPos );
+				// FIXME: humans should return neck position
+				Vector vecGrabPos = pTouchEnt->EyePosition();
+				if ( pBCC && pBCC->HandleInteraction( g_interactionBarnacleVictimGrab, &vecGrabPos, this ) )
+				{
+					AttachTongueToTarget( pTouchEnt, vecGrabPos );
+				}
 			}
 		}
 		else
@@ -376,6 +379,36 @@ void CNPC_Barnacle::BarnacleThink ( void )
 
 	StudioFrameAdvance();
 	DispatchAnimEvents( this );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool CNPC_Barnacle::CanPickup( CBaseCombatCharacter *pBCC )
+{
+	// Barnacle can pick this item up because it has already passed the filters
+	// in TongueTouchEnt. It just isn't an NPC or player and doesn't need further inspection.
+	if( !pBCC )
+		return true;
+
+	// Don't pickup turrets
+	if( FClassnameIs( pBCC, "npc_turret_floor" ) )
+		return false;
+
+	// Don't pick up a dead player or NPC
+	if( !pBCC->IsAlive() )
+		return false;
+
+//	if( pBCC->IsPlayer() )
+//	{
+//		CBasePlayer *pPlayer = dynamic_cast<CBasePlayer*>(pBCC);
+//	
+//		Assert( pPlayer != NULL );
+//
+//		// Don't pick up a player held by another barnacle
+//		if( pPlayer->HasPhysicsFlag(PFLAG_ONBARNACLE) )
+//			return false;
+//	}
+	return true;
 }
 
 //-----------------------------------------------------------------------------

@@ -27,6 +27,9 @@ public:
 
 CPhysicsFluidController::CPhysicsFluidController( CBuoyancyAttacher *pBuoy, IVP_Liquid_Surface_Descriptor_Simple *pLiquid, CPhysicsObject *pObject )
 {
+	// VXP: Missing initializations
+	m_pGameData = NULL;
+
 	m_pBuoyancy = pBuoy;
 	m_pLiquidSurface = pLiquid;
 	m_pObject = pObject;

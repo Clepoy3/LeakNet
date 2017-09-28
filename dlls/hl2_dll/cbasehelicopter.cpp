@@ -478,9 +478,10 @@ void CBaseHelicopter::Hunt( void )
 
 		if( HasEnemy() )
 		{
-			GatherEnemyConditions( GetEnemy() );
+			CBaseEntity *pEnemy = GetEnemy();
+			GatherEnemyConditions( pEnemy );
 
-			if (FVisible( GetEnemy() ))
+			if (FVisible( pEnemy ))
 			{
 				if (m_flLastSeen < gpGlobals->curtime - 2)
 				{
@@ -488,7 +489,7 @@ void CBaseHelicopter::Hunt( void )
 				}
 
 				m_flLastSeen = gpGlobals->curtime;
-				m_vecTargetPosition = GetEnemy()->WorldSpaceCenter();
+				m_vecTargetPosition = pEnemy->WorldSpaceCenter();
 			}
 		}
 		else
@@ -908,7 +909,13 @@ void CBaseHelicopter::DrawDebugGeometryOverlays(void)
 //-----------------------------------------------------------------------------
 void CBaseHelicopter::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
-	// Take no damage from trace attacks
+	// VXP: Take no damage from trace attacks unless it's blast damage. RadiusDamage() sometimes calls
+	// TraceAttack() as a means for delivering blast damage. Usually when the explosive penetrates
+	// the target. (RPG missiles do this sometimes).
+	if( info.GetDamageType() & (DMG_BLAST) )
+	{
+		BaseClass::TraceAttack( info, vecDir, ptr );
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -948,7 +955,7 @@ void CBaseHelicopter::Event_Killed( const CTakeDamageInfo &info )
 	m_lifeState			= LIFE_DYING;
 
 	SetMoveType( MOVETYPE_FLYGRAVITY );
-	SetGravity( 0.3 );
+	SetGravity( UTIL_ScaleForGravity( 240 ) ); // VXP: use a lower gravity
 
 	StopLoopingSounds();
 
@@ -1066,12 +1073,20 @@ bool CBaseHelicopter::ChooseEnemy( void )
 
 	pNewEnemy = BestEnemy();
 
-	if( ( pNewEnemy != GetEnemy() ) && pNewEnemy != NULL )
+	if( pNewEnemy != GetEnemy() )
 	{
-		//New enemy! Clear the timers and set conditions.
- 		SetCondition(COND_NEW_ENEMY);
-		SetEnemy( pNewEnemy );
-		m_flLastSeen = m_flPrevSeen = gpGlobals->curtime;
+		if ( pNewEnemy != NULL )
+		{
+			//New enemy! Clear the timers and set conditions.
+ 			SetCondition(COND_NEW_ENEMY);
+			SetEnemy( pNewEnemy );
+			m_flLastSeen = m_flPrevSeen = gpGlobals->curtime;
+		}
+		else
+		{
+			SetEnemy( NULL );
+			SetState( NPC_STATE_ALERT );
+		}
 		return true;
 	}
 	else

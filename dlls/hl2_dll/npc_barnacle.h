@@ -83,6 +83,11 @@ public:
 	void			UpdateTongue( void );
 	void			BitePrey( void );
 
+private:
+	bool			CanPickup( CBaseCombatCharacter *pBCC );
+
+public:
+
 	CNetworkVar( float, m_flAltitude );
 	int				m_cGibs;				// barnacle loads up on gibs each time it kills something.
 	bool			m_fTongueExtended;

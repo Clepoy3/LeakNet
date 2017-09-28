@@ -897,9 +897,6 @@ CSaveRestoreData *CSaveRestore::SaveGameState( void )
 //-----------------------------------------------------------------------------
 void CSaveRestore::Finish( CSaveRestoreData *save )
 {
-//	if( !save )
-//		return;
-
 	char **pTokens = save->DetachSymbolTable();
 	if ( pTokens )
 		SaveFreeMemory( pTokens );
@@ -908,7 +905,7 @@ void CSaveRestore::Finish( CSaveRestoreData *save )
 	if ( pEntityTable )
 		SaveFreeMemory( pEntityTable );
 
-//	if ( save )
+	if ( save )
 		SaveFreeMemory( save );
 
 	g_ServerGlobalVariables.pSaveData = NULL;
@@ -1327,19 +1324,7 @@ CSaveRestoreData *CSaveRestore::LoadSaveData( const char *level )
 
 	if ( sectionsInfo.nBytesSymbols > 0 )
 	{
-	/*
-		pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
-
-		// Make sure the token strings pointed to by the pToken hashtable.
-		for( int i = 0; i<sectionsInfo.nSymbols; i++ )
-		{
-			if ( *pszTokenList )
-			{
-				Verify( pSaveData->DefineSymbol( pszTokenList, i ) );
-			}
-			while( *pszTokenList++ );				// Find next token (after next null)
-		}
-	*/
+	//	pSaveData->InitSymbolTable( (char**)SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) ), sectionsInfo.nSymbols );
 		pSaveMemory = SaveAllocMemory( sectionsInfo.nSymbols, sizeof(char *) );
 		if ( !pSaveMemory )
 		{

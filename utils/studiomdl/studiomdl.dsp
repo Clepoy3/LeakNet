@@ -188,6 +188,10 @@ SOURCE=..\common\scriplib.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\sharedmodel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\simplify.cpp
 # End Source File
 # Begin Source File

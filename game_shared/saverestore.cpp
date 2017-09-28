@@ -1078,14 +1078,15 @@ void CSave::WriteFunction( datamap_t *pRootMap, const char *pname, const int *da
 	AssertMsg( count == 1, "Arrays of functions not presently supported" );
 	const char *functionName = UTIL_FunctionToName( pRootMap, (void *)(*data) );
 
-	if ( !functionName )
+	if ( functionName )
+	{
+		BufferField( pname, strlen(functionName) + 1, functionName );
+	}
+	else
 	{
 		Warning( "Invalid function pointer in entity!" );
 		Assert(0);
-		functionName = "BADFUNCTIONPOINTER";
 	}
-
-	BufferField( pname, strlen(functionName) + 1, functionName );
 }
 
 //-------------------------------------
@@ -1345,23 +1346,15 @@ void CRestore::ReadBasicField( const SaveRestoreRecordHeader_t &header, void *pD
 #ifdef _DEBUG
 			int startPos = GetReadPos();
 #endif
-			if ( !(pField->flags & FTYPEDESC_PTR) || *((void **)pDest) )
+			int nFieldCount = pField->fieldSize;
+			char *pFieldData = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pDest : *((void **)pDest) );
+			while ( --nFieldCount >= 0 )
 			{
-				int nFieldCount = pField->fieldSize;
-				char *pFieldData = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pDest : *((void **)pDest) );
-				while ( --nFieldCount >= 0 )
-				{
-					// No corresponding "block" (see write) as it was used as the header of the field
-					ReadAll( pFieldData, pField->td );
-					pFieldData += pField->fieldSizeInBytes;
-				}
-				Assert( GetReadPos() - startPos == header.size );
+				// No corresponding "block" (see write) as it was used as the header of the field
+				ReadAll( pFieldData, pField->td );
+				pFieldData += pField->fieldSizeInBytes;
 			}
-			else
-			{
-				SetReadPos( GetReadPos() + header.size );
-				Warning( "Attempted to restore FIELD_EMBEDDEDBYREF %s but there is no destination memory\n", pField->fieldName );
-			}
+			Assert( GetReadPos() - startPos == header.size );
 			break;
 			
 		}
@@ -1482,9 +1475,6 @@ void CRestore::EmptyFields( void *pBaseData, typedescription_t *pFields, int fie
 
 		case FIELD_EMBEDDED:
 			{
-				if ( (pField->flags & FTYPEDESC_PTR) && !*((void **)pFieldData) )
-					break;
-
 				int nFieldCount = pField->fieldSize;
 				char *pFieldMemory = (char *)( ( !(pField->flags & FTYPEDESC_PTR) ) ? pFieldData : *((void **)pFieldData) );
 				while ( --nFieldCount >= 0 )
@@ -1958,30 +1948,15 @@ void CRestore::ReadGameField( const SaveRestoreRecordHeader_t &header, void *pDe
 			int nRead = ReadString( pStringDest, pField->fieldSize, header.size );
 			if ( m_precache )
 			{
-#if !defined( CLIENT_DLL )
-				// HACKHACK: Rewrite the .bsp models to match the map name in case the bugreporter renamed it
-				if ( pField->fieldType == FIELD_MODELNAME && Q_stristr(pStringDest->ToCStr(), ".bsp") )
-				{
-					char buf[MAX_PATH];
-					Q_strncpy( buf, "maps/", sizeof(buf) );
-					Q_strncat( buf, gpGlobals->mapname.ToCStr(), sizeof(buf) );
-					Q_strncat( buf, ".bsp", sizeof(buf) );
-					*pStringDest = AllocPooledString( buf );
-				}
-#endif
 				for ( int i = 0; i < nRead; i++ )
 				{
 					if ( pStringDest[i] != NULL_STRING )
 					{
 #if !defined( CLIENT_DLL )	
 						if ( pField->fieldType == FIELD_MODELNAME )
-						{
 							engine->PrecacheModel( STRING( pStringDest[i] ) );
-						}
 						else if ( pField->fieldType == FIELD_SOUNDNAME )
-						{
 							enginesound->PrecacheSound( STRING( pStringDest[i] ) );
-						}
 #endif
 					}
 				}
@@ -2037,10 +2012,7 @@ int CRestore::ReadTime( float *pValue, int count, int nBytesAvailable )
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		if ( pValue[i] == ZERO_TIME )
-			pValue[i] = 0.0;
-		else if ( pValue[i] != INVALID_TIME && pValue[i] != FLT_MAX )
-			pValue[i] += baseTime;
+		pValue[i] += baseTime;
 	}
 	
 	return nRead;
@@ -2048,27 +2020,12 @@ int CRestore::ReadTime( float *pValue, int count, int nBytesAvailable )
 
 int CRestore::ReadTick( int *pValue, int count, int nBytesAvailable )
 {
-//	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() );
-	// HACK HACK:  Adding 0.1f here makes sure that all tick times read
-	//  from .sav file which are near the basetime will end up just ahead of
-	//  the base time, because we are restoring we'll have a slow frame of the
-	//  max frametime of 0.1 seconds and that could otherwise cause all of our
-	//  think times to get synchronized to each other... sigh.  ywb...
-	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() + 0.1f );
+	int baseTick = TIME_TO_TICKS( m_pGameInfo->GetBaseTime() );
 	int nRead = ReadInt( pValue, count, nBytesAvailable );
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		if ( pValue[ i ] != TICK_NEVER_THINK_ENCODE )
-		{
-			// Rebase it
-			pValue[i] += baseTick;
-		}
-		else
-		{
-			// Slam to -1 value
-			pValue[ i ] = TICK_NEVER_THINK;
-		}
+		pValue[i] += baseTick;
 	}
 	
 	return nRead;
@@ -2090,8 +2047,7 @@ int CRestore::ReadPositionVector( Vector *pValue, int count, int nBytesAvailable
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		if ( pValue[i] != vec3_invalid )
-			pValue[i] += basePosition;
+		pValue[i] += basePosition;
 	}
 	
 	return nRead;
@@ -2449,26 +2405,6 @@ void CEntitiySaveRestoreBlockHandler::PostRestore()
 {
 }
 
-void SaveEntityOnTable( CBaseEntity *pEntity, CSaveRestoreData *pSaveData, int &iSlot )
-{
-	entitytable_t *pEntInfo = pSaveData->GetEntityInfo( iSlot );
-	pEntInfo->id = iSlot;
-#if !defined( CLIENT_DLL )
-	pEntInfo->edictindex = pEntity->RequiredEdictIndex();
-#else
-	pEntInfo->edictindex = -1;
-#endif
-	pEntInfo->restoreentityindex = -1;
-	pEntInfo->saveentityindex = pEntity ? pEntity->entindex() : -1;
-	pEntInfo->hEnt = pEntity;
-	pEntInfo->flags = 0;
-	pEntInfo->location = 0;
-	pEntInfo->size = 0;
-	pEntInfo->classname = NULL_STRING;
-
-	iSlot++;
-}
-
 //---------------------------------
 bool CEntitiySaveRestoreBlockHandler::SaveInitEntities( CSaveRestoreData *pSaveData )
 {
@@ -2500,9 +2436,23 @@ bool CEntitiySaveRestoreBlockHandler::SaveInitEntities( CSaveRestoreData *pSaveD
 		if(  !pEnt )
 			continue;
 #endif
-		SaveEntityOnTable( pEnt, pSaveData, i );
 
-		
+		entitytable_t *pEntInfo = pSaveData->GetEntityInfo( i );
+		pEntInfo->id = i;
+#if !defined( CLIENT_DLL )
+		pEntInfo->edictindex = pEnt->RequiredEdictIndex();
+#else
+		pEntInfo->edictindex = -1;
+#endif
+		pEntInfo->restoreentityindex = -1;
+		pEntInfo->saveentityindex = pEnt ? pEnt->entindex() : -1;
+		pEntInfo->hEnt = pEnt;
+		pEntInfo->flags = 0;
+		pEntInfo->location = 0;
+		pEntInfo->size = 0;
+		pEntInfo->classname = NULL_STRING;
+
+		i++;
 	}
 
 	Assert( i == pSaveData->NumEntities() );
@@ -3001,8 +2951,7 @@ void CreateEntitiesInTransitionList( CSaveRestoreData *pSaveData, int levelMask 
 
 		// spawn players
 		pent = NULL;
-	//	if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex < gpGlobals->maxClients+1) )	
-		if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex <= gpGlobals->maxClients+1) )	
+		if ( (pEntInfo->edictindex > 0) && (pEntInfo->edictindex < gpGlobals->maxClients+1) )	
 		{
 			edict_t *ed = INDEXENT( pEntInfo->edictindex );
 
@@ -3042,7 +2991,6 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 	CreateEntitiesInTransitionList( pSaveData, levelMask );
 	
 	// Now spawn entities
-	CUtlVector<int> checkList;
 	for ( i = 0; i < pSaveData->NumEntities(); i++ )
 	{
 		pEntInfo = pSaveData->GetEntityInfo( i );
@@ -3068,10 +3016,6 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 					pEntInfo->restoreentityindex = pEntInfo->hEnt.Get()->entindex();
 					AddRestoredEntity( pEntInfo->hEnt.Get() );
 				}
-				else
-				{
-					UTIL_RemoveImmediate( pEntInfo->hEnt.Get() );
-				}
 				// -------------------------------------------------------------------------
 			}
 			else 
@@ -3084,7 +3028,7 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 				}
 				else
 				{
-					/*pent->Relink();
+					pent->Relink();
 					if ( !(pEntInfo->flags & FENTTABLE_PLAYER) && UTIL_EntityInSolid( pent ) )
 					{
 						// this can happen during normal processing - PVS is just a guess, some map areas won't exist in the new map
@@ -3097,42 +3041,12 @@ int CreateEntityTransitionList( CSaveRestoreData *pSaveData, int levelMask )
 						pEntInfo->flags = FENTTABLE_REMOVED;
 						pEntInfo->restoreentityindex = pent->entindex();
 						AddRestoredEntity( pent );
-					}*/
-
-					// needs to be checked.  Do this in a separate pass so that pointers & hierarchy can be traversed
-					checkList.AddToTail(i);
+					}
 				}
 			}
 
 			// Remove any entities that were removed using UTIL_Remove() as a result of the above calls to UTIL_RemoveImmediate()
 			gEntList.CleanupDeleteList();
-		}
-	}
-
-	for ( i = checkList.Count()-1; i >= 0; --i )
-	{
-		pEntInfo = pSaveData->GetEntityInfo( checkList[i] );
-		pent = pEntInfo->hEnt;
-
-		// NOTE: pent can be NULL because UTIL_RemoveImmediate (called below) removes all in hierarchy
-		if ( !pent )
-			continue;
-
-		pent->Relink();
-		if ( !(pEntInfo->flags & FENTTABLE_PLAYER) && UTIL_EntityInSolid( pent ) )
-		{
-			// this can happen during normal processing - PVS is just a guess, some map areas won't exist in the new map
-			DevMsg( 2, "Suppressing %s\n", STRING(pEntInfo->classname) );
-			UTIL_RemoveImmediate( pent );
-			// Remove any entities that were removed using UTIL_Remove() as a result of the above calls to UTIL_RemoveImmediate()
-			gEntList.CleanupDeleteList();
-		}
-		else
-		{
-			movedCount++;
-			pEntInfo->flags = FENTTABLE_REMOVED;
-			pEntInfo->restoreentityindex = pent->entindex();
-			AddRestoredEntity( pent );
 		}
 	}
 

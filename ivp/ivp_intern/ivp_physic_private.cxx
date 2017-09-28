@@ -58,7 +58,7 @@ void IVP_Cluster_Manager::fire_event_object_deleted(IVP_Event_Object *event_obj)
 	int i;
 	for (i=obj_table->listeners.len()-1; i>=0; i--) {
 	    IVP_Listener_Object *lis = obj_table->listeners.element_at(i);
-		if ( lis == NULL || event_obj == NULL ) continue; // VXP
+	//	if ( lis == NULL || event_obj == NULL ) continue; // VXP: TODO: Written and then commented
 	    lis->event_object_deleted(event_obj);
 	    if (i>0 && !obj_callback_hash->find_table(ro)) break;	// object deleted
 	}

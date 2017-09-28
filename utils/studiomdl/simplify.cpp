@@ -4559,13 +4559,15 @@ static void CalcPoseParameters( void )
 						MatrixAngles( boneRel, angles, pos );
 						// printf("%6.2f %6.2f %6.2f : %6.2f %6.2f %6.2f\n", RAD2DEG( angles.x ), RAD2DEG( angles.y ), RAD2DEG( angles.z ), pos.x, pos.y, pos.z );
 
+						float v = CalcPoseParameterValue( pseq->paramcontrol[iPose], angles, pos );
+						printf(" %6.2f", v );
 						if (iPose == 0)
 						{
-							pseq->param0[m[iPose]] = CalcPoseParameterValue( pseq->paramcontrol[iPose], angles, pos );
+							pseq->param0[m[iPose]] = v;
 						}
 						else
 						{
-							pseq->param1[m[iPose]] = CalcPoseParameterValue( pseq->paramcontrol[iPose], angles, pos );
+							pseq->param1[m[iPose]] = v;
 						}
 
 
@@ -4573,11 +4575,13 @@ static void CalcPoseParameters( void )
 
 						if (m[iPose] == 0)
 						{
-							pseq->paramstart[iPose] = pseq->param0[m[iPose]];
+						//	pseq->paramstart[iPose] = pseq->param0[m[iPose]];
+							pseq->paramstart[iPose] = (iPose == 0) ? pseq->param0[m[iPose]] : pseq->param1[m[iPose]];
 						}
 						if (m[iPose] == pseq->groupsize[iPose] - 1)
 						{
-							pseq->paramend[iPose] = pseq->param0[m[iPose]];
+						//	pseq->paramend[iPose] = pseq->param0[m[iPose]];
+							pseq->paramend[iPose] = (iPose == 0) ? pseq->param0[m[iPose]] : pseq->param1[m[iPose]];
 						}
 					}
 					printf("%s : %6.2f %6.2f\n", pseq->name, pseq->paramstart[iPose], pseq->paramend[iPose] );

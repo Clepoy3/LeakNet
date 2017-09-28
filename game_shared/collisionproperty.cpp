@@ -165,31 +165,35 @@ IClientUnknown* CCollisionProperty::GetIClientUnknown()
 //-----------------------------------------------------------------------------
 void CCollisionProperty::SetSolid( SolidType_t val )
 {
+	if ( m_Solid == val )
+		return;
+
 #ifndef CLIENT_DLL
-	if ( m_Solid != val )
+	// OBB is not yet implemented
+//	Assert( val != SOLID_OBB );
+	if ( val == SOLID_BSP )
 	{
-		// OBB is not yet implemented
-		Assert( val != SOLID_OBB );
-		if ( val == SOLID_BSP )
+		if ( m_pOuter->GetParent() )
 		{
-			if ( m_pOuter->GetParent() )
+			if ( m_pOuter->GetRootMoveParent()->GetSolid() != SOLID_BSP )
 			{
 				// must be SOLID_VPHYSICS because parent might rotate
 				val = SOLID_VPHYSICS;
 			}
 		}
-		m_Solid = val;
-
-		// ivp maintains state based on recent return values from the collision filter, so anything
-		// that can change the state that a collision filter will return (like m_Solid) needs to call RecheckCollisionFilter.
-		IPhysicsObject *pObj = m_pOuter->VPhysicsGetObject();
-		if ( pObj )
-		{
-			pObj->RecheckCollisionFilter();
-		}
-
-		m_pOuter->Relink();
 	}
+	m_Solid = val;
+
+	// ivp maintains state based on recent return values from the collision filter, so anything
+	// that can change the state that a collision filter will return (like m_Solid) needs to call RecheckCollisionFilter.
+	IPhysicsObject *pObj = m_pOuter->VPhysicsGetObject();
+	if ( pObj )
+	{
+		pObj->RecheckCollisionFilter();
+	}
+
+	m_pOuter->Relink();
+
 #else
 	m_Solid = val;
 #endif

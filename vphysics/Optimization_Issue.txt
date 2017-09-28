@@ -1,0 +1,15 @@
+Crash:
+	Release configuration:
+		"Optimizations: Maximize Speed"
+		"Optimizations: Disable (Debug)" + "Debug Info: >None"
+	Debug configuration:
+		"Optimizations: Maximize Speed"
+		"Optimizations: Disable (Debug)" + "Debug Info: <Program Database for Edit and Continue"
+
+Working:
+	Release configuration:
+	Debug configuration:
+		"Optimizations: Disable (Debug)"
+
+Попробовать #pragma optimize в Release и "Debug Info: <Program Database for Edit and Continue"
+(Program Database for Edit and Continue отключает все #pragma optimize)

@@ -53,19 +53,34 @@ bool CMySqlDatabase::Initialize(const char *serverName, const char *catalogName)
 {
 	// attempt to connect to the database via named pipes
 //	m_Connection.connect(catalogName, serverName, "", "");
-	m_Connection.connect("newtracker", "leaknet.tk", "tracker", "");
+	m_Connection.connect(catalogName, serverName, "tracker", "");
 
 	// check the connection
 	if (!m_Connection.connected())
 	{
 		// try again
 	//	m_Connection.connect(catalogName, serverName, "", "");
-		m_Connection.connect("leaknet.tk", "newtracker", "tracker", "");
+		m_Connection.connect("newtracker", "leaknet.tk", "tracker", "");
 
 		if (!m_Connection.connected())
 		{
-			g_pConsole->Print(5, "Failed to connect to MySqlDB %s : %s\n", serverName, m_Connection.error());
-			return false;
+			m_Connection.connect("leaknet.tk", "newtracker", "tracker", "");
+
+			if (!m_Connection.connected())
+			{
+				m_Connection.connect("95.215.108.176", "newtracker", "tracker", "");
+
+				if (!m_Connection.connected())
+				{
+					m_Connection.connect("newtracker", "95.215.108.176", "tracker", "");
+
+					if (!m_Connection.connected())
+					{
+						g_pConsole->Print(5, "Failed to connect to MySqlDB %s : %s\n", serverName, m_Connection.error());
+						return false;
+					}
+				}
+			}
 		}
 	}
 	

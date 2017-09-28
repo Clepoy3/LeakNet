@@ -2047,7 +2047,7 @@ void qh_nearcoplanar ( void /* qh.facet_list */) {
   }else if (!qh KEEPcoplanar || !qh KEEPinside) {
     qh_outerinner (NULL, NULL, &innerplane);
     if (qh JOGGLEmax < REALmax/2)
-      innerplane -= qh JOGGLEmax * (float)sqrt ((float)qh hull_dim); // VXP: (float)
+      innerplane -= qh JOGGLEmax * sqrt (qh hull_dim);
     numpart= 0;
     FORALLfacets { 
       if (facet->coplanarset) {

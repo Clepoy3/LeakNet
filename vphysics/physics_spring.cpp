@@ -180,8 +180,6 @@ void CPhysicsSpring::SetSpringLength( float flSpringLength )
 
 void CPhysicsSpring::WriteToTemplate( vphysics_save_cphysicsspring_t &params )
 {
-	if( m_pSpring ) // VXP: Check
-	{
 		params.constant = m_pSpring->get_constant();
 		params.naturalLength = ConvertDistanceToHL( m_pSpring->get_spring_length_zero_force() );
 		params.damping = m_pSpring->get_damp_factor();
@@ -196,22 +194,6 @@ void CPhysicsSpring::WriteToTemplate( vphysics_save_cphysicsspring_t &params )
 		params.onlyStretch = m_pSpring->get_only_stretch() ? true : false;
 		params.pObjStart = m_pObjStart;
 		params.pObjEnd = m_pObjEnd;
-	}
-	else
-	{
-		params.constant = 0.0f;
-		params.naturalLength = 0.0f;
-		params.damping = 0.0f;
-		params.relativeDamping = 0.0f;
-		
-		params.startPosition = Vector( 0, 0, 0 );
-		params.endPosition = Vector( 0, 0, 0 );
-		params.useLocalPositions = true;
-		
-		params.onlyStretch = false;
-		params.pObjStart = m_pObjStart;
-		params.pObjEnd = m_pObjEnd;
-	}
 }
 
 
@@ -234,7 +216,6 @@ IPhysicsSpring *CreateSpring( IVP_Environment *pEnvironment, CPhysicsObject *pOb
 
 	IVP_U_Float_Point ivpPosStart;
 	IVP_U_Float_Point ivpPosEnd;
-
 
 	if ( !pParams->useLocalPositions )
 	{

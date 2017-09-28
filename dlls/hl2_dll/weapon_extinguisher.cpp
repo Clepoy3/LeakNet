@@ -51,6 +51,9 @@ protected:
 	void	StopJet( void );
 
 	CExtinguisherJet	*m_pJet;
+
+private:
+	bool	m_bNeedAnim;
 };
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponExtinguisher, DT_WeaponExtinguisher)
@@ -196,7 +199,6 @@ void CWeaponExtinguisher::StopJet( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool isNeedAnim = false;
 void CWeaponExtinguisher::ItemPostFrame( void )
 {	
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
@@ -209,7 +211,7 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 	{
 		StopJet();
 		
-		isNeedAnim = false;
+		m_bNeedAnim = false;
 		SendWeaponAnim( ACT_VM_IDLE );
 		
 		return;
@@ -218,11 +220,11 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 	//See if we should try and extinguish fires
 	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
-		if( !isNeedAnim )
+		if( !m_bNeedAnim )
 		{
 			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 		//	WeaponSound( SINGLE_NPC );
-			isNeedAnim = true;
+			m_bNeedAnim = true;
 		}
 		//Drain ammo
 		if ( m_flNextPrimaryAttack < gpGlobals->curtime )
@@ -236,7 +238,7 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 		{
 			StopJet();
 			
-			isNeedAnim = false;
+			m_bNeedAnim = false;
 			SendWeaponAnim( ACT_VM_IDLE );
 			
 			return;
@@ -290,7 +292,7 @@ void CWeaponExtinguisher::ItemPostFrame( void )
 	{
 		StopJet();
 		
-		isNeedAnim = false;
+		m_bNeedAnim = false;
 		SendWeaponAnim( ACT_VM_IDLE );
 	//	WeaponSound( EMPTY );
 	}

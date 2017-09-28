@@ -566,6 +566,27 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 				{
 					prop.data.dampening = atof(value);
 				}
+				// VXP: Here are not all Source 2007 surfaceprop keys
+				else if ( !strcmpi( key, "audioreflectivity" ) )
+				{
+					// VXP: TODO?
+				}
+				else if ( !strcmpi( key, "audiohardnessfactor" ) )
+				{
+					// VXP: TODO?
+				}
+				else if ( !strcmpi( key, "audioroughnessfactor" ) )
+				{
+					// VXP: TODO?
+				}
+				else if ( !strcmpi( key, "scraperoughthreshold" ) )
+				{
+					// VXP: TODO?
+				}
+				else if ( !strcmpi( key, "impacthardthreshold" ) )
+				{
+					// VXP: TODO?
+				}
 				else
 				{
 					// force a breakpoint
@@ -587,6 +608,9 @@ void CPhysicsSurfaceProps::SetWorldMaterialIndexTable( int *pMapArray, int mapSi
 
 CIVPMaterialManager::CIVPMaterialManager( void ) : IVP_Material_Manager( IVP_FALSE )
 {
+	// VXP: Missing initializations
+	m_props = NULL;
+
 	// by default every index maps to itself (NULL translation)
 	for ( int i = 0; i < ARRAYSIZE(m_propMap); i++ )
 	{
