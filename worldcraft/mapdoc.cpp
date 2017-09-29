@@ -74,6 +74,9 @@
 #include "ibsplighting.h"
 #include "camera.h"
 
+// VXP
+#include "filesystem.h"
+#include "filesystem_WC.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1554,6 +1557,13 @@ BOOL CMapDoc::SelectDocType(void)
 	}
 	CGameConfig *pGame = dlg.GetSelectedGame();
 	SetActiveGame(pGame);
+
+	// VXP: TODO: This is not good
+	// I tried to add some kind of refreshing textures on map load from the right places
+////	g_Textures.Initialize(g_pGameConfig->m_szGameDir, AfxGetApp()->m_pMainWnd->m_hWnd);
+//	FileSystem_Init( g_pGameConfig->m_szModDir, g_pGameConfig->m_szGameDir ); // VXP: We just need to call that from g_Textures.Initialize
+//	Msg( mwStatus, "Added mod %s", g_pGameConfig->m_szModDir );
+//	g_Textures.LoadAllGraphicsFiles();
 
 	//
 	// Try to find some textures that this game can use.

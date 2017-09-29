@@ -16,6 +16,10 @@
 #include "IEditorTexture.h"
 #include "Material.h"
 
+// VXP
+#include "utlvector.h"
+#include "utldict.h"
+
 //-----------------------------------------------------------------------------
 // Purpose: Defines the interface to a set of textures of a given texture format.
 //			The textures are stored as an index into the global array of textures.
@@ -32,7 +36,8 @@ public:
 
 	inline int GetCount(void)
 	{
-		return( m_nTextures );
+	//	return( m_nTextures );
+		return m_Textures.Count();
 	}
 
 	inline TEXTUREFORMAT GetTextureFormat(void)
@@ -57,8 +62,9 @@ public:
 protected:
 	char m_szName[MAX_PATH];
 	TEXTUREFORMAT m_eTextureFormat;
-	CTypedPtrArray<CPtrArray, IEditorTexture *> m_Textures;
-	int m_nTextures;
+//	CTypedPtrArray<CPtrArray, IEditorTexture *> m_Textures;
+//	int m_nTextures;
+	CUtlVector<IEditorTexture *> m_Textures;
 
 	// Used to lazily load the textures in the group
 	int	m_nTextureToLoad;
@@ -148,6 +154,10 @@ public:
 
 protected:
 
+// Internal stuff.
+
+	void FreeAllTextures();
+
 	int AddTexture(IEditorTexture *pTexture);
 
 	DWORD LoadGraphicsFile(CString filename);
@@ -164,8 +174,9 @@ protected:
 	//
 	// Master array of textures.
 	//
-	BlockArray<IEditorTexture *, 64, 256> m_Textures;
-	int m_nTextures;
+//	BlockArray<IEditorTexture *, 64, 256> m_Textures;
+//	int m_nTextures;
+	CUtlVector<IEditorTexture *> m_Textures;
 
 	//
 	// List of Dummies and MRU textures.
@@ -232,7 +243,8 @@ int CTextureSystem::GetActiveTextureCount(void) const
 //-----------------------------------------------------------------------------
 int CTextureSystem::GetTextureCount(void) const
 {
-	return(m_nTextures);
+//	return(m_nTextures);
+	return(m_Textures.Count());
 }
 
 
