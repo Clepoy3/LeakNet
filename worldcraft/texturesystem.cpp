@@ -479,7 +479,7 @@ void HammerFileSystem_SetGame( const char *pExeDir, const char *pModDir )
 //-----------------------------------------------------------------------------
 void CTextureSystem::LoadAllGraphicsFiles(void)
 {
-	FreeAllTextures();
+//	FreeAllTextures(); // VXP: TODO: Causes crash at some PCs
 
 	CGameConfig *pConfig = g_pGameConfig;
 
