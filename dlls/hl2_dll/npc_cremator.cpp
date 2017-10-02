@@ -358,7 +358,7 @@ void CNPC_Cremator::Event_Killed(const CTakeDamageInfo &info)
 	// VXP: Spawning weapon_immolator
 	Vector vGunPosition = GetAbsOrigin();
 	QAngle vGunAngles = GetAbsAngles();
-	Msg( "%f %f %f\n", vGunPosition.x, vGunPosition.y, vGunPosition.z );
+	DevMsg( "Cremator's immolator now at %f %f %f\n", vGunPosition.x, vGunPosition.y, vGunPosition.z );
 //	GetAttachment( "muzzle", vGunPosition, vGunAngles );
 //	GetAttachment( 0, vGunPosition, vGunAngles );
 //	int iBIndex = LookupBone( "muzzle" );
@@ -513,7 +513,7 @@ void CNPC_Cremator::StartTask( const Task_t *pTask )
 			Vector flEnemyLKP = GetEnemyLKP();
 			GetMotor()->SetIdealYawToTarget( flEnemyLKP );
 		//	ResetSequence( LookupSequence( "fireinout" ) );
-			Msg("1\n");
+			DevMsg("TASK_CREMATOR_RANGE_ATTACK1\n");
 			SetSequenceByName( "fireinout" );
 		}
 		break;

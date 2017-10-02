@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "ENABLE_IVP_MOPP" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "VPHYSICS_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /G6 /MT /W4 /Od /I "..\ivp\IVP_INTERN" /I "..\ivp\IVP_COLLISION" /I "..\ivp\IVP_PHYSICS" /I "..\ivp\IVP_SURFACE_MANAGER" /I "..\ivp\IVP_UTILITY" /I "..\ivp\IVP_CONTROLLER" /I "..\ivp\IVP_COMPACT_BUILDER" /I "..\ivp\havana\havok" /I "..\ivp\havana" /I "..\public" /D "NDEBUG" /D "_WIN32" /D "WIN32" /D "_MBCS" /D "_USRDLL" /D "VPHYSICS_EXPORTS" /D "ENABLE_IVP_MOPP" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WINDOWS" /D "HAVANA_CONSTRAINTS" /D "HAVOK_MOPP" /FR /YX /FD /c
+# ADD CPP /nologo /G6 /MT /W4 /Od /I "..\ivp\IVP_INTERN" /I "..\ivp\IVP_COLLISION" /I "..\ivp\IVP_PHYSICS" /I "..\ivp\IVP_SURFACE_MANAGER" /I "..\ivp\IVP_UTILITY" /I "..\ivp\IVP_CONTROLLER" /I "..\ivp\IVP_COMPACT_BUILDER" /I "..\ivp\havana\havok" /I "..\ivp\havana" /I "..\public" /D "NDEBUG" /D "_WIN32" /D "WIN32" /D "_MBCS" /D "_USRDLL" /D "VPHYSICS_EXPORTS" /D "ENABLE_IVP_MOPP" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WINDOWS" /D "HAVANA_CONSTRAINTS" /D "HAVOK_MOPP" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"

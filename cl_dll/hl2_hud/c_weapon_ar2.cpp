@@ -191,7 +191,7 @@ void CHudAR2Mode::Paint()
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Handle an item pickup event from the server
+// Purpose: Handle a mode change from the server
 //-----------------------------------------------------------------------------
 void CHudAR2Mode::MsgFunc_AR2ModeChanged( const char *pszName, int iSize, void *pbuf )
 {
@@ -200,12 +200,12 @@ void CHudAR2Mode::MsgFunc_AR2ModeChanged( const char *pszName, int iSize, void *
 
 	if ( m_bUseGrenade )
 	{
-		Msg( "Setting %i (grenade) mode for AR2\n", CHudAR2Mode::AR2MODE_GRENADE );
+		DevMsg( "Setting %i (grenade) mode for AR2\n", CHudAR2Mode::AR2MODE_GRENADE );
 		SetMode( CHudAR2Mode::AR2MODE_GRENADE );
 	}
 	else
 	{
-		Msg( "Setting %i (zoom) mode for AR2\n", CHudAR2Mode::AR2MODE_ZOOM );
+		DevMsg( "Setting %i (zoom) mode for AR2\n", CHudAR2Mode::AR2MODE_ZOOM );
 		SetMode( CHudAR2Mode::AR2MODE_ZOOM );
 	}
 }
