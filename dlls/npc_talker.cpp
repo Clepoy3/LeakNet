@@ -922,6 +922,7 @@ int CAI_PlayerAlly::TranslateSchedule( int scheduleType )
 			if (GetExpresser()->CanSpeakConcept( TLK_WOUND) && !GetExpresser()->SpokeConcept(TLK_WOUND) && (m_iHealth <= (m_iMaxHealth * 0.75)))
 			{
 				Speak( TLK_WOUND );
+				// VXP: Can be PainSound too
 				return SCHED_IDLE_STAND;
 			}
 			// sustained heavy wounds?

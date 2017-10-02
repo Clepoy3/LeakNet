@@ -102,7 +102,7 @@ void CGrenadeRocket::MissileTouch( CBaseEntity *pOther )
 
 	if (!bHittingShield)
 	{
-		RadiusDamage( CTakeDamageInfo( this, m_pRealOwner, m_flDamage, DMG_BLAST ), vecAbsOrigin, 100, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, m_pRealOwner, m_flDamage, DMG_BLAST ), vecAbsOrigin, 100, CLASS_NONE, NULL );
 	}
 
 	UTIL_Remove( this );

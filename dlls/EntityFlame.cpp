@@ -20,10 +20,14 @@ BEGIN_DATADESC( CEntityFlame )
 
 	DEFINE_FIELD( CEntityFlame, m_flSize, FIELD_FLOAT ),
 	DEFINE_FIELD( CEntityFlame, m_hEntAttached, FIELD_EHANDLE ),
+
+	DEFINE_FIELD( CEntityFlame, m_bUsePlasma, FIELD_BOOLEAN ),
+	DEFINE_FIELD( CEntityFlame, m_flDamageTime, FIELD_FLOAT ),
 	
 	DEFINE_FUNCTION( CEntityFlame, FlameThink ),
 
 	DEFINE_INPUTFUNC( CEntityFlame, FIELD_VOID, "Ignite", InputIgnite ),
+	DEFINE_INPUTFUNC( CEntityFlame, FIELD_VOID, "IgnitePlasma", InputIgnitePlasma ),
 
 END_DATADESC()
 
@@ -31,6 +35,7 @@ END_DATADESC()
 IMPLEMENT_SERVERCLASS_ST( CEntityFlame, DT_EntityFlame )
 	SendPropFloat( SENDINFO( m_flSize ), 16, SPROP_NOSCALE ),
 	SendPropEHandle( SENDINFO( m_hEntAttached ) ),
+	SendPropBool( SENDINFO( m_bUsePlasma ) ),
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( entityflame, CEntityFlame );
@@ -44,6 +49,9 @@ CEntityFlame::CEntityFlame( void )
 {
 	m_flSize		= 0.0f;
 	m_flLifetime	= 0.0f;
+
+	m_bUsePlasma	= false;
+	m_flDamageTime	= gpGlobals->curtime;
 }
 
 
@@ -51,7 +59,7 @@ CEntityFlame::CEntityFlame( void )
 // Purpose: 
 // Input  : inputdata - 
 //-----------------------------------------------------------------------------
-void CEntityFlame::InputIgnite( inputdata_t &inputdata )
+void CEntityFlame::DoIgnite( inputdata_t &inputdata, bool bUsePlasma )
 {
 	if (m_target != NULL_STRING)
 	{
@@ -63,19 +71,38 @@ void CEntityFlame::InputIgnite( inputdata_t &inputdata )
 			if (pBCC)
 			{
 				// DVS TODO: consider promoting Ignite to CBaseEntity and doing everything here
-				pBCC->Ignite(m_flLifetime);
+				pBCC->Ignite(m_flLifetime, true, 0.0f, false, true);
 			}
 			// Everything else, we handle here.
 			else
 			{
-				CEntityFlame *pFlame = CEntityFlame::Create(pTarget);
+				CEntityFlame *pFlame = CEntityFlame::Create(pTarget, bUsePlasma);
 				if (pFlame)
 				{
 					pFlame->SetLifetime(m_flLifetime);
+					pTarget->AddFlag( FL_ONFIRE );
 				}
 			}
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : inputdata - 
+//-----------------------------------------------------------------------------
+void CEntityFlame::InputIgnite( inputdata_t &inputdata )
+{
+	DoIgnite( inputdata, false );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : inputdata - 
+//-----------------------------------------------------------------------------
+void CEntityFlame::InputIgnitePlasma( inputdata_t &inputdata )
+{
+	DoIgnite( inputdata, true );
 }
 
 
@@ -83,7 +110,7 @@ void CEntityFlame::InputIgnite( inputdata_t &inputdata )
 // Purpose: Creates a flame and attaches it to a target entity.
 // Input  : pTarget - 
 //-----------------------------------------------------------------------------
-CEntityFlame *CEntityFlame::Create( CBaseEntity *pTarget )
+CEntityFlame *CEntityFlame::Create( CBaseEntity *pTarget, bool bUsePlasma )
 {
 	CEntityFlame *pFlame = (CEntityFlame *) CreateEntityByName( "entityflame" );
 
@@ -110,6 +137,7 @@ CEntityFlame *CEntityFlame::Create( CBaseEntity *pTarget )
 
 	pFlame->AttachToEntity( pTarget );
 	pFlame->SetLifetime( 2.0f );
+	pFlame->m_bUsePlasma = bUsePlasma;
 
 	//Send to the client even though we don't have a model
 	pFlame->AddEFlags( EFL_FORCE_CHECK_TRANSMIT );
@@ -148,17 +176,57 @@ void CEntityFlame::SetLifetime( float lifetime )
 //-----------------------------------------------------------------------------
 void CEntityFlame::FlameThink( void )
 {
-	if ( m_flLifetime < gpGlobals->curtime )
+	// VXP: See if we're done burning, or our attached ent has vanished
+	if ( m_flLifetime < gpGlobals->curtime || m_hEntAttached == NULL )
 	{
 		SetThink( &CEntityFlame::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.1f );
+
+		// Notify anything we're attached to
+		if ( m_hEntAttached )
+		{
+			CBaseCombatCharacter *pAttachedCC = m_hEntAttached->MyCombatCharacterPointer();
+
+			if( pAttachedCC )
+			{
+				// Notify the NPC that it's no longer burning!
+				pAttachedCC->Extinguish();
+			}
+		}
+
 		return;
 	}
 
-	RadiusDamage( CTakeDamageInfo( this, this, 4.0f, DMG_BURN ), GetAbsOrigin(), m_flSize/2, CLASS_NONE );
+	int bitsDamageType = m_bUsePlasma ? DMG_PLASMA : DMG_BURN;
+#if 1
+	if ( m_hEntAttached && gpGlobals->curtime>= m_flDamageTime )
+	{
+		// Do radius damage ignoring the entity I'm attached to. This will harm things around me.
+		RadiusDamage( CTakeDamageInfo( this, this, 4.0f, bitsDamageType ), GetAbsOrigin(), m_flSize/2, CLASS_NONE, m_hEntAttached );
+
+		// Directly harm the entity I'm attached to. This is so we can precisely control how much damage the entity
+		// that is on fire takes without worrying about the flame's position relative to the bodytarget (which is the
+		// distance that the radius damage code uses to determine how much damage to inflict)
+		
+		// FLAME_DIRECT_DAMAGE = FLAME_DIRECT_DAMAGE_PER_SEC * FLAME_DAMAGE_INTERVAL
+		// 5.0f * 0.2f = 1.0f
+
+		m_hEntAttached->TakeDamage( CTakeDamageInfo( this, this, 1.0f, bitsDamageType /*| DMG_DIRECT*/ ) );
+
+		m_flDamageTime = gpGlobals->curtime + 0.7f; // VXP: Fix for repeated citizen pain sounds
+	}
+	else
+	{
+		// VXP: FLAME_RADIUS_DAMAGE = FLAME_RADIUS_DAMAGE_PER_SEC * FLAME_DAMAGE_INTERVAL
+		// 4.0f * 0.2f = 0.8f
+		RadiusDamage( CTakeDamageInfo( this, this, 0.8f, bitsDamageType ), GetAbsOrigin(), m_flSize/2, CLASS_NONE, NULL );
+	}
+#else
+	RadiusDamage( CTakeDamageInfo( this, this, 4.0f, bitsDamageType ), GetAbsOrigin(), m_flSize/2, CLASS_NONE, NULL );
+#endif // 0
 	FireSystem_AddHeatInRadius( GetAbsOrigin(), m_flSize/2, 2.0f );
 
-	SetNextThink( gpGlobals->curtime + 0.1f );
+	SetNextThink( gpGlobals->curtime + FLAME_DAMAGE_INTERVAL );
 }
 
 

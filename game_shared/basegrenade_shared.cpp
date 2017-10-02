@@ -173,7 +173,7 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	
 	CTakeDamageInfo info( this, m_hOwner, GetBlastForce(), GetAbsOrigin(), m_flDamage, bitsDamageType, 0, &vecReported );
 
-	RadiusDamage( info, GetAbsOrigin(), m_DmgRadius, CLASS_NONE );
+	RadiusDamage( info, GetAbsOrigin(), m_DmgRadius, CLASS_NONE, NULL );
 
 	UTIL_DecalTrace( pTrace, "Scorch" );
 

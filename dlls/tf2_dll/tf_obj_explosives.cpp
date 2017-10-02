@@ -112,7 +112,7 @@ void CObjectExplosives::Killed( void )
 void CObjectExplosives::ExplodeThink( void )
 {
 	// Do radius damage
-	RadiusDamage( CTakeDamageInfo( this, GetBuilder(), obj_explosives_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), obj_explosives_radius.GetFloat(), CLASS_NONE );
+	RadiusDamage( CTakeDamageInfo( this, GetBuilder(), obj_explosives_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), obj_explosives_radius.GetFloat(), CLASS_NONE, NULL );
 
 	// Kill myself
 	BaseClass::Killed();

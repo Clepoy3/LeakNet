@@ -170,11 +170,11 @@ void CSnark::Event_Killed( const CTakeDamageInfo &inputInfo )
 
 	if ( m_hOwner != NULL )
 	{
-		RadiusDamage( CTakeDamageInfo( this, m_hOwner, GetDamage(), DMG_BLAST ), GetAbsOrigin(), GetDamage() * 2.5, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, m_hOwner, GetDamage(), DMG_BLAST ), GetAbsOrigin(), GetDamage() * 2.5, CLASS_NONE, NULL );
 	}
 	else
 	{
-		RadiusDamage( CTakeDamageInfo( this, this, GetDamage(), DMG_BLAST ), GetAbsOrigin(), GetDamage() * 2.5, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, this, GetDamage(), DMG_BLAST ), GetAbsOrigin(), GetDamage() * 2.5, CLASS_NONE, NULL );
 	}
 
 	// reset owner so death message happens

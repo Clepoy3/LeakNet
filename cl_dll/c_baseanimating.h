@@ -183,6 +183,8 @@ public:
 	// For shadows rendering the correct body + sequence...
 	virtual int GetBody()			{ return m_nBody; }
 
+	bool IsOnFire() { return ( (GetFlags() & FL_ONFIRE) != 0 ); } // VXP
+
 	inline float					GetPlaybackRate();
 	inline void						SetPlaybackRate( float rate );
 

@@ -24,6 +24,8 @@ extern ConVar    sk_npc_dmg_ar2_grenade;
 extern ConVar    sk_max_ar2_grenade;
 extern ConVar	 sk_ar2_grenade_radius;
 
+ConVar ar2_switch_mode_sounds("ar2_switch_mode_sounds", "1", FCVAR_ARCHIVE, "Switches AR2 mode sounds"); 
+
 #define AR2_ZOOM_RATE	0.5f	// Interval between zoom levels in seconds.
 
 //=========================================================
@@ -123,6 +125,14 @@ void CWeaponAR2::ItemPostFrame( void )
 			Zoom();
 		}
 	//	Msg( "AR2 secondary mode has changed (%s)\n", ( (m_bUseGrenade) ? "grenade" : "sight" ) );
+
+		if ( ar2_switch_mode_sounds.GetBool() )
+		{
+		//	CPASAttenuationFilter filter( this );
+		//	EmitSound( filter, entindex(), CHAN_VOICE, "weapons/ar2/ar2_mode.wav", 1, ATTN_NORM );
+
+			EmitSound( m_bUseGrenade ? "Weapon_AR2.GrenadeMode" : "Weapon_AR2.ZoomMode" );
+		}
 	}
 	
 //	if ( !m_bZoomed )

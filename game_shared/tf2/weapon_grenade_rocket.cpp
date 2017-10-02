@@ -298,7 +298,7 @@ void CWeaponGrenadeRocket::RocketTouch( CBaseEntity *pOther )
 	{
 		vecReported = GetOwnerEntity()->GetAbsOrigin();
 	}
-	RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), vec3_origin, GetAbsOrigin(), GetDamage(), GetDamageType(), 0, &vecReported ), GetAbsOrigin(), GetDamageRadius(), CLASS_NONE );
+	RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), vec3_origin, GetAbsOrigin(), GetDamage(), GetDamageType(), 0, &vecReported ), GetAbsOrigin(), GetDamageRadius(), CLASS_NONE, NULL );
 
 	UTIL_Remove( this );
 }

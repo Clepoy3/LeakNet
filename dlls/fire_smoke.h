@@ -61,6 +61,8 @@ public:
 
 	//Client-side
 	CNetworkVar( int, m_nFlameModelIndex );
+	CNetworkVar( int, m_nPlasmaModelIndex );
+	CNetworkVar( int, m_nPlasmaModelIndex2 );
 
 	//Server-side
 };

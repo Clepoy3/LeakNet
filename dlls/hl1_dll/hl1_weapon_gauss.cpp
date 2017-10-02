@@ -477,7 +477,7 @@ void CWeaponGauss::Fire( Vector vecOrigSrc, Vector vecDir, float flDamage )
 				vecDest = vecSrc + vecDir * MAX_TRACE_LENGTH;
 
 				// explode a bit
-				RadiusDamage( CTakeDamageInfo( this, pPlayer, flDamage * n, DMG_BLAST ), tr.endpos, flDamage * n * 2.5, CLASS_NONE );
+				RadiusDamage( CTakeDamageInfo( this, pPlayer, flDamage * n, DMG_BLAST ), tr.endpos, flDamage * n * 2.5, CLASS_NONE, NULL );
 
 				nTotal += 34;
 				
@@ -583,7 +583,7 @@ void CWeaponGauss::Fire( Vector vecOrigSrc, Vector vecDir, float flDamage )
 								flDamageRadius = flDamage * 2.5;
 							}
 
-							RadiusDamage( CTakeDamageInfo( this, pPlayer, flDamage, DMG_BLAST ), beam_tr.endpos + vecDir * 8, flDamageRadius, CLASS_NONE );
+							RadiusDamage( CTakeDamageInfo( this, pPlayer, flDamage, DMG_BLAST ), beam_tr.endpos + vecDir * 8, flDamageRadius, CLASS_NONE, NULL );
 
 							CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), 1024, 3.0 );
 

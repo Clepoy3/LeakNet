@@ -191,7 +191,7 @@ END_NETWORK_TABLE()
 	//-----------------------------------------------------------------------------
 	// Default implementation of radius damage
 	//-----------------------------------------------------------------------------
-	void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore )
+	void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
 	{
 		CBaseEntity *pEntity = NULL;
 		trace_t		tr;
@@ -214,6 +214,9 @@ END_NETWORK_TABLE()
 		{
 			if ( pEntity->m_takedamage != DAMAGE_NO )
 			{
+				if ( pEntity == pEntityIgnore )
+					continue;
+
 				// UNDONE: this should check a damage mask, not an ignore
 				if ( iClassIgnore != CLASS_NONE && pEntity->Classify() == iClassIgnore )
 				{// houndeyes don't hurt other houndeyes with their attack

@@ -299,7 +299,7 @@ void CEnvExplosion::InputExplode( inputdata_t &inputdata )
 	if ( !( m_spawnflags & SF_ENVEXPLOSION_NODAMAGE ) )
 	{
 		CBaseEntity *pAttacker = GetOwnerEntity() ? GetOwnerEntity() : this;
-		RadiusDamage( CTakeDamageInfo( this, pAttacker, m_iMagnitude, DMG_BLAST ), GetAbsOrigin(), iRadius, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, pAttacker, m_iMagnitude, DMG_BLAST ), GetAbsOrigin(), iRadius, CLASS_NONE, NULL );
 	}
 
 	SetThink( &CEnvExplosion::Smoke );

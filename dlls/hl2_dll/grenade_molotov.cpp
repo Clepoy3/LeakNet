@@ -91,9 +91,10 @@ void CGrenade_Molotov::Spawn( void )
 
 		m_pFireTrail->SetLifetime( 20.0f );
 		
-		int nAttachmentIndex = LookupAttachment( "fire" );
 	//	m_pFireTrail->FollowEntity( entindex(), 2 );
-		m_pFireTrail->FollowEntity( entindex(), nAttachmentIndex );
+
+	//	int nAttachmentIndex = LookupAttachment( "fire" );
+		m_pFireTrail->FollowEntity( entindex(), LookupAttachment( "0" ) );
 	}
 }
 
@@ -203,7 +204,7 @@ void CGrenade_Molotov::Detonate( void )
 	UTIL_ScreenShake( GetAbsOrigin(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	CSoundEnt::InsertSound ( SOUND_DANGER, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0 );
 
-	RadiusDamage( CTakeDamageInfo( this, pOwner, m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE );
+	RadiusDamage( CTakeDamageInfo( this, pOwner, m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE, NULL );
 
 	m_fEffects |= EF_NODRAW;
 	SetAbsVelocity( vec3_origin );

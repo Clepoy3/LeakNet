@@ -406,11 +406,12 @@ bool CAI_BaseNPC::PassesDamageFilter( CBaseEntity *pAttacker )
 //-----------------------------------------------------------------------------
 int CAI_BaseNPC::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 {
-	PainSound();// "Ouch!"
 	Forget( bits_MEMORY_INCOVER );
 
 	if ( !BaseClass::OnTakeDamage_Alive( info ) )
 		return 0;
+
+	PainSound();// "Ouch!"
 
 #if 0
 	// HACKHACK Don't kill npcs in a script.  Let them break their scripts first
@@ -618,15 +619,15 @@ bool CAI_BaseNPC::IsHeavyDamage( float flDamage, int bitsDamageType )
 	return (flDamage > 20);
 }
 
-void CAI_BaseNPC::DoRadiusDamage( const CTakeDamageInfo &info, int iClassIgnore )
+void CAI_BaseNPC::DoRadiusDamage( const CTakeDamageInfo &info, int iClassIgnore, CBaseEntity *pEntityIgnore )
 {
-	RadiusDamage( info, GetAbsOrigin(), info.GetDamage() * 2.5, iClassIgnore );
+	RadiusDamage( info, GetAbsOrigin(), info.GetDamage() * 2.5, iClassIgnore, pEntityIgnore );
 }
 
 
-void CAI_BaseNPC::DoRadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, int iClassIgnore )
+void CAI_BaseNPC::DoRadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, int iClassIgnore, CBaseEntity *pEntityIgnore )
 {
-	RadiusDamage( info, vecSrc, info.GetDamage() * 2.5, iClassIgnore );
+	RadiusDamage( info, vecSrc, info.GetDamage() * 2.5, iClassIgnore, pEntityIgnore );
 }
 
 
@@ -5534,7 +5535,7 @@ int CAI_BaseNPC::DrawDebugTextOverlays(void)
 		// --------------
 		// Print Health
 		// --------------
-		Q_snprintf(tempstr,sizeof(tempstr),"Health: %i",m_iHealth);
+		Q_snprintf(tempstr,sizeof(tempstr),"Health: %i  (DACC:%1.2f)",m_iHealth, GetDamageAccumulator());
 		NDebugOverlay::EntityText(entindex(),text_offset,tempstr,0);
 		text_offset++;
 

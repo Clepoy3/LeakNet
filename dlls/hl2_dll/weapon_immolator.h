@@ -11,6 +11,13 @@
 #include "cbase.h"
 #include "basehlcombatweapon.h"
 
+enum IMMOLATOR_FIRESTATE
+{
+	FIRE_OFF,
+	FIRE_STARTUP,
+	FIRE_CHARGE
+};
+
 class CWeaponImmolator : public CBaseHLCombatWeapon
 {
 public:
@@ -35,7 +42,16 @@ public:
 
 	void StartImmolating();
 	void StopImmolating();
+//	bool IsImmolating() { return m_flBurnRadius != 0.0; } // VXP: Old style
 	bool IsImmolating() { return m_flBurnRadius != 0.0; }
+
+	bool Deploy( void );
+	bool Holster( CBaseCombatWeapon *pSwitchingTo = NULL );
+	void WeaponIdle( void );
+//	bool HasAmmo( void );
+	void UseAmmo( int count );
+
+	float GetFireRate( void ) { return 1.0f; }
 
 	DECLARE_ACTTABLE();
 	DECLARE_DATADESC();
@@ -46,6 +62,10 @@ public:
 	float m_flTimeLastUpdatedRadius;
 
 	Vector  m_vecImmolatorTarget;
+
+	IMMOLATOR_FIRESTATE		m_fireState;
+	float				m_flAmmoUseTime;	// since we use < 1 point of ammo per update, we subtract ammo on a timer.
+	float				m_flStartFireTime;
 };
 
 #endif	//WEAPONIMMOLATOR_H

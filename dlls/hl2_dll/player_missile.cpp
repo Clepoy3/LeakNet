@@ -324,7 +324,7 @@ void CPlayer_Missile::BlowUp(void)
 	UTIL_ScreenShake( GetAbsOrigin(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	CSoundEnt::InsertSound ( SOUND_DANGER, GetAbsOrigin(), 1024, 3.0 );
 
-	RadiusDamage ( CTakeDamageInfo( this, this, m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_flDamageRadius, CLASS_NONE );
+	RadiusDamage ( CTakeDamageInfo( this, this, m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_flDamageRadius, CLASS_NONE, NULL );
 
 	SetThink(ExplodeThink);
 	SetTouch(NULL);

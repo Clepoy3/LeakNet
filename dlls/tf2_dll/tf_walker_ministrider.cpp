@@ -210,7 +210,7 @@ void CWalkerMiniStrider::UpdateLargeGun()
 					flDamage );
 
 				UTIL_ScreenShake( vHitPos, 10.0, 150.0, 1.0, 100, SHAKE_START );
-				RadiusDamage( CTakeDamageInfo( this, pDriver, flDamage, DMG_BLAST ), vHitPos, flDamageRadius, CLASS_NONE );
+				RadiusDamage( CTakeDamageInfo( this, pDriver, flDamage, DMG_BLAST ), vHitPos, flDamageRadius, CLASS_NONE, NULL );
 			}
 		}
 

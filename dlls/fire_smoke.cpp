@@ -87,6 +87,8 @@ IMPLEMENT_SERVERCLASS_ST( CFireSmoke, DT_FireSmoke )
 	SendPropFloat(	SENDINFO( m_flScaleTime ),	0,	SPROP_NOSCALE),
 	SendPropInt(	SENDINFO( m_nFlags ),		8,  SPROP_UNSIGNED ),
 	SendPropModelIndex(	SENDINFO( m_nFlameModelIndex ) ),
+	SendPropModelIndex(	SENDINFO( m_nPlasmaModelIndex ) ),
+	SendPropModelIndex(	SENDINFO( m_nPlasmaModelIndex2 ) ),
 END_SEND_TABLE()
 
 //Data description 
@@ -97,6 +99,8 @@ BEGIN_DATADESC( CFireSmoke )
 	DEFINE_FIELD( CFireSmoke, m_flScaleTime,		FIELD_FLOAT ),
 	DEFINE_FIELD( CFireSmoke, m_nFlags,				FIELD_INTEGER ),
 	DEFINE_FIELD( CFireSmoke, m_nFlameModelIndex,	FIELD_INTEGER ),
+	DEFINE_FIELD( CFireSmoke, m_nPlasmaModelIndex,	FIELD_INTEGER ),
+	DEFINE_FIELD( CFireSmoke, m_nPlasmaModelIndex2,	FIELD_INTEGER ),
 
 END_DATADESC()
 
@@ -129,6 +133,8 @@ void CFireSmoke::Precache()
 {
 	BaseClass::Precache();
 	m_nFlameModelIndex	= engine->PrecacheModel( "sprites/fire1.vmt" );
+	m_nPlasmaModelIndex	= engine->PrecacheModel( "sprites/plasma1.vmt" );
+	m_nPlasmaModelIndex2	= engine->PrecacheModel( "sprites/plasma1.vmt" );//<<TEMP>>
 }
 
 void CFireSmoke::Spawn()

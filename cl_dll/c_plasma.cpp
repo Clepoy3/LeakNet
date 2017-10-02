@@ -233,6 +233,11 @@ void C_Plasma::AddEntity( void )
 
 	// Note: Sprite renderer assumes scale of 0.0 is 1.0
 	m_entGlow.SetScale( max( 0.0000001f, (m_flScaleRegister*1.5f) + GetFlickerScale() ) );
+
+	Vector	offset = GetAbsOrigin();
+	offset[2] += 128.0f * m_entGlow.GetScale();
+	m_entGlow.SetLocalOrigin( offset );
+
 	m_entGlow.SetLocalOriginDim( Z_INDEX, m_entGlow.GetLocalOriginDim( Z_INDEX ) + ( dScale * 32.0f ) );
 }
 
@@ -328,8 +333,8 @@ void C_Plasma::Start( void )
 
 		// Setup all the information for the client entity
 		m_entFlames[i].SetModelByIndex( nModelIndex );
-	//	m_entFlames[i].SetLocalOrigin( GetLocalOrigin() );
-		m_entFlames[i].SetLocalOrigin( GetAbsOrigin() );
+		m_entFlames[i].SetLocalOrigin( GetLocalOrigin() );
+	//	m_entFlames[i].SetLocalOrigin( GetAbsOrigin() ); // VXP: Old position fix
 		m_entFlames[i].m_flFrame			= random->RandomInt( 0.0f, maxFrames );
 		m_entFlames[i].m_flSpriteFramerate	= (float) random->RandomInt( 15, 20 );
 		m_entFlames[i].SetScale( m_flStartScale );
@@ -352,8 +357,8 @@ void C_Plasma::Start( void )
 
 	// Setup the glow
 	m_entGlow.SetModelByIndex( m_nGlowModelIndex );
-//	m_entGlow.SetLocalOrigin( GetLocalOrigin() );
-	m_entGlow.SetLocalOrigin( GetAbsOrigin() );
+	m_entGlow.SetLocalOrigin( GetLocalOrigin() );
+//	m_entGlow.SetLocalOrigin( GetAbsOrigin() );
 	m_entGlow.SetScale( m_flStartScale );
 	m_entGlow.m_nRenderMode		= kRenderTransAdd;
 	m_entGlow.m_nRenderFX		= kRenderFxNone;
@@ -407,7 +412,9 @@ void C_Plasma::UpdateFlames( void )
 		dir[2] = 0.0f;
 
 		Vector	offset = GetAbsOrigin();
-		offset[2] = m_entFlames[i].GetAbsOrigin()[2];
+	//	offset[2] = m_entFlames[i].GetAbsOrigin()[2];
+		// VXP: FLAME_SOURCE_HEIGHT = 128.0f
+		offset[2] += 128.0f * m_entFlames[i].GetScale();
 
 		// Note: Sprite render assumes 0 scale means 1.0
 		m_entFlames[i].SetScale ( max(0.000001,newScale) );
@@ -415,6 +422,10 @@ void C_Plasma::UpdateFlames( void )
 		if ( i != 0 )
 		{
 			m_entFlames[i].SetLocalOrigin( offset + ( m_entFlames[i].m_vecMoveDir * ((m_entFlames[i].GetScale())*CHILD_SPREAD) ) );
+		}
+		else
+		{
+			m_entFlames[i].SetLocalOrigin( offset );
 		}
 
 		Assert( !m_entFlames[i].GetMoveParent() );

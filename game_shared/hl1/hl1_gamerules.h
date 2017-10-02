@@ -61,7 +61,7 @@ public:
 	virtual void			PlayerThink( CBasePlayer *pPlayer );
 	bool					CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon );
 
-	void					RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, float flRadius, int iClassIgnore );
+	void					RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore );
 #endif
 
 };

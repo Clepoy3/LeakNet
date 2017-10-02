@@ -8,28 +8,13 @@
 #include "entitylist_base.h"
 #include "ihandleentity.h"
 
-enum
-{
-	SERIAL_MASK = 0x7fff // the max value of a serial number, rolls back to 0 when it hits this limit
-};
 
 CBaseEntityList::CBaseEntityList()
 {
-	// These are not in any list (yet)
-	int i;
-	for ( i = 0; i < NUM_ENT_ENTRIES; i++ )
-	{
-	//	m_EntPtrArray[i].ClearLinks();
-		m_EntPtrArray[i].m_SerialNumber = (rand()& SERIAL_MASK); // generate random starting serial number
-		m_EntPtrArray[i].m_pEntity = NULL;
-	}
-
 	// Initially, all the slots are free.
-//	for ( unsigned short i=MAX_EDICTS; i < NUM_ENT_ENTRIES; i++ )
-	for ( unsigned short j=MAX_EDICTS; j < NUM_ENT_ENTRIES; j++ )
+	for ( unsigned short i=MAX_EDICTS; i < NUM_ENT_ENTRIES; i++ )
 	{
-	//	m_FreeNonNetworkableSlots.AddToTail( i );
-		m_FreeNonNetworkableSlots.AddToTail( j );
+		m_FreeNonNetworkableSlots.AddToTail( i );
 	}
 	memset( m_EntPtrArray, 0, sizeof( m_EntPtrArray ) );
 }
@@ -80,7 +65,7 @@ CBaseHandle CBaseEntityList::AddEntityAtSlot( IHandleEntity *pEnt, int iSlot, in
 	CEntInfo *pSlot = &m_EntPtrArray[iSlot];
 	Assert( pSlot->m_pEntity == NULL );
 	pSlot->m_pEntity = pEnt;
-
+	
 	// Force the serial number (client-only)?
 	if ( iForcedSerialNum != -1 )
 	{
@@ -127,9 +112,7 @@ void CBaseEntityList::RemoveEntityAtSlot( int iSlot )
 
 		// Add the slot back to the free list if it's a non-networkable entity.
 		if ( iSlot >= MAX_EDICTS )
-		{
 			m_FreeNonNetworkableSlots.AddToTail( iSlot );
-		}
 	}
 }
 

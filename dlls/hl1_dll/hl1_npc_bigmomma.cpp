@@ -1319,7 +1319,7 @@ void CBMortar::Touch( CBaseEntity *pOther )
 
 	CBaseEntity *pOwner = GetOwnerEntity();
 
-	RadiusDamage( CTakeDamageInfo( this, pOwner, sk_bigmomma_dmg_blast.GetFloat(), DMG_ACID ), GetAbsOrigin(), sk_bigmomma_radius_blast.GetFloat(), CLASS_NONE );
+	RadiusDamage( CTakeDamageInfo( this, pOwner, sk_bigmomma_dmg_blast.GetFloat(), DMG_ACID ), GetAbsOrigin(), sk_bigmomma_radius_blast.GetFloat(), CLASS_NONE, NULL );
 		
 	UTIL_Remove( pSprite );
 	UTIL_Remove( this );

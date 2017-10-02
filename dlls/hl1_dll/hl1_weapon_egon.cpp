@@ -291,7 +291,7 @@ void CWeaponEgon::Fire( const Vector &vecOrigSrc, const Vector &vecDir )
 		if ( g_pGameRules->IsMultiplayer() )
 		{
 			// radius damage a little more potent in multiplayer.
-			RadiusDamage( CTakeDamageInfo( this, pPlayer, sk_plr_dmg_egon_wide.GetFloat() / 4, DMG_ENERGYBEAM | DMG_BLAST | DMG_ALWAYSGIB ), tr.endpos, 128, CLASS_NONE );
+			RadiusDamage( CTakeDamageInfo( this, pPlayer, sk_plr_dmg_egon_wide.GetFloat() / 4, DMG_ENERGYBEAM | DMG_BLAST | DMG_ALWAYSGIB ), tr.endpos, 128, CLASS_NONE, NULL );
 		}
 
 		if ( !pPlayer->IsAlive() )

@@ -360,7 +360,7 @@ void CBasePlasmaProjectile::Detonate( void )
 	// Should I explode?
 	if ( m_flExplosiveRadius )
 	{
-		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), m_flDamage, m_DamageType | DMG_BLAST ), GetAbsOrigin(), m_flExplosiveRadius, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), m_flDamage, m_DamageType | DMG_BLAST ), GetAbsOrigin(), m_flExplosiveRadius, CLASS_NONE, NULL );
 	}
 #endif
 	Remove( );

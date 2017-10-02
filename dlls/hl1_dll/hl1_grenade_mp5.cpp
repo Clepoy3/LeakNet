@@ -130,7 +130,7 @@ void CGrenadeMP5::Detonate(void)
 
 	CSoundEnt::InsertSound ( SOUND_COMBAT, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0 );
 
-	RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_flDamage * 2.5, CLASS_NONE );
+	RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_flDamage * 2.5, CLASS_NONE, NULL );
 
 	CPASAttenuationFilter filter2( this );
 

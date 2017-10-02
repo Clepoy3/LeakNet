@@ -73,7 +73,7 @@ public:
 	virtual bool PlayTextureSounds( void ) { return true; }
 	virtual bool PlayFootstepSounds( CBasePlayer *pl );
 	virtual float FlPlayerFallDamage( CBasePlayer *pPlayer );
-	virtual void  RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore );
+	virtual void  RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore );
 	// Let the game rules specify if fall death should fade screen to black
 	virtual bool  FlPlayerFallDeathDoesScreenFade( CBasePlayer *pl ) { return FALSE; }
 

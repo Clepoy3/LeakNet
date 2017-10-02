@@ -122,7 +122,7 @@ void CPointHurt::HurtThink( void )
 	}
 	else
 	{
-		RadiusDamage( CTakeDamageInfo( this, this, m_nDamage, m_bitsDamageType ), GetAbsOrigin(), m_flRadius, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, this, m_nDamage, m_bitsDamageType ), GetAbsOrigin(), m_flRadius, CLASS_NONE, NULL );
 	}
 
 	SetNextThink( gpGlobals->curtime + m_flDelay );

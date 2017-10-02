@@ -11,6 +11,7 @@
 #endif
 
 #include "baseentity.h"
+#include "entityoutput.h"
 
 struct animevent_t;
 struct studiocache_t;
@@ -215,6 +216,13 @@ public:
 
 	virtual void	ModifyOrAppendCriteria( AI_CriteriaSet& set );
 
+	// Fire
+	virtual void Ignite( float flFlameLifetime, bool bNPCOnly = true, float flSize = 0.0f, bool bCalledByLevelDesigner = false, bool bUsePlasma = false );
+	virtual void Extinguish() { RemoveFlag( FL_ONFIRE ); }
+	bool IsOnFire() { return ( (GetFlags() & FL_ONFIRE) != 0 ); }
+	void Scorch( int rate, int floor );
+	void InputIgnite( inputdata_t &inputdata );
+
 	// animation needs
 	float				m_flGroundSpeed;	// computed linear movement rate for current sequence
 	float				m_flLastEventCheck;	// cycle index of when events were last checked
@@ -261,6 +269,10 @@ private:
 	CNetworkVar( int, m_nNewSequenceParity );
 	CNetworkVar( int, m_nResetEventsParity );
 
+public:
+	COutputEvent m_OnIgnite;
+
+private:
 
 // FIXME: necessary so that cyclers can hack m_bSequenceFinished
 friend class CFlexCycler;

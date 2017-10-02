@@ -18,6 +18,10 @@
 #include "npcevent.h"
 #include "isaverestore.h"
 
+// VXP
+#include "EntityFlame.h"
+#include "ai_basenpc.h"
+
 class CIKSaveRestoreOps : public CClassPtrSaveRestoreOps
 {
 	// save data type interface
@@ -68,6 +72,10 @@ BEGIN_DATADESC( CBaseAnimating )
 	DEFINE_FIELD( CBaseAnimating, m_bClientSideFrameReset, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CBaseAnimating, m_nNewSequenceParity, FIELD_INTEGER ),
 	DEFINE_FIELD( CBaseAnimating, m_nResetEventsParity, FIELD_INTEGER ),
+
+	// VXP
+	DEFINE_INPUTFUNC( CBaseAnimating, FIELD_VOID, "Ignite", InputIgnite ),
+	DEFINE_OUTPUT( CBaseAnimating, m_OnIgnite, "OnIgnite" ),
 
 END_DATADESC()
 
@@ -2014,6 +2022,73 @@ void CBaseAnimating::ModifyOrAppendCriteria( AI_CriteriaSet& set )
 
 	// TODO
 	// Append any animation state parameters here
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CBaseAnimating::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bool bCalledByLevelDesigner, bool bUsePlasma )
+{
+	if( IsOnFire() )
+		return;
+
+//	bool bIsNPC = IsNPC();
+
+	CAI_BaseNPC *pNPC = MyNPCPointer();
+	bool bIsNPC = ( pNPC != NULL );
+
+	// Right now this prevents stuff we don't want to catch on fire from catching on fire.
+	if( bNPCOnly && bIsNPC == false )
+	{
+		return;
+	}
+
+	if( bIsNPC == true && bCalledByLevelDesigner == false )
+	{
+	//	if ( pNPC && pNPC->AllowedToIgnite() == false ) // VXP: TODO!
+	//		 return;
+	}
+
+	CEntityFlame *pFlame = CEntityFlame::Create( this, bUsePlasma );
+	if (pFlame)
+	{
+		pFlame->SetLifetime( flFlameLifetime );
+		AddFlag( FL_ONFIRE );
+
+	//	SetEffectEntity( pFlame ); // VXP: TODO
+
+		if ( flSize > 0.0f )
+		{
+			pFlame->SetSize( flSize );
+		}
+	}
+
+	m_OnIgnite.FireOutput( this, this );
+}
+
+//-----------------------------------------------------------------------------
+// Make a model look as though it's burning. 
+//-----------------------------------------------------------------------------
+void CBaseAnimating::Scorch( int rate, int floor )
+{
+	color32 color = GetRenderColor();
+
+	if( color.r > floor )
+		color.r -= rate;
+
+	if( color.g > floor )
+		color.g -= rate;
+
+	if( color.b > floor )
+		color.b -= rate;
+
+	SetRenderColor( color.r, color.g, color.b );
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CBaseAnimating::InputIgnite( inputdata_t &inputdata )
+{
+	Ignite( 30, false, 0.0f, true );
 }
 
 BEGIN_PREDICTION_DATA_NO_BASE( CBaseAnimating )

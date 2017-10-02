@@ -215,7 +215,7 @@ void CWalkerStrider::WalkerThink()
 					MessageEnd();
 
 					UTIL_ScreenShake( vHitPos, 10.0, 150.0, 1.0, 100, SHAKE_START );
-					RadiusDamage( CTakeDamageInfo( this, pDriver, flDamage, DMG_BLAST ), vHitPos, flDamageRadius, CLASS_NONE );
+					RadiusDamage( CTakeDamageInfo( this, pDriver, flDamage, DMG_BLAST ), vHitPos, flDamageRadius, CLASS_NONE, NULL );
 				}
 
 				m_flNextShootTime = gpGlobals->curtime + STRIDER_FIRE_INTERVAL;
@@ -356,7 +356,7 @@ void CWalkerStrider::FootHit( const char *pFootName )
 		if ( pPlayer )
 		{
 			CTakeDamageInfo info( this, pPlayer, 20, DMG_CLUB );
-			TFGameRules()->RadiusDamage( info, footPosition, 200, CLASS_NONE );
+			TFGameRules()->RadiusDamage( info, footPosition, 200, CLASS_NONE, NULL );
 		}			
 
 		m_flDontMakeSoundsUntil = gpGlobals->curtime + 0.4;

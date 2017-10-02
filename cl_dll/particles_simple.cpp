@@ -108,7 +108,7 @@ void CParticleEffect::GetSortOrigin( Vector &vSortOrigin )
 void CParticleEffect::NotifyDestroyParticle( Particle* pParticle )
 {
 	// Go away if we're released and there are no more particles.
-	if( m_ParticleEffect.GetNumActiveParticles() == 0 && IsReleased() && (m_Flags & FLAG_ALLOCATED) )
+	if( m_ParticleEffect.GetNumActiveParticles() == 0 && IsReleased() )
 	{
 		m_ParticleEffect.SetRemoveFlag();
 	}

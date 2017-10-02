@@ -17,6 +17,8 @@
 
 #include "cdll_util.h"
 
+ConVar pp_motionblur_downscale("pp_motionblur_downscale", "1", FCVAR_ARCHIVE, "Downscale for motion blur, 1 = normal, 2 - half of game resolution. Values should be from 1 to 3"); 
+
 //=============================================================================
 // 
 //=============================================================================
@@ -38,16 +40,33 @@ ITexture *GetMotionBlurTex0( int w, int h )
 
 CTextureReference m_MotionBlurTexture;
 
+static float m_flMotionBlurDownscaleValue = 1.0f;
 ITexture *GetMotionBlurTexture()
 {
-	if(!m_MotionBlurTexture)
+	float downscale = pp_motionblur_downscale.GetFloat();
+	downscale = clamp( downscale, 1.0f, 3.0f );
+
+	if(!m_MotionBlurTexture || downscale != m_flMotionBlurDownscaleValue)
 	{
+		// VXP: Shutting down existing texture
+		if ( m_MotionBlurTexture != NULL && downscale != m_flMotionBlurDownscaleValue )
+		{
+			m_MotionBlurTexture.Shutdown();
+		}
+
 	//	m_MotionBlurTexture.InitRenderTarget(256, 256, RT_SIZE_FULL_FRAME_BUFFER, IMAGE_FORMAT_ARGB8888, MATERIAL_RT_DEPTH_NONE, false);
 	//	m_MotionBlurTexture.InitRenderTarget(256, 256, IMAGE_FORMAT_ARGB8888, false);
 	
 		int width, height;
 		materials->GetBackBufferDimensions( width, height );
-		Msg( "Get motion blur overlay with %ix%i size\n", width, height );
+
+		// Storing current downscale value in cache
+		m_flMotionBlurDownscaleValue = downscale;
+
+		width /= downscale;
+		height /= downscale;
+
+		Msg( "Getting motion blur overlay of %ix%i size\n", width, height );
 		m_MotionBlurTexture.InitRenderTarget(width, height, IMAGE_FORMAT_ARGB8888, false);
 	
 	//	Assert(!IsErrorTexture(m_MotionBlurTexture));

@@ -352,7 +352,7 @@ void CWeaponGaussGun::ChargedFire( void )
 
 	if ( penetrated == true )
 	{
-		RadiusDamage( CTakeDamageInfo( this, this, flDamage, DMG_SHOCK ), tr.endpos, 200.0f, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, this, flDamage, DMG_SHOCK ), tr.endpos, 200.0f, CLASS_NONE, NULL );
 	}
 
 	// Register a muzzleflash for the AI

@@ -364,7 +364,7 @@ int g_sModelIndexC4Glow = -1;
 		if ( g_pMapInfo )
 			flBombRadius = g_pMapInfo->m_flBombRadius;
 		CSGameRules()->RadiusDamage( 
-			CTakeDamageInfo( this, GetOwnerEntity(), 1000, bitsDamageType ), GetAbsOrigin(), flBombRadius, CLASS_NONE );
+			CTakeDamageInfo( this, GetOwnerEntity(), 1000, bitsDamageType ), GetAbsOrigin(), flBombRadius, CLASS_NONE, NULL );
 
 		// send director message, that something important happed here
 		/*

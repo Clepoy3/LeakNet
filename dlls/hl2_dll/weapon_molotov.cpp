@@ -146,8 +146,7 @@ void CWeaponMolotov::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatC
 			// -----------------------------------------------------
 			// If owner has a hand, set position to the hand bone position
 			Vector launchPos;
-		//	int iBIndex = pNPC->LookupBone("Bip01 R Hand");
-			int iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
 			if (iBIndex != -1) 
 			{
 				Vector origin;
@@ -157,9 +156,20 @@ void CWeaponMolotov::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatC
 			// Otherwise just set to in front of the owner
 			else 
 			{
-				Vector vFacingDir = pNPC->BodyDirection2D( );
-				vFacingDir = vFacingDir * 60.0; 
-				launchPos = pNPC->GetAbsOrigin()+vFacingDir;
+				// VXP: Ugly repeated second condition
+				iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+				if (iBIndex != -1) 
+				{
+					Vector origin;
+					QAngle angles;
+					pNPC->GetBonePosition( iBIndex, launchPos, angles);
+				}
+				else
+				{
+					Vector vFacingDir = pNPC->BodyDirection2D( );
+					vFacingDir = vFacingDir * 60.0; 
+					launchPos = pNPC->GetAbsOrigin()+vFacingDir;
+				}
 			}
 
 

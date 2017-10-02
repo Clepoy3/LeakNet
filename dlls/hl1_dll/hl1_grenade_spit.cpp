@@ -118,7 +118,7 @@ void CGrenadeSpit::GrenadeSpitTouch( CBaseEntity *pOther )
 	}
 	else
 	{
-		RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE );
+		RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE, NULL );
 	}
 
 	Detonate();

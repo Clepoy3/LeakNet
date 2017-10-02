@@ -112,6 +112,7 @@
 #define FL_OBJECT				(1<<25) // Terrible name. This is an object that NPCs should see. Missiles, for example.
 #define FL_KILLME				(1<<26)	// This entity is marked for death -- will be freed by game DLL
 //#define FL_???				(1<<27)	
+#define FL_ONFIRE				(1<<27)	// VXP: You know...
 
 
 // edict->movetype values

@@ -10,6 +10,8 @@
 #pragma once
 #endif
 
+#define FLAME_DAMAGE_INTERVAL			0.2f // How often to deal damage. VXP: Was 0.1f, but it's too fast
+
 class CEntityFlame : public CBaseEntity 
 {
 public:
@@ -18,16 +20,20 @@ public:
 
 	CEntityFlame( void );
 
-	static CEntityFlame	*Create( CBaseEntity *pTarget );
+	static CEntityFlame	*Create( CBaseEntity *pTarget, bool bUsePlasma = false );
 
 	void	AttachToEntity( CBaseEntity *pTarget );
 	void	SetLifetime( float lifetime );
+
+	void	SetSize( float size ) { m_flSize = size; }
 
 	DECLARE_DATADESC();
 
 protected:
 
-	void InputIgnite( inputdata_t &inputdata );
+	void	DoIgnite( inputdata_t &inputdata, bool bUsePlasma );
+	void	InputIgnite( inputdata_t &inputdata );
+	void	InputIgnitePlasma( inputdata_t &inputdata );
 
 	void	FlameThink( void );
 
@@ -35,6 +41,8 @@ protected:
 
 	CNetworkVar( float, m_flSize );
 	float	m_flLifetime;
+	CNetworkVar( bool, m_bUsePlasma );
+	float	m_flDamageTime;
 };
 
 #endif // ENTITYFLAME_H

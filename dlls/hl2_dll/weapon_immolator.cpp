@@ -6,7 +6,9 @@
 //=============================================================================
 
 #include "cbase.h"
+#include "fire.h"
 #include "basehlcombatweapon.h"
+#include "npcevent.h"
 #include "basecombatcharacter.h"
 #include "player.h"
 #include "soundent.h"
@@ -16,6 +18,7 @@
 #include "ai_basenpc.h"
 #include "ai_memory.h"
 #include "beam_shared.h"
+#include "EntityFlame.h"
 
 #include "weapon_immolator.h"
 
@@ -38,6 +41,10 @@ BEGIN_DATADESC( CWeaponImmolator )
 	DEFINE_FIELD( CWeaponImmolator, m_flBurnRadius, FIELD_FLOAT ),
 	DEFINE_FIELD( CWeaponImmolator, m_flTimeLastUpdatedRadius, FIELD_TIME ),
 	DEFINE_FIELD( CWeaponImmolator, m_vecImmolatorTarget, FIELD_VECTOR ),
+
+	DEFINE_FIELD( CWeaponImmolator, m_fireState, FIELD_INTEGER ),
+	DEFINE_FIELD( CWeaponImmolator, m_flAmmoUseTime, FIELD_TIME ),
+	DEFINE_FIELD( CWeaponImmolator, m_flStartFireTime, FIELD_TIME ),
 
 	DEFINE_ENTITYFUNC( CWeaponImmolator, UpdateThink ),
 END_DATADESC()
@@ -62,6 +69,46 @@ CWeaponImmolator::CWeaponImmolator( void )
 	StopImmolating();
 }
 
+bool CWeaponImmolator::Deploy( void )
+{
+	m_fireState = FIRE_OFF;
+
+	return BaseClass::Deploy();
+}
+
+bool CWeaponImmolator::Holster( CBaseCombatWeapon *pSwitchingTo )
+{
+    StopImmolating();
+
+	return BaseClass::Holster( pSwitchingTo );
+}
+
+/*
+bool CWeaponImmolator::HasAmmo( void )
+{
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( pOwner == NULL )
+		return false;
+
+	if ( pOwner->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
+		return false;
+
+	return true;
+}
+*/
+
+void CWeaponImmolator::UseAmmo( int count )
+{
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( pOwner == NULL )
+		return;
+
+	if ( pOwner->GetAmmoCount( m_iPrimaryAmmoType ) >= count )
+		pOwner->RemoveAmmo( count, m_iPrimaryAmmoType );
+	else
+		pOwner->RemoveAmmo( pOwner->GetAmmoCount( m_iPrimaryAmmoType ), m_iPrimaryAmmoType );
+}
+
 void CWeaponImmolator::StartImmolating()
 {
 	// Start the radius really tiny because we use radius == 0.0 to 
@@ -76,7 +123,20 @@ void CWeaponImmolator::StopImmolating()
 {
 	m_flBurnRadius = 0.0;
 	SetThink( NULL );
+	m_vecImmolatorTarget= IMMOLATOR_TARGET_INVALID;
 	m_flNextPrimaryAttack = gpGlobals->curtime + 2.0;
+
+	StopSound( "Weapon_Immolator.Run" );
+	
+	if ( m_fireState != FIRE_OFF )
+	{
+		 EmitSound( "Weapon_Immolator.Off" );
+	}
+
+	SetWeaponIdleTime( gpGlobals->curtime + 2.0 );
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.5;
+
+	m_fireState = FIRE_OFF;
 }
 
 //-----------------------------------------------------------------------------
@@ -94,12 +154,83 @@ void CWeaponImmolator::Precache( void )
 //-----------------------------------------------------------------------------
 void CWeaponImmolator::PrimaryAttack( void )
 {
+/*
+	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
+	if ( pOwner == NULL )
+		return;
+
 	WeaponSound( SINGLE );
 
 	if( !IsImmolating() )
 	{
 		StartImmolating();
 	} 
+
+	// VXP
+	pOwner->m_fEffects |= EF_MUZZLEFLASH;
+	m_flNextPrimaryAttack = gpGlobals->curtime + GetFireRate();
+*/
+
+	switch( m_fireState )
+	{
+		case FIRE_OFF:
+		{
+			if ( !HasAmmo() )
+			{
+				Msg( "No ammo!\n" );
+				m_flNextPrimaryAttack = gpGlobals->curtime + 0.25;
+				WeaponSound( EMPTY );
+				return;
+			}
+
+			m_flAmmoUseTime = gpGlobals->curtime;// start using ammo ASAP.
+			
+			EmitSound( "Weapon_Immolator.Start" ); // VXP: Play startup sound here
+			
+			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+			
+			m_flStartFireTime = gpGlobals->curtime;
+
+			SetWeaponIdleTime( gpGlobals->curtime + 0.1 );
+			
+			m_fireState = FIRE_STARTUP;
+		}
+		break;
+
+		case FIRE_STARTUP:
+		{
+		//	StartImmolating();
+
+			if ( gpGlobals->curtime >= ( m_flStartFireTime + 0.3 ) )
+			{
+				EmitSound( "Weapon_Immolator.Run" );
+
+				m_fireState = FIRE_CHARGE;
+			}
+
+			if ( !HasAmmo() )
+			{
+				StopImmolating();
+				m_flNextPrimaryAttack = gpGlobals->curtime + 1.0;
+			}
+		}
+		break;
+
+		case FIRE_CHARGE:
+		{
+			if( !IsImmolating() )
+			{
+				StartImmolating();
+			}
+
+			if ( !HasAmmo() )
+			{
+				StopImmolating();
+				m_flNextPrimaryAttack = gpGlobals->curtime + 1.0;
+			}
+		}
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -110,6 +241,11 @@ bool CWeaponImmolator::WeaponLOSCondition( const Vector &ownerPos, const Vector 
 {
 	CAI_BaseNPC* npcOwner = GetOwner()->MyNPCPointer();
 
+	if( !npcOwner )
+	{
+		return false;
+	}
+
 	if( IsImmolating() )
 	{
 		// Don't update while Immolating. This is a committed attack.
@@ -117,7 +253,8 @@ bool CWeaponImmolator::WeaponLOSCondition( const Vector &ownerPos, const Vector 
 	}
 
 	// Assume we won't find a target.
-	m_vecImmolatorTarget = IMMOLATOR_TARGET_INVALID;
+//	m_vecImmolatorTarget = IMMOLATOR_TARGET_INVALID;
+	m_vecImmolatorTarget = targetPos;
 
 	if( npcOwner->FInViewCone( targetPos ) && npcOwner->FVisible( targetPos ) )
 	{
@@ -166,6 +303,12 @@ bool CWeaponImmolator::WeaponLOSCondition( const Vector &ownerPos, const Vector 
 //-----------------------------------------------------------------------------
 int CWeaponImmolator::WeaponRangeAttack1Condition( float flDot, float flDist )
 {
+	if( m_flNextPrimaryAttack > gpGlobals->curtime )
+	{
+		// Too soon to attack!
+		return COND_NONE;
+	}
+
 	if( IsImmolating() )
 	{
 		// Once is enough!
@@ -249,6 +392,21 @@ void CWeaponImmolator::Update()
 	trace_t	tr;
 	UTIL_TraceLine( vecSrc, vecSrc + vecAiming * MAX_TRACE_LENGTH, MASK_SHOT, pOwner, COLLISION_GROUP_NONE, &tr );
 
+	CSoundEnt::InsertSound( SOUND_DANGER, m_vecImmolatorTarget, 256, 5.0, GetOwner() );
+
+	if ( gpGlobals->curtime >= m_flAmmoUseTime )
+	{
+		UseAmmo( 1 );
+		ImmolationDamage( CTakeDamageInfo( this, this, 1, DMG_PLASMA ), tr.endpos, m_flBurnRadius, CLASS_NONE );
+		
+		if ( !HasAmmo() )
+		{
+			StopImmolating();
+		}
+		
+		m_flAmmoUseTime = gpGlobals->curtime + 0.1;
+	}
+
 	int brightness;
 	brightness = 255 * (m_flBurnRadius/MAX_BURN_RADIUS);
 /*
@@ -281,10 +439,11 @@ void CWeaponImmolator::Update()
 	pBeam->SetEndWidth( 1 );			// endwidth
 	pBeam->SetFadeLength( 0 );			// fadelength,
 	pBeam->SetNoise( 1 );				// noise
-	pBeam->SetColor( 0, 255, 0 );		// red, green, blue,
+//	pBeam->SetColor( 0, 255, 0 );		// red, green, blue,
+//	pBeam->SetColor( 0, 165, 255 );		// red, green, blue,
 	pBeam->SetBrightness( brightness );	// bright
 
-	if( tr.DidHitWorld() )
+	if( true || tr.DidHitWorld() )
 	{
 		int beams;
 
@@ -312,16 +471,21 @@ void CWeaponImmolator::Update()
 						0.75,	// fadelength,
 						15,		// noise
 
+					//	0,		// red
+					//	255,	// green
+					//	0,		// blue,
+
 						0,		// red
-						255,	// green
-						0,		// blue,
+						165,	// green
+						255,	// blue,
 
 						128, // bright
 						100  // speed
 						);
 		}
 
-		ImmolationDamage( CTakeDamageInfo( this, this, 1, DMG_BURN ), tr.endpos, m_flBurnRadius, CLASS_NONE );
+	//	ImmolationDamage( CTakeDamageInfo( this, this, 1, DMG_BURN ), tr.endpos, m_flBurnRadius, CLASS_NONE );
+	//	ImmolationDamage( CTakeDamageInfo( this, this, 1, DMG_PLASMA ), tr.endpos, m_flBurnRadius, CLASS_NONE );
 	}
 	else
 	{
@@ -330,10 +494,10 @@ void CWeaponImmolator::Update()
 
 	m_flTimeLastUpdatedRadius = gpGlobals->curtime;
 
-	if( m_flBurnRadius >= MAX_BURN_RADIUS )
+/*	if( m_flBurnRadius >= MAX_BURN_RADIUS )
 	{
 		StopImmolating();
-	}
+	}*/
 }
 
 //-----------------------------------------------------------------------------
@@ -357,6 +521,7 @@ void CWeaponImmolator::ImmolationDamage( const CTakeDamageInfo &info, const Vect
 	// iterate on all entities in the vicinity.
 	for ( CEntitySphereQuery sphere( vecSrc, flRadius ); pEntity = sphere.GetCurrentEntity(); sphere.NextEntity() )
 	{
+	/* VXP: Old behavior
 		if ( pEntity->m_takedamage != DAMAGE_NO )
 		{
 			// UNDONE: this should check a damage mask, not an ignore
@@ -367,5 +532,62 @@ void CWeaponImmolator::ImmolationDamage( const CTakeDamageInfo &info, const Vect
 
 			pEntity->TakeDamage( info );
 		}
+	*/
+		CBaseCombatCharacter *pBCC = pEntity->MyCombatCharacterPointer();
+		if ( pBCC && pBCC->IsAlive() && !pBCC->IsOnFire() )
+		{
+			// UNDONE: this should check a damage mask, not an ignore
+			if ( iClassIgnore != CLASS_NONE && pEntity->Classify() == iClassIgnore )
+			{
+				continue;
+			}
+
+		//	if ( pEntity->m_takedamage != DAMAGE_NO )
+		//	{
+		//		pEntity->TakeDamage( info );
+		//	}
+
+		//	if( pEntity == GetOwner() )
+		//	{
+		//		continue;
+		//	}
+
+		//	pBCC->Ignite( random->RandomFloat( 15, 20 ) );
+		//	pBCC->Ignite( 2 );
+
+		//	CPlasma	*plasma = (CPlasma *) CreateEntityByName( "_plasma" );
+		//	plasma->EnableSmoke( true );
+		//	plasma->AttachToEntity( pBCC );
+
+		//	CPlasma	*plasma = CPlasma::Create( pBCC );
+		//	plasma->EnableSmoke( true );
+		//	plasma->SetLifetime( 5 );
+		
+			float lifetime = random->RandomFloat( 15, 20 );
+
+			// VXP: Commented since I fixed repeated citizen pain sounds with a timer in EntityFlame.cpp
+		//	if ( pEntity == GetOwner() ) // VXP: Slightly less burn lifetime for player
+		//	{
+		//		lifetime = random->RandomFloat( 4, 10 );
+		//	}
+
+			CEntityFlame *pFlame = CEntityFlame::Create( pBCC, true );
+			if (pFlame)
+			{
+				pFlame->SetLifetime( lifetime );
+				pBCC->AddFlag( FL_ONFIRE );
+			}
+		}
 	}
+}
+
+void CWeaponImmolator::WeaponIdle( void )
+{
+	if ( !HasWeaponIdleTimeElapsed() )
+		return;
+
+	if ( m_fireState != FIRE_OFF )
+		 StopImmolating();
+
+	SendWeaponAnim( ACT_VM_IDLE );
 }

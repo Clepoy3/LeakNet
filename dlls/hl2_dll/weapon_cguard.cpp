@@ -161,7 +161,7 @@ public:
 			);
 
 		//Do the radius damage
-		RadiusDamage( CTakeDamageInfo( this, this, 125*magnitude, DMG_BLAST ), GetAbsOrigin(), 256*magnitude, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, this, 125*magnitude, DMG_BLAST ), GetAbsOrigin(), 256*magnitude, CLASS_NONE, NULL );
 
 		UTIL_Remove( this );
 	}

@@ -67,6 +67,7 @@ BEGIN_DATADESC( CBaseCombatCharacter )
 	DEFINE_KEYFIELD( CBaseCombatCharacter, m_RelationshipString, FIELD_STRING, "Relationship" ),
 
 	DEFINE_FIELD( CBaseCombatCharacter, m_LastHitGroup, FIELD_INTEGER ),
+	DEFINE_FIELD( CBaseCombatCharacter, m_flDamageAccumulator, FIELD_FLOAT ), // VXP
 	DEFINE_INPUT( CBaseCombatCharacter, m_impactEnergyScale, FIELD_FLOAT, "physdamagescale" ),
 	DEFINE_FIELD( CBaseCombatCharacter, m_CurrentWeaponProficiency, FIELD_INTEGER),
 
@@ -361,6 +362,9 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 	// necessary since in debug, we initialize vectors to NAN for debugging
 	m_HackedGunPos.Init();
 #endif
+
+	// Zero the damage accumulator.
+	m_flDamageAccumulator = 0.0f;
 
 	// Init weapon and Ammo data
 	m_hActiveWeapon			= NULL;
@@ -983,6 +987,18 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 		//	int iBIndex = LookupBone( "ValveBiped.Bip01_R_Wrist" );
 			if ( iBIndex != -1)  
 			{
+				Vector origin;
+				QAngle angles;
+				GetBonePosition( iBIndex, origin, angles);
+				//GetAttachment("gun", origin, angles);
+				pWeapon->SetAbsOrigin( origin );
+				pWeapon->SetAbsAngles( angles );
+				UTIL_Relink(pWeapon);
+			}
+			// Otherwise just set in front of me.
+			else 
+			{
+				// VXP: Ugly repeated second condition
 				iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger02" );
 				if ( iBIndex != -1) 
 				{
@@ -994,13 +1010,12 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 					pWeapon->SetAbsAngles( angles );
 					UTIL_Relink(pWeapon);
 				}
-			}
-			// Otherwise just set in front of me.
-			else 
-			{
-				Vector vFacingDir = BodyDirection2D();
-				vFacingDir = vFacingDir * 10.0; 
-				pWeapon->SetAbsOrigin( Weapon_ShootPosition() + vFacingDir );
+				else
+				{
+					Vector vFacingDir = BodyDirection2D();
+					vFacingDir = vFacingDir * 10.0; 
+					pWeapon->SetAbsOrigin( Weapon_ShootPosition() + vFacingDir );
+				}
 			}
 		}
 
@@ -1370,7 +1385,28 @@ int CBaseCombatCharacter::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	// do the damage
 	if ( m_takedamage != DAMAGE_EVENTS_ONLY )
 	{
-		m_iHealth -= info.GetDamage();
+	//	m_iHealth -= info.GetDamage();
+
+		// VXP
+		// Separate the fractional amount of damage from the whole
+		float flFractionalDamage = info.GetDamage() - floor( info.GetDamage() );
+		float flIntegerDamage = info.GetDamage() - flFractionalDamage;
+
+		// Add fractional damage to the accumulator
+		m_flDamageAccumulator += flFractionalDamage;
+
+		// If the accumulator is holding a full point of damage, move that point
+		// of damage into the damage we're about to inflict.
+		if( m_flDamageAccumulator >= 1.0 )
+		{
+			flIntegerDamage += 1.0;
+			m_flDamageAccumulator -= 1.0;
+		}
+
+		if ( flIntegerDamage <= 0 )
+			return 0;
+
+		m_iHealth -= flIntegerDamage;
 	}
 
 	return 1;
@@ -1397,6 +1433,7 @@ int CBaseCombatCharacter::OnTakeDamage_Dead( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // Purpose: Catch fire! The flames will burn for the given lifetime (in seconds).
 //-----------------------------------------------------------------------------
+/* VXP: Now in CBaseAnimating
 void CBaseCombatCharacter::Ignite( float flFlameLifetime )
 {
 	CEntityFlame *pFlame = CEntityFlame::Create( this );
@@ -1406,6 +1443,7 @@ void CBaseCombatCharacter::Ignite( float flFlameLifetime )
 		m_bOnFire = true;
 	}
 }
+*/
 
 
 //-----------------------------------------------------------------------------
@@ -1880,13 +1918,13 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 // Input  :
 // Output :
 //-----------------------------------------------------------------------------	
-void RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, float flRadius, int iClassIgnore )
+void RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrc, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
 {
 	// NOTE: I did this this way so I wouldn't have to change a whole bunch of
 	// code unnecessarily. We need TF2 specific rules for RadiusDamage, so I moved
 	// the implementation of radius damage into gamerules. All existing code calls
 	// this method, which calls the game rules method
-	g_pGameRules->RadiusDamage( info, vecSrc, flRadius, iClassIgnore );
+	g_pGameRules->RadiusDamage( info, vecSrc, flRadius, iClassIgnore, pEntityIgnore );
 }
 
 //-----------------------------------------------------------------------------

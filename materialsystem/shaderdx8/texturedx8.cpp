@@ -582,16 +582,12 @@ void LoadSubTexture( int bindId, int copy, IDirect3DBaseTexture* pTexture,
 
 
 int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
-//int64 ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
-//unsigned int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 {
-	/*FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
+	FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		GUID deviceId;
 		int texSize;
-	//	int64 texSize;
-	//	unsigned int texSize;
 		FileSystem()->Read( &deviceId, sizeof(deviceId), file );
 		FileSystem()->Read( &texSize, sizeof(texSize), file );
 		FileSystem()->Close( file );
@@ -599,7 +595,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		{
 			return texSize;
 		}
-	}*/
+	}
 	// How much texture memory?
 	if (deviceType == D3DDEVTYPE_REF)
 		return 64 * 1024 * 1024;
@@ -612,9 +608,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 //	int textureSize = 256 * 256 * 2; // VXP: width * height * SizeInBytes(imageFormat)
 //	unsigned int textureSize = ShaderUtil()->GetMemRequired( 256, 256, fmt, false );
 
-//	int totalSize = 0;
-//	int64 totalSize = 0;
-	unsigned int totalSize = 0;
+	int totalSize = 0;
 	CUtlVector< IDirect3DBaseTexture* > textures;
 
 #ifndef DONT_CHECK_MEM
@@ -635,7 +629,7 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		totalSize += textureSize;
 
 		textures.AddToTail( pTex );
-	}
+	} 
 
 	// Free all the temp textures
 	for (int i = textures.Size(); --i >= 0; )
@@ -645,22 +639,22 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 
 		DestroyD3DTexture( textures[i] );
 	}
-#else
-	totalSize = 102236160;
-#endif
 
-	if ( totalSize >= INT_MAX )
+	if ( totalSize < 0 || totalSize >= INT_MAX )
 	{
 		totalSize = INT_MAX;
 	}
 
-	/*file = FileSystem()->Open( "vidcfg.bin", "wb", "EXECUTABLE_PATH" );
+#else
+	totalSize = 102236160;
+#endif
+	file = FileSystem()->Open( "vidcfg.bin", "wb", "EXECUTABLE_PATH" );
 	if ( file )
 	{
 		FileSystem()->Write( &nDeviceGUID, sizeof(GUID), file );
 		FileSystem()->Write( &totalSize, sizeof(totalSize), file );
 		FileSystem()->Close( file );
-	}*/
+	}
 
 	return totalSize;
 }

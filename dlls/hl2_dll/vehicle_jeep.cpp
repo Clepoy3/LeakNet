@@ -869,7 +869,7 @@ void CPropJeep::FireChargedCannon( void )
 	//Do radius damage if we didn't penetrate the wall
 	if ( penetrated == true )
 	{
-		RadiusDamage( CTakeDamageInfo( this, this, flDamage, DMG_SHOCK ), tr.endpos, 200.0f, CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, this, flDamage, DMG_SHOCK ), tr.endpos, 200.0f, CLASS_NONE, NULL );
 	}
 }
 

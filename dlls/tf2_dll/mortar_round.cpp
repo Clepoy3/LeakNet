@@ -106,7 +106,7 @@ void CMortarRound::MissileTouch( CBaseEntity *pOther )
 		SetLocalOrigin( GetAbsOrigin() + Vector(0,0,32) );
 		CPASFilter filter( GetAbsOrigin() );
 		te->Explosion( filter, 0.0, &GetAbsOrigin(), g_sModelIndexFireball, 3.0, 15, TE_EXPLFLAG_NONE, 512, 100 );
-		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), weapon_mortar_starburst_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), weapon_mortar_starburst_radius.GetFloat(), CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), weapon_mortar_starburst_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), weapon_mortar_starburst_radius.GetFloat(), CLASS_NONE, NULL );
 
 		// Blind all players nearby
 		for ( int i = 1; i <= gpGlobals->maxClients; i++ )
@@ -169,7 +169,7 @@ void CMortarRound::MissileTouch( CBaseEntity *pOther )
 		SetLocalOrigin( GetAbsOrigin() + Vector(0,0,64) );
 		CPASFilter filter( GetAbsOrigin() );
 		te->Explosion( filter, 0.0,	&GetAbsOrigin(), g_sModelIndexFireball, 10.0, 15, TE_EXPLFLAG_NONE, 512, 300 );
-		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), weapon_mortar_shell_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), weapon_mortar_shell_radius.GetFloat(), CLASS_NONE );
+		RadiusDamage( CTakeDamageInfo( this, GetOwnerEntity(), weapon_mortar_shell_damage.GetFloat(), DMG_BLAST ), GetAbsOrigin(), weapon_mortar_shell_radius.GetFloat(), CLASS_NONE, NULL );
 		UTIL_Remove( this );
 	}
 }

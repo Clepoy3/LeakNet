@@ -1555,7 +1555,7 @@ void CNihilanthHVR::ZapTouch( CBaseEntity *pOther )
 {
 	UTIL_EmitAmbientSound( this, GetAbsOrigin(), "weapons/electro4.wav", 1.0, SNDLVL_NORM, 0, random->RandomInt( 90, 95 ) );
 
-	RadiusDamage( CTakeDamageInfo( this, this, 50, DMG_SHOCK ), GetAbsOrigin(), 125,  CLASS_NONE  );
+	RadiusDamage( CTakeDamageInfo( this, this, 50, DMG_SHOCK ), GetAbsOrigin(), 125,  CLASS_NONE, NULL );
 	SetAbsVelocity( GetAbsVelocity() * 0 );
 
 	SetTouch( NULL );

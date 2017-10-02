@@ -140,7 +140,7 @@ void CGrenadeScanner::Detonate(void)
 	UTIL_ScreenShake( GetAbsOrigin(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	CSoundEnt::InsertSound ( SOUND_DANGER, GetAbsOrigin(), 400, 0.2 );
 
-	RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE );
+	RadiusDamage ( CTakeDamageInfo( this, GetOwner(), m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_DmgRadius, CLASS_NONE, NULL );
 	CPASAttenuationFilter filter2( this, "GrenadeScanner.StopSound" );
 	EmitSound( filter2, entindex(), "GrenadeScanner.StopSound" );
 	UTIL_Remove( this );
