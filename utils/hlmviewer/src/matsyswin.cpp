@@ -306,7 +306,7 @@ MatSysWindow::handleEvent (mxEvent *event)
 
 		float r = 1.0/3.0 * min( w(), h() );
 
-		float d = sqrt( (event->x - w()/2) * (event->x - w()/2) + (event->y - h()/2) * (event->y - h()/2) );
+		float d = sqrt( ( float )( (event->x - w()/2) * (event->x - w()/2) + (event->y - h()/2) * (event->y - h()/2) ) );
 
 		if (d < r)
 			g_viewerSettings.rotating = false;
@@ -756,6 +756,9 @@ void DrawMovementBoxes()
 void
 MatSysWindow::draw ()
 {
+	if ( !g_pStudioModel->GetStudioRender() )
+		return;
+
 	g_pMaterialSystem->BeginFrame();
 	g_pStudioModel->GetStudioRender()->BeginFrame();
 
@@ -780,6 +783,10 @@ MatSysWindow::draw ()
 	g_pMaterialSystem->Rotate( -90,  0, 0, 1 );
 
 	int polycount = g_pStudioModel->DrawModel ();
+
+	g_pStudioModel->GetStudioRender()->EndFrame();
+
+	g_ControlPanel->setModelInfo();
 
 	int lod;
 	float metric;
@@ -871,7 +878,7 @@ MatSysWindow::draw ()
 
     g_pMaterialSystem->SwapBuffers();
 
-	g_pStudioModel->GetStudioRender()->EndFrame();
+//	g_pStudioModel->GetStudioRender()->EndFrame();
 	g_pMaterialSystem->EndFrame();
 }
 

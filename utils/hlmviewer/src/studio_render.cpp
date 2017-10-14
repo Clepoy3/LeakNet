@@ -388,7 +388,7 @@ void StudioModel::SetUpBones ( bool mergeBones )
 
 	InitPose(  m_pstudiohdr, pos, q );
 	
-	AccumulatePose( m_pstudiohdr, pIK, pos, q, m_sequence, m_cycle, m_poseparameter, BONE_USED_BY_ANYTHING );
+	AccumulatePose( m_pstudiohdr, pIK, pos, q, m_sequence, m_cycle, m_poseparameter, BoneMask( ) );
 
 	if ( g_viewerSettings.blendSequenceChanges &&
 		m_sequencetime < m_blendtime && 
@@ -406,7 +406,7 @@ void StudioModel::SetUpBones ( bool mergeBones )
 		float s = 1.0 - ( m_sequencetime / m_blendtime );
 		s = 3 * s * s - 2 * s * s * s;
 
-		AccumulatePose( m_pstudiohdr, NULL, pos, q, m_prevsequence, m_prevcycle, m_poseparameter, BONE_USED_BY_ANYTHING, s );
+		AccumulatePose( m_pstudiohdr, NULL, pos, q, m_prevsequence, m_prevcycle, m_poseparameter, BoneMask( ), s );
 		// Con_DPrintf("%d %f : %d %f : %f\n", pev->sequence, f, pev->prevsequence, pev->prevframe, s );
 	}
 	else
@@ -429,7 +429,7 @@ void StudioModel::SetUpBones ( bool mergeBones )
 		{
 			if (m_Layer[i].m_priority == j && m_Layer[i].m_weight > 0)
 			{
-				AccumulatePose( m_pstudiohdr, pIK, pos, q, m_Layer[i].m_sequence, m_Layer[i].m_cycle, m_poseparameter, BONE_USED_BY_ANYTHING, m_Layer[i].m_weight );
+				AccumulatePose( m_pstudiohdr, pIK, pos, q, m_Layer[i].m_sequence, m_Layer[i].m_cycle, m_poseparameter, BoneMask( ), m_Layer[i].m_weight );
 			}
 		}
 	}
@@ -444,9 +444,9 @@ void StudioModel::SetUpBones ( bool mergeBones )
 	CIKContext auto_ik;
 	auto_ik.Init( m_pstudiohdr, a1, p1, 0.0 );
 
-	CalcAutoplaySequences( m_pstudiohdr, &auto_ik, pos, q, m_poseparameter, BONE_USED_BY_ANYTHING, GetAutoPlayTime() );
+	CalcAutoplaySequences( m_pstudiohdr, &auto_ik, pos, q, m_poseparameter, BoneMask( ), GetAutoPlayTime() );
 
-	CalcBoneAdj( m_pstudiohdr, pos, q, m_controller, BONE_USED_BY_ANYTHING );
+	CalcBoneAdj( m_pstudiohdr, pos, q, m_controller, BoneMask( ) );
 
 	if (pIK)
 	{
@@ -1013,6 +1013,11 @@ void StudioModel::DrawBones( )
 
 	for (int i = 0; i < m_pstudiohdr->numbones; i++)
 	{
+		if ( !(m_pstudiohdr->pBone( i )->flags & BoneMask()))
+		{
+			continue;
+		}
+
 		if (pbones[i].parent >= 0)
 		{
 			int j = pbones[i].parent;
@@ -1240,6 +1245,12 @@ void StudioModel::DrawPhysicsModel( )
 
 void StudioModel::SetViewTarget( void )
 {
+	// VXP: only valid if the attachment bones are used
+	if ((BoneMask() & BONE_USED_BY_ATTACHMENT) == 0) // VXP: FIx for "Highlight Bone"
+	{
+		return;
+	}
+
 	int iEyeUpdown = LookupFlexController( "eyes_updown" );
 
 	int iEyeRightleft = LookupFlexController( "eyes_rightleft" );
@@ -1481,7 +1492,7 @@ void StudioModel::SetHeadPosition( Vector pos[], Quaternion q[] )
 			q2[j] = q[j];
 		}
 
-		CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, m_poseparameter, BONE_USED_BY_ANYTHING, GetAutoPlayTime() );
+		CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, m_poseparameter, BoneMask( ), GetAutoPlayTime() );
 	//	UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
 		UpdateBoneChain( pos2, q2, patt->bone, m_pBoneToWorld );
 		matrix3x4_t attToWorld;
@@ -1612,7 +1623,7 @@ void StudioModel::CalcDefaultView( mstudioattachment_t *patt, Vector pos[], Quat
 		q2[j] = q[j];
 	}
 
-	CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, tmpPoseParameter, BONE_USED_BY_ANYTHING, GetAutoPlayTime() );
+	CalcAutoplaySequences( m_pstudiohdr, NULL, pos2, q2, tmpPoseParameter, BoneMask( ), GetAutoPlayTime() );
 
 //	UpdateBoneChain( pos2, q2, patt->bone, m_pStudioRender->GetBoneToWorldArray() );
 	UpdateBoneChain( pos2, q2, patt->bone, m_pBoneToWorld );
