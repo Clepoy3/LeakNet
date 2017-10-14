@@ -811,7 +811,14 @@ bool SV_BuildSoundMsg( edict_t *pEntity, int iChannel, const char *pSample, int 
 		//	return false;
 
 			// VXP: Trying to precache
-			sv.PrecacheSound( pSample, 0 );
+		//	sv.PrecacheSound( pSample, 0 );
+			int done = SV_FindOrAddSound( pSample, false );
+			if ( done < 0 )
+			{
+				Con_Printf ("SV_StartSound: %s cannot be precached (%d)\n", pSample, sound_num);
+				return false;
+			}
+
 			sound_num = sv.LookupSoundIndex( pSample );
 			if ( !sound_num || !sv.GetSound( sound_num ) )
 			{

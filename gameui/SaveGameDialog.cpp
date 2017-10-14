@@ -261,7 +261,7 @@ int TimeStampSortFunc(const void *elem1, const void *elem2)
 	vgui::ListPanelItem *p1, *p2;
 	p1 = *(vgui::ListPanelItem **)elem1;
 	p2 = *(vgui::ListPanelItem **)elem2;
-	assert(p1 && p2);
+	Assert(p1 && p2);
 
 	if (!p1)
 		return -1;
@@ -270,8 +270,8 @@ int TimeStampSortFunc(const void *elem1, const void *elem2)
 
 	int t1 = p1->kv->GetInt("timestamp", 0);
 	int t2 = p2->kv->GetInt("timestamp", 0);
-	assert(t1 > 0);
-	assert(t2 > 0);
+	Assert(t1 > 0);
+	Assert(t2 > 0);
 
 	return (t1 < t2) ? 1 : -1;
 }
@@ -439,6 +439,6 @@ const char *CSaveGameDialog::FindSaveSlot()
 		filesystem()->Close(fp);
 	}
 
-	assert(!("Could not generate new save game file"));
+	Assert(!("Could not generate new save game file"));
 	return "error.sav";
 }

@@ -206,7 +206,7 @@ public:
 		{
 			int j = strlen( m_Strings[i].Base() ) + 1;
 			int k = m_Strings[i].Size();
-			assert( j == k );
+			Assert( j == k );
 			memcpy( pDst + size, m_Strings[i].Base(), m_Strings[i].Size() );
 			size += m_Strings[i].Size();
 		}
@@ -495,17 +495,17 @@ void COptimizedModel::SanityCheckAgainstStudioHDR( studiohdr_t *phdr )
 #if 0 // garymcthack
 	printf( "SanityCheckAgainstStudioHDR\n" );
 	FileHeader_t *header = ( FileHeader_t * )m_FileBuffer->GetPointer( 0 );
-	assert( header->numBodyParts == phdr->numbodyparts );
+	Assert( header->numBodyParts == phdr->numbodyparts );
 	for( int bodyPartID = 0; bodyPartID < header->numBodyParts; bodyPartID++ )
 	{
 		BodyPartHeader_t *bodyPart = header->pBodyPart( bodyPartID );
 		mstudiobodyparts_t *pStudioBodyPart = phdr->pBodypart( bodyPartID );
-		assert( bodyPart->numModels == pStudioBodyPart->nummodels );
+		Assert( bodyPart->numModels == pStudioBodyPart->nummodels );
 		for( int modelID = 0; modelID < bodyPart->numModels; modelID++ )
 		{
 			ModelHeader_t *model = bodyPart->pModel( modelID );
 			mstudiomodel_t *pStudioModel = pStudioBodyPart->pModel( modelID );
-			assert( model->numMeshes == pStudioModel->nummeshes );
+			Assert( model->numMeshes == pStudioModel->nummeshes );
 			for( int meshID = 0; meshID < model->numMeshes; meshID++ )
 			{
 				MeshHeader_t *mesh = model->pMesh( meshID );
@@ -638,7 +638,7 @@ Triangle_t *COptimizedModel::GetNextUntouchedWithLeastBoneStateChanges( Triangle
 #else
 	// Remove bones until we have enough space...
 	int numToRemove = bestNumNewBones - m_HardwareMatrixState.FreeMatrixCount();
-	assert( numToRemove > 0 );
+	Assert( numToRemove > 0 );
 	m_HardwareMatrixState.DeallocateLRU(numToRemove);
 #endif
 
@@ -704,7 +704,7 @@ void COptimizedModel::SanityCheckVertBones( VertexIndexList_t const& list, Verte
 		pVert = &vertices[list[i]];
 		if( !g_staticprop )
 		{
-			assert( pVert->numBones != 0 );
+			Assert( pVert->numBones != 0 );
 		}
 		int j;
 		for( j = 0; j < pVert->numBones; j++ )
@@ -715,7 +715,7 @@ void COptimizedModel::SanityCheckVertBones( VertexIndexList_t const& list, Verte
 			}
 			if( !m_HardwareMatrixState.IsMatrixAllocated( pVert->boneID[j] ) )
 			{
-				assert( 0 );
+				Assert( 0 );
 			}
 		}
 	}
@@ -757,7 +757,7 @@ void COptimizedModel::Stripify( VertexIndexList_t const& sourceIndices,
 	// Be sure to call delete[] on the returned primGroups to avoid leaking mem
 	GenerateStrips( &sourceIndices[0], sourceIndices.Size(),
 		&primGroups, &numPrimGroups );
-	assert( numPrimGroups == 1 );
+	Assert( numPrimGroups == 1 );
 	*pNumIndices = primGroups->numIndices;
 	*ppIndices = new unsigned short[*pNumIndices];
 	memcpy( *ppIndices, primGroups->indices, sizeof( unsigned short ) * *pNumIndices );
@@ -773,7 +773,7 @@ void COptimizedModel::Stripify( VertexIndexList_t const& sourceIndices,
 void COptimizedModel::BuildStripsRecursive( VertexIndexList_t& indices,
 								TriangleList_t& tris, Triangle_t *triangle )
 {
-	assert( triangle );
+	Assert( triangle );
 
 	// Don't process the triangle if it's already been processed
 	if( triangle->touched )
@@ -826,7 +826,7 @@ void COptimizedModel::BuildHWSkinnedStrips( TriangleList_t& triangles,
 	{
 		// Make sure we've got out transforms allocated
 		bool ok = AllocateHardwareBonesForTriangle( pSeedTri );
-		assert( ok );
+		Assert( ok );
 
 		// eat up triangle recursively by flood-filling around the model until
 		// we run out of bones on the hardware.
@@ -867,7 +867,7 @@ void COptimizedModel::BuildHWSkinnedStrips( TriangleList_t& triangles,
 
 		// Compute the number of bones in this strip
 		newStrip.numBoneStateChanges = m_HardwareMatrixState.AllocatedMatrixCount();
-		assert( newStrip.numBoneStateChanges <= maxBonesPerStrip );
+		Assert( newStrip.numBoneStateChanges <= maxBonesPerStrip );
 
 		// Save off the bones used for this strip.
 		for( i = 0; i < m_HardwareMatrixState.AllocatedMatrixCount(); i++ )
@@ -1006,7 +1006,7 @@ static void	TryToReduceBoneInfluence( Vertex_t& stripGroupVert,
 				}
 			}
 		}
-		assert( minIndex >= 0 );
+		Assert( minIndex >= 0 );
 		
 		// Now that we got it, remove that bone influence if it's small enough
 		if (minWeight >= MIN_BONE_INFLUENCE)
@@ -1131,7 +1131,7 @@ int COptimizedModel::CountUniqueBones( int count, Vertex_t *pVertex ) const
 			// Didn't find a match!
 			if (j < 0)
 			{
-				assert( uniqueBoneCount < MAX_NUM_BONES_PER_STRIP );
+				Assert( uniqueBoneCount < MAX_NUM_BONES_PER_STRIP );
 				uniqueBoneList[uniqueBoneCount++] = boneID;
 			}
 		}
@@ -1164,7 +1164,7 @@ static int FindOrCreateVertex( VertexList_t& list, Vertex_t const& vert )
 		if (list[i].origMeshVertID == vert.origMeshVertID)
 		{
 			// If this is the case, then everything else should be too!
-			assert( !memcmp( &list[i], &vert, sizeof( vert )) );
+			Assert( !memcmp( &list[i], &vert, sizeof( vert )) );
 			return i;
 		}
 	}
@@ -1197,7 +1197,7 @@ void COptimizedModel::BuildTriangleBoneData( VertexList_t& list, Triangle_t& tri
 		for( k = 0; k < vert.numBones; ++k )
 		{
 			int bone = vert.boneID[k];
-			assert( (bone >= 0) && (bone < m_NumBones) );
+			Assert( (bone >= 0) && (bone < m_NumBones) );
 
 			// Look for matches with previously found bones
 			for ( l = tri.numBones; --l >= 0; )
@@ -1386,14 +1386,14 @@ int COptimizedModel::CountUniqueBonesInStrip( StripGroup_t *pStripGroup, Strip_t
 		Vertex_t *pVert = &pStripGroup->verts[i+pStrip->stripGroupVertexOffset];
 		if( !g_staticprop )
 		{
-			assert( pVert->numBones != 0 );
+			Assert( pVert->numBones != 0 );
 		}
 		int j;
 		for( j = 0; j < pVert->numBones; j++ )
 		{
 			int boneID;
 			boneID = pVert->boneID[j];
-			assert( boneID != -1 );
+			Assert( boneID != -1 );
 			boneUsageCounts[boneID]++;
 		}
 	}
@@ -1709,13 +1709,13 @@ static void WriteDebugFile( const char *fileName, const char *outFileName, float
 	strcpy( tmpName, fileName );
 	
 	s_source_t *pSrc = Load_Source( tmpName, "SMD" );
-	assert( pSrc );
+	Assert( pSrc );
 
 	int i, j;
 
 	FILE *fp;
 	fp = fopen( outFileName, "w" );
-	assert( fp );
+	Assert( fp );
 	
 	for( i = 0; i < pSrc->nummeshes; i++ )
 	{
@@ -2004,7 +2004,7 @@ void COptimizedModel::ProcessModel( studiohdr_t *pHdr, s_bodypart_t *pSrcBodyPar
 				s_source_t* pLODSource = GetModelLODSource( pStudioModel->name, scriptLOD, &found );
 
 				int i = newModel.modelLODs.AddToTail();
-				assert( i == lodID );
+				Assert( i == lodID );
 				ModelLOD_t& newLOD = newModel.modelLODs[lodID];
 				newLOD.switchPoint = scriptLOD.switchValue;
 
@@ -2021,7 +2021,7 @@ void COptimizedModel::ProcessModel( studiohdr_t *pHdr, s_bodypart_t *pSrcBodyPar
 					s_mesh_t *pSrcMesh = &pSrcModel->source->mesh[pSrcModel->source->meshindex[meshID]];
 
 					int i = newLOD.meshes.AddToTail();
-					assert( i == meshID );
+					Assert( i == meshID );
 					Mesh_t& newMesh = newLOD.meshes[meshID];
 					
 					if( MeshNeedsRemoval( pHdr, pStudioMesh, scriptLOD ) )
@@ -2075,7 +2075,7 @@ void COptimizedModel::MapGlobalBonesToHardwareBoneIDsAndSortBones( studiohdr_t *
 	int hardwareToGlobalBoneIndex[MAX_NUM_BONES_PER_STRIP];
 	
 	globalToHardwareBoneIndex = ( int * )_alloca( m_NumBones * sizeof( int ) );
-	assert( globalToHardwareBoneIndex );
+	Assert( globalToHardwareBoneIndex );
 	FileHeader_t *header = ( FileHeader_t * )m_FileBuffer->GetPointer( 0 );
 	for( int bodyPartID = 0; bodyPartID < header->numBodyParts; bodyPartID++ )
 	{
@@ -2140,12 +2140,12 @@ void COptimizedModel::MapGlobalBonesToHardwareBoneIDsAndSortBones( studiohdr_t *
 										// this index isn't used.
 										vert->boneID[boneID] = 0;
 										// make sure it's associated weight is zero.
-										//									assert( vert->boneWeights[boneID] == 0 );
+										//									Assert( vert->boneWeights[boneID] == 0 );
 										continue;
 									}
-									assert( globalBoneID >= 0 && globalBoneID < m_NumBones );
+									Assert( globalBoneID >= 0 && globalBoneID < m_NumBones );
 									vert->boneID[boneID] = globalToHardwareBoneIndex[globalBoneID];
-									assert( vert->boneID[boneID] >= 0 && vert->boneID[boneID] < header->maxBonesPerStrip );
+									Assert( vert->boneID[boneID] >= 0 && vert->boneID[boneID] < header->maxBonesPerStrip );
 								}
 								
 								// We only do index palette skinning when we're not doing fixed function
@@ -2951,7 +2951,7 @@ void COptimizedModel::SetFlexedAndSkinColor( unsigned int glViewFlags, unsigned 
 		}
 		else
 		{
-			assert( 0 );
+			Assert( 0 );
 		}
 
 	}
@@ -2988,7 +2988,7 @@ void COptimizedModel::SetColorFromNumVertexBones( int numBones, Vector& color )
 		Vector( 0.0f, 0.0f, 1.0f ), // 3 bones = blue
 		Vector( 1.0f, 0.0f, 0.0f )  // 4 bones = red
 	};
-	assert( numBones >= 0 && numBones <= 4 );
+	Assert( numBones >= 0 && numBones <= 4 );
 	VectorCopy( numBonesColor[numBones], color );	
 }
 
@@ -3012,7 +3012,7 @@ void COptimizedModel::GLViewVert( FILE *fp, Vertex_t vert, int index,
 	bool showSubStrips, float shrinkFactor )
 {
 //	CheckVertBoneWeights( &vert, pStudioModel, pStudioMesh );
-	assert( s_DrawMode != GLVIEWDRAW_NONE );
+	Assert( s_DrawMode != GLVIEWDRAW_NONE );
 	int id = s_ListID % 3;
 	s_LastThreeIndices[id] = index;
 	s_LastThreeVerts[id] = vert;
@@ -3377,7 +3377,7 @@ void COptimizedModel::CheckVertBoneWeights( Vertex_t *pVert, mstudiomodel_t *pSt
 		float boneWeight = GetOrigVertBoneWeightValue( pStudioModel, pStudioMesh, pVert, i );
 		sum += boneWeight;
 	}
-	assert( sum > 0.95f && sum < 1.1f );
+	Assert( sum > 0.95f && sum < 1.1f );
 }
 
 
@@ -3462,7 +3462,7 @@ void COptimizedModel::ShowStats( void )
 								}
 								else
 								{
-									assert( pStrip->numIndices % 3 == 0 );
+									Assert( pStrip->numIndices % 3 == 0 );
 									totalHWTriangles += pStrip->numIndices / 3;
 									for( int indexID = 0; indexID < pStrip->numIndices; indexID++ )
 									{
@@ -3524,19 +3524,19 @@ void COptimizedModel::CheckVert( Vertex_t *pVert, int maxBonesPerTri, int maxBon
 {
 #ifndef IGNORE_BONES
 	int offset = ( int )( ( unsigned char * )pVert - ( unsigned char * )m_FileBuffer->GetPointer( 0 ) );
-	assert( offset >= m_VertsOffset && offset < m_IndicesOffset );
-	assert( ( ( offset - m_VertsOffset ) % sizeof( Vertex_t ) ) == 0 );
+	Assert( offset >= m_VertsOffset && offset < m_IndicesOffset );
+	Assert( ( ( offset - m_VertsOffset ) % sizeof( Vertex_t ) ) == 0 );
 	int j;
 	for( j = 0; j < maxBonesPerVert; j++ )
 	{
 		if( pVert->boneID[j] != -1 )
 		{
-			assert( pVert->boneID[j] >= 0 && pVert->boneID[j] < maxBonesPerTri );
+			Assert( pVert->boneID[j] >= 0 && pVert->boneID[j] < maxBonesPerTri );
 		}
 #if 0
 		if( pVert->boneWeights[j] != 0 )
 		{
-			assert( pVert->boneID[j] != -1 );
+			Assert( pVert->boneID[j] != -1 );
 		}
 #endif
 	}
@@ -3546,7 +3546,7 @@ void COptimizedModel::CheckVert( Vertex_t *pVert, int maxBonesPerTri, int maxBon
 #if 1
 //		if( pVert->boneWeights[j] != 0 && pVert->boneWeights[j+1] != 0 )
 		{
-			assert( pVert->boneID[j] < pVert->boneID[j+1] );
+			Assert( pVert->boneID[j] < pVert->boneID[j+1] );
 		}
 #endif
 	}
@@ -3564,7 +3564,7 @@ void COptimizedModel::CheckVert( Vertex_t *pVert, int maxBonesPerTri, int maxBon
 		}
 		else
 		{
-			assert( pVert->boneWeights[j] == 0.0f );
+			Assert( pVert->boneWeights[j] == 0.0f );
 		}
 	}
 #endif
@@ -3653,15 +3653,15 @@ void COptimizedModel::SortBonesWithinVertex( bool flexed, Vertex_t *vert, mstudi
 		if( boneWeight > 0.0f )
 		{
 			int hardwareBoneIndex = globalToHardwareBoneIndex[globalBoneIndex];
-			assert( globalBoneIndex != -1 );
+			Assert( globalBoneIndex != -1 );
 			origBoneWeightIndex[hardwareBoneIndex] = vert->boneWeightIndex[i];
 		}
 		else
 		{
 			int hardwareBoneIndex = globalToHardwareBoneIndex[globalBoneIndex];
 			origBoneWeightIndex[hardwareBoneIndex] = zeroWeightIndex;
-			assert( zeroWeightIndex != -1 );
-			assert( globalBoneIndex == -1 );
+			Assert( zeroWeightIndex != -1 );
+			Assert( globalBoneIndex == -1 );
 		}
 	}
 //	if( vert->numBones > 1 )
@@ -3673,7 +3673,7 @@ void COptimizedModel::SortBonesWithinVertex( bool flexed, Vertex_t *vert, mstudi
 		int globalBoneIndex = GetOrigVertBoneIndex( pStudioModel, pStudioMesh, vert, i );
 		if( flexed )
 		{
-			assert( boneWeight >= 0.0f && boneWeight <= 1.0f );
+			Assert( boneWeight >= 0.0f && boneWeight <= 1.0f );
 			printf( "boneWeight: %f ", boneWeight );
 			printf( "globalBoneIndex: %d ", globalBoneIndex );
 			printf( "hardwareBoneID: %d\n", i );
@@ -3750,7 +3750,7 @@ void COptimizedModel::RemoveRedundantBoneStateChanges( void )
 							for( int boneStateChangeID = 0; boneStateChangeID < pStrip->numBoneStateChanges; boneStateChangeID++ )
 							{
 								BoneStateChangeHeader_t *boneStateChange = pStrip->pBoneStateChange( boneStateChangeID );
-								assert( boneStateChange->hardwareID >= 0 && boneStateChange->hardwareID < MAX_NUM_BONES_PER_STRIP );
+								Assert( boneStateChange->hardwareID >= 0 && boneStateChange->hardwareID < MAX_NUM_BONES_PER_STRIP );
 								if( allocated[boneStateChange->hardwareID] && 
 									hardwareBoneState[boneStateChange->hardwareID] == boneStateChange->newBoneID )
 								{

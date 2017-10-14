@@ -765,7 +765,7 @@ void ListViewPanel::OnShiftSelect(int itemID)
 			break;
 		}
 	}
-	assert(lowerPos <= upperPos);
+	Assert(lowerPos <= upperPos);
 	if ( !input()->IsKeyDown(KEY_LCONTROL) && !input()->IsKeyDown(KEY_RCONTROL) )
 	{
 		ClearSelectedItems();		

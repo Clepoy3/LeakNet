@@ -833,7 +833,7 @@ void SurfComputeLightmapCoordinate( SurfaceCtx_t const& ctx, int surfID,
 		uv *= ctx.m_Scale;
 		uv += ctx.m_Offset;
 
-		assert( uv.IsValid() );
+		Assert( uv.IsValid() );
 	}
 }
 

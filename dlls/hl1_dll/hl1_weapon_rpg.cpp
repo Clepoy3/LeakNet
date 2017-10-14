@@ -301,7 +301,7 @@ CLaserDot *CLaserDot::Create( const Vector &origin, CBaseEntity *pOwner )
 
 	if ( pNewLaserDot->m_hLaserSprite == NULL )
 	{
-		assert(0);
+		Assert(0);
 		return pNewLaserDot;
 	}
 

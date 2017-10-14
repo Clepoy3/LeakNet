@@ -194,7 +194,7 @@ CNetGraphPanel::CNetGraphPanel( vgui::VPANEL parent )
 	cl_updaterate = cvar->FindVar( "cl_updaterate" );
 	cl_cmdrate = cvar->FindVar( "cl_cmdrate" );
 	rate = cvar->FindVar( "rate" );
-	assert( cl_updaterate && cl_cmdrate && rate );
+	Assert( cl_updaterate && cl_cmdrate && rate );
 
 	memset( sendcolor, 0, 3 );
 	memset( holdcolor, 0, 3 );
@@ -246,7 +246,7 @@ void CNetGraphPanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	m_hFont = pScheme->GetFont( "DefaultVerySmall" );
-	assert( m_hFont );
+	Assert( m_hFont );
 }
 
 //-----------------------------------------------------------------------------

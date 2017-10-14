@@ -115,7 +115,7 @@ void MakeTnodes (dmodel_t *bm)
 
 // UNDONE: Should return CONTENTS_SKY or some sky marker
 // when sky surfaces are hit
-int TestLine_r (int node, Vector const& start, Vector const& stop, Ray_t& ray, PropTested_t& propTested,
+int TestLine_r (int node, const Vector& start, const Vector& stop, Ray_t& ray, PropTested_t& propTested,
 				DispTested_t &dispTested )
 {
 	tnode_t	*tnode;
@@ -208,14 +208,15 @@ int TestLine_r (int node, Vector const& start, Vector const& stop, Ray_t& ray, P
 PropTested_t s_PropTested[MAX_TOOL_THREADS+1];
 DispTested_t s_DispTested[MAX_TOOL_THREADS+1];
 
-int TestLine (Vector const& start, Vector const& stop, int node, int iThread )
+int TestLine (const Vector& start, const Vector& stop, int node, int iThread )
 {
 	// Compute a bitfield, one per prop and disp...
 	StaticPropMgr()->StartRayTest( s_PropTested[iThread] );
 	StaticDispMgr()->StartRayTest( s_DispTested[iThread] );
 	Ray_t ray;
 	ray.Init( start, stop, vec3_origin, vec3_origin );
-	return TestLine_r( node, start, stop, ray, s_PropTested[iThread], s_DispTested[iThread] );
+	int hit=TestLine_r( node, start, stop, ray, s_PropTested[iThread], s_DispTested[iThread] );
+	return hit;
 }
 
 

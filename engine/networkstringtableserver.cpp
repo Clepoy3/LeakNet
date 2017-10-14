@@ -91,7 +91,7 @@ void CNetworkStringTableServer::CheckDirectUpdate( client_t *client )
 	if ( !client->m_bUsedLocalNetworkBackdoor )
 		return;
 
-	assert( client );
+	Assert( client );
 	int client_ack = client->GetMaxAckTickCount();
 
 	int count = GetNumStrings();
@@ -129,7 +129,7 @@ void CNetworkStringTableServer::CheckDirectUpdate( client_t *client )
 //-----------------------------------------------------------------------------
 bool CNetworkStringTableServer::NeedsUpdate( client_t *client )
 {
-	assert( client );
+	Assert( client );
 	int client_ack = client->GetMaxAckTickCount();
 
 	int count = GetNumStrings();
@@ -169,7 +169,7 @@ bool CNetworkStringTableServer::NeedsUpdate( client_t *client )
 //-----------------------------------------------------------------------------
 void CNetworkStringTableServer::SendClientUpdate( client_t *client, bf_write *msg )
 {
-	assert( client );
+	Assert( client );
 	int client_ack = client->GetMaxAckTickCount();
 
 	// Write out the header
@@ -275,7 +275,7 @@ TABLEID CNetworkStringTableContainerServer::CreateStringTable( const char *table
 	TABLEID found = FindTable( tableName );
 	if ( found != INVALID_STRING_TABLE )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return INVALID_STRING_TABLE;
 	}
 
@@ -287,7 +287,7 @@ TABLEID CNetworkStringTableContainerServer::CreateStringTable( const char *table
 	TABLEID id = m_Tables.Size();
 
 	CNetworkStringTableServer *pTable = new CNetworkStringTableServer( id, tableName, maxentries );
-	assert( pTable );
+	Assert( pTable );
 	m_Tables.AddToTail( pTable );
 
 	return id;
@@ -301,10 +301,10 @@ TABLEID CNetworkStringTableContainerServer::CreateStringTable( const char *table
 int CNetworkStringTableContainerServer::GetNumStrings( TABLEID stringTable )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return 0;
 	}
 	return table->GetNumStrings();
@@ -317,10 +317,10 @@ int CNetworkStringTableContainerServer::GetNumStrings( TABLEID stringTable )
 int	CNetworkStringTableContainerServer::GetMaxStrings( TABLEID stringTable )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return 0;
 	}
 	return table->GetMaxEntries();
@@ -335,10 +335,10 @@ int	CNetworkStringTableContainerServer::GetMaxStrings( TABLEID stringTable )
 int CNetworkStringTableContainerServer::AddString( TABLEID stringTable, const char *value, int length /*=0*/, const void *userdata /*=0*/ )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return INVALID_STRING_INDEX;
 	}
 
@@ -354,10 +354,10 @@ int CNetworkStringTableContainerServer::AddString( TABLEID stringTable, const ch
 void CNetworkStringTableContainerServer::SetString( TABLEID stringTable, int stringNumber, const char *value )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 
@@ -374,10 +374,10 @@ void CNetworkStringTableContainerServer::SetString( TABLEID stringTable, int str
 void CNetworkStringTableContainerServer::SetStringUserData( TABLEID stringTable, int stringNumber, int length /*=0*/, const void *userdata /*=0*/ )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 
@@ -393,10 +393,10 @@ void CNetworkStringTableContainerServer::SetStringUserData( TABLEID stringTable,
 const char *CNetworkStringTableContainerServer::GetString( TABLEID stringTable, int stringNumber )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return NULL;
 	}
 
@@ -413,10 +413,10 @@ const char *CNetworkStringTableContainerServer::GetString( TABLEID stringTable, 
 const void *CNetworkStringTableContainerServer::GetStringUserData( TABLEID stringTable, int stringNumber, int *length /*=0*/ )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return NULL;
 	}
 
@@ -432,10 +432,10 @@ const void *CNetworkStringTableContainerServer::GetStringUserData( TABLEID strin
 int CNetworkStringTableContainerServer::FindStringIndex( TABLEID stringTable, char const *string )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return -1;
 	}
 
@@ -465,10 +465,10 @@ TABLEID	CNetworkStringTableContainerServer::FindTable( const char *tableName )
 const char *CNetworkStringTableContainerServer::GetTableName( TABLEID stringTable )
 {
 	CNetworkStringTableServer *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return NULL;
 	}
 
@@ -543,7 +543,7 @@ void CNetworkStringTableContainerServer::CreateTableDefinitions( bf_write *msg )
 	msg->WriteByte( svc_createstringtables );
 
 	// 256 tables max
-	assert( m_Tables.Size() <= MAX_TABLES );
+	Assert( m_Tables.Size() <= MAX_TABLES );
 
 	msg->WriteByte( m_Tables.Size() );
 
@@ -554,7 +554,7 @@ void CNetworkStringTableContainerServer::CreateTableDefinitions( bf_write *msg )
 		history.RemoveAll();
 
 		CNetworkStringTableServer *table = GetTable( i );
-		assert( table );
+		Assert( table );
 
 		msg->WriteString( table->GetTableName() );
 		msg->WriteShort( table->GetMaxEntries() );

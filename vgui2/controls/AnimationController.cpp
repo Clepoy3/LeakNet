@@ -110,7 +110,7 @@ bool AnimationController::LoadScriptFile(const char *fileName)
 	// read into temporary memory block
 	char *pMem = (char *)malloc(size);
 	int bytesRead = filesystem()->Read(pMem, size, f);
-	assert(bytesRead < size);
+	Assert(bytesRead < size);
 	pMem[bytesRead] = 0;
 	filesystem()->Close(f);
 	// parse

@@ -216,7 +216,7 @@ void CPlayerListDialog::ToggleMuteStateOfSelectedUser()
 	if (!data)
 		return;
 	int playerIndex = data->GetInt("index");
-	assert(playerIndex);
+	Assert(playerIndex);
 
 	if (GameClientExports()->IsPlayerGameVoiceMuted(playerIndex))
 	{

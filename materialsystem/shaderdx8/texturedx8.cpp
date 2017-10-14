@@ -63,6 +63,11 @@ static HRESULT GetLevelDesc( IDirect3DBaseTexture* pBaseTexture, UINT level, D3D
 static HRESULT GetSurfaceFromTexture( IDirect3DBaseTexture* pBaseTexture, UINT level, 
 									  D3DCUBEMAP_FACES cubeFaceID, IDirect3DSurface** ppSurfLevel )
 {
+	if ( !pBaseTexture )
+	{
+		return ( HRESULT )-1;
+	}
+
 	HRESULT hr;
 
 	switch( pBaseTexture->GetType() )
@@ -74,6 +79,7 @@ static HRESULT GetSurfaceFromTexture( IDirect3DBaseTexture* pBaseTexture, UINT l
 		hr = ( ( IDirect3DCubeTexture * )pBaseTexture )->GetCubeMapSurface( cubeFaceID, level, ppSurfLevel );
 		break;
 	default:
+		Assert(0); // VXP
 		return ( HRESULT )-1;
 		break;
 	}
@@ -115,14 +121,18 @@ IDirect3DBaseTexture* CreateD3DTexture( int width, int height,
 	// NOTE: This function shouldn't be used for creating depth buffers!
 	Assert( !isDepthBuffer );
 
-	D3DFORMAT d3dFormat;
+	D3DFORMAT d3dFormat = D3DFMT_UNKNOWN;
 
 	// move this up a level?
 	if (!isRenderTarget)
+	{
 		d3dFormat = ImageFormatToD3DFormat( FindNearestSupportedFormat( dstFormat ) );
+	}
 	else
+	{
 		d3dFormat = ImageFormatToD3DFormat( FindNearestRenderTargetFormat( dstFormat) );
-	if ( d3dFormat == -1 )
+	}
+	if ( d3dFormat == D3DFMT_UNKNOWN )
 	{
 		Warning("ShaderAPIDX8::CreateD3DTexture: Invalid color format!\n");
 		return 0;
@@ -131,8 +141,9 @@ IDirect3DBaseTexture* CreateD3DTexture( int width, int height,
 	IDirect3DBaseTexture* pBaseTexture = NULL;
 	IDirect3DTexture* pD3DTexture = NULL;
 	IDirect3DCubeTexture* pD3DCubeTexture = NULL;
-	HRESULT hr;
+	HRESULT hr = S_OK;
 	DWORD usage = 0;
+
 	if( isRenderTarget )
 	{
 		usage |= D3DUSAGE_RENDERTARGET;
@@ -183,7 +194,9 @@ IDirect3DBaseTexture* CreateD3DTexture( int width, int height,
 			// This conditional is here so that we don't complain when testing
 			// how much video memory we have. . this is kinda gross.
 			if (managed)
+			{
 				Warning( "ShaderAPIDX8::CreateD3DTexture: D3DERR_OUTOFVIDEOMEMORY\n" );
+			}
 			break;
 		case E_OUTOFMEMORY:
 			Warning( "ShaderAPIDX8::CreateD3DTexture: E_OUTOFMEMORY\n" );
@@ -581,6 +594,21 @@ void LoadSubTexture( int bindId, int copy, IDirect3DBaseTexture* pTexture,
 #endif
 
 
+int GetCorrectMemorySize( int dummyMemSize )
+{
+	int totalSize = dummyMemSize;
+
+	// VXP: If we have wrong video memory size
+	// (too small or too big) - it was just integer overloading, and we can just set the maximum amount of integer can be
+	// VXP: TODO: Maybe, actually use "unsigned int" for more video memory support?
+	if ( totalSize <= 0 || totalSize >= INT_MAX )
+	{
+		totalSize = INT_MAX;
+	}
+
+	return totalSize;
+}
+
 int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 {
 	FileHandle_t file = FileSystem()->Open( "vidcfg.bin", "rb", "EXECUTABLE_PATH" );
@@ -593,7 +621,8 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		FileSystem()->Close( file );
 		if ( nDeviceGUID == deviceId )
 		{
-			return texSize;
+			// VXP: TODO: Maybe if the number is wrong - rewrite it into vidcfg.bin too?
+			return GetCorrectMemorySize( texSize );
 		}
 	}
 	// How much texture memory?
@@ -640,10 +669,8 @@ int ComputeTextureMemorySize( const GUID &nDeviceGUID, D3DDEVTYPE deviceType )
 		DestroyD3DTexture( textures[i] );
 	}
 
-	if ( totalSize < 0 || totalSize >= INT_MAX )
-	{
-		totalSize = INT_MAX;
-	}
+	
+	totalSize = GetCorrectMemorySize( totalSize );
 
 #else
 	totalSize = 102236160;

@@ -14,9 +14,10 @@
  * $NoKeywords:
 ==============================================================================*/
 
-#include <assert.h>
+//#include <assert.h>
 #include <memory.h>
 #include "minmax.h"
+#include "tier0/dbg.h"
 #include "CircularBuffer.h"
 
 
@@ -32,16 +33,16 @@ CCircularBuffer::CCircularBuffer(int size)
 void CCircularBuffer::AssertValid()
 {
 	#ifdef _DEBUG
-		assert(this);
-		assert(m_nSize > 0);
-		assert(m_nCount >= 0);
-		assert(m_nCount <= m_nSize);
-		assert(m_nWrite < m_nSize);
+		Assert(this);
+		Assert(m_nSize > 0);
+		Assert(m_nCount >= 0);
+		Assert(m_nCount <= m_nSize);
+		Assert(m_nWrite < m_nSize);
 
 		// Verify that m_nCount is correct.
 		if(m_nRead == m_nWrite)
 		{
-			assert(m_nCount == 0 || m_nCount == m_nSize);
+			Assert(m_nCount == 0 || m_nCount == m_nSize);
 		}
 		else
 		{
@@ -51,7 +52,7 @@ void CCircularBuffer::AssertValid()
 			else
 				testCount = (m_nSize - m_nRead) + m_nWrite;
 
-			assert(testCount == m_nCount);
+			Assert(testCount == m_nCount);
 		}
 	#endif
 }
@@ -64,7 +65,7 @@ void CCircularBuffer::AssertValid()
 //------------------------------------------------------------------------------
 void CCircularBuffer::SetSize(int size)
 {
-	assert(this);
+	Assert(this);
 
 	m_nSize = size;
 	m_nRead = 0;
@@ -231,7 +232,7 @@ int CCircularBuffer::Read(void *pchDestIn, int m_nCount)
 	{
 		m_nRead = Advance(nPeeked);
 
-		assert(m_nRead == nPeeked);
+		Assert(m_nRead == nPeeked);
 	}
 	else
 	{

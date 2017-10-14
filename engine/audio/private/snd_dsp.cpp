@@ -7038,7 +7038,7 @@ void SXRVB_CheckNewReverbVal()
 						pdly->mod = RVB_MODRATE2;
 						break;
 					default:
-						assert(false);
+						Assert(false);
 						delaysamples = 0;
 						break;
 				}

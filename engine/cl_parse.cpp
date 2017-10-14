@@ -754,7 +754,7 @@ void CL_ReallocateDynamicData( void )
 	// Describes the entity's networking data (the RecvTable is in the baseline).
 	AllocateEntityBaselines( maxents );
 	
-	assert( entitylist );
+	Assert( entitylist );
 	if ( entitylist )
 	{
 		entitylist->SetMaxEntities( maxents );

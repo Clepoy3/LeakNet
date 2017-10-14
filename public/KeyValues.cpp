@@ -375,8 +375,8 @@ void KeyValues::UsesEscapeSequences(bool state)
 
 bool KeyValues::LoadFromFile( IBaseFileSystem *filesystem, const char *resourceName, const char *pathID )
 {
-	assert(filesystem);
-	assert(_heapchk() == _HEAPOK);
+	Assert(filesystem);
+	Assert(_heapchk() == _HEAPOK);
 
 	FileHandle_t f = filesystem->Open(resourceName, "rb", pathID);
 	if (!f)
@@ -680,7 +680,7 @@ KeyValues *KeyValues::FindKey(const char *keyName, bool bCreate)
 		{
 			// we need to create a new key
 			dat = new KeyValues( searchStr );
-//			assert(dat != NULL);
+//			Assert(dat != NULL);
 
 			// insert new key at end of list
 			if (lastItem)
@@ -1283,7 +1283,7 @@ KeyValues *KeyValues::MakeCopy( void )
 			if ( m_sValue )
 			{
 				int len = Q_strlen( m_sValue );
-				assert( !newKeyValue->m_sValue );
+				Assert( !newKeyValue->m_sValue );
 				newKeyValue->m_sValue = new char[len + 1];
 				Q_memcpy( newKeyValue->m_sValue, m_sValue, len+1 );
 			}

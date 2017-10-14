@@ -815,7 +815,7 @@ bool CVRadDispMgr::DispRayDistance_EnumerateElement( int userId, CBSPDispRayDist
 /*
 float CVRadDispMgr::ClipRayToDisp( Ray_t const &ray, int dispinfo )
 {
-	assert( m_DispTrees.IsValidIndex(dispinfo) );
+	Assert( m_DispTrees.IsValidIndex(dispinfo) );
 
 	RayDispOutput_t output;
 	if (!m_DispTrees[dispinfo].m_pDispTree->RayTest( ray, output ))

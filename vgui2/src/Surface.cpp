@@ -1034,7 +1034,7 @@ void CWin32Surface::DrawGetTextPos(int& x,int& y)
 
 void CWin32Surface::DrawSetTextFont(HFont font)
 {
-	assert(font);
+	Assert(font);
 	
 	// make the font current
 	m_hCurrentFont = font;
@@ -1124,7 +1124,7 @@ void CWin32Surface::SetLineColor(Color col)
 
 void CWin32Surface::DrawPrintText(const wchar_t *text, int textLen, FontDrawType_t drawType /*= FONT_DRAW_DEFAULT*/)
 {
-	assert(text);
+	Assert(text);
 	if (!text)
 		return;
 
@@ -1223,7 +1223,7 @@ void CWin32Surface::PaintHTMLWindow(IHTML *htmlwin)
 		int w,h;
 		IE->GetSize(w,h);
 
-		assert(PLAT(_currentContextPanel)->hdc != NULL);
+		Assert(PLAT(_currentContextPanel)->hdc != NULL);
 		IE->OnPaint(PLAT(_currentContextPanel)->hdc);
 		//BOOL r = BitBlt(_currentContextPanel->Plat()->hdc, 0, 0, w, h, bit, 0, 0, SRCCOPY);	
 		// don't release the bitmap's HDC, its "cached" by the IE control

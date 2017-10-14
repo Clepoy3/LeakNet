@@ -128,7 +128,7 @@ Panel *PanelListPanel::GetCellRenderer( int row )
 //-----------------------------------------------------------------------------
 int PanelListPanel::AddItem( Panel *labelPanel, Panel *panel)
 {
-	assert(labelPanel && panel);
+	Assert(labelPanel && panel);
 
 	DATAITEM *newitem = new DATAITEM;
 	newitem->labelPanel = labelPanel;
@@ -282,7 +282,7 @@ void PanelListPanel::PerformLayout()
 		// add in a little buffer between panels
 		y += m_iPanelBuffer;
 		DATAITEM *item = m_DataItems[ m_SortedItems[i] ];
-		assert(item);
+		Assert(item);
 
 		h = item->panel->GetTall();
 

@@ -86,7 +86,7 @@ void C_SpotlightEnd::ClientThink(void)
 	if ( !m_pDynamicLight || (m_pDynamicLight->key != index) )
 	{
 		m_pDynamicLight = effects->CL_AllocDlight( index );
-		assert (m_pDynamicLight);
+		Assert (m_pDynamicLight);
 	}
 
 	m_pDynamicLight->flags = DLIGHT_NO_MODEL_ILLUMINATION;
@@ -105,7 +105,7 @@ void C_SpotlightEnd::ClientThink(void)
  	if ( !m_pModelLight || (m_pModelLight->key != -index) )
 	{
 		m_pModelLight = effects->CL_AllocDlight( -index );
-		assert (m_pModelLight);
+		Assert (m_pModelLight);
 	}
 
 	m_pModelLight->radius = m_Radius;

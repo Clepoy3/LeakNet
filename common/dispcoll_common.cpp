@@ -426,8 +426,8 @@ void CDispCollTree::Tri_CalcPlane( short iTri )
 inline int CDispCollTree::Nodes_GetParent( int ndxNode )
 {
 	// node range [0...m_NodeCount)
-	assert( ndxNode >= 0 );
-	assert( ndxNode < m_NodeCount );
+	Assert( ndxNode >= 0 );
+	Assert( ndxNode < m_NodeCount );
 
 	// ( node index - 1 ) / 4
 	return ( ( ndxNode - 1 ) >> 2 );
@@ -444,8 +444,8 @@ inline int CDispCollTree::Nodes_GetParent( int ndxNode )
 inline int CDispCollTree::Nodes_GetChild( int ndxNode, int direction )
 {
 	// node range [0...m_NodeCount)
-	assert( ndxNode >= 0 );
-	assert( ndxNode < m_NodeCount );
+	Assert( ndxNode >= 0 );
+	Assert( ndxNode < m_NodeCount );
 
     // ( node index * 4 ) + ( direction + 1 )
     return ( ( ndxNode << 2 ) + ( direction + 1 ) );	
@@ -459,8 +459,8 @@ inline int CDispCollTree::Nodes_GetChild( int ndxNode, int direction )
 inline int CDispCollTree::Nodes_GetLevel( int ndxNode )
 {
 	// node range [0...m_NodeCount)
-	assert( ndxNode >= 0 );
-	assert( ndxNode < m_NodeCount );
+	Assert( ndxNode >= 0 );
+	Assert( ndxNode < m_NodeCount );
 
 	// level = 2^n + 1
 	if( ndxNode == 0 )  { return 1; }
@@ -856,8 +856,8 @@ bool CDispCollTree::RayTest( Ray_t const &ray, RayDispOutput_t &output )
 		output.v = minV;
 		output.dist = minT;
 
-		assert( (output.u <= 1.0f) && (output.v <= 1.0f ));
-		assert( (output.u >= 0.0f) && (output.v >= 0.0f ));
+		Assert( (output.u <= 1.0f) && (output.v <= 1.0f ));
+		Assert( (output.u >= 0.0f) && (output.v >= 0.0f ));
 
 		return true;
 	}
@@ -895,8 +895,8 @@ void CDispCollTree::Ray_BuildTriList( Ray_t const &ray, int ndxNode, AABB_t &box
 		if( Node_IsLeaf( node ) )
 		{
 			// debugging!!!
-			assert( triList.m_Count >= 0 );
-			assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
+			Assert( triList.m_Count >= 0 );
+			Assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
 
 			if( triList.m_Count < DISPCOLL_TRILIST_SIZE )
 			{
@@ -1116,8 +1116,8 @@ void CDispCollTree::Ray_BuildTriList( const Vector &rayStart, const Vector &rayE
 		if( Node_IsLeaf( *pNode ) )
 		{
 			// debugging!!!
-			assert( triList.m_Count >= 0 );
-			assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
+			Assert( triList.m_Count >= 0 );
+			Assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
 
 			if( triList.m_Count < DISPCOLL_TRILIST_SIZE )
 			{
@@ -1376,8 +1376,8 @@ void CDispCollTree::AABB_BuildTriList( const Vector &boxCenter, const Vector &bo
 		if( Node_IsLeaf( *pNode ) )
 		{
 			// debugging!!!
-			assert( triList.m_Count >= 0 );
-			assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
+			Assert( triList.m_Count >= 0 );
+			Assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
 
 			if( triList.m_Count < DISPCOLL_TRILIST_SIZE )
 			{
@@ -1530,8 +1530,8 @@ void CDispCollTree::SweptAABB_BuildTriList( const Vector &rayStart, const Vector
 		if( Node_IsLeaf( *pNode ) )
 		{
 			// debugging!!!
-			assert( triList.m_Count >= 0 );
-			assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
+			Assert( triList.m_Count >= 0 );
+			Assert( triList.m_Count < DISPCOLL_TRILIST_SIZE );
 
 			if( triList.m_Count < DISPCOLL_TRILIST_SIZE )
 			{

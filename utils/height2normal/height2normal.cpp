@@ -185,7 +185,7 @@ void ProcessFiles( const char *pNormalFileNameWithoutExtension,
 
 		strcpy( buf, pNormalFileNameWithoutExtension );
 		char *tmp = ( char * )Q_stristr( buf, "_normal" );
-		assert( tmp );
+		Assert( tmp );
 		tmp[0] = 0;
 		if( animated )
 		{

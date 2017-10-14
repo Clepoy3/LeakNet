@@ -1040,7 +1040,7 @@ void CAI_BaseNPC::StartTask( const Task_t *pTask )
 
 			pBestSound = GetBestSound();
 
-			Assert( pBestSound != NULL ); // VXP: Happens rarely
+		//	Assert( pBestSound != NULL ); // VXP: Happens rarely
 			/*
 			if ( pBestSound && FindLateralCover( pBestSound->m_vecOrigin, vec3_origin) )
 			{
@@ -1053,6 +1053,7 @@ void CAI_BaseNPC::StartTask( const Task_t *pTask )
 			if (!pBestSound)
 			{
 				TaskFail("No sound in list");
+				DevMsg( 2, "Attempting to find cover from best sound, but best sound not found.\n" );
 				return;
 			}
 

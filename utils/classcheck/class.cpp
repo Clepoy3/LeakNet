@@ -1311,21 +1311,21 @@ bool CClass::ParseProtection( char *&input, int &protection )
 	{
 		protection = 0;
 		input = CC_ParseToken( input );
-		assert( !stricmp( com_token, ":" ) );
+		Assert( !stricmp( com_token, ":" ) );
 		return true;
 	}
 	else if ( !stricmp( com_token, "protected" ) )
 	{
 		protection = 1;
 		input = CC_ParseToken( input );
-		assert( !stricmp( com_token, ":" ) );
+		Assert( !stricmp( com_token, ":" ) );
 		return true;
 	}
 	else if ( !stricmp( com_token, "private" ) )
 	{
 		protection = 2;
 		input = CC_ParseToken( input );
-		assert( !stricmp( com_token, ":" ) );
+		Assert( !stricmp( com_token, ":" ) );
 		return true;
 	}
 

@@ -348,7 +348,7 @@ static bool TestLeafAgainstCollide( int depth, int* pNodeList,
 	CPhysConvex* pPhysConvex = s_pPhysCollision->ConvexFromPlanes( pPlanes, depth, 0.0f );
 
 	// This should never happen, but if it does, return no collision
-	assert( pPhysConvex ); // VXP: FIX ME!
+	Assert( pPhysConvex ); // VXP: FIX ME!
 	if (!pPhysConvex)
 		return false;
 
@@ -373,7 +373,7 @@ static void ComputeConvexHullLeaves_R( int node, int depth, int* pNodeList,
 	Vector const& origin, QAngle const& angles,	CPhysCollide* pCollide,
 	CUtlVector<unsigned short>& leafList )
 {
-	assert( pNodeList && pCollide );
+	Assert( pNodeList && pCollide );
 	Vector cornermin, cornermax;
 
 	while( node >= 0 )
@@ -432,7 +432,7 @@ static void ComputeConvexHullLeaves_R( int node, int depth, int* pNodeList,
 		}
 	}
 
-	assert( pNodeList && pCollide );
+	Assert( pNodeList && pCollide );
 
 	// Never add static props to solid leaves
 	if ( (dleafs[-node-1].contents & CONTENTS_SOLID) == 0 )

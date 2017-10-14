@@ -184,7 +184,7 @@ void CPositionInterpolator_Linear::GetDetails( char **outName, int *outMinKeyReq
 
 void CPositionInterpolator_Linear::SetKeyPosition( int keyNum, Vector const &vPos )
 {
-	assert ( keyNum <= HIGHEST_KEYFRAME && keyNum >= LOWEST_KEYFRAME );
+	Assert ( keyNum <= HIGHEST_KEYFRAME && keyNum >= LOWEST_KEYFRAME );
 	VectorCopy( vPos, g_KeyFramePtr[keyNum].vPos );
 }
 
@@ -231,7 +231,7 @@ void CPositionInterpolator_CatmullRom::GetDetails( char **outName, int *outMinKe
 
 void CPositionInterpolator_CatmullRom::SetKeyPosition( int keyNum, Vector const &vPos )
 {
-	assert ( keyNum <= HIGHEST_KEYFRAME && keyNum >= LOWEST_KEYFRAME );
+	Assert ( keyNum <= HIGHEST_KEYFRAME && keyNum >= LOWEST_KEYFRAME );
 	VectorCopy( vPos, g_KeyFramePtr[keyNum].vPos );
 }
 
@@ -421,7 +421,7 @@ int Motion_GetNumberOfPositionInterpolators( void )
 
 IPositionInterpolator* Motion_GetPositionInterpolator( int interpNum )
 {
-	assert( interpNum >= 0 && interpNum < Motion_GetNumberOfPositionInterpolators() );
+	Assert( interpNum >= 0 && interpNum < Motion_GetNumberOfPositionInterpolators() );
 	return g_PositionInterpolatorCreateFns[interpNum]();
 }
 

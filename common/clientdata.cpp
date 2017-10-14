@@ -60,7 +60,7 @@ void ClientDataAllocator::Free(ClientDataHandle &theHandle)
 		if(theHandle.m_pBlock->m_nReferences == 0)
 		{
 			#ifdef _DEBUG
-				assert(m_nBlocksAllocated > 0);
+				Assert(m_nBlocksAllocated > 0);
 				m_nBytesAllocated -= theHandle.m_pBlock->m_Size;
 				m_nBlocksAllocated--;
 				theHandle.m_pBlock->m_Size = 0;
@@ -119,7 +119,7 @@ ClientDataHandle& ClientDataHandle::operator=(const ClientDataHandle &other)
 	ClientDataBlock *pBlock;
 
 
-	assert(this != &other);
+	Assert(this != &other);
 
 	// (Increment references first just in case, for some reason it calls = on ourself).
 	pBlock = other.m_pBlock;

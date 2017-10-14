@@ -102,9 +102,9 @@ typedef CUtlMemory<unsigned char> CTempImage;
 
 static bool ReadFile( char const* pFileName, CTempImage& image, int maxbytes = -1 )
 {
-	assert( pFileName );
+	Assert( pFileName );
 #ifndef TGALOADER_USE_FOPEN
-	assert( s_pFileSystem );
+	Assert( s_pFileSystem );
 	if( !s_pFileSystem )
 	{
 		return false;
@@ -324,7 +324,7 @@ void OutputRowBGR888( CUtlBuffer& buf, TGAHeader_t const& header, unsigned char*
 
 void OutputRowRGB565( CUtlBuffer& buf, TGAHeader_t const& header, unsigned char* pDst )
 {
-	assert( 0 );
+	Assert( 0 );
 }
 
 void OutputRowI8( CUtlBuffer& buf, TGAHeader_t const& header, unsigned char* pDst )
@@ -580,7 +580,7 @@ void ReadRow8BitUncompressedWithColormap( CUtlBuffer& buf,
 		break;
 
 	default:
-		assert( 0 );
+		Assert( 0 );
 		break;
 	}
 }
@@ -698,7 +698,7 @@ static void DecompressRow( CUtlBuffer& buf, TGAHeader_t const& header, unsigned 
 
 	} while( pixelsLeftInRow );
 
-	assert( pDst == pLast );
+	Assert( pDst == pLast );
 }
 
 //-----------------------------------------------------------------------------
@@ -980,7 +980,7 @@ bool Load( unsigned char *pOutputImage, CUtlBuffer& buf, int width,
 bool Load( unsigned char *pOutputImage, const char *pFileName, int width, int height, 
 			ImageFormat imageFormat, float targetGamma, bool mipmap )
 {
-	assert( pOutputImage && pFileName );
+	Assert( pOutputImage && pFileName );
 
 	// memory for the file
 	CTempImage vec;
@@ -1040,7 +1040,7 @@ static bool LoadRGBA8888( CUtlBuffer& buf, CUtlMemory<unsigned char> &outputData
 
 bool LoadRGBA8888( const char *pFileName, CUtlMemory<unsigned char> &outputData, int &outWidth, int &outHeight )
 {
-	assert( pFileName );
+	Assert( pFileName );
 
 	// memory for the file
 	CTempImage vec;

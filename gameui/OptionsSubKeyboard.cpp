@@ -603,7 +603,7 @@ void COptionsSubKeyboard::ClearBindItems( void )
 //-----------------------------------------------------------------------------
 void COptionsSubKeyboard::RemoveKeyFromBindItems( const char *key )
 {
-	assert( key && key[ 0 ] );
+	Assert( key && key[ 0 ] );
 	if ( !key || !key[ 0 ] )
 		return;
 

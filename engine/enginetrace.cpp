@@ -820,6 +820,7 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 	if ( pTraceFilter->GetTraceType() != TRACE_ENTITIES_ONLY )
 	{
 		ICollideable *pCollide = GetWorldCollideable();
+		Assert( pCollide );
 
 		// Make sure the world entity is unrotated
 		// FIXME: BAH! The !pCollide test here is because of
@@ -832,26 +833,52 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 		SetTraceEntity( pCollide, pTrace );
 
 		// Blocked by the world.
-		if ( pTrace->fraction == 0 )
+	//	if ( pTrace->fraction == 0 )
+		if ( pTrace->startsolid )
 			return;
 
 		// Early out if we only trace against the world
 		if ( pTraceFilter->GetTraceType() == TRACE_WORLD_ONLY )
 			return;
 	}
+	else
+	{
+		// VXP: Set initial start + endpos, necessary if the world isn't traced against 
+		// because we may not trace against *anything* below.
+		VectorAdd( ray.m_Start, ray.m_StartOffset, pTrace->startpos );
+		VectorAdd( pTrace->startpos, ray.m_Delta, pTrace->endpos );
+	}
 
 	// Save the world collision fraction.
 	float flWorldFraction = pTrace->fraction;
+	float flWorldFractionLeftSolidScale = flWorldFraction; // VXP
 
 	// Create a ray that extends only until we hit the world
 	// and adjust the trace accordingly
 	Ray_t entityRay = ray;
-	entityRay.m_Delta *= pTrace->fraction;
+//	entityRay.m_Delta *= pTrace->fraction;
 
-	// We know this is safe because if pTrace->fraction == 0
-	// we would have exited above
-	pTrace->fractionleftsolid /= pTrace->fraction;
- 	pTrace->fraction = 1.0;
+	if ( pTrace->fraction == 0 )
+	{
+		entityRay.m_Delta.Init();
+		flWorldFractionLeftSolidScale = pTrace->fractionleftsolid;
+		pTrace->fractionleftsolid = 1.0f;
+		pTrace->fraction = 1.0f;
+	}
+	else
+	{
+		// Explicitly compute end so that this computation happens at the quantization of
+		// the output (endpos).  That way we won't miss any intersections we would get
+		// by feeding these results back in to the tracer
+		// This is not the same as entityRay.m_Delta *= pTrace->fraction which happens 
+		// at a quantization that is more precise as m_Start moves away from the origin
+		Vector end;
+		VectorMA( entityRay.m_Start, pTrace->fraction, entityRay.m_Delta, end );
+		VectorSubtract(end, entityRay.m_Start, entityRay.m_Delta);
+		// We know this is safe because pTrace->fraction != 0
+		pTrace->fractionleftsolid /= pTrace->fraction;
+ 		pTrace->fraction = 1.0;
+	}
 
 	// Collide with entities along the ray
 	// FIXME: Hitbox code causes this to be re-entrant for the IK stuff.
@@ -877,9 +904,12 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 		// Check for error condition
 		if ( !IsSolid( pCollideable->GetSolid(), pCollideable->GetSolidFlags() ) )
 		{
-			char temp[1024];
-			Q_snprintf(temp, sizeof( temp ), "%s in solid list (not solid)\n", pDebugName );
-			Sys_Error (temp);
+		//	char temp[1024];
+		//	Q_snprintf(temp, sizeof( temp ), "%s in solid list (not solid)\n", pDebugName );
+		//	Sys_Error (temp);
+			Assert( 0 );
+			Msg( "%s in solid list (not solid)\n", pDebugName );
+			continue;
 		}
 
 		if ( !StaticPropMgr()->IsStaticProp( pHandleEntity ) )
@@ -915,7 +945,7 @@ void CEngineTrace::TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter 
 	// Fix up the fractions so they are appropriate given the original
 	// unclipped-to-world ray
 	pTrace->fraction *= flWorldFraction;
-	pTrace->fractionleftsolid *= flWorldFraction;
+	pTrace->fractionleftsolid *= flWorldFractionLeftSolidScale;
 
 #ifdef _DEBUG
 	Vector vecOffset, vecEndTest;

@@ -81,7 +81,7 @@ void CBaseParticleEntity::GetSortOrigin( Vector &vSortOrigin )
 bool CBaseParticleEntity::SimulateAndRender( Particle *pParticle, ParticleDraw* pParticleDraw, float &sortKey )
 {
 	// If you derive from C_BaseParticleEntity, you should always implement this function.
-	assert( false );
+	Assert( false );
 	return true;
 }
 #endif

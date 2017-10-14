@@ -447,7 +447,7 @@ void CVideoMode_Common::ReleaseFullScreen( void )
 void CVideoMode_Common::AdjustWindowForMode( void )
 {
 	vmode_t *mode = GetCurrentMode();
-	assert( mode );
+	Assert( mode );
 
 	RECT WindowRect;
 
@@ -656,7 +656,7 @@ void CVideoMode_MaterialSystem::ChangeDisplaySettingsToFullscreen( void )
 		return;
 
 	vmode_t *mode = GetCurrentMode();
-	assert( mode );
+	Assert( mode );
 	if ( !mode )
 		return;
 
@@ -717,7 +717,7 @@ void VideoMode_Create()
 
 	videomode = new CVideoMode_MaterialSystem( windowed, bordered );
 
-	assert( videomode );
+	Assert( videomode );
 }
 
 void VideoMode_SwitchMode( int windowed )

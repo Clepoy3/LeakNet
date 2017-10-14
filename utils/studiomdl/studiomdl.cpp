@@ -1265,7 +1265,7 @@ static s_source_t *FindCachedSource( char const* name, char const* xext )
 
 s_source_t *Load_Source( char const *name, const char *ext, bool reverse )
 {
-	assert(name);
+	Assert(name);
 	char* pTempName = (char*)_alloca(strlen(name) + 1 );
 	char xext[32];
 	int result = false;

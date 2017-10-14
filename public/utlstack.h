@@ -125,28 +125,28 @@ CUtlStack<T>::~CUtlStack()
 template< class T >
 inline T& CUtlStack<T>::operator[]( int i )
 {
-	assert( IsIdxValid(i) );
+	Assert( IsIdxValid(i) );
 	return m_Memory[i];
 }
 
 template< class T >
 inline T const& CUtlStack<T>::operator[]( int i ) const
 {
-	assert( IsIdxValid(i) );
+	Assert( IsIdxValid(i) );
 	return m_Memory[i];
 }
 
 template< class T >
 inline T& CUtlStack<T>::Element( int i )
 {
-	assert( IsIdxValid(i) );
+	Assert( IsIdxValid(i) );
 	return m_Memory[i];
 }
 
 template< class T >
 inline T const& CUtlStack<T>::Element( int i ) const
 {
-	assert( IsIdxValid(i) );
+	Assert( IsIdxValid(i) );
 	return m_Memory[i];
 }
 
@@ -174,14 +174,14 @@ inline T const* CUtlStack<T>::Base() const
 template< class T >
 inline T& CUtlStack<T>::Top()
 {
-	assert( m_Size > 0 );
+	Assert( m_Size > 0 );
 	return Element(m_Size-1);
 }
 
 template< class T >
 inline T const& CUtlStack<T>::Top() const
 {
-	assert( m_Size > 0 );
+	Assert( m_Size > 0 );
 	return Element(m_Size-1);
 }
 
@@ -265,7 +265,7 @@ int CUtlStack<T>::Push( T const& src )
 template< class T >
 void CUtlStack<T>::Pop()
 {
-	assert( m_Size > 0 );
+	Assert( m_Size > 0 );
 	Destruct( &Element(m_Size-1) );
 	--m_Size;
 }
@@ -273,7 +273,7 @@ void CUtlStack<T>::Pop()
 template< class T >
 void CUtlStack<T>::Pop( T& oldTop )
 {
-	assert( m_Size > 0 );
+	Assert( m_Size > 0 );
 	oldTop = Top();
 	Pop();
 }

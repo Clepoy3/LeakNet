@@ -350,7 +350,7 @@ void CTextureBox::LoadGraphicList(void)
 		char szStr[MAX_PATH];
 		pTex->GetShortName(szStr);
 		int err = AddString(szStr);
-		assert( (err != CB_ERR) && (err != CB_ERRSPACE) );
+		Assert( (err != CB_ERR) && (err != CB_ERRSPACE) );
 		SetItemDataPtr(nStrCount, (void *)pTex);
 		nStrCount++;
 

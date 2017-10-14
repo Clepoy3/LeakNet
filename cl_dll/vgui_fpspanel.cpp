@@ -85,7 +85,7 @@ void CFPSPanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	m_hFont = pScheme->GetFont( "DefaultFixed" );
-	assert( m_hFont );
+	Assert( m_hFont );
 }
 
 

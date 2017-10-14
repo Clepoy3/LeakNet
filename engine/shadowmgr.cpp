@@ -1355,7 +1355,7 @@ static void ShadowClip( ShadowClipState_t& clip, Clipper& clipper )
 			if (!startInside)
 			{
 				// Started outside, ended inside, need to clip the edge
-				assert( clip.m_TempCount <= SHADOW_VERTEX_TEMP_COUNT );
+				Assert( clip.m_TempCount <= SHADOW_VERTEX_TEMP_COUNT );
 				
 				// Allocate a new clipped vertex 
 				pDestVert[numOutVerts] = &clip.m_pTempVertices[clip.m_TempCount++];
@@ -1371,7 +1371,7 @@ static void ShadowClip( ShadowClipState_t& clip, Clipper& clipper )
 			if (startInside)
 			{
 				// Started inside, ended outside, need to clip the edge
-				assert( clip.m_TempCount <= SHADOW_VERTEX_TEMP_COUNT ); 
+				Assert( clip.m_TempCount <= SHADOW_VERTEX_TEMP_COUNT ); 
 
 				// Allocate a new clipped vertex 
 				pDestVert[numOutVerts] = &clip.m_pTempVertices[clip.m_TempCount++];
@@ -1388,7 +1388,7 @@ static void ShadowClip( ShadowClipState_t& clip, Clipper& clipper )
 	// Switch source lists
 	clip.m_CurrVert = 1 - clip.m_CurrVert;
 	clip.m_ClipCount = numOutVerts;
-	assert( clip.m_ClipCount <= SHADOW_VERTEX_TEMP_COUNT ); 
+	Assert( clip.m_ClipCount <= SHADOW_VERTEX_TEMP_COUNT ); 
 }
 
 

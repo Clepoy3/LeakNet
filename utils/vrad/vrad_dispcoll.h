@@ -156,8 +156,8 @@ inline int CVRADDispColl::GetPointCount( void )
 //-----------------------------------------------------------------------------
 inline void CVRADDispColl::GetPoint( int ndxPt, Vector &pt )
 {
-	assert( ndxPt >= 0 );
-	assert( ndxPt < VRAD_QUAD_SIZE );
+	Assert( ndxPt >= 0 );
+	Assert( ndxPt < VRAD_QUAD_SIZE );
 
 	pt = m_Points[ndxPt];
 }
@@ -167,8 +167,8 @@ inline void CVRADDispColl::GetPoint( int ndxPt, Vector &pt )
 //-----------------------------------------------------------------------------
 inline void CVRADDispColl::GetPointNormal( int ndxPt, Vector &ptNormal )
 {
-	assert( ndxPt >= 0 );
-	assert( ndxPt < VRAD_QUAD_SIZE );
+	Assert( ndxPt >= 0 );
+	Assert( ndxPt < VRAD_QUAD_SIZE );
 
 	ptNormal = m_PointNormals[ndxPt];
 }
@@ -192,8 +192,8 @@ inline void CVRADDispColl::GetVert( int ndxVert, Vector &v )
 {
 #ifdef _DEBUG
 	int size = GetSize();
-	assert( ndxVert >= 0 );
-	assert( ndxVert < size );
+	Assert( ndxVert >= 0 );
+	Assert( ndxVert < size );
 #endif
 
 	v = m_pVerts[ndxVert];
@@ -206,8 +206,8 @@ inline void CVRADDispColl::GetVertNormal( int ndxVert, Vector &normal )
 {
 #ifdef _DEBUG
 	int size = GetSize();
-	assert( ndxVert >= 0 );
-	assert( ndxVert < size );
+	Assert( ndxVert >= 0 );
+	Assert( ndxVert < size );
 #endif
 
 	normal = m_pVertNormals[ndxVert];
@@ -244,7 +244,7 @@ inline void CVRADDispColl::GetSampleBBox( Vector &boxMin, Vector &boxMax )
 
 inline Vector2D const& CVRADDispColl::GetLuxelCoord( int i )
 {
-	assert( m_pLuxelCoords );
+	Assert( m_pLuxelCoords );
 	return m_pLuxelCoords[i]; 
 }
 

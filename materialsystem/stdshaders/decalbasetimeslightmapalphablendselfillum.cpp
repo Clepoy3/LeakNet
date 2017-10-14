@@ -12,7 +12,7 @@ BEGIN_SHADER( DecalBaseTimesLightmapAlphaBlendSelfIllum,
 			  "Help for DecalBaseTimesLightmapAlphaBlendSelfIllum" )
 			  
 	BEGIN_SHADER_PARAMS
-		SHADER_PARAM( SELFILLUMTEXTURE, SHADER_PARAM_TYPE_TEXTURE, "", "self-illum texture" )
+		SHADER_PARAM( SELFILLUMTEXTURE, SHADER_PARAM_TYPE_TEXTURE, "decals/decalporthole001b_mask", "self-illum texture" )
 		SHADER_PARAM( SELFILLUMTEXTUREFRAME, SHADER_PARAM_TYPE_INTEGER, "0", "self-illum texture frame" )
 	END_SHADER_PARAMS
 

@@ -334,7 +334,7 @@ bool CVradStaticPropMgr::LoadStudioModelVtx( char const* pModelName, CUtlBuffer&
 
 	strcpy( tempFileName, pFileName );
 	char* pTex = strrchr( tempFileName, '.' );
-	assert( pTex );
+	Assert( pTex );
 	strcpy( pTex, ".dx80.vtx" );
 	
 	if (!LoadFile( tempFileName, buf ))
@@ -474,7 +474,7 @@ static void AddMeshToPolysoup( CPhysPolysoup* pSoup, mstudiomesh_t* pMesh, Optim
 CPhysCollide* CreatePhysCollide( studiohdr_t* pStudioHdr, OptimizedModel::FileHeader_t* pVtxHdr )
 {
 	CPhysPolysoup* pPhysPolysoup = s_pPhysCollision->PolysoupCreate( );
-	assert( pPhysPolysoup );
+	Assert( pPhysPolysoup );
 
 	for (int body = 0; body < pStudioHdr->numbodyparts; ++body )
 	{

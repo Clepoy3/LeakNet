@@ -394,8 +394,8 @@ void CInput::MouseMove( CUserCmd *cmd)
 //-----------------------------------------------------------------------------
 void CInput::GetFullscreenMousePos( int *mx, int *my, int *unclampedx /*=NULL*/, int *unclampedy /*=NULL*/ )
 {
-	assert( mx );
-	assert( my );
+	Assert( mx );
+	Assert( my );
 
 	if ( vgui::surface()->IsCursorVisible() )
 	{

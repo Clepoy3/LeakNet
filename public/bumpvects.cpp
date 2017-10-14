@@ -32,7 +32,7 @@ void GetBumpNormals( const Vector& sVect, const Vector& tVect, const Vector& fla
 	bool leftHanded;
 	int i;
 
-	assert( NUM_BUMP_VECTS == 3 );
+	Assert( NUM_BUMP_VECTS == 3 );
 	
 	// Are we left or right handed?
 	CrossProduct( sVect, tVect, tmpNormal );

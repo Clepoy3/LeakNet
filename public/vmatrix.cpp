@@ -917,7 +917,7 @@ void MatrixBuildRotationAboutAxis( VMatrix &dst, const Vector &vAxisOfRot, float
 void MatrixBuildRotation( VMatrix &dst, const Vector& initialDirection, const Vector& finalDirection )
 {
 	float angle = DotProduct( initialDirection, finalDirection );
-	assert( IsFinite(angle) );
+	Assert( IsFinite(angle) );
 	
 	Vector axis;
 
@@ -960,7 +960,7 @@ void MatrixBuildRotation( VMatrix &dst, const Vector& initialDirection, const Ve
 	Vector test;
 	Vector3DMultiply( dst, initialDirection, test );
 	test -= finalDirection;
-	assert( test.LengthSqr() < 1e-3 );
+	Assert( test.LengthSqr() < 1e-3 );
 #endif
 }
 

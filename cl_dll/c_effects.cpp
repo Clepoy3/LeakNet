@@ -513,7 +513,7 @@ void CClient_Precipitation::RenderParticle( ParticleDraw* pDraw,
 	float scale;
 	Vector start, delta;
 
-	assert( pParticle );
+	Assert( pParticle );
 
 	ClientStats().BeginTimedStat( CS_PRECIPITATION_SETUP );
 

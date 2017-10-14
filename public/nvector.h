@@ -64,10 +64,10 @@ inline float NDot( NVector<N> const &a, NVector<N> const &b )
 }
 
 template<int N>
-Vector& ToVec( NVector<N> &vec )			{assert( N >= 3 ); return *((Vector*)&vec);}
+Vector& ToVec( NVector<N> &vec )			{Assert( N >= 3 ); return *((Vector*)&vec);}
 
 template<int N>
-Vector const& ToVec( NVector<N> const &vec ){assert( N >= 3 ); return *((Vector const*)&vec);}
+Vector const& ToVec( NVector<N> const &vec ){Assert( N >= 3 ); return *((Vector const*)&vec);}
 
 NVector<3>&			ToNVec( Vector &vec )		{return *((NVector<3>*)&vec);}
 NVector<3> const&	ToNVec( Vector const &vec )	{return *((NVector<3> const*)&vec);}
@@ -89,7 +89,7 @@ NVectorN NVectorN::SetupNVectorNull()
 template<int N>
 float& NVectorN::operator[]( int i )
 {
-	assert( i >= 0 && i < N );
+	Assert( i >= 0 && i < N );
 	return v[i];
 }
 
@@ -97,7 +97,7 @@ float& NVectorN::operator[]( int i )
 template<int N>
 float const& NVectorN::operator[]( int i ) const
 {
-	assert( i >= 0 && i < N );
+	Assert( i >= 0 && i < N );
 	return v[i];
 }
 

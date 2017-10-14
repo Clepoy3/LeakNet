@@ -63,7 +63,7 @@ void CCachedRenderData::SetBodyPart( int bodypart )
 
 void CCachedRenderData::SetModel( int model )
 {
-	assert(m_Body >= 0);
+	Assert(m_Body >= 0);
 	m_Model = model;
 	m_CacheDict[m_Body].EnsureCount(m_Model+1);
 	m_Mesh = -1;
@@ -73,7 +73,7 @@ void CCachedRenderData::SetModel( int model )
 
 void CCachedRenderData::SetMesh( int mesh )
 {
-	assert((m_Model >= 0) && (m_Body >= 0));
+	Assert((m_Model >= 0) && (m_Body >= 0));
 
 	m_Mesh = mesh;
 	m_CacheDict[m_Body][m_Model].EnsureCount(m_Mesh+1);
@@ -100,7 +100,7 @@ void CCachedRenderData::SetMesh( int mesh )
 
 bool CCachedRenderData::IsFlexComputationDone( ) const
 {
-	assert((m_Model >= 0) && (m_Body >= 0) && (m_Mesh >= 0));
+	Assert((m_Model >= 0) && (m_Body >= 0) && (m_Mesh >= 0));
 
 	// Lets create the dictionary entry
 	// If the tags match, that means we're doing the computation twice!!!
@@ -114,8 +114,8 @@ bool CCachedRenderData::IsFlexComputationDone( ) const
 
 void CCachedRenderData::SetupComputation( mstudiomesh_t *pMesh, bool flexComputation )
 {
-	assert((m_Model >= 0) && (m_Body >= 0) && (m_Mesh >= 0));
-//	assert( !m_pFirstIndex );
+	Assert((m_Model >= 0) && (m_Body >= 0) && (m_Mesh >= 0));
+//	Assert( !m_pFirstIndex );
 
 	// Lets create the dictionary entry
 	// If the tags match, that means we're doing the computation twice!!!
@@ -141,11 +141,11 @@ void CCachedRenderData::SetupComputation( mstudiomesh_t *pMesh, bool flexComputa
 
 CachedVertex_t* CCachedRenderData::CreateFlexVertex( int vertex )
 {
-	assert( m_pFirstFlexIndex );
-	assert( m_pFirstFlexIndex[vertex].m_Tag != m_CurrentTag );
+	Assert( m_pFirstFlexIndex );
+	Assert( m_pFirstFlexIndex[vertex].m_Tag != m_CurrentTag );
 
 	// Point the flex list to the new flexed vertex
-	assert( m_FlexVertexCount < MAXSTUDIOVERTS );
+	Assert( m_FlexVertexCount < MAXSTUDIOVERTS );
 	m_pFirstFlexIndex[vertex].m_Tag = m_CurrentTag;
 	m_pFirstFlexIndex[vertex].m_VertexIndex = m_FlexVertexCount;
 
@@ -161,11 +161,11 @@ CachedVertex_t* CCachedRenderData::CreateFlexVertex( int vertex )
 
 CachedVertex_t* CCachedRenderData::CreateWorldVertex( int vertex )
 {
-	assert( m_pFirstWorldIndex );
+	Assert( m_pFirstWorldIndex );
 	if ( m_pFirstWorldIndex[vertex].m_Tag != m_CurrentTag )
 	{
 		// Point the flex list to the new flexed vertex
-		assert( m_WorldVertexCount < MAXSTUDIOVERTS );
+		Assert( m_WorldVertexCount < MAXSTUDIOVERTS );
 		m_pFirstWorldIndex[vertex].m_Tag = m_CurrentTag;
 		m_pFirstWorldIndex[vertex].m_VertexIndex = m_WorldVertexCount;
 

@@ -87,7 +87,7 @@ inline NMatrixMN NMatrixMN::SetupNMatrixNull()
 template<int M, int N>
 inline NMatrixMN NMatrixMN::SetupNMatrixIdentity()
 {
-	assert( M == N );	// Identity matrices must be square.
+	Assert( M == N );	// Identity matrices must be square.
 
 	NMatrix ret;
 	memset( ret.m, 0, sizeof(float)*M*N );
@@ -212,7 +212,7 @@ bool NMatrixMN::InverseGeneral( NMatrixMN &mInverse ) const
 	// Can only invert square matrices.
 	if( M != N )
 	{
-		assert( !"Tried to invert a non-square matrix" );
+		Assert( !"Tried to invert a non-square matrix" );
 		return false;
 	}
 

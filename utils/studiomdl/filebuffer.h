@@ -45,7 +45,7 @@ public:
 			if( !m_pUsed[i] )
 			{
 				printf( "offset %d not written!\n", i );
-				assert( 0 );
+				Assert( 0 );
 			}
 		}
 	}
@@ -81,7 +81,7 @@ public:
 				if( !bitched )
 				{
 					printf( "overwrite at %d! (overwriting \"%s\" with \"%s\")\n", i + offset, used[i], name );
-					assert( 0 );
+					Assert( 0 );
 					bitched = true;
 				}
 			}
@@ -105,7 +105,7 @@ public:
 private:
 	void Append( void *data, int size )
 	{
-		assert( m_pCurPos + size - m_pData < m_Size );
+		Assert( m_pCurPos + size - m_pData < m_Size );
 		memcpy( m_pCurPos, data, size );
 		m_pCurPos += size;
 	}

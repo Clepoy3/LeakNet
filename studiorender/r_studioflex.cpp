@@ -184,7 +184,7 @@ void CStudioRender::MaterialPlanerProjection( const matrix3x4_t& mat, int count,
 //-----------------------------------------------------------------------------
 void CStudioRender::R_StudioFlexVerts( mstudiomesh_t *pmesh )
 {
-	assert( pmesh );
+	Assert( pmesh );
 
 	// There's a chance we can actually do the flex twice on a single mesh
 	// since there's flexed HW + SW portions of the mesh.

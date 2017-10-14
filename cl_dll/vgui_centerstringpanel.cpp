@@ -109,7 +109,7 @@ void CCenterStringPanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 
 	// Use a large font
 	m_hFont = pScheme->GetFont( "Trebuchet24" );
-	assert( m_hFont );
+	Assert( m_hFont );
 }
 
 

@@ -460,7 +460,7 @@ static inline void SV_DetermineUpdateType(
 		SendTable *pFromTable = u.m_pOldPack->m_pSendTable;
 		SendTable *pToTable   = u.m_pNewPack->m_pSendTable;
 		
-		assert( u.m_pToSnapshot->m_Entities[ newEntity ].m_bExists );
+		Assert( u.m_pToSnapshot->m_Entities[ newEntity ].m_bExists );
 
 		recreate = SV_NeedsExplicitCreate( u.m_Type, newEntity, u.m_pFromSnapshot, u.m_pToSnapshot );
 		

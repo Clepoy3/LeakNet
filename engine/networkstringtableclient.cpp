@@ -281,11 +281,13 @@ void CNetworkStringTableClient::DirectUpdate( int entryIndex, char const *string
 	else
 	{
 		// Grow the table (entryindex must be the next empty slot)
+		int getnumstrings = GetNumStrings();
 	//	Assert( entryIndex == GetNumStrings() );
-		if( entryIndex != GetNumStrings() )
-		{
-			DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings() (%i != %i) in table %s\n", entryIndex, GetNumStrings(), GetTableName() );
-		}
+		Assert( entryIndex == getnumstrings );
+	//	if( entryIndex != GetNumStrings() )
+	//	{
+	//		DevWarning( "CNetworkStringTableClient::DirectUpdate: entryIndex != GetNumStrings() (%i != %i) in table %s\n", entryIndex, GetNumStrings(), GetTableName() );
+	//	}
 		AddString( pName, nBytes, pUserData );
 	}
 }
@@ -364,6 +366,7 @@ void CNetworkStringTableClient::ParseUpdate( void )
 
 		// Read in the user data.
 		unsigned char tempbuf[ CNetworkStringTableItem::MAX_USERDATA_SIZE ];
+		memset( tempbuf, 0, sizeof( tempbuf ) ); // VXP
 		const void *pUserData = NULL;
 		int nBytes = 0;
 
@@ -394,11 +397,11 @@ void CNetworkStringTableClient::ParseUpdate( void )
 		else
 		{
 			// Grow the table (entryindex must be the next empty slot)
-		//	Assert( entryIndex == GetNumStrings() );
-			if( entryIndex != GetNumStrings() )
-			{
-				DevWarning( "CNetworkStringTableClient::ParseUpdate: entryIndex != GetNumStrings() (%i != %i)\n", entryIndex, GetNumStrings() );
-			}
+			Assert( entryIndex == GetNumStrings() );
+		//	if( entryIndex != GetNumStrings() )
+		//	{
+		//		DevWarning( "CNetworkStringTableClient::ParseUpdate: entryIndex != GetNumStrings() (%i != %i)\n", entryIndex, GetNumStrings() );
+		//	}
 			AddString( pName, nBytes, pUserData );
 		}
 	}
@@ -457,10 +460,10 @@ TABLEID CNetworkStringTableContainerClient::FindStringTable( const char *tableNa
 char const *CNetworkStringTableContainerClient::GetTableName( TABLEID stringTable )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return "Unknown Table";
 	}
 	return table->GetTableName();
@@ -474,10 +477,10 @@ char const *CNetworkStringTableContainerClient::GetTableName( TABLEID stringTabl
 int CNetworkStringTableContainerClient::GetNumStrings( TABLEID stringTable )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return 0;
 	}
 	return table->GetNumStrings();
@@ -490,10 +493,10 @@ int CNetworkStringTableContainerClient::GetNumStrings( TABLEID stringTable )
 int	CNetworkStringTableContainerClient::GetMaxStrings( TABLEID stringTable )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return 0;
 	}
 	return table->GetMaxEntries();
@@ -508,10 +511,10 @@ int	CNetworkStringTableContainerClient::GetMaxStrings( TABLEID stringTable )
 const char *CNetworkStringTableContainerClient::GetString( TABLEID stringTable, int stringNumber )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return NULL;
 	}
 
@@ -527,10 +530,10 @@ const char *CNetworkStringTableContainerClient::GetString( TABLEID stringTable, 
 const void *CNetworkStringTableContainerClient::GetStringUserData( TABLEID stringTable, int stringNumber, int *length /*=0*/ )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return NULL;
 	}
 
@@ -546,10 +549,10 @@ const void *CNetworkStringTableContainerClient::GetStringUserData( TABLEID strin
 int CNetworkStringTableContainerClient::FindStringIndex( TABLEID stringTable, char const *string )
 {
 	CNetworkStringTableClient *table = GetTable( stringTable );
-	assert( table );
+	Assert( table );
 	if ( !table )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return -1;
 	}
 
@@ -568,14 +571,14 @@ TABLEID CNetworkStringTableContainerClient::AddTable( const char *tableName, int
 	TABLEID found = FindStringTable( tableName );
 	if ( found != INVALID_STRING_TABLE )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return INVALID_STRING_TABLE;
 	}
 
 	TABLEID id = m_Tables.Size();
 
 	CNetworkStringTableClient *pTable = new CNetworkStringTableClient( id, tableName, maxentries );
-	assert( pTable );
+	Assert( pTable );
 	m_Tables.AddToTail( pTable );
 
 	return id;
@@ -610,7 +613,7 @@ void CNetworkStringTableContainerClient::ParseTableDefinitions( void )
 	RemoveAllTables();
 
 	int numTables = MSG_ReadByte();
-	assert( numTables >= 0 && numTables <= MAX_TABLES );
+	Assert( numTables >= 0 && numTables <= MAX_TABLES );
 
 	CUtlVector< StringHistoryEntry > history;
 
@@ -622,13 +625,13 @@ void CNetworkStringTableContainerClient::ParseTableDefinitions( void )
 		Q_strncpy( tableName, MSG_ReadString(), sizeof( tableName ) );
 		
 		int maxentries = MSG_ReadShort();
-		assert( maxentries >= 0 );
+		Assert( maxentries >= 0 );
 
 		TABLEID id = AddTable( tableName, maxentries );
-		assert( id != INVALID_STRING_TABLE );
+		Assert( id != INVALID_STRING_TABLE );
 
 		CNetworkStringTableClient *table = GetTable( id );
-		assert( table );
+		Assert( table );
 
 		// Let engine hook callbacks before we read in any data values at all
 		if ( !CL_InstallEngineStringTableCallback( tableName ) )
@@ -701,7 +704,7 @@ void CNetworkStringTableContainerClient::ParseUpdate( void )
 	}
 
 	CNetworkStringTableClient *table = m_Tables[ tableId ];
-	assert( table );
+	Assert( table );
 
 	table->ParseUpdate();
 }

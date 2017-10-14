@@ -368,7 +368,7 @@ void SV_ComputeClientPacks(
 
 		// Get the edict send table
 		SendTable* pSendTable = GetEntSendTable( ent );
-		assert( pSendTable );
+		Assert( pSendTable );
 		if ( !pSendTable )
 			continue;
 
@@ -622,7 +622,7 @@ void SV_WriteClassInfos(ServerClass *pClasses, bf_write *pBuf)
 		++nClasses;
 	}
 
-	assert( nClasses < (1<<16) );
+	Assert( nClasses < (1<<16) );
 
 	sv.serverclasses = nClasses;
 	sv.serverclassbits = Q_log2( sv.serverclasses ) + 1;

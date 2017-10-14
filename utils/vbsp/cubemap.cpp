@@ -322,7 +322,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		strcpy( s_DefaultCubemapNames[id], fileName );
 
 		// Make a new texdata
-		assert( strlen( generatedTexDataName ) < TEXTURE_NAME_LENGTH - 1 );
+		Assert( strlen( generatedTexDataName ) < TEXTURE_NAME_LENGTH - 1 );
 		if( !( strlen( generatedTexDataName ) < TEXTURE_NAME_LENGTH - 1 ) )
 		{
 			Error( "generatedTexDataName: %s too long!\n", generatedTexDataName );
@@ -332,7 +332,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		
 	}
 
-	assert( texDataID != -1 );
+	Assert( texDataID != -1 );
 	
 	texinfo_t newTexInfo;
 	newTexInfo = *pTexInfo;
@@ -375,7 +375,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		numtexinfo++;
 	}
 
-	assert( texInfoID != -1 );
+	Assert( texInfoID != -1 );
 	return texInfoID;
 }
 
@@ -397,14 +397,14 @@ static int SideIDToIndex( int brushSideID )
 			return i;
 		}
 	}
-	assert( 0 );
+	Assert( 0 );
 	return -1;
 }
 
 void Cubemap_FixupBrushSidesMaterials( void )
 {
 	Msg( "fixing up env_cubemap materials on brush sides...\n" );
-	assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
+	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 
 	int cubemapID;
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
@@ -419,6 +419,9 @@ void Cubemap_FixupBrushSidesMaterials( void )
 			int sideIndex = SideIDToIndex( brushSideID );
 			if( sideIndex < 0 )
 			{
+				Warning("env_cubemap pointing at deleted brushside near (%d, %d, %d)\n", 
+					g_CubemapSamples[cubemapID].origin[0], g_CubemapSamples[cubemapID].origin[1], g_CubemapSamples[cubemapID].origin[2] );
+
 				continue;
 			}
 			Cubemap_CreateMaterialForBrushSide( sideIndex, g_CubemapSamples[cubemapID].origin );
@@ -432,7 +435,7 @@ void Cubemap_FixupBrushSidesMaterials( void )
 void Cubemap_FixupDispMaterials( void )
 {
 //	printf( "fixing up env_cubemap materials on displacements...\n" );
-	assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
+	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 
 	// FIXME: this is order N to the gazillion!
 	int cubemapID;

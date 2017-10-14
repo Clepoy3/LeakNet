@@ -706,18 +706,18 @@ void Menu::MakeItemsVisibleInScrollRange()
 		int i;
 		for ( i = 0 ; i < startItem ; i++ )
 		{
-			assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
+			Assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
 			m_MenuItems[ m_SortedItems[i] ]->SetVisible(false);
 		}
 		for ( i = startItem; count < m_iNumVisibleLines && i < m_SortedItems.Count() ; i++ )
 		{
-			assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
+			Assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
 			m_MenuItems[ m_SortedItems[i] ]->SetVisible(true);
 			count++;
 		}
 		for ( i ; i < m_SortedItems.Count() ; i++)
 		{
-			assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
+			Assert( m_MenuItems.IsValidIndex( m_SortedItems[i] ));
 			m_MenuItems[ m_SortedItems[i] ]->SetVisible(false);
 		}
 		
@@ -1409,7 +1409,7 @@ void Menu::SetCurrentlyHighlightedItem(int itemID)
 {
 	SetCurrentlySelectedItem(itemID);
 	int row = m_SortedItems.Find(itemID);
-	assert(row != -1);
+	Assert(row != -1);
 
 	// if there is a scroll bar, and we scroll off lets move it.
 	if ( m_pScroller->IsVisible() )

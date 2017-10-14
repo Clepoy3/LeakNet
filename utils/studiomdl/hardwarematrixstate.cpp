@@ -7,10 +7,11 @@
 
 #include <windows.h>
 #include "HardwareMatrixState.h"
-#include <assert.h>
+//#include <assert.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "studio.h"
 
 CHardwareMatrixState::CHardwareMatrixState()
 {
@@ -25,10 +26,10 @@ void CHardwareMatrixState::Init( int numHardwareMatrices )
 	m_NumMatrices = numHardwareMatrices;
 	delete [] m_matrixState;
 	m_matrixState = new MatrixState_t[m_NumMatrices];
-	assert( m_matrixState );
+	Assert( m_matrixState );
 	delete [] m_savedMatrixState;
 	m_savedMatrixState = new MatrixState_t[m_NumMatrices];
-	assert( m_savedMatrixState );
+	Assert( m_savedMatrixState );
 	m_LRUCounter = 0;
 	m_AllocatedMatrices = 0;
 
@@ -83,7 +84,7 @@ int CHardwareMatrixState::FindLocalLRUIndex( void )
 		}
 	}
 
-	assert( oldestLRUCounter != INT_MAX );
+	Assert( oldestLRUCounter != INT_MAX );
 	return oldestID;
 }
 
@@ -182,7 +183,7 @@ int CHardwareMatrixState::GetNthBoneGlobalID( int n ) const
 			m++;
 		}
 	}
-	assert( 0 );
+	Assert( 0 );
 	exit( -1 );
 	return 0;
 }
@@ -222,7 +223,7 @@ int CHardwareMatrixState::FindHardwareMatrix( int globalMatrixID )
 			return i;
 		}
 	}
-	assert( 0 );
+	Assert( 0 );
 	printf( "barfing in FindHardwareMatrix\n" );
 	exit( -1 );
 	return 0;

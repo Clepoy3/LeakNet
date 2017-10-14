@@ -620,7 +620,7 @@ CHudElement *CHud::FindElement( const char *pName )
 	}
 
 	DevWarning(1, "Could not find Hud Element: %s\n", pName );
-	assert(0);
+	Assert(0);
 	return NULL;
 }
 

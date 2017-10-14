@@ -48,6 +48,8 @@ LINK_ENTITY_TO_CLASS( grenade_molotov, CGrenade_Molotov );
 
 void CGrenade_Molotov::Spawn( void )
 {
+	Precache();
+
 	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
 	SetSolid( SOLID_BBOX ); 
 

@@ -365,7 +365,7 @@ static CreateInterfaceFn g_pFileSystemFactory = NULL;
 static bool FileSystem_LoadDLL( void )
 {
 	g_pFileSystemModule = Sys_LoadModule( "filesystem_stdio.dll" );
-	assert( g_pFileSystemModule );
+	Assert( g_pFileSystemModule );
 	if( !g_pFileSystemModule )
 	{
 		return false;
@@ -377,7 +377,7 @@ static bool FileSystem_LoadDLL( void )
 		return false;
 	}
 	g_pFileSystem = ( IFileSystem * )g_pFileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
-	assert( g_pFileSystem );
+	Assert( g_pFileSystem );
 	if( !g_pFileSystem )
 	{
 		return false;
@@ -467,7 +467,7 @@ static void MaterialSystem_Error( char *fmt, ... )
 
 	MessageBox( NULL, (LPCTSTR)msg, "MaterialSystem Fatal Error", MB_OK | MB_ICONINFORMATION );
 #ifdef _DEBUG
-	assert( 0 );	
+	Assert( 0 );	
 #endif
 	exit( -1 );
 }
@@ -578,7 +578,7 @@ void LoadMaterialSystem( void )
 		return;
 	}
 
-	assert( !g_MaterialsDLL );
+	Assert( !g_MaterialsDLL );
 
 	g_MaterialsDLL = Sys_LoadModule( "MaterialSystem.dll" );
 
@@ -637,7 +637,7 @@ CreateInterfaceFn g_MaterialSystemClientFactory;
 void Shader_Init( HWND mainWindow )
 {
 	LoadMaterialSystem();
-	assert( g_pMaterialSystem );
+	Assert( g_pMaterialSystem );
 
 	// FIXME: Where do we put this?
 	const char* pDLLName;
@@ -1022,7 +1022,7 @@ void RenderFrame( void )
 	{
 		pModel = g_pIHVTestModel;
 	}
-	assert( pModel );
+	Assert( pModel );
 	
 	g_EngineStats.BeginFrame();
 
@@ -1082,7 +1082,7 @@ void RenderFrame( void )
 				while( !g_BenchRuns[currentRun].pModelName[modelAlternator] );
 
 				pModel = &g_BenchModels[currentRun][modelAlternator];
-				assert(pModel);
+				Assert(pModel);
 			}
 
 			if( g_BenchMode )
@@ -1328,7 +1328,7 @@ static bool LoadModel( const char *modelName, IHVTestModel *pModel )
 	g_pFileSystem->Close( mdlFileHandle );
 
 	studiohdr_t *pStudioHdr = pModel->GetMDLData();
-	assert( pStudioHdr );
+	Assert( pStudioHdr );
 
 #ifdef IDENTITY_TRANSFORM
 	int i;
@@ -1590,7 +1590,7 @@ static void WriteBenchResults( void )
 	}
 
 	FILE *fp = fopen( "ihvtest1.txt", "a+" );
-	assert( fp );
+	Assert( fp );
 	if( !fp )
 	{
 		return;
@@ -1704,7 +1704,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE hInstance, LPSTR pCommands, INT )
 #endif
 
 	sprintf( szBuffer, "PATH=%s;%s", pRootDir, pPath );
-	assert( len < 4096 );
+	Assert( len < 4096 );
 	_putenv( szBuffer );
 		    
 	MathLib_Init( 2.2f, 2.2f, 0.0f, 1.0f );

@@ -112,7 +112,7 @@ void CL_RecordAddEntity( int entnum )
 {
 	if ( entnum < 0 || entnum >= MAX_HISTORY_ENTITIES )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 
@@ -129,7 +129,7 @@ void CL_RecordLeavePVS( int entnum )
 {
 	if ( entnum < 0 || entnum >= MAX_HISTORY_ENTITIES )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 
@@ -147,7 +147,7 @@ void CL_RecordDeleteEntity( int entnum, ClientClass *pclass )
 {
 	if ( entnum < 0 || entnum >= MAX_HISTORY_ENTITIES )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 

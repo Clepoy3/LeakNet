@@ -308,7 +308,7 @@ CVoiceChannel* GetVoiceChannel(int iChannel, bool bAssert=true)
 	{
 		if(bAssert)
 		{
-			assert(false);
+			Assert(false);
 		}
 		return NULL;
 	}
@@ -380,7 +380,7 @@ bool Voice_Init(const char *pCodecName)
 
 void Voice_EndChannel(int iChannel)
 {
-	assert(iChannel >= 0 && iChannel < VOICE_NUM_CHANNELS);
+	Assert(iChannel >= 0 && iChannel < VOICE_NUM_CHANNELS);
 
 	CVoiceChannel *pChannel = &g_VoiceChannels[iChannel];
 	
@@ -867,7 +867,7 @@ void Voice_FlushChannel(int nChannel)
 {
 	if ((nChannel < 0) || (nChannel >= VOICE_NUM_CHANNELS))
 	{
-		assert(false);
+		Assert(false);
 		return;
 	}
 
@@ -885,7 +885,7 @@ int VoiceTweak_StartVoiceTweakMode()
 	// If we're already in voice tweak mode, return an error.
 	if(g_bInTweakMode)
 	{
-		assert(!"VoiceTweak_StartVoiceTweakMode called while already in tweak mode.");
+		Assert(!"VoiceTweak_StartVoiceTweakMode called while already in tweak mode.");
 		return 0;
 	}
 
@@ -905,7 +905,7 @@ void VoiceTweak_EndVoiceTweakMode()
 {
 	if(!g_bInTweakMode)
 	{
-		assert(!"VoiceTweak_EndVoiceTweakMode called when not in tweak mode.");
+		Assert(!"VoiceTweak_EndVoiceTweakMode called when not in tweak mode.");
 		return;
 	}
 

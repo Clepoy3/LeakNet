@@ -31,7 +31,7 @@ void FileSystem_Init( CreateInterfaceFn fileSystemFactory )
 
 	TGAWriter::SetFileSystem( g_FileSystemFactory );
 	g_pFileSystem = ( IFileSystem * )g_FileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
-	assert( g_pFileSystem );
+	Assert( g_pFileSystem );
 	g_pFileSystem->SetWarningFunc( Warning );
 }
 

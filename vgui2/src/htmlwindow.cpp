@@ -895,7 +895,7 @@ void HtmlWindow::CreateBrowser()
 	// Get IOleInPlaceObject interface
 	hret = p->QueryInterface(IID_IOleInPlaceObject, (void**)(&m_oleInPlaceObject));
 //	hret = p->QueryInterface(IID_IOleInPlaceObjectWindowless, (void**)(&m_oleInPlaceObject));
-	assert(SUCCEEDED(hret));
+	Assert(SUCCEEDED(hret));
 
 
 	::SetParent(m_oleObjectHWND,m_parent);
@@ -914,7 +914,7 @@ void HtmlWindow::CreateBrowser()
 	if (m_bVisibleAtRuntime) {
 		hret = m_oleObject->DoVerb(OLEIVERB_INPLACEACTIVATE, &msg, 
 			c->m_IOleClientSite, 0, m_parent, &posRect);
-		assert(SUCCEEDED(hret));
+		Assert(SUCCEEDED(hret));
 
 	}
 	
@@ -926,13 +926,13 @@ void HtmlWindow::CreateBrowser()
 
 	// Get IWebBrowser2 Interface
 	hret = p->QueryInterface(IID_IWebBrowser2, (void**)(&m_webBrowser));
-	assert(SUCCEEDED(hret));
+	Assert(SUCCEEDED(hret));
 
 	IConnectionPointContainer * cpContainer;
 	hret = p->QueryInterface(IID_IConnectionPointContainer, (void**)(&cpContainer));
-	assert(SUCCEEDED(hret));
+	Assert(SUCCEEDED(hret));
 	hret = cpContainer->FindConnectionPoint(DIID_DWebBrowserEvents2, &m_connectionPoint);
-	assert(SUCCEEDED(hret));
+	Assert(SUCCEEDED(hret));
 	// connect the object to our sink
 	m_connectionPoint->Advise(c->m_DWebBrowserEvents2, &m_adviseCookie);
 	cpContainer->Release();
@@ -1771,9 +1771,9 @@ void HtmlWindow::OnFinishURL(const char * url)
 		FrameSite *c = reinterpret_cast<FrameSite *>(m_fs);
 		IConnectionPointContainer * cpContainer;
 		hret = pDisp->QueryInterface(IID_IConnectionPointContainer, (void**)(&cpContainer));
-		assert(SUCCEEDED(hret));
+		Assert(SUCCEEDED(hret));
 		hret = cpContainer->FindConnectionPoint(DIID_HTMLDocumentEvents, &m_connectionPoint);
-		assert(SUCCEEDED(hret));
+		Assert(SUCCEEDED(hret));
 		// connect the object to our sink
 		m_connectionPoint->Advise(c->m_DHTMLDocumentEvents2, &m_HtmlEventsAdviseCookie);
 		cpContainer->Release();

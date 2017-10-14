@@ -94,7 +94,7 @@ void CGlowOverlay::UpdateGlowObstruction( const Vector &vToGlow )
 	{
 		// If it's not in the sky, then we need a valid position or else we don't
 		// know what's in front of it.
-		assert( !m_bDirectional );
+		Assert( !m_bDirectional );
 
 		bool bVisible = (m_vPos - CurrentViewOrigin()).LengthSqr() < (trace.endpos - CurrentViewOrigin()).LengthSqr();
 		flScale = (float)bVisible;

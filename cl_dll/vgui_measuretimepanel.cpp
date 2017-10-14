@@ -147,7 +147,7 @@ void CMeasureTimePanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	m_hFont = pScheme->GetFont( "DefaultVerySmall" );
-	assert( m_hFont );
+	Assert( m_hFont );
 }
 
 

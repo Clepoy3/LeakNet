@@ -204,8 +204,8 @@ inline int CUtlHash<Data>::GetKeyDataIndex( UtlHashHandle_t handle )
 template<class Data>
 inline UtlHashHandle_t CUtlHash<Data>::BuildHandle( int ndxBucket, int ndxKeyData )
 {
-	assert( ( ndxBucket >= 0 ) && ( ndxBucket < 65536 ) );
-	assert( ( ndxKeyData >= 0 ) && ( ndxKeyData < 65536 ) );
+	Assert( ( ndxBucket >= 0 ) && ( ndxBucket < 65536 ) );
+	Assert( ( ndxKeyData >= 0 ) && ( ndxKeyData < 65536 ) );
 
 	UtlHashHandle_t handle = ndxKeyData;
 	handle |= ( ndxBucket << 16 );
@@ -303,7 +303,7 @@ inline UtlHashHandle_t CUtlHash<Data>::AllocEntryFromKey( Data const &src )
 template<class Data>
 inline void CUtlHash<Data>::Remove( UtlHashHandle_t handle )
 {
-	assert( IsValidHandle( handle ) );
+	Assert( IsValidHandle( handle ) );
 
 	// check to see if the bucket exists
 	int ndxBucket = GetBucketIndex( handle );
@@ -337,8 +337,8 @@ template<class Data>
 inline UtlHashHandle_t CUtlHash<Data>::Find( Data const &src )
 {
 	// sanity check(s)
-	assert( m_KeyFunc );
-	assert( m_CompareFunc );
+	Assert( m_KeyFunc );
+	Assert( m_CompareFunc );
 
 	// generate the data "key"
 	unsigned int key = m_KeyFunc( src );

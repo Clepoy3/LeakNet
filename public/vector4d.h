@@ -21,13 +21,15 @@
 #endif
 
 #include <math.h>
-#include <assert.h>
+//#include <assert.h>
 
 // For rand(). We really need a library!
 #include <stdlib.h>
 
 // For vec_t, put this somewhere else?
 #include "basetypes.h"
+
+#include "tier0/dbg.h"
 
 #ifdef __cplusplus
 
@@ -205,14 +207,14 @@ inline Vector4D::Vector4D(void)
 inline Vector4D::Vector4D(vec_t X, vec_t Y, vec_t Z, vec_t W )
 { 
 	x = X; y = Y; z = Z; w = W;
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 inline Vector4D::Vector4D(const float *pFloat)					
 {
-	assert( pFloat );
+	Assert( pFloat );
 	x = pFloat[0]; y = pFloat[1]; z = pFloat[2]; w = pFloat[3];	
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 
@@ -222,7 +224,7 @@ inline Vector4D::Vector4D(const float *pFloat)
 
 inline Vector4D::Vector4D(const Vector4D &vOther)					
 { 
-	assert( vOther.IsValid() );
+	Assert( vOther.IsValid() );
 	x = vOther.x; y = vOther.y; z = vOther.z; w = vOther.w;
 }
 
@@ -233,7 +235,7 @@ inline Vector4D::Vector4D(const Vector4D &vOther)
 inline void Vector4D::Init( vec_t ix, vec_t iy, vec_t iz, vec_t iw )
 { 
 	x = ix; y = iy; z = iz;	w = iw;
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 inline void Vector4D::Random( vec_t minVal, vec_t maxVal )
@@ -255,7 +257,7 @@ inline void Vector4DClear( Vector4D& a )
 
 inline Vector4D& Vector4D::operator=(const Vector4D &vOther)	
 {
-	assert( vOther.IsValid() );
+	Assert( vOther.IsValid() );
 	x=vOther.x; y=vOther.y; z=vOther.z; w=vOther.w;
 	return *this; 
 }
@@ -266,13 +268,13 @@ inline Vector4D& Vector4D::operator=(const Vector4D &vOther)
 
 inline vec_t& Vector4D::operator[](int i)
 {
-	assert( (i >= 0) && (i < 4) );
+	Assert( (i >= 0) && (i < 4) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t Vector4D::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 4) );
+	Assert( (i >= 0) && (i < 4) );
 	return ((vec_t*)this)[i];
 }
 
@@ -329,13 +331,13 @@ inline bool Vector4D::IsValid() const
 
 inline bool Vector4D::operator==( Vector4D const& src ) const
 {
-	assert( src.IsValid() && IsValid() );
+	Assert( src.IsValid() && IsValid() );
 	return (src.x == x) && (src.y == y) && (src.z == z) && (src.w == w);
 }
 
 inline bool Vector4D::operator!=( Vector4D const& src ) const
 {
-	assert( src.IsValid() && IsValid() );
+	Assert( src.IsValid() && IsValid() );
 	return (src.x != x) || (src.y != y) || (src.z != z) || (src.w != w);
 }
 
@@ -346,7 +348,7 @@ inline bool Vector4D::operator!=( Vector4D const& src ) const
 
 inline void Vector4DCopy( Vector4D const& src, Vector4D& dst )
 {
-	assert( src.IsValid() );
+	Assert( src.IsValid() );
 	dst.x = src.x;
 	dst.y = src.y;
 	dst.z = src.z;
@@ -355,8 +357,8 @@ inline void Vector4DCopy( Vector4D const& src, Vector4D& dst )
 
 inline void	Vector4D::CopyToArray(float* rgfl) const		
 { 
-	assert( IsValid() );
-	assert( rgfl );
+	Assert( IsValid() );
+	Assert( rgfl );
 	rgfl[0] = x; rgfl[1] = y; rgfl[2] = z; rgfl[3] = w;
 }
 
@@ -366,20 +368,20 @@ inline void	Vector4D::CopyToArray(float* rgfl) const
 
 inline void Vector4D::Negate()
 { 
-	assert( IsValid() );
+	Assert( IsValid() );
 	x = -x; y = -y; z = -z; w = -w;
 } 
 
 inline Vector4D& Vector4D::operator+=(const Vector4D& v)	
 { 
-	assert( IsValid() && v.IsValid() );
+	Assert( IsValid() && v.IsValid() );
 	x+=v.x; y+=v.y; z += v.z; w += v.w;	
 	return *this;
 }
 
 inline Vector4D& Vector4D::operator-=(const Vector4D& v)	
 { 
-	assert( IsValid() && v.IsValid() );
+	Assert( IsValid() && v.IsValid() );
 	x-=v.x; y-=v.y; z -= v.z; w -= v.w;
 	return *this;
 }
@@ -390,7 +392,7 @@ inline Vector4D& Vector4D::operator*=(float fl)
 	y *= fl;
 	z *= fl;
 	w *= fl;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
@@ -400,36 +402,36 @@ inline Vector4D& Vector4D::operator*=(Vector4D const& v)
 	y *= v.y;
 	z *= v.z;
 	w *= v.w;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline Vector4D& Vector4D::operator/=(float fl)	
 {
-	assert( fl != 0.0f );
+	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
 	x *= oofl;
 	y *= oofl;
 	z *= oofl;
 	w *= oofl;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline Vector4D& Vector4D::operator/=(Vector4D const& v)	
 { 
-	assert( v.x != 0.0f && v.y != 0.0f && v.z != 0.0f && v.w != 0.0f );
+	Assert( v.x != 0.0f && v.y != 0.0f && v.z != 0.0f && v.w != 0.0f );
 	x /= v.x;
 	y /= v.y;
 	z /= v.z;
 	w /= v.w;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline void Vector4DAdd( Vector4D const& a, Vector4D const& b, Vector4D& c )
 {
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x + b.x;
 	c.y = a.y + b.y;
 	c.z = a.z + b.z;
@@ -438,7 +440,7 @@ inline void Vector4DAdd( Vector4D const& a, Vector4D const& b, Vector4D& c )
 
 inline void Vector4DSubtract( Vector4D const& a, Vector4D const& b, Vector4D& c )
 {
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x - b.x;
 	c.y = a.y - b.y;
 	c.z = a.z - b.z;
@@ -447,7 +449,7 @@ inline void Vector4DSubtract( Vector4D const& a, Vector4D const& b, Vector4D& c 
 
 inline void Vector4DMultiply( Vector4D const& a, vec_t b, Vector4D& c )
 {
-	assert( a.IsValid() && IsFinite(b) );
+	Assert( a.IsValid() && IsFinite(b) );
 	c.x = a.x * b;
 	c.y = a.y * b;
 	c.z = a.z * b;
@@ -456,7 +458,7 @@ inline void Vector4DMultiply( Vector4D const& a, vec_t b, Vector4D& c )
 
 inline void Vector4DMultiply( Vector4D const& a, Vector4D const& b, Vector4D& c )
 {
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x * b.x;
 	c.y = a.y * b.y;
 	c.z = a.z * b.z;
@@ -465,8 +467,8 @@ inline void Vector4DMultiply( Vector4D const& a, Vector4D const& b, Vector4D& c 
 
 inline void Vector4DDivide( Vector4D const& a, vec_t b, Vector4D& c )
 {
-	assert( a.IsValid() );
-	assert( b != 0.0f );
+	Assert( a.IsValid() );
+	Assert( b != 0.0f );
 	vec_t oob = 1.0f / b;
 	c.x = a.x * oob;
 	c.y = a.y * oob;
@@ -476,8 +478,8 @@ inline void Vector4DDivide( Vector4D const& a, vec_t b, Vector4D& c )
 
 inline void Vector4DDivide( Vector4D const& a, Vector4D const& b, Vector4D& c )
 {
-	assert( a.IsValid() );
-	assert( (b.x != 0.0f) && (b.y != 0.0f) && (b.z != 0.0f) && (b.w != 0.0f) );
+	Assert( a.IsValid() );
+	Assert( (b.x != 0.0f) && (b.y != 0.0f) && (b.z != 0.0f) && (b.w != 0.0f) );
 	c.x = a.x / b.x;
 	c.y = a.y / b.y;
 	c.z = a.z / b.z;
@@ -486,7 +488,7 @@ inline void Vector4DDivide( Vector4D const& a, Vector4D const& b, Vector4D& c )
 
 inline void Vector4DMA( Vector4D const& start, float s, Vector4D const& dir, Vector4D& result )
 {
-	assert( start.IsValid() && IsFinite(s) && dir.IsValid() );
+	Assert( start.IsValid() && IsFinite(s) && dir.IsValid() );
 	result.x = start.x + s*dir.x;
 	result.y = start.y + s*dir.y;
 	result.z = start.z + s*dir.z;
@@ -517,7 +519,7 @@ inline void Vector4DLerp(const Vector4D& src1, const Vector4D& src2, vec_t t, Ve
 
 inline vec_t DotProduct4D(const Vector4D& a, const Vector4D& b) 
 { 
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	return( a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w ); 
 }
 
@@ -534,13 +536,13 @@ inline vec_t Vector4D::Dot( Vector4D const& vOther ) const
 
 inline vec_t Vector4DLength( Vector4D const& v )
 {				   
-	assert( v.IsValid() );
+	Assert( v.IsValid() );
 	return (vec_t)FastSqrt(v.x*v.x + v.y*v.y + v.z*v.z + v.w*v.w);		
 }
 
 inline vec_t Vector4D::LengthSqr(void) const	
 { 
-	assert( IsValid() );
+	Assert( IsValid() );
 	return (x*x + y*y + z*z + w*w);		
 }
 
@@ -557,7 +559,7 @@ inline vec_t Vector4D::Length(void) const
 // FIXME: Can't use until we're un-macroed in mathlib.h
 inline vec_t Vector4DNormalize( Vector4D& v )
 {
-	assert( v.IsValid() );
+	Assert( v.IsValid() );
 	vec_t l = v.Length();
 	if (l != 0.0f)
 	{

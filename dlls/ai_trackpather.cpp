@@ -362,7 +362,7 @@ CPathTrack *CAI_TrackPather::BestPointOnPath( const Vector &targetPos, float avo
 		else
 		{
 			//FIXME: Implement
-			assert(0);
+			Assert(0);
 			return NULL;
 		}
 	}
@@ -398,7 +398,7 @@ CPathTrack *CAI_TrackPather::BestPointOnPath( const Vector &targetPos, float avo
 			{
 				// This means that the path is either really large, or we've slipped through a continuous loop somehow
 				DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-				//assert(0);
+				//Assert(0);
 				break;
 			} 
 
@@ -502,7 +502,7 @@ CPathTrack *CAI_TrackPather::FindNextPathPoint( CPathTrack *pStart, CPathTrack *
 		{
 			// This means that the path is either really large, or we've slipped through a continuous loop somehow
 			DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-			assert(0);
+			Assert(0);
 			break;
 		}
 
@@ -518,7 +518,7 @@ CPathTrack *CAI_TrackPather::FindNextPathPoint( CPathTrack *pStart, CPathTrack *
 		{
 			//NOTENOTE: We wrapped?  Should never happen
 			DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-			assert(0);
+			Assert(0);
 		}
 
 		if ( pNext->GetNext() != NULL )
@@ -542,7 +542,7 @@ CPathTrack *CAI_TrackPather::FindNextPathPoint( CPathTrack *pStart, CPathTrack *
 		{
 			// This means that the path is either really large, or we've slipped through a continuous loop somehow
 			DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-			assert(0);
+			Assert(0);
 			break;
 		}
 
@@ -561,7 +561,7 @@ CPathTrack *CAI_TrackPather::FindNextPathPoint( CPathTrack *pStart, CPathTrack *
 		if ( pNext == pStart )
 		{
 			DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-			assert(0);
+			Assert(0);
 		}
 
 		if ( pNext->GetPrevious() != NULL )
@@ -591,7 +591,7 @@ CPathTrack *CAI_TrackPather::FindNextPathPoint( CPathTrack *pStart, CPathTrack *
 
 	// NOTENOTE: No path was found?
 	// DevWarning( "Unable to find path to: %s\n", m_pDestPathTarget->GetEntityName() );
-	// assert(0);
+	// Assert(0);
 	return NULL;
 }
 
@@ -632,7 +632,7 @@ Vector CAI_TrackPather::GetPathGoalPoint( float leadDist )
 		{
 			// This means that the path is either really large, or we've slipped through a continuous loop somehow
 			DevWarning( "%s: Cyclical path found in path_track connections, check links!\n", GetClassname() );
-			assert(0);
+			Assert(0);
 			break;
 		}
 

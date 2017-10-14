@@ -64,7 +64,7 @@ void CL_DescribeEvent( int slot, CEventInfo *event, const char *eventname )
 void CL_ParseEventDelta( void *RawData, void *pToData, RecvTable *pRecvTable )
 {
 	// Make sure we have a decoder
-	assert(pRecvTable->m_pDecoder);
+	Assert(pRecvTable->m_pDecoder);
 
 	// Only so much data allowed
 	bf_read fromBuf( "CL_ParseEventDelta->fromBuf", RawData, MAX_EVENT_DATA );

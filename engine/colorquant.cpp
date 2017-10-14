@@ -85,7 +85,7 @@ static OctTreeNode_t *AllocNode()
 			PrintTree( root, 0 );
 			PrintColorsInTree( root, 0, 0, 0, 0 );
 			getch();
-			assert( node );
+			Assert( node );
 		}
 		freeList = freeList->next;
 	}
@@ -129,7 +129,7 @@ static void RemoveFromPriorityQueue( int level, OctTreeNode_t *node )
 		}
 		prev = searchNode;
 	}
-	assert( 0 );
+	Assert( 0 );
 }
 
 static void ReduceNode( OctTreeNode_t *node, int nodeLevel )
@@ -186,7 +186,7 @@ static void ReduceTree( void )
 			return;
 		}
 	}
-	assert( 0 );
+	Assert( 0 );
 }
 
 static void AddToNode( OctTreeNode_t *node, int depth, unsigned char *color )
@@ -234,7 +234,7 @@ static void Insert( OctTreeNode_t *node, OctTreeNode_t *parent, int depth, unsig
 		( ( g & ( 1 << 7 ) ) >> 6 ) | 
 		( ( b & ( 1 << 7 ) ) >> 7 );
 
-	assert( childNum >= 0 && childNum < 8 );
+	Assert( childNum >= 0 && childNum < 8 );
 
 	// does the child already exist?
 	if( !node->children[childNum] )
@@ -267,7 +267,7 @@ void Quantize( unsigned char *image, int numPixels, int bytesPerPixel, int numPa
 	desiredNumColors = numPalEntries;
 
 	root = AllocNode();
-	assert( root );
+	Assert( root );
 	numColorsUsed = 0;
 	desiredNumColors = numPalEntries;
 
@@ -440,7 +440,7 @@ static void RemapPixel( OctTreeNode_t *node, int depth,
 		( ( g & ( 1 << 7 ) ) >> 6 ) | 
 		( ( b & ( 1 << 7 ) ) >> 7 );
 
-	assert( childNum >= 0 && childNum < 8 );
+	Assert( childNum >= 0 && childNum < 8 );
 
 	RemapPixel( node->children[childNum], depth + 1, pixel,
 		    ( r << 1 ) & 0xff, 

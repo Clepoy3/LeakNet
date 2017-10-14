@@ -10,11 +10,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
+//#include <assert.h>
 #include <malloc.h>
 #ifndef TGAWRITER_USE_FOPEN
 #include "filesystem.h"
 #endif
+
+#include "tier0/dbg.h"
 
 #include "tgawriter.h"
 
@@ -90,7 +92,7 @@ bool Write( unsigned char *pImageData, const char *fileName, int width, int heig
 		return false;
 	}
 #else
-	assert( s_pFileSystem );
+	Assert( s_pFileSystem );
 	if( !s_pFileSystem )
 	{
 		return false;

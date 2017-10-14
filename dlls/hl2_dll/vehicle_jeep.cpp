@@ -892,7 +892,7 @@ void CPropJeep::ChargeCannon( void )
 		CPASAttenuationFilter filter( this );
 		m_sndCannonCharge = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "weapons/gauss/chargeloop.wav", ATTN_NORM );
 
-		assert(m_sndCannonCharge!=NULL);
+		Assert(m_sndCannonCharge!=NULL);
 		if ( m_sndCannonCharge != NULL )
 		{
 			(CSoundEnvelopeController::GetController()).Play( m_sndCannonCharge, 1.0f, 50 );

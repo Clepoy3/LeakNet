@@ -365,7 +365,7 @@ void DrawLightSprites( void )
 		case emit_skyambient:
 			continue;
 		default:
-			assert( 0 );
+			Assert( 0 );
 			continue;
 		}
 		DrawLightSprite( pLight, angleAttenFactor );
@@ -416,7 +416,7 @@ void DrawLightDebuggingInfo( void )
 		case emit_skyambient:
 			continue;
 		default:
-			assert( 0 );
+			Assert( 0 );
 			continue;
 		}
 		DrawLightSprite( pLight, angleAttenFactor );

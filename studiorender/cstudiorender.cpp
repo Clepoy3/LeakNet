@@ -210,7 +210,7 @@ static int R_StudioAssignMeshIDs( studiohdr_t *pStudioHdr )
 	int id = 0;
 	int i, j, k;
 
-	assert( pStudioHdr );
+	Assert( pStudioHdr );
 
 	// Iterate over every body part...
 	for ( i = 0; i < pStudioHdr->numbodyparts; i++ )
@@ -344,8 +344,8 @@ void CStudioRender::UpdateConfig( const StudioRenderConfig_t& config )
 	}
 	Con_Printf = config.pConPrintf;
 	Con_DPrintf = config.pConDPrintf;
-	assert( Con_Printf );
-	assert( Con_DPrintf );
+	Assert( Con_Printf );
+	Assert( Con_DPrintf );
 
 	if( m_CachedGamma != m_Config.gamma ||
 		m_CachedTexGamma != m_Config.texGamma ||
@@ -417,7 +417,7 @@ void CStudioRender::SetAmbientLightColors( const Vector *pColors, const Vector *
 void CStudioRender::SetLocalLights( int numLights, const LightDesc_t *pLights )
 {
 	int i;
-	assert( numLights <= MAXLOCALLIGHTS );
+	Assert( numLights <= MAXLOCALLIGHTS );
 	if( numLights > MAXLOCALLIGHTS )
 	{
 		numLights = MAXLOCALLIGHTS;
@@ -831,8 +831,8 @@ bool CStudioRender::Mod_LoadStudioModelVertexData( studiohdr_t *pStudioHdr, void
 										int	*numLODs,
 										studioloddata_t	**ppLODs )
 {
-	assert( pStudioHdr );
-	assert( pVtxBuffer );
+	Assert( pStudioHdr );
+	Assert( pVtxBuffer );
 	if( !pStudioHdr || !pVtxBuffer )
 	{
 		return false;
@@ -842,7 +842,7 @@ bool CStudioRender::Mod_LoadStudioModelVertexData( studiohdr_t *pStudioHdr, void
 	OptimizedModel::FileHeader_t* pVertexHdr = (OptimizedModel::FileHeader_t*)pVtxBuffer; 
 
 	// Create static meshes
-	assert( pVertexHdr->numLODs );
+	Assert( pVertexHdr->numLODs );
 	*numLODs = pVertexHdr->numLODs;
 	*ppLODs = new studioloddata_t[*numLODs];
 	memset( *ppLODs, 0, sizeof( studioloddata_t ) * *numLODs );

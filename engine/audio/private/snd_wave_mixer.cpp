@@ -316,7 +316,7 @@ int CAudioMixerWave::SkipSamples( int startSample, int sampleCount, int outputRa
 		}
 
 		// Verify that we won't get a buffer overrun.
-		assert(floor(sampleFraction + rate * (outputSampleCount-1)) <= availableSamples);
+		Assert(floor(sampleFraction + rate * (outputSampleCount-1)) <= availableSamples);
 
 		if ( advanceSample )
 		{
@@ -429,7 +429,7 @@ int CAudioMixerWave::MixDataToDevice( IAudioDevice *pDevice, channel_t *pChannel
 		}
 
 		// Verify that we won't get a buffer overrun.
-		assert(floor(sampleFraction + rate * (outputSampleCount-1)) <= availableSamples);
+		Assert(floor(sampleFraction + rate * (outputSampleCount-1)) <= availableSamples);
 
 		// mix this data to all active paintbuffers
 		int i, j;

@@ -266,59 +266,59 @@ bool CNPC_BaseZombie::FindNearestPhysicsObject( int iMaxMass )
 		Vector center = pList[ i ]->WorldSpaceCenter();
 		flDist = UTIL_DistApprox2D( GetAbsOrigin(), center );
 
-		if( flDist < flNearestDist )
+		if( flDist >= flNearestDist )
+			continue;
+
+		// This object is closer... but is it between the player and the zombie?
+		vecDirToObject = pList[ i ]->WorldSpaceCenter() - GetAbsOrigin();
+		VectorNormalize(vecDirToObject);
+		vecDirToObject.z = 0;
+
+		if( DotProduct( vecDirToEnemy, vecDirToObject ) < 0.8 )
+			continue;
+
+		if( flDist >= UTIL_DistApprox2D( center, GetEnemy()->GetAbsOrigin() ) )
+			continue;
+
+		float down = GetAbsMins().z * 0.75 + GetAbsMaxs().z * 0.25;
+		if ( pList[i]->GetAbsMaxs().z < down )
 		{
-			// This object is closer... but is it between the player and the zombie?
-			vecDirToObject = pList[ i ]->WorldSpaceCenter() - GetAbsOrigin();
-			VectorNormalize(vecDirToObject);
-			vecDirToObject.z = 0;
-
-			if( DotProduct( vecDirToEnemy, vecDirToObject ) >= 0.8 )
-			{
-				if( UTIL_DistApprox2D( GetAbsOrigin(), center ) < UTIL_DistApprox2D( center, GetEnemy()->GetAbsOrigin() ) )
-				{
-					float down = GetAbsMins().z * 0.75 + GetAbsMaxs().z * 0.25;
-					if ( pList[i]->GetAbsMaxs().z < down )
-					{
-						// don't swat things where the highest point is under my knees
-						continue;
-					}
-
-					if( center.z > EyePosition().z )
-					{
-						// don't swat things that are over my head.
-						continue;
-					}
-
-					vcollide_t *pCollide = modelinfo->GetVCollide( pList[i]->GetModelIndex() );
-					
-					Vector objMins, objMaxs;
-					physcollision->CollideGetAABB( objMins, objMaxs, pCollide->solids[0], pList[i]->GetAbsOrigin(), pList[i]->GetAbsAngles() );
-
-					if ( objMaxs.z < down )
-						continue;
-
-					if ( !FVisible( pList[i] ) )
-						continue;
-
-					// Make this the last check, since it makes a string.
-					// Don't swat server ragdolls!
-					if ( FClassnameIs( pList[ i ], "physics_prop_ragdoll" ) )
-					{
-						continue;
-					}
-						
-					if ( FClassnameIs( pList[ i ], "prop_ragdoll" ) )
-					{
-						continue;
-					}
-
-					// The object must also be closer to the zombie than it is to the enemy
-					pNearest = pList[ i ];
-					flNearestDist = flDist;
-				}
-			}
+			// don't swat things where the highest point is under my knees
+			continue;
 		}
+
+		// don't swat things that are over my head.
+		if( center.z > EyePosition().z )
+			continue;
+
+		vcollide_t *pCollide = modelinfo->GetVCollide( pList[i]->GetModelIndex() );
+		if ( !pCollide )
+			continue;
+		
+		Vector objMins, objMaxs;
+		physcollision->CollideGetAABB( objMins, objMaxs, pCollide->solids[0], pList[i]->GetAbsOrigin(), pList[i]->GetAbsAngles() );
+
+		if ( objMaxs.z < down )
+			continue;
+
+		if ( !FVisible( pList[i] ) )
+			continue;
+
+		// Make this the last check, since it makes a string.
+		// Don't swat server ragdolls!
+		if ( FClassnameIs( pList[ i ], "physics_prop_ragdoll" ) )
+		{
+			continue;
+		}
+			
+		if ( FClassnameIs( pList[ i ], "prop_ragdoll" ) )
+		{
+			continue;
+		}
+
+		// The object must also be closer to the zombie than it is to the enemy
+		pNearest = pList[ i ];
+		flNearestDist = flDist;
 	}
 
 	m_hPhysicsEnt = pNearest;

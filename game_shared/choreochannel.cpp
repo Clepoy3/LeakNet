@@ -51,7 +51,7 @@ CChoreoChannel&	CChoreoChannel::operator=( const CChoreoChannel& src )
 //-----------------------------------------------------------------------------
 void CChoreoChannel::SetName( const char *name )
 {
-	assert( strlen( name ) < MAX_CHANNEL_NAME );
+	Assert( strlen( name ) < MAX_CHANNEL_NAME );
 	strcpy( m_szName, name );
 }
 

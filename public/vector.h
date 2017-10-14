@@ -22,7 +22,7 @@
 
 #include <math.h>
 #include <float.h>
-#include <assert.h>
+//#include <assert.h>
 
 // For vec_t, put this somewhere else?
 #include "basetypes.h"
@@ -30,6 +30,7 @@
 // For rand(). We really need a library!
 #include <stdlib.h>
 
+#include "tier0/dbg.h"
 #include "vector2d.h"
 
 // Uncomment this to add extra asserts to check for NANs, uninitialized vecs, etc.
@@ -46,7 +47,7 @@
 
 
 #ifdef VECTOR_PARANOIA
-#define CHECK_VALID( _v)	assert( (_v).IsValid() )
+#define CHECK_VALID( _v)	Assert( (_v).IsValid() )
 #else
 #define CHECK_VALID( _v)	0
 #endif
@@ -203,7 +204,20 @@ public:
 	vec_t x, y, z;
 
 	operator Vector &()				{ return *((Vector *)(this)); }
-	operator const Vector &() const	{ return *((Vector *)(this)); }
+	operator const Vector &() const	{ return *((const Vector *)(this)); }
+
+	// array access...
+	inline vec_t& operator[](int i)
+	{
+		Assert( (i >= 0) && (i < 3) );
+		return ((vec_t*)this)[i];
+	}
+
+	inline vec_t operator[](int i) const
+	{
+		Assert( (i >= 0) && (i < 3) );
+		return ((vec_t*)this)[i];
+	}
 };
 
 //-----------------------------------------------------------------------------
@@ -238,7 +252,7 @@ FORCEINLINE void VectorCopy( Vector const& src, Vector& dst );
 // Vector arithmetic
 FORCEINLINE void VectorAdd( Vector const& a, Vector const& b, Vector& result );
 FORCEINLINE void VectorSubtract( Vector const& a, Vector const& b, Vector& result );
-FORCEINLINE void VectorMultiply( Vector const& a, vec_t b, Vector& result );
+FORCEINLINE void VectorMultiply( const Vector& a, vec_t b, Vector& result );
 FORCEINLINE void VectorMultiply( Vector const& a, Vector const& b, Vector& result );
 FORCEINLINE void VectorDivide( Vector const& a, vec_t b, Vector& result );
 FORCEINLINE void VectorDivide( Vector const& a, Vector const& b, Vector& result );
@@ -309,7 +323,7 @@ inline Vector::Vector(vec_t X, vec_t Y, vec_t Z)
 
 //inline Vector::Vector(const float *pFloat)					
 //{
-//	assert( pFloat );
+//	Assert( pFloat );
 //	x = pFloat[0]; y = pFloat[1]; z = pFloat[2];	
 //	CHECK_VALID(*this);
 //} 
@@ -366,13 +380,13 @@ inline Vector& Vector::operator=(const Vector &vOther)
 
 inline vec_t& Vector::operator[](int i)
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t Vector::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
@@ -446,7 +460,7 @@ FORCEINLINE void VectorCopy( Vector const& src, Vector& dst )
 
 inline void	Vector::CopyToArray(float* rgfl) const		
 { 
-	assert( rgfl );
+	Assert( rgfl );
 	CHECK_VALID(*this);
 	rgfl[0] = x, rgfl[1] = y, rgfl[2] = z; 
 }
@@ -498,7 +512,7 @@ FORCEINLINE  Vector& Vector::operator*=(Vector const& v)
 
 FORCEINLINE  Vector& Vector::operator/=(float fl)	
 {
-	assert( fl != 0.0f );
+	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
 	x *= oofl;
 	y *= oofl;
@@ -510,7 +524,7 @@ FORCEINLINE  Vector& Vector::operator/=(float fl)
 FORCEINLINE  Vector& Vector::operator/=(Vector const& v)	
 { 
 	CHECK_VALID(v);
-	assert( v.x != 0.0f && v.y != 0.0f && v.z != 0.0f );
+	Assert( v.x != 0.0f && v.y != 0.0f && v.z != 0.0f );
 	x /= v.x;
 	y /= v.y;
 	z /= v.z;
@@ -536,12 +550,12 @@ FORCEINLINE void VectorSubtract( Vector const& a, Vector const& b, Vector& c )
 	c.z = a.z - b.z;
 }
 
-FORCEINLINE void VectorMultiply( Vector const& a, vec_t b, Vector& c )
+FORCEINLINE void VectorMultiply( const Vector& a, vec_t b, Vector& c )
 {
 	CHECK_VALID(a);
 	// VXP: Error here on d1_trainstation_02 when moving upstairs and on d1_under_03 when you saw the citizens
 	// VXP: Fixed
-	assert( IsFinite(b) );
+	Assert( IsFinite(b) );
 	c.x = a.x * b;
 	c.y = a.y * b;
 	c.z = a.z * b;
@@ -566,7 +580,7 @@ inline void VectorScale ( Vector const& in, vec_t scale, Vector& result )
 FORCEINLINE void VectorDivide( Vector const& a, vec_t b, Vector& c )
 {
 	CHECK_VALID(a);
-	assert( b != 0.0f );
+	Assert( b != 0.0f );
 	vec_t oob = 1.0f / b;
 	c.x = a.x * oob;
 	c.y = a.y * oob;
@@ -577,7 +591,7 @@ FORCEINLINE void VectorDivide( Vector const& a, Vector const& b, Vector& c )
 {
 	CHECK_VALID(a);
 	CHECK_VALID(b);
-	assert( (b.x != 0.0f) && (b.y != 0.0f) && (b.z != 0.0f) );
+	Assert( (b.x != 0.0f) && (b.y != 0.0f) && (b.z != 0.0f) );
 	c.x = a.x / b.x;
 	c.y = a.y / b.y;
 	c.z = a.z / b.z;
@@ -588,7 +602,7 @@ void VectorMA( Vector const& start, float s, Vector const& dir, Vector& result )
 {
 	CHECK_VALID(start);
 	CHECK_VALID(dir);
-	assert( IsFinite(s) );
+	Assert( IsFinite(s) );
 	result.x = start.x + s*dir.x;
 	result.y = start.y + s*dir.y;
 	result.z = start.z + s*dir.z;
@@ -695,7 +709,7 @@ inline vec_t Vector::Length(void) const
 // FIXME: Can't use until we're un-macroed in mathlib.h
 inline vec_t VectorNormalize( Vector& v )
 {
-	assert( v.IsValid() );
+	Assert( v.IsValid() );
 	vec_t l = v.Length();
 	if (l != 0.0f)
 	{
@@ -887,28 +901,28 @@ inline Vector RandomVector( float minVal, float maxVal )
 inline bool operator==( float const* f, Vector const& v )
 {
 	// AIIIEEEE!!!!
-	assert(0);
+	Assert(0);
 	return false;
 }
 
 inline bool operator==( Vector const& v, float const* f )
 {
 	// AIIIEEEE!!!!
-	assert(0);
+	Assert(0);
 	return false;
 }
 
 inline bool operator!=( float const* f, Vector const& v )
 {
 	// AIIIEEEE!!!!
-	assert(0);
+	Assert(0);
 	return false;
 }
 
 inline bool operator!=( Vector const& v, float const* f )
 {
 	// AIIIEEEE!!!!
-	assert(0);
+	Assert(0);
 	return false;
 }
 
@@ -962,13 +976,13 @@ public:
 
 inline vec_t& Quaternion::operator[](int i)
 {
-	assert( (i >= 0) && (i < 4) );
+	Assert( (i >= 0) && (i < 4) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t Quaternion::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 4) );
+	Assert( (i >= 0) && (i < 4) );
 	return ((vec_t*)this)[i];
 }
 
@@ -1024,7 +1038,7 @@ inline void VectorCopy( RadianEuler const& src, RadianEuler &dst )
 inline void VectorScale( RadianEuler const& src, float b, RadianEuler &dst )
 {
 	CHECK_VALID(src);
-	assert( IsFinite(b) );
+	Assert( IsFinite(b) );
 	dst.x = src.x * b;
 	dst.y = src.y * b;
 	dst.z = src.z * b;
@@ -1041,13 +1055,13 @@ inline bool RadianEuler::IsValid() const
 
 inline vec_t& RadianEuler::operator[](int i)
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t RadianEuler::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
@@ -1204,13 +1218,13 @@ inline QAngle& QAngle::operator=(const QAngle &vOther)
 
 inline vec_t& QAngle::operator[](int i)
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t QAngle::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 3) );
+	Assert( (i >= 0) && (i < 3) );
 	return ((vec_t*)this)[i];
 }
 
@@ -1302,7 +1316,7 @@ inline QAngle& QAngle::operator*=(float fl)
 
 inline QAngle& QAngle::operator/=(float fl)	
 {
-	assert( fl != 0.0f );
+	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
 	x *= oofl;
 	y *= oofl;

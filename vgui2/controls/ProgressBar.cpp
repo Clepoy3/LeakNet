@@ -107,7 +107,7 @@ void ProgressBar::ApplySchemeSettings(IScheme *pScheme)
 //-----------------------------------------------------------------------------
 bool ProgressBar::ConstructTimeRemainingString(wchar_t *output, int outputBufferSizeInBytes, float startTime, float currentTime, float currentProgress, float lastProgressUpdateTime, bool addRemainingSuffix)
 {
-	assert(lastProgressUpdateTime <= currentTime);
+	Assert(lastProgressUpdateTime <= currentTime);
 
 	// calculate pre-extrapolation values
 	float timeElapsed = lastProgressUpdateTime - startTime;

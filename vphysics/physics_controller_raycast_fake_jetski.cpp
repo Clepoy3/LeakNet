@@ -4,6 +4,7 @@
 //
 //=============================================================================
 
+#include <assert.h>
 #include "tier0/dbg.h"
 #include "physics_controller_raycast_fake_jetski.h"
 #include "ivp_material.hxx"

@@ -598,7 +598,7 @@ NextHint:
 //-----------------------------------------------------------------------------
 CAI_Hint* CAI_Hint::FindHint( CAI_BaseNPC *pNPC, Hint_e nHintType, int nFlags, float flMaxDist, const Vector *pMaxDistFrom )
 {
-	assert( pNPC != NULL );
+	Assert( pNPC != NULL );
 	if ( pNPC == NULL )
 		return NULL;
 
@@ -633,7 +633,7 @@ CAI_Hint *CAI_Hint::FindHint( const Vector &position, CHintCriteria *pHintCriter
 //-----------------------------------------------------------------------------
 CAI_Hint *CAI_Hint::FindHint( CAI_BaseNPC *pNPC, CHintCriteria *pHintCriteria )
 {
-	assert( pNPC != NULL );
+	Assert( pNPC != NULL );
 	if ( pNPC == NULL )
 		return NULL;
 

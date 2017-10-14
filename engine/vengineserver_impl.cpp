@@ -1281,7 +1281,7 @@ public:
 		SV_ClearClientStructure(fakeclient);
 		
 		// Wipe the remainder of the structure.
-		assert( !fakeclient->frames );
+		Assert( !fakeclient->frames );
 
 		fakeclient->frames = (client_frame_t *)new client_frame_t[ SV_UPDATE_BACKUP ];
 		fakeclient->numframes = SV_UPDATE_BACKUP;

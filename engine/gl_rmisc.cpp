@@ -96,7 +96,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%srt.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 
@@ -109,7 +109,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering ();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%sbk.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 
@@ -122,7 +122,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering ();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%slf.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 
@@ -135,7 +135,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering ();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%sft.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 
@@ -148,7 +148,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering ();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%sup.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 
@@ -161,7 +161,7 @@ static void TakeCubemapSnapshot( const Vector &origin, const char *pFileNameBase
 	Shader_BeginRendering ();
 	g_ClientDLL->RenderView( view, false );
 	Q_snprintf( name, sizeof( name ), "%sdn.tga", pFileNameBase );
-	assert( strlen( name ) < 1023 );
+	Assert( strlen( name ) < 1023 );
 	VID_TakeSnapshotRect( name, 0, 0, screenBufSize, screenBufSize,
 		tgaSize, tgaSize );
 }
@@ -543,13 +543,13 @@ void R_BuildCubemapSamples( int numIterations )
 				( int )pCubemapSample->origin[0],
 				( int )pCubemapSample->origin[1],
 				( int )pCubemapSample->origin[2] );
-			assert( strlen( textureName ) < 255 );
+			Assert( strlen( textureName ) < 255 );
 			int tgaSize = ( pCubemapSample->size == 0 ) ? mat_envmaptgasize.GetInt() : 1 << ( pCubemapSample->size-1 );
 			int screenBufSize = 4 * tgaSize;
 
 			TakeCubemapSnapshot( pCubemapSample->origin, textureName, screenBufSize, tgaSize );
 			Q_strncat( textureName, ".txt", sizeof( textureName ) );
-			assert( strlen( textureName ) < 255 );
+			Assert( strlen( textureName ) < 255 );
 			FileHandle_t fp = g_pFileSystem->Open( textureName, "w" );
 			g_pFileSystem->Close( fp );
 			// garymcthack
@@ -643,7 +643,7 @@ void R_BuildCubemapSamples( int numIterations )
 			if( !pathLen )
 			{
 				Con_Printf( "Error getting pathLength for %s\n", textureName );
-				assert( 0 );
+				Assert( 0 );
 				continue;
 			}
 			char localPath[1024];

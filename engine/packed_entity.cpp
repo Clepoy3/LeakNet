@@ -207,7 +207,7 @@ DataHandle& DataHandle::operator=(const DataHandle &other)
 	DataBlock *pBlock;
 
 
-	assert(this != &other);
+	Assert(this != &other);
 
 	// (Increment references first just in case, for some reason it calls = on ourself).
 	pBlock = other.m_pBlock;

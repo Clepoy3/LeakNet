@@ -1007,7 +1007,7 @@ char	com_defaultgamedir[MAX_OSPATH];
 //-----------------------------------------------------------------------------
 int COM_FindFile( const char *filename, FileHandle_t *file )
 {
-	assert( file );
+	Assert( file );
 
 	*file = g_pFileSystem->Open( filename, "rb" );
 	if ( *file )
@@ -1126,13 +1126,13 @@ void COM_CopyFile (char *netpath, char *cachepath)
 	FileHandle_t in, out;
 
 	in = g_pFileSystem->Open( netpath, "rb" );
-	assert( in );
+	Assert( in );
 	
 	// create directories up to the cache file
 	COM_CreatePath (cachepath);     
 
 	out = g_pFileSystem->Open( cachepath, "wb" );
-	assert( out );
+	Assert( out );
 	
 	remaining = g_pFileSystem->Size( in );
 	while ( remaining > 0 )

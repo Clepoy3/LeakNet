@@ -173,7 +173,7 @@ void CRegistry::WriteString( const char *key, const char *value )
 		return;
 	}
 
-	dwSize = strlen( value ) + 1;
+	dwSize = (DWORD)( strlen( value ) + 1 );
 
 	RegSetValueEx(
 		m_hKey,		// handle to key

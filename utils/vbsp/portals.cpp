@@ -947,7 +947,7 @@ int Convex2D( Vector2D const *pPoints, int nPoints, int *indices, int nMaxIndice
 		if( iMinAngle == -1 )
 		{
 			// Couldn't find a point?
-			assert( false );
+			Assert( false );
 			break;
 		}
 		else if( iMinAngle == indices[0] )
@@ -1140,7 +1140,7 @@ void EmitAreaPortals (node_t *headnode)
 
 				if( pLeadingPortal )
 				{
-					assert( pLeadingPortal->nodes[0]->area != pLeadingPortal->nodes[1]->area );
+					Assert( pLeadingPortal->nodes[0]->area != pLeadingPortal->nodes[1]->area );
 
 					dp = &dareaportals[numareaportals];
 					numareaportals++;
@@ -1149,8 +1149,8 @@ void EmitAreaPortals (node_t *headnode)
 					dp->otherarea = e->portalareas[iSide];
 					dp->planenum = pLeadingPortal->onnode->planenum;
 
-					assert( pLeadingPortal->nodes[0]->planenum == PLANENUM_LEAF );
-					assert( pLeadingPortal->nodes[1]->planenum == PLANENUM_LEAF );
+					Assert( pLeadingPortal->nodes[0]->planenum == PLANENUM_LEAF );
+					Assert( pLeadingPortal->nodes[1]->planenum == PLANENUM_LEAF );
 
 					if( pLeadingPortal->nodes[0]->area == dp->otherarea )
 					{

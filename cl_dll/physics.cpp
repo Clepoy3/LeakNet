@@ -101,7 +101,7 @@ bool PhysicsDLLInit( CreateInterfaceFn physicsFactory )
 void PhysicsLevelInit( void )
 {
 	physenv = physics->CreateEnvironment();
-	assert( physenv );
+	Assert( physenv );
 
 	physenv->SetGravity( Vector(0, 0, -sv_gravity.GetFloat() ) );
 //	physenv->SetSimulationTimestep( 0.015 ); // 15 ms per tick

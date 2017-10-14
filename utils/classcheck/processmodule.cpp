@@ -546,7 +546,7 @@ char *CCodeProcessor::ParseTypeDescription( char *current, bool fIsMacroized )
 		}
 
 		current = CC_ParseToken( current );
-		assert( !stricmp( com_token, ":" ) );
+		Assert( !stricmp( com_token, ":" ) );
 
 		current = CC_ParseToken( current );
 		if ( strlen( com_token ) <= 0 )
@@ -583,7 +583,7 @@ char *CCodeProcessor::ParseTypeDescription( char *current, bool fIsMacroized )
 	{
 		char ch;
 		current = CC_RawParseChar( current, "{", &ch );
-		assert( ch == '{' );
+		Assert( ch == '{' );
 		if ( strlen( com_token ) <= 0 )
 			return current;
 	}
@@ -680,7 +680,7 @@ char *CCodeProcessor::ParseTypeDescription( char *current, bool fIsMacroized )
 		{
 			// Scoped class name here...
 			current = CC_ParseToken( current );
-			assert( !stricmp( com_token, ":" ) );
+			Assert( !stricmp( com_token, ":" ) );
 			current = CC_ParseToken( current );
 
 			// skip comma
@@ -1248,7 +1248,7 @@ void CCodeProcessor::ProcessModule( bool forcequiet, int depth, int& maxdepth, i
 		return;
 	}
 
-	assert( buffer );
+	Assert( buffer );
 
 	m_nBytesProcessed += filelength;
 

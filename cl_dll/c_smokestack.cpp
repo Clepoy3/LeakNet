@@ -270,7 +270,7 @@ void C_SmokeStack::Update(float fTimeDelta)
 {
 	if( !m_pParticleMgr )
 	{
-		assert(false);
+		Assert(false);
 		return;
 	}
 

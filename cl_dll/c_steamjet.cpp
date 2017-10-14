@@ -226,7 +226,7 @@ void C_SteamJet::Update(float fTimeDelta)
 {
 	if(!m_pParticleMgr)
 	{
-		assert(false);
+		Assert(false);
 		return;
 	}
 

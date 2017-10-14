@@ -362,7 +362,15 @@ Class_T  CHL2_Player::Classify ( void )
 			// VXP:
 		//	IDrivableVehicle *m_pDrivableVehicle = dynamic_cast<IDrivableVehicle*>(m_pVehicle);
 		//	IServerVehicle *pVehicle = GetVehicle();
-			CPropVehicleDriveable *pVehicle = dynamic_cast<CPropVehicleDriveable*>(GetVehicleEntity());
+
+			CBaseEntity *pVehicleEntity = GetVehicleEntity();
+			if ( !pVehicleEntity )
+				return CLASS_PLAYER;
+
+			CPropVehicleDriveable *pVehicle = dynamic_cast<CPropVehicleDriveable*>(pVehicleEntity);
+			if ( !pVehicle )
+				return CLASS_PLAYER;
+
 			return pVehicle->ClassifyPassenger( this, CLASS_PLAYER );
 		}
 		else

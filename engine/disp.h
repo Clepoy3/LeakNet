@@ -477,7 +477,7 @@ inline int CDispInfo::NumVerts() const
 
 inline CDispRenderVert* CDispInfo::GetVertex( int i )
 {
-	assert( i < NumVerts() );
+	Assert( i < NumVerts() );
 	return &m_Verts[i];
 }
 
@@ -499,14 +499,14 @@ inline bool CDispInfo::IsTouched( void )
 
 inline int CDispInfo::VertIndex( int x, int y ) const
 {
-	assert( x >= 0 && x < GetSideLength() && y >= 0 && y < GetSideLength() );
+	Assert( x >= 0 && x < GetSideLength() && y >= 0 && y < GetSideLength() );
 	return y * GetSideLength() + x;
 }
 
 
 inline int CDispInfo::VertIndex( CVertIndex const &vert ) const
 {
-	assert( vert.x >= 0 && vert.x < GetSideLength() && vert.y >= 0 && vert.y < GetSideLength() );
+	Assert( vert.x >= 0 && vert.x < GetSideLength() && vert.y >= 0 && vert.y < GetSideLength() );
 	return vert.y * GetSideLength() + vert.x;
 }
 

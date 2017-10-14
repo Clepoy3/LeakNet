@@ -2203,8 +2203,8 @@ bool Host_NewGame( char *mapName, bool loadGame, bool bBackgroundLevel )
 //-----------------------------------------------------------------------------
 void Host_FreeToLowMark( bool server )
 {
-	assert( host_initialized );
-	assert( host_hunklevel );
+	Assert( host_initialized );
+	Assert( host_hunklevel );
 
 	// If called by the client and we are running a listen server, just ignore
 	if ( !server && sv.active )

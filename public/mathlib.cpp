@@ -3802,6 +3802,10 @@ float Hermite_Spline(
 //			this is reasonable C1 method when there's no "p3" data yet.
 // Input  : 
 //-----------------------------------------------------------------------------
+
+// BUG: the VectorSubtract()'s calls go away if the global optimizer is enabled
+#pragma optimize( "g", off )
+
 void Hermite_Spline(
 	const Vector &p0,
 	const Vector &p1,
@@ -3812,6 +3816,8 @@ void Hermite_Spline(
 	Hermite_Spline( p1, p2, p1 - p0, p2 - p1, t, output );
 	return;
 }
+
+#pragma optimize( "", on )
 
 
 float Hermite_Spline(
@@ -3923,7 +3929,7 @@ float CalcClosestPointToLineT( const Vector &P, const Vector &vLineA, const Vect
 
 void CalcClosestPointOnLine( const Vector &P, const Vector &vLineA, const Vector &vLineB, Vector &vClosest, float *outT )
 {
-	assert( s_bMathlibInitialized );
+	Assert( s_bMathlibInitialized );
 	Vector vDir;
 	float t = CalcClosestPointToLineT( P, vLineA, vLineB, vDir );
 	if ( outT ) *outT = t;
@@ -3977,7 +3983,7 @@ float CalcClosestPointToLineT2D( Vector2D const &P, Vector2D const &vLineA, Vect
 
 void CalcClosestPointOnLine2D( Vector2D const &P, Vector2D const &vLineA, Vector2D const &vLineB, Vector2D &vClosest, float *outT )
 {
-	assert( s_bMathlibInitialized );
+	Assert( s_bMathlibInitialized );
 	Vector2D vDir;
 	float t = CalcClosestPointToLineT2D( P, vLineA, vLineB, vDir );
 	if ( outT ) *outT = t;

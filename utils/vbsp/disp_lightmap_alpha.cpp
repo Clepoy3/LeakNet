@@ -312,7 +312,7 @@ void AddDispTris( CCoreDispInfo *pCoreDispInfos, int iMainFace, int iSourceFace,
 				}
 			}
 		}
-		assert( bFound );
+		Assert( bFound );
 
 		// Set the new source face coords.
 		pSourceFace->GetSurface()->SetLuxelCoords( 0, sfCoords );

@@ -23,7 +23,7 @@ CHudElementHelper::CHudElementHelper(
 	m_sHelpers		= this;
 
 	// Set attributes
-	assert( pfnCreate );
+	Assert( pfnCreate );
 	m_pfnCreate		= pfnCreate;
 }
 

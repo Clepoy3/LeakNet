@@ -22,7 +22,7 @@ static int CountTris( FILE *fp )
 			{
 				if( !fgets( buf, 4095, fp ) )
 				{
-					assert( 0 );
+					Assert( 0 );
 					return numTriangles;
 				}
 				if( _strnicmp( "end", buf, strlen( "end" ) ) == 0 )
@@ -53,12 +53,12 @@ static void ReadTris( FILE *fp, int numTris, NmRawTriangle *tris )
 			{
 				if( !fgets( buf, 4095, fp ) )
 				{
-					assert( 0 );
+					Assert( 0 );
 					return;
 				}
 				if( _strnicmp( "end", buf, strlen( "end" ) ) == 0 )
 				{
-					assert( count == numTris );
+					Assert( count == numTris );
 					return;
 				}
 				int i;
@@ -71,7 +71,7 @@ static void ReadTris( FILE *fp, int numTris, NmRawTriangle *tris )
 						&tris[count].vert[i].x, &tris[count].vert[i].y, &tris[count].vert[i].z, 
 						&tris[count].norm[i].x, &tris[count].norm[i].y, &tris[count].norm[i].z, 
 						&tris[count].texCoord[i].u, &tris[count].texCoord[i].v );
-					assert( numRead == 9 );
+					Assert( numRead == 9 );
 					if( tris[count].texCoord[i].u < 0.0f )
 					{
 						printf( "texCoord out of range!: %f\n", tris[count].texCoord[i].u );

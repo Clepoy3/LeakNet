@@ -357,9 +357,9 @@ void CBaseNPCMaker::DeathNotice( CBaseEntity *pVictim )
 	m_nLiveChildren--;
 
 	// If we're here, we're getting erroneous death messages from children we haven't created
-//	assert( m_nLiveChildren >= 0 ); // VXP: On d1_town_02 map when we jumping down the pit (3 times), and on e3_seafloor when we beating up combine near the big window
+//	Assert( m_nLiveChildren >= 0 ); // VXP: On d1_town_02 map when we jumping down the pit (3 times), and on e3_seafloor when we beating up combine near the big window
 	if( !(m_nLiveChildren >= 0) )
-		Warning( "npc_maker receiving child death notice but thinks has no children\n" );
+		Warning( "npc_maker receiving child death notice but thinks has no children\n" ); // VXP: TODO: Make this not happen
 
 	if ( m_nLiveChildren <= 0 )
 	{

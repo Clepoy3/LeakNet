@@ -641,7 +641,7 @@ static CUtlRBTree< WaterTexInfo, int > g_WaterTexInfos( 0, 32, WaterLessFunc );
 #if 0
 float GetSubdivSizeForFogVolume( int fogVolumeID )
 {
-	assert( fogVolumeID >= 0 && fogVolumeID < g_WaterTexInfos.Count() );
+	Assert( fogVolumeID >= 0 && fogVolumeID < g_WaterTexInfos.Count() );
 	return g_WaterTexInfos[fogVolumeID].m_SubdivSize;
 }
 #endif
@@ -779,8 +779,8 @@ static void ApplyDepthMaterials( CUtlVector<waterleaf_t> &list )
 
 static int FindWaterSurfaceTexInfo( int leafID, int planeNum )
 {
-	assert( leafID >= 0 && leafID < numleafs );
-	assert( planeNum >= 0 && planeNum < numplanes );
+	Assert( leafID >= 0 && leafID < numleafs );
+	Assert( planeNum >= 0 && planeNum < numplanes );
 	dleaf_t *pLeaf = dleafs + leafID;
 	int i;
 	for( i = 0; i < pLeaf->numleaffaces; i++ )
@@ -793,7 +793,7 @@ static int FindWaterSurfaceTexInfo( int leafID, int planeNum )
 		if( ( pFace->planenum & ~1 ) == ( planeNum & ~1 ) )
 		{
 			// found the right plane. . .  now make sure it's water
-			assert( pFace->texinfo >= 0 && pFace->texinfo < numtexinfo );
+			Assert( pFace->texinfo >= 0 && pFace->texinfo < numtexinfo );
 			texinfo_t *pTexInfo = &texinfo[pFace->texinfo];
 			if( pTexInfo->flags & SURF_WARP )
 			{
@@ -801,7 +801,7 @@ static int FindWaterSurfaceTexInfo( int leafID, int planeNum )
 			}
 		}
 	}
-//	assert( 0 ); // we really should never get here.
+//	Assert( 0 ); // we really should never get here.
 	return -1;
 }
 
@@ -833,7 +833,7 @@ static void FindVolumeID( CUtlVector<waterleaf_t> &list )
 				if( ( pFace->planenum & ~1 ) == ( pWaterLeaf->planenum & ~1 ) )
 				{
 					// found the right plane. . .  now make sure it's water
-					assert( pFace->texinfo >= 0 && pFace->texinfo < numtexinfo );
+					Assert( pFace->texinfo >= 0 && pFace->texinfo < numtexinfo );
 					texinfo_t *pTexInfo = &texinfo[pFace->texinfo];
 					if( pTexInfo->flags & SURF_WARP )
 					{
@@ -1082,7 +1082,7 @@ static void FixupLeafWaterData( CPlaneList &planes, int *leafIDToWaterLeaf,
 		}
 
 		int leafID = planes.m_leafList[j];
-		assert( leafID >= 0 && leafID < numleafs );
+		Assert( leafID >= 0 && leafID < numleafs );
 		dleaf_t *pLeaf = &dleafs[leafID];
 		if ( !(pLeaf->contents & CONTENTS_WATER) )
 			continue;
@@ -1093,14 +1093,14 @@ static void FixupLeafWaterData( CPlaneList &planes, int *leafIDToWaterLeaf,
 			minZ = pLeaf->mins[2];
 		}
 
-		assert( waterLeafID >= 0 && waterLeafID < waterLeafs.Count() );
+		Assert( waterLeafID >= 0 && waterLeafID < waterLeafs.Count() );
 		waterleaf_t *pWaterLeaf = &waterLeafs[waterLeafID];
 		if( pWaterLeaf->surfaceTexInfo != -1 )
 		{
 			// garymcthack : this should probably be a user warning/error.
-			//assert( texinfoID == -1 || texinfoID == pWaterLeaf->surfaceTexInfo );
+			//Assert( texinfoID == -1 || texinfoID == pWaterLeaf->surfaceTexInfo );
 			texinfoID = pWaterLeaf->surfaceTexInfo;
-			assert( pWaterLeaf->hasSurface );
+			Assert( pWaterLeaf->hasSurface );
 			surfaceZ = pWaterLeaf->surfaceDist;
 		}
 		if( pLeaf->mins[2] < minZ )
@@ -1121,22 +1121,22 @@ static void FixupLeafWaterData( CPlaneList &planes, int *leafIDToWaterLeaf,
 		}
 
 		int leafID = planes.m_leafList[j];
-		assert( leafID >= 0 && leafID < numleafs );
+		Assert( leafID >= 0 && leafID < numleafs );
 		dleaf_t *pLeaf = &dleafs[leafID];
-		assert( waterLeafID >= 0 && waterLeafID < waterLeafs.Count() );
+		Assert( waterLeafID >= 0 && waterLeafID < waterLeafs.Count() );
 		waterleaf_t *pWaterLeaf = &waterLeafs[waterLeafID];
-		assert( pWaterLeaf );
+		Assert( pWaterLeaf );
 		// Create a one-off .vmt reference for water of the specified depth based on the original texinfoID for
 		//  this water surface
 		pWaterLeaf->surfaceTexInfo = FindOrCreateWaterTexInfo( &texinfo[ texinfoID ], surfaceZ - minZ );
 	}
 
-	assert( texinfoID != -1 );
+	Assert( texinfoID != -1 );
 	int leafWaterDataID = FindOrCreateLeafWaterData( surfaceZ, minZ, texinfoID );
 	for( j = 0; j < planes.m_leafList.Count(); j++ )
 	{
 		int leafID = planes.m_leafList[j];
-		assert( leafID >= 0 && leafID < numleafs );
+		Assert( leafID >= 0 && leafID < numleafs );
 		dleaf_t *pLeaf = &dleafs[leafID];
 		pLeaf->leafWaterDataID = leafWaterDataID;
 	}
@@ -1625,7 +1625,7 @@ void EmitPhysCollision( void )
 	model.solidCount = 0;
 	memcpy( ptr, &model, sizeof(model) );
 	ptr += sizeof(model);
-	assert( (ptr-g_pPhysCollide) == g_PhysCollideSize);
+	Assert( (ptr-g_pPhysCollide) == g_PhysCollideSize);
 	Msg("done (%d) (%d bytes)\n", (int)(I_FloatTime() - start), g_PhysCollideSize );
 
 	// UNDONE: Collision models (collisionList) memory leak!

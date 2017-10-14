@@ -128,7 +128,7 @@ InitReturnVal_t CFileSystem_Steam::Init()
 
 void CFileSystem_Steam::Shutdown()
 {
-	assert( m_bSteamInitialized );
+	Assert( m_bSteamInitialized );
 
 	// If we're not running Steam in local mode, remove all mount points from the STEAM VFS.
 	if ( !CommandLine()->CheckParm("-steamlocal") && !STEAM_Unmount() )
@@ -339,7 +339,7 @@ void CFileSystem_Steam::GetLocalCopy( const char *pFileName )
 			if ( nSize > nBaseLen )
 			{
 				// Create a new path (relative to the base directory)
-				assert( sizeof(srchPath) > nBaseLen + strlen(pFileName) + 2 );
+				Assert( sizeof(srchPath) > nBaseLen + strlen(pFileName) + 2 );
 				nSize -= nBaseLen+1;
 				memcpy( srchPath, pStart+nBaseLen+1, nSize );
 				memcpy( srchPath+nSize, pFileName, strlen(pFileName)+1 );
@@ -369,12 +369,12 @@ CSysModule * CFileSystem_Steam::LoadModule( const char *path )
 	// File must end in .dll
 	char szNewPath[512];
 	char szExtension[] = ".dll";
-	assert( strlen(path) < sizeof(szNewPath) );
+	Assert( strlen(path) < sizeof(szNewPath) );
 	
 	strcpy( szNewPath, path );
 	if ( !strstr(szNewPath, szExtension) )
 	{
-		assert( strlen(path) + sizeof(szExtension) < sizeof(szNewPath) );
+		Assert( strlen(path) + sizeof(szExtension) < sizeof(szNewPath) );
 		strcat( szNewPath, szExtension );
 	}
 

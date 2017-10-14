@@ -1106,7 +1106,7 @@ void CBaseEntity::PhysicsSimulate( void )
 
 	// If we've got a moveparent, we must simulate that first.
 	CBaseEntity *pMoveParent = GetMoveParent();
-	bool bHasMoveParent = pMoveParent != NULL;
+//	bool bHasMoveParent = pMoveParent != NULL;
 
 	if ( (GetMoveType() == MOVETYPE_NONE && !pMoveParent) || (GetMoveType() == MOVETYPE_VPHYSICS ) )
 	{

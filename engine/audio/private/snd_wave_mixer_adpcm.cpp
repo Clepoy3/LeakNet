@@ -83,7 +83,7 @@ CAudioMixerWaveADPCM::CAudioMixerWaveADPCM( IWaveData *data ) : CAudioMixerWave(
 		m_blockSize = ((m_pFormat->wSamplesPerBlock - 2) * m_pFormat->wfx.nChannels ) / 2;
 		// size of channel header
 		m_blockSize += 7 * m_pFormat->wfx.nChannels;
-//		assert(m_blockSize < MAX_BLOCK_SIZE);
+//		Assert(m_blockSize < MAX_BLOCK_SIZE);
 	}
 }
 

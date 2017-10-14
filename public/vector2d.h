@@ -21,13 +21,15 @@
 #endif
 
 #include <math.h>
-#include <assert.h>
+//#include <assert.h>
 
 // For vec_t, put this somewhere else?
 #include "basetypes.h"
 
 // For rand(). We really need a library!
 #include <stdlib.h>
+
+#include "tier0/dbg.h"
 
 #ifdef __cplusplus
 
@@ -207,14 +209,14 @@ inline Vector2D::Vector2D(void)
 inline Vector2D::Vector2D(vec_t X, vec_t Y)						
 { 
 	x = X; y = Y;
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 inline Vector2D::Vector2D(const float *pFloat)					
 {
-	assert( pFloat );
+	Assert( pFloat );
 	x = pFloat[0]; y = pFloat[1];	
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 
@@ -224,7 +226,7 @@ inline Vector2D::Vector2D(const float *pFloat)
 
 inline Vector2D::Vector2D(const Vector2D &vOther)					
 { 
-	assert( vOther.IsValid() );
+	Assert( vOther.IsValid() );
 	x = vOther.x; y = vOther.y;
 }
 
@@ -235,7 +237,7 @@ inline Vector2D::Vector2D(const Vector2D &vOther)
 inline void Vector2D::Init( vec_t ix, vec_t iy )    
 { 
 	x = ix; y = iy;
-	assert( IsValid() );
+	Assert( IsValid() );
 }
 
 inline void Vector2D::Random( float minVal, float maxVal )
@@ -255,7 +257,7 @@ inline void Vector2DClear( Vector2D& a )
 
 inline Vector2D& Vector2D::operator=(const Vector2D &vOther)	
 {
-	assert( vOther.IsValid() );
+	Assert( vOther.IsValid() );
 	x=vOther.x; y=vOther.y;
 	return *this; 
 }
@@ -266,13 +268,13 @@ inline Vector2D& Vector2D::operator=(const Vector2D &vOther)
 
 inline vec_t& Vector2D::operator[](int i)
 {
-	assert( (i >= 0) && (i < 2) );
+	Assert( (i >= 0) && (i < 2) );
 	return ((vec_t*)this)[i];
 }
 
 inline vec_t Vector2D::operator[](int i) const
 {
-	assert( (i >= 0) && (i < 2) );
+	Assert( (i >= 0) && (i < 2) );
 	return ((vec_t*)this)[i];
 }
 
@@ -305,13 +307,13 @@ inline bool Vector2D::IsValid() const
 
 inline bool Vector2D::operator==( Vector2D const& src ) const
 {
-	assert( src.IsValid() && IsValid() );
+	Assert( src.IsValid() && IsValid() );
 	return (src.x == x) && (src.y == y);
 }
 
 inline bool Vector2D::operator!=( Vector2D const& src ) const
 {
-	assert( src.IsValid() && IsValid() );
+	Assert( src.IsValid() && IsValid() );
 	return (src.x != x) || (src.y != y);
 }
 
@@ -322,15 +324,15 @@ inline bool Vector2D::operator!=( Vector2D const& src ) const
 
 inline void Vector2DCopy( Vector2D const& src, Vector2D& dst )
 {
-	assert( src.IsValid() );
+	Assert( src.IsValid() );
 	dst.x = src.x;
 	dst.y = src.y;
 }
 
 inline void	Vector2D::CopyToArray(float* rgfl) const		
 { 
-	assert( IsValid() );
-	assert( rgfl );
+	Assert( IsValid() );
+	Assert( rgfl );
 	rgfl[0] = x; rgfl[1] = y; 
 }
 
@@ -340,20 +342,20 @@ inline void	Vector2D::CopyToArray(float* rgfl) const
 
 inline void Vector2D::Negate()
 { 
-	assert( IsValid() );
+	Assert( IsValid() );
 	x = -x; y = -y;
 } 
 
 inline Vector2D& Vector2D::operator+=(const Vector2D& v)	
 { 
-	assert( IsValid() && v.IsValid() );
+	Assert( IsValid() && v.IsValid() );
 	x+=v.x; y+=v.y;	
 	return *this;
 }
 
 inline Vector2D& Vector2D::operator-=(const Vector2D& v)	
 { 
-	assert( IsValid() && v.IsValid() );
+	Assert( IsValid() && v.IsValid() );
 	x-=v.x; y-=v.y;	
 	return *this;
 }
@@ -362,7 +364,7 @@ inline Vector2D& Vector2D::operator*=(float fl)
 {
 	x *= fl;
 	y *= fl;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
@@ -370,53 +372,53 @@ inline Vector2D& Vector2D::operator*=(Vector2D const& v)
 { 
 	x *= v.x;
 	y *= v.y;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline Vector2D& Vector2D::operator/=(float fl)	
 {
-	assert( fl != 0.0f );
+	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
 	x *= oofl;
 	y *= oofl;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline Vector2D& Vector2D::operator/=(Vector2D const& v)	
 { 
-	assert( v.x != 0.0f && v.y != 0.0f );
+	Assert( v.x != 0.0f && v.y != 0.0f );
 	x /= v.x;
 	y /= v.y;
-	assert( IsValid() );
+	Assert( IsValid() );
 	return *this;
 }
 
 inline void Vector2DAdd( Vector2D const& a, Vector2D const& b, Vector2D& c )
 {
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x + b.x;
 	c.y = a.y + b.y;
 }
 
 inline void Vector2DSubtract( Vector2D const& a, Vector2D const& b, Vector2D& c )
 {
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x - b.x;
 	c.y = a.y - b.y;
 }
 
 inline void Vector2DMultiply( Vector2D const& a, vec_t b, Vector2D& c )
 {
-	assert( a.IsValid() && IsFinite(b) );
+	Assert( a.IsValid() && IsFinite(b) );
 	c.x = a.x * b;
 	c.y = a.y * b;
 }
 
 inline void Vector2DMultiply( Vector2D const& a, Vector2D const& b, Vector2D& c )
 {				  
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	c.x = a.x * b.x;
 	c.y = a.y * b.y;
 }
@@ -424,8 +426,8 @@ inline void Vector2DMultiply( Vector2D const& a, Vector2D const& b, Vector2D& c 
 
 inline void Vector2DDivide( Vector2D const& a, vec_t b, Vector2D& c )
 {
-	assert( a.IsValid() );
-	assert( b != 0.0f );
+	Assert( a.IsValid() );
+	Assert( b != 0.0f );
 	vec_t oob = 1.0f / b;
 	c.x = a.x * oob;
 	c.y = a.y * oob;
@@ -433,15 +435,15 @@ inline void Vector2DDivide( Vector2D const& a, vec_t b, Vector2D& c )
 
 inline void Vector2DDivide( Vector2D const& a, Vector2D const& b, Vector2D& c )
 {
-	assert( a.IsValid() );
-	assert( (b.x != 0.0f) && (b.y != 0.0f) );
+	Assert( a.IsValid() );
+	Assert( (b.x != 0.0f) && (b.y != 0.0f) );
 	c.x = a.x / b.x;
 	c.y = a.y / b.y;
 }
 
 inline void Vector2DMA( Vector2D const& start, float s, Vector2D const& dir, Vector2D& result )
 {
-	assert( start.IsValid() && IsFinite(s) && dir.IsValid() );
+	Assert( start.IsValid() && IsFinite(s) && dir.IsValid() );
 	result.x = start.x + s*dir.x;
 	result.y = start.y + s*dir.y;
 }
@@ -466,7 +468,7 @@ inline void Vector2DLerp(const Vector2D& src1, const Vector2D& src2, vec_t t, Ve
 
 inline vec_t DotProduct2D(const Vector2D& a, const Vector2D& b) 
 { 
-	assert( a.IsValid() && b.IsValid() );
+	Assert( a.IsValid() && b.IsValid() );
 	return( a.x*b.x + a.y*b.y ); 
 }
 
@@ -483,13 +485,13 @@ inline vec_t Vector2D::Dot( Vector2D const& vOther ) const
 
 inline vec_t Vector2DLength( Vector2D const& v )
 {
-	assert( v.IsValid() );
+	Assert( v.IsValid() );
 	return (vec_t)FastSqrt(v.x*v.x + v.y*v.y);		
 }
 
 inline vec_t Vector2D::LengthSqr(void) const	
 { 
-	assert( IsValid() );
+	Assert( IsValid() );
 	return (x*x + y*y);		
 }
 
@@ -519,7 +521,7 @@ inline void Vector2DMax( Vector2D const &a, Vector2D const &b, Vector2D &result 
 
 inline vec_t Vector2DNormalize( Vector2D& v )
 {
-	assert( v.IsValid() );
+	Assert( v.IsValid() );
 	vec_t l = v.Length();
 	if (l != 0.0f)
 	{

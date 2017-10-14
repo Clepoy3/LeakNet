@@ -199,11 +199,11 @@ static void ValidateBoneWeight( const s_boneweight_t &boneWeight, const s_source
 	int i;
 	if( boneWeight.weight[0] == 1.0f )
 	{
-		assert( boneWeight.numbones == 1 );
+		Assert( boneWeight.numbones == 1 );
 	}
 	for( i = 0; i < boneWeight.numbones; i++ )
 	{
-		assert( boneWeight.bone[i] >= 0 && boneWeight.bone[i] < g_numbones );
+		Assert( boneWeight.bone[i] >= 0 && boneWeight.bone[i] < g_numbones );
 	}
 
 	float weight = 0.0f;
@@ -211,7 +211,7 @@ static void ValidateBoneWeight( const s_boneweight_t &boneWeight, const s_source
 	{
 		weight += boneWeight.weight[i] ;
 	}
-	assert( fabs( weight - 1.0f ) < 1e-3 );
+	Assert( fabs( weight - 1.0f ) < 1e-3 );
 #endif
 }
 
@@ -363,7 +363,7 @@ static void RemapBoneWeights( const CUtlVector<int> &boneMap, s_boneweight_t &bo
 {
 	for( int i = 0; i < boneWeight.numbones; i++ )
 	{
-		assert( boneWeight.bone[i] >= 0 && boneWeight.bone[i] < boneMap.Size() );
+		Assert( boneWeight.bone[i] >= 0 && boneWeight.bone[i] < boneMap.Size() );
 		boneWeight.bone[i] = boneMap[boneWeight.bone[i]];
 	}
 }
@@ -478,7 +478,7 @@ static void CalculateIdealVert( int srcVertID, const s_mesh_t *pSrcMesh,
 
 	if( dstMeshVertID != -1 )
 	{
-		assert( dstMeshVertID >= 0 && dstMeshVertID < pDstMesh->numvertices );
+		Assert( dstMeshVertID >= 0 && dstMeshVertID < pDstMesh->numvertices );
 		// found in the mesh already.
 		idealPos = verts[pDstMesh->vertexoffset + dstMeshVertID];
 		idealBoneWeight = boneWeights[pDstMesh->vertexoffset + dstMeshVertID];
@@ -532,7 +532,7 @@ static void CalculateIdealVert( int srcVertID, const s_mesh_t *pSrcMesh,
 		
 	printf( "LOD vertex mismatch.  All verts in lower LODs must exist in the top LOD: position %f %f %f file: %s.\n",
 		pSrc->vertex[srcID].x, pSrc->vertex[srcID].y, pSrc->vertex[srcID].z, pSrc->filename );
-	assert( 0 );
+	Assert( 0 );
 	exit( -1 );
 }
 
@@ -760,9 +760,9 @@ static void StompSourceWithTempVertexArrays( s_source_t *pSrc, CUtlVector<Vector
 	free( pSrc->texcoord );
 	free( pSrc->face );
 	
-	assert( boneWeights.Size() == verts.Size() );
-	assert( normals.Size() == verts.Size() );
-	assert( texcoords.Size() == verts.Size() );
+	Assert( boneWeights.Size() == verts.Size() );
+	Assert( normals.Size() == verts.Size() );
+	Assert( texcoords.Size() == verts.Size() );
 	
 	pSrc->globalBoneweight = (s_boneweight_t *)kalloc( boneWeights.Size(), sizeof( s_boneweight_t ) );
 	pSrc->vertexInfo = (s_vertexinfo_t *)kalloc( vertexInfo.Size(), sizeof( s_vertexinfo_t ) );
@@ -791,7 +791,7 @@ static void BuildBoneLODMapping( CUtlVector<int> &boneMap,
 {
 	boneMap.AddMultipleToTail( g_numbones );
 
-	assert( lodID < g_ScriptLODs.Size() );
+	Assert( lodID < g_ScriptLODs.Size() );
 	LodScriptData_t& scriptLOD = g_ScriptLODs[lodID];
 	int i;
 	for( i = 0; i < g_numbones; i++ )
@@ -851,7 +851,7 @@ static void UnifyModelLODs( s_model_t *pSrcModel )
 	}
 
 	meshes.AddMultipleToTail( MAXSTUDIOSKINS );
-	assert( meshes.Size() == MAXSTUDIOSKINS );
+	Assert( meshes.Size() == MAXSTUDIOSKINS );
 	memset( meshes.Base(), 0, sizeof( s_mesh_t ) * meshes.Size() );
 	int meshID;
 	for( meshID = 0; meshID < pSrcModel->source->nummeshes; meshID++ )

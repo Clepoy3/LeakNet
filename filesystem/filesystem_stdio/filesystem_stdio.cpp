@@ -83,7 +83,7 @@ FILE *CFileSystem_Stdio::FS_fopen( const char *filename, const char *options )
 {
 	FILE *tst = NULL;
 	// stop newline characters at end of filename
-	assert(!strchr(filename, '\n') && !strchr(filename, '\r'));
+	Assert(!strchr(filename, '\n') && !strchr(filename, '\r'));
 	tst=fopen(filename, options);
 #if !defined _WIN32
 	if(!tst && !strchr(options,'w') && !strchr(options,'+') ) // try opening the lower cased version

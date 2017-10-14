@@ -8,6 +8,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include "tier0/vcrmode.h"
+#include "tier0/dbg.h"
 
 												
 #define VCRFILE_VERSION		2

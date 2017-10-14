@@ -59,7 +59,7 @@ void CCodeProcessor::AddHeader( int depth, const char *filename, const char *roo
 
 void CCodeProcessor::CreateBackup( const char *filename, bool& wasreadonly )
 {
-	assert( strstr( filename, ".cpp" ) );
+	Assert( strstr( filename, ".cpp" ) );
 
 	// attrib it, change extension, save it
 	if ( GetFileAttributes( filename ) & FILE_ATTRIBUTE_READONLY )
@@ -84,7 +84,7 @@ void CCodeProcessor::CreateBackup( const char *filename, bool& wasreadonly )
 
 void CCodeProcessor::RestoreBackup( const char *filename, bool makereadonly )
 {
-	assert( strstr( filename, ".cpp" ) );
+	Assert( strstr( filename, ".cpp" ) );
 
 	char backupname[ 256 ];
 	strcpy( backupname, filename );
@@ -111,7 +111,7 @@ bool CCodeProcessor::TryBuild( const char *rootdir, const char *filename, unsign
 	fp = fopen( filename, "wb" );
 	if ( !fp )
 	{
-		assert( 0 );
+		Assert( 0 );
 		return false;
 	}
 
@@ -291,7 +291,7 @@ retry:
 					if ( !TryBuild( baseroot, filename, (unsigned char *)buffer, filelength ) )
 					{
 						// build is broken, stop
-						assert( 0 );
+						Assert( 0 );
 					}
 				}
 

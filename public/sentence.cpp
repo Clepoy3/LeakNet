@@ -188,7 +188,7 @@ CPhonemeTag::~CPhonemeTag( void )
 //-----------------------------------------------------------------------------
 void CPhonemeTag::SetTag( const char *phoneme )
 {
-	assert( strlen( phoneme ) <= MAX_PHONEME_LENGTH - 1 );
+	Assert( strlen( phoneme ) <= MAX_PHONEME_LENGTH - 1 );
 	strcpy( m_szPhoneme, phoneme );
 }
 
@@ -545,7 +545,7 @@ void CSentence::ParseWords( CUtlBuffer& buf )
 		end = atof( token );
 
 		CWordTag *wt = new CWordTag( word );
-		assert( wt );
+		Assert( wt );
 		wt->m_flStartTime = start;
 		wt->m_flEndTime = end;
 
@@ -579,7 +579,7 @@ void CSentence::ParseWords( CUtlBuffer& buf )
 			volume = atof( token );
 
 			CPhonemeTag *pt = new CPhonemeTag();
-			assert( pt );
+			Assert( pt );
 			pt->m_nPhonemeCode = code;
 			strcpy( pt->m_szPhoneme, phonemename );
 			pt->m_flStartTime = start;
@@ -904,7 +904,7 @@ void CSentence::InitFromDataChunk( void *data, int size )
 	}
 	else
 	{
-		assert( 0 );
+		Assert( 0 );
 		return;
 	}
 }

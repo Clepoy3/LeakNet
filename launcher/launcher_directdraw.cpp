@@ -74,7 +74,7 @@ CLauncherDirectDraw::~CLauncherDirectDraw( void )
 //-----------------------------------------------------------------------------
 bool CLauncherDirectDraw::Init( void )
 {
-	assert( !m_pDirectDraw );
+	Assert( !m_pDirectDraw );
 
 	// Create the main DirectDraw object
 	if ( DirectDrawCreate( NULL, &m_pDirectDraw, NULL ) != DD_OK )
@@ -123,7 +123,7 @@ static HRESULT CALLBACK ModeCallback( LPDDSURFACEDESC pdds, LPVOID lParam )
 	float	aspect			= (float)height/(float)width;
 
 	CLauncherDirectDraw::DDENUMPARAMS *params = ( CLauncherDirectDraw::DDENUMPARAMS * )lParam;
-	assert( params );
+	Assert( params );
 
 	int		requestedbpp	= params->bpp;
 	bool	checkaspect		= params->checkaspect;

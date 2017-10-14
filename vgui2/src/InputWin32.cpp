@@ -335,7 +335,7 @@ HInputContext CInputWin32::CreateInputContext()
 
 void CInputWin32::DestroyInputContext( HInputContext context )
 {
-	assert( context != DEFAULT_INPUT_CONTEXT );
+	Assert( context != DEFAULT_INPUT_CONTEXT );
 	if ( m_hContext == context )
 	{
 		ActivateInputContext( DEFAULT_INPUT_CONTEXT );
@@ -376,7 +376,7 @@ void CInputWin32::AssociatePanelWithInputContext( HInputContext context, VPANEL 
 //-----------------------------------------------------------------------------
 void CInputWin32::ActivateInputContext( HInputContext context )
 {
-	assert( (context == DEFAULT_INPUT_CONTEXT) || m_Contexts.IsValidIndex(context) );
+	Assert( (context == DEFAULT_INPUT_CONTEXT) || m_Contexts.IsValidIndex(context) );
 	m_hContext = context;
 }
 
@@ -598,13 +598,13 @@ void CInputWin32::PanelDeleted(VPANEL vfocus, InputContext_t &context)
 	// NOTE: These two will only ever happen for the default context at the moment
 	if (context._mouseCapture == focus)
 	{
-		assert( &context == &m_DefaultInputContext );
+		Assert( &context == &m_DefaultInputContext );
 		SetMouseCapture(NULL);
 		context._mouseCapture = NULL;
 	}
 	if (context._appModalPanel == focus)
 	{
-		assert( &context == &m_DefaultInputContext );
+		Assert( &context == &m_DefaultInputContext );
 		ReleaseAppModalSurface();
 	}
 }

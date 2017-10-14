@@ -586,7 +586,7 @@ void ListPanel::AddColumnHeader(int index, const char *columnName, const char *c
 //-----------------------------------------------------------------------------
 void ListPanel::ResortColumnRBTree(int col)
 {
-	assert(m_CurrentColumns.IsValidIndex(col));
+	Assert(m_CurrentColumns.IsValidIndex(col));
 
 	unsigned char dataColumnIndex = m_CurrentColumns[col];
 	int columnHistoryIndex = m_ColumnsHistory.Find(dataColumnIndex);
@@ -625,7 +625,7 @@ void ListPanel::ResortColumnRBTree(int col)
 			dataItem->m_SortedTreeIndexes.AddToTail();
 		}
 
-		assert( dataItem->m_SortedTreeIndexes.IsValidIndex(columnHistoryIndex) );
+		Assert( dataItem->m_SortedTreeIndexes.IsValidIndex(columnHistoryIndex) );
 
 		dataItem->m_SortedTreeIndexes[columnHistoryIndex] = rbtree.Insert(item);
 	}
@@ -1231,8 +1231,8 @@ IImage *ListPanel::GetCellImage(int itemID, int col) //, ImagePanel *&buffer)
 //-----------------------------------------------------------------------------
 Panel *ListPanel::GetCellRenderer(int itemID, int col)
 {
-	assert( m_pTextImage );
-	assert( m_pImagePanel );
+	Assert( m_pTextImage );
+	Assert( m_pImagePanel );
 	
 	column_t& column = m_ColumnsData[ m_CurrentColumns[col] ];
 
@@ -1465,7 +1465,7 @@ void ListPanel::PerformLayout()
 		}
 
 		// shrink from the most right column to minimum width until we can fit them all
-		assert(totalDesiredWidth > buttonMaxXPos);
+		Assert(totalDesiredWidth > buttonMaxXPos);
 		for ( i = nColumns-1; i >= 0 ; i--)
 		{
 			column_t &column = m_ColumnsData[m_CurrentColumns[i]];

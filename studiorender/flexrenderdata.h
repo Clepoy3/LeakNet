@@ -152,8 +152,8 @@ inline bool CCachedRenderData::IsVertexFlexed( int vertex ) const
 
 inline CachedVertex_t* CCachedRenderData::GetFlexVertex( int vertex )
 {
-	assert( m_pFirstFlexIndex );
-	assert( m_pFirstFlexIndex[vertex].m_Tag == m_CurrentTag );
+	Assert( m_pFirstFlexIndex );
+	Assert( m_pFirstFlexIndex[vertex].m_Tag == m_CurrentTag );
 	return &m_pFlexVerts[ m_pFirstFlexIndex[vertex].m_VertexIndex ];
 }
 
@@ -172,8 +172,8 @@ inline bool CCachedRenderData::IsVertexPositionCached( int vertex ) const
 
 inline CachedVertex_t* CCachedRenderData::GetWorldVertex( int vertex )
 {
-	assert( m_pFirstWorldIndex );
-	assert( m_pFirstWorldIndex[vertex].m_Tag == m_CurrentTag );
+	Assert( m_pFirstWorldIndex );
+	Assert( m_pFirstWorldIndex[vertex].m_Tag == m_CurrentTag );
 	return &m_pWorldVerts[ m_pFirstWorldIndex[vertex].m_VertexIndex ];
 }
 

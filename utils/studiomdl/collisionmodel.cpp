@@ -708,8 +708,8 @@ void ConvertToWorldSpace( s_source_t *psource, Vector *worldVerts )
 			// convert vertex into original models' bone local space
 			int localBone = psource->localBoneweight[i].bone[n];
 			int globalBone = psource->boneLocalToGlobal[localBone];
-			assert( localBone >= 0 );
-			assert( globalBone >= 0 );
+			Assert( localBone >= 0 );
+			Assert( globalBone >= 0 );
 
 			matrix3x4_t boneToPose;
 			ConcatTransforms( psource->boneToPose[localBone], g_bonetable[globalBone].srcRealign, boneToPose );

@@ -111,7 +111,7 @@ void CLabeledCommandComboBox::ApplyChanges()
 	if (m_Items.Size() < 1)
 		return;
 
-	assert( m_iCurrentSelection < m_Items.Size() );
+	Assert( m_iCurrentSelection < m_Items.Size() );
 	COMMANDITEM *item = &m_Items[ m_iCurrentSelection ];
 	engine->ClientCmd( item->command );
 	m_iStartSelection = m_iCurrentSelection;

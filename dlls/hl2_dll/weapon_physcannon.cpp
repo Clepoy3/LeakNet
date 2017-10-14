@@ -1774,7 +1774,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 
 	case EFFECT_LAUNCH:
 		{
-			assert(pos!=NULL);
+			Assert(pos!=NULL);
 			if ( pos == NULL )
 				return;
 

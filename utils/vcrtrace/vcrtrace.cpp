@@ -225,7 +225,7 @@ static void VCR_TraceEvents()
 				
 				g_pTrace->Read(&ret, sizeof(ret));
 
-				assert(ret < (int)sizeof(buf));
+				Assert(ret < (int)sizeof(buf));
 				if(ret == SOCKET_ERROR)
 				{
 					int err;
@@ -302,7 +302,7 @@ static void VCR_TraceEvents()
 				char str[8192];
 
 				g_pTrace->Read(&len, sizeof(len));
-				assert(len < sizeof(str));
+				Assert(len < sizeof(str));
 				g_pTrace->Read(str, len);
 
 				printf("CmdLine: %s\n", str);

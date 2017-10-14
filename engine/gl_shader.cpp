@@ -73,7 +73,7 @@ void Shader_Shutdown( void )
 void Shader_InitDedicated( void )
 {
 	TRACEINIT( LoadMaterialSystemInterface(), UnloadMaterialSystemInterface() );
-	assert( materialSystemInterface );
+	Assert( materialSystemInterface );
 
 	// assume that paths have already been set via g_pFileSystem 
 	g_MaterialSystemClientFactory = materialSystemInterface->Init( 
@@ -101,7 +101,7 @@ void Shader_InitDedicated( void )
 void Shader_Init( void )
 {
 	TRACEINIT( LoadMaterialSystemInterface(), UnloadMaterialSystemInterface() );
-	assert( materialSystemInterface );
+	Assert( materialSystemInterface );
 
 	// FIXME: Where do we put this?
 	char const* pDLLName = "shaderapidx9";
@@ -212,7 +212,7 @@ void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias, int nQuali
 
 void Shader_SwapBuffers( void )
 {
-	assert( materialSystemInterface );
+	Assert( materialSystemInterface );
 	materialSystemInterface->SwapBuffers();
 }
 

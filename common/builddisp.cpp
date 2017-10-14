@@ -439,7 +439,7 @@ void CCoreDispInfo::InitSurf( int parentIndex, Vector points[4], Vector normals[
 
 		if( lightCoords )
 		{
-			assert( NUM_BUMP_VECTS == 3 );
+			Assert( NUM_BUMP_VECTS == 3 );
 			Vector2DCopy( lightCoords[0][i], m_Surf.m_LightCoords[i][0] );
 			Vector2DCopy( lightCoords[1][i], m_Surf.m_LightCoords[i][1] );
 			Vector2DCopy( lightCoords[2][i], m_Surf.m_LightCoords[i][2] );
@@ -2302,7 +2302,7 @@ void CCoreDispInfo::BaseFacePlaneToDispUV( Vector const &planePt, Vector2D &disp
 	if( ( A > -PLANE_EPSILON ) && ( A < PLANE_EPSILON ) )
 	{
 		// shouldn't be here really -- this should be taken care of up above (the quick result)
-		assert( 0 );
+		Assert( 0 );
 
 #if 0
 		// not a quadratic -- solve linearly

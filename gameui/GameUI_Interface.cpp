@@ -278,7 +278,7 @@ void CGameUI::MasterVersionCheckQuery()
 	net->StringToAdr(m_MasterServerNames[serverIndex].String(), &m_MasterAddress);
 
 	CMsgBuffer *buffer = m_pMaster->GetSendBuffer();
-	assert( buffer );
+	Assert( buffer );
 	if ( !buffer )
 		return;
 

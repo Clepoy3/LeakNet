@@ -112,8 +112,8 @@ bool MergeFace_r( node_t *node, face_t *face, face_t *original )
 		if ( onwinding )
 		{
 			// face is in the split plane, go down the appropriate side according to the facing direction
-			assert( frontwinding == NULL );
-			assert( backwinding == NULL );
+			Assert( frontwinding == NULL );
+			Assert( backwinding == NULL );
 
 			if ( DotProduct( mapplanes[face->planenum].normal, mapplanes[node->planenum].normal ) > 0 )
 			{

@@ -1451,13 +1451,13 @@ static void SubdivideFaceBySubdivSize( face_t *f, float subdivsize )
 	WORD *pStripIndices = NULL;
 	Stripify( triListIndices.Size() / 3, triListIndices.Base(), &numTristripIndices, 
 		&pStripIndices );
-	assert( pStripIndices );
+	Assert( pStripIndices );
 
 	// FIXME: Should also call ComputeVertexPermutation and reorder the verts.
 
 	for( i = 0; i < numTristripIndices; i++ )
 	{
-		assert( pStripIndices[i] >= newPrim.firstVert && 
+		Assert( pStripIndices[i] >= newPrim.firstVert && 
 			pStripIndices[i] < newPrim.firstVert + newPrim.vertCount );
 		g_primindices[newPrim.firstIndex + newPrim.indexCount] = pStripIndices[i];
 		newPrim.indexCount++;

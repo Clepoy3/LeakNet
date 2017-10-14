@@ -171,7 +171,7 @@ MatSysWindow::MatSysWindow (mxWindow *parent, int x, int y, int w, int h, const 
 	g_pFileSystemFactory = Sys_GetFactory( "filesystem_stdio" );
     if( !g_pFileSystemFactory )
     {
-        assert( 0 );
+        Assert( 0 );
         return;
     }
 
@@ -226,7 +226,7 @@ MatSysWindow::MatSysWindow (mxWindow *parent, int x, int y, int w, int h, const 
     Assert( filesystem );
     if( !filesystem )
     {
-        assert( 0 ); // garymcthack
+        Assert( 0 ); // garymcthack
         return;
     }
 
@@ -235,7 +235,7 @@ MatSysWindow::MatSysWindow (mxWindow *parent, int x, int y, int w, int h, const 
 //  Assert( g_pSharedModelCache );
     if (!g_pSharedModelCache)
     {
-    //    assert( 0 ); // garymcthack
+    //    Assert( 0 ); // garymcthack
         return;
     }
     g_pSharedModelCache->InitFileSystem(filesystem);

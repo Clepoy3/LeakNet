@@ -388,7 +388,7 @@ void CTaskbar::CreateGameMenu()
 	else
 	{
 		// add a bunch of default stuff
-		assert(!("Could not load file Resource/GameMenu.res"));
+		Assert(!("Could not load file Resource/GameMenu.res"));
 	}
 	datafile->deleteThis();
 }

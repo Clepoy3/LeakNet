@@ -67,7 +67,7 @@ CConnectMessagePanel::CConnectMessagePanel( vgui::VPANEL parent )
 	scr_connectmsg = cvar->FindVar( "scr_connectmsg" );
 	scr_connectmsg1= cvar->FindVar( "scr_connectmsg1" );
 	scr_connectmsg2= cvar->FindVar( "scr_connectmsg2" );
-	assert( scr_connectmsg && scr_connectmsg1 && scr_connectmsg2 );
+	Assert( scr_connectmsg && scr_connectmsg1 && scr_connectmsg2 );
 
 	vgui::ivgui()->AddTickSignal( GetVPanel(), 200 );
 }
@@ -86,7 +86,7 @@ void CConnectMessagePanel::ApplySchemeSettings(vgui::IScheme *pScheme)
 
 	// Use a large font
 	m_hFont = pScheme->GetFont( "Trebuchet18" );
-	assert( m_hFont );
+	Assert( m_hFont );
 }
 
 //-----------------------------------------------------------------------------

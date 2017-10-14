@@ -283,8 +283,8 @@ bool CEngineSprite::Init( const char *name )
 //-----------------------------------------------------------------------------
 void CEngineSprite::SetColor( float r, float g, float b )
 {
-	assert( (r >= 0.0) && (g >= 0.0) && (b >= 0.0) );
-	assert( (r <= 1.0) && (g <= 1.0) && (b <= 1.0) );
+	Assert( (r >= 0.0) && (g >= 0.0) && (b >= 0.0) );
+	Assert( (r <= 1.0) && (g <= 1.0) && (b <= 1.0) );
 	m_hudSpriteColor[0] = r;
 	m_hudSpriteColor[1] = g;
 	m_hudSpriteColor[2] = b;

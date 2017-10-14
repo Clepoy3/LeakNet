@@ -148,14 +148,14 @@ inline void CParticleSphereRenderer::ClampColor( Vector &vColor )
 
 inline CParticleSphereRenderer::CLightInfo& CParticleSphereRenderer::AmbientLight( int index )
 {
-	assert( index >= 0 && index < CParticleSphereRenderer::NUM_AMBIENT_LIGHTS );
+	Assert( index >= 0 && index < CParticleSphereRenderer::NUM_AMBIENT_LIGHTS );
 	return m_Lights[index];
 }
 
 
 inline CParticleSphereRenderer::CLightInfo& CParticleSphereRenderer::Light( int index )
 {
-	assert( index >= 0 && index < CParticleSphereRenderer::NUM_TOTAL_LIGHTS );
+	Assert( index >= 0 && index < CParticleSphereRenderer::NUM_TOTAL_LIGHTS );
 	return m_Lights[index];
 }
 

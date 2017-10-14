@@ -906,7 +906,7 @@ bool CBoneControlWindow::SerializeQC( CUtlBuffer& buf )
 
 	// Print out the surface props
 	buf.Printf( "$surfaceprop \"%s\"\n", g_pStudioModel->m_SurfaceProps[0].String() );
-	assert( g_pStudioModel->m_SurfaceProps.Count() == hdr->numbones );
+	Assert( g_pStudioModel->m_SurfaceProps.Count() == hdr->numbones );
 
 	int i;
 	for ( i = 1; i < g_pStudioModel->m_SurfaceProps.Count(); ++i)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <assert.h>
 #include "physics_material.h"
 #include "physics_vehicle.h"
 

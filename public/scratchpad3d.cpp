@@ -209,7 +209,7 @@ bool CScratchPad3D::LoadCommandsFromFile( )
 
 		if( !pCmd )
 		{
-			assert( !"LoadCommandsFromFile: invalid file" );
+			Assert( !"LoadCommandsFromFile: invalid file" );
 			m_pFileSystem->Close( fp );
 			return false;
 		}
@@ -443,7 +443,7 @@ void CScratchPad3D::DrawImageBW( unsigned char const *pData, int width, int heig
 
 void CScratchPad3D::DrawImageRGBA( SPRGBA *pData, int width, int height, int pitchInBytes )
 {
-	assert( pitchInBytes % sizeof(SPRGBA) == 0 );
+	Assert( pitchInBytes % sizeof(SPRGBA) == 0 );
 
 	SetMapping( 
 		Vector(0,0,0), 

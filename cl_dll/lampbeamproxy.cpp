@@ -49,7 +49,7 @@ CLampBeamProxy::~CLampBeamProxy( void )
 //-----------------------------------------------------------------------------
 bool CLampBeamProxy::Init( IMaterial *pMaterial, KeyValues* pKeyValues )
 {
-	assert( pMaterial );
+	Assert( pMaterial );
 
 	// Need to get the color variable.
 	bool found;

@@ -202,7 +202,7 @@ void CWeaponGauss::SecondaryAttack( void )
 			m_sndCharge	= (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_WEAPON, "ambience/pulsemachine.wav", ATTN_NORM );
 		}
 
-		assert(m_sndCharge!=NULL);
+		Assert(m_sndCharge!=NULL);
 		if ( m_sndCharge != NULL )
 		{
 			(CSoundEnvelopeController::GetController()).Play( m_sndCharge, 1.0f, 110 );

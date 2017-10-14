@@ -769,7 +769,7 @@ void CCvar::PrintConCommandBaseDescription( const ConCommandBase *pVar )
 	float fMin, fMax;
 	const char *pStr;
 
-	assert( pVar );
+	Assert( pVar );
 
 	if ( !pVar->IsCommand() )
 	{

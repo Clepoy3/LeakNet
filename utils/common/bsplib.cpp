@@ -362,7 +362,7 @@ void CPakFile::ParseFromBuffer( byte *buffer, int bufferlength )
 			break;
 		}
 	}
-	assert( foundEndOfCentralDirRecord );
+	Assert( foundEndOfCentralDirRecord );
 	
 	buf.SeekGet( CUtlBuffer::SEEK_HEAD, rec.startOfCentralDirOffset );
 
@@ -376,15 +376,15 @@ void CPakFile::ParseFromBuffer( byte *buffer, int bufferlength )
 
 	// Allocate space for directory
 	TmpFileInfo_t *newfiles = new TmpFileInfo_t[ numpackfiles ];
-	assert( newfiles );
+	Assert( newfiles );
 
 	int i;
 	for( i = 0; i < rec.nCentralDirectoryEntries_Total; i++ )
 	{
 		ZIP_FileHeader fileHeader;
 		buf.Get( &fileHeader, sizeof( ZIP_FileHeader ) );
-		assert( fileHeader.signature == 0x02014b50 );
-		assert( fileHeader.compressionMethod == 0 );
+		Assert( fileHeader.signature == 0x02014b50 );
+		Assert( fileHeader.compressionMethod == 0 );
 		
 		// bogus. . .do we have to allocate this here?  should make a symbol instead.
 		char tmpString[1024];
@@ -402,7 +402,7 @@ void CPakFile::ParseFromBuffer( byte *buffer, int bufferlength )
 		buf.SeekGet( CUtlBuffer::SEEK_HEAD, newfiles[i].filepos );
 		ZIP_LocalFileHeader localFileHeader;
 		buf.Get( &localFileHeader, sizeof( ZIP_LocalFileHeader ) );
-		assert( localFileHeader.signature == 0x04034b50 );
+		Assert( localFileHeader.signature == 0x04034b50 );
 		buf.SeekGet( CUtlBuffer::SEEK_CURRENT, localFileHeader.fileNameLength + localFileHeader.extraFieldLength );
 		newfiles[i].filepos = buf.TellGet();
 	}
@@ -481,8 +481,8 @@ static void CopyTextData( char *pDst, const char *pSrc, int dstSize, int srcSize
 			pDstScan++;
 		}
 	}
-	assert( pSrcScan == pSrcEnd );
-	assert( pDstScan == pDstEnd );
+	Assert( pSrcScan == pSrcEnd );
+	Assert( pDstScan == pDstEnd );
 }
 
 //-----------------------------------------------------------------------------
@@ -624,7 +624,7 @@ void CPakFile::WriteLump( void )
 	for( i = 0; i < m_Files.Count(); i++ )
 	{
 		CPakEntry *e = &m_Files[ i ];
-		assert( e );
+		Assert( e );
 
 		// Fix up the offset
 		e->offset = buf.TellPut();
@@ -660,7 +660,7 @@ void CPakFile::WriteLump( void )
 	for( i = 0; i < m_Files.Count(); i++, realNumFiles++ )
 	{
 		CPakEntry *e = &m_Files[ i ];
-		assert( e );
+		Assert( e );
 		
 		if ( e->length > 0 && e->data != NULL )
 		{
@@ -711,7 +711,7 @@ void CPakFile::WriteLump( void )
 /*
 	FILE *fp;
 	fp = fopen( "crap.zip", "wb" );
-	assert( fp );
+	Assert( fp );
 	fwrite( buf.Base(), buf.TellPut(), 1, fp );
 	fclose( fp );
 */
@@ -774,7 +774,7 @@ void AddBufferToPack( const char *relativename, void *data, int length, bool bTe
 GameLumpHandle_t GetGameLumpHandle( GameLumpId_t id )
 {
 	// NOTE: I'm also expecting game lump id's to be four-CC codes
-	assert( id > HEADER_LUMPS );
+	Assert( id > HEADER_LUMPS );
 
 	for (int i = s_GameLumps.Count(); --i >= 0; )
 	{
@@ -843,7 +843,7 @@ GameLumpHandle_t	InvalidGameLump()
 
 GameLumpHandle_t	CreateGameLump( GameLumpId_t id, int size, int flags, int version )
 {
-	assert( GetGameLumpHandle(id) == InvalidGameLump() );
+	Assert( GetGameLumpHandle(id) == InvalidGameLump() );
 	GameLumpHandle_t handle = s_GameLumps.AddToTail();
 	s_GameLumps[handle].m_Id = id;
 	s_GameLumps[handle].m_Flags = flags;
@@ -2401,7 +2401,7 @@ bool CToolBSPTree::EnumerateLeavesAlongRay( Ray_t const& ray, ISpatialLeafEnumer
 	}
 
 	// FIXME: Extruded ray not implemented yet
-	assert( ray.m_IsRay );
+	Assert( ray.m_IsRay );
 
 	Vector end;
 	VectorAdd( ray.m_Start, ray.m_Delta, end );

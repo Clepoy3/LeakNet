@@ -60,7 +60,7 @@ CDownloadSliderPanel::CDownloadSliderPanel( vgui::VPANEL parent ) :
 	SetPaintBackgroundEnabled( false );
 
 	scr_downloading = (ConVar *)cvar->FindVar( "scr_downloading" );
-	assert( scr_downloading );
+	Assert( scr_downloading );
 
 	vgui::ivgui()->AddTickSignal( GetVPanel(), 250 );
 }

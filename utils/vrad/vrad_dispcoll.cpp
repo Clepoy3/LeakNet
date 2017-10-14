@@ -68,7 +68,7 @@ bool CVRADDispColl::Create( CCoreDispInfo *pDisp )
 
 	// Set up the luxel data
 	m_pLuxelCoords = new Vector2D[GetSize()];
-	assert( m_pLuxelCoords );
+	Assert( m_pLuxelCoords );
 	for ( i = GetSize(); --i >= 0; )
 	{
 		pDisp->GetLuxelCoord( 0, i, m_pLuxelCoords[i] );	

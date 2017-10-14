@@ -175,7 +175,7 @@ void ProgressBox::PerformLayout()
 //-----------------------------------------------------------------------------
 void ProgressBox::SetProgress(float progress)
 {
-	assert(progress >= 0.0f && progress <= 1.0f);
+	Assert(progress >= 0.0f && progress <= 1.0f);
 	m_pProgressBar->SetProgress(progress);
 	m_pProgressBar->SetVisible(true);
 

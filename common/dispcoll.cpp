@@ -46,8 +46,8 @@ void CDispCollTri::Init( void )
 //-----------------------------------------------------------------------------
 inline void CDispCollTri::SetPoint( int index, Vector const &vert )
 {
-	assert( index >= 0 );
-	assert( index < 3 );
+	Assert( index >= 0 );
+	Assert( index < 3 );
 
 	m_Points[index].x = vert[0];
 	m_Points[index].y = vert[1];
@@ -60,8 +60,8 @@ inline void CDispCollTri::SetPoint( int index, Vector const &vert )
 //-----------------------------------------------------------------------------
 inline void CDispCollTri::SetPointNormal( int index, Vector const &normal )
 {
-	assert( index >= 0 );
-	assert( index < 3 );
+	Assert( index >= 0 );
+	Assert( index < 3 );
 
 	m_PointNormals[index].x = normal[0];
 	m_PointNormals[index].y = normal[1];
@@ -480,7 +480,7 @@ bool CDispCollTree::Create( CCoreDispInfo *pDisp )
 bool CDispCollTree::AllocNodes( int nodeCount )
 {
 	// sanity check
-	assert( nodeCount != 0 );
+	Assert( nodeCount != 0 );
 
 	m_pNodes = new CDispCollNode[nodeCount];
 	if( !m_pNodes )
@@ -513,8 +513,8 @@ void CDispCollTree::FreeNodes( void )
 inline int CDispCollTree::CalcNodeCount( int power )
 {
 	// power range [2...4]
-	assert( power > 0 );
-	assert( power < 5 );
+	Assert( power > 0 );
+	Assert( power < 5 );
 
 	return ( ( 1 << ( ( power + 1 ) << 1 ) ) / 3 );
 }
@@ -528,8 +528,8 @@ inline int CDispCollTree::CalcNodeCount( int power )
 inline int CDispCollTree::GetParentNode( int nodeIndex )
 {
 	// node range [0...m_NodeCount)
-	assert( nodeIndex >= 0 );
-	assert( nodeIndex < m_NodeCount );
+	Assert( nodeIndex >= 0 );
+	Assert( nodeIndex < m_NodeCount );
 
 	// ( nodeIndex - 1 ) / 4
 	return ( ( nodeIndex - 1 ) >> 2 );
@@ -546,8 +546,8 @@ inline int CDispCollTree::GetParentNode( int nodeIndex )
 inline int CDispCollTree::GetChildNode( int nodeIndex, int direction )
 {
 	// node range [0...m_NodeCount)
-	assert( nodeIndex >= 0 );
-	assert( nodeIndex < m_NodeCount );
+	Assert( nodeIndex >= 0 );
+	Assert( nodeIndex < m_NodeCount );
 
     // ( nodeIndex * 4 ) + ( direction + 1 )
     return ( ( nodeIndex << 2 ) + ( direction + 1 ) );	
@@ -560,8 +560,8 @@ inline int CDispCollTree::GetChildNode( int nodeIndex, int direction )
 inline int CDispCollTree::GetNodeLevel( int nodeIndex )
 {
 	// node range [0...m_NodeCount)
-	assert( nodeIndex >= 0 );
-	assert( nodeIndex < m_NodeCount );
+	Assert( nodeIndex >= 0 );
+	Assert( nodeIndex < m_NodeCount );
 
 	// level = 2^n + 1
 	if( nodeIndex == 0 )  { return 1; }
@@ -766,8 +766,8 @@ void CDispCollTree::RayNodeTest_r( CDispCollTreeTempData *pTemp, int nodeIndex, 
 		if( pNode->IsLeaf() )
 		{
 			// assert for now -- flush cache later!!!!!
-			assert( pTemp->m_TriListCount >= 0 );
-			assert( pTemp->m_TriListCount < TRILIST_CACHE_SIZE );
+			Assert( pTemp->m_TriListCount >= 0 );
+			Assert( pTemp->m_TriListCount < TRILIST_CACHE_SIZE );
 
 			pTemp->m_ppTriList[pTemp->m_TriListCount] = &pNode->m_Tris[0];
 			pTemp->m_ppTriList[pTemp->m_TriListCount+1] = &pNode->m_Tris[1];
@@ -1934,8 +1934,8 @@ void CDispCollTree::BuildTriList_r( CDispCollTreeTempData *pTemp, int nodeIndex,
 		if( pNode->IsLeaf() )
 		{
 			// assert for now -- flush cache later!!!!!
-			assert( pTemp->m_TriListCount >= 0 );
-			assert( pTemp->m_TriListCount < TRILIST_CACHE_SIZE );
+			Assert( pTemp->m_TriListCount >= 0 );
+			Assert( pTemp->m_TriListCount < TRILIST_CACHE_SIZE );
 
 			pTemp->m_ppTriList[pTemp->m_TriListCount] = &pNode->m_Tris[0];
 			pTemp->m_ppTriList[pTemp->m_TriListCount+1] = &pNode->m_Tris[1];

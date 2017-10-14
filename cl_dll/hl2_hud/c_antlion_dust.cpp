@@ -109,7 +109,7 @@ void C_TEAntlionDust::PostDataUpdate( DataUpdateType_t updateType )
 
 	if ( !pDustEmitter )
 	{
-		assert(0);
+		Assert(0);
 		return;
 	}
 

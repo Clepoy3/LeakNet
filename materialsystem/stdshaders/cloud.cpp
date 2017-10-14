@@ -11,7 +11,7 @@
 BEGIN_SHADER( Cloud,
 			  "Help for Cloud" )
 	BEGIN_SHADER_PARAMS
-		SHADER_PARAM( CLOUDALPHATEXTURE, SHADER_PARAM_TYPE_TEXTURE, "", "cloud alpha texture" )
+		SHADER_PARAM( CLOUDALPHATEXTURE, SHADER_PARAM_TYPE_TEXTURE, "shadertest/cloudalpha", "cloud alpha texture" )
 		SHADER_PARAM( CLOUDSCALE, SHADER_PARAM_TYPE_VEC2, "[1 1]", "cloudscale" )
 		SHADER_PARAM( MASKSCALE, SHADER_PARAM_TYPE_VEC2, "[1 1]", "maskscale" )
 		SHADER_PARAM( ADDITIVE, SHADER_PARAM_TYPE_BOOL, "0", "additive blend (as opposed to over blend)" )

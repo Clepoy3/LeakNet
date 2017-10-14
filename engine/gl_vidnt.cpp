@@ -87,7 +87,7 @@ void VID_TakeSnapshotRect( const char *pFilename, int x, int y, int w, int h, in
 	// Get Bits from the material system
 	materialSystemInterface->ReadPixels( x, y, w, h, pImage, IMAGE_FORMAT_RGBA8888 );
 
-	assert( w == h ); // garymcthack - this only works for square images
+	Assert( w == h ); // garymcthack - this only works for square images
 
 	if( !ImageLoader::ResampleRGBA8888( pImage, pImage1, w, h, resampleWidth, resampleHeight, 1.0f, 1.0f ) )
 	{

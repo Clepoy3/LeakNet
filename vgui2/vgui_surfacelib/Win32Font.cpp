@@ -165,7 +165,7 @@ bool CWin32Font::Create(const char *windowsFontName, int tall, int weight, int b
 	// c is the space after the character
 	memset(m_ABCWidthsCache, 0, sizeof(m_ABCWidthsCache));
 	ABC abc[ABCWIDTHS_CACHE_SIZE];
-	assert(ABCWIDTHS_CACHE_SIZE <= 256);
+	Assert(ABCWIDTHS_CACHE_SIZE <= 256);
 	if (::GetCharABCWidthsW(m_hDC, 0, ABCWIDTHS_CACHE_SIZE - 1, &abc[0]) || ::GetCharABCWidthsA(m_hDC, 0, ABCWIDTHS_CACHE_SIZE - 1, &abc[0]))
 	{	
 		// copy out into our formated structure
@@ -579,7 +579,7 @@ bool CWin32Font::IsValid()
 //-----------------------------------------------------------------------------
 void CWin32Font::SetAsActiveFont(HDC hdc)
 {
-	assert(IsValid());
+	Assert(IsValid());
 	::SelectObject(hdc, m_hFont);
 }
 
@@ -588,7 +588,7 @@ void CWin32Font::SetAsActiveFont(HDC hdc)
 //-----------------------------------------------------------------------------
 void CWin32Font::GetCharABCWidths(int ch, int &a, int &b, int &c)
 {
-	assert(IsValid());
+	Assert(IsValid());
 	if (ch < ABCWIDTHS_CACHE_SIZE)
 	{
 		// use the cache entry
@@ -619,7 +619,7 @@ void CWin32Font::GetCharABCWidths(int ch, int &a, int &b, int &c)
 //-----------------------------------------------------------------------------
 int CWin32Font::GetHeight()
 {
-	assert(IsValid());
+	Assert(IsValid());
 	return m_iHeight;
 }
 
@@ -628,7 +628,7 @@ int CWin32Font::GetHeight()
 //-----------------------------------------------------------------------------
 int CWin32Font::GetMaxCharWidth()
 {
-	assert(IsValid());
+	Assert(IsValid());
 	return m_iMaxCharWidth;
 }
 

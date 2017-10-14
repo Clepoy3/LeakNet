@@ -20,8 +20,8 @@ CNetworkStringTable::CNetworkStringTable( TABLEID id, const char *tableName, int
 {
 	m_id = id;
 	m_pszTableName = new char[ strlen( tableName ) + 1 ];
-	assert( m_pszTableName );
-	assert( tableName );
+	Assert( m_pszTableName );
+	Assert( tableName );
 	strcpy( m_pszTableName, tableName );
 
 	m_nMaxEntries = maxentries;
@@ -163,7 +163,7 @@ void CNetworkStringTable::SetString( int stringNumber, const char *value )
 //-----------------------------------------------------------------------------
 const char *CNetworkStringTable::GetString( int stringNumber )
 {
-	assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
+	Assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
 	return m_Items.GetElementName( stringNumber );
 }
 
@@ -177,9 +177,10 @@ void CNetworkStringTable::SetStringUserData( int stringNumber, int length /*=0*/
 {
 	CNetworkStringTableItem *p;
 
-	assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
+	Assert( (length == 0 && userdata == NULL) || ( length > 0 && userdata != NULL) );
+	Assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
 	p = &m_Items[ stringNumber ];
-	assert( p );
+	Assert( p );
 
 	if ( p->SetUserData( length, userdata ) )
 	{
@@ -198,9 +199,9 @@ const void *CNetworkStringTable::GetStringUserData( int stringNumber, int *lengt
 {
 	CNetworkStringTableItem *p;
 
-	assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
+	Assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
 	p = &m_Items[ stringNumber ];
-	assert( p );
+	Assert( p );
 	return p->GetUserData( length );
 }
 

@@ -274,7 +274,7 @@ void VoiceSE_StartChannel(
 	int iChannel	//! Which channel to start.
 	)
 {
-	assert( iChannel >= 0 && iChannel < VOICE_NUM_CHANNELS );
+	Assert( iChannel >= 0 && iChannel < VOICE_NUM_CHANNELS );
 
 	// Start the sound.
 	CSfxTable *sfx = &g_CVoiceSfx[iChannel];

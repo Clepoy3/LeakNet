@@ -29,7 +29,7 @@
 //-----------------------------------------------------------------------------
 void AddDispSurfsToLeafs_r( IDispInfo *pDispInfo, mnode_t *pNode )
 {
-	assert( pDispInfo );
+	Assert( pDispInfo );
 
 	while( 1 )
 	{

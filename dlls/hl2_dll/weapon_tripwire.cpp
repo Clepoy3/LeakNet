@@ -42,7 +42,7 @@ END_SEND_TABLE()
 LINK_ENTITY_TO_CLASS( weapon_tripwire, CWeapon_Tripwire );
 
 // BUGBUG: Enable this when the script & resources are checked in.
-//PRECACHE_WEAPON_REGISTER(weapon_tripwire);
+PRECACHE_WEAPON_REGISTER(weapon_tripwire);
 
 acttable_t	CWeapon_Tripwire::m_acttable[] = 
 {

@@ -705,7 +705,7 @@ inline StudioModelLighting_t CStudioRender::R_StudioComputeLighting( IMaterial *
 
 	// FIXME: When we move software lighting into the material system, only need to
 	// test if it's vertex lit
-	assert( pMaterial );
+	Assert( pMaterial );
 	bool doMouthLighting = materialFlags && (m_pStudioHdr->nummouths >= 1);
 
 	bool doSoftwareLighting = doMouthLighting ||

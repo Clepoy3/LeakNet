@@ -87,7 +87,7 @@ void CObjectRallyFlag::RallyThink( void )
 	for ( int i = 0; i < GetTFTeam()->GetNumPlayers(); i++ )
 	{
 		CBaseTFPlayer *pPlayer = (CBaseTFPlayer *)GetTFTeam()->GetPlayer(i);
-		assert(pPlayer);
+		Assert(pPlayer);
 
 		// Is it within range?
 		if ( ((pPlayer->GetAbsOrigin() - GetAbsOrigin()).Length() < RALLYFLAG_RADIUS ) && pPlayer->IsAlive() )

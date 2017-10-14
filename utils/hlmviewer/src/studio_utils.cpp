@@ -71,14 +71,14 @@ void StudioModel::Init()
 	if( !studioRenderDLL )
 	{
 //		Msg( mwWarning, "Can't load StudioRender.dll\n" );
-		assert( 0 ); // garymcthack
+		Assert( 0 ); // garymcthack
 		return;
 	}
 	CreateInterfaceFn studioRenderFactory = Sys_GetFactory( "StudioRender.dll" );
 	if (!studioRenderFactory )
 	{
 //		Msg( mwWarning, "Can't get studio render factory\n" );
-		assert( 0 ); // garymcthack
+		Assert( 0 ); // garymcthack
 		return;
 	}
 
@@ -92,14 +92,14 @@ void StudioModel::Init()
 	if (!m_pStudioRender)
 	{
 //		Msg( mwWarning, "Can't get version %s of StudioRender.dll\n", STUDIO_RENDER_INTERFACE_VERSION );
-		assert( 0 ); // garymcthack
+		Assert( 0 ); // garymcthack
 		return;
 	}
 
 	if( !m_pStudioRender->Init( g_MaterialSystemFactory, g_MaterialSystemClientFactory ) )
 	{
 //		Msg( mwWarning, "Can't initialize StudioRender.dll\n" );
-		assert( 0 ); // garymcthack
+		Assert( 0 ); // garymcthack
 		m_pStudioRender = NULL;
 	}
 	m_AmbientLightColors = new Vector[m_pStudioRender->GetNumAmbientLightSamples()];
@@ -113,7 +113,7 @@ void StudioModel::Init()
     Assert( filesystem );
     if( !filesystem )
     {
-        assert( 0 ); // garymcthack
+        Assert( 0 ); // garymcthack
         return;
     }
 
@@ -121,7 +121,7 @@ void StudioModel::Init()
 //  Assert( g_pSharedModelCache );
     if (!g_pSharedModelCache)
     {
-        assert( 0 ); // garymcthack
+        Assert( 0 ); // garymcthack
         return;
     }
     g_pSharedModelCache->InitFileSystem(filesystem);
@@ -315,7 +315,7 @@ bool StudioModel::LoadModel( const char *modelname )
 	char *vtxFileName = ( char * )_alloca( vtxFileNameLen );
 	strcpy( vtxFileName, modelname );
 	strcpy( vtxFileName + strlen( vtxFileName ) - 4, pExtension );
-	assert( ( int )strlen( vtxFileName ) == vtxFileNameLen - 1 );
+	Assert( ( int )strlen( vtxFileName ) == vtxFileNameLen - 1 );
 	
 	CUtlMemory<unsigned char> tmpVtxMem; // This goes away when we leave this scope.
 	
@@ -327,7 +327,7 @@ bool StudioModel::LoadModel( const char *modelname )
 		vtxFileName = ( char * )_alloca( vtxFileNameLen );
 		strcpy( vtxFileName, modelname );
 		strcpy( vtxFileName + strlen( vtxFileName ) - 4, pExtension );
-		assert( ( int )strlen( vtxFileName ) == vtxFileNameLen - 1 );
+		Assert( ( int )strlen( vtxFileName ) == vtxFileNameLen - 1 );
 		if( (fp = fopen( vtxFileName, "rb" )) == NULL)
 		{
 			// garymcthack - need to spew an error
