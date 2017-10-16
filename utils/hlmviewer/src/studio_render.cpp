@@ -380,7 +380,7 @@ void StudioModel::SetUpBones ( bool mergeBones )
 	if ( g_viewerSettings.enableIK )
 	{
 		pIK = &ik;
-		ik.Init( m_pstudiohdr, a1, p1, 0.0 );
+		ik.Init( m_pstudiohdr, a1, p1, 0.0 ); // VXP: TODO: Add bonemask parameter to CIKContext?
 	}
 
 	// VXP: TODO: Should I do this here???
@@ -442,7 +442,7 @@ void StudioModel::SetUpBones ( bool mergeBones )
 	SetHeadPosition( pos, q );
 
 	CIKContext auto_ik;
-	auto_ik.Init( m_pstudiohdr, a1, p1, 0.0 );
+	auto_ik.Init( m_pstudiohdr, a1, p1, 0.0 ); // VXP: TODO: Add bonemask parameter to CIKContext?
 
 	CalcAutoplaySequences( m_pstudiohdr, &auto_ik, pos, q, m_poseparameter, BoneMask( ), GetAutoPlayTime() );
 
@@ -1246,7 +1246,7 @@ void StudioModel::DrawPhysicsModel( )
 void StudioModel::SetViewTarget( void )
 {
 	// VXP: only valid if the attachment bones are used
-	if ((BoneMask() & BONE_USED_BY_ATTACHMENT) == 0) // VXP: FIx for "Highlight Bone"
+	if ((BoneMask() & BONE_USED_BY_ATTACHMENT) == 0) // VXP: Fix for "Highlight Bone"
 	{
 		return;
 	}

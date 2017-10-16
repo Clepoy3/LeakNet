@@ -79,7 +79,7 @@ CGrenadeHomer* CGrenadeHomer::CreateGrenadeHomer( string_t sModelName, string_t 
 		return NULL;
 	}
 
-	if ( pGrenade->pev )
+	if ( pGrenade->edict() )
 	{
 		pGrenade->m_sFlySound	= sFlySound;
 		pGrenade->SetOwnerEntity( Instance( pentOwner ) );

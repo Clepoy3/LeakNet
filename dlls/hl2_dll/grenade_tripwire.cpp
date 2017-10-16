@@ -134,6 +134,18 @@ void CTripwireGrenade::BreakRope( void )
 		{
 			m_pRope->DetachPoint(1);
 		}
+
+		UTIL_Remove( m_pRope );
+		m_pRope = NULL;
+
+		// VXP: Maybe, immediately break a hook too here?
+		UTIL_Remove( m_pHook );
+
+		// VXP: Or we can delay removing a bit for whatever reason
+	//	m_pHook->SetThink( SUB_Remove );
+	//	m_pHook->SetNextThink( gpGlobals->curtime + 1.0f );
+
+		m_pHook = NULL;
 	}
 }
 
@@ -254,6 +266,7 @@ void CTripwireGrenade::Event_Killed( const CTakeDamageInfo &info )
 			FireMissile(vTargetPos);
 		}
 		BreakRope();
+		m_iHealth = 0; // VXP: Fix for spamming rockets too much on it's death
 		UTIL_Remove(this);
 	}
 }
@@ -312,7 +325,9 @@ void CTripwireGrenade::FireThink()
 	if (m_nMissileCount > 4)
 	{
 		m_iHealth = -1;
-		SetThink( NULL );
+	//	SetThink( NULL );
+		SetThink( SUB_Remove );
+		SetNextThink( gpGlobals->curtime );
 	}
 }
 
