@@ -268,13 +268,13 @@ protected:
 		{
 			m_hCurrentActiveWeapon = NULL;
 			SetPaintEnabled( false );
-		//	SetPaintBackgroundEnabled( false );
+			SetPaintBackgroundEnabled( false );
 			return;
 		}
 		else
 		{
 			SetPaintEnabled( true );
-		//	SetPaintBackgroundEnabled( true );
+			SetPaintBackgroundEnabled( true );
 		}
 		
 	//	SetShouldDisplaySecondaryValue(true); // VXP: Test

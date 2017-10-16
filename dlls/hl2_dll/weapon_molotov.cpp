@@ -37,6 +37,7 @@ BEGIN_DATADESC( CWeaponMolotov )
 
 	// Function Pointers
 	DEFINE_FUNCTION( CWeaponMolotov, MolotovTouch ),
+	DEFINE_FUNCTION( CWeaponMolotov, ThrowingThink ),
 
 END_DATADESC()
 
@@ -106,7 +107,7 @@ void CWeaponMolotov::MolotovTouch( CBaseEntity *pOther )
 		CWeaponMolotov* oldWeapon = (CWeaponMolotov*)pBCC->Weapon_OwnsThisType( GetClassname() );
 		if (oldWeapon != this)
 		{
-			UTIL_Remove( this );
+			UTIL_Remove( oldWeapon ); // VXP: Was "this" for some reason 0_o
 		}
 		else
 		{
@@ -350,6 +351,67 @@ void CWeaponMolotov::PrimaryAttack( void )
 	{
 		return;
 	}
+/*
+	Vector vecSrc		= pPlayer->WorldSpaceCenter();
+	Vector vecFacing	= pPlayer->BodyDirection3D( );
+	vecSrc				= vecSrc + vecFacing * 18.0;
+	// BUGBUG: is this some hack because it's not at the eye position????
+	vecSrc.z		   += 24.0f;
+
+	// Player may have turned to face a wall during the throw anim in which case
+	// we don't want to throw the SLAM into the wall
+	if (ObjectInWay())
+	{
+		vecSrc   = pPlayer->WorldSpaceCenter() + vecFacing * 5.0;
+	}
+
+	Vector vecAiming = pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
+	vecAiming.z += 0.20; // Raise up so passes through reticle
+
+	ThrowMolotov(vecSrc, vecAiming*800);
+	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
+*/
+
+	// Don't fire again until fire animation has completed
+//	m_flNextPrimaryAttack = gpGlobals->curtime + CurSequenceDuration();
+	//<<TEMP>> - till real animation is avaible
+//	m_flNextPrimaryAttack = gpGlobals->curtime + 1.0;
+//	m_flNextSecondaryAttack = gpGlobals->curtime + 1.0;
+
+//	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+	SendWeaponAnim( ACT_VM_THROW );
+
+//	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+//	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
+
+	SetThink( ThrowingThink );
+	SetNextThink( gpGlobals->curtime + 0.5f );
+
+	m_bNeedDraw = true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//
+//
+//-----------------------------------------------------------------------------
+void CWeaponMolotov::SecondaryAttack( void )
+{
+	//<<TEMP>>
+	// Hmmm... what should I do here?
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponMolotov::ThrowingThink( void )
+{
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+
+	if (!pPlayer)
+	{
+		return;
+	}
 
 	Vector vecSrc		= pPlayer->WorldSpaceCenter();
 	Vector vecFacing	= pPlayer->BodyDirection3D( );
@@ -370,25 +432,21 @@ void CWeaponMolotov::PrimaryAttack( void )
 	ThrowMolotov(vecSrc, vecAiming*800);
 	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
 
-	
-	// Don't fire again until fire animation has completed
-	//m_flNextPrimaryAttack = gpGlobals->curtime + CurSequenceDuration();
-	//<<TEMP>> - till real animation is avaible
-	m_flNextPrimaryAttack = gpGlobals->curtime + 1.0;
-	m_flNextSecondaryAttack = gpGlobals->curtime + 1.0;
+	CBaseCombatCharacter *pOwner = GetOwner();
+	if (pOwner->GetAmmoCount(m_iSecondaryAmmoType) <=0)
+	{
+		pOwner->Weapon_Drop( this );
+		UTIL_Remove(this);
+		return;
+	}
 
-	m_bNeedDraw = true;
-}
+	SendWeaponAnim( ACT_VM_DRAW );
 
-//-----------------------------------------------------------------------------
-// Purpose: 
-//
-//
-//-----------------------------------------------------------------------------
-void CWeaponMolotov::SecondaryAttack( void )
-{
-	//<<TEMP>>
-	// Hmmm... what should I do here?
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
+
+	SetThink( NULL );
+	SetNextThink( gpGlobals->curtime );
 }
 
 //-----------------------------------------------------------------------------
@@ -401,19 +459,28 @@ void CWeaponMolotov::DrawAmmo( void )
 	// -------------------------------------------
 	// Make sure I have ammo of the current type
 	// -------------------------------------------
+/* VXP: Moved to ThrowingThink
 	CBaseCombatCharacter *pOwner = GetOwner();
+	Msg( "m_iSecondaryAmmoCount = %i\n", pOwner->GetAmmoCount(m_iSecondaryAmmoType) );
 	if (pOwner->GetAmmoCount(m_iSecondaryAmmoType) <=0)
 	{
 		pOwner->Weapon_Drop( this );
 		UTIL_Remove(this);
 		return;
 	}
+*/
+
+//	SendWeaponAnim( ACT_VM_DRAW );
+
 	Msg("Drawing Molotov...\n");
 	m_bNeedDraw = false;
 
 	//<<TEMP>> - till real animation is avaible
-	m_flNextPrimaryAttack	= gpGlobals->curtime + 2.0;
-	m_flNextSecondaryAttack = gpGlobals->curtime + 2.0;
+//	m_flNextPrimaryAttack	= gpGlobals->curtime + 2.0;
+//	m_flNextSecondaryAttack = gpGlobals->curtime + 2.0;
+
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 
 }
 
@@ -444,6 +511,7 @@ void CWeaponMolotov::ItemPostFrame( void )
 		}
 	}
 	else if (m_bNeedDraw)
+//	if (m_bNeedDraw) // VXP: Enable repeated throwing 0_o Funny
 	{
 		DrawAmmo();
 	}
