@@ -405,6 +405,9 @@ public:
 
 CTraceSolverSweptObject::CTraceSolverSweptObject( trace_t *ptr, ITraceObject *sweepobject, CTraceRay *ray, CTraceIVP *obstacle, const Vector &axis, unsigned int contentsMask, IConvexInfo *pConvexInfo )
 {
+	// VXP: Missing initializations
+	m_rayLengthOS = 0.0f;
+
 	m_pTotalTrace = ptr;
 	m_sweepObject = sweepobject;
 	m_obstacle = obstacle;
@@ -831,6 +834,13 @@ Vector SolveEdge( simplex_t &simplex, const voronoiedge_t &edge, const simplexve
 		simplex.verts[0] = t0;
 		simplex.verts[1] = t1;
 
+#ifdef _DEBUG
+	//	printf( "dot[0] = %f, dot[1] = %f\n", edge.dot[0], edge.dot[1] );
+	//	printf( "-Divide = %f\n", (-edge.dot[1] / (edge.dot[0] - edge.dot[1])) );
+		printf( "x = %f, 1-x = %f\n", x, (1.f-x) );
+		printf( "t0pos = %f:%f:%f, t1pos = %f:%f:%f\n", t0.position[0], t0.position[1], t0.position[2], t1.position[0], t1.position[1], t1.position[2] );
+#endif // _DEBUG
+
 		return x * t0.position + (1.f-x)*t1.position;
 	}
 	else
@@ -847,6 +857,10 @@ Vector SolveFace( simplex_t &simplex, const voronoiface_t &face, const simplexve
 	simplex.verts[0] = t0;
 	simplex.verts[1] = t1;
 	simplex.verts[2] = t2;
+
+#ifdef _DEBUG
+//	printf( "Normal = %f:%f:%f, Dist = %f\n", face.normal[0], face.normal[1], face.normal[2], face.dist );
+#endif // _DEBUG
 	return face.normal * face.dist;
 }
 
@@ -911,6 +925,9 @@ Vector SolveVoronoiRegion3( simplex_t &simplex, const simplexvert_t &newPoint )
 
 		face0.faceFlip = 0;
 		face0.dist = DotProduct( face0.normal, vertList[face0.vertIndex[0]]->position );
+#ifdef _DEBUG
+	//	printf( "SVR3: dist = %f\n", face0.dist );
+#endif // _DEBUG
 
 		face0.score = 0;
 	}
@@ -1070,7 +1087,7 @@ Vector SolveGJKSet( simplex_t &simplex, const simplexvert_t &w )
 // and this is an intersection from the initial object position.
 int ClassifySweepVerts( simplex_t &simplex, int skipVert, int moveIndex[4], int staticIndex[4] )
 {
-	assert( simplex.vertCount <= 4 );
+	Assert( simplex.vertCount <= 4 );
 	int moveCount = 0, staticCount = 0;
 	for ( int i = 0; i < simplex.vertCount; i++ )
 	{
@@ -1430,7 +1447,7 @@ void CalculateSeparatingPlane( trace_t *ptr, ITraceObject *sweepObject, CTraceRa
 	int testCount = 1, obstacleCount = 1, testIndex[4], obstacleIndex[4];
 	testIndex[0] = simplex.verts[0].testIndex;
 	obstacleIndex[0] = simplex.verts[0].obstacleIndex;
-	assert( simplex.vertCount <= 4 );
+	Assert( simplex.vertCount <= 4 );
 	for ( int i = 1; i < simplex.vertCount; i++ )
 	{
 		int j;
@@ -1571,7 +1588,7 @@ float CTraceSolverSweptObject::SolveMeshIntersection( simplex_t &simplex )
 		simplex.vertCount++;
 		iterate = true;
 
-		assert( simplex.vertCount <= 4 );
+		Assert( simplex.vertCount <= 4 );
 		// expanded from edge to tri, check to make sure it's planar
 		if ( simplex.vertCount == 3 )
 		{
@@ -1824,6 +1841,17 @@ void CPhysicsTrace::GetStartVert( const IVP_Compact_Ledge *pLedge, const IVP_U_F
 
 CPhysicsTrace::CPhysicsTrace()
 {
+	// VXP: Missing initializations
+/*
+	for ( int i = 0; i < CONVEX_HASH_SIZE; i++ )
+	{
+		m_vertVisit->visitID = 0;
+		m_vertVisit->vertID = 0;
+	}
+	m_vertVisitID = 0;
+	m_statsDotProduct = 0;
+*/
+
 	InitEdges();
 	m_pLedgeCache = new CLedgeCache;
 }
