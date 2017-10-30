@@ -299,7 +299,7 @@ void C_ExtinguisherJet::Update( float fTimeDelta )
 
 				pParticle = (SimpleParticle *) m_pEmberEmitter->AddParticle( sizeof(SimpleParticle), m_pEmberEmitter->GetPMaterial( "particle/particle_smokegrenade" ), GetAbsOrigin() );
 				
-				assert(pParticle);
+				Assert(pParticle);
 
 				if ( pParticle )
 				{
