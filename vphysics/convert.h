@@ -24,24 +24,16 @@ struct cplane_t;
 // Convert HL engine units to IVP units
 inline void ConvertPositionToIVP( const Vector &in, IVP_U_Float_Point &out )
 {
-	float tmpZ;
-
-	tmpZ = in[1];
-
 	out.k[0] = HL2IVP(in[0]);
 	out.k[1] = -HL2IVP(in[2]);
-	out.k[2] = HL2IVP(tmpZ);
+	out.k[2] = HL2IVP(in[1]);
 }
 
 inline void ConvertPositionToIVP( const Vector &in, IVP_U_Point &out )
 {
-	float tmpZ;
-
-	tmpZ = in[1];
-
 	out.k[0] = HL2IVP(in[0]);
 	out.k[1] = -HL2IVP(in[2]);
-	out.k[2] = HL2IVP(tmpZ);
+	out.k[2] = HL2IVP(in[1]);
 }
 
 inline void ConvertPositionToIVP( float &x, float &y, float &z )
