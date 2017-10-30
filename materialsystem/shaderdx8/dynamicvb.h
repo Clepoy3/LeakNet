@@ -133,8 +133,8 @@ CVertexBuffer::CVertexBuffer(
 //	desc.Size = vertexCount * m_VertexSize;
 	desc.Size = m_nBufferSize;
 	desc.Type = D3DRTYPE_VERTEXBUFFER;
-//	desc.Pool = D3DPOOL_DEFAULT; //m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
-	desc.Pool = m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+	desc.Pool = D3DPOOL_DEFAULT; //m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+//	desc.Pool = m_bDynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
 	desc.FVF = theFVF;
 	
 	desc.Usage = D3DUSAGE_WRITEONLY;
@@ -151,7 +151,8 @@ CVertexBuffer::CVertexBuffer(
 	RECORD_INT( m_bDynamic );
 
 //	HRESULT hr = pD3D->CreateVertexBuffer( m_VertexCount * m_VertexSize,
-	HRESULT hr = pD3D->CreateVertexBuffer( m_nBufferSize,
+	HRESULT hr = D3D_OK;
+	hr = pD3D->CreateVertexBuffer( m_nBufferSize,
 					desc.Usage,	desc.FVF, desc.Pool, &m_pVB, NULL );
 	if( hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY )
 	{

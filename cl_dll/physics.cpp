@@ -104,8 +104,7 @@ void PhysicsLevelInit( void )
 	Assert( physenv );
 
 	physenv->SetGravity( Vector(0, 0, -sv_gravity.GetFloat() ) );
-//	physenv->SetSimulationTimestep( 0.015 ); // 15 ms per tick
-	physenv->SetSimulationTimestep( TICK_RATE );
+	physenv->SetSimulationTimestep( 0.015 ); // 15 ms per tick
 	physenv->SetCollisionEventHandler( &g_Collisions );
 	physenv->SetCollisionSolver( &g_Collisions );
 
@@ -379,9 +378,9 @@ void CCollisionEvent::PostCollision( vcollisionevent_t *pEvent )
 //-----------------------------------------------------------------------------
 void CCollisionEvent::FrameUpdate( void )
 {
-	UpdateFriction(); // VXP
 	UpdateTouchEvents();
 	UpdateFluidEvents();
+	UpdateFriction(); // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -509,6 +508,9 @@ void CCollisionEvent::Friction( IPhysicsObject *pObject, float energy, int surfa
 	CBaseEntity *pEntity = (CBaseEntity *)pObject->GetGameData();
 	if ( pEntity )
 	{
+		if ( pEntity->IsPlayer() )
+			return;
+
 		energy *= energy;
 		float volume = energy * (1.0f/(10.0f*10.0f));
 		
@@ -541,9 +543,19 @@ void CCollisionEvent::Friction( IPhysicsObject *pObject, float energy, int surfa
 
 			if ( !pFriction->pObject )
 			{
+				// VXP: don't create really quiet scrapes
+				if ( params.volume * volume <= 0.1f )
+					return;
+
 				pFriction->pObject = pEntity;
 			//	pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( pEntity->pev, CHAN_BODY, params.soundname, ATTN_STATIC );
-				CPASAttenuationFilter filter( pEntity );
+				CPASAttenuationFilter filter( pEntity, params.soundlevel );
+				int entindex = pEntity->entindex();
+
+				// clientside created entites doesn't have a valid entindex, let 'world' play the sound for them
+				if ( entindex < 0 )
+					entindex = 0;
+
 				pFriction->patch = CSoundEnvelopeController::GetController().SoundCreate( filter, pEntity->entindex(), CHAN_BODY, params.soundname, ATTN_STATIC );
 				CSoundEnvelopeController::GetController().Play( pFriction->patch, params.volume * volume, params.pitch );
 //					engine->AlertMessage( at_console, "Scrape Start %s \n", STRING(pEntity->m_iClassname) );
@@ -582,7 +594,8 @@ void CCollisionEvent::ShutdownFriction( friction_t &friction )
 {
 //		engine->AlertMessage( at_console, "Scrape Stop %s \n", STRING(friction.pObject->m_iClassname) );
 //	DevMsg( "Scrape Stop %s \n", STRING(friction.pObject->GetModel()) ); // VXP: Sometimes crashes at this moment..?
-	CSoundEnvelopeController::GetController().Shutdown( friction.patch );
+//	CSoundEnvelopeController::GetController().Shutdown( friction.patch );
+	CSoundEnvelopeController::GetController().SoundDestroy( friction.patch );
 	friction.patch = NULL;
 	friction.pObject = NULL;
 }

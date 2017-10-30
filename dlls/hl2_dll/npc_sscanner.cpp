@@ -205,6 +205,8 @@ void CNPC_SScanner::Event_Killed( const CTakeDamageInfo &info )
 {
 	BaseClass::Event_Killed( info );
 	StopShield();
+
+	Gib(); // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -917,7 +919,8 @@ void CNPC_SScanner::Precache(void)
 	//
 	engine->PrecacheModel("models/shield_scanner.mdl");
 	engine->PrecacheModel("models/scanner_shield.mdl");
-	engine->PrecacheModel("models/gibs/mortarsynth_gibs.mdl");
+//	engine->PrecacheModel("models/gibs/mortarsynth_gibs.mdl");
+	engine->PrecacheModel("models/computergibs.mdl");
 	
 	enginesound->PrecacheSound( "npc/waste_scanner/grenade_fire.wav");
 	enginesound->PrecacheSound( "npc/waste_scanner/hover.wav");
@@ -953,7 +956,8 @@ void CNPC_SScanner::Gib(void)
 			&GetAbsOrigin(), 255, 180, 100, 0, 100, 0.1, 0 );
 
 	// Throw scanner gibs
-	CGib::SpawnSpecificGibs( this, SSCANNER_GIB_COUNT, 800, 1000, "models/gibs/mortarsynth_gibs.mdl");
+//	CGib::SpawnSpecificGibs( this, SSCANNER_GIB_COUNT, 800, 1000, "models/gibs/mortarsynth_gibs.mdl");
+	CGib::SpawnSpecificGibs( this, SSCANNER_GIB_COUNT, 800, 1000, "models/computergibs.mdl"); // VXP
 
 	ExplosionCreate(GetAbsOrigin(), GetAbsAngles(), NULL, random->RandomInt(30, 40), 0, true);
 

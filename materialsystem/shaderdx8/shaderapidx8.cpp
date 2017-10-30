@@ -72,7 +72,7 @@ mat_fullbright 1 doesn't work properly on alpha materials in testroom_standards
 //#define STUBD3D
 
 //#undef D3D_BUG_TRACKED_DOWN
-#define D3D_BUG_TRACKED_DOWN
+//#define D3D_BUG_TRACKED_DOWN
 
 //-----------------------------------------------------------------------------
 // Vendor IDs sometimes needed for vendor-specific code

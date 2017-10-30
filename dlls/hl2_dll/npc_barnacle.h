@@ -34,13 +34,15 @@ class CBarnacleTongueTip : public CBaseAnimating
 public:
 	DECLARE_DATADESC();
 
-	~CBarnacleTongueTip( void )
-	{
-		physenv->DestroySpring( m_pSpring );
-	}
+	// VXP: Moved to UpdateOnRemove
+//	~CBarnacleTongueTip( void )
+//	{
+//		physenv->DestroySpring( m_pSpring );
+//	}
 
 	void	Spawn( void );
 	void	Precache( void );
+	void	UpdateOnRemove( );
 
 	bool						CreateSpring( CBaseAnimating *pTongueRoot );
 	static CBarnacleTongueTip	*CreateTongueTip( CBaseAnimating *pTongueRoot, const Vector &vecOrigin, const QAngle &vecAngles );

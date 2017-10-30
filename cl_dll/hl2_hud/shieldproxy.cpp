@@ -10,6 +10,7 @@
 #include "materialsystem/IMaterialVar.h"
 #include "materialsystem/IMaterialSystem.h"
 #include <KeyValues.h>
+#include "VMatrix.h" // VXP
 
 // $sineVar : name of variable that controls the alpha level (float)
 class CShieldProxy : public CEntityMaterialProxy
@@ -92,7 +93,16 @@ void CShieldProxy::OnBind( C_BaseEntity *pEnt )
 	sOffset = sOffset - ( int )sOffset;
 	tOffset = tOffset - ( int )tOffset;
 	
-	m_pTextureScrollVar->SetVecValue( sOffset, tOffset, 0.0f );
+	if (m_pTextureScrollVar->GetType() == MATERIAL_VAR_TYPE_MATRIX) // VXP
+	{
+		VMatrix mat;
+		MatrixBuildTranslation( mat, sOffset, tOffset, 0.0f );
+		m_pTextureScrollVar->SetMatrixValue( mat );
+	}
+	else
+	{
+		m_pTextureScrollVar->SetVecValue( sOffset, tOffset, 0.0f );
+	}
 }
 
 EXPOSE_INTERFACE( CShieldProxy, IMaterialProxy, "Shield" IMATERIAL_PROXY_INTERFACE_VERSION );

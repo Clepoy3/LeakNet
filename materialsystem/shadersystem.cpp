@@ -1597,6 +1597,10 @@ void CShaderSystem::LoadTexture( IMaterialVar *pTextureVar )
 	// In this case, we have to convert the string into a texture value
 	const char *pName = pTextureVar->GetStringValue();
 
+	// Fix cases where people stupidly put a slash at the front of the vtf filename in a vmt. Causes trouble elsewhere.
+	if ( pName[0] == '\\' || pName[1] == '\\' ) 
+		++pName;
+
 	ITextureInternal *pTexture;
 	pTexture = TextureManager()->FindOrLoadTexture( pName );
 
