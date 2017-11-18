@@ -558,7 +558,8 @@ int CAI_AssaultBehavior::TranslateSchedule( int scheduleType )
 	case SCHED_RANGE_ATTACK1:
 		if ( !m_ShotRegulator.ShouldShoot() )				
 		{
-			return SCHED_IDLE_STAND; // @TODO (toml 07-02-03): Should do something more tactically sensible
+		//	return SCHED_IDLE_STAND; // @TODO (toml 07-02-03): Should do something more tactically sensible
+			return SCHED_COMBAT_FACE; // VXP: From Source 2007
 		}
 		break;
 

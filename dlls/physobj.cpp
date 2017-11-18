@@ -239,17 +239,30 @@ IPhysicsObject *FindPhysicsObject( const char *pName )
 		return NULL;
 
 	CBaseEntity *pEntity = NULL;
-
+	IPhysicsObject *pBestObject = NULL;
 	while (1)
 	{
 		pEntity = gEntList.FindEntityByName( pEntity, pName, NULL );
 		if ( !pEntity )
 			break;
-		IPhysicsObject *pObject = pEntity->VPhysicsGetObject();
-		if ( pObject )
-			return pObject;
+	//	IPhysicsObject *pObject = pEntity->VPhysicsGetObject();
+	//	if ( pObject )
+	//		return pObject;
+		if ( pEntity->VPhysicsGetObject() )
+		{
+			if ( pBestObject )
+			{
+				DevWarning("Physics entity/constraint attached to more than one entity with the name %s!!!\n", pName );
+				while ( ( pEntity = gEntList.FindEntityByName( pEntity, pName, NULL ) ) != NULL )
+				{
+					DevWarning("Found %s\n", pEntity->GetClassname() );
+				}
+				break;
+			}
+			pBestObject = pEntity->VPhysicsGetObject();
+		}
 	}
-	return NULL;
+	return pBestObject;
 }
 
 void CPhysicsSpring::GetSpringObjectConnections( string_t nameStart, string_t nameEnd, IPhysicsObject **pStart, IPhysicsObject **pEnd )
@@ -476,25 +489,27 @@ bool CPhysBox::CreateVPhysics()
 		PhysSetGameFlags( pPhysics, FVPHYSICS_DMG_SLICE );
 	}
 
-	IPhysicsObject* vPhysicsObject = VPhysicsGetObject();
+//	IPhysicsObject* vPhysicsObject = VPhysicsGetObject();
 
 	// Wake it up if not asleep
 	if ( !HasSpawnFlags(SF_PHYSBOX_ASLEEP) )
 	{
 	//	VPhysicsGetObject()->Wake();
-		if( vPhysicsObject != NULL )
-		{
-			vPhysicsObject->Wake();
-		}
+	//	if( vPhysicsObject != NULL )
+	//	{
+	//		vPhysicsObject->Wake();
+	//	}
+		pPhysics->Wake();
 	}
 
 	if ( HasSpawnFlags(SF_PHYSBOX_MOTIONDISABLED) || m_damageToEnableMotion > 0  )
 	{
 	//	VPhysicsGetObject()->EnableMotion( false );
-		if( vPhysicsObject != NULL )
-		{
-			vPhysicsObject->EnableMotion( false );
-		}
+	//	if( vPhysicsObject != NULL )
+	//	{
+	//		vPhysicsObject->EnableMotion( false );
+	//	}
+		pPhysics->EnableMotion( false );
 	}
 
 	// only send data when physics moves this object

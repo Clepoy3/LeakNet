@@ -1094,7 +1094,7 @@ void CAI_ScriptedSchedule::StartSchedule( CAI_BaseNPC *pTarget )
 		{
 			pTarget->SetEnemy( pGoalEnt );
 			pTarget->UpdateEnemyMemory( pGoalEnt, pGoalEnt->GetAbsOrigin() );
-			pTarget->SetCondition( COND_NEW_ENEMY ); // VXP: Do we need this?
+		//	pTarget->SetCondition( COND_NEW_ENEMY ); // VXP: Do we need this?
 			pTarget->SetCondition( COND_SCHEDULE_DONE );
 		}
 		else
@@ -1166,6 +1166,7 @@ void CAI_ScriptedSchedule::StartSchedule( CAI_BaseNPC *pTarget )
 			COND_HEAR_BULLET_IMPACT,
 			COND_HEAR_COMBAT,
 			COND_HEAR_DANGER,
+			COND_HEAR_PHYSICS_DANGER, // VXP
 			COND_NEW_ENEMY,
 			COND_PROVOKED,
 			COND_SEE_ENEMY,
@@ -1179,6 +1180,9 @@ void CAI_ScriptedSchedule::StartSchedule( CAI_BaseNPC *pTarget )
 			COND_LIGHT_DAMAGE,
 			COND_RECEIVED_ORDERS,
 		};
+
+		pTarget->ClearIgnoreConditions( g_GeneralConditions, ARRAYSIZE(g_GeneralConditions) );
+		pTarget->ClearIgnoreConditions( g_DamageConditions, ARRAYSIZE(g_DamageConditions) );
 
 		if ( m_Interruptability > GENERAL_INTERRUPTABILITY )
 			pTarget->SetIgnoreConditions( g_GeneralConditions, ARRAYSIZE(g_GeneralConditions) );

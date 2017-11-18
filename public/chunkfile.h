@@ -143,7 +143,7 @@ class CChunkFile
 		// Functions for reading chunk files.
 		//
 		ChunkFileResult_t ReadChunk(KeyHandler_t pfnKeyHandler = NULL, void *pData = NULL);
-		ChunkFileResult_t ReadNext(char *szKey, char *szValue, ChunkType_t &eChunkType);
+		ChunkFileResult_t ReadNext(char *szKey, char *szValue, int nValueSize, ChunkType_t &eChunkType);
 		ChunkFileResult_t HandleChunk(const char *szChunkName);
 		void HandleError(const char *szChunkName, ChunkFileResult_t eError);
 

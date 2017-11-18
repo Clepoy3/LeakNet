@@ -384,9 +384,9 @@ CAI_Schedule *CAI_BaseNPC::GetNewSchedule( void )
 		}
 
 
-	// VXP: Commented and moved to CAI_BaseNPC::MaintainSchedule
-	//	if ( !m_bConditionsGathered ) // occurs if a schedule is exhausted within one think
-	//		GatherConditions();
+	// VXP: UNDONE: moved to CAI_BaseNPC::MaintainSchedule
+		if ( !m_bConditionsGathered ) // occurs if a schedule is exhausted within one think
+			GatherConditions();
 
 		if ( m_NPCState == NPC_STATE_SCRIPT || m_NPCState == NPC_STATE_DEAD ) // VXP: From Source 2007
 		{
@@ -444,7 +444,8 @@ void CAI_BaseNPC::MaintainSchedule ( void )
 	int			i;
 	bool		runTask = true;
 
-	memset( g_AITaskTimings, sizeof(g_AITaskTimings), 0 );
+//	memset( g_AITaskTimings, sizeof(g_AITaskTimings), 0 );
+	memset( g_AITaskTimings, 0, sizeof(g_AITaskTimings) ); // VXP
 	
 	g_nAITasksRun = 0;
 	
@@ -487,14 +488,19 @@ void CAI_BaseNPC::MaintainSchedule ( void )
 			// Notify the NPC that his schedule is changing
 			OnScheduleChange();
 
+		/* VXP: Copied from CAI_BaseNPC::GetNewSchedule and then commented
 			if ( !HasCondition(COND_NPC_FREEZE) && !m_bConditionsGathered )
 			{
 				// occurs if a schedule is exhausted within one think
 				GatherConditions();
 			}
+		*/
 			if ( ShouldSelectIdealState() )
 			{
-				SelectIdealState();
+			//	SelectIdealState();
+				NPC_STATE eIdealState = SelectIdealState();
+				if ( m_IdealNPCState != eIdealState )
+					m_IdealNPCState = eIdealState;
 			}
 
 			if ( HasCondition( COND_TASK_FAILED ) && m_NPCState == m_IdealNPCState )

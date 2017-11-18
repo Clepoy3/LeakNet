@@ -180,14 +180,17 @@ public:
 	{
 		if ( !pObj )
 			return;
-		unsigned short gameFlags = pObj->GetGameFlags();
-		gameFlags &= ~FVPHYSICS_CONSTRAINT_STATIC;
-		pObj->SetGameFlags( gameFlags );
+	//	unsigned short gameFlags = pObj->GetGameFlags();
+	//	gameFlags &= ~FVPHYSICS_CONSTRAINT_STATIC;
+	//	pObj->SetGameFlags( gameFlags );
+		PhysClearGameFlags( pObj, FVPHYSICS_CONSTRAINT_STATIC );
 
 	}
 
-	void Deactivate()
+	virtual void Deactivate()
 	{
+		if ( !m_pConstraint )
+			return;
 		m_pConstraint->Deactivate();
 		ClearStaticFlag( m_pConstraint->GetReferenceObject() );
 		ClearStaticFlag( m_pConstraint->GetAttachedObject() );
@@ -225,7 +228,9 @@ public:
 
 	void InputBreak( inputdata_t &inputdata )
 	{
-		m_pConstraint->Deactivate();
+		if ( m_pConstraint ) 
+			m_pConstraint->Deactivate();
+
 		OnBreak();
 	}
 
@@ -236,7 +241,13 @@ public:
 
 	void InputTurnOn( inputdata_t &inputdata )
 	{
-		ActivateConstraint();
+		if ( m_pConstraint )
+		{
+		//	ActivateConstraint();
+			m_pConstraint->Activate();
+			m_pConstraint->GetReferenceObject()->Wake();
+			m_pConstraint->GetAttachedObject()->Wake();
+		}
 	}
 	void InputTurnOff( inputdata_t &inputdata )
 	{
@@ -254,6 +265,7 @@ public:
 
 protected:	
 	void GetConstraintObjects( hl_constraint_info_t &info );
+	void SetupTeleportationHandling( hl_constraint_info_t &info );
 	bool ActivateConstraint( void );
 	virtual IPhysicsConstraint *CreateConstraint( IPhysicsConstraintGroup *pGroup, const hl_constraint_info_t &info ) = 0;
 
@@ -306,6 +318,7 @@ CPhysConstraint::CPhysConstraint( void )
 
 CPhysConstraint::~CPhysConstraint()
 {
+	Deactivate();
 	physenv->DestroyConstraint( m_pConstraint );
 }
 
@@ -349,6 +362,21 @@ void FindPhysicsAnchor( string_t name, hl_constraint_info_t &info, int index )
 	}
 }
 
+void CPhysConstraint::SetupTeleportationHandling( hl_constraint_info_t &info )
+{
+	CBaseEntity *pEntity0 = (CBaseEntity *)info.pObjects[0]->GetGameData();
+	if ( pEntity0 )
+	{
+		g_pNotify->AddEntity( this, pEntity0 );
+	}
+
+	CBaseEntity *pEntity1 = (CBaseEntity *)info.pObjects[1]->GetGameData();
+	if ( pEntity1 )
+	{
+		g_pNotify->AddEntity( this, pEntity1 );
+	}
+}
+
 void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 {
 	FindPhysicsAnchor( m_nameAttach1, info, 0 );
@@ -357,21 +385,29 @@ void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 	// Missing one object, assume the world instead
 	if ( info.pObjects[0] == NULL && info.pObjects[1] )
 	{
+		if ( Q_strlen(STRING(m_nameAttach1)) )
+		{
+			Warning("Bogus constraint %s (attaches %s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+			info.pObjects[0] = info.pObjects[1] = NULL;
+			return;
+		}
 		info.pObjects[0] = g_PhysWorldObject;
 	}
 	else if ( info.pObjects[0] && !info.pObjects[1] )
 	{
+		if ( Q_strlen(STRING(m_nameAttach2)) )
+		{
+			Warning("Bogus constraint %s (attaches %s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+			info.pObjects[0] = info.pObjects[1] = NULL;
+			return;
+		}
 		info.pObjects[1] = info.pObjects[0];
 		info.pObjects[0] = g_PhysWorldObject;		// Try to make the world object consistently object0 for ease of implementation
 		info.swapped = true;
 	}
 	else if ( info.pObjects[0] && info.pObjects[1] )
 	{
-		CBaseEntity *pEntity0 = (CBaseEntity *)info.pObjects[0]->GetGameData();
-		g_pNotify->AddEntity( this, pEntity0 );
-
-		CBaseEntity *pEntity1 = (CBaseEntity *)info.pObjects[1]->GetGameData();
-		g_pNotify->AddEntity( this, pEntity1 );
+		SetupTeleportationHandling( info );
 	}
 }
 
@@ -379,13 +415,13 @@ void CPhysConstraint::Activate( void )
 {
 	BaseClass::Activate();
 
-	if ( !m_pConstraint )
-	{
+//	if ( !m_pConstraint )
+//	{
 		if ( !ActivateConstraint() )
 		{
 			UTIL_Remove(this);
 		}
-	}
+//	}
 }
 
 IPhysicsConstraintGroup *GetConstraintGroup( string_t systemName )
@@ -414,33 +450,46 @@ bool CPhysConstraint::ActivateConstraint( void )
 		// already have a constraint, don't make a new one
 		info.pObjects[0] = m_pConstraint->GetReferenceObject();
 		info.pObjects[1] = m_pConstraint->GetAttachedObject();
+		if ( info.pObjects[0] && info.pObjects[1] )
+		{
+			SetupTeleportationHandling( info );
+		}
+
 		if ( m_spawnflags & SF_CONSTRAINT_DISABLE_COLLISION )
 		{
 			physenv->DisableCollisions( info.pObjects[0], info.pObjects[1] );
 		}
-		m_pConstraint->Activate();
+		return true;
 	}
-	else
+	GetConstraintObjects( info );
+
+	if ( !info.pObjects[0] && !info.pObjects[1] )
 	{
-		GetConstraintObjects( info );
+		return false;
+	}
 
-		if ( !info.pObjects[0] && !info.pObjects[1] )
-		{
-			return false;
-		}
+	if ( info.pObjects[0]->IsStatic() && info.pObjects[1]->IsStatic() )
+	{
+		Warning("Constraint (%s) attached to two static objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
+		return false;
+	}
 
-		IPhysicsConstraintGroup *pGroup = GetConstraintGroup( m_nameSystem );
-		m_pConstraint = CreateConstraint( pGroup, info );
-		if ( !m_pConstraint )
-		{
-			return false;
-		}
-		m_pConstraint->SetGameData( (void *)this );
+	if ( info.pObjects[0]->GetShadowController() && info.pObjects[1]->GetShadowController() )
+	{
+		Warning("Constraint (%s) attached to two shadow objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
+		return false;
+	}
+	IPhysicsConstraintGroup *pGroup = GetConstraintGroup( m_nameSystem );
+	m_pConstraint = CreateConstraint( pGroup, info );
+	if ( !m_pConstraint )
+	{
+		return false;
+	}
+	m_pConstraint->SetGameData( (void *)this );
 
-		if ( pGroup )
-		{
-			pGroup->Activate();
-		}
+	if ( pGroup )
+	{
+		pGroup->Activate();
 	}
 
 	if ( m_spawnflags & SF_CONSTRAINT_DISABLE_COLLISION )
@@ -475,14 +524,8 @@ public:
 			DevMsg("CreateConstraint: ERROR: Hinge with bad data!!!\n" );
 			return NULL;
 		}
-
-		// VXP: Cath
-		if( info.pObjects[0] == NULL || info.pObjects[1] == NULL )
-		{
-			DevMsg("CreateConstraint: ERROR: one of pObject pointers is NULL!\n" );
-			return NULL;
-		}
-
+		GetBreakParams( m_hinge.constraint );
+		m_hinge.constraint.strength = 1.0;
 		// BUGBUG: These numbers are very hard to edit
 		// Scale by 1000 to make things easier
 		// CONSIDER: Unify the units of torque around something other 
@@ -531,8 +574,8 @@ void CPhysHinge::Spawn( void )
 	UTIL_SnapDirectionToAxis( m_hinge.worldAxisDirection );
 
 	m_hinge.hingeAxis.SetAxisFriction( 0, 0, 0 );
-	GetBreakParams( m_hinge.constraint );
-	m_hinge.constraint.strength = 1.0;
+//	GetBreakParams( m_hinge.constraint );
+//	m_hinge.constraint.strength = 1.0;
 }
 
 
@@ -652,9 +695,7 @@ IPhysicsConstraint *CPhysFixed::CreateConstraint( IPhysicsConstraintGroup *pGrou
 	// constraining to the world means object 1 is fixed
 	if ( info.pObjects[0] == g_PhysWorldObject )
 	{
-		unsigned short gameFlags = info.pObjects[1]->GetGameFlags();
-		gameFlags |= FVPHYSICS_CONSTRAINT_STATIC;
-		info.pObjects[1]->SetGameFlags( gameFlags );
+		PhysSetGameFlags( info.pObjects[1], FVPHYSICS_CONSTRAINT_STATIC );
 	}
 
 	return physenv->CreateFixedConstraint( info.pObjects[0], info.pObjects[1], pGroup, fixed );

@@ -1490,6 +1490,23 @@ void CAI_BaseNPC::SetIgnoreConditions( int *pConditions, int nConditions )
 	}
 }
 
+void CAI_BaseNPC::ClearIgnoreConditions( int *pConditions, int nConditions )
+{
+	for ( int i = 0; i < nConditions; ++i )
+	{
+		int iCondition = pConditions[i];
+		int interrupt = InterruptFromCondition( iCondition );
+		
+		if ( interrupt == -1 )
+		{
+			Assert(0);
+			continue;
+		}
+		
+		m_InverseIgnoreConditions.SetBit( interrupt ); // set means don't ignore
+	}
+}
+
 //---------------------------------------------------------
 //---------------------------------------------------------
 bool CAI_BaseNPC::HasInterruptCondition( int iCondition )
@@ -3007,9 +3024,10 @@ NPC_STATE CAI_BaseNPC::SelectIdealState ( void )
 		{
 			if ( GetEnemy() == NULL )
 			{
-				m_IdealNPCState = NPC_STATE_ALERT;
+			//	m_IdealNPCState = NPC_STATE_ALERT;
 				// m_fEffects = EF_BRIGHTFIELD;
 				DevWarning( 2, "***Combat state with no enemy!\n" );
+				return NPC_STATE_ALERT;
 			}
 			break;
 		}
@@ -6316,18 +6334,27 @@ bool CAI_BaseNPC::BBoxFlat ( void )
 }
 
 
-void CAI_BaseNPC::SetEnemy( CBaseEntity *pEnemy )
+void CAI_BaseNPC::SetEnemy( CBaseEntity *pEnemy, bool bSetCondNewEnemy /*= true*/ )
 {
 	if (m_hEnemy != pEnemy)
 	{
 		ClearAttackConditions( );
 		VacateStrategySlot();
 		m_GiveUpOnDeadEnemyTimer.Stop();
+
+		// If we've just found a new enemy, set the condition
+		if ( pEnemy && bSetCondNewEnemy )
+		{
+			SetCondition( COND_NEW_ENEMY );
+		}
 	}
 
 	// Assert( (pEnemy == NULL) || (m_NPCState == NPC_STATE_COMBAT) );
 
 	m_hEnemy = pEnemy;
+
+	if ( !pEnemy )
+		ClearCondition( COND_NEW_ENEMY );
 }
 
 const Vector &CAI_BaseNPC::GetEnemyLKP() const

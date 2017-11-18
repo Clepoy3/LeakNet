@@ -1040,8 +1040,8 @@ void CSoundControllerImp::SoundDestroy( CSoundPatch	*pSound )
 
 void CSoundControllerImp::SoundChangePitch( CSoundPatch *pSound, float pitchTarget, float deltaTime )
 {
-//	if( !pSound )
-//		return;
+	if( !pSound ) // VXP
+		return;
 
 	pSound->ChangePitch( pitchTarget, deltaTime );
 }
@@ -1049,8 +1049,8 @@ void CSoundControllerImp::SoundChangePitch( CSoundPatch *pSound, float pitchTarg
 
 void CSoundControllerImp::SoundChangeVolume( CSoundPatch *pSound, float volumeTarget, float deltaTime )
 {
-//	if( !pSound )
-//		return;
+	if( !pSound ) // VXP
+		return;
 
 	pSound->ChangeVolume( volumeTarget, deltaTime );
 }

@@ -308,6 +308,7 @@ public:
 	void	StartGroundAttack( void );
 	void	StopGroundAttack( void );
 	Vector	GetGroundAttackHitPosition( void );
+	void	DrawRotorWash( float flAltitude, const Vector vecRotorOrigin ); // VXP
 
 	// Outputs
 	COutputEvent	m_OnFireCannon;
@@ -357,6 +358,10 @@ public:
 
 	Vector			m_vecAttackPosition;
 	Vector			m_vecAttackVelocity;
+
+	// VXP
+	EHANDLE					m_hRagdoll;
+	CHandle<CBaseEntity>	m_hCrashTarget;
 
 	int				m_iTracerTexture;
 
@@ -409,6 +414,8 @@ BEGIN_DATADESC( CNPC_CombineGunship )
 	DEFINE_FIELD( CNPC_CombineGunship, m_flPenetrationDepth,FIELD_FLOAT ),
 	DEFINE_FIELD( CNPC_CombineGunship, m_vecAttackPosition,	FIELD_VECTOR ),
 	DEFINE_FIELD( CNPC_CombineGunship, m_vecAttackVelocity,	FIELD_VECTOR ),
+	DEFINE_FIELD( CNPC_CombineGunship, m_hRagdoll,			FIELD_EHANDLE ), // VXP
+	DEFINE_FIELD( CNPC_CombineGunship, m_hCrashTarget,		FIELD_EHANDLE ), // VXP
 	// Don't save these, they are model indices
 	//DEFINE_FIELD( CNPC_CombineGunship, m_iSpriteTexture,	FIELD_INTEGER ),
 	//DEFINE_FIELD( CNPC_CombineGunship, m_iTracerTexture,	FIELD_INTEGER ),
@@ -444,6 +451,8 @@ CNPC_CombineGunship::CNPC_CombineGunship( void )
 { 
 	m_pSmokeTrail	= NULL;
 	m_iAmmoType		= -1; 
+	m_hRagdoll = NULL;
+	m_hCrashTarget = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -1015,6 +1024,26 @@ void CNPC_CombineGunship::PrescheduleThink( void )
 
 		//GetAttachment( "exhaustr", vecAttachment, &vecDir, NULL, NULL );
 		//NDebugOverlay::Line( vecAttachment, vecAttachment + vecDir * 128, 255,0,0, false, 0.1 );
+
+		// Have we reached our crash point?
+		if ( !m_hRagdoll )
+		{
+			if ( m_hCrashTarget )
+			{
+				MoveHead();
+				UpdateDesiredPosition();
+
+				// If we're over it, destruct
+				Vector vecToTarget = (GetDesiredPosition() - GetAbsOrigin());
+				if ( vecToTarget.LengthSqr() < (384 * 384) )
+				{
+					SelfDestruct();
+				//	m_OnCrashed.FireOutput( this, this );
+				//	m_hCrashTarget->GunshipCrashedOnTarget();
+					return;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -1315,13 +1344,13 @@ void CNPC_CombineGunship::BeginCrash( void )
 	SetTouch( ExplodeTouch );
 	m_lifeState = LIFE_DYING;
 
-	/*
 	CBaseEntity *pPathCorner;
 
-	pPathCorner = CreateEntityByName( "path_corner" );
+//	pPathCorner = CreateEntityByName( "path_corner" );
+	pPathCorner = CreateEntityByName( "path_track" );
 	pPathCorner->SetName( MAKE_STRING("gunshipdie") );
 
-/*
+///*
 	Vector vecForward;
 	Vector vecPosition;
 	trace_t tr;
@@ -1338,10 +1367,10 @@ void CNPC_CombineGunship::BeginCrash( void )
 	vecPosition = tr.endpos;
 	vecPosition.z += 64;
 
-	pPathCorner->SetOrigin( vecPosition );
-*/
+	pPathCorner->SetAbsOrigin( vecPosition );
+//*/
 
-	/*
+	///*
 	CBaseEntity *pCrashEnt = gEntList.FindEntityByName( NULL, gunshipcrash.GetString(), this );
 
 	if( !pCrashEnt )
@@ -1372,15 +1401,24 @@ void CNPC_CombineGunship::BeginCrash( void )
 	// to be trying hard to descend to the new z position more quickly
 	// that it's flying toward it.
 	// vecCrashSpot.z = pCrashEnt->GetAbsOrigin().z + 100;
+	vecCrashSpot.z = pCrashEnt->GetAbsOrigin().z + 100;
 
 	pPathCorner->SetLocalOrigin( vecCrashSpot );
 
-	//NDebugOverlay::Line( GetAbsOrigin(), vecCrashSpot, 255,0,0, false, 10.0 );
+#ifdef _DEBUG
+	// NDebugOverlay::Line( GetAbsOrigin(), vecCrashSpot, 255,0,0, false, 10.0 );
+#endif // _DEBUG
+
+//	MoveHead();
+//	SetTrack( pPathCorner );
 	
 	SetTouch( ExplodeTouch );
 
 	m_lifeState = LIFE_DYING;
-	*/
+	//*/
+
+	// Fly to the crash point and destruct there
+	m_hCrashTarget = pPathCorner;
 }
 
 
@@ -1547,7 +1585,7 @@ void CNPC_CombineGunship::Flight( void )
 	float	accelRate = GUNSHIP_ACCEL_RATE;
 	float	maxSpeed = 60 * 17.6; // 120 miles per hour.
 
-	if ( m_lifeState == LIFE_DYING )
+	if ( m_lifeState == LIFE_DYING && m_hCrashTarget != NULL )
 	{
 		accelRate *= 5.0;
 		maxSpeed *= 5.0;
@@ -1569,8 +1607,11 @@ void CNPC_CombineGunship::Flight( void )
 	
 	// NDebugOverlay::Line(GetLocalOrigin(), GetLocalOrigin() + deltaPos, 255,0,0, true, 0.1);
 
-	// don't fall faster than 0.2G or climb faster than 2G
-	accel.z = clamp( accel.z, 384 * 0.2, 384 * 2.0 );
+	if ( m_lifeState != LIFE_DYING || m_hCrashTarget == NULL )
+	{
+		// don't fall faster than 0.2G or climb faster than 2G
+		accel.z = clamp( accel.z, 384 * 0.2, 384 * 2.0 );
+	}
 
 	Vector forward, right, up;
 	GetVectors( &forward, &right, &up );
@@ -1633,7 +1674,7 @@ void CNPC_CombineGunship::Flight( void )
 
 	Vector vecImpulse = m_flForce * up;
 	
-	if ( m_lifeState == LIFE_DYING )
+	if ( !m_hCrashTarget && m_lifeState == LIFE_DYING )
 	{
 		vecImpulse.z = -38.4;  // 64ft/sec
 	}
@@ -1820,9 +1861,24 @@ void CNPC_CombineGunship::ApplySidewaysDrag( const Vector &vecRight )
 void CNPC_CombineGunship::SelfDestruct( void )
 {
 	SetThink( NULL );
+	m_lifeState = LIFE_DEAD;
 	
 	Vector vecDelta;
 	int i;
+	
+	// If we've ragdolled, play the explosions on the ragdoll instead
+	Vector vecOrigin;
+	if ( m_hRagdoll )
+	{
+		m_hRagdoll->EmitSound( "NPC_CombineGunship.Explode" );
+		vecOrigin = m_hRagdoll->GetAbsOrigin();
+	//	pBreakEnt = m_hRagdoll;
+	}
+	else
+	{
+		EmitSound( "NPC_CombineGunship.Explode" );
+		vecOrigin = GetAbsOrigin();
+	}
 
 	for( i = 0 ; i < 3 ; i++ )
 	{
@@ -1830,15 +1886,15 @@ void CNPC_CombineGunship::SelfDestruct( void )
 		vecDelta.y = random->RandomFloat( -128, 128 );
 		vecDelta.z = random->RandomFloat( -128, 128 );
 
-		ExplosionCreate( GetAbsOrigin() + vecDelta, QAngle( -90, 0, 0 ), this, 10, 10, false );
+		ExplosionCreate( vecOrigin + vecDelta, QAngle( -90, 0, 0 ), this, 10, 10, false );
 	}
 
 	Vector vecSize( 64, 64, 32 );
 
 	Vector vecUp( 0, 0, 100 );
 
-	// CPVSFilter filter( GetAbsOrigin() );
-	// te->BreakModel( filter, 0.0, &GetAbsOrigin(), &vecSize, &vecUp, m_nDebrisModel, 100, 0, 2.5, BREAK_METAL );
+	CPVSFilter filter( GetAbsOrigin() );
+	te->BreakModel( filter, 0.0, &GetAbsOrigin(), &vecSize, &vecUp, m_nDebrisModel, 100, 0, 2.5, BREAK_METAL );
 
 	StopLoopingSounds();
 	StopCannonBurst();
@@ -1850,18 +1906,22 @@ void CNPC_CombineGunship::SelfDestruct( void )
 	EmitSound( "NPC_CombineGunship.Explode" );
 
 	CTakeDamageInfo info;
-	CBaseEntity *pRagdoll;
+//	CBaseEntity *pRagdoll;
 
 	info.SetDamageForce( GetAbsVelocity() * 4000 + Vector( 0, 0, 2000 ) );
 	info.SetDamagePosition( GetAbsOrigin() );
 
-	pRagdoll = CreateServerRagdoll( this, 0, info, COLLISION_GROUP_NONE );
+	m_hRagdoll = CreateServerRagdoll( this, 0, info, COLLISION_GROUP_NONE );
+	if ( m_hRagdoll )
+	{
+		m_hRagdoll->SetName( AllocPooledString( UTIL_VarArgs("%s_ragdoll", GetEntityName()) ) );
+	}
 
-	/*
+	///*
 	CGunshipCrashFX *pFX = ( CGunshipCrashFX* )CreateEntityByName( "gunshipcrashfx" );
 	pFX->Spawn();
-	pFX->SetOwnerEntity( pRagdoll );
-	*/
+	pFX->SetOwnerEntity( m_hRagdoll );
+	//*/
 
 	UTIL_Remove(this);
 }
@@ -2270,11 +2330,14 @@ int	CNPC_CombineGunship::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	// Make a pain sound
 	EmitSound( "NPC_CombineGunship.Pain" );
 
+//#define GUNSHIP_MAX_HEALTH_INCREMENT 5
+#define GUNSHIP_MAX_HEALTH_INCREMENT 3 // VXP: TODO: Make this a convar?
+
 	// Take a percentage of our health away
-	info.SetDamage( m_iMaxHealth / 5 );
+	info.SetDamage( m_iMaxHealth / (float)GUNSHIP_MAX_HEALTH_INCREMENT + 1 );
 	
 	// Find out which "stage" we're at in our health
-	int healthIncrement = 5 - ( m_iHealth / ( m_iMaxHealth / 5 ) );
+	int healthIncrement = GUNSHIP_MAX_HEALTH_INCREMENT - ( m_iHealth / (float)( m_iMaxHealth / (float)GUNSHIP_MAX_HEALTH_INCREMENT ) );
 
 	switch ( healthIncrement )
 	{
@@ -2377,20 +2440,36 @@ void CNPC_CombineGunship::StopLoopingSounds( void )
 {
 	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
 
-	controller.SoundDestroy( m_pCannonSound );
-	m_pCannonSound = NULL;
+	if ( m_pCannonSound )
+	{
+		controller.SoundDestroy( m_pCannonSound );
+		m_pCannonSound = NULL;
+	}
 
-	controller.SoundDestroy( m_pRotorSound );
-	m_pRotorSound = NULL;
+	if ( m_pRotorSound )
+	{
+		controller.SoundDestroy( m_pRotorSound );
+		m_pRotorSound = NULL;
+	}
 
-	controller.SoundDestroy( m_pAirIntakeSound );
-	m_pAirIntakeSound = NULL;
+	if ( m_pAirIntakeSound )
+	{
+		controller.SoundDestroy( m_pAirIntakeSound );
+		m_pAirIntakeSound = NULL;
+	}
 
-	controller.SoundDestroy( m_pAirExhaustSound );
-	m_pAirExhaustSound = NULL;
+	if ( m_pAirExhaustSound )
+	{
+		controller.SoundDestroy( m_pAirExhaustSound );
+		m_pAirExhaustSound = NULL;
+	}
 
-	controller.SoundDestroy( m_pAirBlastSound );
-	m_pAirBlastSound = NULL;
+
+	if ( m_pAirBlastSound )
+	{
+		controller.SoundDestroy( m_pAirBlastSound );
+		m_pAirBlastSound = NULL;
+	}
 
 	BaseClass::StopLoopingSounds();
 }
@@ -2404,12 +2483,31 @@ void CNPC_CombineGunship::UpdateTrackNavigation( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CNPC_CombineGunship::DrawRotorWash( float flAltitude, const Vector vecRotorOrigin )
+{
+	// If we have a ragdoll, we want the wash under that, not me
+	if ( m_hRagdoll )
+	{
+		BaseClass::DrawRotorWash( flAltitude, m_hRagdoll->GetAbsOrigin() );
+		return;
+	}
+
+	BaseClass::DrawRotorWash( flAltitude, vecRotorOrigin );
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Figure out our desired position along our current path
 //-----------------------------------------------------------------------------
 void CNPC_CombineGunship::UpdateDesiredPosition( void )
 {
 	// See which method to use for attacking
-	if ( m_bIsGroundAttacking )
+	if ( m_hCrashTarget )
+	{
+		SetDesiredPosition( m_hCrashTarget->WorldSpaceCenter() + Vector( 0, 0, 128 ) );
+	}
+	else if ( m_bIsGroundAttacking )
 	{
 		// Stand still if attacking the ground
 		SetDesiredPosition( WorldSpaceCenter() );

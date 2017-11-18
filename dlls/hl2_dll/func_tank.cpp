@@ -1452,7 +1452,7 @@ LINK_ENTITY_TO_CLASS( func_tankrocket, CFuncTankRocket );
 
 void CFuncTankRocket::Precache( void )
 {
-	UTIL_PrecacheOther( "missileshot" );
+	UTIL_PrecacheOther( "rpg_missile" );
 	CFuncTank::Precache();
 }
 
@@ -1464,7 +1464,7 @@ void CFuncTankRocket::Fire( int bulletCount, const Vector &barrelEnd, const Vect
 
 	for ( i = 0; i < bulletCount; i++ )
 	{
-		CBaseEntity *pRocket = CBaseEntity::Create( "missileshot", barrelEnd, GetAbsAngles(), this );
+		CBaseEntity *pRocket = CBaseEntity::Create( "rpg_missile", barrelEnd, GetAbsAngles(), this );
 		// HACKHACK: Fix the missile, don't do this
 		pRocket->SetAbsVelocity( forward * 500 );
 	}

@@ -123,19 +123,19 @@ void CEngineSoundServer::EmitSoundInternal( IRecipientFilter& filter, int iEntIn
 
 	if (flVolume < 0 || flVolume > 1)
 	{
-		Warning ("EmitSound: volume out of bounds = %f", flVolume);
+		Warning ("EmitSound: volume out of bounds = %f\n", flVolume);
 		return;
 	}
 
 	if (iSoundLevel < 0 || iSoundLevel > 255)
 	{
-		Warning ("EmitSound: soundlevel out of bounds = %d", iSoundLevel);
+		Warning ("EmitSound: soundlevel out of bounds = %d\n", iSoundLevel);
 		return;
 	}
 
 	if (iPitch < 0 || iPitch > 255)
 	{
-		Warning ("EmitSound: pitch out of bounds = %i", iPitch);
+		Warning ("EmitSound: pitch out of bounds = %i\n", iPitch);
 		return;
 	}
 

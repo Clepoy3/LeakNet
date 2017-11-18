@@ -606,10 +606,11 @@ public:
 	// CAI_BaseNPC
 	void	StartTask( const Task_t *pTask );
 	void	RunTask( const Task_t *pTask );
-//	int		RangeAttack1Conditions( float flDot, float flDist );
+	int		RangeAttack1Conditions( float flDot, float flDist );
 	int		RangeAttack2Conditions( float flDot, float flDist ); // VXP
 	int		MeleeAttack1Conditions( float flDot, float flDist );
 	int		MeleeAttack2Conditions( float flDot, float flDist );
+//	bool	WeaponLOSCondition(const Vector &ownerPos, const Vector &targetPos, bool bSetConditions); // VXP
 	bool	InnateWeaponLOSCondition( const Vector &ownerPos, const Vector &targetPos, bool bSetConditions );
 	int		SelectSchedule();
 	int		TranslateSchedule( int scheduleType );
@@ -621,11 +622,14 @@ public:
 
 	Vector	BodyTarget( const Vector &posSrc, bool bNoisy );
 	void	NPCThink();
+//	void	GatherConditions(); // VXP
 	Disposition_t IRelationType( CBaseEntity *pTarget );
 	bool	IsValidEnemy( CBaseEntity *pTarget );
 	void	OnStateChange( NPC_STATE oldState, NPC_STATE newState );
 	void	BuildScheduleTestBits();
 	void	MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );
+//	bool	CanShootThrough( const trace_t &tr, const Vector &vecTarget ); // VXP
+//	float	StriderEnemyDistance( CBaseEntity *pEnemy ); // VXP
 	bool	FCanCheckAttacks( void );
 	bool	GetTrackPatherTarget( Vector *pPos );
 	void	StartTargetHandling( CBaseEntity *pTargetEnt );
@@ -991,12 +995,14 @@ void CNPC_Strider::Spawn( void )
 	InitPathingData( STRIDER_LEAD_DISTANCE, STRIDER_MIN_CHASE_DIST_DIFF, STRIDER_AVOID_DIST );
 	NPCInit();
 
+#if 0 // VXP
 	CBaseCombatWeapon *pWeapon = Weapon_Create( "weapon_immolator" );
 	if ( pWeapon )
 	{
 		Weapon_Equip( pWeapon );
 		pWeapon->m_fEffects |= EF_NODRAW;
 	}
+#endif
 
 	g_YawControl = LookupPoseParameter( "yaw" );
 	g_PitchControl = LookupPoseParameter( "pitch" );
@@ -1005,6 +1011,8 @@ void CNPC_Strider::Spawn( void )
 	EnableServerIK();
 
 	m_BodyTargetBone = -1;
+
+	m_nextStompTime = gpGlobals->curtime;
 }
 
 
@@ -1079,6 +1087,53 @@ void CNPC_Strider::UpdateMinigunControls( float &yaw, float &pitch )
 	yaw = GetPoseParameter( "miniGunYaw" );
 	pitch = GetPoseParameter( "miniGunPitch" );
 }
+
+//---------------------------------------------------------
+// HACKHACK: The base class looks at distance from the head of the strider
+// But when stomping, we need distance from the feet.  Recompute it here.
+// UNDONE: make enemy distance aware of strider
+//---------------------------------------------------------
+/* VXP: Nope, thanks
+float CNPC_Strider::StriderEnemyDistance( CBaseEntity *pEnemy )
+{
+	Vector enemyDelta = pEnemy->WorldSpaceCenter() - WorldSpaceCenter();
+	
+	// NOTE: We ignore rotation for computing height.  Assume it isn't an effect
+	// we care about, so we simply use OBBSize().z for height.  
+	// Otherwise you'd do this:
+	// float enemyHeight = enemyMaxs.z - enemyMins.z;
+
+//	float enemyHeight = pEnemy->CollisionProp()->OBBSize().z;
+//	float enemyHeight = pEnemy->EntitySpaceSize().z;
+	float enemyHeight = pEnemy->GetAbsMaxs().z - pEnemy->GetAbsMins().z;
+//	Vector striderSurroundMins, striderSurroundMaxs;
+//	CollisionProp()->WorldSpaceSurroundingBounds( &striderSurroundMins, &striderSurroundMaxs );
+//	float myHeight = striderSurroundMaxs.z - striderSurroundMins.z;
+	float myHeight = (GetAbsMaxs().z - GetAbsMins().z) + npc_strider_height_adj.GetFloat(); // VXP: TODO: ???
+	
+	// max distance our centers can be apart with the boxes still overlapping
+	float flMaxZDist = ( enemyHeight + myHeight ) * 0.5f;
+
+	// see if the enemy is closer to my head, feet or in between
+	if ( enemyDelta.z > flMaxZDist )
+	{
+		// enemy feet above my head, compute distance from my head to his feet
+		enemyDelta.z -= flMaxZDist;
+	}
+	else if ( enemyDelta.z < -flMaxZDist )
+	{
+		// enemy head below my feet, return distance between my feet and his head
+		enemyDelta.z += flMaxZDist;
+	}
+	else
+	{
+		// boxes overlap in Z, no delta
+		enemyDelta.z = 0;
+	}
+
+	return enemyDelta.Length();
+}
+*/
 
 bool CNPC_Strider::FCanCheckAttacks( void )
 {
@@ -1436,6 +1491,24 @@ void CNPC_Strider::GatherConditions()
 	}
 }
 */
+/* VXP: Tests...
+void CNPC_Strider::GatherConditions()
+{
+	BaseClass::GatherConditions();
+
+	ClearCondition( COND_CAN_RANGE_ATTACK2 );
+
+	if( m_hCannonTarget != NULL )
+	{
+		Vector vAdjustedOrigin = GetAbsOrigin();
+		vAdjustedOrigin.z -= (GetAbsOrigin().z - GetAbsMins().z) + npc_strider_height_adj.GetFloat(); // VXP: TODO: Done this test second time!!!
+		if ( WeaponLOSCondition( vAdjustedOrigin, m_hCannonTarget->GetAbsOrigin(), false ) )
+		{
+			SetCondition( COND_CAN_RANGE_ATTACK2 );
+		}
+	}
+}
+*/
 
 bool CNPC_Strider::CreateVPhysics()
 {
@@ -1782,29 +1855,11 @@ void CNPC_Strider::Touch( CBaseEntity *pOther )
 #endif
 }
 
-//int CNPC_Strider::RangeAttack1Conditions( float flDot, float flDist )
-int CNPC_Strider::RangeAttack2Conditions( float flDot, float flDist )
+int CNPC_Strider::RangeAttack1Conditions( float flDot, float flDist )
 {
-//	Msg( "CNPC_Strider::RangeAttack2Conditions\n" );
-	if ( m_hCannonTarget.Get() != NULL )
-	{
-		return COND_CAN_RANGE_ATTACK1;
-	}
-
-	// E3: HACKHACK: Don't shoot cannon unless told to
+	// All of this code has moved to GatherConditions(), since the 
+	// strider uses the cannon on things that aren't the enemy!
 	return COND_NONE;
-
-	if (gpGlobals->curtime < m_nextShootTime)
-	{
-		return COND_NONE;
-	}
-	// too close, but don't change schedules/movement
-	if ( flDist < 1200 )
-	{
-		return COND_NONE;
-	}
-//	return BaseClass::RangeAttack1Conditions( flDot, flDist );
-	return BaseClass::RangeAttack2Conditions( flDot, flDist );
 }
 
 
@@ -1832,16 +1887,32 @@ void CNPC_Strider::OpenHatch()
 
 //---------------------------------------------------------
 //---------------------------------------------------------
-/*
 int CNPC_Strider::RangeAttack2Conditions( float flDot, float flDist )
 {
-	// All of this code has moved to GatherConditions(), since the 
-	// strider uses the cannon on things that aren't the enemy!
+//	DevMsg( "CNPC_Strider::RangeAttack2Conditions\n" );
+	if ( m_hCannonTarget.Get() != NULL )
+	{
+		return COND_CAN_RANGE_ATTACK1;
+	}
+
+	// E3: HACKHACK: Don't shoot cannon unless told to
 	return COND_NONE;
+
+	if (gpGlobals->curtime < m_nextShootTime)
+	{
+		return COND_NONE;
+	}
+	// too close, but don't change schedules/movement
+	if ( flDist < 1200 )
+	{
+		return COND_NONE;
+	}
+	return BaseClass::RangeAttack1Conditions( flDot, flDist );
 }
-*/
+
 int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 {
+//	DevMsg( "CNPC_Strider::MeleeAttack1Conditions\n" );
 	if (gpGlobals->curtime < m_nextStompTime)
 	{
 		return COND_NONE;
@@ -1851,8 +1922,12 @@ int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 	if ( !pEnemy || pEnemy->Classify() == CLASS_BULLSEYE )
 		return COND_NONE;
 
+	// recompute this because the base class function does not work for the strider
+//	flDist = StriderEnemyDistance( pEnemy );
+
 	if ( flDist <= STRIDER_STOMP_RANGE )
 	{
+	//	DevMsg( "MeleeAttack1Conditions: Enemy is here (%f/%i)\n", flDist, STRIDER_STOMP_RANGE );
 		Vector right;
 		GetVectors( NULL, &right, NULL );
 		// strider will cross his feet, but only 6ft over
@@ -1865,6 +1940,102 @@ int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 	// too far, but don't change schedules/movement
 	return COND_NONE;
 }
+
+//---------------------------------------------------------
+//---------------------------------------------------------
+/* VXP: Ported from Source 2007 and completely wrong I think
+bool CNPC_Strider::WeaponLOSCondition(const Vector &ownerPos, const Vector &targetPos, bool bSetConditions)
+{
+	CBaseEntity *pTargetEnt;
+	Vector vRootOffset;
+	Vector vBarrelOffset;
+
+	vRootOffset.x = vRootOffset.y = 0;
+	if ( GetCannonTarget() )
+	{
+		//Assert( targetPos == GetCannonTarget()->GetAbsOrigin() );
+		pTargetEnt = GetCannonTarget();
+		
+		Vector position;
+
+		// Currently just using the gun for the vertical component!
+		GetAttachment( "BigGun", position );
+		position.x = GetAbsOrigin().x;
+		position.y = GetAbsOrigin().y;
+		
+		float zCannonDist = position.z - GetAbsOrigin().z;
+		
+		vRootOffset.z = zCannonDist;
+
+		
+	//	Vector position;
+		GetAttachment( "BigGun", position );
+		Vector vLocalRelativePositionCannon;
+		VectorITransform( position, EntityToWorldTransform(), vLocalRelativePositionCannon );
+		vBarrelOffset = vLocalRelativePositionCannon;
+	}
+	else
+	{
+		pTargetEnt = GetEnemy();
+		
+		// Currently just using the gun for the vertical component!
+		Vector defEyePos;
+		GetAttachment( "MiniGun", defEyePos );
+		float zMinigunDist = defEyePos.z - GetAbsOrigin().z;
+		vRootOffset.z = zMinigunDist;
+
+		Vector position;
+		GetAttachment( "MiniGun", position );
+		Vector vLocalRelativePositionMinigun;
+		VectorITransform( position, EntityToWorldTransform(), vLocalRelativePositionMinigun );
+		vBarrelOffset = vLocalRelativePositionMinigun;
+	}
+
+	trace_t tr;
+	AI_TraceLine( ownerPos + vRootOffset, targetPos, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+
+	// Hit the enemy, or hit nothing (traced all the way to a nonsolid enemy like a bullseye)
+	if ( ( pTargetEnt && tr.m_pEnt == pTargetEnt) || tr.fraction == 1.0 || CanShootThrough( tr, targetPos ) )
+	{
+		Vector vBarrelPos;
+		matrix3x4_t losTestToWorld;
+
+		Vector xaxis;
+		VectorSubtract( targetPos, ownerPos, xaxis );
+
+		// @TODO (toml 03-07-04): Add an angle test
+		//float flAngle = acos( xaxis.z / xaxis.Length() );
+
+		xaxis.z = 0.0f;
+		float flLength = VectorNormalize( xaxis );
+		if ( flLength < 1e-3 )
+			return false;
+
+		Vector yaxis( -xaxis.y, xaxis.x, 0.0f );
+
+	//	MatrixInitialize( losTestToWorld, ownerPos, xaxis, yaxis, Vector(0,0,1) ); // VXP: TODO: Implement this!
+		MatrixSetColumn( xaxis, 0, losTestToWorld );
+		MatrixSetColumn( yaxis, 1, losTestToWorld );
+		MatrixSetColumn( Vector(0,0,1), 2, losTestToWorld );
+		MatrixSetColumn( ownerPos, 3, losTestToWorld );
+
+		VectorTransform( vBarrelOffset, losTestToWorld, vBarrelPos );
+
+		AI_TraceLine( vBarrelPos, targetPos, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+		if ( ( pTargetEnt && tr.m_pEnt == pTargetEnt) || tr.fraction == 1.0 || CanShootThrough( tr, targetPos ) )
+		{
+		//	if ( strider_show_weapon_los_condition.GetBool() )
+			{
+				NDebugOverlay::Line( ownerPos + vRootOffset, targetPos, 255, 0, 255, false, 0.1 );
+				NDebugOverlay::Line( vBarrelPos, targetPos, 255, 0, 255, false, 0.1 );
+			}
+			return true;
+		}
+	}
+
+	return false;
+}
+*/
 
 int CNPC_Strider::MeleeAttack2Conditions( float flDot, float flDist )
 {
@@ -1881,31 +2052,50 @@ int CNPC_Strider::SelectSchedule()
 	switch ( m_NPCState )
 	{
 	case NPC_STATE_SCRIPT:
+		DevMsg( "Strider is script-controlled\n" );
 		return BaseClass::SelectSchedule();
 	case NPC_STATE_DEAD:
+		DevMsg( "Strider is dead\n" );
 		return SCHED_STRIDER_DIE;
 	default:
 		if ( !HasCondition( COND_NEW_ENEMY ) )
 		{
 			if ( m_hRagdoll.Get() && (gpGlobals->curtime > m_ragdollTime  || HasCondition( COND_STRIDER_DO_FLICK ) ) )
 			{
+				DevMsg( "Flicking dead body away from one of Strider's leg\n" );
 				return SCHED_STRIDER_FLICKL;
 			}
 		}
+
+		// VXP
+		if ( HasCondition( COND_CAN_MELEE_ATTACK1 ) )
+		{
+			DevMsg( "Strider is about to melee his enemy\n" );
+			return SCHED_MELEE_ATTACK1;
+		}
+
 		if ( HasCondition( COND_CAN_RANGE_ATTACK1 ) )
 		{
 		//	Msg( "SV Strider: SelSched - SCHED_STRIDER_RANGE_ATTACK1\n" );
+			DevMsg( "Strider's range attack1\n" );
 			return SCHED_STRIDER_RANGE_ATTACK1;
 		}
 		if ( HasCondition( COND_CAN_RANGE_ATTACK2 ) )
 		{
+			DevMsg( "Strider's range attack2\n" );
 			return SCHED_STRIDER_RANGE_ATTACK2;
 		}
+	//	return SCHED_MELEE_ATTACK1;
 		break;
 	}
 
 	if ( pTrackTarget )
+	{
+		DevMsg( "Strider is chasing track target\n" );
 		return SCHED_TARGET_CHASE;
+	}
+
+	DevMsg( "Strider is standing like a good boy\n" );
 	return SCHED_IDLE_STAND;
 }
 
@@ -2163,6 +2353,46 @@ void CNPC_Strider::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, in
 		break;
 	}
 }
+
+//---------------------------------------------------------
+// Trace didn't hit the intended target, but should the strider
+// shoot anyway? We use this to get the strider to destroy 
+// breakables that are between him and his target.
+//---------------------------------------------------------
+/*
+bool CNPC_Strider::CanShootThrough( const trace_t &tr, const Vector &vecTarget )
+{
+	if( GetCannonTarget() )
+	{
+		// Cannon does not have this behavior.
+		return false;
+	}
+
+	if( !tr.m_pEnt )
+	{
+		return false;
+	}
+
+	if( !tr.m_pEnt->GetHealth() )
+	{
+		return false;
+	}
+
+	// Would a trace ignoring this entity continue to the target?
+	trace_t continuedTrace;
+	AI_TraceLine( tr.endpos, vecTarget, MASK_SHOT, tr.m_pEnt, COLLISION_GROUP_NONE, &continuedTrace );
+
+	if( continuedTrace.fraction != 1.0 )
+	{
+		if( continuedTrace.m_pEnt != GetEnemy() )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+*/
 
 
 static Vector GetAttachmentPositionInSpaceOfBone( studiohdr_t *pStudioHdr, const char *pAttachmentName, int outputBoneIndex )
