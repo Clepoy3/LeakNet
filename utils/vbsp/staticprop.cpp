@@ -192,7 +192,7 @@ bool LoadStudioModel( char const* pModelName, char const* pEntityType, CUtlBuffe
 	}
 
 	studiohdr_t* pHdr = (studiohdr_t*)buf.PeekGet();
-//	Studio_ConvertStudioHdrToNewVersion( pHdr );
+	Studio_ConvertStudioHdrToNewVersion( pHdr );
 	if (pHdr->version != STUDIO_VERSION)
 	{
 		return false;

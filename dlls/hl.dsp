@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=hl - Win32 Debug CounterStrike
+CFG=hl - Win32 Debug Snowball
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,7 +13,7 @@ CFG=hl - Win32 Debug CounterStrike
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "hl.mak" CFG="hl - Win32 Debug CounterStrike"
+!MESSAGE NMAKE /f "hl.mak" CFG="hl - Win32 Debug Snowball"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -25,6 +25,8 @@ CFG=hl - Win32 Debug CounterStrike
 !MESSAGE "hl - Win32 Debug HL1" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "hl - Win32 Debug CounterStrike" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "hl - Win32 Release CounterStrike" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "hl - Win32 Debug Snowball" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "hl - Win32 Release Snowball" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -346,6 +348,84 @@ SOURCE="$(InputPath)"
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "hl___Win32_Debug_Snowball"
+# PROP BASE Intermediate_Dir "hl___Win32_Debug_Snowball"
+# PROP BASE Ignore_Export_Lib 1
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "Debug_snowb"
+# PROP Intermediate_Dir "Debug_snowb"
+# PROP Ignore_Export_Lib 1
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /G6 /W4 /Gm /GR /ZI /Od /I "../game_shared/hl2" /I "./" /I "../Public" /I "../game_shared" /I "../utils/common" /I "../dlls" /I "../../dlls" /I "../dlls/hl2_dll" /D "HL2_DLL" /D "USES_SAVERESTORE" /D "_DEBUG" /D fopen=dont_use_fopen /D "GAME_DLL" /D sprintf=use_Q_snprintf_instead_of_sprintf /D "_WINDOWS" /D "VECTOR" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WIN32" /D "PROTECTED_THINGS_ENABLE" /FR /Yu"cbase.h" /FD /c
+# ADD CPP /nologo /G6 /W4 /Gm /GR /ZI /Od /I "../game_shared/hl2" /I "../game_shared/snowb" /I "./" /I "../Public" /I "../game_shared" /I "../utils/common" /I "../dlls" /I "../../dlls" /I "../dlls/hl2_dll" /I "../dlls/snowb_dll" /D "HL2_DLL" /D "SNOWB_DLL" /D "USES_SAVERESTORE" /D "_DEBUG" /D fopen=dont_use_fopen /D "GAME_DLL" /D sprintf=use_Q_snprintf_instead_of_sprintf /D "_WINDOWS" /D "VECTOR" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WIN32" /D "PROTECTED_THINGS_ENABLE" /FR /Yu"cbase.h" /FD /c
+# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /i "..\engine" /d "_DEBUG"
+# ADD RSC /l 0x409 /i "..\engine" /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 user32.lib advapi32.lib winmm.lib /nologo /base:"0x22000000" /subsystem:windows /dll /debug /machine:I386 /out:"Debug_hl2/server.dll" /implib:".\Debug_hl2\server.lib" /libpath:"..\lib\public"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 user32.lib advapi32.lib winmm.lib /nologo /base:"0x22000000" /subsystem:windows /dll /debug /machine:I386 /out:"Debug_snowb/server.dll" /implib:".\Debug_snowb\server.lib" /libpath:"..\lib\public"
+# SUBTRACT LINK32 /pdb:none
+# Begin Custom Build - Copying to HL2
+TargetDir=.\Debug_snowb
+InputPath=.\Debug_snowb\server.dll
+SOURCE="$(InputPath)"
+
+"..\..\snowball\bin\server.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist ..\..\snowball\bin\server.dll attrib -r ..\..\snowball\bin\server.dll 
+	if exist $(TargetDir)\server.dll copy $(TargetDir)\server.dll ..\..\snowball\bin\server.dll 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "hl___Win32_Release_Snowball"
+# PROP BASE Intermediate_Dir "hl___Win32_Release_Snowball"
+# PROP BASE Ignore_Export_Lib 1
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "Release_snowb"
+# PROP Intermediate_Dir "Release_snowb"
+# PROP Ignore_Export_Lib 1
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /G6 /W4 /GR /Zi /O2 /I "../game_shared/hl2" /I "./" /I "../Public" /I "../game_shared" /I "../utils/common" /I "../dlls" /I "../../dlls" /I "../dlls/hl2_dll" /D "HL2_DLL" /D "USES_SAVERESTORE" /D "NDEBUG" /D "GAME_DLL" /D sprintf=use_Q_snprintf_instead_of_sprintf /D "_WINDOWS" /D "VECTOR" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WIN32" /D "PROTECTED_THINGS_ENABLE" /Fr /Yu"cbase.h" /FD /c
+# ADD CPP /nologo /G6 /W4 /GR /Zi /O2 /I "../game_shared/hl2" /I "../game_shared/snowb" /I "./" /I "../Public" /I "../game_shared" /I "../utils/common" /I "../dlls" /I "../../dlls" /I "../dlls/hl2_dll" /I "../dlls/snowb_dll" /D "HL2_DLL" /D "SNOWB_DLL" /D "USES_SAVERESTORE" /D "NDEBUG" /D "GAME_DLL" /D sprintf=use_Q_snprintf_instead_of_sprintf /D "_WINDOWS" /D "VECTOR" /D strncpy=use_Q_strncpy_instead /D _snprintf=use_Q_snprintf_instead /D "_WIN32" /D "PROTECTED_THINGS_ENABLE" /Fr /Yu"cbase.h" /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 user32.lib advapi32.lib winmm.lib /nologo /base:"0x22000000" /subsystem:windows /dll /map /debug /machine:I386 /nodefaultlib:"LIBCD" /out:"Release_hl2/server.dll" /libpath:"..\lib\public"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 user32.lib advapi32.lib winmm.lib /nologo /base:"0x22000000" /subsystem:windows /dll /map /debug /machine:I386 /nodefaultlib:"LIBCD" /out:"Release_snowb/server.dll" /libpath:"..\lib\public"
+# SUBTRACT LINK32 /pdb:none
+# Begin Custom Build - Copying to HL2
+TargetDir=.\Release_snowb
+InputPath=.\Release_snowb\server.dll
+SOURCE="$(InputPath)"
+
+"..\..\snowb\bin\server.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	if exist ..\..\snowb\bin\server.dll attrib -r ..\..\snowb\bin\server.dll 
+	if exist $(TargetDir)\server.dll copy $(TargetDir)\server.dll ..\..\snowb\bin\server.dll 
+	
+# End Custom Build
+
 !ENDIF 
 
 # Begin Target
@@ -358,6 +438,8 @@ SOURCE="$(InputPath)"
 # Name "hl - Win32 Debug HL1"
 # Name "hl - Win32 Debug CounterStrike"
 # Name "hl - Win32 Release CounterStrike"
+# Name "hl - Win32 Debug Snowball"
+# Name "hl - Win32 Release Snowball"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
@@ -401,6 +483,10 @@ SOURCE=.\hl2_dll\antlion_dust.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -436,6 +522,10 @@ SOURCE=.\hl2_dll\assassin_smoke.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -462,6 +552,10 @@ SOURCE=.\hl2_dll\assassin_smoke.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -526,6 +620,10 @@ SOURCE=.\hl2_dll\rotorwash.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -552,6 +650,10 @@ SOURCE=.\smoke_trail.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -776,6 +878,10 @@ SOURCE=.\hl2_dll\ai_allymanager.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -806,6 +912,10 @@ SOURCE=.\hl2_dll\AI_Interactions.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -844,6 +954,10 @@ SOURCE=.\hl2_dll\ar2_explosion.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -880,6 +994,10 @@ SOURCE=.\hl2_dll\ar2_explosion.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -918,6 +1036,10 @@ SOURCE=.\BaseBludgeonWeapon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -950,6 +1072,10 @@ SOURCE=.\BaseBludgeonWeapon.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -988,6 +1114,10 @@ SOURCE=.\hl2_dll\basehlcombatweapon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1025,6 +1155,10 @@ SOURCE=..\game_shared\hl2\basehlcombatweapon_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1060,6 +1194,10 @@ SOURCE=.\hl2_dll\CBaseHelicopter.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1090,6 +1228,10 @@ SOURCE=.\hl2_dll\CBaseHelicopter.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1122,6 +1264,10 @@ SOURCE=.\hl2_dll\CBaseSpriteProjectile.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1152,6 +1298,10 @@ SOURCE=.\hl2_dll\CBaseSpriteProjectile.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1184,6 +1334,10 @@ SOURCE=.\hl2_dll\energy_wave.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1215,6 +1369,10 @@ SOURCE=.\hl2_dll\energy_wave.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1241,6 +1399,10 @@ SOURCE=.\hl2_dll\env_speaker.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1279,6 +1441,10 @@ SOURCE=.\hl2_dll\extinguisherjet.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1316,6 +1482,10 @@ SOURCE=.\hl2_dll\extinguisherjet.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1346,6 +1516,10 @@ SOURCE=.\hl2_dll\Func_Monitor.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1381,6 +1555,10 @@ SOURCE=.\hl2_dll\func_recharge.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1419,6 +1597,10 @@ SOURCE=.\hl2_dll\func_tank.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1455,6 +1637,10 @@ SOURCE=.\hl2_dll\grenade_ar2.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1493,6 +1679,10 @@ SOURCE=.\hl2_dll\grenade_ar2.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1524,6 +1714,10 @@ SOURCE=.\hl2_dll\grenade_beam.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1554,6 +1748,10 @@ SOURCE=.\hl2_dll\grenade_beam.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1591,6 +1789,10 @@ SOURCE=.\hl2_dll\grenade_brickbat.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1635,6 +1837,13 @@ SOURCE=.\hl2_dll\grenade_brickbat.h
 # PROP Exclude_From_Build 1
 # PROP Ignore_Default_Tool 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Ignore_Default_Tool 1
+# PROP Ignore_Default_Tool 1
+
 !ENDIF 
 
 # End Source File
@@ -1671,6 +1880,10 @@ SOURCE=.\hl2_dll\grenade_bugbait.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1709,6 +1922,10 @@ SOURCE=.\hl2_dll\grenade_bugbait.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1745,6 +1962,10 @@ SOURCE=.\hl2_dll\grenade_energy.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1783,6 +2004,10 @@ SOURCE=.\hl2_dll\grenade_energy.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1819,6 +2044,10 @@ SOURCE=.\hl2_dll\grenade_frag.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1857,6 +2086,10 @@ SOURCE=.\hl2_dll\grenade_frag.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1889,6 +2122,10 @@ SOURCE=.\hl2_dll\grenade_homer.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1927,6 +2164,10 @@ SOURCE=.\hl2_dll\grenade_homer.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -1961,6 +2202,10 @@ SOURCE=.\hl2_dll\grenade_hopwire.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -1998,6 +2243,10 @@ SOURCE=.\hl2_dll\grenade_molotov.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2042,6 +2291,13 @@ SOURCE=.\hl2_dll\grenade_molotov.h
 # PROP Exclude_From_Build 1
 # PROP Ignore_Default_Tool 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Ignore_Default_Tool 1
+# PROP Ignore_Default_Tool 1
+
 !ENDIF 
 
 # End Source File
@@ -2078,6 +2334,10 @@ SOURCE=.\hl2_dll\grenade_pathfollower.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2116,6 +2376,10 @@ SOURCE=.\hl2_dll\grenade_pathfollower.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2152,6 +2416,10 @@ SOURCE=.\hl2_dll\grenade_satchel.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2190,6 +2458,10 @@ SOURCE=.\hl2_dll\grenade_satchel.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2226,6 +2498,10 @@ SOURCE=.\hl2_dll\grenade_scanner.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2264,6 +2540,10 @@ SOURCE=.\hl2_dll\grenade_scanner.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2300,6 +2580,10 @@ SOURCE=.\hl2_dll\grenade_spit.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2338,6 +2622,10 @@ SOURCE=.\hl2_dll\grenade_spit.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2374,6 +2662,10 @@ SOURCE=.\hl2_dll\grenade_tripmine.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2412,6 +2704,10 @@ SOURCE=.\hl2_dll\grenade_tripmine.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2448,6 +2744,10 @@ SOURCE=.\hl2_dll\grenade_tripwire.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2486,6 +2786,10 @@ SOURCE=.\hl2_dll\grenade_tripwire.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2523,6 +2827,14 @@ SOURCE=.\hl2_dll\hl2_client.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -2557,6 +2869,10 @@ SOURCE=.\hl2_dll\hl2_eventlog.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2593,6 +2909,10 @@ SOURCE=..\game_shared\hl2\hl2_gamerules.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2627,6 +2947,10 @@ SOURCE=..\game_shared\hl2\hl2_gamerules.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2665,6 +2989,10 @@ SOURCE=.\hl2_dll\HL2_Player.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2701,6 +3029,10 @@ SOURCE=.\hl2_dll\HL2_Player.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2739,6 +3071,10 @@ SOURCE=.\hl2_dll\hl2_playerlocaldata.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2776,6 +3112,10 @@ SOURCE=.\hl2_dll\hl2_playerlocaldata.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2806,6 +3146,10 @@ SOURCE=..\game_shared\hl2_shareddefs.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2842,6 +3186,10 @@ SOURCE=..\game_shared\hl2\hl2_usermessages.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2877,6 +3225,10 @@ SOURCE=..\game_shared\hl_gamemovement.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2908,6 +3260,10 @@ SOURCE=..\game_shared\hl_movedata.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -2938,6 +3294,10 @@ SOURCE=.\hl2_dll\hl_playermove.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -2973,6 +3333,10 @@ SOURCE=.\hl2_dll\item_ammo.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3011,6 +3375,10 @@ SOURCE=.\hl2_dll\item_battery.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3045,6 +3413,10 @@ SOURCE=.\hl2_dll\item_healthkit.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3083,6 +3455,10 @@ SOURCE=.\hl2_dll\item_suit.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3114,6 +3490,10 @@ SOURCE=.\hl2_dll\look_door.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3144,6 +3524,10 @@ SOURCE=.\hl2_dll\monster_dummy.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3182,6 +3566,10 @@ SOURCE=.\hl2_dll\npc_alyx.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3218,6 +3606,10 @@ SOURCE=.\hl2_dll\npc_alyx.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3256,6 +3648,10 @@ SOURCE=.\hl2_dll\npc_antlion.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3292,6 +3688,10 @@ SOURCE=.\hl2_dll\npc_antliongrub.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3330,6 +3730,10 @@ SOURCE=.\hl2_dll\npc_antliongrub.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3366,6 +3770,10 @@ SOURCE=.\hl2_dll\npc_antlionguard.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3404,6 +3812,10 @@ SOURCE=.\hl2_dll\npc_assassin.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3440,6 +3852,10 @@ SOURCE=.\hl2_dll\npc_assassin.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3478,6 +3894,10 @@ SOURCE=.\hl2_dll\npc_attackchopper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3514,6 +3934,10 @@ SOURCE=.\hl2_dll\npc_Barnacle.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3552,6 +3976,10 @@ SOURCE=.\hl2_dll\npc_Barnacle.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3588,6 +4016,10 @@ SOURCE=.\hl2_dll\npc_Barney.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3626,6 +4058,10 @@ SOURCE=.\hl2_dll\npc_BaseZombie.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3663,6 +4099,10 @@ SOURCE=.\hl2_dll\npc_BaseZombie.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3697,6 +4137,10 @@ SOURCE=.\hl2_dll\npc_breen.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3735,6 +4179,10 @@ SOURCE=.\hl2_dll\npc_bullseye.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3771,6 +4219,10 @@ SOURCE=.\hl2_dll\npc_Bullseye.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3809,6 +4261,10 @@ SOURCE=.\hl2_dll\npc_bullsquid.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3845,6 +4301,10 @@ SOURCE=.\hl2_dll\npc_Bullsquid.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3883,6 +4343,10 @@ SOURCE=.\hl2_dll\npc_citizen17.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3919,6 +4383,10 @@ SOURCE=.\hl2_dll\npc_citizen17.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -3957,6 +4425,10 @@ SOURCE=.\hl2_dll\npc_Combine.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -3994,6 +4466,10 @@ SOURCE=.\hl2_dll\npc_Combine.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4028,6 +4504,10 @@ SOURCE=.\hl2_dll\npc_combinecamera.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4066,6 +4546,10 @@ SOURCE=.\hl2_dll\npc_combinedropship.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4102,6 +4586,10 @@ SOURCE=.\hl2_dll\npc_CombineE.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4140,6 +4628,10 @@ SOURCE=.\hl2_dll\npc_CombineE.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4176,6 +4668,10 @@ SOURCE=.\hl2_dll\npc_CombineGuard.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4214,6 +4710,10 @@ SOURCE=.\hl2_dll\npc_combinegunship.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4250,6 +4750,10 @@ SOURCE=.\hl2_dll\npc_CombineS.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4288,6 +4792,10 @@ SOURCE=.\hl2_dll\npc_CombineS.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4324,6 +4832,10 @@ SOURCE=.\hl2_dll\npc_Conscript.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4362,6 +4874,10 @@ SOURCE=.\hl2_dll\npc_Conscript.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4399,6 +4915,10 @@ SOURCE=.\hl2_dll\npc_crabsynth.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4433,6 +4953,10 @@ SOURCE=.\hl2_dll\npc_cranedriver.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4469,6 +4993,10 @@ SOURCE=.\hl2_dll\npc_cremator.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4503,6 +5031,10 @@ SOURCE=.\hl2_dll\npc_cremator.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4541,6 +5073,10 @@ SOURCE=.\hl2_dll\npc_crow.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4575,6 +5111,10 @@ SOURCE=.\hl2_dll\npc_eli.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4613,6 +5153,10 @@ SOURCE=.\hl2_dll\npc_EnemyFinder.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4649,6 +5193,10 @@ SOURCE=.\hl2_dll\npc_fastzombie.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4687,6 +5235,10 @@ SOURCE=.\hl2_dll\npc_Headcrab.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4723,6 +5275,10 @@ SOURCE=.\hl2_dll\npc_Headcrab.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4761,6 +5317,10 @@ SOURCE=.\hl2_dll\npc_houndeye.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4797,6 +5357,10 @@ SOURCE=.\hl2_dll\npc_Houndeye.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4835,6 +5399,10 @@ SOURCE=.\hl2_dll\npc_hydra.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4871,6 +5439,10 @@ SOURCE=.\hl2_dll\npc_hydra.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4909,6 +5481,10 @@ SOURCE=.\hl2_dll\NPC_Ichthyosaur.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -4945,6 +5521,10 @@ SOURCE=.\hl2_dll\npc_kleiner.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -4983,6 +5563,10 @@ SOURCE=.\hl2_dll\npc_launcher.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5019,6 +5603,10 @@ SOURCE=.\npc_Leader.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5057,6 +5645,10 @@ SOURCE=.\npc_Leader.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5093,6 +5685,10 @@ SOURCE=.\hl2_dll\npc_lightstalk.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5131,6 +5727,10 @@ SOURCE=.\hl2_dll\npc_lightstalk.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5167,6 +5767,10 @@ SOURCE=.\hl2_dll\npc_Manhack.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5205,6 +5809,10 @@ SOURCE=.\hl2_dll\npc_Manhack.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5241,6 +5849,10 @@ SOURCE=.\hl2_dll\npc_metropolice.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5279,6 +5891,10 @@ SOURCE=.\hl2_dll\npc_metropolice.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5315,6 +5931,10 @@ SOURCE=.\hl2_dll\npc_missiledefense.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5353,6 +5973,10 @@ SOURCE=.\hl2_dll\npc_monk.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5389,6 +6013,10 @@ SOURCE=.\hl2_dll\npc_mortarsynth.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5427,6 +6055,10 @@ SOURCE=.\hl2_dll\npc_mortarsynth.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5461,6 +6093,10 @@ SOURCE=.\hl2_dll\npc_mossman.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5499,6 +6135,10 @@ SOURCE=.\hl2_dll\npc_odell.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5535,6 +6175,10 @@ SOURCE=.\hl2_dll\npc_odell.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5573,6 +6217,10 @@ SOURCE=.\hl2_dll\npc_PoisonZombie.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5609,6 +6257,10 @@ SOURCE=.\hl2_dll\NPC_Roller.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5647,6 +6299,10 @@ SOURCE=.\hl2_dll\NPC_Roller.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5683,6 +6339,10 @@ SOURCE=.\hl2_dll\NPC_RollerBuddy.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5721,6 +6381,10 @@ SOURCE=.\hl2_dll\npc_rollerbuddy.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5757,6 +6421,10 @@ SOURCE=.\hl2_dll\npc_rollerbull.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5795,6 +6463,10 @@ SOURCE=.\hl2_dll\NPC_RollerDozer.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5831,6 +6503,10 @@ SOURCE=.\hl2_dll\npc_rollermine.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5869,6 +6545,10 @@ SOURCE=.\hl2_dll\NPC_RollerTurret.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5905,6 +6585,10 @@ SOURCE=.\hl2_dll\npc_Scanner.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -5943,6 +6627,10 @@ SOURCE=.\hl2_dll\npc_Spotlight.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -5979,6 +6667,10 @@ SOURCE=.\hl2_dll\npc_SScanner.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6017,6 +6709,10 @@ SOURCE=.\hl2_dll\npc_SScanner.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6053,6 +6749,10 @@ SOURCE=.\hl2_dll\npc_SScanner_Beam.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6091,6 +6791,10 @@ SOURCE=.\hl2_dll\npc_SScanner_Beam.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6127,6 +6831,10 @@ SOURCE=.\hl2_dll\npc_stalker.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6165,6 +6873,10 @@ SOURCE=.\hl2_dll\npc_stalker.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6201,6 +6913,10 @@ SOURCE=.\hl2_dll\npc_strider.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6247,6 +6963,10 @@ SOURCE=.\hl2_dll\npc_turret_ceiling.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6284,6 +7004,10 @@ SOURCE=.\hl2_dll\npc_turret_floor.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6318,6 +7042,10 @@ SOURCE=.\hl2_dll\npc_vehicledriver.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6356,6 +7084,10 @@ SOURCE=.\hl2_dll\npc_Vortigaunt.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6392,6 +7124,10 @@ SOURCE=.\hl2_dll\npc_Vortigaunt.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6430,6 +7166,10 @@ SOURCE=.\hl2_dll\npc_wscanner.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6466,6 +7206,10 @@ SOURCE=.\hl2_dll\npc_WScanner.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6504,6 +7248,10 @@ SOURCE=.\hl2_dll\npc_zombie.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6535,6 +7283,10 @@ SOURCE=.\hl2_dll\player_control.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6565,6 +7317,10 @@ SOURCE=.\hl2_dll\player_control.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6603,6 +7359,10 @@ SOURCE=.\hl2_dll\player_manhack.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6639,6 +7399,10 @@ SOURCE=.\hl2_dll\player_missile.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6677,6 +7441,10 @@ SOURCE=.\hl2_dll\point_apc_controller.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6707,6 +7475,10 @@ SOURCE=.\hl2_dll\Point_Camera.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6745,6 +7517,10 @@ SOURCE=.\hl2_dll\proto_sniper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6775,6 +7551,10 @@ SOURCE=.\hl2_dll\rotorwash.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6813,6 +7593,10 @@ SOURCE=.\hl2_dll\Scanner_Shield.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6850,6 +7634,10 @@ SOURCE=.\hl2_dll\Scanner_Shield.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6884,6 +7672,10 @@ SOURCE=.\hl2_dll\vehicle_airboat.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6922,6 +7714,10 @@ SOURCE=.\hl2_dll\vehicle_apc.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -6958,6 +7754,10 @@ SOURCE=.\hl2_dll\vehicle_base.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -6996,6 +7796,10 @@ SOURCE=.\vehicle_base.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7030,6 +7834,10 @@ SOURCE=.\hl2_dll\vehicle_baseserver.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7068,6 +7876,10 @@ SOURCE=.\hl2_dll\Vehicle_Chopper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7102,6 +7914,10 @@ SOURCE=.\hl2_dll\vehicle_crane.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7140,6 +7956,10 @@ SOURCE=.\hl2_dll\vehicle_jeep.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7175,6 +7995,10 @@ SOURCE=.\hl2_dll\vehicle_jetski.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7207,6 +8031,10 @@ SOURCE=.\hl2_dll\WaterLODControl.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7243,6 +8071,10 @@ SOURCE=.\hl2_dll\weapon_alyxgun.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7277,6 +8109,10 @@ SOURCE=.\hl2_dll\weapon_alyxgun.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7315,6 +8151,10 @@ SOURCE=.\hl2_dll\weapon_ar1.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7351,6 +8191,10 @@ SOURCE=.\hl2_dll\weapon_ar2.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7389,6 +8233,10 @@ SOURCE=.\hl2_dll\weapon_ar2.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7426,6 +8274,10 @@ SOURCE=.\hl2_dll\weapon_Binoculars.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7462,6 +8314,10 @@ SOURCE=.\hl2_dll\weapon_brickbat.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7506,6 +8362,13 @@ SOURCE=.\hl2_dll\weapon_brickbat.h
 # PROP Exclude_From_Build 1
 # PROP Ignore_Default_Tool 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Ignore_Default_Tool 1
+# PROP Ignore_Default_Tool 1
+
 !ENDIF 
 
 # End Source File
@@ -7542,6 +8405,10 @@ SOURCE=.\hl2_dll\weapon_bugbait.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7580,6 +8447,10 @@ SOURCE=.\hl2_dll\weapon_cguard.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7617,6 +8488,10 @@ SOURCE=.\hl2_dll\weapon_crowbar.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7651,6 +8526,10 @@ SOURCE=.\weapon_cubemap.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7689,6 +8568,10 @@ SOURCE=.\hl2_dll\weapon_extinguisher.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7726,6 +8609,10 @@ SOURCE=.\hl2_dll\weapon_flaregun.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7758,6 +8645,10 @@ SOURCE=.\hl2_dll\weapon_flaregun.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7796,6 +8687,10 @@ SOURCE=.\hl2_dll\weapon_frag.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7833,6 +8728,10 @@ SOURCE=.\hl2_dll\weapon_gauss.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7865,6 +8764,10 @@ SOURCE=.\hl2_dll\weapon_gauss.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7903,6 +8806,10 @@ SOURCE=.\hl2_dll\weapon_hgm1.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -7937,6 +8844,10 @@ SOURCE=.\hl2_dll\weapon_hopwire.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -7975,6 +8886,10 @@ SOURCE=.\hl2_dll\weapon_iceaxe.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8010,6 +8925,10 @@ SOURCE=.\hl2_dll\weapon_immolator.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8044,6 +8963,10 @@ SOURCE=.\hl2_dll\weapon_immolator.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8082,6 +9005,10 @@ SOURCE=.\hl2_dll\weapon_irifle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8118,6 +9045,10 @@ SOURCE=.\hl2_dll\weapon_manhack.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8156,6 +9087,10 @@ SOURCE=.\hl2_dll\weapon_molotov.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8192,6 +9127,10 @@ SOURCE=.\hl2_dll\weapon_molotov.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8230,6 +9169,10 @@ SOURCE=.\hl2_dll\weapon_physcannon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8266,6 +9209,10 @@ SOURCE=.\hl2_dll\weapon_pistol.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8304,6 +9251,10 @@ SOURCE=.\hl2_dll\weapon_rollerwand.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8341,6 +9292,10 @@ SOURCE=.\hl2_dll\weapon_rpg.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8373,6 +9328,10 @@ SOURCE=.\hl2_dll\weapon_rpg.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8411,6 +9370,10 @@ SOURCE=.\hl2_dll\weapon_shotgun.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8447,6 +9410,10 @@ SOURCE=.\hl2_dll\weapon_slam.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8485,6 +9452,10 @@ SOURCE=.\hl2_dll\weapon_slam.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8521,6 +9492,10 @@ SOURCE=.\hl2_dll\weapon_smg1.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8559,6 +9534,10 @@ SOURCE=.\hl2_dll\weapon_smg2.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8595,6 +9574,10 @@ SOURCE=.\hl2_dll\weapon_SniperRifle.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8633,6 +9616,10 @@ SOURCE=.\hl2_dll\weapon_stickylauncher.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8669,6 +9656,10 @@ SOURCE=.\hl2_dll\weapon_stunstick.cpp
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8707,6 +9698,10 @@ SOURCE=.\hl2_dll\weapon_thumper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8744,6 +9739,10 @@ SOURCE=.\hl2_dll\weapon_tripwire.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -8780,6 +9779,10 @@ SOURCE=.\hl2_dll\weapon_tripwire.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -8827,6 +9830,16 @@ SOURCE=.\tf2_dll\tf_class_commando.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -8862,6 +9875,16 @@ SOURCE=.\tf2_dll\tf_class_commando.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -8905,6 +9928,16 @@ SOURCE=.\tf2_dll\tf_class_defender.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -8940,6 +9973,16 @@ SOURCE=.\tf2_dll\tf_class_defender.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -8983,6 +10026,16 @@ SOURCE=.\tf2_dll\tf_class_escort.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9018,6 +10071,16 @@ SOURCE=.\tf2_dll\tf_class_escort.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9061,6 +10124,16 @@ SOURCE=.\tf2_dll\tf_class_infiltrator.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9096,6 +10169,16 @@ SOURCE=.\tf2_dll\tf_class_infiltrator.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9139,6 +10222,16 @@ SOURCE=.\tf2_dll\tf_class_medic.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9174,6 +10267,16 @@ SOURCE=.\tf2_dll\tf_class_medic.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9217,6 +10320,16 @@ SOURCE=.\tf2_dll\tf_class_pyro.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9252,6 +10365,16 @@ SOURCE=.\tf2_dll\tf_class_pyro.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9295,6 +10418,16 @@ SOURCE=.\tf2_dll\tf_class_recon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9330,6 +10463,16 @@ SOURCE=.\tf2_dll\tf_class_recon.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9373,6 +10516,16 @@ SOURCE=.\tf2_dll\tf_class_sapper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9408,6 +10561,16 @@ SOURCE=.\tf2_dll\tf_class_sapper.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9451,6 +10614,16 @@ SOURCE=.\tf2_dll\tf_class_sniper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9486,6 +10659,16 @@ SOURCE=.\tf2_dll\tf_class_sniper.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9529,6 +10712,16 @@ SOURCE=.\tf2_dll\tf_class_support.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9564,6 +10757,16 @@ SOURCE=.\tf2_dll\tf_class_support.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9611,6 +10814,16 @@ SOURCE=..\game_shared\tf_gamemovement.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9646,6 +10859,16 @@ SOURCE=..\game_shared\tf_gamemovement.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9689,6 +10912,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_chooser.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9724,6 +10957,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_chooser.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9767,6 +11010,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_commando.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9802,6 +11055,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_commando.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9845,6 +11108,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_defender.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9880,6 +11153,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_defender.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -9923,6 +11206,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_escort.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -9958,6 +11251,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_escort.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10001,6 +11304,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_infiltrator.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10036,6 +11349,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_infiltrator.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10079,6 +11402,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_medic.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10114,6 +11447,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_medic.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10157,6 +11500,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_pyro.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10192,6 +11545,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_pyro.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10235,6 +11598,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_recon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10270,6 +11643,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_recon.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10313,6 +11696,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_sapper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10345,6 +11738,10 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_sapper.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -10381,6 +11778,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_sniper.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10424,6 +11831,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_sniper.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10459,6 +11876,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_support.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10502,6 +11929,16 @@ SOURCE=..\game_shared\tf2\tf_gamemovement_support.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10541,6 +11978,16 @@ SOURCE=..\game_shared\tf_movedata.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10576,6 +12023,16 @@ SOURCE=.\tf2_dll\tf_playermove.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10620,6 +12077,16 @@ SOURCE=.\tf2_dll\basecombatcharacter_tf2.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10653,6 +12120,10 @@ SOURCE=.\hl2_dll\basehlcombatweapon.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -10685,6 +12156,10 @@ SOURCE=..\game_shared\hl2\basehlcombatweapon_shared.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -10725,6 +12200,16 @@ SOURCE=..\game_shared\tf2\baseobject_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10757,6 +12242,10 @@ SOURCE=..\game_shared\tf2\baseobject_shared.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -10801,6 +12290,16 @@ SOURCE=..\game_shared\tf2\basetfcombatweapon_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10836,6 +12335,16 @@ SOURCE=..\game_shared\tf2\basetfcombatweapon_shared.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10879,6 +12388,16 @@ SOURCE=..\game_shared\tf2\basetfplayer_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10914,6 +12433,16 @@ SOURCE=..\game_shared\basetfplayer_shared.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -10957,6 +12486,16 @@ SOURCE=..\game_shared\tf2\basetfvehicle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -10989,6 +12528,10 @@ SOURCE=..\game_shared\tf2\basetfvehicle.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -11025,6 +12568,16 @@ SOURCE=.\tf2_dll\bot_base.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11068,6 +12621,16 @@ SOURCE=.\tf2_dll\ControlZone.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11103,6 +12666,16 @@ SOURCE=.\tf2_dll\controlzone.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11144,6 +12717,10 @@ SOURCE=.\CRagdollMagnet.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -11179,6 +12756,16 @@ SOURCE=.\tf2_dll\demo_entities.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11222,6 +12809,16 @@ SOURCE=.\tf2_dll\entity_burn_effect.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11261,6 +12858,16 @@ SOURCE=.\tf2_dll\entity_burn_effect.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11293,6 +12900,10 @@ SOURCE=.\EntityFlame.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -11329,6 +12940,16 @@ SOURCE=.\tf2_dll\env_fallingrocks.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11372,6 +12993,16 @@ SOURCE=..\game_shared\tf2\env_laserdesignation.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11404,6 +13035,10 @@ SOURCE=..\game_shared\tf2\env_laserdesignation.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -11440,6 +13075,16 @@ SOURCE=.\tf2_dll\env_meteor.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11483,6 +13128,16 @@ SOURCE=.\tf2_dll\env_meteor.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11522,6 +13177,16 @@ SOURCE=..\game_shared\env_meteor_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11557,6 +13222,16 @@ SOURCE=..\game_shared\env_meteor_shared.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11604,6 +13279,16 @@ SOURCE=.\tf2_dll\fire_damage_mgr.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11639,6 +13324,16 @@ SOURCE=.\tf2_dll\fire_damage_mgr.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11682,6 +13377,16 @@ SOURCE=.\tf2_dll\gasoline_blob.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11717,6 +13422,16 @@ SOURCE=.\tf2_dll\gasoline_blob.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11760,6 +13475,16 @@ SOURCE=..\game_shared\tf2\gasoline_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11795,6 +13520,16 @@ SOURCE=..\game_shared\tf2\grenade_antipersonnel.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11838,6 +13573,16 @@ SOURCE=..\game_shared\tf2\grenade_antipersonnel.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11873,6 +13618,16 @@ SOURCE=..\game_shared\tf2\grenade_base_empable.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -11916,6 +13671,16 @@ SOURCE=..\game_shared\tf2\grenade_base_empable.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11955,6 +13720,16 @@ SOURCE=..\game_shared\tf2\grenade_emp.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -11990,6 +13765,16 @@ SOURCE=..\game_shared\tf2\grenade_emp.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12037,6 +13822,16 @@ SOURCE=..\game_shared\tf2\grenade_limpetmine.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12072,6 +13867,16 @@ SOURCE=..\game_shared\tf2\grenade_limpetmine.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12115,6 +13920,16 @@ SOURCE=..\game_shared\tf2\grenade_objectsapper.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12150,6 +13965,16 @@ SOURCE=..\game_shared\tf2\grenade_objectsapper.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12193,6 +14018,16 @@ SOURCE=..\game_shared\tf2\grenade_rocket.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12228,6 +14063,16 @@ SOURCE=..\game_shared\tf2\grenade_rocket.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12271,6 +14116,16 @@ SOURCE=..\game_shared\tf2\grenade_stickybomb.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12303,6 +14158,10 @@ SOURCE=.\h_cycler.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -12341,6 +14200,10 @@ SOURCE=..\game_shared\hl2_player_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -12373,6 +14236,10 @@ SOURCE=..\game_shared\tf2\ihasbuildpoints.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -12409,6 +14276,16 @@ SOURCE=.\tf2_dll\info_act.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12452,6 +14329,16 @@ SOURCE=.\tf2_dll\info_act.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12487,6 +14374,16 @@ SOURCE=.\tf2_dll\info_add_resources.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12530,6 +14427,16 @@ SOURCE=.\tf2_dll\info_buildpoint.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12565,6 +14472,16 @@ SOURCE=.\tf2_dll\info_buildpoint.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12608,6 +14525,16 @@ SOURCE=.\tf2_dll\info_customtech.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12643,6 +14570,16 @@ SOURCE=.\tf2_dll\info_customtech.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12686,6 +14623,16 @@ SOURCE=.\tf2_dll\info_input_playsound.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12721,6 +14668,16 @@ SOURCE=.\tf2_dll\info_input_resetbanks.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12764,6 +14721,16 @@ SOURCE=.\tf2_dll\info_input_resetobjects.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12799,6 +14766,16 @@ SOURCE=.\tf2_dll\info_input_respawnplayers.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12842,6 +14819,16 @@ SOURCE=.\tf2_dll\info_minimappulse.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12877,6 +14864,16 @@ SOURCE=.\tf2_dll\info_output_team.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12920,6 +14917,16 @@ SOURCE=.\tf2_dll\info_vehicle_bay.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -12955,6 +14962,16 @@ SOURCE=.\tf2_dll\info_vehicle_bay.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -12998,6 +15015,16 @@ SOURCE=.\iscorer.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13033,6 +15060,16 @@ SOURCE=.\tf2_dll\mapdata_server.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13076,6 +15113,16 @@ SOURCE=..\game_shared\mapdata_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13111,6 +15158,16 @@ SOURCE=.\tf2_dll\menu_base.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13154,6 +15211,16 @@ SOURCE=.\tf2_dll\menu_base.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13189,6 +15256,16 @@ SOURCE=.\tf2_dll\mortar_round.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13232,6 +15309,16 @@ SOURCE=.\tf2_dll\npc_bug_builder.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13267,6 +15354,16 @@ SOURCE=.\tf2_dll\npc_bug_builder.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13310,6 +15407,16 @@ SOURCE=.\tf2_dll\npc_bug_hole.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13345,6 +15452,16 @@ SOURCE=.\tf2_dll\npc_bug_hole.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13388,6 +15505,16 @@ SOURCE=.\tf2_dll\npc_bug_warrior.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13423,6 +15550,16 @@ SOURCE=.\tf2_dll\npc_bug_warrior.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13470,6 +15607,16 @@ SOURCE=.\tf2_dll\order_assist.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13505,6 +15652,16 @@ SOURCE=.\tf2_dll\order_assist.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13548,6 +15705,16 @@ SOURCE=.\tf2_dll\order_buildsentrygun.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13583,6 +15750,16 @@ SOURCE=.\tf2_dll\order_buildsentrygun.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13626,6 +15803,16 @@ SOURCE=.\tf2_dll\order_buildshieldwall.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13661,6 +15848,16 @@ SOURCE=.\tf2_dll\order_buildshieldwall.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13704,6 +15901,16 @@ SOURCE=.\tf2_dll\order_events.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13739,6 +15946,16 @@ SOURCE=.\tf2_dll\order_events.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13782,6 +15999,16 @@ SOURCE=.\tf2_dll\order_heal.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13817,6 +16044,16 @@ SOURCE=.\tf2_dll\order_heal.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13860,6 +16097,16 @@ SOURCE=.\tf2_dll\order_helpers.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13895,6 +16142,16 @@ SOURCE=.\tf2_dll\order_helpers.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -13938,6 +16195,16 @@ SOURCE=.\tf2_dll\order_killmortarguy.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -13973,6 +16240,16 @@ SOURCE=.\tf2_dll\order_killmortarguy.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14016,6 +16293,16 @@ SOURCE=.\tf2_dll\order_mortar_attack.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14051,6 +16338,16 @@ SOURCE=.\tf2_dll\order_mortar_attack.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14094,6 +16391,16 @@ SOURCE=.\tf2_dll\order_player.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14129,6 +16436,16 @@ SOURCE=.\tf2_dll\order_player.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14172,6 +16489,16 @@ SOURCE=.\tf2_dll\order_repair.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14207,6 +16534,16 @@ SOURCE=.\tf2_dll\order_repair.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14250,6 +16587,16 @@ SOURCE=.\tf2_dll\order_resourcepump.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14285,6 +16632,16 @@ SOURCE=.\tf2_dll\order_resourcepump.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14328,6 +16685,16 @@ SOURCE=.\tf2_dll\order_resupply.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14363,6 +16730,16 @@ SOURCE=.\tf2_dll\order_resupply.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14406,6 +16783,16 @@ SOURCE=.\tf2_dll\orders.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14441,6 +16828,16 @@ SOURCE=.\tf2_dll\orders.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14488,6 +16885,16 @@ SOURCE=..\game_shared\tf2\plasmaprojectile.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14523,6 +16930,16 @@ SOURCE=..\game_shared\tf2\plasmaprojectile.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14566,6 +16983,16 @@ SOURCE=..\game_shared\tf2\plasmaprojectile_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14601,6 +17028,16 @@ SOURCE=..\game_shared\tf2\plasmaprojectile_shared.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14644,6 +17081,16 @@ SOURCE=.\tf2_dll\ragdoll_shadow.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14683,6 +17130,16 @@ SOURCE=.\tf2_dll\ragdoll_shadow.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14715,6 +17172,10 @@ SOURCE=..\game_shared\ragdoll_shared.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -14755,6 +17216,16 @@ SOURCE=.\tf2_dll\resource_chunk.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14790,6 +17261,16 @@ SOURCE=.\tf2_dll\resource_chunk.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14837,6 +17318,16 @@ SOURCE=.\tf2_dll\sensor_tf_team.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14869,6 +17360,10 @@ SOURCE=..\game_shared\solidsetdefaults.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -14905,6 +17400,16 @@ SOURCE=.\spark.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -14952,6 +17457,16 @@ SOURCE=.\tf2_dll\team_messages.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -14987,6 +17502,16 @@ SOURCE=.\tf2_dll\team_messages.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15030,6 +17555,16 @@ SOURCE=..\game_shared\tf2\techtree.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15065,6 +17600,16 @@ SOURCE=..\game_shared\tf2\techtree.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15108,6 +17653,16 @@ SOURCE=..\game_shared\tf2\techtree_parse.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15141,6 +17696,16 @@ SOURCE=.\tf2_dll\tf2_eventlog.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -15178,6 +17743,16 @@ SOURCE=.\tf2_dll\tf_ai_hint.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15221,6 +17796,16 @@ SOURCE=.\tf2_dll\tf_basecombatweapon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15256,6 +17841,16 @@ SOURCE=.\tf2_dll\tf_basecombatweapon.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15299,6 +17894,16 @@ SOURCE=.\tf2_dll\tf_basefourwheelvehicle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15334,6 +17939,16 @@ SOURCE=.\tf2_dll\tf_basefourwheelvehicle.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15377,6 +17992,16 @@ SOURCE=.\tf2_dll\tf_client.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15412,6 +18037,16 @@ SOURCE=.\tf2_dll\tf_filters.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15455,6 +18090,16 @@ SOURCE=.\tf2_dll\tf_flare.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15490,6 +18135,16 @@ SOURCE=.\tf2_dll\tf_flare.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15533,6 +18188,16 @@ SOURCE=.\tf2_dll\tf_func_construction_yard.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15565,6 +18230,10 @@ SOURCE=.\tf2_dll\tf_func_construction_yard.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -15605,6 +18274,16 @@ SOURCE=.\tf2_dll\tf_func_mass_teleport.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15637,6 +18316,10 @@ SOURCE=.\tf2_dll\tf_func_mass_teleport.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -15673,6 +18356,16 @@ SOURCE=.\tf2_dll\tf_func_no_build.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15716,6 +18409,16 @@ SOURCE=.\tf2_dll\tf_func_no_build.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15751,6 +18454,16 @@ SOURCE=.\tf2_dll\tf_func_resource.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15794,6 +18507,16 @@ SOURCE=.\tf2_dll\tf_func_resource.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15829,6 +18552,16 @@ SOURCE=.\tf2_dll\tf_func_weldable_door.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -15872,6 +18605,16 @@ SOURCE=.\tf2_dll\tf_func_weldable_door.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15905,6 +18648,16 @@ SOURCE=..\game_shared\tf2\tf_gamerules.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -15942,6 +18695,16 @@ SOURCE=..\game_shared\tf2\tf_gamerules.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -15977,6 +18740,16 @@ SOURCE=.\tf2_dll\tf_hintmanager.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16020,6 +18793,16 @@ SOURCE=.\tf2_dll\tf_hintmanager.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16055,6 +18838,16 @@ SOURCE=.\tf2_dll\tf_obj.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16098,6 +18891,16 @@ SOURCE=.\tf2_dll\tf_obj.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16137,6 +18940,16 @@ SOURCE=.\tf2_dll\tf_obj_armor_upgrade.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16169,6 +18982,10 @@ SOURCE=.\tf2_dll\tf_obj_armor_upgrade.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16209,6 +19026,16 @@ SOURCE=.\tf2_dll\tf_obj_barbed_wire.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16241,6 +19068,10 @@ SOURCE=.\tf2_dll\tf_obj_barbed_wire.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16281,6 +19112,16 @@ SOURCE=..\game_shared\tf2\tf_obj_base_manned_gun.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16313,6 +19154,10 @@ SOURCE=..\game_shared\tf2\tf_obj_base_manned_gun.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16349,6 +19194,16 @@ SOURCE=..\game_shared\tf2\tf_obj_basedrivergun_shared.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16392,6 +19247,16 @@ SOURCE=..\game_shared\tf2\tf_obj_basedrivergun_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16427,6 +19292,16 @@ SOURCE=..\game_shared\tf2\tf_obj_baseupgrade_shared.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16470,6 +19345,16 @@ SOURCE=..\game_shared\tf2\tf_obj_baseupgrade_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16509,6 +19394,16 @@ SOURCE=.\tf2_dll\tf_obj_buff_station.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16541,6 +19436,10 @@ SOURCE=.\tf2_dll\tf_obj_buff_station.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16581,6 +19480,16 @@ SOURCE=.\tf2_dll\tf_obj_bunker.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16613,6 +19522,10 @@ SOURCE=.\tf2_dll\tf_obj_bunker.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16649,6 +19562,16 @@ SOURCE=.\tf2_dll\tf_obj_dragonsteeth.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16692,6 +19615,16 @@ SOURCE=.\tf2_dll\tf_obj_dragonsteeth.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16727,6 +19660,16 @@ SOURCE=..\game_shared\tf2\tf_obj_driver_machinegun_shared.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16770,6 +19713,16 @@ SOURCE=..\game_shared\tf2\tf_obj_driver_machinegun_shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16805,6 +19758,16 @@ SOURCE=.\tf2_dll\tf_obj_empgenerator.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16848,6 +19811,16 @@ SOURCE=.\tf2_dll\tf_obj_empgenerator.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16883,6 +19856,16 @@ SOURCE=.\tf2_dll\tf_obj_explosives.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -16926,6 +19909,16 @@ SOURCE=.\tf2_dll\tf_obj_manned_missilelauncher.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -16958,6 +19951,10 @@ SOURCE=.\tf2_dll\tf_obj_manned_missilelauncher.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -16994,6 +19991,16 @@ SOURCE=..\game_shared\tf2\tf_obj_manned_plasmagun.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17037,6 +20044,16 @@ SOURCE=..\game_shared\tf2\tf_obj_manned_plasmagun.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17076,6 +20093,16 @@ SOURCE=..\game_shared\tf2\tf_obj_manned_plasmagun_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17108,6 +20135,10 @@ SOURCE=..\game_shared\tf2\tf_obj_manned_plasmagun_shared.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -17144,6 +20175,16 @@ SOURCE=.\tf2_dll\tf_obj_manned_shield.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17187,6 +20228,16 @@ SOURCE=.\tf2_dll\tf_obj_mapdefined.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17226,6 +20277,16 @@ SOURCE=.\tf2_dll\tf_obj_mapdefined.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17261,6 +20322,16 @@ SOURCE=.\tf2_dll\tf_obj_mcv_selection_panel.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17308,6 +20379,16 @@ SOURCE=.\tf2_dll\tf_obj_mortar.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17343,6 +20424,16 @@ SOURCE=.\tf2_dll\tf_obj_mortar.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17386,6 +20477,16 @@ SOURCE=.\tf2_dll\tf_obj_powerpack.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17421,6 +20522,16 @@ SOURCE=.\tf2_dll\tf_obj_powerpack.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17464,6 +20575,16 @@ SOURCE=.\tf2_dll\tf_obj_rallyflag.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17499,6 +20620,16 @@ SOURCE=.\tf2_dll\tf_obj_rallyflag.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17542,6 +20673,16 @@ SOURCE=.\tf2_dll\tf_obj_resourcepump.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17577,6 +20718,16 @@ SOURCE=.\tf2_dll\tf_obj_resourcepump.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17620,6 +20771,16 @@ SOURCE=.\tf2_dll\tf_obj_respawn_station.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17655,6 +20816,16 @@ SOURCE=.\tf2_dll\tf_obj_respawn_station.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17698,6 +20869,16 @@ SOURCE=.\tf2_dll\tf_obj_resupply.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17733,6 +20914,16 @@ SOURCE=.\tf2_dll\tf_obj_resupply.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17776,6 +20967,16 @@ SOURCE=.\tf2_dll\tf_obj_sandbag_bunker.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17808,6 +21009,10 @@ SOURCE=.\tf2_dll\tf_obj_sandbag_bunker.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -17844,6 +21049,16 @@ SOURCE=.\tf2_dll\tf_obj_selfheal.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17887,6 +21102,16 @@ SOURCE=.\tf2_dll\tf_obj_selfheal.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -17922,6 +21147,16 @@ SOURCE=.\tf2_dll\tf_obj_sentrygun.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -17965,6 +21200,16 @@ SOURCE=.\tf2_dll\tf_obj_sentrygun.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18000,6 +21245,16 @@ SOURCE=.\tf2_dll\tf_obj_shieldwall.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18043,6 +21298,16 @@ SOURCE=.\tf2_dll\tf_obj_shieldwall.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18078,6 +21343,16 @@ SOURCE=.\tf2_dll\tf_obj_tower.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18121,6 +21396,16 @@ SOURCE=.\tf2_dll\tf_obj_tower.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18156,6 +21441,16 @@ SOURCE=.\tf2_dll\tf_obj_tunnel.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18199,6 +21494,16 @@ SOURCE=.\tf2_dll\tf_obj_vehicleboost.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18234,6 +21539,16 @@ SOURCE=.\tf2_dll\tf_obj_vehicleboost.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18277,6 +21592,16 @@ SOURCE=.\tf2_dll\tf_player.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18312,6 +21637,16 @@ SOURCE=.\tf2_dll\tf_player.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18355,6 +21690,16 @@ SOURCE=.\tf2_dll\tf_player_death.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18394,6 +21739,16 @@ SOURCE=.\tf2_dll\tf_player_resource.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18429,6 +21784,16 @@ SOURCE=.\tf2_dll\tf_player_resource.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18476,6 +21841,16 @@ SOURCE=.\tf2_dll\tf_playerclass.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18511,6 +21886,16 @@ SOURCE=.\tf2_dll\tf_playerclass.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18554,6 +21939,16 @@ SOURCE=.\tf2_dll\tf_playerlocaldata.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18589,6 +21984,16 @@ SOURCE=.\tf2_dll\tf_playerlocaldata.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18632,6 +22037,16 @@ SOURCE=..\game_shared\tf_reconvars.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18667,6 +22082,16 @@ SOURCE=..\game_shared\tf_reconvars.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18710,6 +22135,16 @@ SOURCE=..\game_shared\tf2\tf_shareddefs.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18745,6 +22180,16 @@ SOURCE=..\game_shared\tf_shareddefs.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18788,6 +22233,16 @@ SOURCE=.\tf2_dll\tf_shield.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18823,6 +22278,16 @@ SOURCE=.\tf2_dll\tf_shield.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18866,6 +22331,16 @@ SOURCE=.\tf2_dll\tf_shield_flat.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18905,6 +22380,16 @@ SOURCE=.\tf2_dll\tf_shield_flat.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -18938,6 +22423,16 @@ SOURCE=..\game_shared\tf2\tf_shield_mobile_shared.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -18981,6 +22476,16 @@ SOURCE=.\tf2_dll\tf_shieldgrenade.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19016,6 +22521,16 @@ SOURCE=.\tf2_dll\tf_shieldgrenade.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19073,6 +22588,20 @@ SOURCE=..\game_shared\tf_shieldshared.cpp
 # SUBTRACT BASE CPP /YX /Yc /Yu
 # SUBTRACT CPP /YX /Yc /Yu
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# SUBTRACT CPP /YX /Yc /Yu
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# SUBTRACT CPP /YX /Yc /Yu
+
 !ENDIF 
 
 # End Source File
@@ -19108,6 +22637,16 @@ SOURCE=..\game_shared\tf_shieldshared.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19151,6 +22690,16 @@ SOURCE=.\tf2_dll\tf_stats.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19186,6 +22735,16 @@ SOURCE=.\tf2_dll\tf_stats.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19227,6 +22786,16 @@ SOURCE=.\tf2_dll\tf_stressentities.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19284,6 +22853,20 @@ SOURCE=..\game_shared\tf_tacticalmap.cpp
 # SUBTRACT BASE CPP /YX /Yc /Yu
 # SUBTRACT CPP /YX /Yc /Yu
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# SUBTRACT CPP /YX /Yc /Yu
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# SUBTRACT CPP /YX /Yc /Yu
+
 !ENDIF 
 
 # End Source File
@@ -19319,6 +22902,16 @@ SOURCE=.\tf2_dll\tf_team.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19362,6 +22955,16 @@ SOURCE=.\tf2_dll\tf_team.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19401,6 +23004,16 @@ SOURCE=.\tf2_dll\tf_teamspawnpoint.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19434,6 +23047,16 @@ SOURCE=..\game_shared\tf2\tf_usermessages.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -19471,6 +23094,16 @@ SOURCE=.\tf2_dll\tf_vehicle_battering_ram.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19514,6 +23147,16 @@ SOURCE=.\tf2_dll\tf_vehicle_battering_ram.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19549,6 +23192,16 @@ SOURCE=.\tf2_dll\tf_vehicle_flatbed.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19592,6 +23245,16 @@ SOURCE=.\tf2_dll\tf_vehicle_flatbed.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19627,6 +23290,16 @@ SOURCE=.\tf2_dll\tf_vehicle_mortar.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19670,6 +23343,16 @@ SOURCE=.\tf2_dll\tf_vehicle_mortar.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19705,6 +23388,16 @@ SOURCE=.\tf2_dll\tf_vehicle_motorcycle.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19748,6 +23441,16 @@ SOURCE=.\tf2_dll\tf_vehicle_siege_tower.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19783,6 +23486,16 @@ SOURCE=.\tf2_dll\tf_vehicle_siege_tower.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -19826,6 +23539,16 @@ SOURCE=.\tf2_dll\tf_vehicle_tank.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19858,6 +23581,10 @@ SOURCE=.\tf2_dll\tf_vehicle_tank.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -19898,6 +23625,16 @@ SOURCE=.\tf2_dll\tf_vehicle_teleport_station.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -19930,6 +23667,10 @@ SOURCE=.\tf2_dll\tf_vehicle_teleport_station.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -19966,6 +23707,16 @@ SOURCE=.\tf2_dll\tf_vehicle_wagon.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20009,6 +23760,16 @@ SOURCE=.\tf2_dll\tf_vehicle_wagon.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20048,6 +23809,16 @@ SOURCE=..\game_shared\tf_vehicleshared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20083,6 +23854,16 @@ SOURCE=.\tf2_dll\tf_walker_base.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20130,6 +23911,16 @@ SOURCE=.\tf2_dll\tf_walker_ministrider.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20169,6 +23960,16 @@ SOURCE=.\tf2_dll\tf_walker_strider.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20216,6 +24017,16 @@ SOURCE=..\game_shared\tf2\tfclassdata_shared.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20255,6 +24066,16 @@ SOURCE=..\game_shared\tf2\TFClassData_Shared.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20287,6 +24108,10 @@ SOURCE=..\game_shared\touchlink.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -20327,6 +24152,16 @@ SOURCE=.\tf2_dll\trigger_fall.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20362,6 +24197,16 @@ SOURCE=.\tf2_dll\trigger_skybox.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20417,6 +24262,16 @@ SOURCE=..\game_shared\tf2\weapon_arcwelder.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20452,6 +24307,16 @@ SOURCE=..\game_shared\tf2\weapon_basecombatobject.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20495,6 +24360,16 @@ SOURCE=..\game_shared\tf2\weapon_basecombatobject.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20530,6 +24405,16 @@ SOURCE=..\game_shared\tf2\weapon_builder.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20573,6 +24458,16 @@ SOURCE=..\game_shared\tf2\weapon_builder.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20608,6 +24503,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_basegrenade.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20651,6 +24556,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_basegrenade.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20686,6 +24601,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_burstrifle.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20729,6 +24654,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_grenade.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20764,6 +24699,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_grenade_emp.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20807,6 +24752,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_laserrifle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20842,6 +24797,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_plasma_grenade_launcher.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20885,6 +24850,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_plasmarifle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20920,6 +24895,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_shotgun.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -20963,6 +24948,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_usedwithshieldbase.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -20998,6 +24993,16 @@ SOURCE=..\game_shared\tf2\weapon_combat_usedwithshieldbase.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21041,6 +25046,16 @@ SOURCE=..\game_shared\tf2\weapon_combatshield.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21076,6 +25091,16 @@ SOURCE=..\game_shared\tf2\weapon_combatshield.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21119,6 +25144,16 @@ SOURCE=..\game_shared\tf2\weapon_drainbeam.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21154,6 +25189,16 @@ SOURCE=..\game_shared\tf2\weapon_drainbeam.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21197,6 +25242,16 @@ SOURCE=..\game_shared\tf2\weapon_flame_thrower.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21232,6 +25287,16 @@ SOURCE=..\game_shared\tf2\weapon_flame_thrower.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21275,6 +25340,16 @@ SOURCE=..\game_shared\tf2\weapon_gas_can.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21310,6 +25385,16 @@ SOURCE=..\game_shared\tf2\weapon_gas_can.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21353,6 +25438,16 @@ SOURCE=..\game_shared\tf2\weapon_grenade_rocket.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21388,6 +25483,16 @@ SOURCE=..\game_shared\tf2\weapon_grenade_rocket.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21431,6 +25536,16 @@ SOURCE=..\game_shared\tf2\weapon_harpoon.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21466,6 +25581,16 @@ SOURCE=..\game_shared\tf2\weapon_limpetmine.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21509,6 +25634,16 @@ SOURCE=..\game_shared\tf2\weapon_limpetmine.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21544,6 +25679,16 @@ SOURCE=..\game_shared\tf2\weapon_minigun.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21587,6 +25732,16 @@ SOURCE=..\game_shared\tf2\weapon_obj_empgenerator.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21622,6 +25777,16 @@ SOURCE=..\game_shared\tf2\weapon_obj_rallyflag.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21665,6 +25830,16 @@ SOURCE=..\game_shared\tf2\weapon_objectselection.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21700,6 +25875,16 @@ SOURCE=..\game_shared\tf2\weapon_objectselection.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21747,6 +25932,16 @@ SOURCE=..\game_shared\tf2\weapon_plasmarifle.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21782,6 +25977,16 @@ SOURCE=..\game_shared\tf2\weapon_repairgun.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21825,6 +26030,16 @@ SOURCE=..\game_shared\tf2\weapon_repairgun.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21860,6 +26075,16 @@ SOURCE=..\game_shared\tf2\weapon_rocketlauncher.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21903,6 +26128,16 @@ SOURCE=..\game_shared\tf2\weapon_rocketlauncher.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -21938,6 +26173,16 @@ SOURCE=..\game_shared\tf2\weapon_shield.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -21981,6 +26226,16 @@ SOURCE=..\game_shared\tf2\weapon_shield.h
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22016,6 +26271,16 @@ SOURCE=..\game_shared\tf2\weapon_shieldgrenade.cpp
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -22059,6 +26324,16 @@ SOURCE=..\game_shared\tf2\weapon_twohandedcontainer.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22094,6 +26369,16 @@ SOURCE=..\game_shared\tf2\weapon_twohandedcontainer.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -22137,6 +26422,16 @@ SOURCE=.\hl1_dll\hl1_ai_basenpc.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22170,6 +26465,16 @@ SOURCE=.\hl1_dll\hl1_ai_basenpc.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22207,6 +26512,16 @@ SOURCE=.\hl1_dll\hl1_basecombatweapon.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22240,6 +26555,16 @@ SOURCE=..\game_shared\hl1\hl1_basecombatweapon_shared.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22277,6 +26602,16 @@ SOURCE=..\game_shared\hl1\hl1_basecombatweapon_shared.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22310,6 +26645,16 @@ SOURCE=.\hl1_dll\hl1_basegrenade.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22347,6 +26692,16 @@ SOURCE=.\hl1_dll\hl1_basegrenade.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22380,6 +26735,16 @@ SOURCE=.\hl1_CBaseHelicopter.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22417,6 +26782,16 @@ SOURCE=.\hl1_dll\hl1_client.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22450,6 +26825,16 @@ SOURCE=.\hl1_dll\hl1_ents.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22487,6 +26872,16 @@ SOURCE=.\hl1_dll\hl1_ents.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22520,6 +26915,16 @@ SOURCE=.\hl1_dll\hl1_env_speaker.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22557,6 +26962,16 @@ SOURCE=.\hl1_dll\hl1_eventlog.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22590,6 +27005,16 @@ SOURCE=.\hl1_dll\hl1_func_recharge.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22627,6 +27052,16 @@ SOURCE=.\hl1_dll\hl1_func_tank.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22660,6 +27095,16 @@ SOURCE=..\game_shared\hl1\hl1_gamemovement.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22697,6 +27142,16 @@ SOURCE=..\game_shared\hl1\hl1_gamemovement.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22730,6 +27185,16 @@ SOURCE=..\game_shared\hl1\hl1_gamerules.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22767,6 +27232,16 @@ SOURCE=..\game_shared\hl1\hl1_gamerules.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22800,6 +27275,16 @@ SOURCE=.\hl1_dll\hl1_grenade_mp5.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22837,6 +27322,16 @@ SOURCE=.\hl1_dll\hl1_grenade_mp5.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22870,6 +27365,16 @@ SOURCE=.\hl1_dll\hl1_grenade_spit.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22907,6 +27412,16 @@ SOURCE=.\hl1_dll\hl1_grenade_spit.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -22940,6 +27455,16 @@ SOURCE=.\hl1_dll\hl1_item_ammo.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -22977,6 +27502,16 @@ SOURCE=.\hl1_dll\hl1_item_battery.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23010,6 +27545,16 @@ SOURCE=.\hl1_dll\hl1_item_healthkit.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23047,6 +27592,16 @@ SOURCE=.\hl1_dll\hl1_item_longjump.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23080,6 +27635,16 @@ SOURCE=.\hl1_dll\hl1_item_suit.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23117,6 +27682,16 @@ SOURCE=.\hl1_dll\hl1_items.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23150,6 +27725,16 @@ SOURCE=.\hl1_dll\hl1_items.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23187,6 +27772,16 @@ SOURCE=.\hl1_dll\hl1_monstermaker.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23220,6 +27815,16 @@ SOURCE=.\hl1_dll\hl1_monstermaker.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23257,6 +27862,16 @@ SOURCE=.\hl1_dll\hl1_npc_aflock.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23290,6 +27905,16 @@ SOURCE=.\hl1_dll\hl1_npc_agrunt.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23327,6 +27952,16 @@ SOURCE=.\hl1_dll\hl1_npc_apache.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23360,6 +27995,16 @@ SOURCE=.\hl1_dll\hl1_npc_barnacle.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23397,6 +28042,16 @@ SOURCE=.\hl1_dll\hl1_npc_barnacle.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23430,6 +28085,16 @@ SOURCE=.\hl1_dll\hl1_npc_barney.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23467,6 +28132,16 @@ SOURCE=.\hl1_dll\hl1_npc_barney.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23500,6 +28175,16 @@ SOURCE=.\hl1_dll\hl1_npc_bigmomma.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23537,6 +28222,16 @@ SOURCE=.\hl1_dll\hl1_npc_bloater.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23570,6 +28265,16 @@ SOURCE=.\hl1_dll\hl1_npc_bullsquid.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23607,6 +28312,16 @@ SOURCE=.\hl1_dll\hl1_npc_bullsquid.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23640,6 +28355,16 @@ SOURCE=.\hl1_dll\hl1_npc_controller.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23677,6 +28402,16 @@ SOURCE=.\hl1_dll\hl1_npc_gargantua.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23710,6 +28445,16 @@ SOURCE=.\hl1_dll\hl1_npc_gargantua.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23747,6 +28492,16 @@ SOURCE=.\hl1_dll\hl1_npc_gman.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23780,6 +28535,16 @@ SOURCE=.\hl1_dll\hl1_npc_hassassin.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23817,6 +28582,16 @@ SOURCE=.\hl1_dll\hl1_npc_headcrab.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23850,6 +28625,16 @@ SOURCE=.\hl1_dll\hl1_npc_headcrab.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23887,6 +28672,16 @@ SOURCE=.\hl1_dll\hl1_npc_hgrunt.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23920,6 +28715,16 @@ SOURCE=.\hl1_dll\hl1_npc_hgrunt.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -23957,6 +28762,16 @@ SOURCE=.\hl1_dll\hl1_npc_hornet.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -23990,6 +28805,16 @@ SOURCE=.\hl1_dll\hl1_npc_hornet.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24027,6 +28852,16 @@ SOURCE=.\hl1_dll\hl1_npc_houndeye.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24060,6 +28895,16 @@ SOURCE=.\hl1_dll\hl1_npc_houndeye.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24097,6 +28942,16 @@ SOURCE=.\hl1_dll\hl1_npc_ichthyosaur.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24130,6 +28985,16 @@ SOURCE=.\hl1_dll\hl1_npc_ichthyosaur.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24167,6 +29032,16 @@ SOURCE=.\hl1_dll\hl1_npc_leech.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24200,6 +29075,16 @@ SOURCE=.\hl1_dll\hl1_npc_nihilanth.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24237,6 +29122,16 @@ SOURCE=.\hl1_dll\hl1_npc_osprey.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24270,6 +29165,16 @@ SOURCE=.\hl1_dll\hl1_npc_roach.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24307,6 +29212,16 @@ SOURCE=.\hl1_dll\hl1_npc_scientist.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24340,6 +29255,16 @@ SOURCE=.\hl1_dll\hl1_npc_scientist.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24377,6 +29302,16 @@ SOURCE=.\hl1_dll\hl1_npc_snark.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24410,6 +29345,16 @@ SOURCE=.\hl1_dll\hl1_npc_snark.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24447,6 +29392,16 @@ SOURCE=.\hl1_dll\hl1_npc_talker.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24480,6 +29435,16 @@ SOURCE=.\hl1_dll\hl1_npc_talker.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24517,6 +29482,16 @@ SOURCE=.\hl1_dll\hl1_npc_tentacle.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24550,6 +29525,16 @@ SOURCE=.\hl1_dll\hl1_npc_turret.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24587,6 +29572,16 @@ SOURCE=.\hl1_dll\hl1_npc_vortigaunt.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24620,6 +29615,16 @@ SOURCE=.\hl1_dll\hl1_npc_vortigaunt.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24657,6 +29662,16 @@ SOURCE=.\hl1_dll\hl1_npc_zombie.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24690,6 +29705,16 @@ SOURCE=.\hl1_dll\hl1_npc_zombie.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24727,6 +29752,16 @@ SOURCE=.\hl1_dll\hl1_player.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24760,6 +29795,16 @@ SOURCE=.\hl1_dll\hl1_player.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24797,6 +29842,16 @@ SOURCE=..\game_shared\hl1\hl1_player_shared.h
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24830,6 +29885,16 @@ SOURCE=.\hl1_dll\hl1_te_beamfollow.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24867,6 +29932,16 @@ SOURCE=.\hl1_dll\hl1_te_boltstick.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24900,6 +29975,16 @@ SOURCE=..\game_shared\hl1\hl1_usermessages.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -24937,6 +30022,16 @@ SOURCE=.\hl1_dll\hl1_weapon_357.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -24970,6 +30065,16 @@ SOURCE=.\hl1_dll\hl1_weapon_crossbow.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25007,6 +30112,16 @@ SOURCE=.\hl1_dll\hl1_weapon_crowbar.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25040,6 +30155,16 @@ SOURCE=.\hl1_dll\hl1_weapon_egon.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25077,6 +30202,16 @@ SOURCE=.\hl1_dll\hl1_weapon_gauss.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25110,6 +30245,16 @@ SOURCE=.\hl1_dll\hl1_weapon_glock.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25147,6 +30292,16 @@ SOURCE=.\hl1_dll\hl1_weapon_handgrenade.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25180,6 +30335,16 @@ SOURCE=.\hl1_dll\hl1_weapon_hornetgun.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25217,6 +30382,16 @@ SOURCE=.\hl1_dll\hl1_weapon_mp5.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25250,6 +30425,16 @@ SOURCE=.\hl1_dll\hl1_weapon_mp5.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25287,6 +30472,16 @@ SOURCE=.\hl1_dll\hl1_weapon_rpg.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25320,6 +30515,16 @@ SOURCE=.\hl1_dll\hl1_weapon_rpg.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25357,6 +30562,16 @@ SOURCE=.\hl1_dll\hl1_weapon_satchel.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25390,6 +30605,16 @@ SOURCE=.\hl1_dll\hl1_weapon_satchel.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25427,6 +30652,16 @@ SOURCE=.\hl1_dll\hl1_weapon_shotgun.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25460,6 +30695,16 @@ SOURCE=.\hl1_dll\hl1_weapon_snark.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25497,6 +30742,16 @@ SOURCE=.\hl1_dll\hl1_weapon_tripmine.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25530,6 +30785,16 @@ SOURCE=.\hl1_dll\hl1_weaponbox.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
 !ENDIF 
@@ -25571,6 +30836,16 @@ SOURCE=.\cstrike\cs_bot_temp.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25605,6 +30880,16 @@ SOURCE=.\cstrike\cs_client.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25641,6 +30926,16 @@ SOURCE=.\cstrike\cs_client.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25675,6 +30970,16 @@ SOURCE=.\cstrike\cs_eventlog.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25711,6 +31016,16 @@ SOURCE=..\game_shared\cstrike\cs_gamemovement.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25745,6 +31060,16 @@ SOURCE=..\game_shared\cstrike\cs_gamerules.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25781,6 +31106,16 @@ SOURCE=..\game_shared\cstrike\cs_gamerules.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25815,6 +31150,16 @@ SOURCE=.\cstrike\cs_hostage.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25851,6 +31196,16 @@ SOURCE=.\cstrike\cs_hostage.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25885,6 +31240,16 @@ SOURCE=.\cstrike\cs_player.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25921,6 +31286,16 @@ SOURCE=.\cstrike\cs_player.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -25955,6 +31330,16 @@ SOURCE=..\game_shared\cstrike\cs_player_shared.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -25991,6 +31376,16 @@ SOURCE=..\game_shared\cstrike\cs_playeranimstate.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26025,6 +31420,16 @@ SOURCE=..\game_shared\cstrike\cs_playeranimstate.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26061,6 +31466,16 @@ SOURCE=.\cstrike\cs_playermove.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26095,6 +31510,16 @@ SOURCE=..\game_shared\cstrike\cs_shareddefs.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26131,6 +31556,16 @@ SOURCE=..\game_shared\cstrike\cs_shareddefs.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26165,6 +31600,16 @@ SOURCE=.\cstrike\cs_team.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26201,6 +31646,16 @@ SOURCE=.\cstrike\cs_team.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26235,6 +31690,16 @@ SOURCE=..\game_shared\cstrike\cs_usermessages.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26271,6 +31736,16 @@ SOURCE=..\game_shared\cstrike\cs_weapon_parse.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26305,6 +31780,16 @@ SOURCE=..\game_shared\cstrike\cs_weapon_parse.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26341,6 +31826,16 @@ SOURCE=..\game_shared\cstrike\flashbang_projectile.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26375,6 +31870,16 @@ SOURCE=..\game_shared\cstrike\flashbang_projectile.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26411,6 +31916,16 @@ SOURCE=.\cstrike\func_bomb_target.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26445,6 +31960,16 @@ SOURCE=.\cstrike\func_buy_zone.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26481,6 +32006,16 @@ SOURCE=..\game_shared\cstrike\hegrenade_projectile.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26515,6 +32050,16 @@ SOURCE=..\game_shared\cstrike\hegrenade_projectile.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26551,6 +32096,16 @@ SOURCE=.\cstrike\item_assaultsuit.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26585,6 +32140,16 @@ SOURCE=.\cstrike\item_kevlar.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26621,6 +32186,16 @@ SOURCE=.\cstrike\mapinfo.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26655,6 +32230,16 @@ SOURCE=.\cstrike\mapinfo.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26691,6 +32276,16 @@ SOURCE=..\game_shared\cstrike\weapon_ak47.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26725,6 +32320,16 @@ SOURCE=..\game_shared\cstrike\weapon_aug.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26761,6 +32366,16 @@ SOURCE=..\game_shared\cstrike\weapon_awp.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26795,6 +32410,16 @@ SOURCE=..\game_shared\cstrike\weapon_basecsgrenade.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26831,6 +32456,16 @@ SOURCE=..\game_shared\cstrike\weapon_basecsgrenade.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26865,6 +32500,16 @@ SOURCE=..\game_shared\cstrike\weapon_c4.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26901,6 +32546,16 @@ SOURCE=..\game_shared\cstrike\weapon_c4.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -26935,6 +32590,16 @@ SOURCE=..\game_shared\cstrike\weapon_csbase.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -26971,6 +32636,16 @@ SOURCE=..\game_shared\cstrike\weapon_csbase.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27005,6 +32680,16 @@ SOURCE=..\game_shared\cstrike\weapon_csbasegun.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27041,6 +32726,16 @@ SOURCE=..\game_shared\cstrike\weapon_csbasegun.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27075,6 +32770,16 @@ SOURCE=..\game_shared\cstrike\weapon_deagle.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27111,6 +32816,16 @@ SOURCE=..\game_shared\cstrike\weapon_famas.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27145,6 +32860,16 @@ SOURCE=..\game_shared\cstrike\weapon_fiveseven.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27181,6 +32906,16 @@ SOURCE=..\game_shared\cstrike\weapon_flashbang.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27215,6 +32950,16 @@ SOURCE=..\game_shared\cstrike\weapon_g3sg1.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27251,6 +32996,16 @@ SOURCE=..\game_shared\cstrike\weapon_galil.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27285,6 +33040,16 @@ SOURCE=..\game_shared\cstrike\weapon_glock.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27321,6 +33086,16 @@ SOURCE=..\game_shared\cstrike\weapon_hegrenade.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27355,6 +33130,16 @@ SOURCE=..\game_shared\cstrike\weapon_knife.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27391,6 +33176,16 @@ SOURCE=..\game_shared\cstrike\weapon_m249.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27425,6 +33220,16 @@ SOURCE=..\game_shared\cstrike\weapon_m3.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27461,6 +33266,16 @@ SOURCE=..\game_shared\cstrike\weapon_m4a1.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27495,6 +33310,16 @@ SOURCE=..\game_shared\cstrike\weapon_mac10.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27531,6 +33356,16 @@ SOURCE=..\game_shared\cstrike\weapon_mp5navy.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27565,6 +33400,16 @@ SOURCE=..\game_shared\cstrike\weapon_p228.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27601,6 +33446,16 @@ SOURCE=..\game_shared\cstrike\weapon_p90.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27635,6 +33490,16 @@ SOURCE=..\game_shared\cstrike\weapon_scout.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27671,6 +33536,16 @@ SOURCE=..\game_shared\cstrike\weapon_sg550.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27705,6 +33580,16 @@ SOURCE=..\game_shared\cstrike\weapon_sg552.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -27741,6 +33626,16 @@ SOURCE=..\game_shared\cstrike\weapon_ump45.cpp
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -27775,6 +33670,235 @@ SOURCE=..\game_shared\cstrike\weapon_usp.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# End Group
+# Begin Group "Snowball DLL"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\snowb_dll\sb_client.cpp
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\snowb_dll\sb_client.h
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\game_shared\snowb\sb_gamerules.h
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\snowb_dll\sb_player.cpp
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\snowb_dll\sb_player.h
+
+!IF  "$(CFG)" == "hl - Win32 Release HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release TF2"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug HL1"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -28216,6 +34340,10 @@ SOURCE=.\AI_Squad.h
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -28375,6 +34503,10 @@ SOURCE=.\basegrenade_concussion.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -28401,6 +34533,10 @@ SOURCE=.\basegrenade_contact.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -28436,6 +34572,10 @@ SOURCE=.\basegrenade_timed.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -28649,6 +34789,10 @@ SOURCE=.\CTerrainMorph.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Debug CounterStrike"
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -29061,6 +35205,10 @@ SOURCE=.\GrenadeThrown.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -29087,6 +35235,10 @@ SOURCE=.\GrenadeThrown.h
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -29122,6 +35274,10 @@ SOURCE=.\h_cycler.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -29343,6 +35499,10 @@ SOURCE=.\monstermaker.cpp
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -29378,6 +35538,16 @@ SOURCE=.\monstermaker.h
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -29498,6 +35668,10 @@ SOURCE=.\physgun.cpp
 
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
 !ENDIF 
 
 # End Source File
@@ -29542,6 +35716,10 @@ SOURCE=.\physics_bone_follower.h
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -29911,6 +36089,11 @@ SOURCE=..\Public\StringRegistry.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\public\studio.cpp
+# SUBTRACT CPP /YX /Yc /Yu
+# End Source File
+# Begin Source File
+
 SOURCE=..\Public\studio.h
 # End Source File
 # Begin Source File
@@ -30132,6 +36315,10 @@ SOURCE=..\game_shared\weapon_parse_default.cpp
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -30772,6 +36959,16 @@ SOURCE=..\..\bin\base.fgd
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -30799,6 +36996,10 @@ SOURCE=..\..\bin\halflife1.fgd
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 !ENDIF 
 
@@ -30843,6 +37044,16 @@ SOURCE=..\..\bin\halflife2.fgd
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -30882,6 +37093,16 @@ SOURCE=..\..\bin\tf2.fgd
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "hl - Win32 Release CounterStrike"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Debug Snowball"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "hl - Win32 Release Snowball"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1

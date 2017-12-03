@@ -33,6 +33,7 @@
 #include "host.h"
 #include "view.h"
 #include "enginebugreporter.h"
+#include "ispatialpartitioninternal.h" // VXP
 
 
 class IClientEntity;
@@ -194,7 +195,7 @@ void Linefile_Draw( void );
 //-----------------------------------------------------------------------------
 // Purpose: Expose rendering interface to client .dll
 //-----------------------------------------------------------------------------
-class CVRenderView : public IVRenderView
+class CVRenderView : public IVRenderView, public ISpatialLeafEnumerator
 {
 public:
 	void TouchLight( dlight_t *light )
@@ -440,6 +441,36 @@ public:
 	void SetFogVolumeState( int fogVolume, bool useHeightFog )
 	{
 		R_SetFogVolumeState(fogVolume, useHeightFog );
+	}
+
+	// VXP
+	struct BoxIntersectWaterContext_t
+	{
+		bool m_bFoundWaterLeaf;
+		int m_nLeafWaterDataID;
+	};
+
+	bool EnumerateLeaf( int leaf, int context ) // VXP
+	{
+		BoxIntersectWaterContext_t *pSearchContext = ( BoxIntersectWaterContext_t * )context;
+	//	mleaf_t *pLeaf = &host_state.worldmodel->brush.pShared->leafs[leaf];
+		mleaf_t *pLeaf = &host_state.worldmodel->brush.leafs[leaf];
+		if( pLeaf->leafWaterDataID == pSearchContext->m_nLeafWaterDataID )
+		{
+			pSearchContext->m_bFoundWaterLeaf = true;
+			// found it . . stop enumeration
+			return false;
+		}
+		return true;
+	}
+
+	bool DoesBoxIntersectWaterVolume( const Vector &mins, const Vector &maxs, int leafWaterDataID ) // VXP
+	{
+		BoxIntersectWaterContext_t context;
+		context.m_bFoundWaterLeaf = false;
+		context.m_nLeafWaterDataID = leafWaterDataID;
+		g_pToolBSPTree->EnumerateLeavesInBox( mins, maxs, this, ( int )&context );
+		return context.m_bFoundWaterLeaf;
 	}
 
 	IMaterial *GetFogVolumeMaterial( int fogVolume )

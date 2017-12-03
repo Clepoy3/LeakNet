@@ -119,7 +119,7 @@ bool Mod_LoadStudioModel (model_t *mod, void *buffer, bool zerostructure )
 	{
 		memset( phdr, 0, sizeof( studiohdr_t ));
 
-		Msg("%s has wrong version number (%i should be %i)\n", mod->name, version, STUDIO_VERSION);
+		Msg("%s has wrong version number (%i should be %i, or at least 35-36)\n", mod->name, version, STUDIO_VERSION);
 		return false;
 	}
 

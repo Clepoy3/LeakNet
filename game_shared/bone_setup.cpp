@@ -41,11 +41,24 @@ static mstudioanimdesc_t *GetAnimDesc( const studiohdr_t *pStudioHdr, const mstu
 
 	// Get the animation group
 	int iAnimGroup = pSeqDesc->pAnimValue(index1, index2);
+
+//	if( iAnimGroup < 0 || iAnimGroup > pStudioHdr->numanimgroup || pStudioHdr->unused[0] > 0 ) // fire64/VXP: If this is an older model version
+
+	// VXP: Probably a hack, but it works fine
+	if( ( /*iAnimGroup == 0 &&*/ pStudioHdr->numanimgroup == 0 ) || pStudioHdr->unused[0] > 0 )
+	{
+		return pStudioHdr->pAnimdesc(iAnimGroup);
+	}
+
 	Assert(iAnimGroup >= 0 && iAnimGroup < pStudioHdr->numanimgroup);
+//	if ( iAnimGroup < 0 || iAnimGroup >= pStudioHdr->numanimgroup )
+//		return pStudioHdr->pAnimdesc( 0 ); // Fall back to Jesus-pose
 	
 	// Get the sequence group, ensure that it's lower than numseqgroups
 	int iSeqGroup = pStudioHdr->pAnimGroup(iAnimGroup)->group;
 	Assert(iSeqGroup < pStudioHdr->numseqgroups);
+//	if ( iSeqGroup >= pStudioHdr->numseqgroups )
+//		return pStudioHdr->pAnimdesc( 0 ); // Fall back to Jesus-pose
 	
 	// Get the animation index
 	int iAnimIndex = pStudioHdr->pAnimGroup(iAnimGroup)->index;

@@ -118,16 +118,20 @@ private:
 	enum
 	{
 		// Max simultaneous beams
-		MAX_BEAMS			= 128,
+	//	MAX_BEAMS			= 128,
 		// default max # of particles at one time
 		DEFAULT_PARTICLES	= 2048,
 		// no fewer than this no matter what's on the command line
 		MIN_PARTICLES		= 512,	
+
+		// VXP: Maximum length of the free list.
+		BEAM_FREELIST_MAX	= 32,
 	};
 
-	Beam_t					m_Beams[  MAX_BEAMS ];
+//	Beam_t					m_Beams[  MAX_BEAMS ];
 	Beam_t					*m_pActiveBeams;
 	Beam_t					*m_pFreeBeams;
+	int						m_nBeamFreeListLength; // VXP
 
 	BeamTrail_t				*m_pBeamTrails;
 	BeamTrail_t				*m_pActiveTrails;
@@ -179,25 +183,28 @@ static void SineNoise( float *noise, int divs )
 
 bool ComputeBeamEntPosition( C_BaseEntity *pEnt, int nAttachment, Vector& pt )
 {
+	// VXP: NOTE: This will *leave* the pt at its current value, essential for
+	// beam follow ents what want to stick around a little after their ent has died
 	if (!pEnt)
 	{
-		pt.Init( );
+	//	pt.Init( );
 		return false;
 	}
 
 	QAngle angles;
-	if (!pEnt->GetAttachment( nAttachment, pt, angles ))
+	if ( pEnt->GetAttachment( nAttachment, pt, angles ) )
+		return true;
+
+	// Player origins are at their feet
+	if ( pEnt->IsPlayer() )
 	{
-		// Player origins are at their feet
-		if ( pEnt->IsPlayer() )
-		{
-			pt = pEnt->WorldSpaceCenter();
-		}
-		else
-		{
-			VectorCopy( pEnt->GetRenderOrigin(), pt );
-		}
+		pt = pEnt->WorldSpaceCenter();
 	}
+	else
+	{
+		VectorCopy( pEnt->GetRenderOrigin(), pt );
+	}
+
 	return true;
 }
 
@@ -374,10 +381,14 @@ int Beam_t::DrawModel( int flags )
 
 CViewRenderBeams::CViewRenderBeams( void ) : m_pBeamTrails(0)
 {
+	m_pFreeBeams = NULL;
+	m_pActiveBeams = NULL;
+	m_nBeamFreeListLength = 0;
 }
 
 CViewRenderBeams::~CViewRenderBeams( void )
 {
+	ClearBeams();
 }
 
 
@@ -409,6 +420,7 @@ void CViewRenderBeams::InitBeams( void )
 //-----------------------------------------------------------------------------
 void CViewRenderBeams::ClearBeams( void )
 {
+#if 0 // VXP: An old system
 	int i;
 
 	m_pFreeBeams = &m_Beams[ 0 ];
@@ -421,16 +433,35 @@ void CViewRenderBeams::ClearBeams( void )
 	}
 
 	m_Beams[MAX_BEAMS-1].next = NULL;
+#endif
 
-	// Also clear any particles used by beams
-	m_pFreeTrails = &m_pBeamTrails[0];
-	m_pActiveTrails = NULL;
-
-	for (i=0 ;i<m_nNumBeamTrails ; i++)
+	Beam_t *next = NULL;
+	for( ; m_pActiveBeams; m_pActiveBeams = next )
 	{
-		m_pBeamTrails[i].next = &m_pBeamTrails[i+1];
+		next = m_pActiveBeams->next;
+		delete m_pActiveBeams;
 	}
-	m_pBeamTrails[m_nNumBeamTrails-1].next = NULL;
+
+	for( ; m_pFreeBeams; m_pFreeBeams = next )
+	{
+		next = m_pFreeBeams->next;
+		delete m_pFreeBeams;
+	}
+
+	m_nBeamFreeListLength = 0;
+
+	if ( m_nNumBeamTrails )
+	{
+		// Also clear any particles used by beams
+		m_pFreeTrails = &m_pBeamTrails[0];
+		m_pActiveTrails = NULL;
+	
+		for (int i=0 ;i<m_nNumBeamTrails ; i++)
+		{
+			m_pBeamTrails[i].next = &m_pBeamTrails[i+1];
+		}
+		m_pBeamTrails[m_nNumBeamTrails-1].next = NULL;
+	}
 
 }
 
@@ -441,7 +472,13 @@ void CViewRenderBeams::ClearBeams( void )
 void CViewRenderBeams::ShutdownBeams( void )
 {
 	if (m_pBeamTrails)
+	{
 		delete[] m_pBeamTrails;
+		m_pActiveTrails = NULL;
+		m_pBeamTrails = NULL;
+		m_pFreeTrails = NULL;
+		m_nNumBeamTrails = 0;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -450,18 +487,32 @@ void CViewRenderBeams::ShutdownBeams( void )
 //-----------------------------------------------------------------------------
 Beam_t *CViewRenderBeams::BeamAlloc( bool bRenderable )
 {
-	if ( !m_pFreeBeams )
-		return NULL;
+	Beam_t*	pBeam   = NULL;
 
-	Beam_t*	pBeam   = m_pFreeBeams;
-	m_pFreeBeams	= pBeam->next;
+	if ( m_pFreeBeams )
+	{
+		pBeam = m_pFreeBeams;
+		m_pFreeBeams	= pBeam->next;
+		m_nBeamFreeListLength--;
+	}
+	else
+	{
+	//	return NULL;
+		pBeam = new Beam_t();
+		if( !pBeam )
+		{
+			DevMsg( "ERROR: failed to alloc Beam_t!\n" );
+			Assert( pBeam );
+		}
+	}
+
 	pBeam->next		= m_pActiveBeams;
 	m_pActiveBeams	= pBeam;
 
 	if ( bRenderable )
 	{
 		// Hook it into the rendering system...
-		pBeam->m_Handle = ClientLeafSystem()->AddRenderable( pBeam, RENDER_GROUP_TRANSLUCENT_ENTITY );
+		/*pBeam->m_Handle =*/ ClientLeafSystem()->AddRenderable( pBeam, RENDER_GROUP_TRANSLUCENT_ENTITY );
 	}
 	else
 	{
@@ -479,18 +530,27 @@ void CViewRenderBeams::BeamFree( Beam_t* pBeam )
 	// Free particles that have died off.
 	FreeDeadTrails( &pBeam->trail );
 
-	if ( pBeam->m_Handle != INVALID_CLIENT_RENDER_HANDLE )
-	{
+//	if ( pBeam->m_Handle != INVALID_CLIENT_RENDER_HANDLE )
+//	{
 		// Remove it from the rendering system...
 		ClientLeafSystem()->RemoveRenderable( pBeam->m_Handle );
-	}
+//	}
 
 	// Clear us out
 	pBeam->Reset();
 
-	// Now link into free list;
-	pBeam->next = m_pFreeBeams;
-	m_pFreeBeams = pBeam;
+	if( m_nBeamFreeListLength < BEAM_FREELIST_MAX )
+	{
+		m_nBeamFreeListLength++;
+
+		// Now link into free list;
+		pBeam->next = m_pFreeBeams;
+		m_pFreeBeams = pBeam;
+	}
+	else
+	{
+		delete pBeam;
+	}
 }
 
 
@@ -863,6 +923,16 @@ Beam_t *CViewRenderBeams::CreateBeamEntPoint( BeamInfo_t &beamInfo )
 
 		if ( beamInfo.m_pEndEnt && beamInfo.m_pEndEnt->GetModel() == NULL )
 			return NULL;
+	}
+
+	// VXP: From Source 2007 - Model index.
+	if ( ( beamInfo.m_pszModelName ) && ( beamInfo.m_nModelIndex == -1 ) )
+	{
+		beamInfo.m_nModelIndex = modelinfo->GetModelIndex( beamInfo.m_pszModelName );
+	}
+	if ( ( beamInfo.m_pszHaloName ) && ( beamInfo.m_nHaloIndex == -1 ) )
+	{
+		beamInfo.m_nHaloIndex = modelinfo->GetModelIndex( beamInfo.m_pszHaloName );
 	}
 
 	Beam_t *pBeam = CreateGenericBeam( beamInfo );
@@ -1426,7 +1496,13 @@ void CViewRenderBeams::UpdateBeam( Beam_t *pbeam, float frametime )
 	// update life cycle
 	pbeam->t = pbeam->freq + (pbeam->die - gpGlobals->curtime);
 	if (pbeam->t != 0)
-		pbeam->t = 1.0 - pbeam->freq / pbeam->t;
+	{
+		pbeam->t = 1.0 - pbeam->freq / pbeam->t; // VXP: At Source 2007 there's no "1.0 -" part
+	}
+	else
+	{
+		pbeam->t = 1.0f;
+	}
 	
 	// ------------------------------------------
 	// check for zero fadeLength (means no fade)
@@ -1612,7 +1688,7 @@ void CViewRenderBeams::DrawBeamWithHalo(	Beam_t*			pbeam,
 	VectorNormalize(localDir);
 	float	dotpr		= DotProduct(beamDir, localDir);
 	float	fade;
-	if (dotpr < 0)
+	if (dotpr < 0.0f)
 	{
 		fade = 0;
 	}

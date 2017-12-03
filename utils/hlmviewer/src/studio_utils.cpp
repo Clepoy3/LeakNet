@@ -282,7 +282,7 @@ bool StudioModel::LoadModel( const char *modelname )
 		return 0;
 	}
 
-//	Studio_ConvertStudioHdrToNewVersion( phdr );
+	Studio_ConvertStudioHdrToNewVersion( phdr );
 	
 	if( phdr->version != STUDIO_VERSION )
 	{

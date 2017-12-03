@@ -1186,6 +1186,9 @@ void C_EntityFlame::Simulate( void )
 	}
 	else
 	{
+		if ( !m_pEmitter )
+			return;
+
 		m_pEmitter->SetSortOrigin( GetAbsOrigin() );
 
 		float tempDelta = gpGlobals->frametime;

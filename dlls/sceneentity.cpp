@@ -626,7 +626,7 @@ void CSceneEntity::OnRestore()
 		DoThink( dt );
 		if ( m_flCurrentTime == oldT )
 		{
-			Assert( 0 );
+			Assert( 0 ); // VXP: Happened on disp_test3_new after creating citizen and then saving/restoring
 			break;
 		}
 	}

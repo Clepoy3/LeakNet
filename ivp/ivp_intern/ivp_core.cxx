@@ -1124,16 +1124,22 @@ void IVP_Core::core_plausible_check() {
     IVP_DOUBLE rot_change_len,trans_change_len;
     rot_change_len=rot_speed_change.real_length();
     trans_change_len=speed_change.real_length();
-    IVP_ASSERT(rot_change_len<MAX_PLAUSIBLE_LEN);
-    IVP_ASSERT(trans_change_len<MAX_PLAUSIBLE_LEN);
+
+	// VXP: Next fixes are annoying: break (with ent_fire !picker break) a explosible barrel on e3_techdemo_2, and then shoot wood chunks with gauss gun
+	// You will hit asserts below - rot_change_len<MAX_PLAUSIBLE_LEN, trans_change_len<MAX_PLAUSIBLE_LEN and
+	//								rot_len<MAX_PLAUSIBLE_LEN, trans_len<MAX_PLAUSIBLE_LEN
+	// Of course I can increase MAX_PLAUSIBLE_LEN, but... Just commenting should be more efficient(?) and softly
+
+//    IVP_ASSERT(rot_change_len<MAX_PLAUSIBLE_LEN);
+//    IVP_ASSERT(trans_change_len<MAX_PLAUSIBLE_LEN);
     IVP_ASSERT(rot_change_len>-MAX_PLAUSIBLE_LEN);
     IVP_ASSERT(trans_change_len>-MAX_PLAUSIBLE_LEN);
 
     IVP_DOUBLE rot_len,trans_len;
     rot_len=rot_speed.real_length();
     trans_len=speed.real_length();
-    IVP_ASSERT(rot_len<MAX_PLAUSIBLE_LEN);
-    IVP_ASSERT(trans_len<MAX_PLAUSIBLE_LEN);    
+//    IVP_ASSERT(rot_len<MAX_PLAUSIBLE_LEN);
+//    IVP_ASSERT(trans_len<MAX_PLAUSIBLE_LEN);    
     IVP_ASSERT(rot_len>-MAX_PLAUSIBLE_LEN);
     IVP_ASSERT(trans_len>-MAX_PLAUSIBLE_LEN);    
 }

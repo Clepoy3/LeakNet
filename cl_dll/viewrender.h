@@ -200,7 +200,7 @@ private:
 	
 	void			SetRenderTargetAndView( CViewSetup &view, float waterHeight, int flags );	// see DrawFlags_t
 	void			ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, int visibleFogVolumeLeaf, bool bReflect, bool bRefract, bool bReflectEntities );
-	void			ViewDrawScene_EyeUnderWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, bool bReflect, bool bRefract );
+	void			ViewDrawScene_EyeUnderWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, bool bReflect, bool bRefract, bool bReflectEntities );
 	void			ViewDrawScene_NoWater( bool drawSkybox, const CViewSetup &view, bool bCheapWater );
 
 	// Renders all translucent world + detail objects in a particular set of leaves

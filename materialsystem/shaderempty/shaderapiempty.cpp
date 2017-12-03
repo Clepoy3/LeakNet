@@ -395,6 +395,10 @@ public:
 
 	void SetClipPlane( int index, const float *pPlane );
 	void EnableClipPlane( int index, bool bEnable );
+
+	// VXP
+	void SetFastClipPlane( const float *pPlane );
+	void EnableFastClip( bool bEnable );
 	
 	void DestroyVertexBuffers();
 
@@ -2046,6 +2050,14 @@ void CShaderAPIEmpty::SetClipPlane( int index, const float *pPlane )
 }
 
 void CShaderAPIEmpty::EnableClipPlane( int index, bool bEnable )
+{
+}
+
+void CShaderAPIEmpty::SetFastClipPlane( const float *pPlane ) // VXP
+{
+}
+
+void CShaderAPIEmpty::EnableFastClip( bool bEnable ) // VXP
 {
 }
 

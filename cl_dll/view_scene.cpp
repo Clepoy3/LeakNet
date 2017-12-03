@@ -33,6 +33,9 @@
 #include "particles_ez.h"
 #include "engine/IStaticPropMgr.h"
 
+// VXP
+#include "materialsystem/IMaterialSystemHardwareConfig.h"
+
 // GR
 #include "rendertexture.h"
 
@@ -2276,7 +2279,7 @@ void CViewRender::WaterDrawWorldAndEntities( bool drawSkybox, const CViewSetup &
 		}
 		else
 		{
-			ViewDrawScene_EyeUnderWater( drawSkybox, tmpView, visibleFogVolume, bReflect, bRefract );
+			ViewDrawScene_EyeUnderWater( drawSkybox, tmpView, visibleFogVolume, bReflect, bRefract, bReflectEntities );
 		}
 	}
 	else
@@ -2593,6 +2596,8 @@ void CViewRender::SetRenderTargetAndView( CViewSetup &view, float waterHeight, i
 	}
 }
 
+static ConVar mat_clipz( "mat_clipz", "1" );
+
 void CViewRender::WaterDrawHelper( 
 	const CViewSetup &view, 
 	WorldListInfo_t &info, 
@@ -2624,25 +2629,28 @@ void CViewRender::WaterDrawHelper(
 	// Make sure sound doesn't stutter
 	engine->Sound_ExtraUpdate();
 
-	static ConVar mat_clipz( "mat_clipz", "1" );
-	
 	// This sucks. . need to do an implementation that uses user clip planes for 
 	// hardware that has it.
+	MaterialHeightClipMode_t clipMode = MATERIAL_HEIGHTCLIPMODE_DISABLE;
 	if( ( flags & DF_CLIP_Z ) && mat_clipz.GetBool() )
 	{
 		if( flags & DF_CLIP_BELOW )
 		{
-			materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_RENDER_ABOVE_HEIGHT );
+		//	materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_RENDER_ABOVE_HEIGHT );
+			clipMode = MATERIAL_HEIGHTCLIPMODE_RENDER_ABOVE_HEIGHT;
 		}
 		else
 		{
-			materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_RENDER_BELOW_HEIGHT );
+		//	materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_RENDER_BELOW_HEIGHT );
+			clipMode = MATERIAL_HEIGHTCLIPMODE_RENDER_BELOW_HEIGHT;
 		}
 	}
-	else
-	{
-		materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_DISABLE );
-	}
+//	else
+//	{
+//		materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_DISABLE );
+//	}
+
+	materials->SetHeightClipMode( clipMode );
 
 	if (!bClearDepth)
 		flags &= ~DF_DRAWSKYBOX;
@@ -2664,6 +2672,60 @@ void CViewRender::WaterDrawHelper(
 
 	materials->SetFrameBufferCopyTexture( pSaveFrameBufferCopyTexture );
 	materials->SetHeightClipMode( MATERIAL_HEIGHTCLIPMODE_DISABLE );
+}
+
+//-----------------------------------------------------------------------------
+// Returns true if the view plane intersects the water
+//-----------------------------------------------------------------------------
+bool DoesViewPlaneIntersectWater( float waterZ, int leafWaterDataID )
+{
+	if ( leafWaterDataID == -1 )
+		return false;
+
+	VMatrix viewMatrix, projectionMatrix, viewProjectionMatrix, inverseViewProjectionMatrix;
+	materials->GetMatrix( MATERIAL_VIEW, &viewMatrix );
+	materials->GetMatrix( MATERIAL_PROJECTION, &projectionMatrix );
+	MatrixMultiply( projectionMatrix, viewMatrix, viewProjectionMatrix );
+	MatrixInverseGeneral( viewProjectionMatrix, inverseViewProjectionMatrix );
+
+	Vector mins, maxs;
+	ClearBounds( mins, maxs );
+	Vector testPoint[4];
+	testPoint[0].Init( -1.0f, -1.0f, 0.0f );
+	testPoint[1].Init( -1.0f, 1.0f, 0.0f );
+	testPoint[2].Init( 1.0f, -1.0f, 0.0f );
+	testPoint[3].Init( 1.0f, 1.0f, 0.0f );
+	int i;
+	bool bAbove = false;
+	bool bBelow = false;
+	float fudge = 7.0f;
+	for( i = 0; i < 4; i++ )
+	{
+		Vector worldPos;
+		Vector3DMultiplyPositionProjective( inverseViewProjectionMatrix, testPoint[i], worldPos );
+		AddPointToBounds( worldPos, mins, maxs );
+//		Warning( "viewplanez: %f waterZ: %f\n", worldPos.z, waterZ );
+		if( worldPos.z + fudge > waterZ )
+		{
+			bAbove = true;
+		}
+		if( worldPos.z - fudge < waterZ )
+		{
+			bBelow = true;
+		}
+	}
+
+	// early out if the near plane doesn't cross the z plane of the water.
+	if( !( bAbove && bBelow ) )
+		return false;
+
+	Vector vecFudge( fudge, fudge, fudge );
+	mins -= vecFudge;
+	maxs += vecFudge;
+	
+	// the near plane does cross the z value for the visible water volume.  Call into
+	// the engine to find out if the near plane intersects the water volume.
+	return render->DoesBoxIntersectWaterVolume( mins, maxs, leafWaterDataID );
 }
 
 void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, int visibleFogVolumeLeaf, bool bReflect, bool bRefract, bool bReflectEntities )
@@ -2703,7 +2765,14 @@ void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup
 	// render refraction
 	if ( bRefract )
 	{
-		int flags = DF_RENDER_REFRACTION | DF_CLIP_Z | DF_RENDER_UNDERWATER | 
+	//	int flags = DF_RENDER_REFRACTION | DF_CLIP_Z | DF_RENDER_UNDERWATER | 
+
+		// VXP: Fix for buggy water at e3_techdemo_6
+		// VXP: TODO: Need to fix clip planes properly!
+		// Changing normal planes to clip planes
+		// (EnableFastClip( true ); SetFastClipPlane(plane); in CMaterialSystem::UpdateHeightClipUserClipPlane)
+		// can help, but then clip plane is showing underwater.
+		int flags = DF_RENDER_REFRACTION | DF_RENDER_UNDERWATER | 
 			DF_CLEARDEPTH | DF_CLEARCOLOR | DF_FUDGE_UP | DF_BUILDWORLDLISTS | DF_DRAW_ENTITITES;
 		WaterDrawHelper( view, info, renderList, waterHeight, flags );
 	}
@@ -2726,7 +2795,7 @@ void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup
 	WaterDrawHelper( view, info, renderList, waterHeight, flags );
 }
 
-void CViewRender::ViewDrawScene_EyeUnderWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, bool bReflect, bool bRefract )
+void CViewRender::ViewDrawScene_EyeUnderWater( bool drawSkybox, const CViewSetup &view, int visibleFogVolume, bool bReflect, bool bRefract, bool bReflectEntities )
 {
 	VPROF( "CViewRender::ViewDrawScene_EyeUnderWater" );
 
@@ -2740,6 +2809,9 @@ void CViewRender::ViewDrawScene_EyeUnderWater( bool drawSkybox, const CViewSetup
 		DF_DRAW_ENTITITES;
 //	if (drawSkybox)
 		flags |= DF_DRAWSKYBOX;
+
+//	if ( mat_clipz.GetInt() == 2 )
+//		flags |= DF_CLIP_Z | DF_CLIP_BELOW;
 
 	EnableWorldFog();
 	WaterDrawHelper( view, info, renderList, waterHeight, flags );

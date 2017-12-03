@@ -9,9 +9,14 @@
 #include "convar.h"
 
 // This cvar is here for now because it is shared by the client and the server.
-ConVar disp_modlimit_side( "disp_modlimit", "80" );
-ConVar disp_modlimit_up( "disp_modlimit_up", "80" );
-ConVar disp_modlimit_down( "disp_modlimit_down", "20" );
+// VXP: A little bit redone...
+//ConVar disp_modlimit_side( "disp_modlimit", "80" );
+//ConVar disp_modlimit_up( "disp_modlimit_up", "80" );
+//ConVar disp_modlimit_down( "disp_modlimit_down", "20" );
+
+ConVar disp_modlimit_side( "disp_modlimit", "10000" );
+ConVar disp_modlimit_up( "disp_modlimit_up", "10000" );
+ConVar disp_modlimit_down( "disp_modlimit_down", "10000" );
 
 inline void LockDist( Vector &vec, Vector const &vOriginalPos, bool bStayAboveOriginal )
 {

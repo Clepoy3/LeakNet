@@ -232,6 +232,8 @@ public:
 
 	// Does the leaf contain translucent surfaces?
 	virtual	bool			LeafContainsTranslucentSurfaces( int sortIndex, unsigned long flags ) = 0;
+
+	virtual bool			DoesBoxIntersectWaterVolume( const Vector &mins, const Vector &maxs, int leafWaterDataID ) = 0; // VXP
 };
 
 // change this when the new version is incompatable with the old

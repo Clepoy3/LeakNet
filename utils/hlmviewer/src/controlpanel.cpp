@@ -1903,6 +1903,23 @@ ControlPanel::dumpModelInfo ()
 				fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].pszLabel());
 			//	fprintf (file, "seqdesc %d.fps: %f\n", i + 1, pseqdescs[i].fps); // VXP: Fix later
 				fprintf (file, "seqdesc %d.flags: %d\n", i + 1, pseqdescs[i].flags);
+				fprintf (file, "seqdesc %d.numevents: %d\n", i + 1, pseqdescs[i].numevents);
+			/*
+				for (int j = 0; j < pseqdescs[i].numevents; j++)
+				{
+					mstudioevent_t *pevent = pseqdescs[i].pEvent( j );
+				//	mstudioevent_t *pevent = (mstudioevent_t *) (phdr + pseqdescs[i].eventindex);
+					fprintf (file, "\tevent %d: %s\n", j + 1, pevent->options);
+
+				}
+			*/
+				fprintf (file, "seqdesc %d.numblends: %d\n", i + 1, pseqdescs[i].numblends);
+				fprintf (file, "seqdesc %d.numikrules: %d\n", i + 1, pseqdescs[i].numikrules);
+				fprintf (file, "seqdesc %d.numautolayers: %d\n", i + 1, pseqdescs[i].numautolayers);
+				fprintf (file, "seqdesc %d.numiklocks: %d\n", i + 1, pseqdescs[i].numiklocks);
+				fprintf (file, "seqdesc %d.keyvaluesize: %d\n", i + 1, pseqdescs[i].keyvaluesize);
+				if ( pseqdescs[i].keyvaluesize > 0 )
+					fprintf (file, "seqdesc %d.KeyValueText: %s\n", i + 1, pseqdescs[i].KeyValueText());
 				fprintf (file, "<...>\n");
 			}
 /*

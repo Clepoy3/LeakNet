@@ -57,7 +57,7 @@ LINK32=link.exe
 # ADD LINK32 user32.lib shell32.lib gdi32.lib advapi32.lib comctl32.lib winmm.lib comdlg32.lib /nologo /version:1.2 /entry:"mainCRTStartup" /subsystem:windows /map /debug /machine:I386 /nodefaultlib:"libcd.lib" /out:"hlmv.exe" /libpath:"..\..\..\lib\common" /libpath:"..\..\..\lib\public" /release
 # SUBTRACT LINK32 /pdb:none
 # Begin Custom Build - Performing Custom Build Step on $(InputPath)
-TargetDir=\hl2\src\utils\hlmviewer\src
+TargetDir=\AHL2_R\src_main\utils\hlmviewer\src
 TargetPath=.\hlmv.exe
 TargetName=hlmv
 InputPath=.\hlmv.exe
@@ -98,7 +98,7 @@ LINK32=link.exe
 # ADD LINK32 user32.lib shell32.lib gdi32.lib advapi32.lib comctl32.lib winmm.lib comdlg32.lib /nologo /version:1.1 /entry:"mainCRTStartup" /subsystem:windows /debug /machine:I386 /out:"hlmv.exe" /pdbtype:sept /libpath:"..\..\..\lib\common" /libpath:"..\..\..\lib\public"
 # SUBTRACT LINK32 /pdb:none
 # Begin Custom Build
-TargetDir=\hl2\src\utils\hlmviewer\src
+TargetDir=\AHL2_R\src_main\utils\hlmviewer\src
 TargetPath=.\hlmv.exe
 TargetName=hlmv
 InputPath=.\hlmv.exe
@@ -575,6 +575,10 @@ SOURCE=..\..\..\Public\string_t.h
 # Begin Source File
 
 SOURCE=..\..\..\public\vstdlib\strtools.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\public\studio.cpp
 # End Source File
 # Begin Source File
 

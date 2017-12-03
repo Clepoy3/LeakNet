@@ -492,6 +492,7 @@ void CBaseVSShader::SetModulationPixelShaderDynamicState( int modulationVar )
 // set alphaVar to -1 to ignore it.
 void CBaseVSShader::SetEnvMapTintPixelShaderDynamicState( int pixelReg, int tintVar, int alphaVar )
 {
+/*
 	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	IMaterialVar* pTintVar = s_ppParams[tintVar];
 	IMaterialVar* pAlphaVar = NULL;
@@ -506,6 +507,27 @@ void CBaseVSShader::SetEnvMapTintPixelShaderDynamicState( int pixelReg, int tint
 	if( g_pConfig->bShowSpecular )
 	{
 		pTintVar->GetVecValue( color, 3 );
+	}
+*/
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	if( g_pConfig->bShowSpecular )
+	{
+		IMaterialVar* pAlphaVar = NULL;
+		if( alphaVar >= 0 )
+		{
+			pAlphaVar = s_ppParams[alphaVar];
+		}
+		if( pAlphaVar )
+		{
+			color[3] = pAlphaVar->GetFloatValue();
+		}
+	
+		IMaterialVar* pTintVar = s_ppParams[tintVar];
+		pTintVar->GetVecValue( color, 3 );
+	}
+	else
+	{
+		color[0] = color[1] = color[2] = color[3] = 0.0f;
 	}
 	s_pShaderAPI->SetPixelShaderConstant( pixelReg, color, 1 );
 }
@@ -644,12 +666,13 @@ void CBaseVSShader::VertexShaderUnlitGenericPass( bool doSkin, int baseTextureVa
 	bool bBaseAlphaEnvmapMask = IS_FLAG_SET(MATERIAL_VAR_BASEALPHAENVMAPMASK);
 	bool bEnvmap = (envmapVar >= 0) && params[envmapVar]->IsDefined();
 	bool bMask = false;
-	if (bEnvmap)
+//	if (bEnvmap)
+	if (bEnvmap && (envmapMaskVar >= 0))
 	{
 		bMask = params[envmapMaskVar]->IsDefined();
 	}
 	bool bDetail = (detailVar >= 0) && params[detailVar]->IsDefined(); 
-	bool bBaseTexture = params[baseTextureVar]->IsDefined();
+	bool bBaseTexture = (baseTextureVar >= 0) && params[baseTextureVar]->IsDefined();
 	bool bVertexColor = IS_FLAG_SET(MATERIAL_VAR_VERTEXCOLOR);
 	bool bEnvmapCameraSpace = IS_FLAG_SET(MATERIAL_VAR_ENVMAPCAMERASPACE);
 	bool bEnvmapSphere = IS_FLAG_SET(MATERIAL_VAR_ENVMAPSPHERE);
@@ -660,34 +683,36 @@ void CBaseVSShader::VertexShaderUnlitGenericPass( bool doSkin, int baseTextureVa
 		s_pShaderShadow->EnableAlphaTest( IS_FLAG_SET(MATERIAL_VAR_ALPHATEST) );
 
 		// Base texture on stage 0
-		if (params[baseTextureVar]->IsDefined())
+		if (bBaseTexture)
 		{
 			s_pShaderShadow->EnableTexture( SHADER_TEXTURE_STAGE0, true );
 		}
 
-		if ((detailVar >= 0) && params[detailVar]->IsDefined())
+		if (bDetail)
 		{
 			s_pShaderShadow->EnableTexture( SHADER_TEXTURE_STAGE3, true );
 		}
 
-		bool bEnvMapDefined = (envmapVar >= 0) && params[envmapVar]->IsDefined();
-		if (bEnvMapDefined)
+	//	bool bEnvMapDefined = (envmapVar >= 0) && params[envmapVar]->IsDefined();
+		if (bEnvmap)
 		{
 			// envmap on stage 1
 			s_pShaderShadow->EnableTexture( SHADER_TEXTURE_STAGE1, true );
 
 			// envmapmask on stage 2
-			if (params[envmapMaskVar]->IsDefined() || bBaseAlphaEnvmapMask )
+			if (bMask || bBaseAlphaEnvmapMask )
 				s_pShaderShadow->EnableTexture( SHADER_TEXTURE_STAGE2, true );
 		}
 
-		if (params[baseTextureVar]->IsDefined())
+		if (bBaseTexture)
 			SetDefaultBlendingShadowState( baseTextureVar, true );
-		else
+		else if (bMask)
 			SetDefaultBlendingShadowState( envmapMaskVar, false );
+		else
+			SetDefaultBlendingShadowState();
 
 		int fmt = VERTEX_POSITION;
-		if( bEnvMapDefined )
+		if( bEnvmap )
 			fmt |= VERTEX_NORMAL;
 		if (doSkin)
 			fmt |= VERTEX_BONE_INDEX;
@@ -947,7 +972,7 @@ void CBaseVSShader::DrawModelBumpedSpecularLighting( int bumpMapVar, int bumpMap
 		if( bBlendSpecular )
 		{
 			s_pShaderShadow->EnableBlending( true );
-			s_pShaderShadow->BlendFunc( SHADER_BLEND_ONE, SHADER_BLEND_ONE );
+		//	s_pShaderShadow->BlendFunc( SHADER_BLEND_ONE, SHADER_BLEND_ONE );
 			SetAdditiveBlendingShadowState( -1, false );
 		}
 		else
@@ -961,14 +986,10 @@ void CBaseVSShader::DrawModelBumpedSpecularLighting( int bumpMapVar, int bumpMap
 		s_pShaderShadow->VertexShaderVertexFormat( 
 			VERTEX_POSITION | VERTEX_NORMAL | VERTEX_BONE_INDEX, 
 			1, 0, numLights, 4 /* userDataSize */ );
-
-		bool bHasNormalMapAlphaEnvMapMask = IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK );
-
 		if( g_pHardwareConfig->SupportsPixelShaders_1_4() )
 		{
 			s_pShaderShadow->SetVertexShader( "VertexLitGeneric_EnvmappedBumpmap_NoLighting_ps14" );
-		//	if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
-			if( bHasNormalMapAlphaEnvMapMask )
+			if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
 			{
 				s_pShaderShadow->SetPixelShader( "VertexLitGeneric_EnvmappedBumpmapV2_MultByAlpha_ps14" );
 			}
@@ -982,8 +1003,7 @@ void CBaseVSShader::DrawModelBumpedSpecularLighting( int bumpMapVar, int bumpMap
 			s_pShaderShadow->SetVertexShader( "VertexLitGeneric_EnvmappedBumpmap_NoLighting" );
 			// This version does not multiply by lighting.
 			// NOTE: We don't support multiplying by lighting for bumped specular stuff.
-		//	if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
-			if( bHasNormalMapAlphaEnvMapMask )
+			if( IS_FLAG_SET( MATERIAL_VAR_NORMALMAPALPHAENVMAPMASK ) )
 			{
 				s_pShaderShadow->SetPixelShader( "VertexLitGeneric_EnvmappedBumpmapV2_MultByAlpha" );
 			}

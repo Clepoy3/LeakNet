@@ -203,10 +203,14 @@ bool CDispCollTree::Create( CCoreDispInfo *pDisp )
 		{
 			flTotalAlpha += pDisp->GetAlpha( m_pTris[iTri].m_uiVerts[iVert] );
 		}
-		m_pTris[iTri].m_iSurfProp = 0;
+
 		if ( flTotalAlpha > DISP_ALPHA_PROP_DELTA )
 		{
 			m_pTris[iTri].m_iSurfProp = 1;
+		}
+		else
+		{
+			m_pTris[iTri].m_iSurfProp = 0;
 		}
 
 		// Add the displacement surface flag!
@@ -721,6 +725,7 @@ void CDispCollTree::ApplyTerrainMod( ITerrainMod *pMod )
 //	for ( int iTri = 0; iTri < m_nTriCount; ++iTri)
 //		Tri_CalcPlane( iTri );
 
+	// VXP: Collision fix
 	// Copy the triangle flags data.
 	for ( int iTri = 0; iTri < m_nTriCount; ++iTri )
 	{

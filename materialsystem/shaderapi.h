@@ -206,6 +206,10 @@ public:
 
 	virtual void SetClipPlane( int index, const float *pPlane ) = 0;
 	virtual void EnableClipPlane( int index, bool bEnable ) = 0;
+
+	// VXP
+	virtual void SetFastClipPlane(const float *pPlane) = 0;
+	virtual void EnableFastClip(bool bEnable) = 0;
 	
 	// Put all the model matrices into vertex shader constants.
 	virtual void SetSkinningMatrices() = 0;

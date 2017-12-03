@@ -481,6 +481,7 @@ struct mstudioseqdesc_t
 	Vector	bbmin;		// per sequence bounding box
 	Vector	bbmax;		
 
+///* VXP: TAP's code
 	//-------------------------------------------------------------------------
 	// Purpose: returns a model animation from the sequence group size and
 	//          blend index
@@ -488,7 +489,8 @@ struct mstudioseqdesc_t
 	// Note: this also acts as a SetAnimValue() as it returns a reference to
 	//       the anim value in question
 	//-------------------------------------------------------------------------
-	inline unsigned short& pAnimValue( int nIndex0, int nIndex1 ) const
+//	inline unsigned short& pAnimValue( int nIndex0, int nIndex1 ) const
+	inline int pAnimValue( int nIndex0, int nIndex1 ) const
 	{
 		// Clamp indexes
 		if ( nIndex0 >= groupsize[0] )
@@ -498,14 +500,46 @@ struct mstudioseqdesc_t
 			nIndex1 = groupsize[1] - 1;
 		
 		return *pBlend(nIndex1 * groupsize[0] + nIndex0);
+
+	//	int offset = nIndex1 * groupsize[0] + nIndex0;
+	//	short *blends = (short *)(((byte *)this) + blendindex);
+	//	int value = (int)blends[ offset ];
+	//	return value;
 	}
 
 	int	numblends;
 
-	int blendindex;
+	int blendindex; // animindexindex - SiPlus
 	inline unsigned short *pBlend( int i ) const { return (unsigned short *)(((byte *)this) + blendindex) + i; };
 
-	int seqgroup; // sequence group for demand loading
+	int seqgroup; // sequence group for demand loading. movementindex - SiPlus
+//*/
+/* VXP: SiPlus' code
+	int					numblends;
+
+	// Index into array of shorts which is groupsize[0] x groupsize[1] in length
+	int					animindexindex;
+
+	inline int			pAnimValue( int x, int y ) const
+	{
+		if ( x >= groupsize[0] )
+		{
+			x = groupsize[0] - 1;
+		}
+
+		if ( y >= groupsize[1] )
+		{
+			y = groupsize[ 1 ] - 1;
+		}
+
+		int offset = y * groupsize[0] + x;
+		short *blends = (short *)(((byte *)this) + animindexindex);
+		int value = (int)blends[ offset ];
+		return value;
+	}
+
+	int					movementindex;	// [blend] float array for blended movement
+*/
 
 	int	groupsize[2];
 	int	paramindex[2];	// X, Y, Z, XR, YR, ZR
@@ -590,8 +624,14 @@ struct mstudioseqdesc_v36_t
 
 	int anim[MAXSTUDIOBLENDS][MAXSTUDIOBLENDS]; // animation number
 
+///* VXP: Original code
 	int blendindex; // [blend] float array for blended movement
 	inline unsigned short *pBlend( int i ) const { return (unsigned short *)(((byte *)this) + blendindex) + i; };
+//*/
+
+/* VXP: SiPlus' code
+	int					movementindex;	// [blend] float array for blended movement
+*/
 
 	int	groupsize[2];
 	int	paramindex[2];	// X, Y, Z, XR, YR, ZR
@@ -1604,6 +1644,9 @@ inline int flexsetting_t::psetting( byte *base, int i, flexweight_t **weights ) 
 	return numsettings;
 };
 
+
+void Studio_ConvertSeqDescsToNewVersion( studiohdr_t *pStudioHdr );
+
 // Insert this code anywhere that you need to allow for conversion from an old STUDIO_VERSION
 // to a new one.
 // If we only support the current version, this function should be empty.
@@ -1612,34 +1655,28 @@ inline void Studio_ConvertStudioHdrToNewVersion( studiohdr_t *pStudioHdr )
 	COMPILE_TIME_ASSERT( STUDIO_VERSION == 37 ); //  put this to make sure this code is updated upon changing version.
 	int version = pStudioHdr->version;
 
-	return;
-	
-	if( version == STUDIO_VERSION )
+	// VXP: We don't support versions below/equal 32 or the time
+	// See issue http://leaknet.tk/mantisbt/view.php?id=109
+	if( version == STUDIO_VERSION || version <= 32 )
 	{
 		return;
 	}
-	
-	if( version <= 31 )
-	{
-		pStudioHdr->version = STUDIO_VERSION;
-		
-		int i;
-		for( i = 0; i < pStudioHdr->numseq; i++ )
-		{
-		//	mstudioseqdesc_t *pSeqdesc = (mstudioseqdesc_t *)hdr->pSeqdesc( i );
-			mstudioseqdesc_t *pSeqdesc = pStudioHdr->pSeqdesc( i );
-			pSeqdesc->numiklocks = -1;
-		}
-	}
 
-	if( version <= 32 )
+	if ( version <= 36 )
 	{
-		pStudioHdr->version = STUDIO_VERSION;
-		pStudioHdr->numhitboxsets = -1;
+		Q_memmove( (void *)&pStudioHdr->numseq, (void *)&pStudioHdr->numanimgroup, (size_t)((byte *)pStudioHdr->unused - (byte *)&pStudioHdr->numseq) );
+
+		pStudioHdr->numanimgroup = 0;
+		pStudioHdr->animgroupindex = 0;
+
+		pStudioHdr->numbonedesc = 0;
+		pStudioHdr->bonedescindex = 0;
+
+		Studio_ConvertSeqDescsToNewVersion( pStudioHdr );
 	}
 
 	// Slam all bone contents to SOLID for versions <= 35
-	if( version <= 35 )
+	if ( version <= 35 )
 	{
 		pStudioHdr->contents = CONTENTS_SOLID;
 
@@ -1656,14 +1693,6 @@ inline void Studio_ConvertStudioHdrToNewVersion( studiohdr_t *pStudioHdr )
 		// Don't remove this!!!!  This code has to be inspected everytime the studio format changes.
 		COMPILE_TIME_ASSERT( STUDIO_VERSION == 37 ); //  put this to make sure this code is updated upon changing version.
 		pStudioHdr->version = STUDIO_VERSION;
-		
-		pStudioHdr->numanimgroup = 1;
-		pStudioHdr->animgroupindex = 1;
-		
-		pStudioHdr->numbonedesc = -1;
-		pStudioHdr->bonedescindex = -1;
-		
-		Assert( 0 );
 	}
 }
 

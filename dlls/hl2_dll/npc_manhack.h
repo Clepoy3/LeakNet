@@ -63,6 +63,7 @@ class CNPC_Manhack : public CAI_BasePhysicsFlyingBot
 
 		void			OnStateChange( NPC_STATE OldState, NPC_STATE NewState );
 
+		virtual bool	ShouldGib( const CTakeDamageInfo &info ); // VXP
 
 		Activity		NPC_TranslateActivity( Activity baseAct );
 		virtual int		TranslateSchedule( int scheduleType );
@@ -152,7 +153,7 @@ void			Ignite( float flFlameLifetime ) { return; }
 		float			m_fSmokeTime;
 
 		bool			m_bDirtyPitch; // indicates whether we want the sound pitch updated.(sjb)
-		bool			m_bWasClubbed;
+	//	bool			m_bWasClubbed;
 
 		CSoundPatch		*m_pEngineSound1;
 		CSoundPatch		*m_pEngineSound2;
@@ -174,6 +175,8 @@ void			Ignite( float flFlameLifetime ) { return; }
 		int				m_iPanel2;
 		int				m_iPanel3;
 		int				m_iPanel4;
+
+		bool			m_bGib; // VXP
 };
 
 #endif	//NPC_MANHACK_H

@@ -1233,6 +1233,12 @@ bool CBaseCombatCharacter::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
 	acttable_t *pTable		= pWeapon->ActivityList();
 	int			actCount	= pWeapon->ActivityListCount();
 
+	// VXP: From Source 2007 - ?
+//	if( actCount < 1 )
+//	{
+//		// If the weapon has no activity table, it definitely cannot be used.
+//		return false;
+//	}
 	for ( int i = 0; i < actCount; i++, pTable++ )
 	{
 		if ( pTable->required )
@@ -1360,7 +1366,7 @@ int CBaseCombatCharacter::OnTakeDamage( const CTakeDamageInfo &info )
 	default:
 	case LIFE_DEAD:
 		retVal = OnTakeDamage_Dead( info );
-		if ( m_iHealth <= 0 && (info.GetDamageType() & DMG_GIB_CORPSE) )
+		if ( m_iHealth <= 0 && (info.GetDamageType() & DMG_GIB_CORPSE) && ShouldGib( info ) ) // VXP: Added ShouldGib check
 		{
 			Event_Gibbed( info );
 			retVal = 0;

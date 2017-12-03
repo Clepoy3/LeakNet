@@ -144,6 +144,7 @@ string_t CNPC_Citizen::GetModelName( void ) const
 	// If the model refers to an obsolete model, pretend it was blank
 	// so that we pick the new default model.
 	//
+/*
 	if (!strnicmp(STRING(iszModelName), "models/c17_", 11) ||
 		!strnicmp(STRING(iszModelName), "models/male", 11) ||
 		!strnicmp(STRING(iszModelName), "models/female", 13) ||
@@ -151,6 +152,7 @@ string_t CNPC_Citizen::GetModelName( void ) const
 	{
 		return NULL_STRING;
 	}
+*/
 
 	if ( !strnicmp(STRING(iszModelName), "random", 6) )
 	{

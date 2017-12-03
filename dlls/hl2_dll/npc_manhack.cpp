@@ -134,7 +134,8 @@ BEGIN_DATADESC( CNPC_Manhack )
 	DEFINE_FIELD( CNPC_Manhack,	m_fSmokeTime,				FIELD_TIME),
 
 	DEFINE_FIELD( CNPC_Manhack, m_bDirtyPitch, FIELD_BOOLEAN ),
-	DEFINE_FIELD( CNPC_Manhack, m_bWasClubbed,				FIELD_BOOLEAN),
+//	DEFINE_FIELD( CNPC_Manhack, m_bWasClubbed,				FIELD_BOOLEAN),
+	DEFINE_FIELD( CNPC_Manhack, m_bGib,					FIELD_BOOLEAN), // VXP
 
 	DEFINE_SOUNDPATCH( CNPC_Manhack,  m_pEngineSound1 ),
 	DEFINE_SOUNDPATCH( CNPC_Manhack,  m_pEngineSound2 ),
@@ -291,6 +292,15 @@ void CNPC_Manhack::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CNPC_Manhack::ShouldGib( const CTakeDamageInfo &info )
+{
+	return ( m_bGib );
+}
+
+//-----------------------------------------------------------------------------
 // Purpose:
 // Input  :
 // Output :
@@ -332,17 +342,28 @@ void CNPC_Manhack::Event_Killed( const CTakeDamageInfo &info )
 		SoundInit();
 	}
 
-	if( m_bWasClubbed || random->RandomInt( 0, 1 ) == 0 )
+//	if( m_bWasClubbed || random->RandomInt( 0, 1 ) == 0 )
+	if( ( info.GetDamageType() & (DMG_CLUB|DMG_CRUSH|DMG_BLAST) ) || ( random->RandomInt( 0, 1 ) ) )
 	{
 		// Always Gib if clubbed.
 		// Otherwise, 50% chance to gib.
-		CorpseGib( info );
-		CleanupOnDeath( info.GetAttacker() );
+	//	CorpseGib( info );
+	//	CleanupOnDeath( info.GetAttacker() );
+
+		m_bGib = true;
 	}
 	else
 	{
-		BaseClass::Event_Killed( info );
+	//	BaseClass::Event_Killed( info );
+
+		m_bGib = false;
+
+		//FIXME: These don't stay with the ragdolls currently -- jdw
+		// Long fadeout on the sprites!!
+		KillSprites( 0.0f );
 	}
+
+	BaseClass::Event_Killed( info );
 }
 
 void CNPC_Manhack::HitPhysicsObject( CBaseEntity *pOther )
@@ -482,12 +503,12 @@ int	CNPC_Manhack::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		// tdInfo.SetDamage( 1.0 );
 
 		// Also indicate that the last time we took damage, we were clubbed.
-		m_bWasClubbed = true;
+	//	m_bWasClubbed = true;
 	}
 	else
 	{
 		// We were NOT clubbed. Clear this out.
-		m_bWasClubbed = false;
+	//	m_bWasClubbed = false;
 
 		m_flBladeSpeed = 20.0;
 
@@ -535,12 +556,11 @@ void CNPC_Manhack::Ragdoll(void)
 //------------------------------------------------------------------------------
 bool CNPC_Manhack::CorpseGib( const CTakeDamageInfo &info )
 {
-	KillSprites( 0.0 );
-
 	Vector			vecGibVelocity;
 	AngularImpulse	vecGibAVelocity;
 
-	if( m_bWasClubbed )
+//	if( m_bWasClubbed )
+	if( info.GetDamageType() & DMG_CLUB )
 	{
 		// If clubbed to death, break apart before the attacker's eyes!
 		vecGibVelocity = g_vecAttackDir * -150;
@@ -564,6 +584,8 @@ bool CNPC_Manhack::CorpseGib( const CTakeDamageInfo &info )
 	AddFlag( EF_NODRAW );
 	SetThink( SUB_Remove );
 
+	KillSprites( 0.0 );
+
 	return true;
 }
 
@@ -581,10 +603,11 @@ int	CNPC_Manhack::OnTakeDamage_Dying( const CTakeDamageInfo &info )
 
 	VPhysicsTakeDamage( info );
 	
-	if( gpGlobals->curtime > m_flIgnoreDamageTime )
-	{
-		CorpseGib( info );
-	}
+	// VXP: Fix for spamming gibs when dying from fire
+//	if( gpGlobals->curtime > m_flIgnoreDamageTime )
+//	{
+//		CorpseGib( info );
+//	}
 
 	return 0;
 }

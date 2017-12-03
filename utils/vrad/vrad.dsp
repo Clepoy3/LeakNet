@@ -524,6 +524,10 @@ SOURCE=..\..\public\vstdlib\strtools.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\public\studio.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Public\studio.h
 # End Source File
 # Begin Source File
