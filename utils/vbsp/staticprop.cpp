@@ -68,6 +68,9 @@ static CUtlRBTree<ModelCollisionLookup_t, unsigned short>	s_ModelCollisionCache(
 static CUtlVector<int>	s_LightingInfo;
 
 
+extern qboolean	nostaticpropcheck; // VXP
+
+
 //-----------------------------------------------------------------------------
 // Gets the keyvalues from a studiohdr
 //-----------------------------------------------------------------------------
@@ -207,9 +210,12 @@ bool LoadStudioModel( char const* pModelName, char const* pEntityType, CUtlBuffe
 
 	if (!IsStaticProp(pHdr))
 	{
-		Warning("Error! To use model \"%s\"\n"
-			"      with %s, it must be compiled with $staticprop!\n", pFileName, pEntityType );
-		return false;
+		if ( !nostaticpropcheck ) // VXP: Don't skip static prop check
+		{
+			Warning("Error! To use model \"%s\"\n"
+				"      with %s, it must be compiled with $staticprop!\n", pFileName, pEntityType );
+			return false;
+		}
 	}
 
 	return true;
@@ -305,6 +311,11 @@ static CPhysCollide* GetCollisionModel( char const* pModelName )
 	studiohdr_t* pStudioHdr = (studiohdr_t*)buf.PeekGet();
 	lookup.m_pCollide = ComputeConvexHull( pStudioHdr );
 	s_ModelCollisionCache.Insert( lookup );
+
+	if ( !lookup.m_pCollide )
+	{
+		Warning("Bad geometry on \"%s\"!\n", pModelName );
+	}
 
 	// Debugging
 	if (g_DumpStaticProps)

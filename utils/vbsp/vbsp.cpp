@@ -28,6 +28,7 @@ qboolean	glview;
 qboolean	nodetail;
 qboolean	fulldetail;
 qboolean	onlyents;
+qboolean	nostaticpropcheck; // VXP
 bool		onlyprops;
 qboolean	nomerge;
 qboolean	nowater;
@@ -752,6 +753,11 @@ int main (int argc, char **argv)
 			Msg ("onlyents = true\n");
 			onlyents = true;
 		}
+		else if (!strcmp(argv[i], "-nostaticpropcheck")) // VXP
+		{
+			Msg ("nostaticpropcheck = true\n");
+			nostaticpropcheck = true;
+		}
 		else if (!strcmp(argv[i], "-onlyprops"))
 		{
 			Msg ("onlyprops = true\n");
@@ -873,7 +879,7 @@ int main (int argc, char **argv)
 				"             -nodetail -fulldetail -onlyents -onlyprops -micro -leaktest\n"
 				"             -verboseentities -snapaxial -block -blocks -dumpstaticprop -dumpcollide\n"
 				"             -forcedetailcuts -luxelscale -tmpout -bumpall -lowpriority\n"
-				"             -lightifmissing]\n"
+				"             -lightifmissing -noenvmapfix -nostaticpropcheck]\n"
 				"             mapfile\n");
 
 	start = I_FloatTime ();
