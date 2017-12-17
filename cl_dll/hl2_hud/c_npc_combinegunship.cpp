@@ -235,7 +235,8 @@ void Gunship_DrawSprite( const Vector &vecOrigin, float size, const color32 &col
 {
 	if ( glow )
 	{
-		if ( GlowSightDistance( vecOrigin ) <= 0 )
+		float visible = GlowSightDistance( vecOrigin, true ) > 0.0f ? 1.0f : 0.0f;
+		if ( visible <= 0 )
 			return;
 	}
 

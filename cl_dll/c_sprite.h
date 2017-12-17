@@ -12,7 +12,7 @@
 
 #include "Sprite.h"
 
-float GlowSightDistance( const Vector &glowOrigin );
+float GlowSightDistance( const Vector &glowOrigin, bool bShouldTrace );
 
 #if 0 
 #include "c_baseentity.h"

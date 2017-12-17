@@ -383,9 +383,9 @@ bool WorldLightToMaterialLight( dworldlight_t* pWorldLight, LightDesc_t& light )
 		// A 180 degree spotlight
 		light.m_Type = MATERIAL_LIGHT_SPOT;
 		light.m_Attenuation2 = 1.0;
-		light.m_Theta = 0;
+		light.m_Theta = 0; // VXP: M_PI in Source 2007
 		light.m_Phi = M_PI;
-		light.m_ThetaDot = 1.0f;
+		light.m_ThetaDot = 1.0f; // VXP: 0.0f in Source 2007
 		light.m_PhiDot = 0.0f;
 		light.m_Falloff = 1.0f;
 		break;
@@ -2336,11 +2336,16 @@ void CModelRender::AddDecal( ModelInstanceHandle_t handle, Ray_t const& ray,
 	IMaterial* pDecalMaterial;
 	float w, h;
 	R_DecalGetMaterialAndSize( decalIndex, pDecalMaterial, w, h );
+	if ( !pDecalMaterial ) // VXP
+	{
+		DevWarning("Bad decal index %d\n", decalIndex );
+		return;
+	}
 	w *= 0.5f;
 	h *= 0.5f;
 
 	// FIXME: For now, don't render fading decals on props...
-	bool found;
+	bool found = false;
 	pDecalMaterial->FindVar( "$decalFadeDuration", &found, false );
 	if (found)
 		return;

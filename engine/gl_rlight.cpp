@@ -440,9 +440,9 @@ static bool FASTCALL FindIntersectionAtSurface( int surfID, float f,
 	ComputeTextureCoordsAtIntersection( pTex, pt, state.m_pTextureS, state.m_pTextureT );
 
 #ifdef USE_CONVARS
-	if( 1 )
-#else
 	if (r_avglight.GetInt())
+#else
+	if( 1 )
 #endif
 	{
 		// This is the faster path; it looks slightly different though

@@ -212,7 +212,7 @@ void Shader_SetMode( void *mainWindow, bool windowed, int nAntialias, int nQuali
 
 void Shader_SwapBuffers( void )
 {
-	Assert( materialSystemInterface );
+	assert( materialSystemInterface );
 	materialSystemInterface->SwapBuffers();
 }
 

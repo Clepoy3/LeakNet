@@ -33,7 +33,7 @@ bool EffectOccluded( const Vector &pos )
 {
 	trace_t	tr;
 	UTIL_TraceLine( pos, MainViewOrigin(), MASK_OPAQUE, NULL, COLLISION_GROUP_NONE, &tr );
-	return ( tr.fraction < 1.0f );
+	return ( tr.fraction < 1.0f ) ? true : false;
 }
 
 

@@ -16,11 +16,30 @@
 void DrawSpriteModel( IClientEntity *baseentity, CEngineSprite *psprite, const Vector &origin, float fscale, float frame, 
 	int rendermode, int r, int g, int b, int a, const Vector& forward, const Vector& right, const Vector& up );
 
-static ConVar	r_traceglow( "r_traceglow","0");
+// VXP: Was 0, but then sprites shows up even behind the walls
+//static ConVar	r_traceglow( "r_traceglow","1");
 ConVar	r_drawsprites( "r_drawsprites", "1" );
 
-float GlowSightDistance( const Vector &glowOrigin )
+class CTraceFilterGlow : public CTraceFilterSimple
 {
+public:
+	DECLARE_CLASS( CTraceFilterGlow, CTraceFilterSimple );
+	
+	CTraceFilterGlow( const IHandleEntity *passentity, int collisionGroup ) : CTraceFilterSimple(passentity, collisionGroup) {}
+	virtual bool ShouldHitEntity( IHandleEntity *pHandleEntity, int contentsMask )
+	{
+	//	IClientUnknown *pUnk = (IClientUnknown*)pHandleEntity;
+	//	ICollideable *pCollide = pUnk->GetCollideable();
+		Assert( dynamic_cast<CBaseEntity*>(pHandleEntity) );
+		CBaseEntity *pTestEntity = static_cast<CBaseEntity*>(pHandleEntity);
+		if ( pTestEntity->GetSolid() != SOLID_VPHYSICS && pTestEntity->GetSolid() != SOLID_BSP )
+			return false;
+		return BaseClass::ShouldHitEntity( pHandleEntity, contentsMask );
+	}
+};
+float GlowSightDistance( const Vector &glowOrigin, bool bShouldTrace )
+{
+#if 0 // VXP: Old shitty sprite traces
 	float dist = (glowOrigin - CurrentViewOrigin()).Length();
 
 	int traceFlags = r_traceglow.GetBool() ? (MASK_OPAQUE|CONTENTS_MONSTER|CONTENTS_HITBOX) : MASK_OPAQUE;
@@ -31,6 +50,31 @@ float GlowSightDistance( const Vector &glowOrigin )
 		return -1;
 
 	return dist;
+
+#else // VXP: From Source 2007
+
+	float dist = (glowOrigin - CurrentViewOrigin()).Length();
+//	bool bShouldTrace = r_traceglow.GetBool();
+	if ( bShouldTrace )
+	{
+		Vector end = glowOrigin;
+		// VXP: HACKHACK: trace 4" from destination in case the glow is inside some parent object
+		//			allow a little error...
+		if ( dist > 4 )
+		{
+			end -= CurrentViewForward()*4;
+		}
+		int traceFlags = (MASK_OPAQUE|CONTENTS_MONSTER|CONTENTS_HITBOX);
+
+		CTraceFilterGlow filter(NULL, COLLISION_GROUP_NONE);
+		trace_t tr;
+		UTIL_TraceLine( CurrentViewOrigin(), end, traceFlags, &filter, &tr );
+		if ( tr.fraction != 1.0f )
+			return -1;
+	}
+
+	return dist;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -41,6 +85,7 @@ float GlowSightDistance( const Vector &glowOrigin )
 //			alpha - 
 //			pscale - Pointer to the value for scale, will be changed based on distance and rendermode.
 //-----------------------------------------------------------------------------
+#if 0
 float C_SpriteRenderer::GlowBlend( Vector& entorigin, int rendermode, int renderfx, int alpha, float *pscale )
 {
 	float dist = GlowSightDistance( entorigin );
@@ -76,6 +121,65 @@ float C_SpriteRenderer::GlowBlend( Vector& entorigin, int rendermode, int render
 
 	return brightness;
 }
+#else
+float C_SpriteRenderer::GlowBlend( Vector& entorigin, int rendermode, int renderfx, int alpha, float *pscale )
+{
+	float dist;
+	float brightness;
+
+	brightness = GlowSightDistance( entorigin, true ) > 0.0f ? 1.0f : 0.0f;
+	if ( brightness <= 0.0f )
+	{
+		return 0.0f;
+	}
+
+	// VXP: Prevents from fluctuating sprite's brightness at DrawSprite()
+	// Already fixed by "... > 0.0f ? 1.0f : 0.0f" statement a few lines above
+//	brightness = clamp( brightness, 0.05f, 1.0f );
+
+	dist = GlowSightDistance( entorigin, false );
+	if ( dist <= 0.0f )
+	{
+		return 0.0f;
+	}
+
+	if ( renderfx == kRenderFxNoDissipation )
+	{
+	//	return (float)alpha * (1.0f/255.0f);
+		return (float)alpha * (1.0f/255.0f) * brightness;
+	}
+
+/*
+	// UNDONE: Tweak these magic numbers (19000 - falloff & 200 - sprite size)
+	float brightness = 19000.0 / (dist*dist);
+	if ( brightness < 0.05 )
+	{
+		brightness = 0.05;
+	}
+	else if ( brightness > 1.0 )
+	{
+		brightness = 1.0;
+	}
+*/
+
+	// UNDONE: Tweak these magic numbers (1200 - distance at full brightness)
+	float fadeOut = (1200.0f*1200.0f) / (dist*dist);
+	fadeOut = clamp( fadeOut, 0.0f, 1.0f );
+
+	if (rendermode != kRenderWorldGlow)
+	{
+		// Make the glow fixed size in screen space, taking into consideration the scale setting.
+		if (*pscale == 0.0f)
+		{
+			*pscale = 1.0f;
+		}
+
+		*pscale *= dist * (1.0f/200.0f);
+	}
+
+	return fadeOut * brightness;
+}
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -118,7 +222,7 @@ void C_SpriteRenderer::GetSpriteAxes( SPRITETYPE type,
 			VectorNormalize (tvec);
 			dot = tvec[2];	// same as DotProduct (tvec, r_spritedesc.vup) because
 			//  r_spritedesc.vup is 0, 0, 1
-			if ((dot > 0.999848) || (dot < -0.999848))	// cos(1 degree) = 0.999848
+			if ((dot > 0.999848f) || (dot < -0.999848f))	// cos(1 degree) = 0.999848
 				return;
 			up[0] = 0;
 			up[1] = 0;
@@ -159,7 +263,7 @@ void C_SpriteRenderer::GetSpriteAxes( SPRITETYPE type,
 			// the two vectors are less than 1 degree apart
 			dot = CurrentViewForward()[2];	// same as DotProduct (vpn, r_spritedesc.g_vecVUp) because
 			//  r_spritedesc.vup is 0, 0, 1
-			if ((dot > 0.999848) || (dot < -0.999848))	// cos(1 degree) = 0.999848
+			if ((dot > 0.999848f) || (dot < -0.999848f))	// cos(1 degree) = 0.999848
 				return;
 			up[0] = 0;
 			up[1] = 0;
@@ -188,7 +292,7 @@ void C_SpriteRenderer::GetSpriteAxes( SPRITETYPE type,
 			// generate the sprite's axes, parallel to the viewplane, but rotated in
 			// that plane around the center according to the sprite entity's roll
 			// angle. So vpn stays the same, but vright and vup rotate
-			angle = angles[ROLL] * (M_PI*2 / 360);
+			angle = angles[ROLL] * (M_PI*2.0f / 360.0f);
 			SinCos( angle, &sr, &cr );
 			
 			for (i=0 ; i<3 ; i++)
@@ -200,7 +304,7 @@ void C_SpriteRenderer::GetSpriteAxes( SPRITETYPE type,
 		}
 		break;
 	default:
-		Warning( "GetSpriteAxes: Bad sprite type %d", type );
+		Warning( "GetSpriteAxes: Bad sprite type %d\n", type );
 		break;
 	}
 }
@@ -227,31 +331,17 @@ int C_SpriteRenderer::DrawSprite(
 	)
 {
 	VPROF_BUDGET( "C_SpriteRenderer::DrawSprite", VPROF_BUDGETGROUP_PARTICLE_RENDERING );
-	if( !r_drawsprites.GetBool() )
+	if( !r_drawsprites.GetBool() || !model || modelinfo->GetModelType( model ) != mod_sprite )
 	{
 		return 0;
 	}
-	int drawn = 0;
-
-	if ( !model || modelinfo->GetModelType( model ) != mod_sprite )
-		return drawn;
-
-	Vector forward, right, up;
-	
-	CEngineSprite *psprite;
 
 	// Get extra data
-	psprite = (CEngineSprite *)modelinfo->GetModelExtraData( model );
+	CEngineSprite *psprite = (CEngineSprite *)modelinfo->GetModelExtraData( model );
 	if ( !psprite )
 	{
-		return drawn;
+		return 0;
 	}
-
-	// Get orientation
-	SPRITETYPE orientation = (SPRITETYPE)psprite->GetOrientation();
-
-	// Get orthonormal bases
-	GetSpriteAxes( orientation, origin, angles, forward, right, up );
 
 	Vector		effect_origin;
 	VectorCopy( origin, effect_origin );
@@ -267,10 +357,9 @@ int C_SpriteRenderer::DrawSprite(
 		}
 	}
 
-	float blend = 1.0f;
 	if ( rendermode != kRenderNormal )
 	{
-		blend = render->GetBlend();
+		float blend = render->GetBlend();
 
 		// kRenderGlow and kRenderWorldGlow have a special blending function
 		if (( rendermode == kRenderGlow ) || ( rendermode == kRenderWorldGlow ))
@@ -279,19 +368,23 @@ int C_SpriteRenderer::DrawSprite(
 
 			//Fade out the sprite depending on distance from the view origin.
 			alpha *= blend;
+		//	r *= blend;
+		//	g *= blend;
+		//	b *= blend;
 		}
 
 		render->SetBlend( blend );
+		if ( blend <= 0.0f )
+		{
+			return 0;
+		}
 	}
-	
-	if ( blend <= 0.0f )
-		return drawn;
 
+	// Get orthonormal bases
+	Vector forward, right, up;
+	GetSpriteAxes( (SPRITETYPE)psprite->GetOrientation(), origin, angles, forward, right, up );
 	
-		
 	// Draw
-	drawn = 1;
-
 	DrawSpriteModel( 
 		entity,
 		psprite, 
@@ -305,5 +398,5 @@ int C_SpriteRenderer::DrawSprite(
 		alpha, 
 		forward, right ,up );
 
-	return drawn;
+	return 1;
 }

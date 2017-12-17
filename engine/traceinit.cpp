@@ -70,7 +70,7 @@ CInitTracker::~CInitTracker( void )
 {
 	for ( int l = 0; l < NUM_LISTS; l++ )
 	{
-		//Assert( m_nNumFuncs[l] == 0 );
+		//assert( m_nNumFuncs[l] == 0 );
 		for ( int i = 0; i < m_nNumFuncs[l]; i++ )
 		{
 			InitFunc *f = m_Funcs[ l ][ i ];

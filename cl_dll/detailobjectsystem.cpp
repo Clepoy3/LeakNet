@@ -30,6 +30,8 @@
 struct model_t;
 
 
+ConVar	cl_detaildist( "cl_detaildist", "1200", 0, "Distance at which detail props are no longer visible" );
+ConVar	cl_detailfade( "cl_detailfade", "400", 0, "Distance across which detail props fade in" );
 //-----------------------------------------------------------------------------
 // Detail models
 //-----------------------------------------------------------------------------
@@ -995,8 +997,9 @@ void CDetailObjectSystem::BuildDetailObjectRenderLists( )
 
 	MEASURE_TIMED_STAT( CS_ADD_DETAILOBJECTS );
 
-	static ConVar	cl_detaildist( "cl_detaildist", "1200", 0, "Distance at which detail props are no longer visible" );
-	static ConVar	cl_detailfade( "cl_detailfade", "400", 0, "Distance across which detail props fade in" );
+	// VXP: Moved to the top
+//	static ConVar	cl_detaildist( "cl_detaildist", "1200", 0, "Distance at which detail props are no longer visible" );
+//	static ConVar	cl_detailfade( "cl_detailfade", "400", 0, "Distance across which detail props fade in" );
 
 	// Compute factors to optimize rendering of the detail models
 	EnumContext_t ctx;

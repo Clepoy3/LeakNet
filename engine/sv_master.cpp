@@ -64,6 +64,8 @@ public:
 
 	void SetMaster_f( void );
 	void Heartbeat_f( void );
+
+	char *GetExternalIPAddress( void ) { return szExternalIP; };
 private:
 	// List of known master servers
 	adrlist_t *m_pMasterAddresses;

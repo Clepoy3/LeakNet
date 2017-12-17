@@ -282,7 +282,7 @@ static void GenerateTexCoordsForPrimVerts( void )
 		for( j = 0; j < MSurf_NumPrims( surfID ); j++ )
 		{
 			mprimitive_t *pPrim;
-			Assert( MSurf_FirstPrimID( surfID ) + j < host_state.worldmodel->brush.numprimitives );
+			assert( MSurf_FirstPrimID( surfID ) + j < host_state.worldmodel->brush.numprimitives );
 			pPrim = &host_state.worldmodel->brush.primitives[MSurf_FirstPrimID( surfID ) + j];
 			for( k = 0; k < pPrim->vertCount; k++ )
 			{
@@ -307,7 +307,7 @@ static void GenerateTexCoordsForPrimVerts( void )
 				for ( l = 0; l < pPrim->vertCount; l++ )
 				{
 					// world-space vertex
-					Assert( l+pPrim->firstVert < host_state.worldmodel->brush.numprimverts );
+					assert( l+pPrim->firstVert < host_state.worldmodel->brush.numprimverts );
 					mprimvert_t &vert = host_state.worldmodel->brush.primverts[l+pPrim->firstVert];
 					Vector& vec = vert.pos;
 
@@ -388,8 +388,8 @@ bool SurfHasBumpedLightmaps( int surfID )
 bool SurfNeedsBumpedLightmaps( int surfID )
 {
 	ASSERT_SURF_VALID( surfID );
-	Assert( MSurf_TexInfo( surfID ) );
-	Assert( MSurf_TexInfo( surfID )->material );
+	assert( MSurf_TexInfo( surfID ) );
+	assert( MSurf_TexInfo( surfID )->material );
 	return MSurf_TexInfo( surfID )->material->GetPropertyFlag( MATERIAL_PROPERTY_NEEDS_BUMPED_LIGHTMAPS );
 }
 
@@ -409,8 +409,8 @@ bool SurfHasLightmap( int surfID )
 bool SurfNeedsLightmap( int surfID )
 {
 	ASSERT_SURF_VALID( surfID );
-	Assert( MSurf_TexInfo( surfID ) );
-	Assert( MSurf_TexInfo( surfID )->material );
+	assert( MSurf_TexInfo( surfID ) );
+	assert( MSurf_TexInfo( surfID )->material );
 	if (MSurf_TexInfo( surfID )->flags & SURF_NOLIGHT)
 		return false;
 

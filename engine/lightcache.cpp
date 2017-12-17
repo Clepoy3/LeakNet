@@ -607,6 +607,7 @@ static float LightIntensityAndDirectionAtPoint( dworldlight_t* pLight,
 			// ever be affected by one of them (multiple ones are created from
 			// a single light in vrad)
 
+			// VectorFill( *pDirection, 0 ); // VXP: In Source 2007
 			// check to see if you can hit the sky texture
 			Vector end;
 			VectorMA( mid, -COORD_EXTENT * 1.74f, pLight->normal, end ); // max_range * sqrt(3)
@@ -621,7 +622,7 @@ static float LightIntensityAndDirectionAtPoint( dworldlight_t* pLight,
 				return 0.0f;
 
 			// fudge delta and dist for skylights
-			VectorFill( *pDirection, 0 );
+			VectorFill( *pDirection, 0 ); // VXP: Commented and added "*pDirection = -pLight->normal;" in Source 2007
 			return 1.0f;
 		}
 

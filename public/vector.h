@@ -22,7 +22,7 @@
 
 #include <math.h>
 #include <float.h>
-//#include <assert.h>
+#include <assert.h>
 
 // For vec_t, put this somewhere else?
 #include "basetypes.h"
@@ -555,7 +555,7 @@ FORCEINLINE void VectorMultiply( const Vector& a, vec_t b, Vector& c )
 	CHECK_VALID(a);
 	// VXP: Error here on d1_trainstation_02 when moving upstairs and on d1_under_03 when you saw the citizens
 	// VXP: Fixed
-	Assert( IsFinite(b) );
+	assert( IsFinite(b) );
 	c.x = a.x * b;
 	c.y = a.y * b;
 	c.z = a.z * b;

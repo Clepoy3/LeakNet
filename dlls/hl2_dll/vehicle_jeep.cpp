@@ -57,6 +57,8 @@ class CJeepFourWheelServerVehicle : public CFourWheelServerVehicle
 public:
 	bool		NPC_HasPrimaryWeapon( void ) { return true; }
 	void		NPC_AimPrimaryWeapon( Vector vecTarget );
+
+	bool		IsPassengerVisible( int nRole = VEHICLE_DRIVER ) { return true; } // VXP
 };
 
 //-----------------------------------------------------------------------------

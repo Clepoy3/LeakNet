@@ -49,6 +49,8 @@ public:
 	virtual void SetMaster_f( void ) = 0;
 	// Force a heartbeat to be issued right away
 	virtual void Heartbeat_f( void ) = 0;
+	// VXP: Get a cached external IP address
+	virtual char *GetExternalIPAddress( void ) = 0;
 };
 
 extern IMaster *master;

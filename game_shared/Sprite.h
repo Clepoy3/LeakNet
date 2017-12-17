@@ -136,6 +136,7 @@ public:
 	
 	void SetBrightness( int brightness, float duration = 0.0f );
 	void SetScale( float scale, float duration = 0.0f );
+	void SetSpriteScale( float scale ); // VXP
 
 	float GetScale( void ) { return m_flSpriteScale; }
 	int	GetBrightness( void ) { return m_nBrightness; }

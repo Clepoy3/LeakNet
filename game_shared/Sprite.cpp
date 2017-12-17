@@ -120,6 +120,7 @@ void CSprite::Spawn( void )
 	SetModel( STRING( GetModelName() ) );
 
 	m_flMaxFrame = (float)modelinfo->GetModelFrameCount( GetModel() ) - 1;
+	m_fEffects |= EF_NOSHADOW | EF_NORECEIVESHADOW; // VXP
 
 #if defined( CLIENT_DLL )
 	SetNextClientThink( CLIENT_THINK_ALWAYS );
@@ -178,7 +179,7 @@ void CSprite::SetModel( const char *szModelName )
 	const model_t *model = modelinfo->GetModel( index );
 	if ( model && modelinfo->GetModelType( model ) != mod_sprite )
 	{
-		Msg( "Setting CSprite to non-sprite model %s\n", szModelName );
+		Msg( "Setting CSprite to non-sprite model %s\n", szModelName?szModelName:"NULL" );
 	}
 
 #if !defined( CLIENT_DLL )
@@ -219,6 +220,8 @@ void CSprite::SpriteInit( const char *pSpriteName, const Vector &origin )
 //-----------------------------------------------------------------------------
 void CSprite::OnRestore()
 {
+	BaseClass::OnRestore();
+
 	// Reset attachment after save/restore
 	if ( GetFollowedEntity() )
 	{
@@ -324,7 +327,8 @@ void CSprite::Expand( float scaleSpeed, float fadeSpeed )
 void CSprite::ExpandThink( void )
 {
 	float frametime = gpGlobals->curtime - m_flLastTime;
-	m_flSpriteScale += m_flSpeed * frametime;
+//	m_flSpriteScale += m_flSpeed * frametime;
+	SetSpriteScale( m_flSpriteScale + m_flSpeed * frametime );
 
 	int sub = (int)(m_iHealth * frametime);
 	if ( sub > m_clrRender->a )
@@ -375,10 +379,21 @@ void CSprite::SetBrightness( int brightness, float time )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+void CSprite::SetSpriteScale( float scale )
+{
+	if ( scale != m_flSpriteScale )
+	{
+		m_flSpriteScale		= scale;	//Take our current position as our new starting position
+		// The surrounding box is based on sprite scale... it changes, box is dirty
+	//	CollisionProp()->MarkSurroundingBoundsDirty();
+	}
+}
+
 void CSprite::SetScale( float scale, float time )
 {
-	m_flSpriteScale		= scale;	//Take our current position as our new starting position
+//	m_flSpriteScale		= scale;	//Take our current position as our new starting position
 	m_flScaleTime		= time;
+	SetSpriteScale( scale );
 }
 
 

@@ -4365,6 +4365,7 @@ void SV_SendReconnect (void)
 void SV_ActivateServer()
 {
 	int i;
+//	char szExternalIP[ 32 ];
 
 	// Activate the DLL server code
 	serverGameDLL->ServerActivate( sv.edicts, sv.num_edicts, svs.maxclients );
@@ -4390,6 +4391,10 @@ void SV_ActivateServer()
 	if (svs.maxclients > 1)
 	{
 		Con_DPrintf ("%i player server started\n", svs.maxclients);
+
+	//	strcpy( szExternalIP, "127.0.0.1" );
+	//	NET_GetExternalIP( szExternalIP );
+		Con_DPrintf ("\tYour IP address is: %s\n", master->GetExternalIPAddress());
 	}
 	else
 	{
