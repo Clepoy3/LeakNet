@@ -812,7 +812,8 @@ void CBaseEntity::DetachEdict( void )
 
 void CBaseEntity::SetClassname( const char *className )
 {
-	m_iClassname = MAKE_STRING( className );
+//	m_iClassname = MAKE_STRING( className ); // VXP: Commented
+	m_iClassname = AllocPooledString( className ); // VXP: Should we use this to prevent failing at GetClassname sometimes in client physics friction code?
 
 	if ( pev )
 	{
@@ -871,7 +872,7 @@ void CBaseEntity::AddTimedOverlay( const char *msg, int endTime )
 //-----------------------------------------------------------------------------
 void CBaseEntity::DrawBBoxOverlay()
 {
-	if (pev)
+	if (edict())
 	{
 		NDebugOverlay::EntityBounds(this, 255, 100, 0, 0 ,0);
 	}
@@ -889,7 +890,7 @@ void CBaseEntity::DrawAbsBoxOverlay()
 		green = 120;
 	}
 
-	if (pev)
+	if (edict())
 	{
 		// Bounding boxes are axially aligned, so ignore angles
 		Vector center = 0.5f * (GetAbsMins() + GetAbsMaxs());
@@ -910,7 +911,7 @@ void CBaseEntity::DrawRBoxOverlay()
 //-----------------------------------------------------------------------------
 void CBaseEntity::SendDebugPivotOverlay( void )
 {
-	if (pev)
+	if (edict())
 	{
 		Vector xvec;
 		Vector yvec;
@@ -1056,7 +1057,7 @@ void CBaseEntity::SetName( string_t newName )
 }
 
 
-void CBaseEntity::SetParent( string_t newParent, CBaseEntity *pActivator )
+void CBaseEntity::SetParent( string_t newParent, CBaseEntity *pActivator, int iAttachment )
 {
 	// find and notify the new parent
 	CBaseEntity *pParent = gEntList.FindEntityByName( NULL, newParent, pActivator );
@@ -1073,7 +1074,7 @@ void CBaseEntity::SetParent( string_t newParent, CBaseEntity *pActivator )
 		{
 			Msg( "Entity %s(%s) has ambigious parent %s\n", STRING(m_iClassname), GetDebugName(), STRING(newParent) );
 		}
-		SetParent( pParent );
+		SetParent( pParent, iAttachment );
 	}
 }
 
@@ -1144,6 +1145,15 @@ void CBaseEntity::SetParent( const CBaseEntity *pParentEntity, int iAttachment )
 		SetLocalAngles( angles );
 		UTIL_SetOrigin( this, localOrigin );
 	}
+	if ( VPhysicsGetObject() )
+	{
+		if ( VPhysicsGetObject()->IsStatic())
+		{
+			VPhysicsDestroyObject();
+			VPhysicsInitShadow(false, false);
+		}
+	}
+	Relink(); // VXP: Should I do this also to parent?
 }
 
 void CBaseEntity::Activate( void )
@@ -2534,6 +2544,7 @@ void CBaseEntity::OnSave()
 //-----------------------------------------------------------------------------
 void CBaseEntity::OnRestore()
 {
+	// VXP: TODO: Source 2007 has code for re-parenting here
 }
 
 
@@ -3294,6 +3305,12 @@ void CBaseEntity::InputKill( inputdata_t &inputdata )
 //------------------------------------------------------------------------------
 void CBaseEntity::InputSetParent( inputdata_t &inputdata )
 {
+	// If we had a parent attachment, clear it, because it's no longer valid.
+	if ( m_iParentAttachment )
+	{
+		m_iParentAttachment = 0;
+	}
+
 	SetParent( inputdata.value.StringID(), inputdata.pActivator );
 }
 

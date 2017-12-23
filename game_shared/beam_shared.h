@@ -20,6 +20,7 @@
 #include "beam_flags.h"
 
 #define MAX_BEAM_WIDTH			25.5f
+//#define MAX_BEAM_WIDTH			102.3f // VXP
 #define MAX_BEAM_SCROLLSPEED	100.0f
 #define MAX_BEAM_NOISEAMPLITUDE		64
 

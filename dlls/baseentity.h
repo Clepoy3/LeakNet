@@ -449,11 +449,12 @@ public:
 	CBaseEntity *NextMovePeer( void );
 
 	void		SetName( string_t newTarget );
-	void		SetParent( string_t newParent, CBaseEntity *pActivator );
+	void		SetParent( string_t newParent, CBaseEntity *pActivator, int iAttachment = -1 );
 	
 	// Set the movement parent. Your local origin and angles will become relative to this parent.
 	// If iAttachment is a valid attachment on the parent, then your local origin and angles 
-	// are relative to the attachment on this entity.
+	// are relative to the attachment on this entity. If iAttachment == -1, it'll preserve the
+	// current m_iParentAttachment.
 	void		SetParent( const CBaseEntity* pNewParent, int iAttachment = 0 );
 	CBaseEntity* GetParent();
 	int			GetParentAttachment(); // VXP

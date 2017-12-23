@@ -397,8 +397,7 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 	//	gpGlobals->tickcount,
 	//	commands_acknowledged - 1 );
 
-//	m_nServerCommandsAcknowledged = commands_acknowledged;
-	m_nServerCommandsAcknowledged += commands_acknowledged;
+	m_nServerCommandsAcknowledged = commands_acknowledged;
 	m_bPreviousAckHadErrors = false;
 
 	bool entityDumped = false;
@@ -434,8 +433,7 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 
 			if ( ent->GetPredictable() )
 			{
-			//	if ( ent->PostNetworkDataReceived( commands_acknowledged ) )
-				if ( ent->PostNetworkDataReceived( m_nServerCommandsAcknowledged ) )
+				if ( ent->PostNetworkDataReceived( commands_acknowledged ) )
 				{
 					m_bPreviousAckHadErrors = true;
 				}
@@ -485,8 +483,7 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 				ShouldDumpEntity( ent ) )
 			{
 				entityDumped = true;
-			//	dump->DumpEntity( ent, commands_acknowledged );
-				dump->DumpEntity( ent, m_nServerCommandsAcknowledged );
+				dump->DumpEntity( ent, commands_acknowledged );
 			}
 		}
 
@@ -519,8 +516,7 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 
 		if ( error_check && cl_showerror.GetBool() )
 		{
-		//	CheckError( commands_acknowledged );
-			CheckError( m_nServerCommandsAcknowledged );
+			CheckError( commands_acknowledged );
 		}
 	}
 
@@ -534,8 +530,7 @@ void CPrediction::PostNetworkDataReceived( int commands_acknowledged )
 			C_BaseEntity *ent = ClientEntityList().GetBaseEntity( dumpentindex );
 			if ( ent )
 			{
-			//	dump->DumpEntity( ent, commands_acknowledged );
-				dump->DumpEntity( ent, m_nServerCommandsAcknowledged );
+				dump->DumpEntity( ent, commands_acknowledged );
 				entityDumped = true;
 			}
 		}
@@ -1347,6 +1342,29 @@ int CPrediction::ComputeFirstCommandToExecute( bool received_new_world_update, i
 			//	gpGlobals->tickcount,
 			//	skipahead,
 			//	m_nCommandsPredicted - 1 );
+		}
+		else
+		{
+			C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+			
+			// If an entity gets a prediction error, then we want to clear out its interpolated variables
+			// so we don't mix different samples at the same timestamps. We subtract 1 tick interval here because
+			// if we don't, we'll have 3 interpolation entries with the same timestamp as this predicted
+			// frame, so we won't be able to interpolate (which leads to jerky movement in the player when
+			// ANY entity like your gun gets a prediction error).
+			float flPrev = gpGlobals->curtime;
+			gpGlobals->curtime = pLocalPlayer->GetTimeBase() - TICK_RATE;
+			
+			for ( int i = 0; i < predictables->GetPredictableCount(); i++ )
+			{
+				C_BaseEntity *entity = predictables->GetPredictable( i );
+				if ( entity )
+				{
+					entity->ResetLatched();
+				}
+			}
+
+			gpGlobals->curtime = flPrev;
 		}
 	}
 

@@ -422,6 +422,14 @@ const CViewSetup *CViewRender::GetViewSetup( void ) const
 void CViewRender::AddVisOrigin( const Vector& origin )
 {
 	m_bOverrideVisOrigin = true;
+
+	// Don't allow them to write past array length
+	AssertMsg( m_nNumVisOrigins < MAX_VIS_LEAVES, "Added more origins than will fit in the array!" );
+
+	// If the vis origin count is greater than the size of our array, just fail to add this origin
+	if ( m_nNumVisOrigins >= MAX_VIS_LEAVES )
+		return;
+
 	m_rgVisOrigins[ m_nNumVisOrigins++ ] = origin;
 }
 
@@ -538,15 +546,15 @@ void CViewRender::SetUpView()
 	// Remember the origin, not reflected on a water plane.
 	m_View.m_vUnreflectedOrigin = m_View.origin;
 	
-	g_vecRenderOrigin = m_View.origin;
-	g_vecRenderAngles = m_View.angles;
-
 	// Compute the world->main camera transform
 	ComputeCameraVariables( m_View.origin, m_View.angles, 
 		&g_vecVForward, &g_vecVRight, &g_vecVUp, &g_matCamInverse );
 
 	// set up the hearing origin...
 	engine->SetHearingOrigin( m_View.origin, m_View.angles );
+
+	g_vecRenderOrigin = m_View.origin;
+	g_vecRenderAngles = m_View.angles;
 
 	s_TestOrigin = m_View.origin;
 	s_TestAngles = m_View.angles;

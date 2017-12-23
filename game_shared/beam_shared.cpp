@@ -123,8 +123,13 @@ BEGIN_NETWORK_TABLE_NOBASE( CBeam, DT_Beam )
 	),
 	SendPropInt		(SENDINFO(m_nHaloIndex),	16, SPROP_UNSIGNED ),
 	SendPropFloat	(SENDINFO(m_fHaloScale),	0,	SPROP_NOSCALE ),
+
+	// VXP
 	SendPropFloat	(SENDINFO(m_fWidth),		8,	SPROP_ROUNDUP,	0.0f, MAX_BEAM_WIDTH ),
 	SendPropFloat	(SENDINFO(m_fEndWidth),		8,	SPROP_ROUNDUP,	0.0f, MAX_BEAM_WIDTH ),
+//	SendPropFloat	(SENDINFO(m_fWidth),		10,	SPROP_ROUNDUP,	0.0f, MAX_BEAM_WIDTH ),
+//	SendPropFloat	(SENDINFO(m_fEndWidth),		10,	SPROP_ROUNDUP,	0.0f, MAX_BEAM_WIDTH ),
+
 	SendPropFloat	(SENDINFO(m_fFadeLength),	0,	SPROP_NOSCALE ),
 	SendPropFloat	(SENDINFO(m_fAmplitude),	8,	SPROP_ROUNDDOWN,	0.0f, MAX_BEAM_NOISEAMPLITUDE ),
 	SendPropFloat	(SENDINFO(m_fStartFrame),	8,	SPROP_ROUNDDOWN,	0.0f,   256.0f),

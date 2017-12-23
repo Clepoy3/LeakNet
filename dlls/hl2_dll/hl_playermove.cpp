@@ -46,7 +46,7 @@ void CHLPlayerMove::SetupMove( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper 
 	BaseClass::SetupMove( player, ucmd, pHelper, move );
 
 	IServerVehicle *pVehicle = player->GetVehicle();
-	if (pVehicle)
+	if (pVehicle && gpGlobals->frametime != 0)
 	{
 		pVehicle->SetupMove( player, ucmd, pHelper, move ); 
 	}
@@ -58,7 +58,7 @@ void CHLPlayerMove::FinishMove( CBasePlayer *player, CUserCmd *ucmd, CMoveData *
 	// Call the default FinishMove code.
 	BaseClass::FinishMove( player, ucmd, move );
 	IServerVehicle *pVehicle = player->GetVehicle();
-	if (pVehicle)
+	if (pVehicle && gpGlobals->frametime != 0)
 	{
 		pVehicle->FinishMove( player, ucmd, move );
 	}

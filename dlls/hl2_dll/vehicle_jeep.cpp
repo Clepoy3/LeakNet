@@ -325,6 +325,8 @@ Vector CPropJeep::BodyTarget( const Vector &posSrc, bool bNoisy )
 //-----------------------------------------------------------------------------
 void CPropJeep::AimGunAt( Vector *endPos, float flInterval )
 {
+	// VXP: TODO?: In Source 2007 code there's interesting part here
+
 	matrix3x4_t gunMatrix;
 	GetAttachment( LookupAttachment("gun_ref"), gunMatrix );
 
@@ -446,11 +448,13 @@ bool CPropJeep::CheckWater( void )
 			continue;
 
 		// Check to see if we hit water.
-		pWheel->GetContactPoint( &m_WaterData.m_vecWheelContactPoints[iWheel], NULL );
-		m_WaterData.m_bWheelInWater[iWheel] = ( UTIL_PointContents( m_WaterData.m_vecWheelContactPoints[iWheel] ) & MASK_WATER ) ? true : false;
-		if ( m_WaterData.m_bWheelInWater[iWheel] )
+		if ( pWheel->GetContactPoint( &m_WaterData.m_vecWheelContactPoints[iWheel], NULL ) )
 		{
-			bInWater = true;
+			m_WaterData.m_bWheelInWater[iWheel] = ( UTIL_PointContents( m_WaterData.m_vecWheelContactPoints[iWheel] ) & MASK_WATER ) ? true : false;
+			if ( m_WaterData.m_bWheelInWater[iWheel] )
+			{
+				bInWater = true;
+			}
 		}
 	}
 
@@ -894,7 +898,7 @@ void CPropJeep::ChargeCannon( void )
 		CPASAttenuationFilter filter( this );
 		m_sndCannonCharge = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "weapons/gauss/chargeloop.wav", ATTN_NORM );
 
-		Assert(m_sndCannonCharge!=NULL);
+		assert(m_sndCannonCharge!=NULL);
 		if ( m_sndCannonCharge != NULL )
 		{
 			(CSoundEnvelopeController::GetController()).Play( m_sndCannonCharge, 1.0f, 50 );
@@ -995,6 +999,7 @@ void CPropJeep::SetupMove( CBasePlayer *player, CUserCmd *ucmd, IMoveHelper *pHe
 			if ( PlayExitAnimation() )
 				return;
 			
+		//	DevMsg( "CPropJeep::SetupMove calling LeaveVehicle()\n" );
 			player->LeaveVehicle();
 			return;
 		}

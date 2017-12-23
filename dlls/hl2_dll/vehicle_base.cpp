@@ -246,7 +246,7 @@ BEGIN_DATADESC( CPropVehicleDriveable )
 	DEFINE_FIELD( CPropVehicleDriveable, m_vecGunCrosshair, FIELD_VECTOR ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_nScannerDisabledWeapons, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_nScannerDisabledVehicle, FIELD_BOOLEAN ),
-//	DEFINE_FIELD( CPropVehicleDriveable, m_savedViewOffset, FIELD_VECTOR ),
+	DEFINE_FIELD( CPropVehicleDriveable, m_savedViewOffset, FIELD_VECTOR ),
 
 	DEFINE_FIELD( CPropVehicleDriveable, m_bLocked, FIELD_BOOLEAN ),
 	DEFINE_FIELD( CPropVehicleDriveable, m_flMinimumSpeedToEnterExit, FIELD_FLOAT ),
@@ -681,6 +681,7 @@ bool CPropVehicleDriveable::CanEnterVehicle( CBaseEntity *pEntity )
 	if ( GetDriver() && GetDriver() != pEntity )
 		return false;
 
+	// Can't enter if we're upside-down
 	if ( IsOverturned() )
 		return false;
 

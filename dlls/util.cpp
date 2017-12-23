@@ -1735,13 +1735,14 @@ void EntityMatrix::InitFromEntity( CBaseEntity *pEntity, int iAttachment )
 	if ( iAttachment != 0 )
 	{
 		CBaseAnimating *pAnimating = pEntity->GetBaseAnimating();
-		if ( pAnimating )
+		if ( pAnimating && pAnimating->GetModelPtr() )
 		{
 			Vector vOrigin;
 			QAngle vAngles;
 			if ( pAnimating->GetAttachment( iAttachment, vOrigin, vAngles ) )
 			{
 				((VMatrix *)this)->SetupMatrixOrgAngles( vOrigin, vAngles );
+				return;
 			}
 		}
 	}

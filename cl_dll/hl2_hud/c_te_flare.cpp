@@ -11,7 +11,7 @@
 #include "dlight.h"
 #include "view.h"
 #include "clientsideeffects.h"
-#include "c_sprite.h" // VXP: For GlowSightDistance()
+//#include "c_sprite.h" // VXP: For GlowSightDistance()
 
 //Precahce the effects
 CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectFlares )
@@ -178,11 +178,10 @@ void C_Flare::Update( float timeDelta )
 		baseScale *= ( ( m_flTimeBurnOut - gpGlobals->curtime ) / 10.0f );
 	}
 
-	bool bVisible = (baseScale < 0.01f || visible == 0.0f) ? false : true;
 	//Clamp the scale if vanished
-	if ( !bVisible )
+	if ( baseScale < 0.01f || visible == 0.0f ) // VXP: Simplified version of Source 2007 code
 	{
-	//	baseScale = 0.0f;
+		baseScale = 0.0f;
 
 		if ( m_pParticle[0] != NULL )
 		{	
@@ -202,11 +201,9 @@ void C_Flare::Update( float timeDelta )
 			m_pParticle[1]->m_uchColor[2]	= 0;
 		}
 
-	//	return;
+		return;
 	}
 
-	if ( baseScale < 0.01f )
-		return;
 	//
 	// Dynamic light
 	//
@@ -276,11 +273,8 @@ void C_Flare::Update( float timeDelta )
 			m_pParticle[1]->m_uchColor[2] *= 0.25f;
 		}
 
-	//	return;
-	}
-
-	if ( !bVisible )
 		return;
+	}
 
 	//
 	// Outer glow

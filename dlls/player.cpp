@@ -1321,14 +1321,16 @@ void CBasePlayer::Event_Killed( const CTakeDamageInfo &info )
 		ApplyAbsVelocityImpulse( vecImpulse );
 	}
 
-	if ( FlashlightIsOn() )
-		FlashlightTurnOff(); // VXP: Maybe, should be here
-
 	// clear out the suit message cache so we don't keep chattering
 	SetSuitUpdate(NULL, false, 0);
 
 	// reset FOV
 	SetFOV( 0 );
+
+	if ( FlashlightIsOn() )
+	{
+		FlashlightTurnOff();
+	}
 
 	BaseClass::Event_Killed( info );
 }
@@ -2746,28 +2748,26 @@ void CBasePlayer::PhysicsSimulate( void )
 		// If we haven't dropped too many packets, then run some commands
 		if ( ctx->dropped_packets < 24 )                
 		{
-			int droppedcmds = ctx->dropped_packets;
-
-			if ( droppedcmds > numbackup )
+			if ( ctx->dropped_packets > numbackup )
 			{
 				// Msg( "lost %i cmds\n", dropped_packets - numbackup );
 			}
 
 			// Rerun the last valid command a bunch of times.
-			while ( droppedcmds > numbackup )           
+			while ( ctx->dropped_packets > numbackup )           
 			{
 				PlayerRunCommand( &m_LastCmd, MoveHelperServer()  );
 				// For this scenario packets, just use the start time over and over again
 				m_nTickBase = starttick;
-				droppedcmds--;
+				ctx->dropped_packets--;
 			}
 
 			// Now run the "history" commands if we still have dropped packets
-			while ( droppedcmds > 0 )
+			while ( ctx->dropped_packets > 0 )
 			{
-				int cmdnum = ctx->numcmds + droppedcmds - 1;
+				int cmdnum = ctx->numcmds + ctx->dropped_packets - 1;
 				PlayerRunCommand( &ctx->cmds[ cmdnum ], MoveHelperServer()  );
-				droppedcmds--;
+				ctx->dropped_packets--;
 			}
 		}
 
@@ -4331,19 +4331,25 @@ void CBasePlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExi
 	{
 		// VXP: FIXME: this might fail to find a safe exit point!!
 		pVehicle->GetPassengerExitPoint( nRole, &vNewPos, &qAngles );
+
+	//	DevMsg( "vNewPos: %f %f %f\n", 
+	//			vNewPos.x, vNewPos.y, vNewPos.z );
 	}
 	else
 	{
 		vNewPos = vecExitPoint;
 		qAngles = vecExitAngles;
 	}
+
+//	DevMsg( "vecExitPoint: %f %f %f\n", 
+//				vecExitPoint.x, vecExitPoint.y, vecExitPoint.z );
+
 	OnVehicleEnd( vNewPos );
 	SetAbsOrigin( vNewPos );
 	SetAbsAngles( qAngles );
 	// Clear out any leftover velocity
 	SetAbsVelocity( vec3_origin );
 
-	qAngles[ROLL] = 0;
 	SnapEyeAngles( qAngles );
 
 	m_Local.m_iHideHUD &= ~HIDEHUD_WEAPONS;
@@ -4351,10 +4357,16 @@ void CBasePlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExi
 
 	SetMoveType( MOVETYPE_WALK );
 	SetCollisionGroup( COLLISION_GROUP_PLAYER );
+
+	if ( VPhysicsGetObject() )
+	{
+		VPhysicsGetObject()->SetPosition( vNewPos, vec3_angle, true );
+	}
+
 	Relink();
 
-//	qAngles[ROLL] = 0;
-//	SnapEyeAngles( qAngles );
+	qAngles[ROLL] = 0;
+	SnapEyeAngles( qAngles );
 
 	m_hVehicle = NULL;
 	pVehicle->SetPassenger(nRole, NULL);

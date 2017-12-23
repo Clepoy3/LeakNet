@@ -144,8 +144,12 @@ CachedVertex_t* CCachedRenderData::CreateFlexVertex( int vertex )
 	Assert( m_pFirstFlexIndex );
 	Assert( m_pFirstFlexIndex[vertex].m_Tag != m_CurrentTag );
 
-	// Point the flex list to the new flexed vertex
 	Assert( m_FlexVertexCount < MAXSTUDIOVERTS );
+	if ( m_FlexVertexCount >= MAXSTUDIOVERTS )
+		return NULL;
+
+	// Point the flex list to the new flexed vertex
+	
 	m_pFirstFlexIndex[vertex].m_Tag = m_CurrentTag;
 	m_pFirstFlexIndex[vertex].m_VertexIndex = m_FlexVertexCount;
 

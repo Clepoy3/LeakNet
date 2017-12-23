@@ -147,7 +147,7 @@ bool CGameMovement::IsWet() const
 //	return ((player->pev->flags & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->time);
 //	return ((player->GetFlags() & FL_INRAIN) != 0) || (m_WetTime >= gpGlobals->frametime);
 //	return (player->GetFlags() & FL_INRAIN) || (m_WetTime >= gpGlobals->frametime);
-	return (player->GetFlags() & FL_INRAIN) || (m_WetTime >= engine->Time());
+	return (player->GetFlags() & FL_INRAIN) || (m_WetTime >= engine->Time()); // VXP: FIXME: Not curtime?
 }
 
 //-----------------------------------------------------------------------------
@@ -912,10 +912,10 @@ void CGameMovement::CheckWaterJump( void )
 		UTIL_TraceLine( vecStart, vecEnd, MASK_PLAYERSOLID_BRUSHONLY, mv->m_nPlayerHandle.Get(), COLLISION_GROUP_NONE, &tr );
 		if ( tr.fraction == 1.0 )		// open at eye level
 		{
-			mv->m_vecVelocity[2] = 260;			// Push up
+			mv->m_vecVelocity[2] = 260.0f;			// Push up
 			mv->m_nOldButtons |= IN_JUMP;		// Don't jump again until released
 			player->AddFlag( FL_WATERJUMP );
-			player->m_flWaterJumpTime = 2000;	// Do this for 2 seconds
+			player->m_flWaterJumpTime = 2000.0f;	// Do this for 2 seconds
 		}
 	}
 }
@@ -1003,7 +1003,7 @@ void CGameMovement::WaterMove( void )
 	{
 		newspeed = speed - gpGlobals->frametime * speed * sv_friction.GetFloat() * m_surfaceFriction;
 
-		if (newspeed < 0)
+		if (newspeed < 0.0f)
 			newspeed = 0;
 		VectorScale (mv->m_vecVelocity, newspeed/speed, mv->m_vecVelocity);
 	}
@@ -1372,7 +1372,7 @@ void CGameMovement::WalkMove( void )
 	//
 	// Clamp to server defined max speed
 	//
-	if (wishspeed > mv->m_flMaxSpeed)
+	if ((wishspeed != 0.0f) && (wishspeed > mv->m_flMaxSpeed))
 	{
 		VectorScale (wishvel, mv->m_flMaxSpeed/wishspeed, wishvel);
 		wishspeed = mv->m_flMaxSpeed;
@@ -1725,7 +1725,7 @@ void CGameMovement::FullNoClipMove( void )
 	VectorMA( mv->m_vecOrigin, gpGlobals->frametime, mv->m_vecVelocity, mv->m_vecOrigin );
 
 	// Zero out velocity if in noaccel mode
-	if ( sv_noclipaccelerate.GetFloat() < 0.0 )
+	if ( sv_noclipaccelerate.GetFloat() < 0.0f )
 	{
 		mv->m_vecVelocity.Init();
 	}
@@ -2038,6 +2038,11 @@ int CGameMovement::TryPlayerMove( void )
 					break;
 				}
 				CrossProduct (planes[0], planes[1], dir);
+
+				// VXP
+			//	dir.NormalizeInPlace();
+				VectorNormalize( dir );
+
 				d = dir.Dot(mv->m_vecVelocity);
 				VectorScale (dir, d, mv->m_vecVelocity );
 			}
@@ -2375,12 +2380,11 @@ int CGameMovement::ClipVelocity( Vector& in, Vector& normal, Vector& out, float 
 		change = normal[i]*backoff;
 		out[i] = in[i] - change; 
 		// If out velocity is too small, zero it out.
-		// VXP: Commented
-	//	if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
-	//		out[i] = 0;
+		if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
+			out[i] = 0;
 	}
 	
-//#if 0 // VXP
+#if 0
 	// slight adjustment - hopefully to adjust for displacement surfaces
 	float adjust = DotProduct( out, normal );
 	if( adjust < 0.0f )
@@ -2389,7 +2393,7 @@ int CGameMovement::ClipVelocity( Vector& in, Vector& normal, Vector& out, float 
 		out -= ( normal * adjust );
 //		Msg( "Adjustment = %lf\n", adjust );
 	}
-//#endif
+#endif
 
 	// Return blocking flags.
 	return blocked;
@@ -2448,7 +2452,8 @@ void CreateStuckTable( void )
 
 	firsttime = 0;
 
-	memset(rgv3tStuckTable, 0, 54 * sizeof(Vector));
+//	memset(rgv3tStuckTable, 0, 54 * sizeof(Vector));
+	memset(rgv3tStuckTable, 0, sizeof(rgv3tStuckTable)); // VXP
 
 	idx = 0;
 	// Little Moves.

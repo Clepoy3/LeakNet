@@ -53,8 +53,15 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CTEBaseBeam, DT_BaseBeam )
 	SendPropInt( SENDINFO(m_nStartFrame), 8, SPROP_UNSIGNED ),
 	SendPropInt( SENDINFO(m_nFrameRate), 8, SPROP_UNSIGNED ),
 	SendPropFloat( SENDINFO(m_fLife), 8, 0, 0.0, 25.6 ),
+
+	// VXP: Fix for
+	// "DataTable warning: [unknown]: Out-of-range value (128.000000) in SendPropFloat 'm_fWidth'/'m_fEndWidth', clamping."
+	// VXP: FIXME: Undone! Maybe, later I will need to check this
 	SendPropFloat( SENDINFO(m_fWidth), 8, 0, 0.0, 64.0 ),
 	SendPropFloat( SENDINFO(m_fEndWidth), 8, 0, 0.0, 64.0 ),
+//	SendPropFloat( SENDINFO(m_fWidth), 10, 0, 0.0, 128.0 ),
+//	SendPropFloat( SENDINFO(m_fEndWidth), 10, 0, 0.0, 128.0 ),
+
 	SendPropInt( SENDINFO(m_nFadeLength), 8, SPROP_UNSIGNED ),
 	SendPropFloat( SENDINFO(m_fAmplitude), 8, 0, 0.0, 64.0 ),
 	SendPropInt( SENDINFO(m_nSpeed), 8, SPROP_UNSIGNED ),

@@ -523,20 +523,20 @@ CBaseEntity *CBasePlayer::FindUseEntity()
 		if ( !pObject )
 			continue;
 
-		if ( IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
-		{
-			// see if it's more roughly in front of the player than previous guess
-			Vector point;
-			CalcClosestPointOnAABB( pObject->GetAbsMins(), pObject->GetAbsMaxs(), searchCenter, point );
+		if ( !IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
+			continue;
 
-			Vector dir = point - searchCenter;
-			VectorNormalize(dir);
-			float dot = DotProduct( dir, forward );
-			if ( dot > nearestDot )
-			{
-				pNearest = pObject;
-				nearestDot = dot;
-			}
+		// see if it's more roughly in front of the player than previous guess
+		Vector point;
+		CalcClosestPointOnAABB( pObject->GetAbsMins(), pObject->GetAbsMaxs(), searchCenter, point );
+
+		Vector dir = point - searchCenter;
+		VectorNormalize(dir);
+		float dot = DotProduct( dir, forward );
+		if ( dot > nearestDot )
+		{
+			pNearest = pObject;
+			nearestDot = dot;
 		}
 	}
 

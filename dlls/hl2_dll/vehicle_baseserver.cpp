@@ -542,20 +542,19 @@ int CBaseServerVehicle::GetExitAnimToUse( void )
 	int iCount = m_ExitAnimations.Count();
 	for ( int i = 0; i < iCount; i++ )
 	{
-		if ( m_ExitAnimations[i].bUpright == bUpright )
-		{
-			trace_t tr;
-			Vector vehicleExitOrigin;
-			QAngle vehicleExitAngles;
+		if ( m_ExitAnimations[i].bUpright != bUpright )
+			continue;
+		trace_t tr;
+		Vector vehicleExitOrigin;
+		QAngle vehicleExitAngles;
 
-			// Ensure the endpoint is clear
-			pAnimating->GetAttachment( m_ExitAnimations[i].iAttachment, vehicleExitOrigin, vehicleExitAngles );
-  			UTIL_TraceHull( m_pVehicle->GetAbsOrigin(), vehicleExitOrigin, VEC_HULL_MIN, VEC_HULL_MAX, MASK_SOLID, m_pVehicle, COLLISION_GROUP_NONE, &tr );
-		  	if ( tr.fraction == 1.0 )
-			{
-				m_iCurrentExitAnim = i;
-				return pAnimating->LookupSequence( m_ExitAnimations[i].szAnimName );
-			}
+		// Ensure the endpoint is clear
+		pAnimating->GetAttachment( m_ExitAnimations[i].iAttachment, vehicleExitOrigin, vehicleExitAngles );
+		UTIL_TraceHull( m_pVehicle->GetAbsOrigin(), vehicleExitOrigin, VEC_HULL_MIN, VEC_HULL_MAX, MASK_SOLID, m_pVehicle, COLLISION_GROUP_NONE, &tr );
+		if ( tr.fraction == 1.0 )
+		{
+			m_iCurrentExitAnim = i;
+			return pAnimating->LookupSequence( m_ExitAnimations[i].szAnimName );
 		}
 	}
 
@@ -568,6 +567,15 @@ int CBaseServerVehicle::GetExitAnimToUse( void )
 //-----------------------------------------------------------------------------
 void CBaseServerVehicle::HandleEntryExitFinish( bool bExitAnimOn, bool bResetAnim )
 {
+	// Parse the vehicle animations. This is needed because they may have 
+	// saved, and loaded during exit anim, which would clear the exit anim.
+	if ( !m_bParsedAnimations )
+	{
+		// Load the entry/exit animations from the vehicle
+		ParseEntryExitAnims();
+		m_bParsedAnimations = true;
+	}
+
 	// Figure out which entrypoint hitbox the player is in
 	CBaseAnimating *pAnimating = dynamic_cast<CBaseAnimating *>(m_pVehicle);
 	if ( !pAnimating )
@@ -585,14 +593,26 @@ void CBaseServerVehicle::HandleEntryExitFinish( bool bExitAnimOn, bool bResetAni
 			// VXP: Fix for fake-digger - when exitting vehicle, the game crashes
 			if ( m_iCurrentExitAnim >= 0 && m_iCurrentExitAnim < m_ExitAnimations.Count() )
 			{
+			//	DevMsg( "Using exit animation position\n" );
 				pAnimating->GetAttachment( m_ExitAnimations[m_iCurrentExitAnim].szAnimName, vecEyes, vecEyeAng );
 			}
 			else
 			{
+			//	DevMsg( "Using default vehicle driver eyes position\n" );
 				pAnimating->GetAttachment( "vehicle_driver_eyes", vecEyes, vecEyeAng );
 			}
 			vecEyeAng.x = 0;
 			vecEyeAng.z = 0;
+
+			// VXP: HACK HACK
+		//	vecEyes -= VEC_VIEW;
+		//	vecEyes.z += 10.0f;
+			trace_t tr;
+			UTIL_TraceLine( vecEyes, vecEyes + Vector( 0, 0, -1 ) * 512, MASK_ALL, (CBaseEntity *)this, COLLISION_GROUP_NONE, &tr );
+			vecEyes = tr.endpos;
+
+
+		//	DevMsg( "CBaseServerVehicle::HandleEntryExitFinish calling LeaveVehicle()\n" );
 			pPlayer->LeaveVehicle( vecEyes, vecEyeAng );
 		}
 	}
@@ -682,6 +702,7 @@ void CBaseServerVehicle::ItemPostFrame( CBasePlayer *player )
 				return;
 
 			// Couldn't find an animation, so exit immediately
+		//	DevMsg( "CBaseServerVehicle::ItemPostFrame calling LeaveVehicle()\n" );
 			player->LeaveVehicle();
 			return;
 		}

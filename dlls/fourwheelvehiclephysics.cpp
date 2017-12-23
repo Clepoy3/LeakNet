@@ -415,14 +415,14 @@ bool CFourWheelVehiclePhysics::Initialize( const char *pVehicleScript, unsigned 
 	m_flMaxSpeed = vehicle.engine.maxSpeed;
 
 	IPhysicsObject *pBody = m_pOuter->VPhysicsInitNormal( SOLID_VPHYSICS, 0, false, &solid );
-	PhysSetGameFlags( pBody, FVPHYSICS_NO_SELF_COLLISIONS | FVPHYSICS_MULTIOBJECT_ENTITY ); // VXP: Was after CreateVehicleController
+//	PhysSetGameFlags( pBody, FVPHYSICS_NO_SELF_COLLISIONS | FVPHYSICS_MULTIOBJECT_ENTITY ); // VXP: Was after CreateVehicleController
 	m_pVehicle = physenv->CreateVehicleController( pBody, vehicle, nVehicleType, physgametrace );
-//	PhysSetGameFlags( pBody, FVPHYSICS_MULTIOBJECT_ENTITY );
+	PhysSetGameFlags( pBody, FVPHYSICS_MULTIOBJECT_ENTITY );
 	m_wheelCount = m_pVehicle->GetWheelCount();
 	for ( int i = 0; i < m_wheelCount; i++ )
 	{
 		m_pWheels[i] = m_pVehicle->GetWheel( i );
-	//	PhysSetGameFlags( m_pWheels[i], FVPHYSICS_MULTIOBJECT_ENTITY );
+		PhysSetGameFlags( m_pWheels[i], FVPHYSICS_MULTIOBJECT_ENTITY );
 	}
 	return true;
 }
@@ -983,7 +983,7 @@ void CFourWheelVehiclePhysics::SteeringTurn( float carSpeed, const vehicleparams
 	{		
 		// TODO: change the log function to an approx. 
 		m_nTurnLeftCount = clamp( m_nTurnLeftCount, 2, 30 );
-		flSteeringRate *= log( m_nTurnLeftCount );
+		flSteeringRate *= log( (float) m_nTurnLeftCount );
 		flSteeringRate *= gpGlobals->frametime;
 
 		SetSteering( -1, flSteeringRate );
@@ -995,7 +995,7 @@ void CFourWheelVehiclePhysics::SteeringTurn( float carSpeed, const vehicleparams
 	{
 		// TODO: change the log function to an approx. 
 		m_nTurnRightCount = clamp( m_nTurnRightCount, 2, 30 );
-		flSteeringRate *= log( m_nTurnRightCount );
+		flSteeringRate *= log( (float) m_nTurnRightCount );
 		flSteeringRate *= gpGlobals->frametime;
 
 		SetSteering( 1, flSteeringRate );

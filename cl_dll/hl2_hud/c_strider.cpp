@@ -394,7 +394,7 @@ void Strider_DrawSprite( const Vector &vecOrigin, float size, const color32 &col
 {
 	if ( glow )
 	{
-		if ( GlowSightDistance( vecOrigin ) <= 0 )
+		if ( GlowSightDistance( vecOrigin, true ) <= 0 )
 			return;
 	}
 

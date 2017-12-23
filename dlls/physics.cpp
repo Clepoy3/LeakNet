@@ -667,16 +667,16 @@ void CCollisionEvent::FluidStartTouch( IPhysicsObject *pObject, IPhysicsFluidCon
 		// normal points out of the surface, we want the direction that points in
 		float dragScale = pFluid->GetDensity() * physenv->GetSimulationTimestep();
 		normal = -normal;
-		float linearScale = 0.5 * DotProduct( unitVel, normal ) * pObject->CalculateLinearDrag( normal ) * dragScale;
-		linearScale = clamp( linearScale, 0, 1 );
+		float linearScale = 0.5f * DotProduct( unitVel, normal ) * pObject->CalculateLinearDrag( normal ) * dragScale;
+		linearScale = clamp( linearScale, 0.0f, 1.0f );
 		vel *= -linearScale;
 
 		// UNDONE: Figure out how much of the surface area has crossed the water surface and scale angScale by that
 		// For now assume 25%
 		Vector rotAxis = angVel;
 		VectorNormalize(rotAxis);
-		float angScale = 0.25 * pObject->CalculateAngularDrag( angVel ) * dragScale;
-		angScale = clamp( angScale, 0, 1 );
+		float angScale = 0.25f * pObject->CalculateAngularDrag( angVel ) * dragScale;
+		angScale = clamp( angScale, 0.0f, 1.0f );
 		angVel *= -angScale;
 		
 		// compute the splash before we modify the velocity

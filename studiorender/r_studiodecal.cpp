@@ -70,6 +70,9 @@ struct DecalClipState_t
 //-----------------------------------------------------------------------------
 StudioDecalHandle_t CStudioRender::CreateDecalList( studiohwdata_t *pHardwareData )
 {
+	if ( !pHardwareData || pHardwareData->m_NumLODs <= 0 )
+		return STUDIORENDER_DECAL_INVALID;
+
 	StudioDecalHandle_t handle = m_DecalList.AddToTail();
 	m_DecalList[handle].m_pHardwareData = pHardwareData;
 	m_DecalList[handle].m_pLod = new DecalLod_t[pHardwareData->m_NumLODs];
@@ -84,27 +87,27 @@ StudioDecalHandle_t CStudioRender::CreateDecalList( studiohwdata_t *pHardwareDat
 
 void CStudioRender::DestroyDecalList( StudioDecalHandle_t handle )
 {
-	if (handle != STUDIORENDER_DECAL_INVALID)
+	if (handle == STUDIORENDER_DECAL_INVALID)
+		return;
+
+	// Clean up 
+	for (int i = m_DecalList[handle].m_pHardwareData->m_NumLODs; --i >= 0; )
 	{
-		// Clean up 
-		for (int i = m_DecalList[handle].m_pHardwareData->m_NumLODs; --i >= 0; )
+		// Blat out all geometry associated with all materials
+		unsigned short mat = m_DecalList[handle].m_pLod[i].m_FirstMaterial;
+		unsigned short next;
+		while (mat != m_DecalMaterial.InvalidIndex())
 		{
-			// Blat out all geometry associated with all materials
-			unsigned short mat = m_DecalList[handle].m_pLod[i].m_FirstMaterial;
-			unsigned short next;
-			while (mat != m_DecalMaterial.InvalidIndex())
-			{
-				next = m_DecalMaterial.Next(mat);
+			next = m_DecalMaterial.Next(mat);
 
-				m_DecalMaterial.Remove(mat);
+			m_DecalMaterial.Remove(mat);
 
-				mat = next;
-			}
+			mat = next;
 		}
-
-		delete[] m_DecalList[handle].m_pLod;
-		m_DecalList.Remove( handle );
 	}
+
+	delete[] m_DecalList[handle].m_pLod;
+	m_DecalList.Remove( handle );
 }
 
 
