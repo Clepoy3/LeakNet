@@ -331,6 +331,7 @@ void MatrixAngles( const matrix3x4_t & matrix, float *angles ); // !!!!
 void VectorTransform (const float *in1, const matrix3x4_t & in2, float *out);
 void VectorITransform (const float *in1, const matrix3x4_t & in2, float *out);
 void VectorRotate( const float *in1, const matrix3x4_t & in2, float *out);
+void VectorRotate( const Vector &in1, const QAngle &in2, Vector &out ); // VXP
 void VectorIRotate( const float *in1, const matrix3x4_t & in2, float *out);
 
 QAngle TransformAnglesToLocalSpace( const QAngle &angles, matrix3x4_t &parentMatrix );
@@ -403,6 +404,10 @@ FORCEINLINE T Lerp( float flPercent, T const &A, T const &B )
 // YWB:  Specialization for interpolating euler angles via quaternions...
 template<> FORCEINLINE QAngle Lerp<QAngle>( float flPercent, const QAngle& q1, const QAngle& q2 )
 {
+	// VXP: Avoid precision errors
+	if ( q1 == q2 )
+		return q1;
+
 	Quaternion src, dest;
 
 	// Convert to quaternions
@@ -660,6 +665,7 @@ void BuildExponentTable( );
 inline float TexLightToLinear( int c, int exponent )
 {
 	extern float power2_n[256]; 
+//	extern ALIGN128 float power2_n[256]; // VXP: https://github.com/ValveSoftware/source-sdk-2013/pull/419
 	Assert( exponent >= -128 && exponent <= 127 );
 	return ( float )c * power2_n[exponent+128];
 }

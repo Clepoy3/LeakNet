@@ -1226,6 +1226,13 @@ void Sys_CreateFileAssociations( int count, FileAssociationInfo *list )
 #endif
 }
 
+void Sys_NoCrashDialog() // VXP
+{
+#if defined(_WIN32)
+	::SetErrorMode(SetErrorMode(SEM_NOGPFAULTERRORBOX) | SEM_NOGPFAULTERRORBOX);
+#endif
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

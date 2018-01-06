@@ -1883,6 +1883,12 @@ void Host_Init( void )
 	TRACEINIT( Key_Init(), Key_Shutdown() );
 #endif
 
+	if ( CommandLine()->FindParm( "-nocrashdialog" ) ) // VXP
+	{
+		// stop the various windows error message boxes from showing up (used by the auto-builder so it doesn't block on error) 
+		Sys_NoCrashDialog();
+	}
+
 	TRACEINIT( NET_Init(), NET_Shutdown() );     
 	
 	// Sequenced message stream layer.

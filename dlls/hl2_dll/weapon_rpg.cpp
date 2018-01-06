@@ -450,6 +450,10 @@ END_SEND_TABLE()
 LINK_ENTITY_TO_CLASS( weapon_rpg, CWeaponRPG );
 PRECACHE_WEAPON_REGISTER(weapon_rpg);
 
+// VXP
+LINK_ENTITY_TO_CLASS( weapon_ml, CWeaponRPG );
+PRECACHE_WEAPON_REGISTER(weapon_ml);
+
 acttable_t	CWeaponRPG::m_acttable[] = 
 {
 	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_ML, true },

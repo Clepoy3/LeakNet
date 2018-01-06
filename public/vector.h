@@ -626,9 +626,9 @@ inline void VectorLerp(const Vector& src1, const Vector& src2, vec_t t, Vector& 
 {
 	CHECK_VALID(src1);
 	CHECK_VALID(src2);
-	dest[0] = src1[0] + (src2[0] - src1[0]) * t;
-	dest[1] = src1[1] + (src2[1] - src1[1]) * t;
-	dest[2] = src1[2] + (src2[2] - src1[2]) * t;
+	dest.x = src1.x + (src2.x - src1.x) * t;
+	dest.y = src1.y + (src2.y - src1.y) * t;
+	dest.z = src1.z + (src2.z - src1.z) * t;
 }
 
 
@@ -666,6 +666,8 @@ inline void CrossProduct(Vector const& a, Vector const& b, Vector& result )
 {
 	CHECK_VALID(a);
 	CHECK_VALID(b);
+	Assert( &a != &result ); // VXP
+	Assert( &b != &result ); // VXP
 	result.x = a.y*b.z - a.z*b.y;
 	result.y = a.z*b.x - a.x*b.z;
 	result.z = a.x*b.y - a.y*b.x;

@@ -39,4 +39,7 @@ struct FileAssociationInfo
 
 void Sys_CreateFileAssociations( int count, FileAssociationInfo *list );
 
+// VXP: disables the system crash dialogs on windows, stub otherwise
+void Sys_NoCrashDialog();
+
 #endif			// SYS_H

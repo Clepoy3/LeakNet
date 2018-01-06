@@ -313,7 +313,11 @@ void CWeaponCGuard::UpdateLasers( void )
 
 	start += ( v_forward * 8.0f ) + ( v_right * 3.0f ) + ( v_up * -2.0f );
 
-	end = start + ( v_forward * MAX_TRACE_LENGTH );
+	end = start + ( v_forward * MAX_TRACE_LENGTH ); // VXP: Doesn't used anywhere down
+	// Vector vecDir;
+	// AngleVectors( pPlayer->EyeAngles(), &vecDir );
+	// VectorNormalize( vecDir );
+	// end = start + vecDir * MAX_TRACE_LENGTH;
 
 	float	angleOffset = ( 1.0f - ( m_flChargeTime - gpGlobals->curtime ) ) / 1.0f;
 	Vector	offset[4];
@@ -338,7 +342,8 @@ void CWeaponCGuard::UpdateLasers( void )
 		float hScale = ( offset[i][1] <= 0.0f ) ? 1.0f : -1.0f;
 		float vScale = ( offset[i][2] <= 0.0f ) ? 1.0f : -1.0f;
 
-		VectorAngles( v_forward, v_ang );
+	//	VectorAngles( v_forward, v_ang );
+		v_ang = pPlayer->EyeAngles();
 		v_ang[PITCH] = UTIL_AngleMod( v_ang[PITCH] + ( (1.0f-angleOffset) * 15.0f * vScale ) );
 		v_ang[YAW] = UTIL_AngleMod( v_ang[YAW] + ( (1.0f-angleOffset) * 15.0f * hScale ) );
 
@@ -351,6 +356,45 @@ void CWeaponCGuard::UpdateLasers( void )
 		
 		UTIL_Beam( ofs, tr.endpos, m_haloIndex, 0, 0, 2.0f, 0.1f, 4, 0, 1, 16, 255, 255, 255, 8, 100 );
 	}
+/*
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+	if ( pPlayer == NULL )
+		return;
+
+	Vector vecMuzzle;
+	QAngle vecAngle;
+	CBaseViewModel *pViewModel = pPlayer->GetViewModel();
+//	int iBIndex = pViewModel->LookupBone( "Muzzle" );
+//	pViewModel->GetBonePosition( iBIndex, vecMuzzle, vecAngle );
+	pViewModel->GetAttachment( pViewModel->LookupAttachment( "Muzzle" ), vecMuzzle, vecAngle );
+
+	// Get the position of the laser
+	Vector start = vecMuzzle;
+
+	float	angleOffset = ( 1.0f - ( m_flChargeTime - gpGlobals->curtime ) ) / 1.0f;
+
+	angleOffset *= 2.0f;
+	if ( angleOffset > 1.0f )
+		angleOffset = 1.0f;
+
+	for ( int i = 0; i < 4; i++ )
+	{
+		Vector	ofs = start;
+
+	//	VectorAngles( v_forward, v_ang );
+		QAngle v_ang = pPlayer->EyeAngles();
+
+		Vector v_dir;
+		AngleVectors( v_ang, &v_dir );
+
+		trace_t	tr;
+		UTIL_TraceLine( ofs, ofs + ( v_dir * MAX_TRACE_LENGTH ), MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
+
+		UTIL_Beam( ofs, tr.endpos, m_beamIndex, 0, 0, 2.0f, 0.1f, 2, 0, 1, 0, 255, 255, 255, 32, 100 );
+		
+		UTIL_Beam( ofs, tr.endpos, m_haloIndex, 0, 0, 2.0f, 0.1f, 4, 0, 1, 16, 255, 255, 255, 8, 100 );
+	}
+*/
 }
 
 //-----------------------------------------------------------------------------
@@ -474,13 +518,14 @@ void CWeaponCGuard::AddViewKick( void )
 	UTIL_ScreenFade( pPlayer, white, 0.1, 0, FFADE_IN  );
 
 	//Disorient the player
-	QAngle angles = pPlayer->GetLocalAngles();
+//	QAngle angles = pPlayer->GetLocalAngles();
+	QAngle angles = pPlayer->EyeAngles();
 
 	angles.x += random->RandomInt( -5, 5 );
 	angles.y += random->RandomInt( -8, 8 );
 	angles.z = 0.0f;
 
-	SetLocalAngles( angles );
+//	SetLocalAngles( angles ); // VXP: For what?
 
 	pPlayer->SnapEyeAngles( angles );
 	

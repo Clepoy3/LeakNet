@@ -2578,6 +2578,8 @@ float Studio_SetPoseParameter( const studiohdr_t *pStudioHdr, int iParameter, fl
 
 	mstudioposeparamdesc_t *pPoseParam = pStudioHdr->pPoseParameter( iParameter );
 
+	Assert( IsFinite( flValue ) );
+
 	if (pPoseParam->loop)
 	{
 		float wrap = (pPoseParam->start + pPoseParam->end) / 2.0 + pPoseParam->loop / 2.0;
@@ -2590,6 +2592,8 @@ float Studio_SetPoseParameter( const studiohdr_t *pStudioHdr, int iParameter, fl
 
 	if (ctlValue < 0) ctlValue = 0;
 	if (ctlValue > 1) ctlValue = 1;
+
+	Assert( IsFinite( ctlValue ) );
 
 	return ctlValue * (pPoseParam->end - pPoseParam->start) + pPoseParam->start;
 }

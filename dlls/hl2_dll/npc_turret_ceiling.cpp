@@ -20,6 +20,14 @@
 
 #include "iservervehicle.h"
 
+
+#define CEILING_TURRET_BROKEN_EYES // VXP: FIXME: Since ceiling_turret.mdl has rotated "eyes"...
+
+#ifdef CEILING_TURRET_BROKEN_EYES
+#include "studio.h"
+static bool g_ceilingTurretFixBrokenEyes;
+#endif
+
 //Debug visualization
 ConVar	g_debug_turret_ceiling( "g_debug_turret_ceiling", "0" );
 
@@ -142,6 +150,10 @@ protected:
 	void	SpinDown( void );
 	void	SetHeight( float height );
 
+	// VXP
+	void	RotateEyes( QAngle &vecMuzzleAng );
+	void	RotateEyes( matrix3x4_t &debugRotation );
+
 	bool	UpdateFacing( void );
 
 	int		m_iAmmoType;
@@ -219,6 +231,10 @@ CNPC_CeilingTurret::CNPC_CeilingTurret( void )
 	m_bEnabled			= false;
 
 	m_vecGoalAngles.Init();
+
+#ifdef CEILING_TURRET_BROKEN_EYES
+	g_ceilingTurretFixBrokenEyes = true;
+#endif
 }
 
 CNPC_CeilingTurret::~CNPC_CeilingTurret( void )
@@ -232,6 +248,13 @@ void CNPC_CeilingTurret::Precache( void )
 {
 	engine->PrecacheModel( CEILING_TURRET_MODEL );	
 	engine->PrecacheModel( CEILING_TURRET_GLOW_SPRITE );
+
+	// Activities
+	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_OPEN );
+	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_CLOSE );
+	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_CLOSED_IDLE );
+	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_OPEN_IDLE );
+	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_FIRE );
 
 	BaseClass::Precache();
 }
@@ -289,12 +312,16 @@ void CNPC_CeilingTurret::Spawn( void )
 	//Stagger our starting times
 	SetNextThink( gpGlobals->curtime + random->RandomFloat( 0.1f, 0.3f ) );
 
-	// Activities
-	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_OPEN );
-	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_CLOSE );
-	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_CLOSED_IDLE );
-	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_OPEN_IDLE );
-	ADD_CUSTOM_ACTIVITY( CNPC_CeilingTurret, ACT_CEILING_TURRET_FIRE );
+#ifdef CEILING_TURRET_BROKEN_EYES
+	studiohdr_t *pstudiohdr = GetModelPtr();
+//	DevMsg( "Ceiling turret's checksum is %li\n", pstudiohdr->checksum );
+
+	// b2d3c381 in hex
+	if ( pstudiohdr->checksum != -1294744703 ) // This is not old original model
+	{
+		g_ceilingTurretFixBrokenEyes = false; // Do not fix eyes on that model!
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -448,6 +475,40 @@ float CNPC_CeilingTurret::MaxYawSpeed( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+#ifdef CEILING_TURRET_BROKEN_EYES
+void CNPC_CeilingTurret::RotateEyes( QAngle &vecMuzzleAng )
+{
+	if ( !g_ceilingTurretFixBrokenEyes )
+		return;
+
+	matrix3x4_t tmpRotation, debugRotation;
+	AngleMatrix( QAngle( 0, 180, 90 ), tmpRotation ); // Copy fixed rotation to matrix
+	AngleMatrix( vecMuzzleAng, debugRotation ); // Copy "eyes" angles to matrix
+	ConcatTransforms( debugRotation, tmpRotation, debugRotation ); // Combine them
+	MatrixAngles( debugRotation, vecMuzzleAng ); // Convert to angles
+
+/*	// The same, but a little bit less code and a bit harder to understand too
+	matrix3x4_t debugRotation;
+	AngleMatrix( vecMuzzleAng, debugRotation );
+	RotateEyes( debugRotation );
+	MatrixAngles( debugRotation, vecMuzzleAng );
+*/
+}
+
+void CNPC_CeilingTurret::RotateEyes( matrix3x4_t &localToWorld )
+{
+	if ( !g_ceilingTurretFixBrokenEyes )
+		return;
+
+	matrix3x4_t tmpRotation;
+	AngleMatrix( QAngle( 0, 180, 90 ), tmpRotation ); // Copy fixed rotation to matrix
+	ConcatTransforms( localToWorld, tmpRotation, localToWorld ); // Combine them
+}
+#endif
+
+//-----------------------------------------------------------------------------
 // Purpose: Causes the turret to face its desired angles
 //-----------------------------------------------------------------------------
 bool CNPC_CeilingTurret::UpdateFacing( void )
@@ -456,6 +517,10 @@ bool CNPC_CeilingTurret::UpdateFacing( void )
 	matrix3x4_t localToWorld;
 	
 	GetAttachment( LookupAttachment( "eyes" ), localToWorld );
+
+#ifdef CEILING_TURRET_BROKEN_EYES
+	RotateEyes( localToWorld );
+#endif
 
 	Vector vecGoalDir;
 	AngleVectors( m_vecGoalAngles, &vecGoalDir );
@@ -469,6 +534,11 @@ bool CNPC_CeilingTurret::UpdateFacing( void )
 		QAngle	vecMuzzleAng;
 
 		GetAttachment( "eyes", vecMuzzle, vecMuzzleAng );
+
+#ifdef CEILING_TURRET_BROKEN_EYES
+		RotateEyes( vecMuzzleAng );
+#endif
+
 		AngleVectors( vecMuzzleAng, &vecMuzzleDir );
 
 		NDebugOverlay::Cross3D( vecMuzzle, -Vector(2,2,2), Vector(2,2,2), 255, 255, 0, false, 0.05 );
@@ -504,6 +574,8 @@ bool CNPC_CeilingTurret::UpdateFacing( void )
 	{
 		bMoved = true;
 	}
+
+	InvalidateBoneCache(); // VXP
 
 	return bMoved;
 }
@@ -584,7 +656,11 @@ void CNPC_CeilingTurret::ActiveThink( void )
 	
 	//Get our shot positions
 	Vector vecMid = EyePosition();
-	Vector vecMidEnemy = GetEnemy()->BodyTarget( vecMid );
+//	Vector vecMidEnemy = GetEnemy()->BodyTarget( vecMid );
+	Vector vecMidEnemy = GetEnemy()->GetAbsOrigin();
+
+	// VXP: Store off our last seen location
+	UpdateEnemyMemory( GetEnemy(), vecMidEnemy );
 
 	//Look for our current enemy
 	bool bEnemyVisible = FInViewCone( GetEnemy() ) && FVisible( GetEnemy() ) && GetEnemy()->IsAlive();
@@ -640,6 +716,11 @@ void CNPC_CeilingTurret::ActiveThink( void )
 	QAngle vecMuzzleAng;
 	
 	GetAttachment( "eyes", vecMuzzle, vecMuzzleAng );
+
+#ifdef CEILING_TURRET_BROKEN_EYES
+	RotateEyes( vecMuzzleAng );
+#endif
+
 	AngleVectors( vecMuzzleAng, &vecMuzzleDir );
 	
 	if ( m_flShotTime < gpGlobals->curtime )
@@ -693,7 +774,14 @@ void CNPC_CeilingTurret::SearchThink( void )
 	if ( GetEnemy() == NULL )
 	{
 		GetSenses()->Look( CEILING_TURRET_RANGE );
-		SetEnemy( BestEnemy() );
+	//	SetEnemy( BestEnemy() );
+
+		// VXP
+		CBaseEntity *pEnemy = BestEnemy();
+		if ( pEnemy )
+		{
+			SetEnemy( pEnemy );
+		}
 	}
 
 	//If we've found a target, spin up the barrel and start to attack

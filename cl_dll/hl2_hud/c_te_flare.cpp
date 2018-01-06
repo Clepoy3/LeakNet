@@ -11,7 +11,7 @@
 #include "dlight.h"
 #include "view.h"
 #include "clientsideeffects.h"
-//#include "c_sprite.h" // VXP: For GlowSightDistance()
+#include "c_sprite.h" // VXP: For GlowSightDistance()
 
 //Precahce the effects
 CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectFlares )

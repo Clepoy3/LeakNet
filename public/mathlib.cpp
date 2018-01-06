@@ -1098,10 +1098,49 @@ void MatrixAngles( const matrix3x4_t& matrix, RadianEuler &angles, Vector &posit
 
 void MatrixAngles( const matrix3x4_t &matrix, Quaternion &q, Vector &pos )
 {
+	// VXP: TODO: Test this!
+	float trace;
+	trace = matrix[0][0] + matrix[1][1] + matrix[2][2] + 1.0f;
+	if( trace > 1.0f + FLT_EPSILON ) 
+	{
+		q.x = ( matrix[2][1] - matrix[1][2] );
+		q.y = ( matrix[0][2] - matrix[2][0] );
+		q.z = ( matrix[1][0] - matrix[0][1] );
+		q.w = trace;
+	} 
+	else if ( matrix[0][0] > matrix[1][1] && matrix[0][0] > matrix[2][2] ) 
+	{
+		trace = 1.0f + matrix[0][0] - matrix[1][1] - matrix[2][2];
+		q.x = trace;
+		q.y = (matrix[1][0] + matrix[0][1] );
+		q.z = (matrix[0][2] + matrix[2][0] );
+		q.w = (matrix[2][1] - matrix[1][2] );
+	} 
+	else if (matrix[1][1] > matrix[2][2])
+	{
+		trace = 1.0f + matrix[1][1] - matrix[0][0] - matrix[2][2];
+		q.x = (matrix[0][1] + matrix[1][0] );
+		q.y = trace;
+		q.z = (matrix[2][1] + matrix[1][2] );
+		q.w = (matrix[0][2] - matrix[2][0] );
+	}
+	else
+	{
+		trace = 1.0f + matrix[2][2] - matrix[0][0] - matrix[1][1];
+		q.x = (matrix[0][2] + matrix[2][0] );
+		q.y = (matrix[2][1] + matrix[1][2] );
+		q.z = trace;
+		q.w = (matrix[1][0] - matrix[0][1] );
+	}
+
+	QuaternionNormalize( q );
+
+#if 0
 	// FIXME: make a version that does Matrix to Quaternion directly
 	RadianEuler ang;
 	MatrixAngles( matrix, ang );
 	AngleQuaternion( ang, q );
+#endif
 	MatrixGetColumn( matrix, 3, pos );
 }
 
@@ -1309,6 +1348,13 @@ void VectorRotate( const float *in1, const matrix3x4_t& in2, float *out )
 	out[0] = DotProduct( in1, in2[0] );
 	out[1] = DotProduct( in1, in2[1] );
 	out[2] = DotProduct( in1, in2[2] );
+}
+
+void VectorRotate( const Vector &in1, const QAngle &in2, Vector &out )
+{
+	matrix3x4_t matRotate;
+	AngleMatrix( in2, matRotate );
+	VectorRotate( in1, matRotate, out );
 }
 
 void VectorRotateSSE( const float *in1, const matrix3x4_t& in2, float *out1 )
@@ -1560,6 +1606,7 @@ void MatrixCopy( const matrix3x4_t& in, matrix3x4_t& out )
 	memcpy( out.Base(), in.Base(), sizeof( float ) * 3 * 4 );
 }
 
+// VXP: FIXME: Copy from Source 2007?
 void MatrixInvert( const matrix3x4_t& in, matrix3x4_t& out )
 {
 	Assert( s_bMathlibInitialized );
@@ -3070,7 +3117,8 @@ void VectorYawRotate( const Vector &in, float flYaw, Vector &out)
 	Assert( s_bMathlibInitialized );
 	if (&in == &out )
 	{
-		Vector tmp = in;
+		Vector tmp;
+		tmp = in;
 		VectorYawRotate( tmp, flYaw, out );
 		return;
 	}
@@ -3699,6 +3747,7 @@ void Catmull_Rom_Spline_Normalize(
 	Vector& output )
 {
 	// Normalize p2->p1 and p3->p4 to be the same length as p2->p3
+/*
 	float dt = (p3 - p2).Length();
 
 	Vector p1n = (p1 - p2);
@@ -3709,6 +3758,19 @@ void Catmull_Rom_Spline_Normalize(
 
 	p1n = p2 + p1n * dt;
 	p4n = p3 + p4n * dt;
+*/
+
+	float dt = p3.DistTo(p2);
+
+	Vector p1n, p4n;
+	VectorSubtract( p1, p2, p1n );
+	VectorSubtract( p4, p3, p4n );
+
+	VectorNormalize( p1n );
+	VectorNormalize( p4n );
+
+	VectorMA( p2, dt, p1n, p1n );
+	VectorMA( p3, dt, p4n, p4n );
 	
 	Catmull_Rom_Spline( p1n, p2, p3, p4n, t, output );
 }
@@ -4190,15 +4252,18 @@ float AngleDiff( float destAngle, float srcAngle )
 {
 	float delta;
 
-	delta = destAngle - srcAngle;
+//	delta = destAngle - srcAngle;
+	delta = fmodf(destAngle - srcAngle, 360.0f); // VXP
 	if ( destAngle > srcAngle )
 	{
-		while ( delta >= 180 )
+	//	while ( delta >= 180 )
+		if ( delta >= 180 )
 			delta -= 360;
 	}
 	else
 	{
-		while ( delta <= -180 )
+	//	while ( delta <= -180 )
+		if ( delta <= -180 )
 			delta += 360;
 	}
 	return delta;
@@ -4220,11 +4285,14 @@ float AngleDistance( float next, float cur )
 
 float AngleNormalize( float angle )
 {
-	while (angle > 180) 
+	angle = fmodf(angle, 360.0f); // VXP
+//	while (angle > 180) 
+	if (angle > 180) 
 	{
 		angle -= 360;
 	}
-	while (angle < -180)
+//	while (angle < -180)
+	if (angle < -180)
 	{
 		angle += 360;
 	}
