@@ -78,6 +78,7 @@ BEGIN_DATADESC( CHL2_Player )
 END_DATADESC()
 
 CHL2_Player::CHL2_Player()
+// VXP: TODO: : m_PlayerAnimState( this )
 {
 	m_nNumMissPositions	= 0;
 }
@@ -1325,10 +1326,14 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 	//Drop primary weapon
 	if( stricmp( cmd, "DropPrimary" ) == 0 )
 	{
-		if( GetActiveWeapon() )
+		CBaseCombatWeapon *weapon = GetActiveWeapon();
+		if( weapon )
 		{
 		//	Weapon_DropSlot( GetActiveWeapon()->GetSlot() );
-			Weapon_Drop( GetActiveWeapon(), NULL, NULL );
+			if ( !(Q_strcmp( weapon->GetName(), "weapon_brickbat" ) == 0) )
+			{
+				Weapon_Drop( GetActiveWeapon(), NULL, NULL );
+			}
 		}
 
 		return true;

@@ -666,6 +666,11 @@ void CFire::SpawnEffect( fireType_e type, float scale )
 			pEffect			= fireSmoke;
 			m_nFireType		= FIRE_NATURAL;
 			m_takedamage	= DAMAGE_YES;
+
+			if ( m_spawnflags & SF_FIRE_EMIT_SOUND ) // VXP
+			{
+				EmitSound( "Fire.Natural" );
+			}
 		}
 		break;
 

@@ -143,6 +143,7 @@ void CGrenade_Molotov::Detonate( void )
 	}
 
 	EmitSound( "Grenade_Molotov.Detonate");
+	EmitSound( "Grenade_Molotov.Flame");
 
 // Start some fires
 	int i;
@@ -182,7 +183,8 @@ void CGrenade_Molotov::Detonate( void )
 	//	Msg( "Scale for %f offset is: %f\n", offset, scale );
 		if( firetrace.fraction != 1.0 )
 		{
-			FireSystem_StartFire( firetrace.endpos, scale, growth, 30.0f, (SF_FIRE_START_ON|SF_FIRE_SMOKELESS|SF_FIRE_NO_GLOW), (CBaseEntity*) this, FIRE_NATURAL );
+		//	FireSystem_StartFire( firetrace.endpos, scale, growth, 30.0f, (SF_FIRE_START_ON|SF_FIRE_SMOKELESS|SF_FIRE_NO_GLOW), (CBaseEntity*) this, FIRE_NATURAL );
+			FireSystem_StartFire( firetrace.endpos, scale, growth, 30.0f, (SF_FIRE_START_ON|SF_FIRE_SMOKELESS|SF_FIRE_NO_GLOW|SF_FIRE_EMIT_SOUND), (CBaseEntity*) this, FIRE_NATURAL );
 		}
 	}
 // End Start some fires
@@ -265,5 +267,8 @@ void CGrenade_Molotov::Precache( void )
 	engine->PrecacheModel("models/weapons/w_molotov.mdl");
 
 	UTIL_PrecacheOther("_firesmoke");
+
+	PrecacheScriptSound( "Grenade_Molotov.Detonate" );
+	PrecacheScriptSound( "Grenade_Molotov.Flame" );
 }
 
