@@ -2747,7 +2747,11 @@ void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup
 			g_bWaterReflectionCull = true;
 			g_bWaterCullHeight = r_watercullheight.GetFloat();
 		}
-		int flags = DF_RENDER_REFLECTION | DF_CLIP_Z | DF_CLIP_BELOW | 
+
+	//	int flags = DF_RENDER_REFLECTION | DF_CLIP_Z | DF_CLIP_BELOW | 
+
+		// VXP: Fix for buggy water at e3_techdemo_5
+		int flags = DF_RENDER_REFLECTION | DF_CLIP_BELOW | 
 			DF_RENDER_ABOVEWATER | DF_CLEARDEPTH | DF_CLEARCOLOR | DF_BUILDWORLDLISTS;
 		flags |= DF_DRAWSKYBOX;
 		if( bReflectEntities )
