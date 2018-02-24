@@ -2142,10 +2142,15 @@ void NET_GetExternalIP ( char ip[ 32 ] )
 
 		rnd = RandomInt( 0, StunSrvListQty );
 		rc = stun_xor_addr(StunSrvList[rnd].name, StunSrvList[rnd].port, 8080, buffer);
+		
+		if ( rc == STUN_NETWORKERROR ) // Internet is not present or blocked by firewall
+		{
+			return;
+		}
 	}
 
-	// VXP: Successfully get external IP address
-	if ( rc == 0 )
+	// VXP: Successfully got external IP address
+	if ( rc == STUN_SUCCESS )
 	{
 		strcpy( ip, buffer );
 	}

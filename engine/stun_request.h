@@ -1,6 +1,17 @@
 #define STUN_MAXLINE 200
 //#define STUN_DUMP_TO_FILE
 
+#define STUN_SUCCESS 0
+#define STUN_IPERROR -1
+#define STUN_SOCKETERROR -2
+#define STUN_BINDINGERROR -3
+#define STUN_REQUESTERROR -4
+#define STUN_SOPTIONSERROR -5
+#define STUN_RECEIVEERROR -6
+#define STUN_PARSEERROR -7
+#define STUN_UNKNOWNERROR -8
+#define STUN_NETWORKERROR -9
+
 int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* return_ip_port);
 
 struct StunSrv {

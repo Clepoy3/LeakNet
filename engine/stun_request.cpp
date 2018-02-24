@@ -3,6 +3,7 @@
 //#include "vstdlib/random.h"
 
 #include <winsock.h>
+#include <wininet.h>
 
 #include <float.h> // VXP
 //#include <fstream> // VXP
@@ -14,6 +15,12 @@
 
 int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* return_ip_port)
 {
+	if ( !InternetCheckConnection( "http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0 ) )
+	{
+		DevWarning( "STUN: Internet is not active or application is blocked by firewall\n" );
+		return STUN_NETWORKERROR;
+	}
+
     struct sockaddr_in servaddr;
     struct sockaddr_in localaddr;
     unsigned char buf[STUN_MAXLINE];
@@ -30,21 +37,23 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
     if( (addr = inet_addr(StunHostname)) == INADDR_NONE )
     {
         struct hostent* he = gethostbyname(StunHostname);
-        if( NULL == he )
+        if( he == NULL )
         {
             //printf("Couldn't gethostbyname\n");
-            return -1;
+			DevWarning( "STUN: Couldn't get IP by hostname\n" );
+            return STUN_IPERROR;
         }
         addr = *(DWORD*)(he->h_addr_list[0]);
     }
  
     // create socket UDP
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if( INVALID_SOCKET == sockfd )
+    if( sockfd == INVALID_SOCKET )
     {
         //printf("Couldn't socket\n");
+		DevWarning( "STUN: Couldn't create UDP socket\n" );
 		closesocket(sockfd);
-        return -2;
+        return STUN_SOCKETERROR;
     }
  
     // server
@@ -60,11 +69,12 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
     localaddr.sin_port = htons(local_port);
  
     n = bind(sockfd, (struct sockaddr *)&localaddr, sizeof(localaddr));
-    if( SOCKET_ERROR == n )
+    if( n == SOCKET_ERROR )
     {
         //printf("Couldn't bind socket\n");
+		DevWarning( "STUN: Couldn't bind socket\n" );
 		closesocket(sockfd);
-        return -3;
+        return STUN_BINDINGERROR;
     }
  
     //printf("bind result=%d\n",n);
@@ -74,7 +84,7 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
     * (short *)(&bindingReq[0]) = htons(0x0001);    // stun_method
     * (short *)(&bindingReq[2]) = htons(0x0000);    // msg_length
     * (int *)(&bindingReq[4])   = htonl(0x2112A442);// magic cookie
-    *(int *)(&bindingReq[8]) = htonl(0x63c7117e);   // transacation ID
+    *(int *)(&bindingReq[8]) = htonl(0x63c7117e);   // transaction ID
     *(int *)(&bindingReq[12])= htonl(0x0714278f);
     *(int *)(&bindingReq[16])= htonl(0x5ded3221);
  
@@ -84,8 +94,9 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
     if (n == -1)
     {
         //printf("Couldn't sendto\n");
+		DevWarning( "STUN: Couldn't send request\n" );
 		closesocket(sockfd);
-        return -4;
+        return STUN_REQUESTERROR;
     }
  
     // time wait
@@ -98,8 +109,9 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
 	tv.tv_sec = 1000;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(tv)) < 0)
 	{
+		DevWarning( "STUN: Couldn't set socket options\n" );
 		closesocket(sockfd);
-		return -5;
+		return STUN_SOPTIONSERROR;
 	}
  
     //n = recvfrom(sockfd, (char*)buf, STUN_MAXLINE, 0, NULL, 0);
@@ -107,8 +119,9 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
     if (n == -1)
     {
         //printf("Couldn't recvfrom\n");
+		DevWarning( "STUN: Couldn't receive data\n" );
 		closesocket(sockfd);
-        return -5;
+        return STUN_RECEIVEERROR;
     }
  
     //printf("Response from server:\n");
@@ -146,8 +159,9 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
 				if ( _isnan(buf[i+8]^0x21) )
 				{
 					//printf("Server sended a bunch of crap\n");
+					DevWarning( "STUN: STUN server cannot send proper IP\n" );
 					closesocket(sockfd);
-					return -6;
+					return STUN_PARSEERROR;
 				}
 
                 //sprintf(return_ip_port,"%d.%d.%d.%d:%d",
@@ -164,14 +178,18 @@ int stun_xor_addr(char* StunHostname, short StunPort, short local_port, char* re
             i+=(4+attr_length);
         }
     }
- 
+
     // TODO: bind again
     closesocket(sockfd);
 
 	if ( !done )
-		return -7;
+	{
+		DevWarning( "STUN: Unknown error!\n" );
+		return STUN_UNKNOWNERROR;
+	}
 
     //printf("socket closed !\n");
+	DevMsg( "STUN: Your external IP address must be %s\n", return_ip_port );
 
-    return 0;
+    return STUN_SUCCESS;
 }

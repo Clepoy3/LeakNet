@@ -53,7 +53,8 @@ void __MsgFunc_TerrainMod( const char *pszName, int iSize, void *pbuf )
 	if( ent && type == TMod_Sphere )
 	{
 		effects->DecalShoot( 
-			effects->Draw_DecalIndexFromName( "decals/tscorch" ), 
+		//	effects->Draw_DecalIndexFromName( "decals/tscorch" ), 
+			effects->Draw_DecalIndexFromName( "decals/scorch1" ), 
 			iModel, 
 			ent->GetModel(), 
 			vPosition, 

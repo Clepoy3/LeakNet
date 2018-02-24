@@ -837,8 +837,9 @@ Vector SolveEdge( simplex_t &simplex, const voronoiedge_t &edge, const simplexve
 #ifdef _DEBUG
 	//	printf( "dot[0] = %f, dot[1] = %f\n", edge.dot[0], edge.dot[1] );
 	//	printf( "-Divide = %f\n", (-edge.dot[1] / (edge.dot[0] - edge.dot[1])) );
-		printf( "x = %f, 1-x = %f\n", x, (1.f-x) );
-		printf( "t0pos = %f:%f:%f, t1pos = %f:%f:%f\n", t0.position[0], t0.position[1], t0.position[2], t1.position[0], t1.position[1], t1.position[2] );
+
+	//	printf( "x = %f, 1-x = %f\n", x, (1.f-x) );
+	//	printf( "t0pos = %f:%f:%f, t1pos = %f:%f:%f\n", t0.position[0], t0.position[1], t0.position[2], t1.position[0], t1.position[1], t1.position[2] );
 #endif // _DEBUG
 
 		return x * t0.position + (1.f-x)*t1.position;

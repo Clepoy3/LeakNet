@@ -99,7 +99,7 @@ bool PopulateBoneList( mxChoice* pChoice )
 	if ( g_pStudioModel )
 	{
 		studiohdr_t* pHdr = g_pStudioModel->getStudioHeader();
-		if (pHdr && pHdr->numbones)
+		if (pHdr && pHdr->numbones > 0)
 		{
 			for ( int i = 0; i < pHdr->numbones; i++ )
 			{

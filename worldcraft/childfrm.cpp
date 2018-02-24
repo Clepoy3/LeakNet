@@ -544,6 +544,12 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext *pContext)
 		{
 			for (int nCol = 0; nCol < 2; nCol++)
 			{
+				// VXP: These might be lying around in people's registry.
+				if (/*(eDrawType[nRow][nCol] == VIEW3D_ENGINE) ||*/ (eDrawType[nRow][nCol] >= VIEW_TYPE_LAST))
+				{
+					eDrawType[nRow][nCol] = VIEW3D_TEXTURED;
+				}
+
 				switch (eDrawType[nRow][nCol])
 				{
 					case VIEW2D_XY:

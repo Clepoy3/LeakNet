@@ -162,6 +162,19 @@ public:
 
 		//Do the radius damage
 		RadiusDamage( CTakeDamageInfo( this, this, 125*magnitude, DMG_BLAST ), GetAbsOrigin(), 256*magnitude, CLASS_NONE, NULL );
+		
+		// VXP: Make a little hole?
+		CTerrainModParams params;
+		params.m_vCenter = GetAbsOrigin();
+		params.m_flRadius = 30;
+	//	params.m_flStrength = 50;
+		
+		params.m_Flags = 0;
+		TerrainMod_Add( TMod_Sphere, params );
+	
+	//	params.m_vNormal = -vecForward;
+	//	params.m_Flags = CTerrainModParams::TMOD_SUCKTONORMAL;
+	//	TerrainMod_Add( TMod_Suck, params );
 
 		UTIL_Remove( this );
 	}
