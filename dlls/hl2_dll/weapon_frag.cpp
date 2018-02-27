@@ -20,8 +20,9 @@
 //-----------------------------------------------------------------------------
 class CWeaponFrag: public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponFrag, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponFrag, CBaseHLCombatWeapon );
+
 	DECLARE_SERVERCLASS();
 
 	void	Precache( void );

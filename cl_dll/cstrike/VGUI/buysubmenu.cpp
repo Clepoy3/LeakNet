@@ -41,7 +41,7 @@ CBuySubMenu::~CBuySubMenu()
 //-----------------------------------------------------------------------------
 Panel *CBuySubMenu::CreateControlByName( const char *controlName )
 {
-	if( !stricmp( "MouseOverPanelButton", controlName ) )
+	if( !_stricmp( "MouseOverPanelButton", controlName ) )
 	{
 		ClassHelperPanel *classPanel = new ClassHelperPanel( this, NULL );
 		classPanel->SetVisible( false );
@@ -113,7 +113,7 @@ void CBuySubMenu::OnCommand( const char *command)
 		// check the cache
 		for ( i = 0; i < m_SubMenus.Count(); i++ )
 		{
-			if ( !stricmp( m_SubMenus[i].filename, tmpname ) )
+			if ( !_stricmp( m_SubMenus[i].filename, tmpname ) )
 			{
 				_nextPanel = m_SubMenus[i].panel;
 				Assert( _nextPanel );

@@ -1377,7 +1377,7 @@ void C_EntityFlame::AttachToHitBoxes( void )
 	//
 	// Attach fire to the hitboxes.
 	//
-	for ( i = 0; i < NUM_HITBOX_FIRES; i++ )
+	for ( int i = 0; i < NUM_HITBOX_FIRES; i++ )
 	{
 		//
 		// Pick the 5 biggest hitboxes, or random ones if there are less than 5 hitboxes,

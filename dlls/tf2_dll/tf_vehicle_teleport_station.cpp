@@ -210,13 +210,13 @@ void CVehicleTeleportStation::OnFinishedDeploy( void )
 		m_hTeleportCornerSprites[4]->SetScale( 0.1 );
 	}
 
-	SetContextThink( PostTeleportThink, gpGlobals->curtime + 0.1, TELEPORT_STATION_THINK_CONTEXT );
+	SetContextThink( &CVehicleTeleportStation::PostTeleportThink, gpGlobals->curtime + 0.1, TELEPORT_STATION_THINK_CONTEXT );
 
 	// Add ourselves to the list of deployed MCVs.
 	s_DeployedTeleportStations.AddToTail( this );
 
 	// Set our vehicle bay screen's buildpoint
-	for ( i = m_hScreens.Count(); --i >= 0; )
+	for ( int i = m_hScreens.Count(); --i >= 0; )
 	{
 		if (m_hScreens[i].Get())
 		{
@@ -328,7 +328,7 @@ bool CVehicleTeleportStation::ValidDeployPosition( void )
 	// Get a list of nearby entities
 	CBaseEntity *pListOfNearbyEntities[100];
 	int iNumberOfNearbyEntities = UTIL_EntitiesInBox( pListOfNearbyEntities, 100, m_vecTeleporterMins, m_vecTeleporterMaxs, MASK_ALL );
-	for ( i = 0; i < iNumberOfNearbyEntities; i++ )
+	for ( int i = 0; i < iNumberOfNearbyEntities; i++ )
 	{
 		CBaseEntity *pEntity = pListOfNearbyEntities[i];
 		if ( pEntity->IsSolid( ) )
@@ -375,7 +375,7 @@ void CVehicleTeleportStation::DoTeleport( void )
 		}
 	}
 
-	SetContextThink( PostTeleportThink, gpGlobals->curtime + 0.1, TELEPORT_STATION_THINK_CONTEXT );
+	SetContextThink( &CVehicleTeleportStation::PostTeleportThink, gpGlobals->curtime + 0.1, TELEPORT_STATION_THINK_CONTEXT );
 }
 
 //-----------------------------------------------------------------------------

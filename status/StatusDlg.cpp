@@ -164,7 +164,8 @@ char *CheckParm(const char *psz, char **ppszValue = NULL )
 		{
 			char *p2 = ++p1;
 
-			for (int i = 0; i < 128; i++)
+			int i;
+			for (i = 0; i < 128; i++)
 			{
 				if ( !*p2 || (*p2 == 32))
 					break;
@@ -809,7 +810,7 @@ int CALLBACK ModCompareFunc(LPARAM lParam1, LPARAM lParam2,
 		return 0;
 	}
 
-	return ( stricmp( p1->GetGameDir(), p2->GetGameDir() ) );
+	return ( _stricmp( p1->GetGameDir(), p2->GetGameDir() ) );
 }
 
 char *game_name =
@@ -1862,7 +1863,8 @@ void CStatusDlg::GenerateFakeData( bool fulldataset )
 	for ( int n = 0; n < MODCOUNT; n++ )
 	{
 		int len = rand() % 10 + 2;
-		for ( int c = 0 ; c < len; c++ )
+		int c;
+		for ( c = 0 ; c < len; c++ )
 		{
 			modnames[ n ][ c ] = 'a' + rand() % 26;
 		}
@@ -2623,7 +2625,7 @@ CModStats *CStatusDlg::LoadModUpdates( char *pszFile, bool markasfileloaded, int
 	l->list = NULL;
 
 	p = COM_Parse( p );
-	if ( stricmp( com_token, "{" ) )
+	if ( _stricmp( com_token, "{" ) )
 	{
 		goto finish_parse;
 	}
@@ -2637,7 +2639,7 @@ CModStats *CStatusDlg::LoadModUpdates( char *pszFile, bool markasfileloaded, int
 		}
 
 		p = COM_Parse( p );
-		if ( stricmp( com_token, "time" ) )
+		if ( _stricmp( com_token, "time" ) )
 		{
 			goto finish_parse;
 		}
@@ -2679,10 +2681,10 @@ CModStats *CStatusDlg::LoadModUpdates( char *pszFile, bool markasfileloaded, int
 
 		// Serialize raw data.
 		p = COM_Parse( p );
-		if ( !stricmp( com_token, "}" ) )
+		if ( !_stricmp( com_token, "}" ) )
 			break;
 
-		if ( stricmp( com_token, "{" ) )
+		if ( _stricmp( com_token, "{" ) )
 		{
 			goto finish_parse;
 		}
@@ -2710,7 +2712,7 @@ CModStats *CStatusDlg::LoadModUpdates( char *pszFile, bool markasfileloaded, int
 				keepmod = false;
 				break;
 			case SPECIFICMOD:
-				if ( modname && modname[ 0 ] &&	stricmp( modname, m->GetGameDir() )  )
+				if ( modname && modname[ 0 ] &&	_stricmp( modname, m->GetGameDir() )  )
 				{
 					keepmod = false;
 				}
@@ -2754,7 +2756,7 @@ CModStats *CStatusDlg::LoadModUpdates( char *pszFile, bool markasfileloaded, int
 		l->count++;
 
 		p = COM_Parse( p );
-		if ( !stricmp( com_token, "}" ) )
+		if ( !_stricmp( com_token, "}" ) )
 		{
 			break;
 		}
@@ -2939,6 +2941,7 @@ void CStatusDlg::SortUpdates( CModStats *list )
 
 	qsort( temp, list->count, sizeof( CModUpdate * ), FnUpdateCompare );
 
+	int i;
 	for ( i = 0; i < list->count-1; i++ )
 	{
 		temp[ i ]->next = temp[ i + 1 ];
@@ -3595,7 +3598,7 @@ void CStatusDlg::OnWarnDialog()
 		m_iMinPlayersLevel = minPlayers;
 	}
 
-	if ( warnEmail && stricmp( warnEmail, m_sWarnEmail ) ) 
+	if ( warnEmail && _stricmp( warnEmail, m_sWarnEmail ) ) 
 	{
 		theApp.WriteProfileString( "Status", "WarnEmail", dlg.m_sWarnEmail );
 		delete m_sWarnEmail;

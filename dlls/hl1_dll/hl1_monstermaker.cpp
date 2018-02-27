@@ -58,13 +58,13 @@ void CBaseNPCMaker::Spawn( void )
 	//Start on?
 	if ( m_bDisabled == false )
 	{
-		SetThink ( MakerThink );
+		SetThink ( &CBaseNPCMaker::MakerThink );
 		SetNextThink( gpGlobals->curtime + m_flSpawnFrequency );
 	}
 	else
 	{
 		//wait to be activated.
-		SetThink ( SUB_DoNothing );
+		SetThink ( &CBaseEntity::SUB_DoNothing );
 	}
 
 	// Make sure absorigin is set
@@ -164,7 +164,7 @@ void CBaseNPCMaker::Enable( void )
 		return;
 
 	m_bDisabled = false;
-	SetThink ( MakerThink );
+	SetThink ( &CBaseNPCMaker::MakerThink );
 	SetNextThink( gpGlobals->curtime );
 }
 

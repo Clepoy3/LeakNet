@@ -23,8 +23,9 @@
 //-----------------------------------------------------------------------------
 class CBaseTFCombatWeapon : public CBaseCombatWeapon
 {
-	DECLARE_CLASS( CBaseTFCombatWeapon, CBaseCombatWeapon );
 public:
+	DECLARE_CLASS( CBaseTFCombatWeapon, CBaseCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

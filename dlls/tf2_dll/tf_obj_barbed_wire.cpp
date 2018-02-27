@@ -167,7 +167,7 @@ void CObjectBarbedWire::BarbedWireThink( void )
 		}
 	}
 	
-	SetContextThink( BarbedWireThink, gpGlobals->curtime + BARBED_WIRE_THINK_INTERVAL, BARBED_WIRE_THINK_CONTEXT );
+	SetContextThink( &CObjectBarbedWire::BarbedWireThink, gpGlobals->curtime + BARBED_WIRE_THINK_INTERVAL, BARBED_WIRE_THINK_CONTEXT );
 }
 
 //-----------------------------------------------------------------------------

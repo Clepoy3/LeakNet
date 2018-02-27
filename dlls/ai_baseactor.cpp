@@ -747,7 +747,7 @@ void CAI_BaseActor::SetExpression( const char *pszExpressionScene )
 		return;
 	}
 
-	if ( m_iszExpressionScene != NULL_STRING && stricmp( STRING(m_iszExpressionScene), pszExpressionScene ) == 0 )
+	if ( m_iszExpressionScene != NULL_STRING && _stricmp( STRING(m_iszExpressionScene), pszExpressionScene ) == 0 )
 	{
 		return;
 	}

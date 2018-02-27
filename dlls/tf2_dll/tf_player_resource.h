@@ -13,8 +13,9 @@
 
 class CTFPlayerResource : public CPlayerResource
 {
-	DECLARE_CLASS( CTFPlayerResource, CPlayerResource );
 public:
+	DECLARE_CLASS( CTFPlayerResource, CPlayerResource );
+
 	DECLARE_SERVERCLASS();
 
 	virtual void Spawn( void );

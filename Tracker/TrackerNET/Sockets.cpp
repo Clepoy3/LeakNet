@@ -113,7 +113,8 @@ bool CSockets::InitializeSockets( unsigned short portMin, unsigned short portMax
 
 	// bind ourselves to the first available port
 	bool bFirst = false;
-	for ( unsigned short port = (unsigned short)portMin; port <= portMax; port++ )
+	unsigned short port;
+	for ( port = (unsigned short)portMin; port <= portMax; port++ )
 	{
 		if (bFirst)
 		{

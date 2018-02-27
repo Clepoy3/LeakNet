@@ -194,7 +194,7 @@ void CClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// recalc the team scores, then draw them
-	for ( i = 1; i < gViewPortInterface->GetClientDllInterface()->GetMaxPlayers(); i++ )
+	for ( int i = 1; i < gViewPortInterface->GetClientDllInterface()->GetMaxPlayers(); i++ )
 	{
 		VGuiLibraryPlayer_t playerInfo = gViewPortInterface->GetClientDllInterface()->GetPlayerInfo( i );
 
@@ -205,9 +205,10 @@ void CClientScoreBoardDialog::UpdateTeamInfo()
 			continue; // skip over players who are not in a team
 
 		// find what team this player is in
-		for ( int j = 1; j <= m_iNumTeams; j++ )
+		int j;
+		for ( j = 1; j <= m_iNumTeams; j++ )
 		{
-			if ( !stricmp( playerInfo.teamname, m_TeamInfo[j].name ) )
+			if ( !_stricmp( playerInfo.teamname, m_TeamInfo[j].name ) )
 				break;
 		}
 		if ( j > m_iNumTeams )  // player is not in a team, skip to the next guy
@@ -232,7 +233,7 @@ void CClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// find team ping/packetloss averages
-	for ( i = 1; i <= m_iNumTeams; i++ )
+	for ( int i = 1; i <= m_iNumTeams; i++ )
 	{
 		m_TeamInfo[i].already_drawn = false;
 
@@ -249,7 +250,7 @@ void CClientScoreBoardDialog::UpdateTeamInfo()
 		int highest_frags = -99999; int lowest_deaths = 99999;
 		int best_team = 0;
 
-		for ( i = 1; i <= m_iNumTeams; i++ )
+		for ( int i = 1; i <= m_iNumTeams; i++ )
 		{
 			if ( m_TeamInfo[i].players < 1 )
 				continue;

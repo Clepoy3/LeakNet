@@ -215,7 +215,7 @@ int CMySQL::GetColumnIndex( const char *pColumnName )
 {
 	for ( int i=0; i < m_Fields.Count(); i++ )
 	{
-		if ( stricmp( pColumnName, m_Fields[i].name ) == 0 )
+		if ( _stricmp( pColumnName, m_Fields[i].name ) == 0 )
 		{
 			return i;
 		}

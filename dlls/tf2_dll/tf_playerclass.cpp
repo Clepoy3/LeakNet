@@ -197,7 +197,7 @@ void PrintPlayerClassStats()
 
 	pFileSys->FPrintf( hFile, "Class\tTarget Class\tTotal Damage\tKills\tAvg Engagement Dist\t(OLD) Engagement Dist\n" );
 	
-	for ( i=TFCLASS_UNDECIDED+1; i < STATS_NUM_GROUPS; i++ )
+	for ( int i=TFCLASS_UNDECIDED+1; i < STATS_NUM_GROUPS; i++ )
 	{
 		CPlayerClassStats *pStats = &g_PlayerClassStats[i];
 
@@ -256,7 +256,7 @@ void PrintDetailedPlayerClassStats()
 
 		// Write out each column.
 		int iterators[STATS_NUM_GROUPS];
-		for ( i=TFCLASS_UNDECIDED+1; i < STATS_NUM_GROUPS; i++ )
+		for ( int i=TFCLASS_UNDECIDED+1; i < STATS_NUM_GROUPS; i++ )
 			iterators[i] = g_ClassShotInfos[i].Head();
 
 		bool bWroteAnything;

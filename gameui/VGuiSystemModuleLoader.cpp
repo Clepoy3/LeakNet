@@ -81,13 +81,13 @@ void CVGuiSystemModuleLoader::InitializeAllModules(CreateInterfaceFn *factorylis
 
 	// create a table of all the loaded modules
 	CreateInterfaceFn *moduleFactories = (CreateInterfaceFn *)_alloca(sizeof(CreateInterfaceFn) * m_Modules.Size());
-	for (i = 0; i < m_Modules.Size(); i++)
+	for (int i = 0; i < m_Modules.Size(); i++)
 	{
 		moduleFactories[i] = Sys_GetFactory(m_Modules[i].module);
 	}
 
 	// give the modules a chance to link themselves together
-	for (i = 0; i < m_Modules.Size(); i++)
+	for (int i = 0; i < m_Modules.Size(); i++)
 	{
 		if (!m_Modules[i].moduleInterface->PostInitialize(moduleFactories, m_Modules.Size()))
 		{
@@ -230,6 +230,9 @@ void CVGuiSystemModuleLoader::ShutdownPlatformModules()
 //	for (i = 0; i < m_Modules.Size(); i++)
 	for ( i = 0; i < m_Modules.Count(); i++ )
 	{
+	//	if ( m_Modules[i].moduleInterface->GetPanel() == NULL ) // VXP: Added and commented
+	//		continue;
+
 		vgui::ivgui()->PostMessage(m_Modules[i].moduleInterface->GetPanel(), new KeyValues("Command", "command", "Quit"), NULL);
 	}
 
@@ -351,7 +354,7 @@ bool CVGuiSystemModuleLoader::ActivateModule(const char *moduleName)
 {
 	for (int i = 0; i < GetModuleCount(); i++)
 	{
-		if (!stricmp(GetModuleLabel(i), moduleName) || !stricmp(m_Modules[i].data->GetName(), moduleName))
+		if (!_stricmp(GetModuleLabel(i), moduleName) || !_stricmp(m_Modules[i].data->GetName(), moduleName))
 		{
 			ActivateModule(i);
 			return true;

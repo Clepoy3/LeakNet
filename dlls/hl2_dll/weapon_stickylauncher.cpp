@@ -29,8 +29,8 @@ static void LaunchStickyBomb( CBaseCombatCharacter *pOwner, const Vector &origin
 
 class CWeaponStickyLauncher : public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponStickyLauncher, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponStickyLauncher, CBaseHLCombatWeapon );
 
 	CWeaponStickyLauncher(void);
 

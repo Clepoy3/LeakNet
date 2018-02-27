@@ -307,7 +307,7 @@ void CPDumpPanel::Paint()
 	{
 		DumpInfo *slot = &m_DumpEntityInfo[ i ];
 
-		if ( stricmp( slot->classname, currentclass ) )
+		if ( _stricmp( slot->classname, currentclass ) )
 		{
 			y += 2;
 

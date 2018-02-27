@@ -37,7 +37,8 @@ speeditem_t g_Speeds[] =
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsConnection::CSubPanelOptionsConnection() : PropertyPage(NULL, "SubPanelOptionsConnection")
+CSubPanelOptionsConnection::CSubPanelOptionsConnection()
+	: PropertyPage(NULL, "SubPanelOptionsConnection")
 {
 	m_pInternetSpeed = new ComboBox(this, "InternetSpeed", ARRAYSIZE(g_Speeds), false);
 
@@ -91,7 +92,7 @@ void CSubPanelOptionsConnection::OnApplyChanges()
 	m_pInternetSpeed->GetText(text, sizeof(text)-1);
 	for (int i = 0; i < ARRAYSIZE(g_Speeds); i++)
 	{
-		if (!stricmp(text, g_Speeds[i].description))
+		if (!_stricmp(text, g_Speeds[i].description))
 		{
 			speed = g_Speeds[i].speed;
 			break;

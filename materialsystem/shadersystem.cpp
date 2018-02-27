@@ -1606,7 +1606,7 @@ void CShaderSystem::LoadTexture( IMaterialVar *pTextureVar )
 
 	if( !pTexture )
 	{
-		if( !g_pShaderAPI->IsUsingGraphics() && ( stricmp( pName, "env_cubemap" ) != 0 ) )
+		if( !g_pShaderAPI->IsUsingGraphics() && ( _stricmp( pName, "env_cubemap" ) != 0 ) )
 		{
 			Warning( "Shader_t::LoadTexture: texture \"%s.vtf\" doesn't exist\n", pName );
 		}
@@ -1666,7 +1666,7 @@ void CShaderSystem::LoadCubeMap( IMaterialVar **ppParams, IMaterialVar *pTexture
 		return;
 	}
 
-	if( stricmp( pTextureVar->GetStringValue(), "env_cubemap" ) == 0 )
+	if( _stricmp( pTextureVar->GetStringValue(), "env_cubemap" ) == 0 )
 	{
 		// garymcthack 
 		// don't have to load anything here. . just set the texture value to something

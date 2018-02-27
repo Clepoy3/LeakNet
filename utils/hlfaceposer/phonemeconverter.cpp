@@ -112,7 +112,7 @@ int TextToPhoneme( const char *text )
 		if ( !test->string )
 			break;
 
-		if ( !stricmp( test->string, text ) )
+		if ( !_stricmp( test->string, text ) )
 			return test->code;
 
 		i++;
@@ -160,7 +160,7 @@ float WeightForPhoneme( char *text )
 		if ( !test->string )
 			break;
 
-		if ( !stricmp( test->string, text ) )
+		if ( !_stricmp( test->string, text ) )
 			return test->weight;
 
 		i++;

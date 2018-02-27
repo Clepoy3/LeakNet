@@ -489,7 +489,7 @@ bool ConvertStringToIPAddr( const char *pStr, CIPAddr *pOut )
 {
 	char ipStr[512];
 
-	char *pColon = strchr( pStr, ':' );
+	char *pColon = (char *)strchr( pStr, ':' );
 	if ( pColon )
 	{
 		int toCopy = pColon - pStr;

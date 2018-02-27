@@ -2545,7 +2545,7 @@ bool CSniperBullet::Start( const Vector &vecOrigin, const Vector &vecTarget )
 	float flElapsedTime = ( (tr.startpos - tr.endpos).Length() / bulletSpeed.GetFloat() );
 	m_SoundTime = gpGlobals->curtime + flElapsedTime * 0.5;
 	
-	SetThink( Think );
+	SetThink( &CSniperBullet::Think );
 	SetNextThink( gpGlobals->curtime );
 	m_fActive = true;
 	return true;

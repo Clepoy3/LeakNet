@@ -157,7 +157,7 @@ void CHudDamageIndicator::GetDamagePosition( const Vector &vecDelta, float flRad
 	*ypos = flRadius * -front;
 
 	// Get the rotation (yaw)
-	*flRotation = atan2(*xpos,*ypos) + M_PI;
+	*flRotation = atan2((float)*xpos,(float)*ypos) + M_PI;
 	*flRotation *= 180 / M_PI;
 
 	float yawRadians = -(*flRotation) * M_PI / 180.0f;

@@ -1665,7 +1665,7 @@ int NET_IPSocket ( const char *net_interface, int& port)
 		}
 	}
 
-	if (!net_interface || !net_interface[0] || !stricmp(net_interface, "localhost"))
+	if (!net_interface || !net_interface[0] || !_stricmp(net_interface, "localhost"))
 		address.sin_addr.s_addr = INADDR_ANY;
 	else
 		NET_StringToSockaddr (net_interface, (struct sockaddr *)&address);

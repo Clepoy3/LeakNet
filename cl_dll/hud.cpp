@@ -615,7 +615,7 @@ CHudElement *CHud::FindElement( const char *pName )
 {
 	for ( int i = 0; i < m_HudList.Size(); i++ )
 	{
-		if ( stricmp( m_HudList[i]->GetName(), pName ) == 0 )
+		if ( _stricmp( m_HudList[i]->GetName(), pName ) == 0 )
 			return m_HudList[i];
 	}
 

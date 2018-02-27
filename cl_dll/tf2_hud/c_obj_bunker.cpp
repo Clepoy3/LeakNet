@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectBunker : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectBunker, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectBunker, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectBunker();

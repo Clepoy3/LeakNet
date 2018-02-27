@@ -82,7 +82,7 @@ CSteamPasswordDialog::~CSteamPasswordDialog()
 void CSteamPasswordDialog::OnCommand( const char *command )
 {
 	// Give them the option of simply quiting out of the game.
-	if ( stricmp( command, "QuitGame" ) == 0 )
+	if ( _stricmp( command, "QuitGame" ) == 0 )
 	{
 		engine->ClientCmd("quit\n" );
 	}
@@ -122,5 +122,5 @@ void CSteamPasswordDialog::OnClose()
 bool CSteamPasswordDialog::_isValidPassword_TempTestImp( char *szPassword )
 {
 	// For test purposes a valid password is anything other than "bad".
-	return ( stricmp( szPassword, "bad" ) != 0 );
+	return ( _stricmp( szPassword, "bad" ) != 0 );
 }

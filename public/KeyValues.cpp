@@ -639,7 +639,7 @@ KeyValues *KeyValues::FindKey(const char *keyName, bool bCreate)
 
 	// look for '/' characters deliminating sub fields
 	char szBuf[256];
-	char *subStr = strchr(keyName, '/');
+	const char *subStr = strchr(keyName, '/');
 	const char *searchStr = keyName;
 
 	// pull out the substring if it exists
@@ -734,7 +734,7 @@ KeyValues *KeyValues::CreateNewKey()
 	}
 
 	char buf[12];
-	itoa(newID, buf, 10);
+	_itoa(newID, buf, 10);
 
 	return CreateKey( buf );
 }
@@ -980,12 +980,12 @@ const wchar_t *KeyValues::GetWString( const char *keyName, const wchar_t *defaul
 		switch ( dat->m_iDataType )
 		{
 		case TYPE_FLOAT:
-			swprintf(wbuf, L"%f", dat->m_flValue);
+			swprintf(wbuf, sizeof(wbuf), L"%f", dat->m_flValue);
 			SetWString( keyName, wbuf);
 			break;
 		case TYPE_INT:
 		case TYPE_PTR:
-			swprintf( wbuf, L"%d", dat->m_iValue );
+			swprintf( wbuf, sizeof(wbuf), L"%d", dat->m_iValue );
 			SetWString( keyName, wbuf );
 			break;
 		case TYPE_WSTRING:
@@ -1667,6 +1667,11 @@ void *KeyValues::operator new( unsigned int iAllocSize, int nBlockUse, const cha
 // Purpose: deallocator
 //-----------------------------------------------------------------------------
 void KeyValues::operator delete( void *pMem )
+{
+	KeyValuesSystem()->FreeKeyValuesMemory(pMem);
+}
+
+void KeyValues::operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine )
 {
 	KeyValuesSystem()->FreeKeyValuesMemory(pMem);
 }

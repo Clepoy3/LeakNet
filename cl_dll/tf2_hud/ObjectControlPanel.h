@@ -30,9 +30,9 @@ class C_BaseTFPlayer;
 //-----------------------------------------------------------------------------
 class CObjectControlPanel : public CVGuiScreenPanel
 {
+public:
 	DECLARE_CLASS( CObjectControlPanel, CVGuiScreenPanel );
 
-public:
 	CObjectControlPanel( vgui::Panel *parent, const char *panelName );
 
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
@@ -123,9 +123,9 @@ public:
 //-----------------------------------------------------------------------------
 class CRotatingObjectControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CRotatingObjectControlPanel, CObjectControlPanel );
 
-public:
 	CRotatingObjectControlPanel( vgui::Panel *parent, const char *panelName );
 
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

@@ -232,7 +232,7 @@ void CFlextalkActor::SetFlexTarget( int flexnum, float value )
 		if (i != flexnum)
 		{
 			const char *pszOtherType = GetFlexControllerType( i );
-			if (stricmp( pszType, pszOtherType ) == 0)
+			if (_stricmp( pszType, pszOtherType ) == 0)
 			{
 				m_flextarget[i] = 0;
 			}
@@ -264,7 +264,7 @@ int CFlextalkActor::LookupFlex( const char *szTarget  )
 	for (int i = 0; i < GetNumFlexControllers(); i++)
 	{
 		const char *pszFlex = GetFlexControllerName( i );
-		if (stricmp( szTarget, pszFlex ) == 0)
+		if (_stricmp( szTarget, pszFlex ) == 0)
 		{
 			return i;
 		}
@@ -367,7 +367,7 @@ void CFlextalkActor :: ProcessExpressions( void )
 			{
 				m_flextarget[m_flexnum] = 0;
 			}
-			else if (stricmp( GetFlexControllerType( m_flexnum ), "phoneme" ) != 0)
+			else if (_stricmp( GetFlexControllerType( m_flexnum ), "phoneme" ) != 0)
 			{
 				if (strstr( GetFlexControllerName( m_flexnum ), "upper_raiser" ) == NULL)
 				{

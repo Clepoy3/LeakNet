@@ -368,7 +368,7 @@ bool CTextureConverter::TextureNameMatchesMaterialName( const char * pszTextureN
 	if ( ( pszPartialMaterialName == NULL ) || strlen( pszPartialMaterialName ) == 0 )
 		return false;
 
-	if ( stricmp( pszTextureName, pszPartialMaterialName ) == 0 )
+	if ( _stricmp( pszTextureName, pszPartialMaterialName ) == 0 )
 		return true;
 
 	return false;

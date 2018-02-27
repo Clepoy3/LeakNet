@@ -189,7 +189,7 @@ BOOL CSSolid::GetHandleInfo(SSHANDLEINFO *pInfo, SSHANDLE id)
 	}
 
 	// try edges .. 
-	for(i = 0; i < m_nEdges; i++)
+	for(int i = 0; i < m_nEdges; i++)
 	{
 		if(m_Edges[i].id != id)
 			continue;	// not this one
@@ -204,7 +204,7 @@ BOOL CSSolid::GetHandleInfo(SSHANDLEINFO *pInfo, SSHANDLE id)
 	}
 
 	// try faces ..
-	for(i = 0; i < m_nFaces; i++)
+	for(int i = 0; i < m_nFaces; i++)
 	{
 		if(m_Faces[i].id != id)
 			continue;	// not this one
@@ -829,7 +829,8 @@ CSSEdge ** CSSolid::FindAffectedEdges(SSHANDLE *pHandles, int iNumHandles, int& 
 				pEdge->hvEnd == pHandles[h])
 			{
 				// ensure it's not already stored
-				for(int s = 0; s < iNumEdges; s++)
+				int s;
+				for(s = 0; s < iNumEdges; s++)
 				{
 					if(ppEdges[s] == pEdge)
 						break;
@@ -866,7 +867,7 @@ void CSSolid::MoveSelectedHandles(const Vector &Delta)
 			MoveVertices[nMoveVertices++] = m_Vertices[i].id;
 	}
 
-	for(i = 0; i < m_nEdges; i++)
+	for(int i = 0; i < m_nEdges; i++)
 	{
 		CSSEdge* pEdge = &m_Edges[i];
 
@@ -890,7 +891,7 @@ void CSSolid::MoveSelectedHandles(const Vector &Delta)
 	}
 
 	// move vertices now
-	for(i = 0; i < nMoveVertices; i++)
+	for(int i = 0; i < nMoveVertices; i++)
 	{
 		GetHandleInfo(&hi, MoveVertices[i]);
 		CSSVertex* pVertex = (CSSVertex*) hi.pData;
@@ -900,7 +901,7 @@ void CSSolid::MoveSelectedHandles(const Vector &Delta)
 	// calculate center of moved edges
 	int nEdges;
 	CSSEdge ** ppEdges = FindAffectedEdges(MoveVertices, nMoveVertices, nEdges);
-	for(i = 0; i < nEdges; i++)
+	for(int i = 0; i < nEdges; i++)
 	{
 		CalcEdgeCenter(ppEdges[i]);
 	}
@@ -1046,7 +1047,7 @@ BOOL CSSolid::SplitFaceByVertices(CSSVertex *pVertex1, CSSVertex *pVertex2)
 
 	// find where the vertices are and
 	//  kill face references in edges first
-	for(i = 0; i < nVertices; i++)
+	for(int i = 0; i < nVertices; i++)
 	{
 		int iNextVertex = GetNext(i, 1, nVertices);
 		int iEdgeIndex = GetEdgeIndex(phVertexList[i], 
@@ -1062,7 +1063,7 @@ BOOL CSSolid::SplitFaceByVertices(CSSVertex *pVertex1, CSSVertex *pVertex2)
 
 DoNextFace:
 	nNewEdges = 0;
-	for(i = v1index; ; i++)
+	for(int i = v1index; ; i++)
 	{
 		if(i == nVertices)
 			i = 0;
@@ -1203,7 +1204,7 @@ BOOL CSSolid::SplitFaceByEdges(CSSEdge *pEdge1, CSSEdge *pEdge2)
 
 DoNextFace:
 	nNewEdges = 0;
-	for(i = nv1index; ; i++)
+	for(int i = nv1index; ; i++)
 	{
 		if(i == nVertices)
 			i = 0;
@@ -1257,7 +1258,7 @@ DoNextFace:
 			++nVertices;
 		if(nv2index != -1)
 			++nVertices;
-		for(i = 0; i < nVertices; i++)
+		for(int i = 0; i < nVertices; i++)
 		{
 			int iNextVertex = GetNext(i, 1, nVertices);
 			int iEdgeIndex = GetEdgeIndex(phVertexList[i], phVertexList[iNextVertex]);
@@ -1278,7 +1279,7 @@ DoNextFace:
 	SSHANDLE id2 = pEdge2->id;
 
 	// delete old edges
-	for(i = 0; i < m_nEdges; i++)
+	for(int i = 0; i < m_nEdges; i++)
 	{
 		if(m_Edges[i].id == id1 || m_Edges[i].id == id2)
 		{
@@ -1717,14 +1718,14 @@ void CSSolid::SerializeDXF(FILE *stream, int nObject)
 	fprintf(stream,"0\nPOLYLINE\n8\n%s\n66\n1\n70\n64\n71\n%u\n72\n%u\n", szName, m_nVertices, nTriFaces);
 	fprintf(stream,"62\n50\n");
 
-	for (i = 0; i < m_nVertices; i++)
+	for (int i = 0; i < m_nVertices; i++)
 	{
 		Vector &pos = m_Vertices[i].pos;
 		fprintf(stream,	"0\nVERTEX\n8\n%s\n10\n%.6f\n20\n%.6f\n30\n%.6f\n70\n192\n", szName, pos[0], pos[1], pos[2]);
 	}
 
 	// triangulate each face and write
-	for(i = 0; i < m_nFaces; i++)
+	for(int i = 0; i < m_nFaces; i++)
 	{
 		CSSFace &face = m_Faces[i];
 		PINT pVerts = CreatePointIndexList(face);
@@ -1732,7 +1733,7 @@ void CSSolid::SerializeDXF(FILE *stream, int nObject)
 		for(int v = 0; v < face.nEdges; v++)
 			pVerts[v]++;
 
-		for(v = 0; v < face.nEdges-2; v++)
+		for(int v = 0; v < face.nEdges-2; v++)
 		{
 			fprintf(stream, "0\nVERTEX\n8\n%s\n10\n0\n20\n0\n30\n"
 				"0\n70\n128\n71\n%d\n72\n%d\n73\n%d\n", szName, 

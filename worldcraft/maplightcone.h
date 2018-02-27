@@ -42,8 +42,8 @@ class CMapLightCone : public CMapHelper
 
 		void Render3D(CRender3D *pRender);
 
-		int SerializeRMF(fstream &File, BOOL bRMF);
-		int SerializeMAP(fstream &File, BOOL bRMF);
+		int SerializeRMF(std::fstream &File, BOOL bRMF);
+		int SerializeMAP(std::fstream &File, BOOL bRMF);
 
 		virtual void PostloadWorld(CMapWorld *pWorld);
 

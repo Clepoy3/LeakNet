@@ -44,7 +44,7 @@ static void Pause( void )
 	if( !g_NoPause )
 	{
 		printf( "Hit a key to continue\n" );
-		getch();
+		_getch();
 	}
 }
 
@@ -437,7 +437,7 @@ void ProcessFiles( const char *pFullNameWithoutExtension,
 	sprintf( dstFileName, "%s/%s.vtf", pOutputDir, pBaseName );
 
 	if ( g_CreateDir == true )
-		 mkdir( pOutputDir ); //It'll create it if it doesn't exist.
+		 _mkdir( pOutputDir ); //It'll create it if it doesn't exist.
 
 	CUtlBuffer outputBuf;
 	if (!pVTFTexture->Serialize( outputBuf ))
@@ -573,111 +573,111 @@ static void LoadConfigFile( const char *pFileName, int *startFrame, int *endFram
 	char *val = NULL;
 	while( GetKeyValueFromFP( fp, &key, &val ) )
 	{
-		if( stricmp( key, "startframe" ) == 0 )
+		if( _stricmp( key, "startframe" ) == 0 )
 		{
 			*startFrame = atoi( val );
 		}
-		else if( stricmp( key, "endframe" ) == 0 )
+		else if( _stricmp( key, "endframe" ) == 0 )
 		{
 			*endFrame = atoi( val );
 		}
-		else if( stricmp( key, "spheremap_x" ) == 0 )
+		else if( _stricmp( key, "spheremap_x" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_X;
 		}
-		else if( stricmp( key, "spheremap_negx" ) == 0 )
+		else if( _stricmp( key, "spheremap_negx" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_NEGX;
 		}
-		else if( stricmp( key, "spheremap_y" ) == 0 )
+		else if( _stricmp( key, "spheremap_y" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_Y;
 		}
-		else if( stricmp( key, "spheremap_negy" ) == 0 )
+		else if( _stricmp( key, "spheremap_negy" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_NEGY;
 		}
-		else if( stricmp( key, "spheremap_z" ) == 0 )
+		else if( _stricmp( key, "spheremap_z" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_Z;
 		}
-		else if( stricmp( key, "spheremap_negz" ) == 0 )
+		else if( _stricmp( key, "spheremap_negz" ) == 0 )
 		{
 			*pLookDir = LOOK_DOWN_NEGZ;
 		}
-		else if( stricmp( key, "bumpscale" ) == 0 )
+		else if( _stricmp( key, "bumpscale" ) == 0 )
 		{
 			*bumpScale = atof( val );
 		}
-		else if( stricmp( key, "pointsample" ) == 0 )
+		else if( _stricmp( key, "pointsample" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_POINTSAMPLE;
 		}
-		else if( stricmp( key, "trilinear" ) == 0 )
+		else if( _stricmp( key, "trilinear" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_TRILINEAR;
 		}
-		else if( stricmp( key, "clamps" ) == 0 )
+		else if( _stricmp( key, "clamps" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_CLAMPS;
 		}
-		else if( stricmp( key, "clampt" ) == 0 )
+		else if( _stricmp( key, "clampt" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_CLAMPT;
 		}
-		else if( stricmp( key, "anisotropic" ) == 0 )
+		else if( _stricmp( key, "anisotropic" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_ANISOTROPIC;
 		}
-		else if( stricmp( key, "dxt5" ) == 0 )
+		else if( _stricmp( key, "dxt5" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_HINT_DXT5;
 		}
-		else if( stricmp( key, "nocompress" ) == 0 )
+		else if( _stricmp( key, "nocompress" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_NOCOMPRESS;
 		}
-		else if( stricmp( key, "normal" ) == 0 )
+		else if( _stricmp( key, "normal" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_NORMAL;
 		}
-		else if( stricmp( key, "nomip" ) == 0 )
+		else if( _stricmp( key, "nomip" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_NOMIP;
 		}
-		else if( stricmp( key, "nolod" ) == 0 )
+		else if( _stricmp( key, "nolod" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_NOLOD;
 		}
-		else if( stricmp( key, "minmip" ) == 0 )
+		else if( _stricmp( key, "minmip" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_MINMIP;
 		}
-		else if( stricmp( key, "procedural" ) == 0 )
+		else if( _stricmp( key, "procedural" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_PROCEDURAL;
 		}
-		else if( stricmp( key, "rendertarget" ) == 0 )
+		else if( _stricmp( key, "rendertarget" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_RENDERTARGET;
 		}
-		else if ( stricmp( key, "nodebug" ) == 0 )
+		else if ( _stricmp( key, "nodebug" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_NODEBUGOVERRIDE;
 		}
-		else if ( stricmp( key, "singlecopy" ) == 0 )
+		else if ( _stricmp( key, "singlecopy" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_SINGLECOPY;
 		}
-		else if( stricmp( key, "oneovermiplevelinalpha" ) == 0 )
+		else if( _stricmp( key, "oneovermiplevelinalpha" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_ONEOVERMIPLEVELINALPHA;
 		}
-		else if( stricmp( key, "premultcolorbyoneovermiplevel" ) == 0 )
+		else if( _stricmp( key, "premultcolorbyoneovermiplevel" ) == 0 )
 		{
 			*pFlags |= TEXTUREFLAGS_PREMULTCOLORBYONEOVERMIPLEVEL;
 		}
-		else if ( stricmp( key, "normaltodudv" ) == 0 )
+		else if ( _stricmp( key, "normaltodudv" ) == 0 )
 		{
 			if( atoi( val ) )
 			{
@@ -685,7 +685,7 @@ static void LoadConfigFile( const char *pFileName, int *startFrame, int *endFram
 				*pFlags |= TEXTUREFLAGS_NORMALTODUDV;
 			}
 		}
-		else if ( stricmp( key, "dudv" ) == 0 )
+		else if ( _stricmp( key, "dudv" ) == 0 )
 		{
 			if( atoi( val ) )
 			{
@@ -845,13 +845,13 @@ int Find_Files( WIN32_FIND_DATA &wfd, HANDLE &hResult, const char *basedir, cons
 		_splitpath( wfd.cFileName, NULL, NULL, fname, ext );
 
 		// Not the type we want.
-		if ( stricmp( ext, extension ) )
+		if ( _stricmp( ext, extension ) )
 			 return FF_DONTPROCESS;
 
 		// Check for .vmt
 		sprintf( filename, "%s\\%s.vmt", basedir, fname );
 		// Exists, so don't overwrite it
-		if ( access( filename, 0 ) != -1 )
+		if ( _access( filename, 0 ) != -1 )
 			 return FF_TRYAGAIN;
 
 		char texturename[ _MAX_PATH ];
@@ -864,8 +864,8 @@ int Find_Files( WIN32_FIND_DATA &wfd, HANDLE &hResult, const char *basedir, cons
 		sprintf( texturename, "%s\\%s", p, fname );
 		
 		// Convert all to lower case
-		strlwr( texturename );
-		strlwr( filename );
+		_strlwr( texturename );
+		_strlwr( filename );
 	}
 
 	return bMoreFiles;
@@ -1006,23 +1006,23 @@ int main( int argc, char **argv )
 	i = 1;
 	while( i < argc )
 	{
-		if( stricmp( argv[i], "-quiet" ) == 0 )
+		if( _stricmp( argv[i], "-quiet" ) == 0 )
 		{
 			i++;
 			g_Quiet = true;
 			g_NoPause = true; // no point in pausing if we aren't going to print anything out.
 		}
-		if( stricmp( argv[i], "-nopause" ) == 0 )
+		if( _stricmp( argv[i], "-nopause" ) == 0 )
 		{
 			i++;
 			g_NoPause = true;
 		}
-		if ( stricmp( argv[i], "-mkdir" ) == 0 ) 
+		if ( _stricmp( argv[i], "-mkdir" ) == 0 ) 
 		{
 			i++;
 			g_CreateDir = true;
 		}
-		else if( stricmp( argv[i], "-shader" ) == 0 )
+		else if( _stricmp( argv[i], "-shader" ) == 0 )
 		{
 			i++;
 			if( i < argc )

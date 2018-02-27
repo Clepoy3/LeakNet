@@ -36,8 +36,8 @@ void CGrenade_Brickbat::Spawn( void )
 {
 	m_fEffects &= ~EF_NOINTERP;
 
-	SetTouch( BrickbatTouch );
-	SetThink( BrickbatThink );
+	SetTouch( &CGrenade_Brickbat::BrickbatTouch );
+	SetThink( &CGrenade_Brickbat::BrickbatThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_takedamage = DAMAGE_YES;

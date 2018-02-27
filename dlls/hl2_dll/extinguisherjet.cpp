@@ -92,7 +92,7 @@ void CExtinguisherJet::TurnOn( void )
 		m_bEnabled = m_bEmit = true;
 	}
 	
-	SetThink( ExtinguishThink );
+	SetThink( &CExtinguisherJet::ExtinguishThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 

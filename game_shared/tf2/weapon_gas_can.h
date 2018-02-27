@@ -23,8 +23,9 @@
 //=========================================================
 class CWeaponGasCan : public CWeaponFlameThrower
 {
-	DECLARE_CLASS( CWeaponGasCan, CWeaponFlameThrower );
 public:
+	DECLARE_CLASS( CWeaponGasCan, CWeaponFlameThrower );
+
 	CWeaponGasCan();
 
 	DECLARE_NETWORKCLASS();

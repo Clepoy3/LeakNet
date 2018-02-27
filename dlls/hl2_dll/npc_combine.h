@@ -22,9 +22,9 @@
 //=========================================================
 class CNPC_Combine : public CAI_BaseHumanoid
 {
+public:
 	DECLARE_CLASS( CNPC_Combine, CAI_BaseHumanoid );
 
-public:
 	static const char *pCombineSentences[];
 
 	int				m_nKickDamage;

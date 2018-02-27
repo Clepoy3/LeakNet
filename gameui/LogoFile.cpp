@@ -128,7 +128,7 @@ int GrabMip ( HANDLE hdib, unsigned char *lump_p, char *lumpname, COLORREF crf, 
 	maxdistortion = 0;
 	// assume palette full if it's a transparent texture
 	colors_used = 256;
-	for (i = 0; i < 256; i++)
+	for (int i = 0; i < 256; i++)
 		color_used[i] = 1;
 
 

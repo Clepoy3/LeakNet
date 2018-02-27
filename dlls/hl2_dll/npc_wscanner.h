@@ -38,10 +38,9 @@ class CBeam;
 //-----------------------------------------------------------------------------
 class CNPC_WScanner : public CAI_BaseFlyingBot
 {
-	DECLARE_CLASS( CNPC_WScanner, CAI_BaseFlyingBot );
-	static int		m_nNumAttackers;		// Total number of attacking wasteland scanners
-
 public:
+	DECLARE_CLASS( CNPC_WScanner, CAI_BaseFlyingBot );
+
 	CNPC_WScanner();
 
 	Class_T			Classify(void);
@@ -126,6 +125,9 @@ protected:
 	float			m_fAntennaTarget;
 
 	CSprite*		m_pLightGlow;
+
+private:
+	static int		m_nNumAttackers;		// Total number of attacking wasteland scanners
 };
 
 #endif	//NPC_WSCANNER_H

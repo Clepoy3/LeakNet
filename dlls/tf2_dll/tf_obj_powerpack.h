@@ -24,8 +24,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectPowerPack : public CBaseObject
 {
-	DECLARE_CLASS( CObjectPowerPack, CBaseObject );
 public:
+	DECLARE_CLASS( CObjectPowerPack, CBaseObject );
+
 	DECLARE_SERVERCLASS();
 
 	CObjectPowerPack();

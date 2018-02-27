@@ -12,7 +12,6 @@
 #include "ServerSession.h"
 
 #include <vgui_controls/TextImage.h>
-#include <vgui_controls/LabelComboBox.h>
 #include <VGUI/IScheme.h>
 
 #include <stdio.h>
@@ -52,12 +51,12 @@ void COnlineStatusSelectComboBox::ApplySchemeSettings(vgui::IScheme *pScheme)
 	SetFgColor(GetSchemeColor("StatusSelectFgColor", pScheme));
 	_statusText->SetColor(GetSchemeColor("StatusSelectFgColor2", pScheme));
 
-	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor(), pScheme));
 
 	SetDefaultColor(GetFgColor(), GetBgColor());
 
-	SetArmedColor(GetSchemeColor("ButtonArmedFgColor", pScheme), GetBgColor());
-	SetDepressedColor(GetSchemeColor("ButtonDepressedFgColor", pScheme), GetBgColor());
+	SetArmedColor(GetSchemeColor("ButtonArmedFgColor", GetFgColor(), pScheme), GetBgColor());
+	SetDepressedColor(GetSchemeColor("ButtonDepressedFgColor", GetFgColor(), pScheme), GetBgColor());
 }
 
 //-----------------------------------------------------------------------------
@@ -76,10 +75,12 @@ void COnlineStatusSelectComboBox::PerformLayout()
 	// load in the appropriate icon.
 	char buf[128];
 	sprintf(buf, "friends/icon_%s", COnlineStatus::IDToString(ServerSession().GetStatus()));
+//	_statusImage = scheme()->GetImage(scheme()->GetDefaultScheme(), buf);
 	_statusImage = scheme()->GetImage(buf, false);
 
 	if (!_statusImage)
 	{
+	//	_statusImage = scheme()->GetImage(scheme()->GetDefaultScheme(), "resource/icon_blank");
 		_statusImage = scheme()->GetImage("resource/icon_blank", false);
 	}
 

@@ -1324,7 +1324,7 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 	}
 #else
 	//Drop primary weapon
-	if( stricmp( cmd, "DropPrimary" ) == 0 )
+	if( _stricmp( cmd, "DropPrimary" ) == 0 )
 	{
 		CBaseCombatWeapon *weapon = GetActiveWeapon();
 		if( weapon )
@@ -1340,7 +1340,7 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 	}
 #endif
 
-	if ( !stricmp( cmd, "emit" ) )
+	if ( !_stricmp( cmd, "emit" ) )
 	{
 		CSingleUserRecipientFilter filter( this );
 		if ( engine->Cmd_Argc() > 1 )

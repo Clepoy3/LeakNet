@@ -152,7 +152,7 @@ bool CConfigFile::Read( char const *pFilename )
 			if( entry.m_nEMailAddresses < CConfigFile::Entry::MAX_EMAIL_ADDRESSES && 
 				GetNextToken( fp, token, sizeof(token) ) )
 			{
-				if( stricmp( token, "-email" ) == 0 )
+				if( _stricmp( token, "-email" ) == 0 )
 				{
 					CConfigFile::EMailAddress *addr = &entry.m_EMailAddresses[entry.m_nEMailAddresses];
 					if( !GetNextToken( fp, addr->m_EMailAddress, sizeof(addr->m_EMailAddress) ) )
@@ -165,7 +165,7 @@ bool CConfigFile::Read( char const *pFilename )
 					++entry.m_nEMailAddresses;
 					continue;
 				}
-				else if( stricmp( token, "-fast" ) == 0 )
+				else if( _stricmp( token, "-fast" ) == 0 )
 				{
 					entry.m_bFastVis = true;
 					continue;
@@ -218,7 +218,7 @@ CConfigFile::Entry* CConfigFile::FindEntryByFilename( char const *pFilename )
 {
 	for( int i=0; i < m_Entries.Size(); i++ )
 	{
-		if( stricmp( m_Entries[i].m_Filename, pFilename ) == 0 )
+		if( _stricmp( m_Entries[i].m_Filename, pFilename ) == 0 )
 			return &m_Entries[i];
 	}
 
@@ -262,7 +262,7 @@ bool CConfigFile::VerifyNextToken( FILE *fp, char const *pTest )
 	if( !GetNextToken( fp, token, sizeof(token) ) )
 		return false;
 
-	return stricmp( token, pTest ) == 0;
+	return _stricmp( token, pTest ) == 0;
 }
 
 
@@ -348,7 +348,7 @@ bool SendMail( char *pTo, char *pSubject, char *pText )
 char const* FindArg( char const *pName )
 {
 	for( int i=1; i < __argc; i++ )
-		if( stricmp( pName, __argv[i] ) == 0 )
+		if( _stricmp( pName, __argv[i] ) == 0 )
 			return (i+1) < __argc ? __argv[i+1] : "";
 
 	return NULL;

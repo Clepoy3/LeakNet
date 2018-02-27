@@ -511,8 +511,8 @@ void CFlashBorderPanelEffect::doPaint( vgui::Panel *panel )
 //-----------------------------------------------------------------------------
 class CArrowPanelEffect : public CPanelEffect
 {
-	DECLARE_CLASS( CArrowPanelEffect, CPanelEffect );
 public:
+	DECLARE_CLASS( CArrowPanelEffect, CPanelEffect );
 
 	CArrowPanelEffect( ITFHintItem *owner );
 
@@ -851,8 +851,9 @@ void CArrowPanelEffect::ComputeBestPoint( int& px, int &py, vgui::Panel *output,
 //-----------------------------------------------------------------------------
 class CAxialLinePanelEffect : public CArrowPanelEffect
 {
-DECLARE_CLASS( CAxialLinePanelEffect, CArrowPanelEffect );
 public:
+	DECLARE_CLASS( CAxialLinePanelEffect, CArrowPanelEffect );
+
 	CAxialLinePanelEffect( ITFHintItem *owner );
 
 	virtual void doPaint( vgui::Panel *panel );

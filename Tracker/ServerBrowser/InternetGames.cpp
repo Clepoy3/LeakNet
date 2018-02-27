@@ -178,7 +178,7 @@ void CInternetGames::ServerResponded(serveritem_t &server)
 			percentDone = 99;
 		}
 
-		itoa( percentDone, tempPercent, 10 );
+		_itoa( percentDone, tempPercent, 10 );
 		localize()->ConvertANSIToUnicode(tempPercent, unicodePercent, sizeof( unicodePercent ));
 		localize()->ConstructString(unicode, sizeof( unicode ), localize()->Find("#ServerBrowser_RefreshingPercentDone"), 1, unicodePercent);
 		ServerBrowserDialog().UpdateStatusText(unicode);

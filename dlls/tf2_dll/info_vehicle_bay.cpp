@@ -165,7 +165,7 @@ void CVGuiScreenVehicleBay::SetBuildPoint( Vector &vecOrigin, QAngle &vecAngles 
 	m_bBayIsClear = false;
 	
 	// Start checking to see when I'm clear again
-	SetThink( BayThink );
+	SetThink( &CVGuiScreenVehicleBay::BayThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -230,7 +230,7 @@ void CVGuiScreenVehicleBay::FinishedBuildVehicle( CBaseObject *pObject )
 	m_OnFinishedBuild.FireOutput( pObject->GetBuilder(), this );
 
 	// Start checking to see when I'm clear again
-	SetThink( BayThink );
+	SetThink( &CVGuiScreenVehicleBay::BayThink );
 	SetNextThink( gpGlobals->curtime + 0.3 );
 }
 

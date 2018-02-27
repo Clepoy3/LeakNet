@@ -153,7 +153,7 @@ CChoreoEvent *RampTool::GetSafeEvent( void )
 		if ( !e || !e->HasEndTime() )
 			continue;
 
-		if ( !stricmp( m_szEvent, e->GetName() ) )
+		if ( !_stricmp( m_szEvent, e->GetName() ) )
 		{
 			return e;
 		}

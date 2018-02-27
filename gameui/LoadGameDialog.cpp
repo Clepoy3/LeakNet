@@ -83,7 +83,7 @@ CLoadGameDialog::~CLoadGameDialog()
 //-----------------------------------------------------------------------------
 void CLoadGameDialog::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Load" )  )
+	if ( !_stricmp( command, "Load" )  )
 	{
 		KeyValues *item = m_pGameList->GetItem( m_pGameList->GetSelectedItem(0) );
 		if ( item )
@@ -231,7 +231,7 @@ void CLoadGameDialog::ScanSavedGames( void )
 	char const* pFileName = filesystem()->FindFirst( szDirectory, &handle );
 	while (pFileName)
 	{
-		if ( !strnicmp(pFileName, "HLSave", strlen( "HLSave" ) ) )
+		if ( !_strnicmp(pFileName, "HLSave", strlen( "HLSave" ) ) )
 		{
 			pFileName = filesystem()->FindNext( handle );
 			continue;

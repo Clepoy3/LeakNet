@@ -75,7 +75,7 @@ void CCSClassMenu::Update( int *validClasses, int team )
 //-----------------------------------------------------------------------------
 Panel *CCSClassMenu::CreateControlByName(const char *controlName)
 {
-	if( !stricmp( "MouseOverPanelButton", controlName ) )
+	if( !_stricmp( "MouseOverPanelButton", controlName ) )
 	{
 		ClassHelperPanel *classPanel = new ClassHelperPanel( this, NULL );
 		classPanel->SetVisible( false );

@@ -85,7 +85,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define KeyInt( key, dest ) \
-	if (stricmp(szKey, key) != 0) \
+	if (_stricmp(szKey, key) != 0) \
 		; \
 	else \
 	{ \
@@ -93,7 +93,7 @@ static char THIS_FILE[] = __FILE__;
 	}
 
 #define KeyBool( key, dest ) \
-	if (stricmp(szKey, key) != 0) \
+	if (_stricmp(szKey, key) != 0) \
 		; \
 	else \
 	{ \
@@ -519,7 +519,7 @@ void CMapDoc::AssignToGroups(void)
 			{
 				int nID = GetNextNodeID();
 				char szID[80];
-				itoa(nID, szID, 10);
+				_itoa(nID, szID, 10);
 				pEntity->SetKeyValue("nodeid", szID);
 			}
 		}
@@ -856,7 +856,7 @@ BOOL CMapDoc::FindEntityCallback(CMapClass *pObject, FindEntity_t *pFindInfo)
 
 		if (VectorCompare(Pos, pFindInfo->Pos))
 		{
-			if (stricmp(pEntity->GetClassName(), pFindInfo->szClassName) == 0)
+			if (_stricmp(pEntity->GetClassName(), pFindInfo->szClassName) == 0)
 			{
 				pFindInfo->pEntityFound = pEntity;
 				return(FALSE);
@@ -961,7 +961,7 @@ bool CMapDoc::FindEntitiesByClassName(CMapEntityList *pFound, const char *pszCla
 
 			if (pszThisClass != NULL)
 			{
-				if ((pszClassName != NULL) && (!stricmp(pszClassName, pszThisClass)))
+				if ((pszClassName != NULL) && (!_stricmp(pszClassName, pszThisClass)))
 				{
 					pFound->AddTail(pEntity);
 				}
@@ -1000,7 +1000,7 @@ bool CMapDoc::FindEntitiesByKeyValue(CMapEntityList *pFound, const char *pszKey,
 
 			if (pszThisValue != NULL)
 			{
-				if ((pszValue != NULL) && (!stricmp(pszValue, pszThisValue)))
+				if ((pszValue != NULL) && (!_stricmp(pszValue, pszThisValue)))
 				{
 					pFound->AddTail(pEntity);
 				}
@@ -1632,7 +1632,7 @@ void CMapDoc::EditPrefab3D(DWORD dwPrefabID)
 //			bRMF - 
 // Output : Returns TRUE on success, FALSE on failure.
 //-----------------------------------------------------------------------------
-BOOL CMapDoc::Serialize(fstream& file, BOOL fIsStoring, BOOL bRMF)
+BOOL CMapDoc::Serialize(std::fstream& file, BOOL fIsStoring, BOOL bRMF)
 {
 	SetActiveMapDoc(this);
 
@@ -1878,7 +1878,7 @@ BOOL CMapDoc::SaveModified(void)
 		{
 		case IDYES:
 			{
-			fstream file;
+			std::fstream file;
 			Serialize(file, 0, 0);
 			return TRUE;
 			}
@@ -1913,11 +1913,11 @@ BOOL CMapDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	BOOL bRMF = FALSE;
 	BOOL bMAP = FALSE;
 
-	if (!stricmp(lpszPathName + strlen(lpszPathName) - 3, "rmf"))
+	if (!_stricmp(lpszPathName + strlen(lpszPathName) - 3, "rmf"))
 	{
 		bRMF = TRUE;
 	}
-	else if (!stricmp(lpszPathName + strlen(lpszPathName) - 3, "map"))
+	else if (!_stricmp(lpszPathName + strlen(lpszPathName) - 3, "map"))
 	{
 		bMAP = TRUE;
 	}
@@ -1929,7 +1929,8 @@ BOOL CMapDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	if ((bRMF) || (bMAP))
 	{
-		fstream file(lpszPathName, ios::in | ios::binary | ios::nocreate);
+	//	fstream file(lpszPathName, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+		std::fstream file(lpszPathName, std::ios::in | std::ios::binary);
 		if (!file.is_open())
 		{
 			return(FALSE);
@@ -2000,7 +2001,7 @@ BOOL CMapDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	// UNDONE: prefab serialization must be redone
 	if (m_bEditingPrefab)
 	{
-		fstream file;
+		std::fstream file;
 		Serialize(file, 0, 0);
 		SetModifiedFlag(FALSE);
 		OnCloseDocument();
@@ -2014,7 +2015,7 @@ BOOL CMapDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	strcpy(szFile, lpszPathName);
 	szFile[strlen(szFile) - 1] = 'x';
 
-	if (access(lpszPathName, 0) != -1)
+	if (_access(lpszPathName, 0) != -1)
 	{
 		if (!CopyFile(lpszPathName, szFile, FALSE))
 		{
@@ -2032,11 +2033,11 @@ BOOL CMapDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	//
 	BOOL bRMF = FALSE;
 	BOOL bMAP = FALSE;
-	if (!stricmp(lpszPathName + strlen(lpszPathName) - 3, "rmf"))
+	if (!_stricmp(lpszPathName + strlen(lpszPathName) - 3, "rmf"))
 	{
 		bRMF = TRUE;
 	}
-	else if (!stricmp(lpszPathName + strlen(lpszPathName) - 3, "map"))
+	else if (!_stricmp(lpszPathName + strlen(lpszPathName) - 3, "map"))
 	{
 		bMAP = TRUE;
 	}
@@ -2062,7 +2063,7 @@ BOOL CMapDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	//
 	// Half-Life used RMFs and MAPs.
 	//
-	fstream file(lpszPathName, ios::out | ios::binary);
+	std::fstream file(lpszPathName, std::ios::out | std::ios::binary);
 	if (!file.is_open())
 	{
 		char szError[_MAX_PATH];
@@ -3236,7 +3237,8 @@ void CMapDoc::OnEditToWorld(void)
 //-----------------------------------------------------------------------------
 void CMapDoc::OnToolsSubtractselection(void)
 {
-	if (Selection_GetCount == 0)
+//	if (Selection_GetCount == 0) // VXP: Conv
+	if (Selection_GetCount() == 0)
 	{
 		return;
 	}
@@ -4870,7 +4872,7 @@ void CMapDoc::OnToolsHollow(void)
 	//
 	static int iWallWidth = 32;
 	char szBuf[128];
-	itoa(iWallWidth, szBuf, 10);
+	_itoa(iWallWidth, szBuf, 10);
 	CStrDlg dlg(CStrDlg::Spin, szBuf, "How thick do you want the walls? Use a negative number to hollow outward.", "Worldcraft");
 	dlg.SetRange(-1024, 1024, 4);
 	if (dlg.DoModal() == IDCANCEL)
@@ -5397,7 +5399,7 @@ bool CMapDoc::ExpandTargetNameKeywords(char *szNewTargetName, const char *szOldT
 					// If the prefix and the suffix match ours, extract the instance number
 					// from between them and check it against our highest instance number.
 					//
-					if ((strnicmp(szTemp, szPrefix, nPrefixLen) == 0) && (stricmp(pszTempSuffix, szSuffix) == 0))
+					if ((_strnicmp(szTemp, szPrefix, nPrefixLen) == 0) && (_stricmp(pszTempSuffix, szSuffix) == 0))
 					{
 						*pszTempSuffix = '\0';
 
@@ -5566,7 +5568,7 @@ void CMapDoc::OnViewHideselectedobjects(void)
 	// Place the selected objects in the new group.
 	//
 	nSelCount = Selection_GetCount();
-	for (i = 0; i < nSelCount; i++)
+	for (int i = 0; i < nSelCount; i++)
 	{
 		CMapClass *pObject = Selection_GetObject(i);
 		if (pObject->GetParent() == m_pWorld)
@@ -6068,7 +6070,7 @@ static char * FindInString(char *pszSub, char *pszMain)
 	{
 		if(ch1 == toupper(p[0]))
 		{
-			if(!strnicmp(pszSub, p, nSub))
+			if(!_strnicmp(pszSub, p, nSub))
 				return p;
 		}
 		++p;
@@ -6107,7 +6109,7 @@ static BOOL ReplaceTexFunc(CMapSolid *pSolid, ReplaceTexInfo_t *pInfo)
 		{
 			case 0:	// replace exact matches only:
 			{
-				if(!strcmpi(pszFaceTex, pInfo->szFind))
+				if(!_strcmpi(pszFaceTex, pInfo->szFind))
 				{
 					if(bMarkOnly)
 					{
@@ -6292,7 +6294,7 @@ static BOOL BatchReplaceTextureCallback( CMapClass *pObject, BatchReplaceTexture
 	{
 		face = solid->GetFace( i );
 		face->GetTextureName( szCurrentTexture );
-		if( stricmp( szCurrentTexture, pInfo->szFindTexName ) == 0 )
+		if( _stricmp( szCurrentTexture, pInfo->szFindTexName ) == 0 )
 		{
 			face->SetTexture( pInfo->szReplaceTexName );
 		}
@@ -7309,7 +7311,7 @@ void CMapDoc::OnMapLoadpointfile(void)
 		return;
 	}
 	
-	ifstream file(m_strLastPointFile);
+	std::ifstream file(m_strLastPointFile);
 	char szLine[256];
 	int nLines = 0;
 

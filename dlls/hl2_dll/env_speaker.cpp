@@ -81,7 +81,7 @@ void CSpeaker::Spawn( void )
 	{
 		Warning( "'speaker' entity with no Level/Sentence! at: %f, %f, %f\n", GetAbsOrigin().x, GetAbsOrigin().y, GetAbsOrigin().z );
 		SetNextThink( gpGlobals->curtime + 0.1f );
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		return;
 	}
 
@@ -94,7 +94,7 @@ void CSpeaker::Spawn( void )
     SetSolid( SOLID_NONE );
     SetMoveType( MOVETYPE_NONE );
 	
-	SetThink(SpeakerThink);
+	SetThink(&CSpeaker::SpeakerThink);
 	SetNextThink( TICK_NEVER_THINK );
 
 	// allow on/off switching via 'use' function.

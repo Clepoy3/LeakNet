@@ -769,7 +769,7 @@ void CFaceEditDispPage::OnButtonSew( void )
 		FaceListSewEdges();
 
 		// update the parents - force a rebuild
-		for( ndxFace = 0; ndxFace < faceCount; ndxFace++ )
+		for( int ndxFace = 0; ndxFace < faceCount; ndxFace++ )
 		{
 			// get current displacement
 			CMapFace *pFace = pSheet->GetFaceListDataFace( ndxFace );

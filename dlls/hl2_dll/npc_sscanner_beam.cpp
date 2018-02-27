@@ -561,7 +561,7 @@ void CShieldBeam::ShieldBeamStart(  CBaseEntity* pHeadEntity, CBaseEntity*	pTail
 #endif
 	}
 
-	SetThink( ShieldBeamThink );
+	SetThink( &CShieldBeam::ShieldBeamThink );
 	SetNextThink( gpGlobals->curtime );
 	m_bKillBeam						= false;
 }
@@ -579,7 +579,7 @@ CShieldBeam *CShieldBeam::ShieldBeamCreate(CBaseEntity* pHeadEntity, int nAttach
 	pShieldBeam->m_hHead						= pHeadEntity;
 	pShieldBeam->m_nHeadAttachment				= nAttachment;
 	pShieldBeam->SetNextThink( gpGlobals->curtime );
-	pShieldBeam->SetThink(ShieldBeamThink);
+	pShieldBeam->SetThink(&CShieldBeam::ShieldBeamThink);
 	pShieldBeam->m_bKillBeam					= false;
 	
 	return pShieldBeam;

@@ -17,9 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectShieldWallBase : public C_BaseObject
 {
+public:
 	DECLARE_CLASS( C_ObjectShieldWallBase, C_BaseObject );
 
-public:
 	C_ObjectShieldWallBase() {}
 
 public:
@@ -37,8 +37,9 @@ private:
 //-----------------------------------------------------------------------------
 class C_ObjectShieldWall : public C_ObjectShieldWallBase
 {
-	DECLARE_CLASS( C_ObjectShieldWall, C_ObjectShieldWallBase );
 public:
+	DECLARE_CLASS( C_ObjectShieldWall, C_ObjectShieldWallBase );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 
@@ -90,9 +91,9 @@ void C_ObjectShieldWall::RecalculateIDString( void )
 //-----------------------------------------------------------------------------
 class CShieldWallControlPanel : public CRotatingObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CShieldWallControlPanel, CRotatingObjectControlPanel );
 
-public:
 	CShieldWallControlPanel( vgui::Panel *parent, const char *panelName );
 };
 

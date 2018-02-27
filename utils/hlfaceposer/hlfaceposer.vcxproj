@@ -1,0 +1,480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../utils/hlfaceposer;../../hlfaceposer;../mxtk/include;../../public;../../common;../common;../hlmviewer/src;../../game_shared;../SAPI51/Include;./lipsinc;../phonemeextractor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\hlfaceposer.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Debug\hlfaceposer.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\hlfaceposer.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBC;MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Debug\hlfaceposer.exe</OutputFile>
+      <AdditionalLibraryDirectories>../sapi51/lib/i386;..\..\..\src\lib\common;..\..\..\src\lib\public;./lipsinc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;winmm.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <ForceFileOutput>
+      </ForceFileOutput>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\bin\$(TargetName).exe" 
+if exist "$(TargetPath)" copy "$(TargetPath)" ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalIncludeDirectories>../../utils/hlfaceposer;../../hlfaceposer;../mxtk/include;../../public;../../common;../common;../hlmviewer/src;../../game_shared;../SAPI51/Include;./lipsinc;../phonemeextractor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release\hlfaceposer.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\Release\hlfaceposer.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\hlfaceposer.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>MSVCRT;LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Release\hlfaceposer.exe</OutputFile>
+      <AdditionalLibraryDirectories>../sapi51/lib/i386;..\..\..\src\lib\common;..\..\..\src\lib\public;./lipsinc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;winmm.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\bin\$(TargetName).exe" 
+if exist "$(TargetPath)" copy "$(TargetPath)" ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ChoreoActorWidget.cpp" />
+    <ClCompile Include="ChoreoChannelWidget.cpp" />
+    <ClCompile Include="ChoreoEventWidget.cpp" />
+    <ClCompile Include="ChoreoGlobalEventWidget.cpp" />
+    <ClCompile Include="ChoreoWidget.cpp" />
+    <ClCompile Include="ChoreoWidgetDrawHelper.cpp" />
+    <ClCompile Include="ActorProperties.cpp" />
+    <ClCompile Include="addsoundentry.cpp" />
+    <ClCompile Include="basedialogparams.cpp" />
+    <ClCompile Include="ChannelProperties.cpp" />
+    <ClCompile Include="..\..\Public\checksum_crc.cpp" />
+    <ClCompile Include="choiceproperties.cpp" />
+    <ClCompile Include="ChoreoView.cpp" />
+    <ClCompile Include="CloseCaptionManager.cpp" />
+    <ClCompile Include="ControlPanel.cpp" />
+    <ClCompile Include="EditPhrase.cpp" />
+    <ClCompile Include="EventProperties.cpp" />
+    <ClCompile Include="expclass.cpp" />
+    <ClCompile Include="expression.cpp" />
+    <ClCompile Include="ExpressionProperties.cpp" />
+    <ClCompile Include="expressions.cpp" />
+    <ClCompile Include="ExpressionTool.cpp" />
+    <ClCompile Include="faceposer_models.cpp" />
+    <ClCompile Include="faceposertoolwindow.cpp" />
+    <ClCompile Include="FacePoserWorkspace.cpp" />
+    <ClCompile Include="FlexPanel.cpp" />
+    <ClCompile Include="GestureTool.cpp" />
+    <ClCompile Include="GlobalEventProperties.cpp" />
+    <ClCompile Include="hlfaceposer.cpp" />
+    <ClCompile Include="InputProperties.cpp" />
+    <ClCompile Include="..\..\game_shared\interval.cpp" />
+    <ClCompile Include="matsyswin.cpp" />
+    <ClCompile Include="mdlviewer.cpp" />
+    <ClCompile Include="..\..\public\tier0\memoverride.cpp" />
+    <ClCompile Include="..\..\public\mempool.cpp" />
+    <ClCompile Include="mxbitmapbutton.cpp" />
+    <ClCompile Include="mxbitmaptools.cpp" />
+    <ClCompile Include="mxbitmapwindow.cpp" />
+    <ClCompile Include="mxexpressionslider.cpp" />
+    <ClCompile Include="mxExpressionTab.cpp" />
+    <ClCompile Include="mxexpressiontray.cpp" />
+    <ClCompile Include="mxstatuswindow.cpp" />
+    <ClCompile Include="PhonemeConverter.cpp" />
+    <ClCompile Include="PhonemeEditor.cpp" />
+    <ClCompile Include="PhonemeEditor_CloseCaption.cpp" />
+    <ClCompile Include="PhonemeProperties.cpp" />
+    <ClCompile Include="RampTool.cpp" />
+    <ClCompile Include="SceneRampTool.cpp" />
+    <ClCompile Include="..\..\Public\sentence.cpp" />
+    <ClCompile Include="..\..\game_shared\SoundEmitterSystemBase.cpp" />
+    <ClCompile Include="soundlookup.cpp" />
+    <ClCompile Include="tabwindow.cpp" />
+    <ClCompile Include="TimelineItem.cpp" />
+    <ClCompile Include="..\..\Public\utlsymbol.cpp" />
+    <ClCompile Include="..\..\game_shared\bone_setup.cpp" />
+    <ClCompile Include="..\..\public\characterset.cpp" />
+    <ClCompile Include="..\common\cmdlib.cpp" />
+    <ClCompile Include="..\..\Public\CollisionUtils.cpp" />
+    <ClCompile Include="..\..\public\filesystem_helpers.cpp" />
+    <ClCompile Include="..\..\Public\FileSystem_Tools.cpp" />
+    <ClCompile Include="..\..\Public\ImageLoader.cpp" />
+    <ClCompile Include="..\..\Public\interface.cpp" />
+    <ClCompile Include="..\..\public\KeyValues.cpp" />
+    <ClCompile Include="..\..\Public\Mathlib.cpp" />
+    <ClCompile Include="..\..\Public\physdll.cpp" />
+    <ClCompile Include="..\hlmviewer\src\physmesh.cpp" />
+    <ClCompile Include="..\common\scriplib.cpp" />
+    <ClCompile Include="..\hlmviewer\src\studio_flex.cpp" />
+    <ClCompile Include="..\hlmviewer\src\studio_render.cpp" />
+    <ClCompile Include="..\hlmviewer\src\studio_utils.cpp" />
+    <ClCompile Include="..\..\Public\UtlBuffer.cpp" />
+    <ClCompile Include="..\hlmviewer\src\ViewerSettings.cpp" />
+    <ClCompile Include="..\..\public\studio.cpp" />
+    <ClCompile Include="..\..\game_shared\choreoactor.cpp" />
+    <ClCompile Include="..\..\game_shared\choreochannel.cpp" />
+    <ClCompile Include="..\..\game_shared\choreoevent.cpp" />
+    <ClCompile Include="..\..\game_shared\choreoscene.cpp" />
+    <ClCompile Include="riff.cpp" />
+    <ClCompile Include="snd_audio_source.cpp" />
+    <ClCompile Include="snd_wave_mixer.cpp" />
+    <ClCompile Include="snd_wave_mixer_adpcm.cpp" />
+    <ClCompile Include="snd_wave_source.cpp" />
+    <ClCompile Include="sound.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChoreoActorWidget.h" />
+    <ClInclude Include="ChoreoChannelWidget.h" />
+    <ClInclude Include="ChoreoEventWidget.h" />
+    <ClInclude Include="ChoreoGlobalEventWidget.h" />
+    <ClInclude Include="ChoreoWidget.h" />
+    <ClInclude Include="ChoreoWidgetDrawHelper.h" />
+    <ClInclude Include="ActorProperties.h" />
+    <ClInclude Include="addsoundentry.h" />
+    <ClInclude Include="basedialogparams.h" />
+    <ClInclude Include="ChannelProperties.h" />
+    <ClInclude Include="choiceproperties.h" />
+    <ClInclude Include="ChoreoView.h" />
+    <ClInclude Include="ChoreoViewColors.h" />
+    <ClInclude Include="ControlPanel.h" />
+    <ClInclude Include="EditPhrase.h" />
+    <ClInclude Include="EventProperties.h" />
+    <ClInclude Include="expclass.h" />
+    <ClInclude Include="expression.h" />
+    <ClInclude Include="ExpressionProperties.h" />
+    <ClInclude Include="expressions.h" />
+    <ClInclude Include="..\..\game_shared\expressionsample.h" />
+    <ClInclude Include="ExpressionTool.h" />
+    <ClInclude Include="faceposer_models.h" />
+    <ClInclude Include="faceposertoolwindow.h" />
+    <ClInclude Include="FlexPanel.h" />
+    <ClInclude Include="GestureTool.h" />
+    <ClInclude Include="GlobalEventProperties.h" />
+    <ClInclude Include="hlfaceposer.h" />
+    <ClInclude Include="ICloseCaptionManager.h" />
+    <ClInclude Include="ifaceposersound.h" />
+    <ClInclude Include="ifaceposerworkspace.h" />
+    <ClInclude Include="InputProperties.h" />
+    <ClInclude Include="matsyswin.h" />
+    <ClInclude Include="mdlviewer.h" />
+    <ClInclude Include="mxbitmapbutton.h" />
+    <ClInclude Include="mxbitmaptools.h" />
+    <ClInclude Include="mxbitmapwindow.h" />
+    <ClInclude Include="mxexpressionslider.h" />
+    <ClInclude Include="mxexpressiontab.h" />
+    <ClInclude Include="mxexpressiontray.h" />
+    <ClInclude Include="mxstatuswindow.h" />
+    <ClInclude Include="PhonemeConverter.h" />
+    <ClInclude Include="PhonemeEditor.h" />
+    <ClInclude Include="PhonemeEditorColors.h" />
+    <ClInclude Include="PhonemeProperties.h" />
+    <ClInclude Include="RampTool.h" />
+    <ClInclude Include="SceneRampTool.h" />
+    <ClInclude Include="..\..\Public\sentence.h" />
+    <ClInclude Include="..\..\game_shared\SoundEmitterSystemBase.h" />
+    <ClInclude Include="soundlookup.h" />
+    <ClInclude Include="tabwindow.h" />
+    <ClInclude Include="TimelineItem.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\game_shared\iscenetokenprocessor.h" />
+    <ClInclude Include="..\..\Public\amd3dx.h" />
+    <ClInclude Include="..\..\public\basehandle.h" />
+    <ClInclude Include="..\..\Public\basetypes.h" />
+    <ClInclude Include="..\..\game_shared\bone_setup.h" />
+    <ClInclude Include="..\..\Public\BSPFILE.H" />
+    <ClInclude Include="..\..\Public\bspflags.h" />
+    <ClInclude Include="..\..\Public\bumpvects.h" />
+    <ClInclude Include="..\..\Public\characterset.h" />
+    <ClInclude Include="..\..\Public\checksum_crc.h" />
+    <ClInclude Include="..\common\cmdlib.h" />
+    <ClInclude Include="..\..\Public\cmodel.h" />
+    <ClInclude Include="..\..\Public\CollisionUtils.h" />
+    <ClInclude Include="..\..\public\Color.h" />
+    <ClInclude Include="..\..\Public\commonmacros.h" />
+    <ClInclude Include="..\..\Public\const.h" />
+    <ClInclude Include="..\..\public\vphysics\constraints.h" />
+    <ClInclude Include="..\..\Public\convar.h" />
+    <ClInclude Include="..\..\public\tier0\dbg.h" />
+    <ClInclude Include="..\..\public\tier0\fasttimer.h" />
+    <ClInclude Include="..\..\Public\FileSystem.h" />
+    <ClInclude Include="..\..\public\filesystem_helpers.h" />
+    <ClInclude Include="..\..\Public\FileSystem_Tools.h" />
+    <ClInclude Include="..\..\public\gametrace.h" />
+    <ClInclude Include="..\..\public\appframework\IAppSystem.h" />
+    <ClInclude Include="..\..\public\vstdlib\ICommandLine.h" />
+    <ClInclude Include="..\..\Public\engine\IEngineSound.h" />
+    <ClInclude Include="..\..\public\ihandleentity.h" />
+    <ClInclude Include="..\..\public\vstdlib\IKeyValuesSystem.h" />
+    <ClInclude Include="..\..\Public\ImageLoader.h" />
+    <ClInclude Include="..\..\public\materialsystem\imaterial.h" />
+    <ClInclude Include="..\..\public\materialsystem\imaterialproxyfactory.h" />
+    <ClInclude Include="..\..\public\materialsystem\imaterialsystem.h" />
+    <ClInclude Include="..\..\public\materialsystem\imaterialsystemhardwareconfig.h" />
+    <ClInclude Include="..\..\public\materialsystem\imaterialvar.h" />
+    <ClInclude Include="..\..\public\materialsystem\imesh.h" />
+    <ClInclude Include="..\..\Public\interface.h" />
+    <ClInclude Include="..\..\game_shared\interval.h" />
+    <ClInclude Include="..\..\public\irecipientfilter.h" />
+    <ClInclude Include="..\..\Public\IStudioRender.h" />
+    <ClInclude Include="..\..\public\materialsystem\itexture.h" />
+    <ClInclude Include="..\..\public\KeyValues.h" />
+    <ClInclude Include="mapentities.h" />
+    <ClInclude Include="..\..\public\materialsystem\materialsystem_config.h" />
+    <ClInclude Include="..\..\Public\MATHLIB.H" />
+    <ClInclude Include="..\hlmviewer\src\matsyswin.h" />
+    <ClInclude Include="..\hlmviewer\src\mdlviewer.h" />
+    <ClInclude Include="..\..\public\tier0\mem.h" />
+    <ClInclude Include="..\..\public\tier0\memalloc.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgoff.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgon.h" />
+    <ClInclude Include="..\..\Public\MemPool.h" />
+    <ClInclude Include="..\..\Public\mouthinfo.h" />
+    <ClInclude Include="..\mxtk\include\mx\mx.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxBmp.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxCheckBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxChoice.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxChooseColor.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxEvent.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxFileDialog.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxGlWindow.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxGroupBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxImage.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxInit.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLabel.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLineEdit.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLinkedList.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxListBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMatSysWindow.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMenu.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMenuBar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMessageBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxpath.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxPcx.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxPopupMenu.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxProgressBar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxRadioButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxScrollbar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxSlider.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxstring.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxTab.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxTga.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxToggleButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxToolTip.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxTreeView.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxWidget.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxWindow.h" />
+    <ClInclude Include="..\..\public\networkvar.h" />
+    <ClInclude Include="..\..\game_shared\npcevent.h" />
+    <ClInclude Include="..\phonemeextractor\phonemeextractor.h" />
+    <ClInclude Include="..\..\Public\phyfile.h" />
+    <ClInclude Include="..\..\Public\physdll.h" />
+    <ClInclude Include="..\hlmviewer\src\physmesh.h" />
+    <ClInclude Include="..\..\Public\plane.h" />
+    <ClInclude Include="..\..\public\tier0\platform.h" />
+    <ClInclude Include="..\..\public\protected_things.h" />
+    <ClInclude Include="..\..\public\vstdlib\random.h" />
+    <ClInclude Include="..\..\Public\s3_intrf.h" />
+    <ClInclude Include="..\sapi51\Include\sapi.h" />
+    <ClInclude Include="..\sapi51\Include\sapiddk.h" />
+    <ClInclude Include="..\common\scriplib.h" />
+    <ClInclude Include="..\..\game_shared\sharedInterface.h" />
+    <ClInclude Include="..\..\Public\soundflags.h" />
+    <ClInclude Include="..\sapi51\Include\Spddkhlp.h" />
+    <ClInclude Include="..\sapi51\Include\spdebug.h" />
+    <ClInclude Include="..\sapi51\Include\sperror.h" />
+    <ClInclude Include="..\sapi51\Include\sphelper.h" />
+    <ClInclude Include="..\..\Public\string_t.h" />
+    <ClInclude Include="..\..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\..\Public\studio.h" />
+    <ClInclude Include="..\hlmviewer\src\studio_render.h" />
+    <ClInclude Include="..\hlmviewer\src\StudioModel.h" />
+    <ClInclude Include="..\..\Public\TGALoader.h" />
+    <ClInclude Include="..\..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\..\Public\utldict.h" />
+    <ClInclude Include="..\..\Public\utllinkedlist.h" />
+    <ClInclude Include="..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\Public\utlsymbol.h" />
+    <ClInclude Include="..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\Public\vcollide.h" />
+    <ClInclude Include="..\..\Public\vcollide_parse.h" />
+    <ClInclude Include="..\..\Public\vector.h" />
+    <ClInclude Include="..\..\Public\vector2d.h" />
+    <ClInclude Include="..\..\Public\vector4d.h" />
+    <ClInclude Include="..\hlmviewer\src\ViewerSettings.h" />
+    <ClInclude Include="..\..\Public\vphysics_interface.h" />
+    <ClInclude Include="..\..\public\tier0\vprof.h" />
+    <ClInclude Include="..\..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="..\..\game_shared\choreoactor.h" />
+    <ClInclude Include="..\..\game_shared\choreochannel.h" />
+    <ClInclude Include="..\..\game_shared\choreoevent.h" />
+    <ClInclude Include="..\..\game_shared\choreoscene.h" />
+    <ClInclude Include="..\..\game_shared\ichoreoeventcallback.h" />
+    <ClInclude Include="AudioWaveOutput.h" />
+    <ClInclude Include="riff.h" />
+    <ClInclude Include="snd_audio_source.h" />
+    <ClInclude Include="snd_wave_mixer.h" />
+    <ClInclude Include="snd_wave_mixer_adpcm.h" />
+    <ClInclude Include="snd_wave_mixer_private.h" />
+    <ClInclude Include="snd_wave_source.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="cbase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="hlfaceposer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ico00001.ico" />
+    <CustomBuild Include="ico00002.ico" />
+    <CustomBuild Include="icon1.ico" />
+    <CustomBuild Include="icon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\common\mxtk.lib" />
+    <Library Include="..\..\lib\common\s3tc.lib" />
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

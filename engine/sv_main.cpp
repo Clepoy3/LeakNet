@@ -175,7 +175,7 @@ static void SpewToFile( char const* pFmt, ... )
 bool ServerHasPassword()
 {
 	const char * pw = sv_password.GetString();
-	return pw[0] && stricmp(pw, "none");
+	return pw[0] && _stricmp(pw, "none");
 }
 
 
@@ -2615,7 +2615,7 @@ void SVC_RuleInfo (void)
 		{
 			// If it has a value string and the string is not "none"
 			if ( ( strlen( ((ConVar*)var)->GetString() ) > 0 ) &&
-				 stricmp( ((ConVar*)var)->GetString(), "none" ) )
+				 _stricmp( ((ConVar*)var)->GetString(), "none" ) )
 			{
 				buf.WriteString( "1" );
 			}
@@ -2684,7 +2684,7 @@ void SV_ConnectionlessPacket (void)
 		master->RespondToHeartbeatChallenge ();
 		return;
 	}
-	else if ( !stricmp( c, "log" ) )
+	else if ( !_stricmp( c, "log" ) )
 	{
 		if ( sv_logrelay.GetFloat() && args && ( strlen( args ) > 4 ) )
 		{
@@ -2704,27 +2704,27 @@ void SV_ConnectionlessPacket (void)
 		SVC_GetChallenge();
 		return;
 	}
-	else if (!stricmp(c, "info"))
+	else if (!_stricmp(c, "info"))
 	{
 		SVC_Info( false );
 		return;
 	}
-	else if (!stricmp(c, "details"))
+	else if (!_stricmp(c, "details"))
 	{
 		SVC_Info( true );
 		return;
 	}
-	else if (!stricmp(c, "infostring"))
+	else if (!_stricmp(c, "infostring"))
 	{
 		SVC_InfoString();
 		return;
 	}
-	else if (!stricmp(c, "players")) // Player info request.
+	else if (!_stricmp(c, "players")) // Player info request.
 	{
 		SVC_PlayerInfo();
 		return;
 	}
-	else if (!stricmp(c, "rules"))   // Rule info request.
+	else if (!_stricmp(c, "rules"))   // Rule info request.
 	{
 		SVC_RuleInfo();
 		return;
@@ -4081,7 +4081,7 @@ char *SV_ExtractNameFromUserinfo( client_t *cl )
 		val = (char *)Info_ValueForKey (cl->userinfo, "name");
 	}
 
-	if (!val[0] || !stricmp(val, "console")) {
+	if (!val[0] || !_stricmp(val, "console")) {
 		Info_SetValueForKey (cl->userinfo, "name", "unnamed", MAX_INFO_STRING);
 		val = (char *)Info_ValueForKey (cl->userinfo, "name");
 	}
@@ -4091,7 +4091,7 @@ char *SV_ExtractNameFromUserinfo( client_t *cl )
 		for (i=0, client = svs.clients ; i<MAX_CLIENTS ; i++, client++) {
 			if ( !client->active || !client->spawned || client == cl)
 				continue;
-			if (!stricmp(client->name, val))
+			if (!_stricmp(client->name, val))
 				break;
 		}
 		if (i != MAX_CLIENTS) { // dup name

@@ -50,9 +50,9 @@
 
 class CHL1NPCTalker : public CNPCSimpleTalker
 {
-	DECLARE_CLASS( CHL1NPCTalker, CNPCSimpleTalker );
-	
 public:
+	DECLARE_CLASS( CHL1NPCTalker, CNPCSimpleTalker );
+
 	CHL1NPCTalker( void )
 	{
 	}
@@ -80,7 +80,7 @@ public:
 
 	float			PickRandomLookTarget( bool bExcludePlayers = false, float minTime = 1.5, float maxTime = 2.5 );
 
-protected:
+//protected: // VXP: Conv
 	virtual void 	FollowerUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 
 private:

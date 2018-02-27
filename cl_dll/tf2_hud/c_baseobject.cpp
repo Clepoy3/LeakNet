@@ -918,9 +918,9 @@ EXPOSE_INTERFACE( CObjectPowerProxy, IMaterialProxy, "ObjectPower" IMATERIAL_PRO
 //-----------------------------------------------------------------------------
 class CBasicControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CBasicControlPanel, CObjectControlPanel );
 
-public:
 	CBasicControlPanel( vgui::Panel *parent, const char *panelName );
 };
 

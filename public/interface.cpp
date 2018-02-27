@@ -27,6 +27,16 @@
 #include <stdlib.h>
 #include "vstdlib/strtools.h"
 
+#include "tier0/dbg.h"
+#ifdef _WIN32
+#include <direct.h> // getcwd
+#elif _LINUX
+#define _getcwd getcwd
+#endif
+
+// memdbgon must be the last include file in a .cpp file!!!
+#include "tier0/memdbgon.h"
+
 // ------------------------------------------------------------------------------------ //
 // InterfaceReg.
 // ------------------------------------------------------------------------------------ //
@@ -128,31 +138,53 @@ CSysModule	*Sys_LoadModule( const char *pModuleName )
 	// If using the Steam filesystem, either the DLL must be a minimum footprint
 	// file in the depot (MFP) or a filesystem GetLocalCopy() call must be made
 	// prior to the call to this routine.
-#ifdef _WIN32
-	HMODULE hDLL = LoadLibrary( pModuleName );
-#elif _LINUX
 	char szCwd[1024];
-        char szAbsoluteModuleName[1024];
+    char szAbsoluteModuleName[1024];
 
-        getcwd( szCwd, sizeof( szCwd ) );
-        if ( szCwd[ strlen( szCwd ) - 1 ] == '/' )
-                szCwd[ strlen( szCwd ) - 1 ] = 0;
+	// if a full path wasn't passed in use the current working dir
+	if ( !Q_IsAbsolutePath(pModuleName) ) // if a full path wasn't passed in
+	{
+		_getcwd( szCwd, sizeof( szCwd ) );
+		if ( szCwd[ strlen( szCwd ) - 1 ] == '/' )
+				szCwd[ strlen( szCwd ) - 1 ] = 0;
 
-        _snprintf( szAbsoluteModuleName, sizeof(szAbsoluteModuleName),"%s/%s", szCwd, pModuleName );
+		Q_snprintf( szAbsoluteModuleName, sizeof(szAbsoluteModuleName), "%s/%s", szCwd, pModuleName );
+	}
+	else
+	{
+		Q_strncpy( szAbsoluteModuleName, pModuleName, sizeof(szAbsoluteModuleName) );
+	}
 
-        HMODULE hDLL = dlopen( szAbsoluteModuleName, RTLD_NOW );
+#ifdef _WIN32
+	HMODULE hDLL = LoadLibrary( szAbsoluteModuleName );
+#elif _LINUX
+	HMODULE hDLL = dlopen( szAbsoluteModuleName, RTLD_NOW );
 #endif
 
 	if( !hDLL )
 	{
 		char str[512];
 #ifdef _WIN32
-		Q_snprintf( str, sizeof(str), "%s.dll", pModuleName );
+		Q_snprintf( str, sizeof(str), "%s.dll", szAbsoluteModuleName );
 		hDLL = LoadLibrary( str );
 #elif _LINUX
 		_snprintf( str, sizeof(str), "%s_486.so", szAbsoluteModuleName );
                 hDLL = dlopen(str, RTLD_NOW);
 #endif
+
+		// VXP: Duplicating!
+		if ( !hDLL )
+		{
+			Q_snprintf( szAbsoluteModuleName, sizeof(szAbsoluteModuleName), "%s/bin/%s", szCwd, pModuleName );
+		}
+
+#ifdef _WIN32
+		hDLL = LoadLibrary( szAbsoluteModuleName );
+#elif _LINUX
+		hDLL = dlopen( szAbsoluteModuleName, RTLD_NOW );
+#endif
+		// VXP: Duplicating!
+
 // So you can see what the error is in the debugger...
 #ifdef _DEBUG
 		if ( !hDLL )

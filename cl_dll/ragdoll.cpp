@@ -193,7 +193,7 @@ IRagdoll *CreateRagdoll( C_BaseEntity *ent, studiohdr_t *pstudiohdr, const Vecto
 }
 
 template<class Type, int COUNT>
-CUtlFixedLinkedList< CInterpolatedVarArray<Type,COUNT>::CInterpolatedVarEntry >	CInterpolatedVarArray<Type,COUNT>::m_VarHistory;
+CUtlFixedLinkedList< typename CInterpolatedVarArray<Type,COUNT>::CInterpolatedVarEntry >	CInterpolatedVarArray<Type,COUNT>::m_VarHistory;
 
 
 class C_ServerRagdoll : public C_BaseAnimating

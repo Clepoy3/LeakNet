@@ -243,7 +243,7 @@ bool CLocalizedStringTable::AddFile(IFileSystem *fileSystem, const char *szFileN
 	bool bTriedEnglish = false;
 
 	strcpy(fileName, szFileName);
-	char *langptr = strstr(szFileName, LANGUAGE_STRING);
+	char *langptr = (char *)strstr(szFileName, LANGUAGE_STRING);
 	if (langptr)
 	{
 		// copy out the initial part of the string
@@ -338,7 +338,7 @@ bool CLocalizedStringTable::AddFile(IFileSystem *fileSystem, const char *szFileN
 		ConvertUnicodeToANSI(keytoken, key, sizeof(key));
 
 		// if we have a C++ style comment, read to end of line and continue
-		if (!strnicmp(key, "//", 2))
+		if (!_strnicmp(key, "//", 2))
 		{
 			data = ReadToEndOfLine(data);
 			continue;
@@ -351,18 +351,18 @@ bool CLocalizedStringTable::AddFile(IFileSystem *fileSystem, const char *szFileN
 		
 		if (state == STATE_BASE)
 		{
-			if (!stricmp(key, "Language"))
+			if (!_stricmp(key, "Language"))
 			{
 				// copy out our language setting
 				char value[2048];
 				ConvertUnicodeToANSI(valuetoken, value, sizeof(value));
 				strncpy(m_szLanguage, value, sizeof(m_szLanguage) - 1);
 			}
-			else if (!stricmp(key, "Tokens"))
+			else if (!_stricmp(key, "Tokens"))
 			{
 				state = STATE_TOKENS;
 			}
-			else if (!stricmp(key, "}"))
+			else if (!_stricmp(key, "}"))
 			{
 				// we've hit the end
 				break;
@@ -370,7 +370,7 @@ bool CLocalizedStringTable::AddFile(IFileSystem *fileSystem, const char *szFileN
 		}
 		else if (state == STATE_TOKENS)
 		{
-			if (!stricmp(key, "}"))
+			if (!_stricmp(key, "}"))
 			{
 				// end of tokens
 				state = STATE_BASE;
@@ -479,7 +479,7 @@ bool CLocalizedStringTable::SymLess(localizedstring_t const &i1, localizedstring
 	char const *str2 = (i2.nameIndex == INVALID_STRING_INDEX) ? g_LessCtx.m_pUserString :
 											&g_LessCtx.m_pTable->m_Names[i2.nameIndex];
 	
-	return stricmp(str1, str2) < 0;
+	return _stricmp(str1, str2) < 0;
 }
 
 

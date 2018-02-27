@@ -81,7 +81,7 @@ void Host_Say( edict_t *pEdict, int teamonly )
 	if ( engine->Cmd_Argc() == 0 )
 		return;
 
-	if ( !stricmp( pcmd, cpSay) || !stricmp( pcmd, cpSayTeam ) )
+	if ( !_stricmp( pcmd, cpSay) || !_stricmp( pcmd, cpSayTeam ) )
 	{
 		if ( engine->Cmd_Argc() >= 2 )
 		{
@@ -514,7 +514,7 @@ void CC_Player_Give( void )
 		Q_strlower( item_to_give );
 
 		// Dirty hack to avoid suit playing it's pickup sound
-		if ( !stricmp( item_to_give, "item_suit" ) )
+		if ( !_stricmp( item_to_give, "item_suit" ) )
 		{
 			pPlayer->EquipSuit();
 			return;

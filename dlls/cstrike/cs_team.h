@@ -22,8 +22,9 @@
 //-----------------------------------------------------------------------------
 class CCSTeam : public CTeam
 {
-	DECLARE_CLASS( CCSTeam, CTeam );
 public:
+	DECLARE_CLASS( CCSTeam, CTeam );
+
 	virtual ~CCSTeam( void );
 
 	DECLARE_SERVERCLASS();

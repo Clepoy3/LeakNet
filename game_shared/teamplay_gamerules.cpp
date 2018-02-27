@@ -233,7 +233,7 @@ void CTeamplayRules::ClientUserInfoChanged( CBasePlayer *pPlayer, char *infobuff
 	// prevent skin/color/model changes
 	char *mdls = engine->InfoKeyValue( infobuffer, "model" );
 
-	if ( !stricmp( mdls, pPlayer->TeamName() ) )
+	if ( !_stricmp( mdls, pPlayer->TeamName() ) )
 		return;
 
 	if ( defaultteam.GetFloat() )
@@ -348,7 +348,7 @@ int CTeamplayRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarg
 	if ( !pPlayer || !pTarget || !pTarget->IsPlayer() )
 		return GR_NOTTEAMMATE;
 
-	if ( (*GetTeamID(pPlayer) != '\0') && (*GetTeamID(pTarget) != '\0') && !stricmp( GetTeamID(pPlayer), GetTeamID(pTarget) ) )
+	if ( (*GetTeamID(pPlayer) != '\0') && (*GetTeamID(pTarget) != '\0') && !_stricmp( GetTeamID(pPlayer), GetTeamID(pTarget) ) )
 	{
 		return GR_TEAMMATE;
 	}
@@ -417,7 +417,7 @@ int CTeamplayRules::GetTeamIndex( const char *pTeamName )
 		// try to find existing team
 		for ( int tm = 0; tm < num_teams; tm++ )
 		{
-			if ( !stricmp( team_names[tm], pTeamName ) )
+			if ( !_stricmp( team_names[tm], pTeamName ) )
 				return tm;
 		}
 	}

@@ -237,8 +237,9 @@ bool CWeaponTripMine::Holster( CBaseCombatWeapon *pSwitchingTo )
 
 class CTripmineGrenade : public CHL1BaseGrenade
 {
-	DECLARE_CLASS( CTripmineGrenade, CHL1BaseGrenade );
 public:
+	DECLARE_CLASS( CTripmineGrenade, CHL1BaseGrenade );
+
 	CTripmineGrenade();
 	void		Spawn( void );
 	void		Precache( void );
@@ -331,7 +332,7 @@ void CTripmineGrenade :: Spawn( void )
 		m_flPowerUp = gpGlobals->curtime + 2.5;
 	}
 	
-	SetThink( PowerupThink );
+	SetThink( &CTripmineGrenade::PowerupThink );
 	SetNextThink( gpGlobals->curtime + 0.2 );
 
 	m_takedamage = DAMAGE_YES;
@@ -361,7 +362,7 @@ void CTripmineGrenade :: Precache( void )
 void CTripmineGrenade :: WarningThink( void  )
 {
 	// set to power up
-	SetThink( PowerupThink );
+	SetThink( &CTripmineGrenade::PowerupThink );
 	SetNextThink( gpGlobals->curtime + 1.0f );
 }
 
@@ -393,7 +394,7 @@ void CTripmineGrenade :: PowerupThink( void  )
 		{
 			StopSound( "TripmineGrenade.Deploy" );
 			StopSound( "TripmineGrenade.Charge" );
-			SetThink( SUB_Remove );
+			SetThink( &CBaseEntity::SUB_Remove );
 			SetNextThink( gpGlobals->curtime + 0.1f );
 //			ALERT( at_console, "WARNING:Tripmine at %.0f, %.0f, %.0f removed\n", pev->origin.x, pev->origin.y, pev->origin.z );
 			KillBeam();
@@ -407,7 +408,7 @@ void CTripmineGrenade :: PowerupThink( void  )
 		CBaseEntity *pMine = Create( "weapon_tripmine", GetAbsOrigin() + m_vecDir * 24, GetAbsAngles() );
 		pMine->AddSpawnFlags( SF_NORESPAWN );
 
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 		KillBeam();
 		return;
@@ -448,7 +449,7 @@ void CTripmineGrenade :: MakeBeam( void )
 	m_flBeamLength = tr.fraction;
 
 	// set to follow laser spot
-	SetThink( BeamBreakThink );
+	SetThink( &CTripmineGrenade::BeamBreakThink );
 
 	SetNextThink( gpGlobals->curtime + 1.0f );
 
@@ -516,7 +517,7 @@ int CTripmineGrenade::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	{
 		// disable
 		// Create( "weapon_tripmine", GetLocalOrigin() + m_vecDir * 24, GetAngles() );
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 		KillBeam();
 		return 0;
@@ -534,7 +535,7 @@ void CTripmineGrenade::Event_Killed( const CTakeDamageInfo &info )
 		SetOwnerEntity( info.GetAttacker() );
 	}
 
-	SetThink( DelayDeathThink );
+	SetThink( &CTripmineGrenade::DelayDeathThink );
 	SetNextThink( gpGlobals->curtime + random->RandomFloat( 0.1, 0.3 ) );
 
 	StopSound( "TripmineGrenade.Charge" );

@@ -68,6 +68,10 @@ private:
 	void operator delete( void *pMem )							\
 	{															\
 		CHudElement::operator delete ( pMem );					\
+	}															\
+	void operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine )	\
+	{															\
+		CHudElement::operator delete ( pMem, nBlockUse, pFileName, nLine );	\
 	}
 
 // Alias for base hud element

@@ -234,7 +234,7 @@ bool CFourWheelVehiclePhysics::ParseVehicleScript( const char *pScriptName, soli
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "vehicle" ) )
+		if ( !_strcmpi( pBlock, "vehicle" ) )
 		{
 			pParse->ParseVehicle( &vehicle, NULL );
 		}

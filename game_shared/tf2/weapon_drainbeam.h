@@ -22,8 +22,9 @@
 //=========================================================
 class CWeaponDrainBeam : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponDrainBeam, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponDrainBeam, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

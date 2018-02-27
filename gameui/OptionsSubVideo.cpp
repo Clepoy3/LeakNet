@@ -476,7 +476,7 @@ void COptionsSubVideo::GetVidSettings()
 
 	gameuifuncs->GetCurrentVideoMode( &p->w, &p->h, &p->bpp );
 	gameuifuncs->GetCurrentRenderer( p->renderer, 128, &p->windowed );
-	strlwr( p->renderer );
+	_strlwr( p->renderer );
 
 	ConVar *var1 = (ConVar *)cvar->FindVar( "mat_forceaniso" );
 	if( var1 )
@@ -554,27 +554,27 @@ void COptionsSubVideo::ApplyVidSettings(bool bForceRefresh)
 		char sz[ 256 ];
 		m_pAniso->GetText(sz, sizeof(sz));
 
-		if ( !stricmp( sz, m_pszAnisoNames[0] ) )
+		if ( !_stricmp( sz, m_pszAnisoNames[0] ) )
 		{
 		//	strcpy( m_CurrentSettings.aniso, "0" );
 			m_CurrentSettings.aniso = 0;
 		}
-		else if ( !stricmp( sz, m_pszAnisoNames[1] ) )
+		else if ( !_stricmp( sz, m_pszAnisoNames[1] ) )
 		{
 		//	strcpy( m_CurrentSettings.aniso, "2" );
 			m_CurrentSettings.aniso = 2;
 		}
-		else if ( !stricmp( sz, m_pszAnisoNames[2] ) )
+		else if ( !_stricmp( sz, m_pszAnisoNames[2] ) )
 		{
 		//	strcpy( m_CurrentSettings.aniso, "4" );
 			m_CurrentSettings.aniso = 4;
 		}
-		else if ( !stricmp( sz, m_pszAnisoNames[3] ) )
+		else if ( !_stricmp( sz, m_pszAnisoNames[3] ) )
 		{
 		//	strcpy( m_CurrentSettings.aniso, "8" );
 			m_CurrentSettings.aniso = 8;
 		}
-		else if ( !stricmp( sz, m_pszAnisoNames[4] ) )
+		else if ( !_stricmp( sz, m_pszAnisoNames[4] ) )
 		{
 		//	strcpy( m_CurrentSettings.aniso, "16" );
 			m_CurrentSettings.aniso = 16;

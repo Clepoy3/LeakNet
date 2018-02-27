@@ -23,9 +23,9 @@
 // ------------------------------------------------------------------------ //
 class CBaseObjectUpgrade : public CBaseObject
 {
-DECLARE_CLASS( CBaseObjectUpgrade, CBaseObject );
-
 public:
+	DECLARE_CLASS( CBaseObjectUpgrade, CBaseObject );
+
 	DECLARE_NETWORKCLASS();
 
 	CBaseObjectUpgrade();

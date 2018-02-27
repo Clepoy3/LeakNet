@@ -18,8 +18,9 @@ class C_ResourceZone;
 
 class C_ObjectResourcePump : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectResourcePump, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectResourcePump, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 

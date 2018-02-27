@@ -1421,7 +1421,7 @@ void LoadMaterials( studiohdr_t *phdr )
 			IMaterialVar *clientShaderVar = pMaterial->FindVar( "$clientShader", &found, false );
 			if( found )
 			{
-				if (stricmp( clientShaderVar->GetStringValue(), "MouthShader") == 0)
+				if (_stricmp( clientShaderVar->GetStringValue(), "MouthShader") == 0)
 				{
 					phdr->pTexture( i )->flags = 1;
 				}

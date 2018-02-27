@@ -35,9 +35,9 @@
 // NOTE: I have to include stdio + stdarg first so vsnprintf gets compiled in
 #include <stdio.h>
 #include <stdarg.h>
-#ifdef _LINUX
+//#ifdef _LINUX // VXP: Conv
 #include <ctype.h>
-#endif
+//#endif
 #include "tier0/dbg.h"
 #include "vstdlib/strtools.h"
 #include <string.h>
@@ -127,7 +127,7 @@ int	_Q_stricmp(const char* file, int line,  const char *s1, const char *s2 )
 	AssertValidStringPtr( s1 );
 	AssertValidStringPtr( s2 );
 
-	return stricmp( s1, s2 );
+	return _stricmp( s1, s2 );
 }
 
 
@@ -136,20 +136,21 @@ char *_Q_strstr(const char* file, int line,  const char *s1, const char *search 
 	AssertValidStringPtr( s1 );
 	AssertValidStringPtr( search );
 
-	return strstr( s1, search );
+//	return strstr( s1, search ); // VXP: Conv
+	return strstr( (char *)s1, (char *)search );
 }
 
 char *_Q_strupr (const char* file, int line, char *start)
 {
 	AssertValidStringPtr( start );
-	return strupr( start );
+	return _strupr( start );
 }
 
 
 char *_Q_strlower (const char* file, int line, char *start)
 {
 	AssertValidStringPtr( start );
-	return strlwr(start);
+	return _strlwr(start);
 }
 
 
@@ -627,4 +628,86 @@ char *Q_pretifymem( float value, int digitsafterdecimal /*= 2*/, bool usebinaryo
 bool Q_IsAbsolutePath( const char *pStr )
 {
 	return ( pStr[0] && pStr[1] == ':' ) || pStr[0] == '/' || pStr[0] == '\\';
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *ppath - 
+//-----------------------------------------------------------------------------
+void Q_StripTrailingSlash( char *ppath )
+{
+	Assert( ppath );
+
+	int len = Q_strlen( ppath );
+	if ( len > 0 )
+	{
+		if ( PATHSEPARATOR( ppath[ len - 1 ] ) )
+		{
+			ppath[ len - 1 ] = 0;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Changes all '/' or '\' characters into separator
+// Input  : *pname - 
+//			separator - 
+//-----------------------------------------------------------------------------
+void Q_FixSlashes( char *pname, char separator /* = CORRECT_PATH_SEPARATOR */ )
+{
+	while ( *pname )
+	{
+		if ( *pname == INCORRECT_PATH_SEPARATOR || *pname == CORRECT_PATH_SEPARATOR )
+		{
+			*pname = separator;
+		}
+		pname++;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Strip off the last directory from dirName
+// Input  : *dirName - 
+//			maxlen - 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool Q_StripLastDir( char *dirName, int maxlen )
+{
+	if( dirName[0] == 0 || 
+		!Q_stricmp( dirName, "./" ) || 
+		!Q_stricmp( dirName, ".\\" ) )
+		return false;
+	
+	int len = Q_strlen( dirName );
+
+	Assert( len < maxlen );
+
+	// skip trailing slash
+	if ( PATHSEPARATOR( dirName[len-1] ) )
+	{
+		len--;
+	}
+
+	while ( len > 0 )
+	{
+		if ( PATHSEPARATOR( dirName[len-1] ) )
+		{
+			dirName[len] = 0;
+			Q_FixSlashes( dirName, CORRECT_PATH_SEPARATOR );
+			return true;
+		}
+		len--;
+	}
+
+	// Allow it to return an empty string and true. This can happen if something like "tf2/" is passed in.
+	// The correct behavior is to strip off the last directory ("tf2") and return true.
+	if( len == 0 )
+	{
+		Q_snprintf( dirName, maxlen, ".%c", CORRECT_PATH_SEPARATOR );
+		return true;
+	}
+
+	return true;
 }

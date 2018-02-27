@@ -553,7 +553,7 @@ void CWin32Font::GetBlurValueForPixel(unsigned char *src, int blur, float *gauss
 //-----------------------------------------------------------------------------
 bool CWin32Font::IsEqualTo(const char *windowsFontName, int tall, int weight, int blur, int scanlines, int flags)
 {
-	if (!stricmp(windowsFontName, m_szName) 
+	if (!_stricmp(windowsFontName, m_szName) 
 		&& m_iTall == tall
 		&& m_iWeight == weight
 		&& m_iBlur == blur

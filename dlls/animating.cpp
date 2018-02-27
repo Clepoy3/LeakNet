@@ -693,7 +693,7 @@ int CBaseAnimating::LookupPoseParameter( const char *szName )
 
 	for (int i = 0; i < pstudiohdr->numposeparameters; i++)
 	{
-		if (stricmp( pstudiohdr->pPoseParameter( i )->pszName(), szName ) == 0)
+		if (_stricmp( pstudiohdr->pPoseParameter( i )->pszName(), szName ) == 0)
 		{
 			return i;
 		}
@@ -1868,9 +1868,9 @@ void CBaseAnimating::DrawServerHitboxes( void )
 	Vector position;
 	QAngle angles;
 
-	for ( int b = 0; b < set->numhitboxes; b++ )
+	for ( int hb = 0; hb < set->numhitboxes; hb++ )
 	{
-		mstudiobbox_t *pbox = set->pHitbox( b );
+		mstudiobbox_t *pbox = set->pHitbox( hb );
 
 		GetBonePosition( pbox->bone, position, angles );
 

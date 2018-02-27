@@ -56,9 +56,9 @@ void CGrenadeAR2::Spawn( void )
 	UTIL_SetSize(this, Vector(-3, -3, -3), Vector(3, 3, 3));
 //	UTIL_SetSize(this, Vector(0, 0, 0), Vector(0, 0, 0));
 
-	SetUse( DetonateUse );
-	SetTouch( GrenadeAR2Touch );
-	SetThink( GrenadeAR2Think );
+	SetUse( &CBaseGrenade::DetonateUse );
+	SetTouch( &CGrenadeAR2::GrenadeAR2Touch );
+	SetThink( &CGrenadeAR2::GrenadeAR2Think );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_plr_dmg_ar2_grenade.GetFloat();

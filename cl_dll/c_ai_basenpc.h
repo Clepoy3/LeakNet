@@ -17,9 +17,9 @@
 // NOTE: MOved all controller code into c_basestudiomodel
 class C_AI_BaseNPC : public C_BaseCombatCharacter
 {
+public:
 	DECLARE_CLASS( C_AI_BaseNPC, C_BaseCombatCharacter );
 
-public:
 	DECLARE_CLIENTCLASS();
 
 	C_AI_BaseNPC();

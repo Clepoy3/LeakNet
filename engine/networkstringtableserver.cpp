@@ -450,7 +450,7 @@ TABLEID	CNetworkStringTableContainerServer::FindTable( const char *tableName )
 {
 	for ( int i = 0; i < m_Tables.Size(); i++ )
 	{
-		if ( !stricmp( tableName, m_Tables[ i ]->GetTableName() ) )
+		if ( !_stricmp( tableName, m_Tables[ i ]->GetTableName() ) )
 			return (TABLEID)i;
 	}
 

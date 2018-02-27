@@ -21,8 +21,9 @@ class CSprite;
 
 class CEnvLaser : public CBeam
 {
-	DECLARE_CLASS( CEnvLaser, CBeam );
 public:
+	DECLARE_CLASS( CEnvLaser, CBeam );
+
 	void	Spawn( void );
 	void	Precache( void );
 	bool	KeyValue( const char *szKeyName, const char *szValue );

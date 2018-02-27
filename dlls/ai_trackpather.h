@@ -19,9 +19,9 @@ class CPathTrack;
 
 class CAI_TrackPather : public CAI_BaseNPC
 {
+public:
 	DECLARE_CLASS( CAI_TrackPather, CAI_BaseNPC );
 	DECLARE_DATADESC();
-public:
 
 	bool			IsOnPathTrack()							{ return (m_pCurrentPathTarget != NULL); }
 

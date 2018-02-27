@@ -85,9 +85,9 @@ public:
 
 class CMinimapOrderPanel : public CMinimapTraceBitmapPanel
 {
+public:
 	DECLARE_CLASS( CMinimapOrderPanel, CMinimapTraceBitmapPanel );
 
-public:
 	CMinimapOrderPanel( vgui::Panel *parent, const char *panelName ) 
 		: BaseClass( parent, "CMinimapOrderPanel" )
 	{

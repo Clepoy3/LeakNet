@@ -31,10 +31,9 @@ namespace vgui
 
 class C_TFMachineGun : public C_BaseTFCombatWeapon
 {
-private:
+public:
 	DECLARE_CLASS( C_TFMachineGun, C_BaseTFCombatWeapon );
 
-public:
 	C_TFMachineGun() {}
 
 	DECLARE_CLIENTCLASS();

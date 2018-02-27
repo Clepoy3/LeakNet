@@ -628,7 +628,7 @@ void C_RopeKeyframe::RunRopeSimulation( float flSeconds )
 
 	// Now count how many links touched something.
 	m_nLinksTouchingSomething = 0;
-	for ( i=0; i < m_nSegments; i++ )
+	for ( int i=0; i < m_nSegments; i++ )
 	{
 		if ( m_LinksTouchingSomething[i] )
 			++m_nLinksTouchingSomething;
@@ -907,7 +907,7 @@ void C_RopeKeyframe::DrawBeams()
 			seg.m_flTexCoord = m_flCurScroll;
 			m_flCurScroll += m_flScrollSpeed * gpGlobals->frametime;
 
-			for ( i=0; i < nPointsSpecified; i++ )
+			for ( int i=0; i < nPointsSpecified; i++ )
 			{
 				seg.m_vPos = vPositions[i];
 				seg.m_vColor = vColors[i];
@@ -945,7 +945,7 @@ void C_RopeKeyframe::DrawBeams()
 	else
 	{
 		// If rope_smooth is off, just set it up to write m_Width in the next pass.
-		for ( i=0; i < nPointsSpecified; i++ )
+		for ( int i=0; i < nPointsSpecified; i++ )
 			backWidths[i] = m_Width;
 	}
 
@@ -959,7 +959,7 @@ void C_RopeKeyframe::DrawBeams()
 		m_flCurScroll += m_flScrollSpeed * gpGlobals->frametime;
 		seg.m_flAlpha = 0.3f;
 
-		for ( i=0; i < nPointsSpecified; i++ )
+		for ( int i=0; i < nPointsSpecified; i++ )
 		{
 			seg.m_vPos = vPositions[i];
 			seg.m_vColor = vColors[i];

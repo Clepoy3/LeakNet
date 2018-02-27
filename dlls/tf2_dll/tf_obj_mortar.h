@@ -23,8 +23,9 @@ class CWeaponMortar;
 // ------------------------------------------------------------------------ //
 class CObjectMortar : public CBaseObject
 {
-	DECLARE_CLASS( CObjectMortar, CBaseObject );
 public:
+	DECLARE_CLASS( CObjectMortar, CBaseObject );
+
 	static CObjectMortar* Create(const Vector &vOrigin, const QAngle &vAngles, int team);
 
 	DECLARE_SERVERCLASS();

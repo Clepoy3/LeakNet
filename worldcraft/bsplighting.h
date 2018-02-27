@@ -49,6 +49,7 @@ private:
 		Vector2D	m_vLightCoords;
 	};
 
+public:
 	// This is the face data we store for each face. Just enough to
 	// let us update the lightmaps in memory.
 	class CFaceMaterial;

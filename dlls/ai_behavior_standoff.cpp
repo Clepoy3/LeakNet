@@ -113,7 +113,7 @@ public:
 
 		if ( pNpc->NameMatches( pszNamedActor ) ||
 			 pNpc->ClassMatches( pszNamedActor ) ||
-			 ( pNpc->GetSquad() && stricmp( pNpc->GetSquad()->GetName(), pszNamedActor ) == 0 ) )
+			 ( pNpc->GetSquad() && _stricmp( pNpc->GetSquad()->GetName(), pszNamedActor ) == 0 ) )
 		{
 			return true;
 		}
@@ -956,7 +956,7 @@ void CAI_StandoffBehavior::UpdateTranslateActivityMap()
 	const char *pszWeaponClass = ( pWeapon ) ? pWeapon->GetClassname() : "";
 	for ( int i = 0; i < ARRAYSIZE(mappings); i++ )
 	{
-		if ( !mappings[i].pszWeapon || stricmp( mappings[i].pszWeapon, pszWeaponClass ) == 0 )
+		if ( !mappings[i].pszWeapon || _stricmp( mappings[i].pszWeapon, pszWeaponClass ) == 0 )
 		{
 			if ( HaveSequenceForActivity( mappings[i].translation ) )
 				m_ActivityMap.Insert( MAKE_ACTMAP_KEY( mappings[i].posture, mappings[i].activity ), mappings[i].translation );
@@ -1011,9 +1011,9 @@ AI_StandoffParams_t g_StandoffParamsByAgression[] =
 
 class CAI_StandoffGoal : public CAI_GoalEntity
 {
+public:
 	DECLARE_CLASS( CAI_StandoffGoal, CAI_GoalEntity );
 
-public:
 	CAI_StandoffGoal()
 	{
 		m_aggressiveness = AGGR_MEDIUM;	

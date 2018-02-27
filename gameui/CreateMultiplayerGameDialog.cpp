@@ -161,7 +161,7 @@ void CCreateMultiplayerGameDialog::OnOK()
 	//
 	// Changes for Counter-strike game dialog - MSB
 	//
-	if (!stricmp( ModInfo().GetGameDescription(), "Counter-Strike" ))
+	if (!_stricmp( ModInfo().GetGameDescription(), "Counter-Strike" ))
 	{
 		// get bot difficulty level
 		float botSkill = -1.0f;
@@ -230,7 +230,7 @@ void CCreateMultiplayerGameDialog::OnOK()
 
 		// if bots are forced onto a specific team, we must disable team balancing and stacking checks
 		const char *team = m_pBotSavedData->GetString( "bot_join_team" );
-		if (team && stricmp( team, "any" ))
+		if (team && _stricmp( team, "any" ))
 		{
 			engine->ClientCmd( "mp_autoteambalance 0\n" );
 			engine->ClientCmd( "mp_limitteams 0\n" );

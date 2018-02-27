@@ -23,9 +23,9 @@
 //-----------------------------------------------------------------------------
 class CTEMetalSparks : public CBaseTempEntity
 {
-DECLARE_CLASS( CTEMetalSparks, CBaseTempEntity );
-
 public:
+	DECLARE_CLASS( CTEMetalSparks, CBaseTempEntity );
+
 					CTEMetalSparks( const char *name );
 	virtual			~CTEMetalSparks( void );
 
@@ -125,9 +125,9 @@ void TE_MetalSparks( IRecipientFilter& filter, float delay,
 
 class CTEArmorRicochet : public CTEMetalSparks
 {
-DECLARE_CLASS( CTEArmorRicochet, CTEMetalSparks );
-
 public:
+	DECLARE_CLASS( CTEArmorRicochet, CTEMetalSparks );
+
 	CTEArmorRicochet( const char *name ) : CTEMetalSparks(name) {}
 	DECLARE_SERVERCLASS();
 };

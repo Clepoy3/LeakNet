@@ -861,7 +861,7 @@ void DispInfo_DrawPrimLists()
 
 				int indexOffset = 0;
 
-				for( iMesh=0; iMesh < nMeshesSize; iMesh++ )
+				for( int iMesh=0; iMesh < nMeshesSize; iMesh++ )
 				{
 					CGroupMesh *pMesh = pGroup->m_Meshes[iMesh];
 					if( pMesh->m_nVisible == 0 )

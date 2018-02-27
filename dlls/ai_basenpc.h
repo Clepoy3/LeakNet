@@ -250,9 +250,9 @@ extern CAI_Manager g_AI_Manager;
 class CAI_BaseNPC : public CBaseCombatCharacter, 
 					public CAI_DefMovementSink
 {
+public:
 	DECLARE_CLASS( CAI_BaseNPC, CBaseCombatCharacter );
 
-public:
 	//-----------------------------------------------------
 	//
 	// Initialization, cleanup, serialization, identity

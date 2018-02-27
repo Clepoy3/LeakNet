@@ -204,7 +204,7 @@ int IsToken( const char *pText, const char *pTokenName )
 	if ( !pText || !pTokenName )
 		return 0;
 
-	if ( !strnicmp( pText+1, pTokenName, strlen(pTokenName) ) )
+	if ( !_strnicmp( pText+1, pTokenName, strlen(pTokenName) ) )
 		return 1;
 	
 	return 0;
@@ -502,19 +502,19 @@ client_textmessage_t *TextMessageGet( const char *pName )
 {
 	int i;
 
-	if (!stricmp( pName, DEMO_MESSAGE ))
+	if (!_stricmp( pName, DEMO_MESSAGE ))
 	{
 		return &tm_demomessage;
 	}
 
 	// HACKHACK -- add 4 "channels" of network text
-	if (!stricmp( pName, NETWORK_MESSAGE1 ))
+	if (!_stricmp( pName, NETWORK_MESSAGE1 ))
 		return gNetworkTextMessage;
-	else if (!stricmp( pName, NETWORK_MESSAGE2 ))
+	else if (!_stricmp( pName, NETWORK_MESSAGE2 ))
 		return gNetworkTextMessage + 1;
-	else if (!stricmp( pName, NETWORK_MESSAGE3 ))
+	else if (!_stricmp( pName, NETWORK_MESSAGE3 ))
 		return gNetworkTextMessage + 2;
-	else if (!stricmp( pName, NETWORK_MESSAGE4 ))
+	else if (!_stricmp( pName, NETWORK_MESSAGE4 ))
 		return gNetworkTextMessage + 3;
 
 	for ( i = 0; i < gMessageTableCount; i++ )

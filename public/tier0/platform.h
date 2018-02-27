@@ -666,7 +666,7 @@ public:																	\
 };																		\
 const __MetaLooper_##NAME<COUNT> NAME::m;								\
 const __Type_##NAME* NAME::functions = (__Type_##NAME*)&m;				\
-template<int nArgument>													\
+template<const int nArgument>													\
 RETURN_TYPE FASTCALL __Function_##NAME<nArgument>::Run ARGS						
 
 

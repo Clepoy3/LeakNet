@@ -69,9 +69,9 @@ enum
 
 class CNPC_HAssassin : public CHL1BaseNPC
 {
+public:
 	DECLARE_CLASS( CNPC_HAssassin, CHL1BaseNPC );
 
-public:
 	void Spawn( void );
 	void Precache( void );
 

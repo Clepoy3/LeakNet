@@ -31,9 +31,9 @@ class C_BaseEntity;
 
 class CMinimapTracePanel : public vgui::Panel
 {
+public:
 	DECLARE_CLASS_GAMEROOT( CMinimapTracePanel, vgui::Panel );
 
-public:
 				CMinimapTracePanel( vgui::Panel *parent, const char *panelName );
 	virtual		~CMinimapTracePanel();
 
@@ -107,9 +107,9 @@ private:
 //-----------------------------------------------------------------------------
 class CMinimapTraceBitmapPanel : public CMinimapTracePanel
 {
+public:
 	DECLARE_CLASS( CMinimapTraceBitmapPanel, CMinimapTracePanel );
 
-public:
 	CMinimapTraceBitmapPanel( vgui::Panel *parent, const char *panelName )
 		: BaseClass ( parent, panelName )
 	{
@@ -131,9 +131,9 @@ protected:
 //-----------------------------------------------------------------------------
 class CMinimapTraceTeamBitmapPanel : public CMinimapTracePanel
 {
+public:
 	DECLARE_CLASS( CMinimapTraceTeamBitmapPanel, CMinimapTracePanel );
 
-public:
 	CMinimapTraceTeamBitmapPanel( vgui::Panel *parent, const char *panelName )
 		: BaseClass ( parent, panelName )
 	{

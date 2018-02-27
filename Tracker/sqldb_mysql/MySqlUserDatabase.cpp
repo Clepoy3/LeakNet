@@ -284,7 +284,7 @@ public:
 
 		// check to see if the user already exists
 		query << "select userID from User where emailAddress = " << m_szEmail;
-		Result res = query.store();
+		Result res = query.store(RESET_QUERY);
 		if (res)
 		{
 			// user already exists, exit
@@ -384,11 +384,11 @@ public:
 
 		// find the user in the database
 		query << "select password from User where userID = " << m_iUserID;
-		Result res = query.store();
+		Result res = query.store(RESET_QUERY);
 
 		if (!res)
 		{
-			g_pConsole->Print(4, "** User_Login Error: %s\n", connection.error());
+			g_pConsole->Print(4, "** User_Login Error: %s\n", connection.error()/*.c_str()*/);
 			return 0;
 		}
 
@@ -411,7 +411,7 @@ public:
 
 		// see if they are already logged on
 		query << "select status, userIP, userPort from UserStatus where userID = " << m_iUserID;
-		res = query.store();
+		res = query.store(RESET_QUERY);
 		if (!res || res.size() < 1)
 		{
 			// we're not in the table, insert
@@ -530,7 +530,7 @@ public:
 		Query query = connection.query();
 
 		query << "select userID, password from User where emailAddress = '" << m_szEmail << "'";
-		Result res = query.store();
+		Result res = query.store(RESET_QUERY);
 
 		if (!res || res.size() < 1)
 		{
@@ -603,7 +603,7 @@ public:
 		if (!m_bForceLogoff)
 		{
 			query << "select serverID from UserStatus where userID = " << m_iUserID;
-			res = query.store();
+			res = query.store(RESET_QUERY);
 			if (!res)
 			{
 				g_pConsole->Print(4, "** User_Logoff Error: %s\n", query.error().c_str());
@@ -818,7 +818,7 @@ public:
 					<< m_iSessionID << ", "
 					<< m_iServerID << " )";
 
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (!query.success())
 			{
 				bSuccess = false;
@@ -853,14 +853,14 @@ public:
 				// looks like we have some dead entries; clear us out of the database
 				// make sure we're cleared out of the database already
 				query << "delete from Watcher where watcherID = " << m_iUserID;
-				query.execute();
+				query.execute(RESET_QUERY);
 				if (!query.success())
 				{
 					g_pConsole->Print(4, "** User_AddWatcher Error: %s\n", query.error().c_str());
 				}
 
 				query << "delete from WatchMap where watcherID = " << m_iUserID;
-				query.execute();
+				query.execute(RESET_QUERY);
 				if (!query.success())
 				{
 					g_pConsole->Print(4, "** User_AddWatcher (2) Error: %s\n", query.error().c_str());
@@ -907,7 +907,7 @@ public:
 				<< m_iSessionID << ", "
 				<< m_iServerID << " )";
 
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(4, "** User_AddSingleWatch Error: %s\n", query.error().c_str());
@@ -1436,13 +1436,13 @@ public:
 
 		// insert the entry into the table
 		query << "insert into UserAuth ( userID, targetID, authLevel ) values ( " << m_iUserID << ", " << m_iTargetID << ", " << m_iNewAuthLevel << " )";
-		query.execute();
+		query.execute(RESET_QUERY);
 
 		if (!query.success())
 		{
 			// there is probably already an existing entry, update it
 			query << "update UserAuth set authLevel = " << m_iNewAuthLevel << " where userID = " << m_iUserID << " and targetID = " << m_iTargetID;
-			query.execute();
+			query.execute(RESET_QUERY);
 
 			if (!query.success())
 			{
@@ -1500,9 +1500,9 @@ public:
 
 		// remove from watchmap, to ensure the deauthorization is effective immediately
 		query << "delete from WatchMap where watcherID = " << m_iUserID << " and targetID = " << m_iTargetID;
-		query.execute();
+		query.execute(RESET_QUERY);
 		query << "delete from WatchMap where watcherID = " << m_iTargetID << " and targetID = " << m_iUserID;
-		query.execute();
+		query.execute(RESET_QUERY);
 
 		if (!query.success())
 		{
@@ -1512,10 +1512,10 @@ public:
 
 		// remove userID -> targetID link
 		query << "delete from UserAuth where userID = " << m_iUserID << " and targetID = " << m_iTargetID;
-		query.execute();
+		query.execute(RESET_QUERY);
 		// remove targetID -> userID link
 		query << "delete from UserAuth where userID = " << m_iTargetID << " and targetID = " << m_iUserID;
-		query.execute();
+		query.execute(RESET_QUERY);
 
 		if (!query.success())
 		{
@@ -1916,7 +1916,7 @@ public:
 
 		// make sure the sender isn't in the blocked list
 		query << "select userID from UserBlocked where userID = " << m_iToUID << " and blockedID = " << m_iFromUID;
-		Result res = query.store();
+		Result res = query.store(RESET_QUERY);
 		if (!res)
 		{
 			g_pConsole->Print(4, "** User_PostMessage Error: %s\n", query.error().c_str());
@@ -1939,7 +1939,7 @@ public:
 				<< m_iFlags << ", "
 				<< "CURRENT_TIMESTAMP + 30000000 )";		// set the message to be discarded in 30 days
 
-		query.execute();
+		query.execute(RESET_QUERY);
 
 		if (!query.success())
 		{
@@ -2007,6 +2007,7 @@ public:
 		data.mininumBuild = row[5];
 		data.maximumBuild = row[6];
 
+	//	MysqlDateTime currentTime, deleteTime;
 		mysqlpp::DateTime currentTime, deleteTime;
 		deleteTime = row[7];
 		currentTime = row[8];
@@ -2171,7 +2172,7 @@ public:
 				<< " where userID > " << m_iLowerUserIDRange
 				<< " and userID < " << m_iUpperUserIDRange;
 
-		Result user = query.store();
+		Result user = query.store(RESET_QUERY);
 
 		if (!user)
 		{
@@ -2209,7 +2210,7 @@ public:
 				<< " or (targetID > " << m_iLowerUserIDRange
 				<< " and targetID < " << m_iUpperUserIDRange << ")";
 
-		Result userauth = query.store();
+		Result userauth = query.store(RESET_QUERY);
 		if (!userauth)
 		{
 			g_pConsole->Print(6, "** Users_GetCompleteUserData (userauth) Error: %s\n", query.error().c_str());
@@ -2219,7 +2220,7 @@ public:
 		// copy auth data
 		m_pData->userauth.RemoveAll();
 		m_pData->userauth.AddMultipleToTail(userauth.size());
-		for (i = 0; i < userauth.size(); i++)
+		for (int i = 0; i < userauth.size(); i++)
 		{
 			Row row = userauth[i];
 
@@ -2233,7 +2234,7 @@ public:
 				<< " where userID > " << m_iLowerUserIDRange
 				<< " and userID < " << m_iUpperUserIDRange;
 
-		Result userblocked = query.store();
+		Result userblocked = query.store(RESET_QUERY);
 		if (!userblocked)
 		{
 			g_pConsole->Print(6, "** Users_GetCompleteUserData (userblocked) Error: %s\n", query.error().c_str());
@@ -2243,7 +2244,7 @@ public:
 		// copy blocked data
 		m_pData->userblocked.RemoveAll();
 		m_pData->userblocked.AddMultipleToTail(userblocked.size());
-		for (i = 0; i < userblocked.size(); i++)
+		for (int i = 0; i < userblocked.size(); i++)
 		{
 			Row row = userblocked[i];
 			m_pData->userblocked[i].userID = row[0];
@@ -2256,7 +2257,7 @@ public:
 				<< " AND toUserID < " << m_iUpperUserIDRange
 				<< " )";
 
-		Result message = query.store();
+		Result message = query.store(RESET_QUERY);
 		if (!message)
 		{
 			g_pConsole->Print(6, "** Users_GetCompleteUserData (message) Error: %s\n", query.error().c_str());
@@ -2266,7 +2267,7 @@ public:
 		// copy message data
 		m_pData->message.RemoveAll();
 		m_pData->message.AddMultipleToTail(message.size());
-		for (i = 0; i < message.size(); i++)
+		for (int i = 0; i < message.size(); i++)
 		{
 			Row row = message[i];
 
@@ -2339,7 +2340,7 @@ public:
 			char buffer[2048];
 			sprintf(buffer, "insert ignore into User (userID, nickName, firstName, lastName, emailAddress, password, firstLogon, lastLogon, logonCount) values ( %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d )", m_pData->user[i].userID, userName, firstName, lastName, emailAddress, password, m_pData->user[i].firstLogin, m_pData->user[i].lastLogin, m_pData->user[i].loginCount);
 			query << buffer;
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (!query.success())
 			{
 				g_pConsole->Print(6, "** Users_InsertCompleteUserData (user) Error: %s\n", query.error().c_str());
@@ -2365,7 +2366,7 @@ public:
 		}
 
 /*
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_InsertCompleteUserData (user) Error: %s\n", query.error().c_str());
@@ -2377,7 +2378,7 @@ public:
 		if (m_pData->userauth.Size())
 		{
 			query << "insert ignore into UserAuth (userID, targetID, authLevel) values ";
-			for (i = 0; i < m_pData->userauth.Size(); i++)
+			for (int i = 0; i < m_pData->userauth.Size(); i++)
 			{
 				query << "( " << m_pData->userauth[i].userID
 					<< ", " << m_pData->userauth[i].targetID
@@ -2389,7 +2390,7 @@ public:
 					query << ", ";
 				}
 			}
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (!query.success())
 			{
 				g_pConsole->Print(6, "** Users_InsertCompleteUserData (userauth) Error: %s\n", query.error().c_str());
@@ -2401,7 +2402,7 @@ public:
 		if (m_pData->userblocked.Size())
 		{
 			query << "insert ignore into UserBlocked (userID, blockedID) values ";
-			for (i = 0; i < m_pData->userblocked.Size(); i++)
+			for (int i = 0; i < m_pData->userblocked.Size(); i++)
 			{
 				query << "( " << m_pData->userblocked[i].userID
 					<< ", " << m_pData->userblocked[i].blockedID
@@ -2412,7 +2413,7 @@ public:
 					query << ", ";
 				}
 			}
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (!query.success())
 			{
 				g_pConsole->Print(6, "** Users_InsertCompleteUserData (userblocked) Error: %s\n", query.error().c_str());
@@ -2424,7 +2425,7 @@ public:
 		if (m_pData->message.Size())
 		{
 			query << "insert into Message (fromUserID, toUserID, dateSent, body, flags, fromUserName, deleteDate, minimumBuild, maximumBuild) values ";
-			for (i = 0; i < m_pData->message.Size(); i++)
+			for (int i = 0; i < m_pData->message.Size(); i++)
 			{
 				char body[512];
 				char fromUserName[64];
@@ -2447,7 +2448,7 @@ public:
 					query << ", ";
 				}
 			}
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (!query.success())
 			{
 				g_pConsole->Print(6, "** Users_InsertCompleteUserData (message) Error: %s\n", query.error().c_str());
@@ -2491,7 +2492,7 @@ public:
 		// delete from user status
 		query << "delete from UserStatus where userID > " << m_iLowerUserIDRange
 			<< " and userID < " << m_iUpperUserIDRange;
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_DeleteUserRange (UserStatus) Error: %s\n", query.error().c_str());
@@ -2501,7 +2502,7 @@ public:
 		// delete from user table
 		query << "delete from User where userID > " << m_iLowerUserIDRange
 			<< " and userID < " << m_iUpperUserIDRange;
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_DeleteUserRange (User) Error: %s\n", query.error().c_str());
@@ -2512,7 +2513,7 @@ public:
 		query << "delete from UserAuth"
 				<< " where (userID > " << m_iLowerUserIDRange
 				<< " and userID < " << m_iUpperUserIDRange << ")";
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_DeleteUserRange (UserAuth) Error: %s\n", query.error().c_str());
@@ -2522,7 +2523,7 @@ public:
 		// delete from message
 		query << "delete from Message where toUserID > " << m_iLowerUserIDRange
 			<< " and toUserID < " << m_iUpperUserIDRange;
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_DeleteUserRange (Message) Error: %s\n", query.error().c_str());
@@ -2532,7 +2533,7 @@ public:
 		// delete from blocked
 		query << "delete from UserBlocked where userID > " << m_iLowerUserIDRange
 			<< " and userID < " << m_iUpperUserIDRange;
-		query.execute();
+		query.execute(RESET_QUERY);
 		if (!query.success())
 		{
 			g_pConsole->Print(6, "** Users_DeleteUserRange (UserBlocked) Error: %s\n", query.error().c_str());
@@ -2910,7 +2911,7 @@ void CMySqlUserDatabase::Users_Flush()
 
 	// get the list of users logged on from our server
 	query << "select userID from UserStatus where serverID = " << m_iServerID << " and status > 0";
-	Result res = query.store();
+	Result res = query.store(RESET_QUERY);
 	if (!res)
 	{
 		g_pConsole->Print(4, "** Users_Flush Error: %s\n", query.error().c_str());

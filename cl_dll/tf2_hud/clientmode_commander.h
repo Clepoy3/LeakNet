@@ -34,10 +34,10 @@ namespace vgui
 
 class CClientModeCommander : public ClientModeTFBase, public IMinimapClient
 {
+public:
 	DECLARE_CLASS( CClientModeCommander, ClientModeTFBase );
 
 // IClientMode overrides.
-public:
 	
 					CClientModeCommander();
 	virtual			~CClientModeCommander();

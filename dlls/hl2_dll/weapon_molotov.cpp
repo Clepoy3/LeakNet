@@ -80,7 +80,7 @@ void CWeaponMolotov::Spawn( void )
 //------------------------------------------------------------------------------
 void CWeaponMolotov::SetPickupTouch( void )
 {
-	SetTouch(MolotovTouch);
+	SetTouch(&CWeaponMolotov::MolotovTouch);
 }
 
 //-----------------------------------------------------------------------------
@@ -384,7 +384,7 @@ void CWeaponMolotov::PrimaryAttack( void )
 //	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
 //	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 
-	SetThink( ThrowingThink );
+	SetThink( &CWeaponMolotov::ThrowingThink );
 	SetNextThink( gpGlobals->curtime + 0.5f );
 
 	m_bNeedDraw = true;

@@ -121,7 +121,7 @@ void CBaseCombatCharacter::SetPowerup( int iPowerup, bool bState, float flTime, 
 	// If we've got an active powerup, keep thinking
 	if ( m_iPowerups )
 	{
-		SetContextThink( PowerupThink, gpGlobals->curtime + 0.1, POWERUP_THINK_CONTEXT );
+		SetContextThink( &CBaseCombatCharacter::PowerupThink, gpGlobals->curtime + 0.1, POWERUP_THINK_CONTEXT );
 	}
 }
 

@@ -28,8 +28,8 @@ class CWeaponMP5;
 
 class CGrenadeMP5 : public CHL1BaseGrenade
 {
-	DECLARE_CLASS( CGrenadeMP5, CHL1BaseGrenade );
 public:
+	DECLARE_CLASS( CGrenadeMP5, CHL1BaseGrenade );
 
 	float		m_fSpawnTime;
 

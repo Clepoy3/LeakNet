@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectExplosives : public C_BaseObjectUpgrade
 {
-	DECLARE_CLASS( C_ObjectExplosives, C_BaseObjectUpgrade );
 public:
+	DECLARE_CLASS( C_ObjectExplosives, C_BaseObjectUpgrade );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectExplosives();

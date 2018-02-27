@@ -527,7 +527,8 @@ void VMPI_Stats_Term()
 
 static bool ReadStringFromFile( FileHandle_t fp, char *pStr, int strSize )
 {
-	for ( int i=0; i < strSize-2; i++ )
+	int i;
+	for ( i=0; i < strSize-2; i++ )
 	{
 		if ( g_pFileSystem->Read( &pStr[i], 1, fp ) != 1 ||
 			pStr[i] == '\n' )

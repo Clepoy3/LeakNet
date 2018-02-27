@@ -22,7 +22,7 @@
 
 bool StrLess( const char * const &pszLeft, const char * const &pszRight )
 {
-	return ( strcmpi( pszLeft, pszRight) < 0 );
+	return ( _strcmpi( pszLeft, pszRight) < 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ const char * CStringPool::Allocate( const char *pszValue )
 	if ( !bNew )
 		return m_Strings[i];
 
-	pszNew = strdup( pszValue );
+	pszNew = _strdup( pszValue );
 
 	if ( bNew )
 		m_Strings.Insert( pszNew );

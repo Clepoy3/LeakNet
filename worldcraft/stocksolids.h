@@ -11,7 +11,8 @@
 #pragma once
 #endif
 
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include "Vector.h"
 
 
@@ -23,7 +24,7 @@ class Vector;
 class StockSolid
 {
 	public:
-		void Serialize(fstream& file, BOOL bIsStoring);
+		void Serialize(std::fstream& file, BOOL bIsStoring);
 		int GetFieldCount() const;
 		void SetFieldData(int iIndex, int iData);
 		int GetFieldData(int iIndex, int *piData = NULL) const;

@@ -22,10 +22,11 @@
 #include "gl_matsysiface.h"
 #include "vprof_engine.h"
 
-#ifdef _WIN32
-#include <ddraw.h>
-#include <d3d.h>
-#endif
+// VXP: Conv
+//#ifdef _WIN32
+//#include <ddraw.h>
+//#include <d3d.h>
+//#endif
 
 void GameSetState(int iState );
 

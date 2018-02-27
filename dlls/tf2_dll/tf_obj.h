@@ -65,8 +65,9 @@ public:
 // ------------------------------------------------------------------------ //
 class CBaseObject : public CBaseCombatCharacter, public IHasBuildPoints
 {
-	DECLARE_CLASS( CBaseObject, CBaseCombatCharacter );
 public:
+	DECLARE_CLASS( CBaseObject, CBaseCombatCharacter );
+
 	CBaseObject();
 
 	virtual void	UpdateOnRemove( void );

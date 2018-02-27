@@ -30,12 +30,12 @@ enum FlexWeight_t { FLEX_END=INT_MAX };
 
 class CAI_BaseActor : public CAI_BaseHumanoid
 {
+public:
 	DECLARE_CLASS( CAI_BaseActor, CAI_BaseHumanoid );
 
 	//friend CPoseParameter;
 	//friend CFlexWeight;
 
-public:
 	// FIXME: this method is lame, isn't there some sort of template thing that would get rid of the Outer pointer?
 
 	void	Init( PoseParameter_t &index, const char *szName ) { index = (PoseParameter_t)LookupPoseParameter( szName ); };

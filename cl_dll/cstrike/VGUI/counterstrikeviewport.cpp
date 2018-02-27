@@ -569,9 +569,10 @@ int CounterStrikeViewport::MsgFunc_TeamScore( const char *pszName, int iSize, vo
 	const char *TeamName = READ_STRING();
 
 	// find the team matching the name
-	for ( int i = 1; i <= BaseClass::GetNumberOfTeams(); i++ )
+	int i;
+	for ( i = 1; i <= BaseClass::GetNumberOfTeams(); i++ )
 	{
-		if ( !strnicmp( TeamName, m_pClientScoreBoard->GetTeamName( i ), strlen(TeamName) ) )
+		if ( !_strnicmp( TeamName, m_pClientScoreBoard->GetTeamName( i ), strlen(TeamName) ) )
 			break;
 	}
 

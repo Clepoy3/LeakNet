@@ -152,7 +152,11 @@ public:
 	// File I/O and info
 	virtual bool			IsDirectory( const char *pFileName, const char *pathID ) = 0;
 
+#if _MSC_VER < 1300
 	virtual void			FileTimeToString( char* pStrip, int maxCharsIncludingTerminator, long fileTime ) = 0;
+#else
+	virtual void			FileTimeToString( char* pStrip, int maxCharsIncludingTerminator, const time_t fileTime ) = 0; // VXP: Conv
+#endif
 
 	virtual bool			IsOk( FileHandle_t file ) = 0;
 

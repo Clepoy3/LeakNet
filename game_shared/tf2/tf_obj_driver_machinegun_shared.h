@@ -21,9 +21,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectDriverMachinegun : public CBaseObjectDriverGun
 {
-DECLARE_CLASS( CObjectDriverMachinegun, CBaseObjectDriverGun );
-
 public:
+	DECLARE_CLASS( CObjectDriverMachinegun, CBaseObjectDriverGun );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

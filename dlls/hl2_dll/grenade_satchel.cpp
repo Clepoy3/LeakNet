@@ -66,9 +66,9 @@ void CSatchelCharge::Spawn( void )
 	UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 	Relink();
 
-	SetTouch( SatchelTouch );
-	SetUse( SatchelUse );
-	SetThink( SatchelThink );
+	SetTouch( &CSatchelCharge::SatchelTouch );
+	SetUse( &CSatchelCharge::SatchelUse );
+	SetThink( &CSatchelCharge::SatchelThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_plr_dmg_satchel.GetFloat();
@@ -119,7 +119,7 @@ void CSatchelCharge::KillSlideSound(void)
 void CSatchelCharge::SatchelUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
 	KillSlideSound();
-	SetThink( Detonate );
+	SetThink( &CBaseGrenade::Detonate );
 	SetNextThink( gpGlobals->curtime );
 }
 

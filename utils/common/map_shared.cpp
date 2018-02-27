@@ -23,28 +23,28 @@ int g_nMapFileVersion;
 //-----------------------------------------------------------------------------
 ChunkFileResult_t LoadEntityKeyCallback(const char *szKey, const char *szValue, LoadEntity_t *pLoadEntity)
 {
-	if (!stricmp(szKey, "classname"))
+	if (!_stricmp(szKey, "classname"))
 	{
-		if (!stricmp(szValue, "func_detail"))
+		if (!_stricmp(szValue, "func_detail"))
 		{
 			pLoadEntity->nBaseContents = CONTENTS_DETAIL;
 		}
-		else if (!stricmp(szValue, "func_ladder"))
+		else if (!_stricmp(szValue, "func_ladder"))
 		{
 			pLoadEntity->nBaseContents = CONTENTS_LADDER;
 		}
-		else if (!stricmp(szValue, "func_water"))
+		else if (!_stricmp(szValue, "func_water"))
 		{
 			pLoadEntity->nBaseContents = CONTENTS_WATER;
 		}
 	}
-	else if (!stricmp(szKey, "id"))
+	else if (!_stricmp(szKey, "id"))
 	{
 		// UNDONE: flag errors by ID instead of index
 		//g_MapError.BrushState( atoi( szValue ), 0 );
 		return(ChunkFile_Ok);
 	}
-	else if( !stricmp( szKey, "mapversion" ) )
+	else if( !_stricmp( szKey, "mapversion" ) )
 	{
 		// .vmf map revision number
 		g_MapRevision = atoi( szValue );

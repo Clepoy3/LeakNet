@@ -4,7 +4,8 @@
 
 #include "stdafx.h"
 #include "GamePalette.h"
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 
 #pragma warning(disable:4244)
 
@@ -55,12 +56,14 @@ BOOL CGamePalette::Create(LPCTSTR pszFile)
 		return FALSE;	// not exist
 
 	// open file & read palette
-	ifstream file(strFile, ios::binary | ios::nocreate);
+//	ifstream file(strFile, ios::binary | ios::nocreate); // VXP: COnv
+	std::ifstream file(strFile, std::ios::binary);
 
 	if(!file.is_open())
 		return FALSE;
 
-	for(int i = 0; i < 256; i++)
+	int i;
+	for(i = 0; i < 256; i++)
 	{
 		if(file.eof())
 			break;

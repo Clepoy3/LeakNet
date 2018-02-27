@@ -36,9 +36,9 @@ int g_ValidVehicles[] =
 //-----------------------------------------------------------------------------
 class CVehicleBayVGuiScreen : public CVGuiScreenPanel
 {
+public:
 	DECLARE_CLASS( CVehicleBayVGuiScreen, CVGuiScreenPanel );
 
-public:
 	CVehicleBayVGuiScreen( vgui::Panel *parent, const char *panelName );
 
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

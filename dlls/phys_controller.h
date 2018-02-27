@@ -15,8 +15,9 @@
 //-----------------------------------------------------------------------------
 class CKeepUpright : public CPointEntity, public IMotionEvent
 {
-	DECLARE_CLASS( CKeepUpright, CPointEntity );
 public:
+	DECLARE_CLASS( CKeepUpright, CPointEntity );
+
 	DECLARE_DATADESC();
 
 	CKeepUpright();

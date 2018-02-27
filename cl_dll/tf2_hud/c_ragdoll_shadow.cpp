@@ -104,7 +104,7 @@ IPhysicsObject *PhysModelCreateRagdoll( C_BaseEntity *pEntity, int modelIndex, c
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "solid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) )
 		{
 			pParse->ParseSolid( &solid, &g_SolidSetup );
 			break;

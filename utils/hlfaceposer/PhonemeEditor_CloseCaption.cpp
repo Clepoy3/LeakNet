@@ -514,7 +514,8 @@ void PhonemeEditor::ShowContextMenu_CloseCaption( int mx, int my )
 		{
 			// find first one...
 			int c = m_Tags.GetCloseCaptionPhraseCount( CC_ENGLISH );
-			for ( int i = 0; i < c; i++ )
+			int i;
+			for ( i = 0; i < c; i++ )
 			{
 				phrase = m_Tags.GetCloseCaptionPhrase( CC_ENGLISH, i );
 				if ( phrase->GetSelected() )
@@ -631,7 +632,7 @@ void PhonemeEditor::CloseCaption_FinishDrag( int startx, int endx )
 
 	PushUndo();
 
-	TraversePhrases( ITER_MoveSelectedPhrases, dt );
+	TraversePhrases( &PhonemeEditor::ITER_MoveSelectedPhrases, dt );
 
 	CloseCaption_CleanupPhrases( false );
 
@@ -927,7 +928,7 @@ void PhonemeEditor::CloseCaption_ShiftSelectedPhrase( int direction )
 
 	PushUndo();
 
-	TraversePhrases( ITER_MoveSelectedPhrases, movetime );
+	TraversePhrases( &PhonemeEditor::ITER_MoveSelectedPhrases, movetime );
 
 	PushRedo();
 
@@ -963,7 +964,7 @@ void PhonemeEditor::CloseCaption_ExtendSelectedPhraseEndTime( int direction )
 
 	PushUndo();
 
-	TraversePhrases( ITER_ExtendSelectedPhraseEndTimes, movetime );
+	TraversePhrases( &PhonemeEditor::ITER_ExtendSelectedPhraseEndTimes, movetime );
 
 	PushRedo();
 
@@ -1598,7 +1599,7 @@ void PhonemeEditor::CloseCaption_FinishPhraseDrag( int startx, int endx )
 
 	PushUndo();
 
-	TraversePhrases( ITER_MoveSelectedPhrases, dt );
+	TraversePhrases( &PhonemeEditor::ITER_MoveSelectedPhrases, dt );
 
 	CloseCaption_CleanupPhrases( false );
 

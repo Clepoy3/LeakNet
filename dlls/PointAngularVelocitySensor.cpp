@@ -23,9 +23,8 @@ enum
 
 class CPointAngularVelocitySensor : public CPointEntity
 {
-	DECLARE_CLASS( CPointAngularVelocitySensor, CPointEntity );
-
 public:
+	DECLARE_CLASS( CPointAngularVelocitySensor, CPointEntity );
 
 	void Activate(void);
 	void Spawn(void);

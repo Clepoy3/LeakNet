@@ -45,8 +45,9 @@
 
 class CPathTrack : public CPointEntity
 {
-	DECLARE_CLASS( CPathTrack, CPointEntity );
 public:
+	DECLARE_CLASS( CPathTrack, CPointEntity );
+
 	void		Spawn( void );
 	void		Activate( void );
 	
@@ -97,8 +98,9 @@ public:
 
 class CFuncTrackTrain : public CBaseEntity
 {
-	DECLARE_CLASS( CFuncTrackTrain, CBaseEntity );
 public:
+	DECLARE_CLASS( CFuncTrackTrain, CBaseEntity );
+
 	CFuncTrackTrain();
 
 	void Spawn( void );

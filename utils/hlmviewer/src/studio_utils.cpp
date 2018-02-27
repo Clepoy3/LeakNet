@@ -565,7 +565,7 @@ int StudioModel::LookupSequence( const char *szSequence )
 
 	for (i = 0; i < m_pstudiohdr->numseq; i++)
 	{
-		if (!stricmp( szSequence, m_pstudiohdr->pSeqdesc( i )->pszLabel() ))
+		if (!_stricmp( szSequence, m_pstudiohdr->pSeqdesc( i )->pszLabel() ))
 		{
 			return i;
 		}
@@ -612,7 +612,7 @@ int StudioModel::LookupFlexController( char *szName )
 
 	for (int iFlex = 0; iFlex < m_pstudiohdr->numflexcontrollers; iFlex++)
 	{
-		if (stricmp( szName, m_pstudiohdr->pFlexcontroller( iFlex )->pszName() ) == 0)
+		if (_stricmp( szName, m_pstudiohdr->pFlexcontroller( iFlex )->pszName() ) == 0)
 		{
 			return iFlex;
 		}
@@ -883,7 +883,7 @@ int	StudioModel::LookupPoseParameter( char const *szName )
 
 	for (int iParameter = 0; iParameter < m_pstudiohdr->numposeparameters; iParameter++)
 	{
-		if (stricmp( szName, m_pstudiohdr->pPoseParameter( iParameter )->pszName() ) == 0)
+		if (_stricmp( szName, m_pstudiohdr->pPoseParameter( iParameter )->pszName() ) == 0)
 		{
 			return iParameter;
 		}
@@ -943,7 +943,7 @@ int StudioModel::LookupAttachment( char const *szName )
 
 	for (int i = 0; i < m_pstudiohdr->numattachments; i++)
 	{
-		if (stricmp( m_pstudiohdr->pAttachment( i )->pszName(), szName ) == 0)
+		if (_stricmp( m_pstudiohdr->pAttachment( i )->pszName(), szName ) == 0)
 		{
 			return i;
 		}

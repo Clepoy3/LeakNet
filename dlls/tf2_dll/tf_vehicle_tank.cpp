@@ -117,7 +117,7 @@ void CVehicleTank::Spawn()
 	// This can go away when the tank is using a real tank model.
 	SetActivity( ACT_DEPLOY );
 
-	SetContextThink( TurretThink, gpGlobals->curtime, g_pTurretThinkContextName );
+	SetContextThink( &CVehicleTank::TurretThink, gpGlobals->curtime, g_pTurretThinkContextName );
 
 	BaseClass::Spawn();
 }
@@ -167,7 +167,7 @@ void CVehicleTank::TurretThink()
 	SetBoneController( 0, m_flTurretYaw );
 	SetBoneController( 1, m_flTurretPitch );
 
-	SetContextThink( TurretThink, gpGlobals->curtime, g_pTurretThinkContextName );
+	SetContextThink( &CVehicleTank::TurretThink, gpGlobals->curtime, g_pTurretThinkContextName );
 }
 
 

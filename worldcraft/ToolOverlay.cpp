@@ -515,7 +515,8 @@ void CToolOverlay::OnDrag( Vector const &vecRayStart, Vector const &vecRayEnd, b
 	CMapFace *pFace = NULL;
 		
 	int nFaceCount = pOverlay->GetFaceCount();
-	for ( int iFace = 0; iFace < nFaceCount; iFace++ )
+	int iFace;
+	for ( iFace = 0; iFace < nFaceCount; iFace++ )
 	{
 		// Get the current face.
 		pFace = pOverlay->GetFace( iFace );

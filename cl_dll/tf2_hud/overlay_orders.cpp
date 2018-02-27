@@ -18,8 +18,9 @@
 
 class COrderStatusPanel : public CEntityImagePanel
 {
-	DECLARE_CLASS( COrderStatusPanel, CEntityImagePanel );
 public:
+	DECLARE_CLASS( COrderStatusPanel, CEntityImagePanel );
+
 	COrderStatusPanel( vgui::Panel *parent, const char *panelName )
 		: BaseClass( parent, "COrderStatusPanel" )
 	{

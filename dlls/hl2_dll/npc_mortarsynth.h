@@ -32,60 +32,60 @@ class CBeamChaser;
 //-----------------------------------------------------------------------------
 class CNPC_MSynth : public CAI_BaseFlyingBot
 {
+public:
 	DECLARE_CLASS( CNPC_MSynth, CAI_BaseFlyingBot );
 
-	public:
-		CNPC_MSynth();
+	CNPC_MSynth();
 
-		Class_T			Classify(void);
+	Class_T			Classify(void);
 
-		void			Event_Killed( const CTakeDamageInfo &info );
-		int				OnTakeDamage_Alive( const CTakeDamageInfo &info );
-		void			Gib(void);
-		void			NPCThink( void );
+	void			Event_Killed( const CTakeDamageInfo &info );
+	int				OnTakeDamage_Alive( const CTakeDamageInfo &info );
+	void			Gib(void);
+	void			NPCThink( void );
 
- 		virtual int		SelectSchedule(void);
-		virtual int		TranslateSchedule( int scheduleType );
+ 	virtual int		SelectSchedule(void);
+	virtual int		TranslateSchedule( int scheduleType );
 
-		bool			OverrideMove(float flInterval);
-		void			MoveToTarget(float flInterval, const Vector &MoveTarget);
-		void			MoveToEntity(float flInterval, CBaseEntity* pMoveTarget, float fMinRange, float fMaxRange);
-		void			MoveExecute_Alive(float flInterval);
-		float			MinGroundDist(void);
-		void			SetBanking(float flInterval);
+	bool			OverrideMove(float flInterval);
+	void			MoveToTarget(float flInterval, const Vector &MoveTarget);
+	void			MoveToEntity(float flInterval, CBaseEntity* pMoveTarget, float fMinRange, float fMaxRange);
+	void			MoveExecute_Alive(float flInterval);
+	float			MinGroundDist(void);
+	void			SetBanking(float flInterval);
 
-		bool			IsHeadFacing( const Vector &vFaceTarget );
+	bool			IsHeadFacing( const Vector &vFaceTarget );
 
-		void			PlayFlySound(void);
-		virtual void	StopLoopingSounds(void);
+	void			PlayFlySound(void);
+	virtual void	StopLoopingSounds(void);
 
-		void			Precache(void);
-		void			RunTask( const Task_t *pTask );
-		void			Spawn(void);
-		void			StartTask( const Task_t *pTask );
+	void			Precache(void);
+	void			RunTask( const Task_t *pTask );
+	void			Spawn(void);
+	void			StartTask( const Task_t *pTask );
 
-		DEFINE_CUSTOM_AI;
+	DEFINE_CUSTOM_AI;
 
-		DECLARE_DATADESC();
+	DECLARE_DATADESC();
 
-	protected:
-		float			m_lastHurtTime;
+protected:
+	float			m_lastHurtTime;
 
-		// ==================
-		// Attack 
-		// ==================
-		CBeam*			m_pEnergyBeam;
-		CSprite*		m_pEnergyGlow[MSYNTH_NUM_GLOWS];
-		float			m_fNextEnergyAttackTime;
-		void			EnergyWarmup(void);
-		void			EnergyShoot(void);
-		void			EnergyKill(void);
+	// ==================
+	// Attack 
+	// ==================
+	CBeam*			m_pEnergyBeam;
+	CSprite*		m_pEnergyGlow[MSYNTH_NUM_GLOWS];
+	float			m_fNextEnergyAttackTime;
+	void			EnergyWarmup(void);
+	void			EnergyShoot(void);
+	void			EnergyKill(void);
 
-		// ==================
-		// Movement variables.
-		// ==================
-		float			m_fNextFlySoundTime;
-		Vector			m_vCoverPosition;		// Position to go for cover
+	// ==================
+	// Movement variables.
+	// ==================
+	float			m_fNextFlySoundTime;
+	Vector			m_vCoverPosition;		// Position to go for cover
 };
 
 #endif	//NPC_MSYNTH_H

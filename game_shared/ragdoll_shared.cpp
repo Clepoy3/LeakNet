@@ -24,7 +24,7 @@ static void RagdollCreateObjects( IPhysicsCollision *pPhysCollision, IPhysicsEnv
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "solid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) )
 		{
 			solid_t solid;
 			// collisions off by default
@@ -58,7 +58,7 @@ static void RagdollCreateObjects( IPhysicsCollision *pPhysCollision, IPhysicsEnv
 				}
 			}
 		}
-		else if ( !strcmpi( pBlock, "ragdollconstraint" ) )
+		else if ( !_strcmpi( pBlock, "ragdollconstraint" ) )
 		{
 			constraint_ragdollparams_t constraint;
 			pParse->ParseRagdollConstraint( &constraint, NULL );
@@ -247,7 +247,7 @@ int RagdollExtractBoneIndices( int *boneIndexOut, studiohdr_t *pStudioHdr, vcoll
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "solid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) )
 		{
 			solid_t solid;
 			pParse->ParseSolid( &solid, NULL );

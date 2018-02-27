@@ -583,7 +583,7 @@ CGameConfig::CGameConfig(void)
 //			fVersion - 
 // Output : Returns TRUE on success, FALSE on failure.
 //-----------------------------------------------------------------------------
-BOOL CGameConfig::Import(fstream& file, float fVersion)
+BOOL CGameConfig::Import(std::fstream& file, float fVersion)
 {
 	file.read(szName, sizeof szName);
 	file.read((char*)&nGDFiles, sizeof nGDFiles);
@@ -757,13 +757,13 @@ bool CGameConfig::Save(const char *pszFileName, const char *pszSection)
 	}
 
 	char szKey[MAX_PATH];
-	WritePrivateProfileString(pszSection, "TextureFormat", itoa(textureformat, szKey, 10), pszFileName);
-	WritePrivateProfileString(pszSection, "MapFormat", itoa(mapformat, szKey, 10), pszFileName);
+	WritePrivateProfileString(pszSection, "TextureFormat", _itoa(textureformat, szKey, 10), pszFileName);
+	WritePrivateProfileString(pszSection, "MapFormat", _itoa(mapformat, szKey, 10), pszFileName);
 	
 	sprintf(szKey, "%g", m_fDefaultTextureScale);
 	WritePrivateProfileString(pszSection, "DefaultTextureScale", szKey, pszFileName);
 
-	WritePrivateProfileString(pszSection, "DefaultLightmapScale", itoa(m_nDefaultLightmapScale, szKey, 10), pszFileName);
+	WritePrivateProfileString(pszSection, "DefaultLightmapScale", _itoa(m_nDefaultLightmapScale, szKey, 10), pszFileName);
 
 	WritePrivateProfileString(pszSection, "GameExe", szExecutable, pszFileName);
 	WritePrivateProfileString(pszSection, "DefaultSolidEntity", szDefaultSolid, pszFileName);
@@ -783,8 +783,8 @@ bool CGameConfig::Save(const char *pszFileName, const char *pszSection)
 	WritePrivateProfileString(pszSection, "CordonTexture", m_szCordonTexture, pszFileName);
 
 	char szExcludeDir[MAX_PATH];
-	WritePrivateProfileString(pszSection, "MaterialExcludeCount", itoa( m_MaterialExcludeCount, szKey, 10 ), pszFileName );
-	for( i = 0; i < m_MaterialExcludeCount; i++ )
+	WritePrivateProfileString(pszSection, "MaterialExcludeCount", _itoa( m_MaterialExcludeCount, szKey, 10 ), pszFileName );
+	for( int i = 0; i < m_MaterialExcludeCount; i++ )
 	{
 		sprintf( &szExcludeDir[0], "-MaterialExcludeDir%d", i );
 		WritePrivateProfileString(pszSection, szExcludeDir, m_szMaterialExcludeDirs[i], pszFileName ); 
@@ -798,7 +798,7 @@ bool CGameConfig::Save(const char *pszFileName, const char *pszSection)
 // Purpose: 
 // Input  : file - 
 //-----------------------------------------------------------------------------
-void CGameConfig::Save(fstream &file)
+void CGameConfig::Save(std::fstream &file)
 {
 	file.write(szName, sizeof szName);
 	file.write((char*)&nGDFiles, sizeof nGDFiles);

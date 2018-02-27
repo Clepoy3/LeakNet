@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 class C_VehicleTeleportStation : public C_BaseTFFourWheelVehicle
 {
-	DECLARE_CLASS( C_VehicleTeleportStation, C_BaseTFFourWheelVehicle );
 public:
+	DECLARE_CLASS( C_VehicleTeleportStation, C_BaseTFFourWheelVehicle );
+
 	DECLARE_CLIENTCLASS();
 
 	C_VehicleTeleportStation();

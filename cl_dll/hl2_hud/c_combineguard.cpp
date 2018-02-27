@@ -207,8 +207,9 @@ bool CSphereTrails::SimulateAndRender( Particle *pInParticle, ParticleDraw *pDra
 
 class CCombineGuardParticleEffect : public CParticleEffect
 {
-	DECLARE_CLASS( CCombineGuardParticleEffect, CParticleEffect );
 public:
+	DECLARE_CLASS( CCombineGuardParticleEffect, CParticleEffect );
+
 	CCombineGuardParticleEffect( const char *pDebugName, const Vector &origin ) :
 		CParticleEffect( pDebugName )
 	{
@@ -239,8 +240,9 @@ public:
 
 class CCombineGuardBall : public CCombineGuardParticleEffect
 {
-	DECLARE_CLASS( CCombineGuardBall, CCombineGuardParticleEffect );
 public:
+	DECLARE_CLASS( CCombineGuardBall, CCombineGuardParticleEffect );
+
 	CCombineGuardBall( const char *pDebugName, const Vector &origin, float radius, float speed, float delay, int entityIndex, int attachment )
 	: CCombineGuardParticleEffect(pDebugName, origin), m_radius(radius), m_effectSpeed(1/speed),
 	m_entityIndex(entityIndex), m_attachment(attachment)
@@ -659,8 +661,9 @@ public:
 //-----------------------------------------------------------------------------
 class C_CombineGuard : public C_AI_BaseNPC
 {
-	DECLARE_CLASS( C_CombineGuard, C_AI_BaseNPC );
 public:
+	DECLARE_CLASS( C_CombineGuard, C_AI_BaseNPC );
+
 	DECLARE_CLIENTCLASS();
 
 					C_CombineGuard();

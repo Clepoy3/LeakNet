@@ -33,7 +33,7 @@ CAI_Schedule *CAI_BaseNPC::ScheduleInList( const char *pName, CAI_Schedule **pLi
 			Msg( "Unnamed schedule!\n" );
 			continue;
 		}
-		if ( stricmp( pName, pList[i]->GetName() ) == 0 )
+		if ( _stricmp( pName, pList[i]->GetName() ) == 0 )
 			return pList[i];
 	}
 	return NULL;

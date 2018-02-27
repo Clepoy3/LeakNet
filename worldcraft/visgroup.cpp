@@ -21,15 +21,15 @@ bool CVisGroup::g_bShowAll = false;
 //-----------------------------------------------------------------------------
 ChunkFileResult_t CVisGroup::LoadKeyCallback(const char *szKey, const char *szValue, CVisGroup *pGroup)
 {
-	if (!stricmp(szKey, "name"))
+	if (!_stricmp(szKey, "name"))
 	{
 		pGroup->SetName(szValue);
 	}
-	else if (!stricmp(szKey, "visgroupid"))
+	else if (!_stricmp(szKey, "visgroupid"))
 	{
 		pGroup->SetID(atoi(szValue));
 	}
-	else if (!stricmp(szKey, "color"))
+	else if (!_stricmp(szKey, "color"))
 	{
 		unsigned char chRed;
 		unsigned char chGreen;
@@ -38,7 +38,7 @@ ChunkFileResult_t CVisGroup::LoadKeyCallback(const char *szKey, const char *szVa
 		CChunkFile::ReadKeyValueColor(szValue, chRed, chGreen, chBlue);
 		pGroup->SetColor(chRed, chGreen, chBlue);
 	}
-	else if (!stricmp(szKey, "visible"))
+	else if (!_stricmp(szKey, "visible"))
 	{
 		pGroup->SetVisible(atoi(szValue) == 1);
 	}

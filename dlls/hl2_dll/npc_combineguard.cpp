@@ -424,7 +424,7 @@ void CNPC_CombineGuard::PrescheduleThink( void )
 	Vector	vecDamagePoint;
 	QAngle	vecDamageAngles;
 
-	for ( i = 1; i < NUM_CGUARD_BODYGROUPS; i++ )
+	for ( int i = 1; i < NUM_CGUARD_BODYGROUPS; i++ )
 	{
 		if ( m_armorPieces[i].destroyed )
 		{

@@ -557,11 +557,12 @@ void Path3D::SelectInBox(void)
 	{	
 		CMapPath *pPath = m_pPaths->GetNext(p);
 
-		for(i = 0; i < pPath->m_nNodes; i++)
+		for(int i = 0; i < pPath->m_nNodes; i++)
 		{
 			CMapPathNode& node = pPath->m_Nodes[i];
 
-			for(int i2 = 0; i2 < 3; i2++)
+			int i2;
+			for(i2 = 0; i2 < 3; i2++)
 			{
 				if(node.pos[i2] < bmins[i2] || node.pos[i2] > bmaxs[i2])
 					break;

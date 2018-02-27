@@ -438,7 +438,7 @@ void FindNeighboringDispSurfs( CCoreDispInfo *pListBase, int listSize )
 	int nCornerOverflows = 0;
 
 	// Now test all pairs of displacements and setup neighboring relations between them.
-	for( i=0; i < listSize; i++ )
+	for( int i=0; i < listSize; i++ )
 	{
 		CCoreDispInfo *pMain = &pListBase[i];
 
@@ -623,7 +623,7 @@ void SetupAllowedVerts( CCoreDispInfo *pListBase, int listSize )
 	do
 	{
 		bContinue = false;
-		for( i=0; i < listSize; i++ )
+		for( int i=0; i < listSize; i++ )
 		{
 			CDispUtilsHelper *pDisp = &pListBase[i];
 			

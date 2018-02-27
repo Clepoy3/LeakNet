@@ -38,8 +38,8 @@ void CGrenadeEnergy::Spawn( void )
 
 	SetModel( "Models/weapons/w_energy_grenade.mdl" );
 
-	SetUse( DetonateUse );
-	SetTouch( GrenadeEnergyTouch );
+	SetUse( &CBaseGrenade::DetonateUse );
+	SetTouch( &CGrenadeEnergy::GrenadeEnergyTouch );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage			= sk_dmg_energy_grenade.GetFloat();
@@ -73,7 +73,7 @@ void CGrenadeEnergy::Shoot( CBaseEntity* pOwner, const Vector &vStart, Vector vV
 	pEnergy->SetAbsVelocity( vVelocity );
 	pEnergy->SetOwnerEntity( pOwner );
 
-	pEnergy->SetThink ( Animate );
+	pEnergy->SetThink ( &CGrenadeEnergy::Animate );
 	pEnergy->SetNextThink( gpGlobals->curtime + 0.1f );
 
 	pEnergy->m_nRenderMode = kRenderTransAdd;

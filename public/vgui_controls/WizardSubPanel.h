@@ -76,9 +76,10 @@ public:
 protected:
 	virtual void ApplySchemeSettings(IScheme *pScheme);
 
-private:
+public:
 	typedef vgui::EditablePanel BaseClass;
 
+private:
 	WizardPanel *_wizardPanel;
 };
 

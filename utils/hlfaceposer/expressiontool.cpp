@@ -206,7 +206,7 @@ int SortFuncByName(const void *elem1, const void *elem2 )
 		return 0;
 	}
 
-	return stricmp( track1->GetFlexControllerName(), track2->GetFlexControllerName() );
+	return _stricmp( track1->GetFlexControllerName(), track2->GetFlexControllerName() );
 }
 
 void CExpressionToolWorkspace::OnSortByUsed( void )
@@ -1214,7 +1214,7 @@ CChoreoEvent *ExpressionTool::GetSafeEvent( void )
 		if ( !e || e->GetType() != CChoreoEvent::FLEXANIMATION )
 			continue;
 
-		if ( !stricmp( m_szEvent, e->GetName() ) )
+		if ( !_stricmp( m_szEvent, e->GetName() ) )
 		{
 			DoTrackLookup( e );
 			return e;
@@ -3220,14 +3220,14 @@ void ExpressionTool::OnNewExpression( void )
 		return;
 
 	if ( ( strlen( params.m_szName ) <= 0 ) ||
-		!stricmp( params.m_szName, "unnamed" ) )
+		!_stricmp( params.m_szName, "unnamed" ) )
 	{
 		Con_ColorPrintf( ERROR_R, ERROR_G, ERROR_B, "You must type in a valid name\n" );
 		return;
 	}
 
 	if ( ( strlen( params.m_szDescription ) <= 0 ) ||
-   	   !stricmp( params.m_szDescription, "description" ) )
+   	   !_stricmp( params.m_szDescription, "description" ) )
 	{
 		Con_ColorPrintf( ERROR_R, ERROR_G, ERROR_B, "You must type in a valid description\n" );
 		return;
@@ -3642,7 +3642,7 @@ void ExpressionTool::OnImportFlexAnimation( void )
 	LoadScriptFile( (char *)fullpath );
 
 	tokenprocessor->GetToken( true );
-	if ( stricmp( tokenprocessor->CurrentToken(), "flexanimations" ) )
+	if ( _stricmp( tokenprocessor->CurrentToken(), "flexanimations" ) )
 	{
 		Con_Printf( "ExpressionTool::OnImportFlexAnimation:  %s, expecting \"flexanimations\"\n",
 			fullpath );

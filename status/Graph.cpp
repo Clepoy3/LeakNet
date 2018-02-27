@@ -567,7 +567,7 @@ void CGraph::Redraw( CDC *pDC )
 				// If the mouse button is down then draw any necessary dots
 				if ( m_bButtonDown )
 				{
-					if ( fabs( x - m_ptDown.x ) < GetScale() )
+					if ( fabs( (float)(x - m_ptDown.x) ) < GetScale() )
 					{
 						if ( !have_drawn_dot[ 0 ] )
 						{
@@ -576,7 +576,7 @@ void CGraph::Redraw( CDC *pDC )
 						have_drawn_dot[ 0 ] = 1;
 					}
 
-					if ( fabs( x - m_ptCurrent.x ) < GetScale() )
+					if ( fabs( (float)(x - m_ptCurrent.x) ) < GetScale() )
 					{
 						if ( !have_drawn_dot[ 1 ] )
 						{
@@ -587,7 +587,7 @@ void CGraph::Redraw( CDC *pDC )
 				}
 				else
 				{
-					if ( fabs( x - m_ptCurrent.x ) < GetScale() )
+					if ( fabs( (float)(x - m_ptCurrent.x) ) < GetScale() )
 					{
 						if ( !have_drawn_dot[ 0 ] )
 						{

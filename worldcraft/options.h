@@ -10,7 +10,8 @@
 #pragma once
 
 
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include <afxtempl.h>
 #include "GameData.h"
 

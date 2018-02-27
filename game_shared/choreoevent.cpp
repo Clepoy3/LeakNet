@@ -1412,59 +1412,59 @@ CChoreoScene *CChoreoEvent::GetSubScene( void )
 //-----------------------------------------------------------------------------
 CChoreoEvent::EVENTTYPE CChoreoEvent::TypeForName( const char *name )
 {
-	if ( !stricmp( name, "section" ) )
+	if ( !_stricmp( name, "section" ) )
 	{
 		return SECTION;
 	}
-	else if ( !stricmp( name, "expression" ) )
+	else if ( !_stricmp( name, "expression" ) )
 	{
 		return EXPRESSION;
 	}
-	else if ( !stricmp( name, "speak" ) )
+	else if ( !_stricmp( name, "speak" ) )
 	{
 		return SPEAK;
 	}
-	else if ( !stricmp( name, "lookat" ) )
+	else if ( !_stricmp( name, "lookat" ) )
 	{
 		return LOOKAT;
 	}
-	else if ( !stricmp( name, "moveto" ) )
+	else if ( !_stricmp( name, "moveto" ) )
 	{
 		return MOVETO;
 	}
-	else if ( !stricmp( name, "gesture" ) )
+	else if ( !_stricmp( name, "gesture" ) )
 	{
 		return GESTURE;
 	}
-	else if ( !stricmp( name, "face" ) )
+	else if ( !_stricmp( name, "face" ) )
 	{
 		return FACE;
 	}
-	else if ( !stricmp( name, "firetrigger" ) )
+	else if ( !_stricmp( name, "firetrigger" ) )
 	{
 		return FIRETRIGGER;
 	}
-	else if ( !stricmp( name, "sequence" ) )
+	else if ( !_stricmp( name, "sequence" ) )
 	{
 		return SEQUENCE;
 	}
-	else if ( !stricmp( name, "flexanimation" ) )
+	else if ( !_stricmp( name, "flexanimation" ) )
 	{
 		return FLEXANIMATION;
 	}
-	else if ( !stricmp( name, "subscene" ) )
+	else if ( !_stricmp( name, "subscene" ) )
 	{
 		return SUBSCENE;
 	}
-	else if ( !stricmp( name, "loop" ) )
+	else if ( !_stricmp( name, "loop" ) )
 	{
 		return LOOP;
 	}
-	else if ( !stricmp( name, "interrupt" ) )
+	else if ( !_stricmp( name, "interrupt" ) )
 	{
 		return INTERRUPT;
 	}
-	else if ( !stricmp( name, "stoppoint" ) )
+	else if ( !_stricmp( name, "stoppoint" ) )
 	{
 		return STOPPOINT;
 	}
@@ -1618,7 +1618,7 @@ void CChoreoEvent::RemoveRelativeTag( const char *tagname )
 		if ( !prt )
 			continue;
 
-		if ( !stricmp( prt->GetName(), tagname ) )
+		if ( !_stricmp( prt->GetName(), tagname ) )
 		{
 			m_RelativeTags.Remove( i );
 			return;
@@ -1639,7 +1639,7 @@ CEventRelativeTag * CChoreoEvent::FindRelativeTag( const char *tagname )
 		if ( !prt )
 			continue;
 
-		if ( !stricmp( prt->GetName(), tagname ) )
+		if ( !_stricmp( prt->GetName(), tagname ) )
 		{
 			return prt;
 		}
@@ -1773,7 +1773,7 @@ void CChoreoEvent::RemoveTimingTag( const char *tagname )
 		if ( !ptt )
 			continue;
 
-		if ( !stricmp( ptt->GetName(), tagname ) )
+		if ( !_stricmp( ptt->GetName(), tagname ) )
 		{
 			m_TimingTags.Remove( i );
 			return;
@@ -1794,7 +1794,7 @@ CFlexTimingTag * CChoreoEvent::FindTimingTag( const char *tagname )
 		if ( !ptt )
 			continue;
 
-		if ( !stricmp( ptt->GetName(), tagname ) )
+		if ( !_stricmp( ptt->GetName(), tagname ) )
 		{
 			return ptt;
 		}
@@ -1890,7 +1890,7 @@ CFlexAnimationTrack *CChoreoEvent::FindTrack( const char *controllername )
 	for ( int i = 0; i < GetNumFlexAnimationTracks(); i++ )
 	{
 		CFlexAnimationTrack *t = GetFlexAnimationTrack( i );
-		if ( t && !stricmp( t->GetFlexControllerName(), controllername ) )
+		if ( t && !_stricmp( t->GetFlexControllerName(), controllername ) )
 		{
 			return t;
 		}
@@ -2156,7 +2156,7 @@ CEventAbsoluteTag *CChoreoEvent::FindAbsoluteTag( AbsTagType type, const char *t
 		if ( !ptag )
 			continue;
 
-		if ( !stricmp( ptag->GetName(), tagname ) )
+		if ( !_stricmp( ptag->GetName(), tagname ) )
 		{
 			return ptag;
 		}
@@ -2209,7 +2209,7 @@ void CChoreoEvent::RemoveAbsoluteTag( AbsTagType type, const char *tagname )
 		if ( !ptag )
 			continue;
 
-		if ( !stricmp( ptag->GetName(), tagname ) )
+		if ( !_stricmp( ptag->GetName(), tagname ) )
 		{
 			m_AbsoluteTags[ type ].Remove( i );
 			return;

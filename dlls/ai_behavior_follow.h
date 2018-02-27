@@ -29,7 +29,14 @@ struct AI_FollowNavInfo_t
 	DECLARE_SIMPLE_DATADESC();
 };
 
-DECLARE_POINTER_HANDLE(AI_FollowManagerInfoHandle_t);
+//DECLARE_POINTER_HANDLE(AI_FollowManagerInfoHandle_t); // VXP: Conv
+struct AI_FollowGroup_t;
+
+struct AI_FollowManagerInfoHandle_t
+{
+	AI_FollowGroup_t *m_pGroup;
+	int m_hFollower;
+};
 
 //-------------------------------------
 

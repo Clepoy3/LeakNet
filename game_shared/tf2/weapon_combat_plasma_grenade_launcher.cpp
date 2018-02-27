@@ -38,8 +38,9 @@ ConVar	weapon_combat_plasmagrenadelauncher_radius( "weapon_combat_plasmagrenadel
 //-----------------------------------------------------------------------------
 class CWeaponCombatPlasmaGrenadeLauncher : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatPlasmaGrenadeLauncher, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatPlasmaGrenadeLauncher, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

@@ -19,8 +19,9 @@
 
 class CScriptedTarget : public CAI_BaseNPC
 {
-	DECLARE_CLASS( CScriptedTarget, CAI_BaseNPC );
 public:
+	DECLARE_CLASS( CScriptedTarget, CAI_BaseNPC );
+
 	DECLARE_DATADESC();
 
 	void				Spawn( void );

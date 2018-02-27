@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectTower : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectTower, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectTower, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectTower();

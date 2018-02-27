@@ -15,9 +15,9 @@
 //-----------------------------------------------------------------------------
 class CEnvMicrophone : public CPointEntity
 {
+public:
 	DECLARE_CLASS( CEnvMicrophone, CPointEntity );
 
-public:
 	~CEnvMicrophone();
 
 	void Activate(void);

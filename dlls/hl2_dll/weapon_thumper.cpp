@@ -76,8 +76,8 @@ void CPortableThumper::Spawn( void )
 	UTIL_SetSize( this, vecBBMin, vecBBMax );
 	Relink();
 
-	SetThink( ThumpThink );
-	SetUse( ThumperUse );
+	SetThink( &CPortableThumper::ThumpThink );
+	SetUse( &CPortableThumper::ThumperUse );
 	SetNextThink( gpGlobals->curtime + thumpFrequency.GetFloat() );
 }
 
@@ -122,8 +122,9 @@ END_DATADESC()
 
 class CWeaponThumper: public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponThumper, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponThumper, CBaseHLCombatWeapon );
+
 	DECLARE_SERVERCLASS();
 	void				Spawn( void );
 	void				Precache( void );

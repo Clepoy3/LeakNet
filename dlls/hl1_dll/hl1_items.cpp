@@ -21,7 +21,7 @@ void CHL1Item::Spawn( void )
 	// This will make them not collide with anything but the world.
 	SetCollisionGroup( COLLISION_GROUP_NONE );
 	UTIL_SetSize(this, Vector(-15, -15, 0), Vector(15, 15, 15));
-	SetTouch(ItemTouch);
+	SetTouch(&CHL1Item::ItemTouch);
 
 	//Create the object in the physics system
 	if ( VPhysicsInitNormal( SOLID_BBOX, FSOLID_NOT_STANDABLE | FSOLID_TRIGGER | FSOLID_NOT_SOLID, false ) == NULL )

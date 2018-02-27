@@ -18,7 +18,7 @@ static void Pause( void )
 	if( !g_NoPause )
 	{
 		printf( "Hit a key to continue\n" );
-		getch();
+		_getch();
 	}
 }
 
@@ -130,15 +130,15 @@ static void LoadConfigFile( const char *pFileName, float *bumpScale, int *startF
 	char *val = NULL;
 	while( GetKeyValueFromFP( fp, &key, &val ) )
 	{
-		if( stricmp( key, "bumpscale" ) == 0 )
+		if( _stricmp( key, "bumpscale" ) == 0 )
 		{
 			*bumpScale = atof( val );
 		}
-		if( stricmp( key, "startframe" ) == 0 )
+		if( _stricmp( key, "startframe" ) == 0 )
 		{
 			*startFrame = atoi( val );
 		}
-		else if( stricmp( key, "endframe" ) == 0 )
+		else if( _stricmp( key, "endframe" ) == 0 )
 		{
 			*endFrame = atoi( val );
 		}
@@ -245,13 +245,13 @@ int main( int argc, char **argv )
 	i = 1;
 	while( i < argc )
 	{
-		if( stricmp( argv[i], "-quiet" ) == 0 )
+		if( _stricmp( argv[i], "-quiet" ) == 0 )
 		{
 			i++;
 			g_Quiet = true;
 			g_NoPause = true; // no point in pausing if we aren't going to print anything out.
 		}
-		if( stricmp( argv[i], "-nopause" ) == 0 )
+		if( _stricmp( argv[i], "-nopause" ) == 0 )
 		{
 			i++;
 			g_NoPause = true;

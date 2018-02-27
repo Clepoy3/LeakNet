@@ -122,7 +122,7 @@ void CSubPanelConnectionTest::OnPingAck()
 //-----------------------------------------------------------------------------
 void CSubPanelConnectionTest::OnCommand(const char *command)
 {
-	if (!stricmp(command, "RetryConnect"))
+	if (!_stricmp(command, "RetryConnect"))
 	{
 		StartServerSearch();
 	}

@@ -204,11 +204,11 @@ void mxExpressionTray::CreateButtons( void )
 	int x = m_nSnapshotWidth - 2 * ( m_nButtonSquare + 4 );
 	int y = 4;
 
-	AddButton( "undo", "Undo", "gfx/hlfaceposer/undo.bmp", ET_Undo, true, x, y, m_nButtonSquare, m_nButtonSquare );
+	AddButton( "undo", "Undo", "gfx/hlfaceposer/undo.bmp", &mxExpressionTray::ET_Undo, true, x, y, m_nButtonSquare, m_nButtonSquare );
 
 	x += ( m_nButtonSquare + 4 );
 
-	AddButton( "redo", "Redo", "gfx/hlfaceposer/redo.bmp", ET_Redo, true, x, y, m_nButtonSquare, m_nButtonSquare );
+	AddButton( "redo", "Redo", "gfx/hlfaceposer/redo.bmp", &mxExpressionTray::ET_Redo, true, x, y, m_nButtonSquare, m_nButtonSquare );
 }
 
 void mxExpressionTray::ActivateButton( const char *name, bool active )
@@ -225,7 +225,7 @@ mxExpressionTray::mxETButton *mxExpressionTray::FindButton( const char *name )
 	mxETButton *p = m_pButtons;
 	while ( p )
 	{
-		if ( !stricmp( p->m_szName, name ) )
+		if ( !_stricmp( p->m_szName, name ) )
 			return p;
 		p = p->next;
 	}
@@ -1398,14 +1398,14 @@ void mxExpressionTray::CreateContextGroup( void )
 		return;
 
 	if ( ( strlen( params.m_szName ) <= 0 ) ||
-		!stricmp( params.m_szName, "unnamed" ) )
+		!_stricmp( params.m_szName, "unnamed" ) )
 	{
 		Con_ColorPrintf( ERROR_R, ERROR_G, ERROR_B, "You must type in a valid name\n" );
 		return;
 	}
 
 	if ( ( strlen( params.m_szDescription ) <= 0 ) ||
-   	   !stricmp( params.m_szDescription, "description" ) )
+   	   !_stricmp( params.m_szDescription, "description" ) )
 	{
 		Con_ColorPrintf( ERROR_R, ERROR_G, ERROR_B, "You must type in a valid description\n" );
 		return;

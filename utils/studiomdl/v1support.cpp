@@ -251,7 +251,7 @@ void Grab_Triangles( s_source_t *psource )
 				strcpy( texturename, defaulttexture[i] );
 				break;
 			}
-			if (stricmp( texturename, sourcetexture[i]) == 0) 
+			if (_stricmp( texturename, sourcetexture[i]) == 0) 
 			{
 				strcpy( texturename, defaulttexture[i] );
 				break;
@@ -268,7 +268,7 @@ void Grab_Triangles( s_source_t *psource )
 			continue;
 		}
 
-		if (stricmp( texturename, "null.bmp") == 0 || stricmp( texturename, "null.tga") == 0)
+		if (_stricmp( texturename, "null.bmp") == 0 || _stricmp( texturename, "null.tga") == 0)
 		{
 			// skip all faces with the null texture on them.
 			fgets( g_szLine, sizeof( g_szLine ), g_fpInput );

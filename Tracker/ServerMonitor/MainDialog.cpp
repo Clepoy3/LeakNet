@@ -9,11 +9,11 @@
 #include "ServersPage.h"
 #include "UsersPage.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
 
-#include <VGUI_PropertySheet.h>
+#include <vgui_controls/PropertySheet.h>
 
 using namespace vgui;
 

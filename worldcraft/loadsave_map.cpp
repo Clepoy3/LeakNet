@@ -72,7 +72,7 @@ static void StuffLine(char * buf)
 // Input  : file - 
 //			buf - 
 //-----------------------------------------------------------------------------
-static void GetLine(fstream& file, char *buf)
+static void GetLine(std::fstream& file, char *buf)
 {
 	if(bStuffed)
 	{
@@ -86,13 +86,15 @@ static void GetLine(fstream& file, char *buf)
 
 	while(1)
 	{
-		file.eatwhite();
+	//	file.eatwhite(); // VXP: Conv
+		file >> std::ws;
 		file.getline(szBuf, 512);
 		if(file.eof())
 			return;
 		if(!strncmp(szBuf, "//", 2))
 			continue;
-		file.eatwhite();
+	//	file.eatwhite(); // VXP: Conv
+		file >> std::ws;
 		if(buf)
 		{
 //			char *p = strchr(szBuf, '\n');
@@ -113,7 +115,7 @@ static void GetLine(fstream& file, char *buf)
 //			pIntersecting - 
 // Output : int
 //-----------------------------------------------------------------------------
-static int SaveSolidChildrenOf(CMapClass *pObject, fstream& file, BoundBox *pIntersecting = NULL)
+static int SaveSolidChildrenOf(CMapClass *pObject, std::fstream& file, BoundBox *pIntersecting = NULL)
 {
 	CMapWorld *pWorld = (CMapWorld*) CMapClass::GetWorldObject(pObject);
 
@@ -174,7 +176,7 @@ static int SaveSolidChildrenOf(CMapClass *pObject, fstream& file, BoundBox *pInt
 //			pIntersecting - 
 // Output : int
 //-----------------------------------------------------------------------------
-static int SaveEntityChildrenOf(CMapClass *pObject, fstream& file, BoundBox *pIntersecting)
+static int SaveEntityChildrenOf(CMapClass *pObject, std::fstream& file, BoundBox *pIntersecting)
 {
 	CMapWorld *pWorld = (CMapWorld *)CMapClass::GetWorldObject(pObject);
 
@@ -228,12 +230,20 @@ static int SaveEntityChildrenOf(CMapClass *pObject, fstream& file, BoundBox *pIn
 //			file - 
 // Output : int
 //-----------------------------------------------------------------------------
-static int ReadSolids(CMapClass *pObject, fstream& file)
+static int ReadSolids(CMapClass *pObject, std::fstream& file)
 {
 	int nSolids = 0;
 	int iPercent;
-	int fd = file.fd();
-	int iLength = filelength(fd);
+
+	// VXP: Conv
+//	int fd = file.fd();
+//	int iLength = filelength(fd);
+
+	int backup = file.tellg();
+	file.seekg(0,std::ios::end);
+	int iLength = file.tellg();
+	file.seekg(backup);
+
 	char szBuf[128];
 
 	while(1)
@@ -264,7 +274,8 @@ static int ReadSolids(CMapClass *pObject, fstream& file)
 
 		if(pProgDlg && !(nSolids % 10))
 		{ 
-			iPercent = tell(fd) * 100 / iLength;
+		//	iPercent = tell(fd) * 100 / iLength;
+			iPercent = file.tellg() * 100 / iLength;
 			pProgDlg->SetPos(iPercent);
 		}
 
@@ -280,7 +291,7 @@ static int ReadSolids(CMapClass *pObject, fstream& file)
 // Input  : file - 
 // Output : int
 //-----------------------------------------------------------------------------
-static int PeekChar(fstream& file)
+static int PeekChar(std::fstream& file)
 {
 	if(bStuffed)	// stuffed.. return first char
 		return szStuffed[0];
@@ -317,7 +328,7 @@ void SetMapFormat(MAPFORMAT mf)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapClass::SerializeMAP(fstream& file, BOOL fIsStoring)
+int CMapClass::SerializeMAP(std::fstream& file, BOOL fIsStoring)
 {
 	// no info stored in MAPs .. 
 	return fileOk;
@@ -330,7 +341,7 @@ int CMapClass::SerializeMAP(fstream& file, BOOL fIsStoring)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapFace::SerializeMAP(fstream& file, BOOL fIsStoring)
+int CMapFace::SerializeMAP(std::fstream& file, BOOL fIsStoring)
 {
 	char szBuf[512];
 
@@ -340,7 +351,7 @@ int CMapFace::SerializeMAP(fstream& file, BOOL fIsStoring)
 		char szTexture[sizeof(texture.texture)+1];
 		szTexture[sizeof(texture.texture)] = 0;
 		memcpy(szTexture, texture.texture, sizeof texture.texture);
-		strlwr(szTexture);
+		_strlwr(szTexture);
 
 		if (MapFormat == mfQuake2)
 		{
@@ -364,7 +375,7 @@ int CMapFace::SerializeMAP(fstream& file, BOOL fIsStoring)
 			pszTexture = szTexture;
 		}
 
-		strupr(szTexture);
+		_strupr(szTexture);
 
 
 		//
@@ -596,7 +607,7 @@ int CMapFace::SerializeMAP(fstream& file, BOOL fIsStoring)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int MDkeyvalue::SerializeMAP(fstream& file, BOOL fIsStoring)
+int MDkeyvalue::SerializeMAP(std::fstream& file, BOOL fIsStoring)
 {
 	// load/save a keyvalue
 	char szBuf[1024];
@@ -649,7 +660,7 @@ int MDkeyvalue::SerializeMAP(fstream& file, BOOL fIsStoring)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapSolid::SerializeMAP(fstream& file, BOOL fIsStoring)
+int CMapSolid::SerializeMAP(std::fstream& file, BOOL fIsStoring)
 {
 	CMapClass::SerializeMAP(file, fIsStoring);
 
@@ -735,7 +746,7 @@ int CMapSolid::SerializeMAP(fstream& file, BOOL fIsStoring)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapEntity::SerializeMAP(fstream &file, BOOL fIsStoring)
+int CMapEntity::SerializeMAP(std::fstream &file, BOOL fIsStoring)
 {
 	CMapClass::SerializeMAP(file, fIsStoring);
 
@@ -808,7 +819,7 @@ int CMapEntity::SerializeMAP(fstream &file, BOOL fIsStoring)
 //			fIsStoring - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CEditGameClass::SerializeMAP(fstream& file, BOOL fIsStoring)
+int CEditGameClass::SerializeMAP(std::fstream& file, BOOL fIsStoring)
 {
 	int iRvl;
 
@@ -891,7 +902,7 @@ int CEditGameClass::SerializeMAP(fstream& file, BOOL fIsStoring)
 			// For each variable from the base class...
 			//
 			int nVariableCount = pGameDataClass->GetVariableCount();
-			for (i = 0; i < nVariableCount; i++)
+			for (int i = 0; i < nVariableCount; i++)
 			{
 				GDinputvariable *pVar = pGameDataClass->GetVariableAt(i);
 				ASSERT(pVar != NULL);
@@ -914,7 +925,7 @@ int CEditGameClass::SerializeMAP(fstream& file, BOOL fIsStoring)
 						//
 						// Only write the key value if it is non-zero.
 						//
-						if ((pKey->szKey[0] != 0) && (pKey->szValue[0] != 0) && (stricmp(pKey->szValue, "0")))
+						if ((pKey->szKey[0] != 0) && (pKey->szValue[0] != 0) && (_stricmp(pKey->szValue, "0")))
 						{
 							iRvl = pKey->SerializeMAP(file, fIsStoring);
 							if (iRvl != fileOk)
@@ -939,7 +950,7 @@ int CEditGameClass::SerializeMAP(fstream& file, BOOL fIsStoring)
 //			pIntersecting - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapWorld::SerializeMAP(fstream &file, BOOL fIsStoring, BoundBox *pIntersecting)
+int CMapWorld::SerializeMAP(std::fstream &file, BOOL fIsStoring, BoundBox *pIntersecting)
 {
 	int iRvl;
 

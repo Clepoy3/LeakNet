@@ -22,10 +22,8 @@ class CTFMoveData;
 //
 class CTFGameMovementSniper : public CTFGameMovement
 {
-
-	DECLARE_CLASS( CTFGameMovementSniper, CTFGameMovement );
-
 public:
+	DECLARE_CLASS( CTFGameMovementSniper, CTFGameMovement );
 
 	CTFGameMovementSniper();
 

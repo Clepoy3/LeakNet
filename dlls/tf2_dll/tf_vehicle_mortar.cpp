@@ -355,7 +355,7 @@ bool CVehicleMortar::FireMortar( float flFiringPower, float flFiringAccuracy, bo
 
 	// Put in a delay before thinking again.
 	m_bAllowedToFire = false;
-	SetContextThink( NextFireThink, gpGlobals->curtime + MORTAR_FIRE_DELAY, g_pMortarNextFireContextName );
+	SetContextThink( &CVehicleMortar::NextFireThink, gpGlobals->curtime + MORTAR_FIRE_DELAY, g_pMortarNextFireContextName );
 
 	return true;
 }

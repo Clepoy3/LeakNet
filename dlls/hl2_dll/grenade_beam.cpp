@@ -38,7 +38,7 @@ void CGrenadeBeamChaser::Spawn( void )
 {
 	SetSolid( SOLID_NONE );
 	SetMoveType( MOVETYPE_FLY );
-	SetThink(ChaserThink);
+	SetThink(&CGrenadeBeamChaser::ChaserThink);
 	SetNextThink( gpGlobals->curtime );
 	Relink();
 }
@@ -131,7 +131,7 @@ void CGrenadeBeam::Spawn( void )
 	SetModel( "Models/weapons/flare.mdl" );
 	m_fEffects |= EF_NODRAW;
 
-	SetTouch( GrenadeBeamTouch );
+	SetTouch( &CGrenadeBeam::GrenadeBeamTouch );
 	SetNextThink( gpGlobals->curtime );
 
 	m_takedamage	= DAMAGE_NO;
@@ -177,7 +177,7 @@ void CGrenadeBeam::Format(color32 clrColor, float flWidth)
 //------------------------------------------------------------------------------
 void CGrenadeBeam::Shoot(Vector vDirection, float flSpeed, float flLifetime, float flLag, float flDamage )
 {
-	SetThink ( KillBeam );
+	SetThink ( &CGrenadeBeam::KillBeam );
 	SetNextThink( gpGlobals->curtime + flLifetime );
 	m_hBeamChaser		= CGrenadeBeamChaser::ChaserCreate(this);
 	m_flBeamSpeed		= flSpeed;

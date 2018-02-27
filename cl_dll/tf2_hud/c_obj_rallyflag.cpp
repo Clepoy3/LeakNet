@@ -13,8 +13,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectRallyFlag : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectRallyFlag, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectRallyFlag, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectRallyFlag();

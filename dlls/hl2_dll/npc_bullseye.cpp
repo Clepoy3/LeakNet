@@ -151,7 +151,7 @@ void CNPC_Bullseye::Spawn( void )
 
 	AddFlag( FL_NPC );
 
-	SetThink( BullseyeThink );
+	SetThink( &CNPC_Bullseye::BullseyeThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	SetSolid( SOLID_BBOX );

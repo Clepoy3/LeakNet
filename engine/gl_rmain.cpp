@@ -208,7 +208,7 @@ void R_DrawPortals()
 	}
 
 	// Draw the clip rectangles.
-	for( i=0; i < g_PortalRects.Size(); i++ )
+	for( int i=0; i < g_PortalRects.Size(); i++ )
 	{
 		CPortalRect *pRect = &g_PortalRects[i];
 		R_DrawScreenRect( pRect->left, pRect->top, pRect->right, pRect->bottom );

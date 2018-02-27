@@ -15,6 +15,8 @@
 #include <vgui_controls/TextEntry.h>
 #include <vgui_controls/WizardPanel.h>
 
+#include <vgui/ILocalize.h> // VXP
+
 #include <string.h>
 
 using namespace vgui;
@@ -65,6 +67,7 @@ void CSubPanelCreateUser::PerformLayout()
 {
 	GetWizardPanel()->SetTitle("#TrackerUI_Friends_CreateNewUser_1_of_3_Title", false);
 //	surface()->SetTitle(GetVPanel(), "#TrackerUI_Friends_CreateNewUserTitle");
+	surface()->SetTitle(GetVPanel(), localize()->Find("#TrackerUI_Friends_CreateNewUserTitle"));
 	GetWizardPanel()->SetFinishButtonEnabled(false);
 
 	// make sure we have a valid email address before letting the user move on

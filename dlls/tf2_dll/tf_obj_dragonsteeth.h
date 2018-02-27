@@ -17,9 +17,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectDragonsTeeth : public CBaseObject
 {
-DECLARE_CLASS( CObjectDragonsTeeth, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectDragonsTeeth, CBaseObject );
+
 	DECLARE_SERVERCLASS();
 
 	CObjectDragonsTeeth();

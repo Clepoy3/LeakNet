@@ -24,8 +24,9 @@ class CBaseTFPlayer;
 //-----------------------------------------------------------------------------
 class COrder : public CBaseEntity
 {
-	DECLARE_CLASS( COrder, CBaseEntity );
 public:
+	DECLARE_CLASS( COrder, CBaseEntity );
+
 	DECLARE_SERVERCLASS();
 
 					COrder();

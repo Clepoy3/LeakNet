@@ -82,7 +82,7 @@ int __cdecl MapCompare(const void *elem1, const void *elem2 )
 	serveritem_t &s1 = ServerBrowserDialog().GetServer(p1->userData);
 	serveritem_t &s2 = ServerBrowserDialog().GetServer(p2->userData);
 
-	return stricmp(s1.map, s2.map);
+	return _stricmp(s1.map, s2.map);
 }
 
 //-----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ int __cdecl GameCompare(const void *elem1, const void *elem2 )
 	// make sure we haven't added the same server to the list twice
 	Assert(p1->userData != p2->userData);
 
-	return stricmp(s1.gameDescription, s2.gameDescription);
+	return _stricmp(s1.gameDescription, s2.gameDescription);
 }
 
 //-----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ int __cdecl ServerNameCompare(const void *elem1, const void *elem2 )
 	serveritem_t &s1 = ServerBrowserDialog().GetServer(p1->userData);
 	serveritem_t &s2 = ServerBrowserDialog().GetServer(p2->userData);
 
-	return stricmp(s1.name, s2.name);
+	return _stricmp(s1.name, s2.name);
 }
 
 //-----------------------------------------------------------------------------

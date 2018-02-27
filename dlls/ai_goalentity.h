@@ -26,8 +26,9 @@
 class CAI_GoalEntity : public CBaseEntity,
 					   public IEntityListener
 {
-	DECLARE_CLASS( CAI_GoalEntity, CBaseEntity );
 public:
+	DECLARE_CLASS( CAI_GoalEntity, CBaseEntity );
+
 	CAI_GoalEntity()
 	 :	m_iszActor(NULL_STRING),
 	 	m_iszGoal(NULL_STRING),

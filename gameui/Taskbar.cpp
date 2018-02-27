@@ -224,7 +224,7 @@ public:
 
 	virtual void OnCommand(const char *command)
 	{
-		if (!stricmp(command, "Open"))
+		if (!_stricmp(command, "Open"))
 		{
 			MoveToFront();
 			RequestFocus();
@@ -521,7 +521,7 @@ void CTaskbar::UpdateTaskButtons()
 	int x = 40 + MENU_BUTTON_WIDE, y = 20;
 
 	// layout buttons
-	for (i = 0; i < g_Tasks.Size(); i++)
+	for (int i = 0; i < g_Tasks.Size(); i++)
 	{
 		if (!g_Tasks[i]->ShouldDisplay())
 		{
@@ -712,79 +712,79 @@ void CTaskbar::OnGameUIActivated()
 //-----------------------------------------------------------------------------
 void CTaskbar::OnCommand(const char *command)
 {
-	if (!stricmp(command, "OpenGameMenu"))
+	if (!_stricmp(command, "OpenGameMenu"))
 	{
 		if (m_pGameMenu)
 		{
 			PostMessage(m_pGameMenu, new KeyValues("Command", "command", "Open"));
 		}
 	}
-	else if (!stricmp(command, "OpenPlatformMenu"))
+	else if (!_stricmp(command, "OpenPlatformMenu"))
 	{
 		if (m_pPlatformMenu && m_bShowPlatformMenu)
 		{
 			PostMessage(m_pPlatformMenu, new KeyValues("Command", "command", "Open"));
 		}
 	}
-	else if (!stricmp(command, "OpenPlayerListDialog"))
+	else if (!_stricmp(command, "OpenPlayerListDialog"))
 	{
 		OnOpenPlayerListDialog();
 	}
-	else if (!stricmp(command, "OpenNewGameDialog"))
+	else if (!_stricmp(command, "OpenNewGameDialog"))
 	{
 		OnOpenNewGameDialog();
 	}
-	else if (!stricmp(command, "OpenLoadGameDialog"))
+	else if (!_stricmp(command, "OpenLoadGameDialog"))
 	{
 		OnOpenLoadGameDialog();
 	}
-	else if (!stricmp(command, "OpenSaveGameDialog"))
+	else if (!_stricmp(command, "OpenSaveGameDialog"))
 	{
 		OnOpenSaveGameDialog();
 	}
-	else if (!stricmp(command, "OpenOptionsDialog"))
+	else if (!_stricmp(command, "OpenOptionsDialog"))
 	{
 		OnOpenOptionsDialog();
 	}
-	else if (!stricmp(command, "OpenServerBrowser"))
+	else if (!_stricmp(command, "OpenServerBrowser"))
 	{
 		OnOpenServerBrowser();
 	}
-	else if (!stricmp(command, "OpenLoadDemoDialog"))
+	else if (!_stricmp(command, "OpenLoadDemoDialog"))
 	{
 		OnOpenDemoDialog();
 	}
-	else if (!stricmp(command, "OpenCreateMultiplayerGameDialog"))
+	else if (!_stricmp(command, "OpenCreateMultiplayerGameDialog"))
 	{
 		OnOpenCreateMultiplayerGameDialog();
 	}
-	else if (!stricmp(command, "OpenChangeGameDialog"))
+	else if (!_stricmp(command, "OpenChangeGameDialog"))
 	{
 		OnOpenChangeGameDialog();
 	}
-	else if (!stricmp(command, "Quit"))
+	else if (!_stricmp(command, "Quit"))
 	{
 		OnOpenQuitConfirmationDialog();
 	}
-	else if (!stricmp(command, "QuitNoConfirm"))
+	else if (!_stricmp(command, "QuitNoConfirm"))
 	{
 		engine->ClientCmd("quit\n");
 		// hide everything while we quit
 		SetVisible(false);
 		vgui::surface()->RestrictPaintToSinglePanel(GetVPanel());
 	}
-	else if (!stricmp(command, "ResumeGame"))
+	else if (!_stricmp(command, "ResumeGame"))
 	{
 		if (baseuifuncs)
 		{
 			baseuifuncs->HideGameUI();
 		}	
 	}
-	else if (!stricmp(command, "Disconnect"))
+	else if (!_stricmp(command, "Disconnect"))
 	{
 		engine->ClientCmd("disconnect\n" );
 	}
-	else if (!stricmp(command, "ReleaseModalWindow"))
+	else if (!_stricmp(command, "ReleaseModalWindow"))
 	{
 		vgui::surface()->RestrictPaintToSinglePanel(NULL);
 	}

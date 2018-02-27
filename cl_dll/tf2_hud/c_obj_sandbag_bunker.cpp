@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectSandbagBunker : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectSandbagBunker, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectSandbagBunker, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectSandbagBunker();

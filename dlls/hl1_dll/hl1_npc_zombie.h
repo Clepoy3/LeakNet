@@ -16,8 +16,8 @@
 //=========================================================
 class CNPC_Zombie : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Zombie, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Zombie, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

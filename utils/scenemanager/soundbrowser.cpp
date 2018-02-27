@@ -760,7 +760,8 @@ void CSoundBrowser::JumpToItem( CSoundEntry *se )
 	}
 
 	int c = m_pListView->getItemCount();
-	for ( int idx = 0; idx < c; idx++ )
+	int idx;
+	for ( idx = 0; idx < c; idx++ )
 	{
 		CSoundEntry *item = (CSoundEntry *)m_pListView->getUserData( idx, 0 );
 		if ( !Q_stricmp( item->GetName(), se->GetName() ) )

@@ -20,8 +20,9 @@ class C_WeaponCombatShield;
 
 class C_BaseCombatCharacter : public C_BaseFlex
 {
-	DECLARE_CLASS( C_BaseCombatCharacter, C_BaseFlex );
 public:
+	DECLARE_CLASS( C_BaseCombatCharacter, C_BaseFlex );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 

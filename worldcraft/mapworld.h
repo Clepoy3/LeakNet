@@ -68,8 +68,8 @@ class CMapWorld : public CMapClass, public CEditGameClass
 		// saveFlags is a combination of SAVEFLAGS_ defines.
 		ChunkFileResult_t SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo, int saveFlags);
 		
-		virtual int SerializeRMF(fstream &file, BOOL fIsStoring);
-		virtual int SerializeMAP(fstream &file, BOOL fIsStoring, BoundBox *pIntersecting = NULL);
+		virtual int SerializeRMF(std::fstream &file, BOOL fIsStoring);
+		virtual int SerializeMAP(std::fstream &file, BOOL fIsStoring, BoundBox *pIntersecting = NULL);
 
 		virtual void UpdateChild(CMapClass *pChild);
 

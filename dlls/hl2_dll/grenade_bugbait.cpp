@@ -124,7 +124,7 @@ void CGrenadeBugBait::Spawn( void )
 	UTIL_SetSize( this, Vector( -2, -2, -2), Vector( 2, 2, 2 ) );
 	Relink();
 
-	SetTouch( BugBaitTouch );
+	SetTouch( &CGrenadeBugBait::BugBaitTouch );
 
 	m_takedamage = DAMAGE_NO;
 
@@ -235,7 +235,7 @@ void CGrenadeBugBait::BugBaitTouch( CBaseEntity *pOther )
 	int count = UTIL_EntitiesInBox( pList, 100, GetAbsOrigin() - delta, GetAbsOrigin() + delta, 0 );
 	
 	//Iterate over all the possible targets
-	for ( i = 0; i < count; i++ )
+	for ( int i = 0; i < count; i++ )
 	{
 		//See if this is a bugbait sensor
 		if ( FClassnameIs( pList[i], "point_bugbait" ) )

@@ -47,7 +47,7 @@ static CMapObjectList FoundEntities;
 static BOOL FindKeyValue(CMapEntity *pEntity, MDkeyvalue *pKV)
 {
 	LPCTSTR pszValue = pEntity->GetKeyValue(pKV->szKey);
-	if (!pszValue || strcmpi(pszValue, pKV->szValue))
+	if (!pszValue || _strcmpi(pszValue, pKV->szValue))
 	{
 		return TRUE;
 	}
@@ -424,7 +424,7 @@ CMapClass *CMapEntity::CopyFrom(CMapClass *pobj, bool bUpdateDependencies)
 
 	if ((bUpdateDependencies) && (pszNewTargetName != NULL))
 	{
-		if (stricmp(szOldTargetName, pszNewTargetName) != 0)
+		if (_stricmp(szOldTargetName, pszNewTargetName) != 0)
 		{
 			UpdateAllDependencies(this);
 		}
@@ -576,7 +576,7 @@ ChunkFileResult_t CMapEntity::LoadVMF(CChunkFile *pFile)
 //-----------------------------------------------------------------------------
 ChunkFileResult_t CMapEntity::LoadKeyCallback(const char *szKey, const char *szValue, CMapEntity *pEntity)
 {
-	if (!stricmp(szKey, "id"))
+	if (!_stricmp(szKey, "id"))
 	{
 		pEntity->SetID(atoi(szValue));
 	}
@@ -699,7 +699,7 @@ void CMapEntity::ReplaceTargetname(const char *szOldName, const char *szNewName)
 	for (int i = 0; i < nNumKeys; i++)
 	{
 		MDkeyvalue KeyValue = m_KeyValues.GetKeyValue(i);
-		if (!stricmp(KeyValue.szValue, szOldName))
+		if (!_stricmp(KeyValue.szValue, szOldName))
 		{
 			SetKeyValue(KeyValue.szKey, szNewName);
 		}
@@ -712,7 +712,7 @@ void CMapEntity::ReplaceTargetname(const char *szOldName, const char *szNewName)
 	while (pos != NULL)
 	{
 		CEntityConnection *pConn = Connections_GetNext(pos);
-		if (!stricmp(pConn->GetTargetName(), szOldName))
+		if (!_stricmp(pConn->GetTargetName(), szOldName))
 		{
 			pConn->SetTargetName(szNewName);
 		}
@@ -796,7 +796,7 @@ void CMapEntity::AssignNodeID(void)
 {
 	char szID[80];
 	CMapDoc *pDoc = CMapDoc::GetActiveMapDoc();
-	itoa(pDoc->GetNextNodeID(), szID, 10);
+	_itoa(pDoc->GetNextNodeID(), szID, 10);
 	SetKeyValue("nodeid", szID);
 }
 
@@ -1114,7 +1114,7 @@ void CMapEntity::OnPreClone(CMapClass *pClone, CMapWorld *pWorld, CMapObjectList
 	{
 		// dvs: TODO: make this FGD-driven instead of hardcoded, see also MapKeyFrame.cpp
 		// dvs: TODO: use letters of the alphabet between adjacent numbers, ie path2a path2b, etc.
-		if (!stricmp(GetClassName(), "path_corner") || !stricmp(GetClassName(), "path_track"))
+		if (!_stricmp(GetClassName(), "path_corner") || !_stricmp(GetClassName(), "path_track"))
 		{
 			//
 			// Generate a new name for the clone.
@@ -1150,7 +1150,7 @@ void CMapEntity::OnClone(CMapClass *pClone, CMapWorld *pWorld, CMapObjectList &O
 
 	if (OriginalList.GetCount() == 1)
 	{
-		if (!stricmp(GetClassName(), "path_corner") || !stricmp(GetClassName(), "path_track"))
+		if (!_stricmp(GetClassName(), "path_corner") || !_stricmp(GetClassName(), "path_track"))
 		{
 			// dvs: TODO: make this FGD-driven instead of hardcoded, see also MapKeyFrame.cpp
 			// dvs: TODO: use letters of the alphabet between adjacent numbers, ie path2a path2b, etc.
@@ -1197,7 +1197,7 @@ void CMapEntity::OnKeyValueChanged(const char *pszKey, const char *pszOldValue, 
 	// Changing our movement parent. Store a pointer to the movement parent
 	// for when we're playing animations.
 	//
-	if ( !stricmp(pszKey, "parentname") )
+	if ( !_stricmp(pszKey, "parentname") )
 	{
 		CMapWorld *pWorld = (CMapWorld *)GetWorldObject( this );
 		if (pWorld != NULL)
@@ -1209,9 +1209,9 @@ void CMapEntity::OnKeyValueChanged(const char *pszKey, const char *pszOldValue, 
 	// Changing our model - rebuild the helpers from scratch.
 	// dvs: this could probably go away - move support into the helper code.
 	//
-	else if (!stricmp(pszKey, "model"))
+	else if (!_stricmp(pszKey, "model"))
 	{
-		if (stricmp(pszOldValue, pszValue) != 0)
+		if (_stricmp(pszOldValue, pszValue) != 0)
 		{
 			// We don't call SetKeyValue during VMF load.
 			UpdateHelpers(false);
@@ -1221,7 +1221,7 @@ void CMapEntity::OnKeyValueChanged(const char *pszKey, const char *pszOldValue, 
 	// If our targetname has changed, we have to relink EVERYTHING, not
 	// just our dependents, because someone else may point to our new targetname.
 	//
-	else if (!stricmp(pszKey, "targetname") && (stricmp(pszOldValue, pszValue) != 0))
+	else if (!_stricmp(pszKey, "targetname") && (_stricmp(pszOldValue, pszValue) != 0))
 	{
 		UpdateAllDependencies(this);
 	}
@@ -1327,7 +1327,7 @@ CMapEntity *CMapEntity::FindChildByKeyValue( LPCSTR key, LPCSTR value )
 	int index;
 	LPCSTR val = CEditGameClass::GetKeyValue(key, &index);
 
-	if ( val && value && !stricmp(value, val) )
+	if ( val && value && !_stricmp(value, val) )
 	{
 		return this;
 	}

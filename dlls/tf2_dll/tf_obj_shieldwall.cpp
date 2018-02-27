@@ -31,9 +31,9 @@ ConVar	obj_shieldwall_health( "obj_shieldwall_health","200", FCVAR_NONE, "Shield
 //-----------------------------------------------------------------------------
 class CObjectShieldWallBase : public CBaseObject
 {
-DECLARE_CLASS( CObjectShieldWallBase, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectShieldWallBase, CBaseObject );
+
 	CObjectShieldWallBase();
 
 	virtual void	UpdateOnRemove( void );
@@ -155,9 +155,9 @@ void CObjectShieldWallBase::ChangeTeam( int nTeamNumber )
 //-----------------------------------------------------------------------------
 class CObjectShieldWall : public CObjectShieldWallBase
 {
-DECLARE_CLASS( CObjectShieldWall, CObjectShieldWallBase );
-
 public:
+	DECLARE_CLASS( CObjectShieldWall, CObjectShieldWallBase );
+
 	DECLARE_SERVERCLASS();
 
 					CObjectShieldWall();

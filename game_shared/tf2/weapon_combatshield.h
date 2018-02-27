@@ -48,8 +48,9 @@ class Beam_t;
 //-----------------------------------------------------------------------------
 class CWeaponCombatShield : public CBaseTFCombatWeapon
 {
-	DECLARE_CLASS( CWeaponCombatShield, CBaseTFCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponCombatShield, CBaseTFCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 
@@ -170,8 +171,9 @@ private:
 //-----------------------------------------------------------------------------
 class CWeaponCombatShieldAlien : public CWeaponCombatShield
 {
-	DECLARE_CLASS( CWeaponCombatShieldAlien, CWeaponCombatShield );
 public:
+	DECLARE_CLASS( CWeaponCombatShieldAlien, CWeaponCombatShield );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

@@ -46,7 +46,7 @@ CBaseEntity *CTempEntTester::Create( const Vector &vecOrigin, const QAngle &vecA
 	if ( single_te && single_te[0] )
 	{
 		Q_strncpy( classname, single_te ,sizeof(classname));
-		strlwr( classname );
+		_strlwr( classname );
 	}
 	else
 	{
@@ -83,7 +83,7 @@ void CTempEntTester::Spawn( void )
 	{
 		char name[ 128 ];
 		Q_strncpy( name, m_pCurrent->GetName() ,sizeof(name));
-		strlwr( name );
+		_strlwr( name );
 		if ( strstr( name, m_szClass ) )
 		{
 			break;

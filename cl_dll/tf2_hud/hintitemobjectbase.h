@@ -20,9 +20,9 @@ class C_BaseEntity;
 //-----------------------------------------------------------------------------
 class CHintItemObjectBase : public CHintItemOrderBase
 {
-	DECLARE_CLASS( CHintItemObjectBase, CHintItemOrderBase );
-	
 public:
+	DECLARE_CLASS( CHintItemObjectBase, CHintItemOrderBase );
+
 	CHintItemObjectBase( vgui::Panel *parent, const char *panelName );
 	
 	virtual void		ParseItem( KeyValues *pKeyValues );

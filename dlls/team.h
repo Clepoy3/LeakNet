@@ -20,8 +20,9 @@ class CTeamSpawnPoint;
 
 class CTeam : public CBaseNetworkable
 {
-	DECLARE_CLASS( CTeam, CBaseNetworkable );
 public:
+	DECLARE_CLASS( CTeam, CBaseNetworkable );
+
 	CTeam( void );
 	virtual ~CTeam( void );
 

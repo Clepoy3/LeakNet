@@ -148,7 +148,7 @@ void CNetworkStringTable::SetString( int stringNumber, const char *value )
 	Assert( stringNumber >= 0 && stringNumber < (int)m_Items.Count() );
 	CNetworkStringTableItem *p = &m_Items[ stringNumber ];
 
-	if ( !stricmp( m_Items.GetElementName( stringNumber ), value ) )
+	if ( !_stricmp( m_Items.GetElementName( stringNumber ), value ) )
 		return;
 
 	m_Items.SetElementName( stringNumber, value );

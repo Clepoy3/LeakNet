@@ -35,8 +35,9 @@ enum target_ranges
 // ------------------------------------------------------------------------ //
 class CObjectSentrygun : public CBaseObject
 {
-	DECLARE_CLASS( CObjectSentrygun, CBaseObject );
 public:
+	DECLARE_CLASS( CObjectSentrygun, CBaseObject );
+
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 
@@ -154,8 +155,9 @@ public:
 //-----------------------------------------------------------------------------
 class CObjectSentrygunPlasma : public CObjectSentrygun
 {
-	DECLARE_CLASS( CObjectSentrygunPlasma, CObjectSentrygun );
 public:
+	DECLARE_CLASS( CObjectSentrygunPlasma, CObjectSentrygun );
+
 	DECLARE_SERVERCLASS();
 	virtual void	Spawn();
 	virtual bool	Fire( void );
@@ -176,8 +178,9 @@ private:
 //-----------------------------------------------------------------------------
 class CObjectSentrygunRocketlauncher : public CObjectSentrygun
 {
-	DECLARE_CLASS( CObjectSentrygunRocketlauncher, CObjectSentrygun );
 public:
+	DECLARE_CLASS( CObjectSentrygunRocketlauncher, CObjectSentrygun );
+
 	DECLARE_SERVERCLASS();
 	virtual void	Spawn();
 	virtual bool	Fire( void );

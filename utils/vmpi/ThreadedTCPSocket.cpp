@@ -256,7 +256,7 @@ private:
 			*((int*)pOut) = totalLength - 4;	// The length we prepend is the size of the data, not data size + integer for length.
 			pOut += 4;
 		}
-		for ( i=0; i < nChunks; i++ )
+		for ( int i=0; i < nChunks; i++ )
 		{
 			memcpy( pOut, pChunks[i], pChunkLengths[i] );
 			pOut += pChunkLengths[i];

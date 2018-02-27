@@ -230,9 +230,9 @@ bool C_WeaponBuilder::IsBuildingObject( void )
 //-----------------------------------------------------------------------------
 class CHumanPDAPanel : public CVGuiScreenPanel
 {
+public:
 	DECLARE_CLASS( CHumanPDAPanel, CVGuiScreenPanel );
 
-public:
 	CHumanPDAPanel( vgui::Panel *parent, const char *panelName );
 	~CHumanPDAPanel();
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

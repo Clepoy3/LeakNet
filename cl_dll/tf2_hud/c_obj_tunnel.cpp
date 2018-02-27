@@ -21,8 +21,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectTunnel : public C_ObjectMapDefined
 {
-	DECLARE_CLASS( C_ObjectTunnel, C_ObjectMapDefined );
 public:
+	DECLARE_CLASS( C_ObjectTunnel, C_ObjectMapDefined );
+
 	DECLARE_PREDICTABLE();
 	DECLARE_CLIENTCLASS();
 
@@ -53,9 +54,9 @@ C_ObjectTunnel::C_ObjectTunnel()
 //-----------------------------------------------------------------------------
 class CMinimapObjectTunnelPanel : public CMinimapTraceTeamBitmapPanel
 {
+public:
 	DECLARE_CLASS( CMinimapObjectTunnelPanel, CMinimapTraceTeamBitmapPanel );
 
-public:
 	CMinimapObjectTunnelPanel( vgui::Panel *parent, const char *panelName ) 
 	 : BaseClass( parent, "CMinimapObjectTunnelPanel" )
 	{

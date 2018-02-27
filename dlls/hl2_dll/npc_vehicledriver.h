@@ -114,8 +114,9 @@ public:
 //-----------------------------------------------------------------------------
 class CNPC_VehicleDriver : public CAI_BaseNPC
 {
-	DECLARE_CLASS( CNPC_VehicleDriver, CAI_BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_VehicleDriver, CAI_BaseNPC );
+
 	DECLARE_DATADESC();
 	DEFINE_CUSTOM_AI;
 

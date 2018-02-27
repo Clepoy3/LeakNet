@@ -19,8 +19,8 @@
 
 class CWeaponBugBait : public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponBugBait, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponBugBait, CBaseHLCombatWeapon );
 
 	DECLARE_SERVERCLASS();
 
@@ -186,7 +186,7 @@ void CWeaponBugBait::BaitTouch( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 void CWeaponBugBait::SetPickupTouch( void )
 {
-	SetTouch( BaitTouch );
+	SetTouch( &CWeaponBugBait::BaitTouch );
 }
 
 //-----------------------------------------------------------------------------

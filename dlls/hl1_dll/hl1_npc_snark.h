@@ -26,8 +26,8 @@
 
 class CSnark : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CSnark, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CSnark, CHL1BaseNPC );
 
 	DECLARE_DATADESC();
 

@@ -16,9 +16,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectRallyFlag : public CBaseObject
 {
-DECLARE_CLASS( CObjectRallyFlag, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectRallyFlag, CBaseObject );
+
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 

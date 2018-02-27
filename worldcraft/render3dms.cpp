@@ -668,7 +668,9 @@ Visibility_t CRender3DMS::IsBoxVisible(Vector const &BoxMins, Vector const &BoxM
 	//
 	// Build the near and far vertices based on the octant of the plane normal.
 	//
-	for (int i = 0, nInPlanes = 0; i < 6; i++)
+//	for (int i = 0, nInPlanes = 0; i < 6; i++) // VXP: Conv
+	int nInPlanes = 0;
+	for (int i = 0; i < 6; i++)
 	{
 		if (m_FrustumPlanes[i][0] > 0)
 		{
@@ -860,7 +862,7 @@ void CRender3DMS::RenderDisplacementTexels( CMapDisp *pMapDisp, int startWidth,
 	IMesh* pMesh = MaterialSystemInterface()->GetDynamicMesh();
 
 	unsigned char displacementColor[3] = { 0, 0, 0 };
-    for( i = 0; i < height; i++ )
+    for( int i = 0; i < height; i++ )
     {
         for( int j = 0; j < width; j++ )
         {
@@ -914,7 +916,7 @@ void CRender3DMS::RenderDisplacementTexels( CMapDisp *pMapDisp, int startWidth,
 		SetRenderMode( RENDER_MODE_WIREFRAME );
 		IMesh* pMesh = MaterialSystemInterface()->GetDynamicMesh();
 		
-		for( i = 0; i < height; i++ )
+		for( int i = 0; i < height; i++ )
 		{
 			for( int j = 0; j < width; j++ )
 			{
@@ -1729,7 +1731,7 @@ void CRender3DMS::RenderCone( Vector const &vBasePt, Vector const &vTipPt, float
 	Vector ptList[3];
 	
 	// triangulate the base
-	for( i = 0; i < ( nSlices - 2 ); i++ )
+	for( int i = 0; i < ( nSlices - 2 ); i++ )
 	{	
 		ptList[0] = pPts[0];
 		ptList[1] = pPts[i+1];
@@ -1746,7 +1748,7 @@ void CRender3DMS::RenderCone( Vector const &vBasePt, Vector const &vTipPt, float
 	}
 
 	// triangulate the sides
-	for( i = 0; i < nSlices; i++ )
+	for( int i = 0; i < nSlices; i++ )
 	{
 		ptList[0] = pPts[i];
 		ptList[1] = tipPt;
@@ -1783,7 +1785,7 @@ void CRender3DMS::RenderCone( Vector const &vBasePt, Vector const &vTipPt, float
 	// set to a flat shaded render mode
 	SetRenderMode( RENDER_MODE_FLAT );
 
-	for ( i = 0; i < m_Faces.Count(); i++ )
+	for ( int i = 0; i < m_Faces.Count(); i++ )
 	{
 		CMapFace *pFace = m_Faces.Element( i );
 		if( !pFace )
@@ -1799,7 +1801,7 @@ void CRender3DMS::RenderCone( Vector const &vBasePt, Vector const &vTipPt, float
 	//
 	// delete the faces in the list
 	//
-	for ( i = 0; i < m_Faces.Count(); i++ )
+	for ( int i = 0; i < m_Faces.Count(); i++ )
 	{
 		CMapFace *pFace = m_Faces.Element( i );
 		delete pFace;

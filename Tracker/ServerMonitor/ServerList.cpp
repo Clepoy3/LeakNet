@@ -12,8 +12,8 @@
 #include "../TrackerNET/Threads.h"
 #include "../TrackerNET/NetAddress.h"
 
-#include <VGUI_Panel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Panel.h>
+#include <KeyValues.h>
 
 #include <winsock2.h>
 #undef SetPort

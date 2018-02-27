@@ -253,7 +253,7 @@ CMapDisp *CMapDisp::CopyFrom( CMapDisp *pMapDisp, bool bUpdateDependencies )
 	m_Scale = pMapDisp->GetScale();
 
 	int size = GetSize();
-	for( i = 0; i < size; i++ )
+	for( int i = 0; i < size; i++ )
 	{
 		pMapDisp->GetFieldVector( i, v3 );
 		SetFieldVector( i, v3 );
@@ -274,7 +274,7 @@ CMapDisp *CMapDisp::CopyFrom( CMapDisp *pMapDisp, bool bUpdateDependencies )
 
 	int renderCount = pMapDisp->m_CoreDispInfo.GetRenderIndexCount();
 	m_CoreDispInfo.SetRenderIndexCount( renderCount );
-	for( i = 0; i < renderCount; i++ )
+	for( int i = 0; i < renderCount; i++ )
 	{
 		m_CoreDispInfo.SetRenderIndex( i, pMapDisp->m_CoreDispInfo.GetRenderIndex( i ) );
 	}
@@ -967,7 +967,8 @@ void CMapDisp::CollideWithBoundingBoxes( const Vector& rayStart, const Vector& r
 		//
 		// collide against bounding box planes
 		//
-		for( int j = 0; j < 6; j++ )
+		int j;
+		for( j = 0; j < 6; j++ )
 		{
 			float dist1 = DotProduct( planes[j].normal, start ) - planes[j].dist;
 			float dist2 = DotProduct( planes[j].normal, end ) - planes[j].dist;
@@ -1041,7 +1042,7 @@ void CMapDisp::CreateBoundingBoxes( BBox_t *pBBox, int count, float bloat )
 	//
 	int bboxIndex = 0;
 	int index;
-	for( i = 0; i < ( postSpacing - 1 ); i++ )
+	for( int i = 0; i < ( postSpacing - 1 ); i++ )
 	{
 		for( int j = 0; j < ( postSpacing - 1 ); j++ )
 		{
@@ -1183,7 +1184,7 @@ bool CMapDisp::TraceLineSnapTo( Vector &HitPos, Vector &HitNormal,
 	}
 
 	// test edge 1
-	for( ndx = 0; ndx < ( height - 1 ); ndx++ )
+	for( int ndx = 0; ndx < ( height - 1 ); ndx++ )
 	{
 		GetVert( ndx * width, tri.v[0] );
 		GetVert( ( ndx * width )+ width, tri.v[1] );
@@ -1210,7 +1211,7 @@ bool CMapDisp::TraceLineSnapTo( Vector &HitPos, Vector &HitNormal,
 	}
 
 	// test edge 2
-	for( ndx = 0; ndx < ( width - 1 ); ndx++ )
+	for( int ndx = 0; ndx < ( width - 1 ); ndx++ )
 	{
 		GetVert( ( ( height - 1 ) * width ) + ndx + 1, tri.v[0] );
 		GetVert( ( ( height - 2 ) * width ) + ndx + 1, tri.v[1] );
@@ -1237,7 +1238,7 @@ bool CMapDisp::TraceLineSnapTo( Vector &HitPos, Vector &HitNormal,
 	}
 
 	// test edge 3
-	for( ndx = 0; ndx < ( height - 1 ); ndx++ )
+	for( int ndx = 0; ndx < ( height - 1 ); ndx++ )
 	{
 		GetVert( ( ndx * width ) + ( ( 2 * width ) - 1 ), tri.v[0] );
 		GetVert( ( ndx * width ) + ( width - 1 ), tri.v[1] );
@@ -1360,6 +1361,7 @@ void CMapDisp::DoTransFlip( const Vector &RefPoint )
 		}
 	}
 
+	int i;
 	for( i = 0; i < 4; i++ )
 	{
 		float dx = startPoint.x - pFace->Points[i].x;
@@ -1441,7 +1443,7 @@ void CMapDisp::UpdateWalkable( void )
 	m_aWalkableIndices.RemoveAll();
 	m_aForcedWalkableIndices.RemoveAll();
 
-	for ( iTri = 0; iTri < nTriCount; ++iTri )
+	for ( int iTri = 0; iTri < nTriCount; ++iTri )
 	{
 		if ( !IsTriWalkable( iTri ) )
 		{
@@ -1500,7 +1502,7 @@ void CMapDisp::UpdateBuildable( void )
 	m_aBuildableIndices.RemoveAll();
 	m_aForcedBuildableIndices.RemoveAll();
 
-	for ( iTri = 0; iTri < nTriCount; ++iTri )
+	for ( int iTri = 0; iTri < nTriCount; ++iTri )
 	{
 		if ( !IsTriBuildable( iTri ) )
 		{
@@ -1953,7 +1955,7 @@ void CMapDisp::RenderOverlaySurface( CRender3D *pRender, bool bIsSelected, Selec
 	}
 	
 	unsigned short *pIndex = m_CoreDispInfo.GetRenderIndexList();
-	for ( i = 0; i < nIndexCount; ++i )
+	for ( int i = 0; i < nIndexCount; ++i )
 	{
 		meshBuilder.Index( pIndex[i] );
 		meshBuilder.AdvanceIndex();
@@ -1992,7 +1994,7 @@ void CMapDisp::RenderSurface( CRender3D *pRender, bool bIsSelected, SelectionSta
 	}
 	
 	unsigned short *pIndex = m_CoreDispInfo.GetRenderIndexList();
-	for ( i = 0; i < numIndices; ++i )
+	for ( int i = 0; i < numIndices; ++i )
 	{
 		meshBuilder.Index( pIndex[i] );
 		meshBuilder.AdvanceIndex();
@@ -2044,7 +2046,7 @@ void CMapDisp::RenderWalkableSurface( CRender3D *pRender, bool bIsSelected, Sele
 		}
 		
 		unsigned short *pIndex = m_aWalkableIndices.Base();
-		for ( i = 0; i < nIndexCount; ++i )
+		for ( int i = 0; i < nIndexCount; ++i )
 		{
 			meshBuilder.Index( pIndex[i] );
 			meshBuilder.AdvanceIndex();
@@ -2055,7 +2057,7 @@ void CMapDisp::RenderWalkableSurface( CRender3D *pRender, bool bIsSelected, Sele
 	}
 
 	// Forced
-	for ( iPass = 0; iPass < 2; ++iPass )
+	for ( int iPass = 0; iPass < 2; ++iPass )
 	{
 		unsigned char color[4];
 		if ( iPass == 0 )
@@ -2088,7 +2090,7 @@ void CMapDisp::RenderWalkableSurface( CRender3D *pRender, bool bIsSelected, Sele
 		}
 		
 		unsigned short *pIndex = m_aForcedWalkableIndices.Base();
-		for ( i = 0; i < nIndexCount; ++i )
+		for ( int i = 0; i < nIndexCount; ++i )
 		{
 			meshBuilder.Index( pIndex[i] );
 			meshBuilder.AdvanceIndex();
@@ -2144,7 +2146,7 @@ void CMapDisp::RenderBuildableSurface( CRender3D *pRender, bool bIsSelected, Sel
 		}
 		
 		unsigned short *pIndex = m_aBuildableIndices.Base();
-		for ( i = 0; i < nIndexCount; ++i )
+		for ( int i = 0; i < nIndexCount; ++i )
 		{
 			meshBuilder.Index( pIndex[i] );
 			meshBuilder.AdvanceIndex();
@@ -2155,7 +2157,7 @@ void CMapDisp::RenderBuildableSurface( CRender3D *pRender, bool bIsSelected, Sel
 	}
 
 	// Forced
-	for ( iPass = 0; iPass < 2; ++iPass )
+	for ( int iPass = 0; iPass < 2; ++iPass )
 	{
 		unsigned char color[4];
 		if ( iPass == 0 )
@@ -2188,7 +2190,7 @@ void CMapDisp::RenderBuildableSurface( CRender3D *pRender, bool bIsSelected, Sel
 		}
 		
 		unsigned short *pIndex = m_aForcedBuildableIndices.Base();
-		for ( i = 0; i < nIndexCount; ++i )
+		for ( int i = 0; i < nIndexCount; ++i )
 		{
 			meshBuilder.Index( pIndex[i] );
 			meshBuilder.AdvanceIndex();
@@ -2236,7 +2238,7 @@ void CMapDisp::RenderWireframeSurface( CRender3D *pRender, bool bIsSelected, Sel
 	}
 	
 	unsigned short *pIndex = m_CoreDispInfo.GetRenderIndexList();
-	for ( i = 0; i < numIndices; ++i )
+	for ( int i = 0; i < numIndices; ++i )
 	{
 		meshBuilder.Index( pIndex[i] );
 		meshBuilder.AdvanceIndex();
@@ -2277,7 +2279,7 @@ void CMapDisp::UpdateNeighborDependencies( bool bDestroy )
 		//
 		// update corner neighbors
 		//
-		for( i = 0; i < 4; i++ )
+		for( int i = 0; i < 4; i++ )
 		{
 			int cornerCount = GetCornerNeighborCount( i );
 			for( int j = 0; j < cornerCount; j++ )
@@ -2507,7 +2509,7 @@ void CMapDisp::PostLoad( void )
 		Vector vNormal;
 		GetSurfNormal( vNormal );
 
-		for( i = 0; i < size; i++ )
+		for( int i = 0; i < size; i++ )
 		{
 			SetSubdivNormal( i, vNormal );
 		}
@@ -2538,7 +2540,7 @@ ChunkFileResult_t CMapDisp::LoadDispDistancesKeyCallback(const char *szKey, cons
 {
 	float dispDistance;
 
-	if (!strnicmp(szKey, "row", 3))
+	if (!_strnicmp(szKey, "row", 3))
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy(szBuf, szValue);
@@ -2585,7 +2587,7 @@ ChunkFileResult_t CMapDisp::LoadDispOffsetsKeyCallback(const char *szKey, const 
 {
 	Vector subdivVector;
 
-	if( !strnicmp( szKey, "row", 3 ) )
+	if( !_strnicmp( szKey, "row", 3 ) )
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy( szBuf, szValue );
@@ -2643,7 +2645,7 @@ ChunkFileResult_t CMapDisp::LoadDispOffsetNormalsKeyCallback(const char *szKey, 
 {
 	Vector normalVector;
 
-	if( !strnicmp( szKey, "row", 3 ) )
+	if( !_strnicmp( szKey, "row", 3 ) )
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy( szBuf, szValue );
@@ -2686,27 +2688,27 @@ ChunkFileResult_t CMapDisp::LoadDispOffsetNormalsKeyCallback(const char *szKey, 
 //-----------------------------------------------------------------------------
 ChunkFileResult_t CMapDisp::LoadDispKeyCallback(const char *szKey, const char *szValue, CMapDisp *pDisp)
 {
-	if (!stricmp(szKey, "power"))
+	if (!_stricmp(szKey, "power"))
 	{
 		int	power;
 		CChunkFile::ReadKeyValueInt( szValue, power );
 		pDisp->SetPower( power );
 	}
-	else if (!stricmp(szKey, "uaxis"))
+	else if (!_stricmp(szKey, "uaxis"))
 	{
 		Vector mapAxis;
 		CChunkFile::ReadKeyValueVector3( szValue, mapAxis );
 		pDisp->SetHasMappingAxes( true );
 		pDisp->m_MapAxes[0] = mapAxis;
 	}
-	else if (!stricmp(szKey, "vaxis"))
+	else if (!_stricmp(szKey, "vaxis"))
 	{
 		Vector mapAxis;
 		CChunkFile::ReadKeyValueVector3( szValue, mapAxis );
 		pDisp->SetHasMappingAxes( true );
 		pDisp->m_MapAxes[1] = mapAxis;
 	}
-	else if( !stricmp( szKey, "startposition" ) )
+	else if( !_stricmp( szKey, "startposition" ) )
 	{
 		Vector startPosition;
 		CChunkFile::ReadKeyValueVector3( szValue, startPosition );
@@ -2714,19 +2716,19 @@ ChunkFileResult_t CMapDisp::LoadDispKeyCallback(const char *szKey, const char *s
 		pSurf->SetPointStart( startPosition );
 	}
 #if 0
-	else if (!stricmp(szKey, "mintess"))
+	else if (!_stricmp(szKey, "mintess"))
 	{
 		int	minTess;
 		CChunkFile::ReadKeyValueInt( szValue, minTess );
 		pDisp->SetMinTess( minTess );
 	}
-	else if (!stricmp(szKey, "smooth"))
+	else if (!_stricmp(szKey, "smooth"))
 	{
 		float smoothingAngle;
 		CChunkFile::ReadKeyValueFloat( szValue, smoothingAngle );
 		pDisp->SetSmoothingAngle( smoothingAngle );
 	}
-	else if( !stricmp( szKey, "alpha" ) )
+	else if( !_stricmp( szKey, "alpha" ) )
 	{
 		Vector4D alphaValues;
 		CChunkFile::ReadKeyValueVector4( szValue, alphaValues );
@@ -2737,13 +2739,13 @@ ChunkFileResult_t CMapDisp::LoadDispKeyCallback(const char *szKey, const char *s
 		}
 	}
 #endif
-	else if( !stricmp( szKey, "elevation" ) )
+	else if( !_stricmp( szKey, "elevation" ) )
 	{
 		float elevation;
 		CChunkFile::ReadKeyValueFloat( szValue, elevation );
 		pDisp->SetElevation( elevation );
 	}
-	else if( !stricmp( szKey, "subdiv" ) )
+	else if( !_stricmp( szKey, "subdiv" ) )
 	{
 		int bSubdivided;
 		CChunkFile::ReadKeyValueInt( szValue, bSubdivided );
@@ -2777,7 +2779,7 @@ ChunkFileResult_t CMapDisp::LoadDispAlphasKeyCallback(const char *szKey, const c
 {
 	float alpha;
 
-	if (!strnicmp(szKey, "row", 3))
+	if (!_strnicmp(szKey, "row", 3))
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy(szBuf, szValue);
@@ -2817,7 +2819,7 @@ ChunkFileResult_t CMapDisp::LoadDispTriangleTagsKeyCallback(const char *szKey, c
 {
 	unsigned short nTriTag;
 
-	if ( !strnicmp( szKey, "row", 3 ) )
+	if ( !_strnicmp( szKey, "row", 3 ) )
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy( szBuf, szValue );
@@ -2865,7 +2867,7 @@ ChunkFileResult_t CMapDisp::LoadDispNormalsKeyCallback(const char *szKey, const 
 {
 	Vector vectorFieldVector;
 
-	if (!strnicmp(szKey, "row", 3))
+	if (!_strnicmp(szKey, "row", 3))
 	{
 		char szBuf[MAX_KEYVALUE_LEN];
 		strcpy(szBuf, szValue);
@@ -3305,7 +3307,7 @@ ChunkFileResult_t CMapDisp::SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo)
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CMapDisp::SerializedLoadMAP( fstream &file, CMapFace *pFace, UINT version )
+bool CMapDisp::SerializedLoadMAP( std::fstream &file, CMapFace *pFace, UINT version )
 {
 	int		power;
 	float	maxData;
@@ -3362,7 +3364,7 @@ bool CMapDisp::SerializedLoadMAP( fstream &file, CMapFace *pFace, UINT version )
     //
     // displacement distances
     //
-    for( i = 0; i < size; i++ )
+    for( int i = 0; i < size; i++ )
     {
 		if( version < 350 )
 		{
@@ -3390,7 +3392,7 @@ bool CMapDisp::SerializedLoadMAP( fstream &file, CMapFace *pFace, UINT version )
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CMapDisp::SerializedLoadRMF( fstream &file, CMapFace *pFace, float version )
+bool CMapDisp::SerializedLoadRMF( std::fstream &file, CMapFace *pFace, float version )
 {
 	int		power;
 	int		minTess;
@@ -3568,7 +3570,7 @@ void UpdateDispTrans( Selection3D *pSelectionList )
 			//
 			if( bNeighborsInList )
 			{
-				for( j = 0; j < 4; j++ )
+				for( int j = 0; j < 4; j++ )
 				{
 					int cornerCount = pDisp->GetCornerNeighborCount( j );
 					for( int k = 0; k < cornerCount; k++ )
@@ -3606,7 +3608,7 @@ void UpdateDispTrans( Selection3D *pSelectionList )
 	//
 	pDispMgr->SelectClear();
 	int worldListCount = pDispMgr->WorldCount();
-	for( i = 0; i < worldListCount; i++ )
+	for( int i = 0; i < worldListCount; i++ )
 	{
 		CMapDisp *pDisp = pDispMgr->GetFromWorld( i );
 		if( !pDisp )

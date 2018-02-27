@@ -66,7 +66,7 @@ BEGIN_VS_SHADER( WorldVertexTransition_DX8,
 
 		if( IsUsingGraphics() && params[ENVMAP]->IsDefined() )
 		{
-			if( stricmp( params[ENVMAP]->GetStringValue(), "env_cubemap" ) == 0 )
+			if( _stricmp( params[ENVMAP]->GetStringValue(), "env_cubemap" ) == 0 )
 			{
 				Warning( "env_cubemap used on world geometry without rebuilding map. . ignoring: %s\n", pMaterialName );
 				params[ENVMAP]->SetUndefined();

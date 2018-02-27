@@ -56,7 +56,7 @@ bool CChunk::CompareKey( char const *pKeyName, char const *pValueStr )
 {
 	CKeyValue *pKey = FindKey( pKeyName );
 
-	if( pKey && stricmp( pKey->m_pValue, pValueStr ) == 0 )
+	if( pKey && _stricmp( pKey->m_pValue, pValueStr ) == 0 )
 		return true;
 	else
 		return false;
@@ -69,7 +69,7 @@ CKeyValue* CChunk::FindKey( char const *pKeyName )
 	{
 		CKeyValue *pKey = m_Keys[i];
 
-		if( stricmp( pKey->m_pKey, pKeyName ) == 0 )
+		if( _stricmp( pKey->m_pKey, pKeyName ) == 0 )
 			return pKey;
 	}
 
@@ -188,7 +188,7 @@ void WriteChunks_R( CChunkFile *pFile, CChunk *pChunk, bool bRoot )
 	}
 
 	// Write subchunks.
-	for( i=pChunk->m_Chunks.Head(); i != pChunk->m_Chunks.InvalidIndex(); i = pChunk->m_Chunks.Next( i ) )
+	for( int i=pChunk->m_Chunks.Head(); i != pChunk->m_Chunks.InvalidIndex(); i = pChunk->m_Chunks.Next( i ) )
 	{
 		CChunk *pChild = pChunk->m_Chunks[i];
 		WriteChunks_R( pFile, pChild, false );
@@ -225,7 +225,7 @@ bool WriteChunkFile( char const *pOutFilename, CChunk *pRoot )
 //-----------------------------------------------------------------------------
 void ScanFuncWaterMoveDir( CChunk *pChunk )
 {
-	if ( stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
+	if ( _stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
 	{
 		if ( pChunk->CompareKey( "classname", "func_water" ) )
 		{
@@ -241,7 +241,7 @@ void ScanFuncWaterMoveDir( CChunk *pChunk )
 //-----------------------------------------------------------------------------
 void ScanMoveDir( CChunk *pChunk )
 {
-	if ( stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
+	if ( _stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
 	{
 		if ( pChunk->CompareKey( "classname", "env_blood" ) )
 		{
@@ -295,7 +295,7 @@ void ScanMomentaryRotButton( CChunk *pChunk )
 #define SF_BUTTON_LOCKED			2048	// Whether the button is initially locked.
 
 
-	if ( stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
+	if ( _stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
 	{
 		if ( pChunk->CompareKey( "classname", "momentary_rot_button" ) )
 		{
@@ -354,7 +354,7 @@ void ScanMomentaryRotButton( CChunk *pChunk )
 
 void ScanRopeSlack( CChunk *pChunk )
 {
-	if( stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
+	if( _stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
 	{
 		if( pChunk->CompareKey( "classname", "keyframe_rope" ) ||
 			pChunk->CompareKey( "classname", "move_rope" ) )
@@ -548,7 +548,7 @@ char *GetTrainMoveSound( int iValue )
 
 void ScanHL1( CChunk *pChunk )
 {
-	if( stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
+	if( _stricmp( pChunk->m_pChunkName, "entity" ) == 0 )
 	{
 		/*if( pChunk->CompareKey( "classname", "env_beam" ) )
 		{
@@ -870,7 +870,7 @@ int main(int argc, char* argv[])
 
 	char const *pHL1Port = argv[3];
 
-	if ( pHL1Port && !stricmp( pHL1Port, "-hl1port" ) )
+	if ( pHL1Port && !_stricmp( pHL1Port, "-hl1port" ) )
 		 ScanChunks( pRoot, ScanHL1 );
 	
 	if( !WriteChunkFile( pOutFilename, pRoot ) )

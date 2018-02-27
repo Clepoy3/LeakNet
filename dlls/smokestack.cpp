@@ -148,18 +148,18 @@ void CSmokeStack::Activate()
 
 bool CSmokeStack::KeyValue( const char *szKeyName, const char *szValue )
 {
-	if( stricmp( szKeyName, "Wind" ) == 0 )
+	if( _stricmp( szKeyName, "Wind" ) == 0 )
 	{
 		sscanf( szValue, "%f %f %f", &m_vWind.GetForModify().x, &m_vWind.GetForModify().y, &m_vWind.GetForModify().z );
 		return true;
 	}
-	else if( stricmp( szKeyName, "WindAngle" ) == 0 )
+	else if( _stricmp( szKeyName, "WindAngle" ) == 0 )
 	{
 		m_WindAngle = atoi( szValue );
 		RecalcWindVector();
 		return true;
 	}
-	else if( stricmp( szKeyName, "WindSpeed" ) == 0 )
+	else if( _stricmp( szKeyName, "WindSpeed" ) == 0 )
 	{
 		m_WindSpeed = atoi( szValue );
 		RecalcWindVector();

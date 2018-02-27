@@ -39,9 +39,9 @@ namespace vgui
 //-----------------------------------------------------------------------------
 class CHintItemBase : public vgui::Panel, public ITFHintItem
 {
+public:
 	DECLARE_CLASS_GAMEROOT( CHintItemBase, vgui::Panel );
 
-public:
 	CHintItemBase( vgui::Panel *parent, const char *panelName );
 
 	// Draw some extra stuff in the Bg

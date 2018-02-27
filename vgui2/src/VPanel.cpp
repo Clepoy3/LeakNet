@@ -354,7 +354,8 @@ void VPanel::SetZPos(int z)
 	{
 		// find the child in the list
 		int childCount = _parent->GetChildCount();
-		for (int i = 0; i < childCount; i++)
+		int i;
+		for (i = 0; i < childCount; i++)
 		{
 			if (_parent->GetChild(i) == this)
 				break;

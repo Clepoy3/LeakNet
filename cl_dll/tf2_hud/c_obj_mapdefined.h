@@ -18,8 +18,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectMapDefined : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectMapDefined, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectMapDefined, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectMapDefined();

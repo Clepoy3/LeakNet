@@ -26,8 +26,9 @@ class CSprite;
 //-----------------------------------------------------------------------------
 class CGrenadeEMP : public CBaseEMPableGrenade
 {
-	DECLARE_CLASS( CGrenadeEMP, CBaseEMPableGrenade );
 public:
+	DECLARE_CLASS( CGrenadeEMP, CBaseEMPableGrenade );
+
 	CGrenadeEMP();
 
 	DECLARE_PREDICTABLE();

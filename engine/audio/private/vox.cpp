@@ -524,7 +524,7 @@ void VOX_ParseLineCommands( char *pSentenceData, int sentenceIndex )
 		{
 		case 'l':
 			// All commands starting with the letter 'l' here
-			if ( !strnicmp( pSentenceData, "len", 3 ) )
+			if ( !_strnicmp( pSentenceData, "len", 3 ) )
 			{
 				g_Sentences[sentenceIndex].length = atof( pSentenceData + 3 ) ;
 			}
@@ -987,7 +987,7 @@ char *VOX_LookupString(const char *pSentenceName, int *psentencenum)
 	int i;
 	for (i = 0; i < g_Sentences.Size(); i++)
 	{
-		if (!stricmp(pSentenceName, g_Sentences[i].pName))
+		if (!_stricmp(pSentenceName, g_Sentences[i].pName))
 		{
 			if (psentencenum)
 				*psentencenum = i;

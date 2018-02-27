@@ -80,7 +80,7 @@ void FX_AntlionGib( const Vector &origin, const Vector &direction, float scale )
 	}
 
 	// Spawn all the medium gibs
-	for ( i = 0; i < NUM_ANTLION_GIBS_MEDIUM; i++ )
+	for ( int i = 0; i < NUM_ANTLION_GIBS_MEDIUM; i++ )
 	{
 		offset = RandomVector( -16, 16 ) + origin;
 
@@ -88,7 +88,7 @@ void FX_AntlionGib( const Vector &origin, const Vector &direction, float scale )
 	}
 
 	// Spawn all the small gibs
-	for ( i = 0; i < NUM_ANTLION_GIBS_SMALL; i++ )
+	for ( int i = 0; i < NUM_ANTLION_GIBS_SMALL; i++ )
 	{
 		offset = RandomVector( -16, 16 ) + origin;
 
@@ -108,7 +108,7 @@ void FX_AntlionGib( const Vector &origin, const Vector &direction, float scale )
 
 	vDir.Random( -1.0f, 1.0f );
 
-	for ( i = 0; i < 4; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		SimpleParticle *sParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), hMaterial, origin );
 			
@@ -136,7 +136,7 @@ void FX_AntlionGib( const Vector &origin, const Vector &direction, float scale )
 
 	hMaterial = pSimple->GetPMaterial( "effects/blood2" );
 
-	for ( i = 0; i < 4; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		SimpleParticle *sParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), hMaterial, origin );
 			

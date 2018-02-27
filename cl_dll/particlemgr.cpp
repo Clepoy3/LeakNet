@@ -634,7 +634,13 @@ void CParticleEffectBinding::DoBucketSort( CEffectMaterial *pMaterial, float *zC
 		UnlinkParticle( pCur );
 
 		// Add it to the appropriate bucket.
-		float flPercent = (zCoords[iCurParticle] - minZ) / (maxZ - minZ);
+	//	float flPercent = (zCoords[iCurParticle] - minZ) / (maxZ - minZ); // VXP: Conv
+		float flPercent;
+		if ( maxZ == minZ )
+			flPercent = 0.0f;
+		else
+			flPercent = (zCoords[iCurParticle] - minZ) / (maxZ - minZ);
+
 		int iAddBucket = (int)( flPercent * (NUM_BUCKETS - 0.0001f) );
 		iAddBucket = NUM_BUCKETS - iAddBucket - 1;
 		Assert( iAddBucket >= 0 && iAddBucket < NUM_BUCKETS );

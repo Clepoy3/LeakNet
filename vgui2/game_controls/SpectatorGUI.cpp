@@ -213,7 +213,8 @@ void CBottomBar::ApplySchemeSettings(IScheme *pScheme)
 //-----------------------------------------------------------------------------
 void CBottomBar::OnTextChanged(KeyValues *data)
 {
-	Panel *panel = const_cast<vgui::Panel *>( data->GetPtr("panel") );
+//	Panel *panel = const_cast<vgui::Panel *>( data->GetPtr("panel") ); // VXP: Conv
+	Panel *panel = reinterpret_cast<vgui::Panel *>( data->GetPtr("panel") );
 
 	vgui::ComboBox *box = dynamic_cast<vgui::ComboBox *>( panel );
 
@@ -234,11 +235,11 @@ void CBottomBar::OnTextChanged(KeyValues *data)
 
 void CBottomBar::OnCommand( const char *command )
 {
-	if (!stricmp(command, "specnext") )
+	if (!_stricmp(command, "specnext") )
 	{
 		gViewPortInterface->GetClientDllInterface()->FindNextPlayer( false );
 	}
-	else if (!stricmp(command, "specprev") )
+	else if (!_stricmp(command, "specprev") )
 	{
 		gViewPortInterface->GetClientDllInterface()->FindNextPlayer( true );
 	}
@@ -390,7 +391,7 @@ CSpectatorGUI::~CSpectatorGUI()
 
 void CSpectatorGUI::OnCommand( const char *command)
 {
-    if (!stricmp(command, "okay"))
+    if (!_stricmp(command, "okay"))
     {
 		m_pPlayerLabel->SetVisible( true );
 		m_pPlayerLabel->MoveToFront();

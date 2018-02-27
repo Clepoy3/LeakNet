@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectDragonsTeeth : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectDragonsTeeth, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectDragonsTeeth, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectDragonsTeeth();

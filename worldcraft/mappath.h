@@ -19,7 +19,8 @@
 #pragma once
 
 #include <afxtempl.h>
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include "Axes2.h"
 #include "KeyValues.h"
 #include "vector.h"
@@ -81,9 +82,9 @@ class CMapPath
 		void EditInfo();
 
 		// save/load to/from RMF:
-		void SerializeRMF(fstream&, BOOL fIsStoring);
+		void SerializeRMF(std::fstream&, BOOL fIsStoring);
 		// save to map: (no load!!)
-		void SerializeMAP(fstream&, BOOL fIsStoring, BoundBox *pIntersecting = NULL);
+		void SerializeMAP(std::fstream&, BOOL fIsStoring, BoundBox *pIntersecting = NULL);
 
 		//void SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo);
 		//void LoadVMF(CChunkFile *pFile);

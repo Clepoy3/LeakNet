@@ -584,7 +584,7 @@ int FindBoneIndex( studiohdr_t *pstudiohdr, const char *pName )
 	mstudiobone_t *pbones = pstudiohdr->pBone( 0 );
 	for (int i = 0; i < pstudiohdr->numbones; i++)
 	{
-		if ( !strcmpi( pName, pbones[i].pszName() ) )
+		if ( !_strcmpi( pName, pbones[i].pszName() ) )
 			return i;
 	}
 
@@ -606,7 +606,7 @@ int StudioModel::Physics_GetBoneIndex( const char *pName )
 	for (int i = 0; i < m_pPhysics->Count(); i++)
 	{
 		CPhysmesh *pmesh = m_pPhysics->GetMesh(i);
-		if ( !strcmpi( pName, pmesh[i].m_boneName ) )
+		if ( !_strcmpi( pName, pmesh[i].m_boneName ) )
 			return i;
 	}
 
@@ -1057,7 +1057,7 @@ void StudioModel::DrawBones( )
 	if (g_viewerSettings.highlightBone >= 0)
 	{
 		int k, j, n;
-		for (i = 0; i < m_pstudiohdr->numbodyparts; i++)
+		for (int i = 0; i < m_pstudiohdr->numbodyparts; i++)
 		{
 			for (j = 0; j < m_pstudiohdr->pBodypart( i )->nummodels; j++)
 			{

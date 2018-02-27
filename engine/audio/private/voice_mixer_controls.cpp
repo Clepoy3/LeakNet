@@ -59,7 +59,8 @@ private:
 	DWORD			m_dwMicSelectIndex;
 	
 	// Info about the controls we found.
-	ControlInfo		m_ControlInfos[Control::NumControls];
+//	ControlInfo		m_ControlInfos[Control::NumControls];
+	ControlInfo		m_ControlInfos[NumControls];
 };
 
 
@@ -153,27 +154,36 @@ bool CMixerControls::Init()
 					))
 					{
 						// This is the (record) boost option.
-						m_ControlInfos[Control::MicBoost].m_bFound = true;
-						m_ControlInfos[Control::MicBoost].m_dwControlID = pControl->dwControlID;
-						m_ControlInfos[Control::MicBoost].m_cMultipleItems = pControl->cMultipleItems;
+					//	m_ControlInfos[Control::MicBoost].m_bFound = true;
+					//	m_ControlInfos[Control::MicBoost].m_dwControlID = pControl->dwControlID;
+					//	m_ControlInfos[Control::MicBoost].m_cMultipleItems = pControl->cMultipleItems;
+						m_ControlInfos[MicBoost].m_bFound = true;
+						m_ControlInfos[MicBoost].m_dwControlID = pControl->dwControlID;
+						m_ControlInfos[MicBoost].m_cMultipleItems = pControl->cMultipleItems;
 					}
 
 					if(recordLine.dwComponentType == MIXERLINE_COMPONENTTYPE_DST_SPEAKERS &&
 						pControl->dwControlType == MIXERCONTROL_CONTROLTYPE_MUTE)
 					{
 						// This is the mute button.
-						m_ControlInfos[Control::MicMute].m_bFound = true;
-						m_ControlInfos[Control::MicMute].m_dwControlID = pControl->dwControlID;
-						m_ControlInfos[Control::MicMute].m_cMultipleItems = pControl->cMultipleItems;
+					//	m_ControlInfos[Control::MicMute].m_bFound = true;
+					//	m_ControlInfos[Control::MicMute].m_dwControlID = pControl->dwControlID;
+					//	m_ControlInfos[Control::MicMute].m_cMultipleItems = pControl->cMultipleItems;
+						m_ControlInfos[MicMute].m_bFound = true;
+						m_ControlInfos[MicMute].m_dwControlID = pControl->dwControlID;
+						m_ControlInfos[MicMute].m_cMultipleItems = pControl->cMultipleItems;
 					}
 					
 					if(recordLine.dwComponentType == MIXERLINE_COMPONENTTYPE_DST_WAVEIN &&
 						pControl->dwControlType == MIXERCONTROL_CONTROLTYPE_VOLUME)
 					{
 						// This is the mic input level.
-						m_ControlInfos[Control::MicVolume].m_bFound = true;
-						m_ControlInfos[Control::MicVolume].m_dwControlID = pControl->dwControlID;
-						m_ControlInfos[Control::MicVolume].m_cMultipleItems = pControl->cMultipleItems;
+					//	m_ControlInfos[Control::MicVolume].m_bFound = true;
+					//	m_ControlInfos[Control::MicVolume].m_dwControlID = pControl->dwControlID;
+					//	m_ControlInfos[Control::MicVolume].m_cMultipleItems = pControl->cMultipleItems;
+						m_ControlInfos[MicVolume].m_bFound = true;
+						m_ControlInfos[MicVolume].m_dwControlID = pControl->dwControlID;
+						m_ControlInfos[MicVolume].m_cMultipleItems = pControl->cMultipleItems;
 					}
 				}
 			}
@@ -197,17 +207,20 @@ void CMixerControls::Term()
 
 bool CMixerControls::GetValue_Float(Control iControl, float &value)
 {
-	if(iControl < 0 || iControl >= Control::NumControls || !m_ControlInfos[iControl].m_bFound)
+//	if(iControl < 0 || iControl >= Control::NumControls || !m_ControlInfos[iControl].m_bFound) // VXP: Conv
+	if(iControl < 0 || iControl >= NumControls || !m_ControlInfos[iControl].m_bFound)
 		return false;
 
-	if(iControl == Control::MicBoost || iControl == Control::MicMute)
+//	if(iControl == Control::MicBoost || iControl == Control::MicMute) // VXP: Conv
+	if(iControl == MicBoost || iControl == MicMute)
 	{
 		bool bValue = false;
 		bool ret = GetControlOption_Bool(m_ControlInfos[iControl].m_dwControlID, m_ControlInfos[iControl].m_cMultipleItems, bValue);
 		value = (float)bValue;
 		return ret;
 	}
-	else if(iControl == Control::MicVolume)
+//	else if(iControl == Control::MicVolume) // VXP: Conv
+	else if(iControl == MicVolume)
 	{
 		DWORD dwValue = (DWORD)0;
 		if(GetControlOption_Unsigned(m_ControlInfos[iControl].m_dwControlID, m_ControlInfos[iControl].m_cMultipleItems, dwValue))
@@ -223,15 +236,18 @@ bool CMixerControls::GetValue_Float(Control iControl, float &value)
 
 bool CMixerControls::SetValue_Float(Control iControl, float value)
 {
-	if(iControl < 0 || iControl >= Control::NumControls || !m_ControlInfos[iControl].m_bFound)
+//	if(iControl < 0 || iControl >= Control::NumControls || !m_ControlInfos[iControl].m_bFound) // VXP: Conv
+	if(iControl < 0 || iControl >= NumControls || !m_ControlInfos[iControl].m_bFound)
 		return false;
 
-	if(iControl == Control::MicBoost || iControl == Control::MicMute)
+//	if(iControl == Control::MicBoost || iControl == Control::MicMute) // VXP: Conv
+	if(iControl == MicBoost || iControl == MicMute)
 	{
 		bool bValue = !!value;
 		return SetControlOption_Bool(m_ControlInfos[iControl].m_dwControlID, m_ControlInfos[iControl].m_cMultipleItems, bValue);
 	}
-	else if(iControl == Control::MicVolume)
+//	else if(iControl == Control::MicVolume) // VXP: Conv
+	else if(iControl == MicVolume)
 	{
 		DWORD dwValue = (DWORD)(value * 65535.0f);
 		return SetControlOption_Unsigned(m_ControlInfos[iControl].m_dwControlID, m_ControlInfos[iControl].m_cMultipleItems, dwValue);

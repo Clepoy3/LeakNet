@@ -177,14 +177,14 @@ void C_TFTeam::ReceiveMessage( const char *msgname, int length, void *data )
 	char sResourceString[256];
 	if ( GetLocalTeam() == this )
 	{
-		itoa(iAmount, sResourceString, 10 );
+		_itoa(iAmount, sResourceString, 10 );
 		Q_strncat( sResourceString, " RESOURCES HARVESTED!", sizeof(sResourceString) );
 		iYPos = ScreenHeight() / 4;
 	}
 	else
 	{
 		char sAmount[256];
-		itoa(iAmount, sAmount, 10 );
+		_itoa(iAmount, sAmount, 10 );
 		Q_strncpy( sResourceString, "ENEMY TEAM HAS HARVESTED ", sizeof(sResourceString) );
 		Q_strncat( sResourceString, sAmount, sizeof(sResourceString) );
 		Q_strncat( sResourceString, " RESOURCES!", sizeof(sResourceString) );

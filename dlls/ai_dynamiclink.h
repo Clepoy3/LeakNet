@@ -34,8 +34,8 @@ enum DynamicLinkState_t
 //=============================================================================
 class CAI_DynamicLink : public CPointEntity
 {
-	DECLARE_CLASS( CAI_DynamicLink, CPointEntity );
 public:
+	DECLARE_CLASS( CAI_DynamicLink, CPointEntity );
 
 	static void					InitDynamicLinks(void);
 	static void					ResetDynamicLinks(void);
@@ -74,8 +74,8 @@ public:
 //=============================================================================
 class CAI_DynamicLinkController : public CPointEntity
 {
-	DECLARE_CLASS( CAI_DynamicLinkController, CPointEntity );
 public:
+	DECLARE_CLASS( CAI_DynamicLinkController, CPointEntity );
 
 	void GenerateLinksFromVolume();
 

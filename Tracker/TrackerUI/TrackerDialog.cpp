@@ -8,6 +8,8 @@
 // Purpose: 
 //=============================================================================
 
+#include <assert.h>
+
 #include "TrackerMessageFlags.h"
 #include "ServerBrowser/IServerBrowser.h"
 
@@ -46,7 +48,6 @@
 #include <vgui_controls/MessageBox.h>
 #include "FileSystem.h"
 
-#include <KeyValues.h>
 
 
 using namespace vgui;
@@ -664,7 +665,7 @@ void CTrackerDialog::OnSystemMessage(KeyValues *msg)
 	// play the message sound, if they have it enabled
 	if (GetDoc()->Data()->GetInt("User/Sounds/Message", 1))
 	{
-		surface()->PlaySound("..\\..\\Platform\\Friends\\Message.wav");
+		surface()->PlaySound("Friends\\Message.wav");
 	}
 
 	// display the message in a message box
@@ -778,7 +779,7 @@ void CTrackerDialog::OnReceivedMessage(KeyValues *data)
 
 		// make sure we have a user name set
 		const char *buddyName = buddy->GetString("UserName", "");
-		if (!buddyName[0] || !stricmp(buddyName, "Unnamed"))
+		if (!buddyName[0] || !_stricmp(buddyName, "Unnamed"))
 		{
 			buddy->SetString("UserName", data->GetString("UserName"));
 			buddy->SetString("DisplayName", data->GetString("UserName"));
@@ -849,7 +850,7 @@ void CTrackerDialog::OnReceivedFriendInfo(KeyValues *data)
 		{
 			// if user hasn't changed the buddies username, update the buddies displayname as well
 			const char *displayName = buddy->Data()->GetString("DisplayName");
-			if (!stricmp(displayName, "Unnamed") || !stricmp(buddy->Data()->GetString("UserName"), displayName))
+			if (!_stricmp(displayName, "Unnamed") || !_stricmp(buddy->Data()->GetString("UserName"), displayName))
 			{
 				buddy->Data()->SetString("DisplayName", data->GetString("UserName"));
 			}
@@ -932,36 +933,36 @@ void CTrackerDialog::OnCommand(const char *command)
 			m_hDialogFindBuddy = pDialogFindBuddy;
 		}
 	}
-	else if (!stricmp(command, "OpenCreateNewUserDialog"))
+	else if (!_stricmp(command, "OpenCreateNewUserDialog"))
 	{
 		PopupCreateNewUserDialog(false);
 	}
-	else if (!stricmp(command, "AddFriends"))
+	else if (!_stricmp(command, "AddFriends"))
 	{
 		// delay the dialog opening
 		PostMessage(this, new KeyValues("Command", "command", "OpenFindBuddyDialog"), 0.5f);
 	}
-	else if (!stricmp(command, "Quit"))
+	else if (!_stricmp(command, "Quit"))
 	{
 		OnQuit();
 	}
-	else if (!stricmp(command, "Open"))
+	else if (!_stricmp(command, "Open"))
 	{
 		Activate();
 	}
-	else if (!stricmp(command, "Minimize"))
+	else if (!_stricmp(command, "Minimize"))
 	{
 		OnClose();
 	}
-	else if (!stricmp(command, "ServerBrowser"))
+	else if (!_stricmp(command, "ServerBrowser"))
 	{
 		OpenServerBrowser();
 	}
-	else if (!stricmp(command, "OpenOptionsDialog"))
+	else if (!_stricmp(command, "OpenOptionsDialog"))
 	{
 		OpenOptionDialog();
 	}
-	else if (!stricmp(command, "About"))
+	else if (!_stricmp(command, "About"))
 	{
 		OpenAboutDialog();
 	}
@@ -1142,7 +1143,7 @@ void CTrackerDialog::OnLoginOK()
 //-----------------------------------------------------------------------------
 void CTrackerDialog::OpenSavedChats()
 {
-	static done = false;
+	static bool done = false;
 	
 	if (done)
 		return;
@@ -1231,6 +1232,7 @@ void CTrackerDialog::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
 
+//	m_pBuddyListPanel->SetBorder(scheme()->GetBorder(GetScheme(), "ButtonDepressedBorder"));
 	m_pBuddyListPanel->SetBorder(pScheme->GetBorder("ButtonDepressedBorder"));
 }
 

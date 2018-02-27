@@ -16,9 +16,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectRespawnStation : public C_BaseObject
 {
+public:
 	DECLARE_CLASS( C_ObjectRespawnStation, C_BaseObject );
 
-public:
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 

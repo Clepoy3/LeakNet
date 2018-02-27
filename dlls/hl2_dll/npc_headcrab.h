@@ -15,9 +15,9 @@
 
 class CBaseHeadcrab : public CAI_BaseNPC
 {
+public:
 	DECLARE_CLASS( CBaseHeadcrab, CAI_BaseNPC );
 
-public:
 	void Spawn( void );
 	void Precache( void );
 	void RunTask( const Task_t *pTask );
@@ -77,9 +77,9 @@ protected:
 //=========================================================
 class CHeadcrab : public CBaseHeadcrab
 {
+public:
 	DECLARE_CLASS( CHeadcrab, CBaseHeadcrab );
 
-public:
 	void Precache( void );
 	void Spawn( void );
 
@@ -100,8 +100,9 @@ public:
 //=========================================================
 class CFastHeadcrab : public CBaseHeadcrab
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CFastHeadcrab, CBaseHeadcrab );
 
 	void Precache( void );
@@ -137,9 +138,8 @@ public:
 //=========================================================
 class CBlackHeadcrab : public CBaseHeadcrab
 {
-	DECLARE_CLASS( CBlackHeadcrab, CBaseHeadcrab );
-
 public:
+	DECLARE_CLASS( CBlackHeadcrab, CBaseHeadcrab );
 
 	void ThrowAt( const Vector &vecPos );
 	void ThrowThink( void );

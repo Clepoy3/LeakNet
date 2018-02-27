@@ -24,8 +24,9 @@
 
 class CWeapon_Manhack : public CBaseHLCombatWeapon
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CWeapon_Manhack, CBaseHLCombatWeapon );
 
 	DECLARE_SERVERCLASS();

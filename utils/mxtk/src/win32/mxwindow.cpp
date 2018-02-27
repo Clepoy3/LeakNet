@@ -13,7 +13,7 @@
 //
 #include <mx/mxWindow.h>
 #include <windows.h>
-#include <ostream.h>
+//#include <ostream.h> // VXP: Conv
 
 
 

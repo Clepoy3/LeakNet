@@ -81,7 +81,7 @@ CSaveGameDialog::~CSaveGameDialog()
 //-----------------------------------------------------------------------------
 void CSaveGameDialog::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Save" )  )
+	if ( !_stricmp( command, "Save" )  )
 	{
 		KeyValues *item = m_pGameList->GetItem( m_pGameList->GetSelectedItem(0) );
 		if ( item )
@@ -205,7 +205,7 @@ int SaveReadNameAndComment( FileHandle_t f, char *name, char *comment )
 	pData += sizeof(short);
 	pFieldName = pTokenList[ *(short *)pData ];
 
-	if (stricmp(pFieldName, "GameHeader"))
+	if (_stricmp(pFieldName, "GameHeader"))
 	{
 		delete[] pSaveData;
 		return 0;
@@ -230,11 +230,11 @@ int SaveReadNameAndComment( FileHandle_t f, char *name, char *comment )
 		pFieldName = pTokenList[ *(short *)pData ];
 		pData += sizeof(short);
 
-		if (!stricmp(pFieldName, "comment"))
+		if (!_stricmp(pFieldName, "comment"))
 		{
 			strncpy(comment, pData, nFieldSize);
 		}
-		else if (!stricmp(pFieldName, "mapName"))
+		else if (!_stricmp(pFieldName, "mapName"))
 		{
 			strncpy(name, pData, nFieldSize);
 		};
@@ -382,7 +382,7 @@ void CSaveGameDialog::ScanSavedGames( void )
 	char const *pFileName = filesystem()->FindFirst( szDirectory, &handle );
 	while (pFileName)
 	{
-		if ( !strnicmp(pFileName, "HLSave", strlen( "HLSave" ) ) )
+		if ( !_strnicmp(pFileName, "HLSave", strlen( "HLSave" ) ) )
 		{
 			pFileName = filesystem()->FindNext( handle );
 			continue;

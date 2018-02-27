@@ -106,11 +106,11 @@ void CDialogAuthRequest::ReadAuthRequest(int buddyID)
 void CDialogAuthRequest::OnCommand(const char *command)
 {
 	bool bClose = false;
-	if (!stricmp(command, "Decline") || !stricmp(command, "Accept"))
+	if (!_stricmp(command, "Decline") || !_stricmp(command, "Accept"))
 	{
 		// radio buttons have been toggled
 	}
-	else if (!stricmp(command, "OK"))
+	else if (!_stricmp(command, "OK"))
 	{
 		if (m_pAcceptButton->IsSelected())
 		{
@@ -123,7 +123,7 @@ void CDialogAuthRequest::OnCommand(const char *command)
 
 		bClose = true;
 	}
-	else if (!stricmp(command, "Cancel"))
+	else if (!_stricmp(command, "Cancel"))
 	{
 		bClose = true;
 	}

@@ -97,8 +97,9 @@
 
 class CAI_PlayerAlly : public CAI_BaseActor
 {
-	DECLARE_CLASS( CAI_PlayerAlly, CAI_BaseActor );
 public:
+	DECLARE_CLASS( CAI_PlayerAlly, CAI_BaseActor );
+
 	// AI functions
 	Activity		NPC_TranslateActivity( Activity newActivity );
 	virtual int		TranslateSchedule( int scheduleType );
@@ -259,8 +260,9 @@ protected:
 
 class CNPCSimpleTalker : public CAI_PlayerAlly
 {
-	DECLARE_CLASS( CNPCSimpleTalker, CAI_PlayerAlly );
 public:
+	DECLARE_CLASS( CNPCSimpleTalker, CAI_PlayerAlly );
+
 	virtual void			StartFollowing( CBaseEntity *pLeader ) { m_FollowBehavior.SetFollowTarget( pLeader ); DeferSchedulingToBehavior( &m_FollowBehavior ); }
 	virtual void			StopFollowing( ) { m_FollowBehavior.SetFollowTarget( NULL ); DeferSchedulingToBehavior( NULL ); }
 	CBaseEntity		*GetFollowTarget( void ) { return m_FollowBehavior.GetFollowTarget(); }
@@ -285,6 +287,7 @@ private:
 	CAI_FollowBehavior m_FollowBehavior;
 	float		m_useTime;						// Don't allow +USE until this time
 
+public:
 	DECLARE_DATADESC();
 	DEFINE_CUSTOM_AI;
 };

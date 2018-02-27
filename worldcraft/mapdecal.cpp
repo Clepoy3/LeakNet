@@ -306,7 +306,7 @@ int CMapDecal::DecalSolid(CMapSolid *pSolid)
 				pDecalFace->pFace->SetTexture(m_pTexture);
 				pDecalFace->pFace->CalcTextureCoords();
 
-				for (nPoint = 0; nPoint < nPointCount; nPoint++)
+				for (int nPoint = 0; nPoint < nPointCount; nPoint++)
 				{
 					pDecalFace->pFace->SetTextureCoords(nPoint, ClipPoints[nPoint][3], ClipPoints[nPoint][4]);
 				}
@@ -331,7 +331,7 @@ void CMapDecal::OnParentKeyChanged(LPCSTR szKey, LPCSTR szValue)
 	//
 	// The decal texture has changed.
 	//
-	if (!stricmp(szKey, "texture"))
+	if (!_stricmp(szKey, "texture"))
 	{
 		IEditorTexture *pTexNew = g_Textures.FindActiveTexture(szValue);
 
@@ -555,7 +555,7 @@ void CMapDecal::Render3D(CRender3D *pRender)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapDecal::SerializeRMF(fstream &File, BOOL bRMF)
+int CMapDecal::SerializeRMF(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -567,7 +567,7 @@ int CMapDecal::SerializeRMF(fstream &File, BOOL bRMF)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapDecal::SerializeMAP(fstream &File, BOOL bRMF)
+int CMapDecal::SerializeMAP(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }

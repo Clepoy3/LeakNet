@@ -62,7 +62,7 @@ void CMortarRound::Spawn( void )
 	SetModel( "models/weapons/w_grenade.mdl" );
 	UTIL_SetSize( this, vec3_origin, vec3_origin );
 
-	SetTouch( MissileTouch );
+	SetTouch( &CMortarRound::MissileTouch );
 	SetCollisionGroup( TFCOLLISION_GROUP_WEAPON );
 
 	// Trail smoke
@@ -221,7 +221,7 @@ void CMortarRound::SetLauncher( CVehicleMortar *pLauncher )
 //-----------------------------------------------------------------------------
 void CMortarRound::SetFallTime( float flFallTime )
 {
-	SetThink( FallThink );
+	SetThink( &CMortarRound::FallThink );
 	SetNextThink( gpGlobals->curtime + flFallTime );
 }
 

@@ -5,8 +5,8 @@
 
 class CNPC_Gargantua : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Gargantua, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Gargantua, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

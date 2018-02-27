@@ -376,7 +376,7 @@ public:
 					CChoreoActor *a = scene->GetActor( i );
 					Assert( a );
 				
-					if ( stricmp( a->GetFacePoserModelName(), filename ) )
+					if ( _stricmp( a->GetFacePoserModelName(), filename ) )
 						continue;
 					hasassoc = true;
 					break;
@@ -521,7 +521,7 @@ public:
 									
 									strcpy( text.choice, a->GetName() );
 
-									if ( !stricmp( a->GetFacePoserModelName(), modelname ) )
+									if ( !_stricmp( a->GetFacePoserModelName(), modelname ) )
 									{
 										params.m_nSelected = i;
 										oldsel = -1;
@@ -1746,7 +1746,7 @@ void MDLViewer::OnTile()
 {
 	int c = CountVisibleTools();
 
-	int rows = (int)sqrt( c );
+	int rows = (int)sqrt( (float)c );
 	rows = clamp( rows, 1, rows );
 
 	int cols  = 1;
@@ -1896,7 +1896,7 @@ SpewRetval_t HLFacePoserSpewFunc( SpewType_t spewType, char const *pMsg )
 
 char cmdline[1024] = "";
 
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
 	int i;
 	CommandLine()->CreateCmdLine( argc, argv );

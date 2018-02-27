@@ -133,7 +133,7 @@ bool CUtlSymbolTable::SymLessi( unsigned int const& i1, unsigned int const& i2 )
 	char const* str2 = (i2 == INVALID_STRING_INDEX) ? g_LessCtx.m_pUserString :
 											&g_LessCtx.m_pTable->m_Strings[i2];
 	
-	return strcmpi( str1, str2 ) < 0;
+	return _strcmpi( str1, str2 ) < 0;
 }
 
 //-----------------------------------------------------------------------------

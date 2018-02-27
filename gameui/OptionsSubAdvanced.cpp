@@ -112,7 +112,7 @@ COptionsSubAdvanced::COptionsSubAdvanced(vgui::Panel *parent) : PropertyPage(par
 //-----------------------------------------------------------------------------
 void COptionsSubAdvanced::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "ContentControl" ) )
+	if ( !_stricmp( command, "ContentControl" ) )
 	{
         // we're trying to turn it off
         if (!m_pContentCheckButton->IsSelected())

@@ -46,11 +46,11 @@ int main( int argc, char *argv[] )
 	// parse the arguments
 	for ( int count = 1; count < argc; count++ )
 	{
-		if ( !stricmp( argv[count], "-permap" ) )
+		if ( !_stricmp( argv[count], "-permap" ) )
 		{
 			printPerMap = true;
 		}
-		else if ( !stricmp( argv[count], "-onlyent" ) )
+		else if ( !_stricmp( argv[count], "-onlyent" ) )
 		{
 			count++;
 			if ( count < argc )
@@ -58,7 +58,7 @@ int main( int argc, char *argv[] )
 				filterEnt = argv[count];
 			}
 		}
-		else if ( !stricmp( argv[count], "-fgd" ) )
+		else if ( !_stricmp( argv[count], "-fgd" ) )
 		{
 			count++;
 			if ( count < argc )
@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
 				fgdFile = argv[count];
 			}
 		}
-		else if ( !stricmp( argv[count], "-files" ) )
+		else if ( !_stricmp( argv[count], "-files" ) )
 		{
 			count++;
 			if ( count < argc )
@@ -74,7 +74,7 @@ int main( int argc, char *argv[] )
 				fileMask = argv[count];
 			}
 		}
-		else if ( !stricmp( argv[count], "-nofgd" ) )
+		else if ( !_stricmp( argv[count], "-nofgd" ) )
 		{
 		}
 		else
@@ -166,7 +166,7 @@ int main( int argc, char *argv[] )
 			ParseToken( bufpos, Token );
 
 			// add the word to the list, filtering if necessary
-			if ( !filterEnt || !stricmp(filterEnt, Token) )
+			if ( !filterEnt || !_stricmp(filterEnt, Token) )
 			{
 				AddToTable( Token );
 				entFound = true;
@@ -342,7 +342,7 @@ char *FindSearchWord( char *buffer, char *bufend )
 
 	while ( 1 )
 	{
-		if ( strnicmp(buffer - SearchWordLen, SearchWord, SearchWordLen) )
+		if ( _strnicmp(buffer - SearchWordLen, SearchWord, SearchWordLen) )
 		{
 			// strings not equal, jump ahead
 			buffer += JumpTable[ (unsigned char)*buffer ];

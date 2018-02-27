@@ -55,8 +55,9 @@ enum TANKBULLET
 
 class CFuncTank : public CBaseEntity
 {
-	DECLARE_CLASS( CFuncTank, CBaseEntity );
 public:
+	DECLARE_CLASS( CFuncTank, CBaseEntity );
+
 	~CFuncTank( void );
 	void	Spawn( void );
 	void	Activate( void );
@@ -1280,8 +1281,9 @@ void CFuncTankPulseLaser::Fire( int bulletCount, const Vector &barrelEnd, const 
 // #############################################################################
 class CFuncTankLaser : public CFuncTank
 {
-	DECLARE_CLASS( CFuncTankLaser, CFuncTank );
 public:
+	DECLARE_CLASS( CFuncTankLaser, CFuncTank );
+
 	void	Activate( void );
 	void	Fire( int bulletCount, const Vector &barrelEnd, const Vector &forward, CBaseEntity *pAttacker );
 	void	Think( void );

@@ -598,7 +598,7 @@ static int CacheSystemCompare(const void* ppcs1,const void* ppcs2)
 //	OutputDebugString(buf);
 	
 
-	return stricmp(pcs1->name,pcs2->name);
+	return _stricmp(pcs1->name,pcs2->name);
 }	
 
 

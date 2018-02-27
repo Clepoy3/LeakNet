@@ -43,7 +43,7 @@ void StockSolid::AllocateDataFields(int nFields)
 }
 
 
-void StockSolid::Serialize(fstream& file, BOOL bIsStoring)
+void StockSolid::Serialize(std::fstream& file, BOOL bIsStoring)
 {
 }
 
@@ -213,7 +213,7 @@ void StockBlock::CreateMapSolid(CMapSolid *pSolid)
 	pSolid->AddFace(&Face);
 
 	// right - modify xloc
-	for(i = 0; i < 4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Points[i][0] = bmaxs[0];
 	}
@@ -242,7 +242,7 @@ void StockBlock::CreateMapSolid(CMapSolid *pSolid)
 	pSolid->AddFace(&Face);
 
 	// nearest - modify yloc
-	for(i = 0; i < 4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Points[i][1] = bmins[1];
 	}
@@ -430,7 +430,7 @@ void StockCylinder::CreateMapSolid(CMapSolid *pSolid)
 	pSolid->AddFace(&Face);
 
 	// bottom face
-	for(i = 0; i < nSides+1; i++)
+	for(int i = 0; i < nSides+1; i++)
 	{
 		pmPoints[i][2] = origin[2] + fHeight;
 	}
@@ -441,7 +441,7 @@ void StockCylinder::CreateMapSolid(CMapSolid *pSolid)
 	// other sides
 	Vector Points[4];
 
-	for(i = 0; i < nSides; i++)
+	for(int i = 0; i < nSides; i++)
 	{
 		Points[0][0] = pmPoints[i][0];
 		Points[0][1] = pmPoints[i][1];
@@ -528,7 +528,7 @@ void StockSpike::CreateMapSolid(CMapSolid *pSolid)
 	// YWB rounding???
 	Points[0][2] = rint(origin[2] + fHeight);
 
-	for(i = 0; i < nSides; i++)
+	for(int i = 0; i < nSides; i++)
 	{
 		Points[1][0] = pmPoints[i][0];
 		Points[1][1] = pmPoints[i][1];

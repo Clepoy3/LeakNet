@@ -48,8 +48,9 @@ typedef enum
 
 class CNPC_BaseTurret : public CAI_BaseNPC
 {
-	DECLARE_CLASS( CNPC_BaseTurret, CAI_BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_BaseTurret, CAI_BaseNPC );
+
 	void Spawn(void);
 	virtual void Precache(void);
 	void EXPORT TurretUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
@@ -476,7 +477,7 @@ void CNPC_BaseTurret::Initialize(void)
 	}
 	else
 	{
-		SetThink( SUB_DoNothing ); 
+		SetThink( &CBaseEntity::SUB_DoNothing ); 
 	}
 }
 
@@ -945,7 +946,7 @@ void CNPC_BaseTurret::Retire(void)
 			}
 			else
 			{
-				SetThink( SUB_DoNothing );
+				SetThink( &CBaseEntity::SUB_DoNothing );
 			}
 		}
 	}
@@ -1163,9 +1164,9 @@ void CNPC_BaseTurret::Event_Killed( const CTakeDamageInfo &info )
 
 class CNPC_MiniTurret : public CNPC_BaseTurret
 {
+public:
 	DECLARE_CLASS( CNPC_MiniTurret, CNPC_BaseTurret );
 
-public:
 	void Spawn( );
 	void Precache(void);
 
@@ -1175,9 +1176,9 @@ public:
 
 class CNPC_Turret : public CNPC_BaseTurret
 {
+public:
 	DECLARE_CLASS( CNPC_Turret, CNPC_BaseTurret );
 
-public:
 	void Spawn(void);
 	void Precache(void);
 
@@ -1368,9 +1369,9 @@ void CNPC_MiniTurret::Shoot(Vector &vecSrc, Vector &vecDirToEnemy)
 //=========================================================
 class CNPC_Sentry : public CNPC_BaseTurret
 {
+public:
 	DECLARE_CLASS( CNPC_Sentry, CNPC_BaseTurret );
 
-public:
 	void Spawn( );
 	void Precache(void);
 

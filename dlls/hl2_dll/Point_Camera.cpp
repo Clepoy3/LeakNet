@@ -127,7 +127,7 @@ void CPointCamera::InputChangeFOV( inputdata_t &inputdata )
 
 	m_DegreesPerSecond = ( m_TargetFOV - m_FOV ) / flChangeTime;
 
-	SetThink( ChangeFOVThink );
+	SetThink( &CPointCamera::ChangeFOVThink );
 	SetNextThink( gpGlobals->curtime );
 }
 

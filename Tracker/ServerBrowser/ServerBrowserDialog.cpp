@@ -115,19 +115,19 @@ CServerBrowserDialog::CServerBrowserDialog(vgui::Panel *parent) : Frame(parent, 
 	// load current tab
 	const char *gameList = m_pSavedData->GetString("GameList");
 
-	if (!stricmp(gameList, "spectate"))
+	if (!_stricmp(gameList, "spectate"))
 	{
 		m_pTabPanel->SetActivePage(m_pSpectateGames);
 	}
-	else if (!stricmp(gameList, "favorites"))
+	else if (!_stricmp(gameList, "favorites"))
 	{
 		m_pTabPanel->SetActivePage(m_pFavorites);
 	}
-	else if (!stricmp(gameList, "lan"))
+	else if (!_stricmp(gameList, "lan"))
 	{
 		m_pTabPanel->SetActivePage(m_pLanGames);
 	}
-	else if (!stricmp(gameList, "friends"))
+	else if (!_stricmp(gameList, "friends"))
 	{
 		m_pTabPanel->SetActivePage(m_pFriendsGames);
 	}

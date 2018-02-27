@@ -275,7 +275,7 @@ int CReceiveMessage::ReadBlob(const char *name, void *data, int dataBufferSize)
 				break;
 
 			// is this our variable?
-			if (!stricmp(varname, name))
+			if (!_stricmp(varname, name))
 			{
 				// read the data itself and return that
 				if (dataBufferSize < size)

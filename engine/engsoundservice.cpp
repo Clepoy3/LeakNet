@@ -69,7 +69,7 @@ public:
 			if ( strlen(com_token) <= 0)
 				break;
 
-			if ( !stricmp( com_token, "bind" ) )
+			if ( !_stricmp( com_token, "bind" ) )
 			{
 				// Parse keyname and binding
 				pstart = COM_Parse( pstart );
@@ -82,7 +82,7 @@ public:
 			}
 			else // it's a cvar
 			{
-				if ( !stricmp( com_token, pszCvar ) )
+				if ( !_stricmp( com_token, pszCvar ) )
 				{
 					// Find the value
 					pstart = COM_Parse( pstart );

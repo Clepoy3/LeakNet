@@ -16,9 +16,8 @@
 //-----------------------------------------------------------------------------
 class C_VehicleSiegeTower : public C_BaseTFFourWheelVehicle
 {
-	DECLARE_CLASS( C_VehicleSiegeTower, C_BaseTFFourWheelVehicle );
-
 public:
+	DECLARE_CLASS( C_VehicleSiegeTower, C_BaseTFFourWheelVehicle );
 
 	DECLARE_CLIENTCLASS();
 
@@ -60,9 +59,8 @@ void C_VehicleSiegeTower::DebugMessages( void )
 //-----------------------------------------------------------------------------
 class CVehicleSiegeTowerControlPanel : public CObjectControlPanel
 {
-	DECLARE_CLASS( CVehicleSiegeTowerControlPanel, CObjectControlPanel );
-
 public:
+	DECLARE_CLASS( CVehicleSiegeTowerControlPanel, CObjectControlPanel );
 
 	CVehicleSiegeTowerControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

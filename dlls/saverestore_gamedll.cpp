@@ -33,7 +33,7 @@ bool ParseKeyvalue( void *pObject, typedescription_t *pFields, int iNumFields, c
 			}
 		}
 
-		if ( (pField->flags & FTYPEDESC_KEY) && !stricmp(pField->externalName, szKeyName) )
+		if ( (pField->flags & FTYPEDESC_KEY) && !_stricmp(pField->externalName, szKeyName) )
 		{
 			switch( pField->fieldType )
 			{

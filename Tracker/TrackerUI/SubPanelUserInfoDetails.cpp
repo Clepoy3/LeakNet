@@ -16,7 +16,8 @@
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelUserInfoDetails::CSubPanelUserInfoDetails(int userID) : PropertyPage(NULL, "SubPanelUserInfoDetails")
+CSubPanelUserInfoDetails::CSubPanelUserInfoDetails(int userID)
+	: PropertyPage(NULL, "SubPanelUserInfoDetails")
 {
 	m_iUserID = userID;
 	LoadControlSettings("Friends/SubPanelUserInfoDetails.res");
@@ -43,7 +44,7 @@ void CSubPanelUserInfoDetails::PerformLayout()
 //-----------------------------------------------------------------------------
 void CSubPanelUserInfoDetails::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Refresh"))
+	if (!_stricmp(command, "Refresh"))
 	{
 		// send away for new friend info
 		ServerSession().RequestUserInfoFromServer(m_iUserID);

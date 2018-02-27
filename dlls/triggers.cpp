@@ -640,8 +640,8 @@ void CTriggerMultiple::MultiWaitOver( void )
 // ##################################################################################
 class CTriggerOnce : public CTriggerMultiple
 {
-	DECLARE_CLASS( CTriggerOnce, CTriggerMultiple );
 public:
+	DECLARE_CLASS( CTriggerOnce, CTriggerMultiple );
 
 	void Spawn( void );
 };
@@ -667,8 +667,8 @@ void CTriggerOnce::Spawn( void )
 
 class CTriggerLook : public CTriggerOnce
 {
-	DECLARE_CLASS( CTriggerLook, CTriggerOnce );
 public:
+	DECLARE_CLASS( CTriggerLook, CTriggerOnce );
 
 	EHANDLE	m_hLookTarget;
 	float	m_flFieldOfView;
@@ -1113,7 +1113,7 @@ int CChangeLevel::AddTransitionToList( levellist_t *pLevelList, int listCount, c
 
 	for ( i = 0; i < listCount; i++ )
 	{
-		if ( pLevelList[i].pentLandmark == pentLandmark && stricmp( pLevelList[i].mapName, pMapName ) == 0 )
+		if ( pLevelList[i].pentLandmark == pentLandmark && _stricmp( pLevelList[i].mapName, pMapName ) == 0 )
 			return 0;
 	}
 	Q_strncpy( pLevelList[listCount].mapName, pMapName, sizeof(pLevelList[listCount].mapName) );
@@ -2634,8 +2634,9 @@ extern float	GetFloorZ(const Vector &origin);
 
 class CTriggerWind : public CTriggerMultiple
 {
-	DECLARE_CLASS( CTriggerWind, CTriggerMultiple );
 public:
+	DECLARE_CLASS( CTriggerWind, CTriggerMultiple );
+
 	DECLARE_DATADESC();
 
 	int		m_nSpeedBase;	// base line for how hard the wind blows
@@ -2817,13 +2818,13 @@ void CTriggerWind::WindThink( void )
 	{
 		bool bDone = true;
 		// either ramp up, or sleep till change
-		if (fabs(m_nSpeedTarget - m_nSpeedCurrent) > MAX_WIND_CHANGE)
+		if (fabs((float)(m_nSpeedTarget - m_nSpeedCurrent)) > MAX_WIND_CHANGE)
 		{
 			m_nSpeedCurrent += (m_nSpeedTarget > m_nSpeedCurrent) ? MAX_WIND_CHANGE : -MAX_WIND_CHANGE;
 			bDone = false;
 		}
 
-		if (fabs(m_nDirTarget - m_nDirCurrent) > MAX_WIND_CHANGE)
+		if (fabs((float)(m_nDirTarget - m_nDirCurrent)) > MAX_WIND_CHANGE)
 		{
 
 			m_nDirCurrent = UTIL_ApproachAngle( m_nDirTarget, m_nDirCurrent, MAX_WIND_CHANGE );
@@ -2892,8 +2893,9 @@ int CTriggerWind::DrawDebugTextOverlays(void)
 
 class CTriggerImpact : public CTriggerMultiple
 {
-	DECLARE_CLASS( CTriggerImpact, CTriggerMultiple );
 public:
+	DECLARE_CLASS( CTriggerImpact, CTriggerMultiple );
+
 	DECLARE_DATADESC();
 
 	float	m_flMagnitude;
@@ -3029,8 +3031,8 @@ const int SF_TRIGGER_MOVE_AUTODISABLE				= 0x10; // disable auto movement
 
 class CTriggerPlayerMovement : public CBaseTrigger
 {
-	DECLARE_CLASS( CTriggerPlayerMovement, CBaseTrigger );
 public:
+	DECLARE_CLASS( CTriggerPlayerMovement, CBaseTrigger );
 
 	void Spawn( void );
 	void StartTouch( CBaseEntity *pOther );
@@ -3100,8 +3102,9 @@ void CTriggerPlayerMovement::EndTouch( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 class CTriggerWateryDeath : public CBaseTrigger
 {
-	DECLARE_CLASS( CTriggerWateryDeath, CBaseTrigger );
 public:
+	DECLARE_CLASS( CTriggerWateryDeath, CBaseTrigger );
+
 	DECLARE_DATADESC();
 
 	void Spawn( void );
@@ -3299,8 +3302,9 @@ void CTriggerWateryDeath::EndTouch( CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 class CTriggerRPGFire : public CTriggerMultiple
 {
-	DECLARE_CLASS( CTriggerRPGFire, CTriggerMultiple );
 public:
+	DECLARE_CLASS( CTriggerRPGFire, CTriggerMultiple );
+
 	~CTriggerRPGFire(); // VXP
 
 	void Spawn( void );
@@ -3344,9 +3348,8 @@ void CTriggerRPGFire::OnRestore()
 
 class CServerRagdollTrigger : public CBaseTrigger // VXP
 {
-	DECLARE_CLASS( CServerRagdollTrigger, CBaseTrigger );
-
 public:
+	DECLARE_CLASS( CServerRagdollTrigger, CBaseTrigger );
 
 	virtual void StartTouch( CBaseEntity *pOther );
 	virtual void EndTouch( CBaseEntity *pOther );

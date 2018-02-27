@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectSelfHeal : public C_BaseObjectUpgrade
 {
-	DECLARE_CLASS( C_ObjectSelfHeal, C_BaseObjectUpgrade );
 public:
+	DECLARE_CLASS( C_ObjectSelfHeal, C_BaseObjectUpgrade );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectSelfHeal();

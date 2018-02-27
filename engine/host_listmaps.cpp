@@ -431,7 +431,7 @@ static int MapList_CountMaps( const char *pszSubString, bool listobsolete, int& 
 			char const *mapname = g_MapListMgr.GetMapName( i );
 			int valid = g_MapListMgr.IsMapValid( i );
 
-			if ( !substringlength || !strnicmp( &mapname[ 5 ], pszSubString, substringlength ) )
+			if ( !substringlength || !_strnicmp( &mapname[ 5 ], pszSubString, substringlength ) )
 			{
 				if ( MapList_CheckPrintMap( "(fs)", &mapname[ 5 ], valid, showOutdated ? true : false, false ) )
 				{
@@ -484,7 +484,7 @@ static int MapList_ListMaps( const char *pszSubString, bool listobsolete, bool v
 			char const *mapname = g_MapListMgr.GetMapName( i );
 			int valid = g_MapListMgr.IsMapValid( i );
 
-			if ( !substringlength || !strnicmp( &mapname[ 5 ], pszSubString, substringlength ) )
+			if ( !substringlength || !_strnicmp( &mapname[ 5 ], pszSubString, substringlength ) )
 			{
 				if ( MapList_CheckPrintMap( "(fs)", &mapname[ 5 ], valid, showOutdated ? true : false, verbose ) )
 				{

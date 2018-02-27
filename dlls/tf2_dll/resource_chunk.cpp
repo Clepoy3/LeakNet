@@ -74,8 +74,8 @@ void CResourceChunk::Spawn( )
 	SetCollisionGroup( TFCOLLISION_GROUP_RESOURCE_CHUNK );
 	SetGravity( 1.0 );
 	SetFriction( 1 );
-	SetTouch( ChunkTouch );
-	SetThink( ChunkRemove );
+	SetTouch( &CResourceChunk::ChunkTouch );
+	SetThink( &CResourceChunk::ChunkRemove );
 	SetNextThink( gpGlobals->curtime + random->RandomFloat( 50.0, 80.0 ) ); // Remove myself the
 }
 

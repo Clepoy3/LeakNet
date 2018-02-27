@@ -51,8 +51,9 @@ ConVar	weapon_combat_plasmarifle_ducking_mod( "weapon_combat_plasmarifle_ducking
 //-----------------------------------------------------------------------------
 class CWeaponCombatPlasmaRifle : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatPlasmaRifle, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatPlasmaRifle, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 #if !defined( CLIENT_DLL )
@@ -396,7 +397,7 @@ void CWeaponCombatPlasmaRifle::DrawChargingEffect( float flSize, CBaseAnimating 
 		
 		if ( m_flPower >= MAX_RIFLE_POWER )
 		{
-			float frac = fmod( gpGlobals->curtime, 1.0 );
+			float frac = fmod( gpGlobals->curtime, 1.0f );
 			frac *= 2 * M_PI;
 			frac = sin( frac );
 			flSize += (frac * 2) - 1.5;
@@ -509,8 +510,9 @@ END_DATADESC()
 //-----------------------------------------------------------------------------
 class CWeaponCombatPlasmaRifleHuman : public CWeaponCombatPlasmaRifle
 {
-	DECLARE_CLASS( CWeaponCombatPlasmaRifleHuman, CWeaponCombatPlasmaRifle );
 public:
+	DECLARE_CLASS( CWeaponCombatPlasmaRifleHuman, CWeaponCombatPlasmaRifle );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 
@@ -525,8 +527,9 @@ private:
 //-----------------------------------------------------------------------------
 class CWeaponCombatPlasmaRifleAlien : public CWeaponCombatPlasmaRifle
 {
-	DECLARE_CLASS( CWeaponCombatPlasmaRifleAlien, CWeaponCombatPlasmaRifle );
 public:
+	DECLARE_CLASS( CWeaponCombatPlasmaRifleAlien, CWeaponCombatPlasmaRifle );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

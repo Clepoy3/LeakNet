@@ -113,8 +113,8 @@ void CObjectBuffStation::Spawn()
 	InitAttachmentData();
 
 	// Thinking
-	SetContextThink( BoostPlayerThink, 1.0f, BUFF_STATION_BOOST_PLAYER_THINK_CONTEXT );
-	SetContextThink( BoostObjectThink, 2.0f, BUFF_STATION_BOOST_OBJECT_THINK_CONTEXT );
+	SetContextThink( &CObjectBuffStation::BoostPlayerThink, 1.0f, BUFF_STATION_BOOST_PLAYER_THINK_CONTEXT );
+	SetContextThink( &CObjectBuffStation::BoostObjectThink, 2.0f, BUFF_STATION_BOOST_OBJECT_THINK_CONTEXT );
 
 	m_bBuilding = false;
 }

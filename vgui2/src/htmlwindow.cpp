@@ -1567,7 +1567,7 @@ bool HtmlWindow::CheckIsLink(IHTMLElement *el, char *type)
 	if (bstr)
 	{	
 		const char *tag = static_cast<char *>(p);
-		if( !stricmp(tag,type))
+		if( !_stricmp(tag,type))
 		{
 			// its a link
 			IsLink=true;

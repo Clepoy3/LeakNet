@@ -206,8 +206,8 @@ bool CInfoBM::KeyValue( const char *szKeyName, const char *szValue )
 
 class CNPC_BigMomma : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_BigMomma, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_BigMomma, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

@@ -16,8 +16,8 @@
 
 class CHL1BaseGrenade : public CBaseGrenade
 {
-	DECLARE_CLASS( CHL1BaseGrenade, CBaseGrenade );
 public:
+	DECLARE_CLASS( CHL1BaseGrenade, CBaseGrenade );
 
 	void Explode( trace_t *pTrace, int bitsDamageType );
 	unsigned int	PhysicsSolidMaskForEntity( void ) const;

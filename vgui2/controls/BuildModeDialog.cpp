@@ -153,7 +153,7 @@ private:
 
 	virtual void OnCommand(const char *command)
 	{
-		if (!stricmp(command, "OK"))
+		if (!_stricmp(command, "OK"))
 		{
 			//!! apply changes
 		}
@@ -423,23 +423,23 @@ void BuildModeDialog::SetActiveControl(Panel *controlToEdit)
 		// default the data type to a string
 		int datat = TYPE_STRING;
 
-		if (!stricmp(dataType, "int"))
+		if (!_stricmp(dataType, "int"))
 		{
 			datat = TYPE_STRING; //!! just for now
 		}
-		else if (!stricmp(dataType, "alignment"))
+		else if (!_stricmp(dataType, "alignment"))
 		{
 			datat = TYPE_ALIGNMENT;
 		}
-		else if (!stricmp(dataType, "autoresize"))
+		else if (!_stricmp(dataType, "autoresize"))
 		{
 			datat = TYPE_AUTORESIZE;
 		}
-		else if (!stricmp(dataType, "corner"))
+		else if (!_stricmp(dataType, "corner"))
 		{
 			datat = TYPE_CORNER;
 		}
-		else if (!stricmp(dataType, "localize"))
+		else if (!_stricmp(dataType, "localize"))
 		{
 			datat = TYPE_LOCALIZEDSTRING;
 		}
@@ -616,7 +616,7 @@ void BuildModeDialog::UpdateEditControl(PanelItem_t &panelItem, const char *dats
 //-----------------------------------------------------------------------------
 void BuildModeDialog::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Save"))
+	if (!_stricmp(command, "Save"))
 	{
 		// apply the current data and save it to disk
 		if (ApplyDataToControls()) // dont save if we didnt apply successfully	
@@ -628,25 +628,25 @@ void BuildModeDialog::OnCommand(const char *command)
 			}
 		}
 	}
-	else if (!stricmp(command, "Exit"))
+	else if (!_stricmp(command, "Exit"))
 	{
 		// exit build mode
 		ExitBuildMode();
 	}
-	else if (!stricmp(command, "Apply"))
+	else if (!_stricmp(command, "Apply"))
 	{
 		// apply data to controls
 		ApplyDataToControls();
 	}
-	else if (!stricmp(command, "DeletePanel"))
+	else if (!_stricmp(command, "DeletePanel"))
 	{
 		DeletePanel();
 	}
-	else if (!stricmp(command, "RevertToSaved"))
+	else if (!_stricmp(command, "RevertToSaved"))
 	{
 		RevertToSaved();
 	}
-	else if (!stricmp(command, "ShowHelp"))
+	else if (!_stricmp(command, "ShowHelp"))
 	{
 		ShowHelp();
 	}

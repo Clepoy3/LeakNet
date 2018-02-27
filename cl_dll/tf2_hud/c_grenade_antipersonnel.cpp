@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 class C_GrenadeAntiPersonnel : public C_BaseEMPableGrenade
 {
-	DECLARE_CLASS( C_GrenadeAntiPersonnel, C_BaseEMPableGrenade );
 public:
+	DECLARE_CLASS( C_GrenadeAntiPersonnel, C_BaseEMPableGrenade );
+
 	DECLARE_CLIENTCLASS();
 
 	C_GrenadeAntiPersonnel();

@@ -133,7 +133,7 @@ void CBaseServerVehicle::Precache( void )
 	}
 
 	// Precache our other sounds
-	for ( i = 0; i < VS_NUM_SOUNDS; i++ )
+	for ( int i = 0; i < VS_NUM_SOUNDS; i++ )
 	{
 		if ( m_vehicleSounds.iszSound[i] != NULL_STRING )
 		{
@@ -156,7 +156,7 @@ bool CBaseServerVehicle::Initialize( const char *pScriptName )
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "vehicle_sounds" ) )
+		if ( !_strcmpi( pBlock, "vehicle_sounds" ) )
 		{
 			pParse->ParseCustom( &m_vehicleSounds, &soundParser );
 		//	for( int i = 0; i < VS_NUM_SOUNDS; i++ )
@@ -863,7 +863,7 @@ void CBaseServerVehicle::SoundShutdown( float flFadeTime )
 	}
 
 	// Stop all gear sounds
-	for ( i = 0; i < VS_NUM_GEAR_SOUNDS; i++ )
+	for ( int i = 0; i < VS_NUM_GEAR_SOUNDS; i++ )
 	{
 		StopSoundForGear( (vehiclesound_gear)i, m_iSoundGear );
 	}
@@ -1204,7 +1204,7 @@ void CVehicleSoundsParser::ParseKeyValue( void *pData, const char *pKey, const c
 {
 	vehiclesounds_t *pSounds = (vehiclesounds_t *)pData;
 	// New gear?
-	if ( !strcmpi( pKey, "gear" ) )
+	if ( !_strcmpi( pKey, "gear" ) )
 	{
 		// Create, initialize, and add a new gear to our list
 		int iNewGear = pSounds->pGears.AddToTail();
@@ -1239,7 +1239,7 @@ void CVehicleSoundsParser::ParseKeyValue( void *pData, const char *pKey, const c
 			// Check gear sounds
 			for ( int i = 0; i < VS_NUM_GEAR_SOUNDS; i++ )
 			{
-				if ( !strcmpi( pKey, vehiclesound_gear_parsenames[i] ) )
+				if ( !_strcmpi( pKey, vehiclesound_gear_parsenames[i] ) )
 				{
 					pSounds->pGears[m_iCurrentGear].iszSound[i] = AllocPooledString(pValue);
 					return;
@@ -1247,12 +1247,12 @@ void CVehicleSoundsParser::ParseKeyValue( void *pData, const char *pKey, const c
 			}
 
 			// Check gear keys
-			if ( !strcmpi( pKey, "max_speed" ) )
+			if ( !_strcmpi( pKey, "max_speed" ) )
 			{
 				pSounds->pGears[m_iCurrentGear].flMaxSpeed = atof(pValue);
 				return;
 			}
-			if ( !strcmpi( pKey, "speed_approach_factor" ) )
+			if ( !_strcmpi( pKey, "speed_approach_factor" ) )
 			{
 				pSounds->pGears[m_iCurrentGear].flSpeedApproachFactor = atof(pValue);
 				return;
@@ -1264,7 +1264,7 @@ void CVehicleSoundsParser::ParseKeyValue( void *pData, const char *pKey, const c
 
 		for ( int i = 0; i < VS_NUM_SOUNDS; i++ )
 		{
-			if ( !strcmpi( pKey, vehiclesound_parsenames[i] ) )
+			if ( !_strcmpi( pKey, vehiclesound_parsenames[i] ) )
 			{
 				pSounds->iszSound[i] = AllocPooledString(pValue);
 				return;
@@ -1300,7 +1300,7 @@ void CVehicleSoundsParser::ParseVehicleSounds( const char *pScriptName, vehicles
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "vehicle_sounds" ) )
+		if ( !_strcmpi( pBlock, "vehicle_sounds" ) )
 		{
 			pParse->ParseCustom( &pSounds, this );
 		}

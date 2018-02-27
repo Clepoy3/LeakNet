@@ -20,8 +20,9 @@
 //-----------------------------------------------------------------------------
 class CBaseTrigger : public CBaseToggle
 {
-	DECLARE_CLASS( CBaseTrigger, CBaseToggle );
 public:
+	DECLARE_CLASS( CBaseTrigger, CBaseToggle );
+
 	void Activate( void );
 	void InitTrigger( void );
 
@@ -69,8 +70,9 @@ protected:
 //-----------------------------------------------------------------------------
 class CTriggerMultiple : public CBaseTrigger
 {
-	DECLARE_CLASS( CTriggerMultiple, CBaseTrigger );
 public:
+	DECLARE_CLASS( CTriggerMultiple, CBaseTrigger );
+
 	void Spawn( void );
 	void MultiTouch( CBaseEntity *pOther );
 	void MultiWaitOver( void );

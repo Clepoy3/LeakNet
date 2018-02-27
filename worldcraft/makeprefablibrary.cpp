@@ -95,7 +95,7 @@ Again:
 
 		if(GetFileAttributes(strTextFile) != 0xFFFFFFFF)
 		{
-			ifstream tfile(strTextFile);
+			std::ifstream tfile(strTextFile);
 			char szBuffer[1024], szBuffer2[1024];
 			memset(szBuffer, 0, sizeof szBuffer);
 			// read file

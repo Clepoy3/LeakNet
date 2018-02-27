@@ -386,7 +386,8 @@ int RichText::PixelToCursorSpace(int cx, int cy)
 	_currentTextClickable = m_CachedRenderState.textClickable;
 	
 	bool onRightLine = false;
-	for (int i = startIndex; i < m_TextStream.Count(); i++)
+	int i;
+	for (i = startIndex; i < m_TextStream.Count(); i++)
 	{
 		wchar_t ch = m_TextStream[i];
 
@@ -1815,7 +1816,8 @@ void RichText::GetText(int offset, wchar_t *buf, int bufLenInBytes)
 		return;
 	
 	int bufLen = bufLenInBytes / sizeof(wchar_t);
-	for (int i = offset; i < (bufLen - 1); i++)
+	int i;
+	for (i = offset; i < (bufLen - 1); i++)
 	{
 		if (i >= m_TextStream.Count())
 			break;

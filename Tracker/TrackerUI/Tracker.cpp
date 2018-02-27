@@ -6,10 +6,11 @@
 //=============================================================================
 
 #include "Tracker.h"
-#include "VGUI/ISystem.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+
+#include "VGUI/ISystem.h" // VXP
 
 static bool g_bStandaloneMode;
 

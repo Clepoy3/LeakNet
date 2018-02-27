@@ -122,7 +122,7 @@ void CPickAnglesTarget::OnNotifyPickAngles(const Vector &vecPos)
 			VectorAngles(vecForward, angFace);
 
 			// HACK: lights negate pitch
-			if (pEntity->GetClassName() && (!strnicmp(pEntity->GetClassName(), "light_", 6)))
+			if (pEntity->GetClassName() && (!_strnicmp(pEntity->GetClassName(), "light_", 6)))
 			{
 				angFace[PITCH] *= -1;
 			}
@@ -133,7 +133,7 @@ void CPickAnglesTarget::OnNotifyPickAngles(const Vector &vecPos)
 			pEntity->SetKeyValue("angles", szAngles);
 
 			// HACK: lights have a separate "pitch" key
-			if (pEntity->GetClassName() && (!strnicmp(pEntity->GetClassName(), "light_", 6)))
+			if (pEntity->GetClassName() && (!_strnicmp(pEntity->GetClassName(), "light_", 6)))
 			{
 				char szPitch[20];
 				sprintf(szPitch, "%.0f", angFace[PITCH]);
@@ -370,7 +370,7 @@ void COP_Entity::MergeKeyValue(char const *pszKey)
 					// We'll catch the main angles control below, since it's supported even
 					// for objects of an unknown class.
 					//
-					if (stricmp(pVar->GetName(), "angles"))
+					if (_stricmp(pVar->GetName(), "angles"))
 					{
 						m_SmartAngle.SetDifferent(true);
 					}
@@ -387,7 +387,7 @@ void COP_Entity::MergeKeyValue(char const *pszKey)
 		//
 		m_kv.SetValue(pszKey, VALUE_DIFFERENT_STRING);
 
-		if (!stricmp(pszKey, "angles"))
+		if (!_stricmp(pszKey, "angles"))
 		{
 			// We can't merge angles, so set the main angles control to "different".
 			m_Angle.SetDifferent(true);
@@ -498,7 +498,7 @@ void COP_Entity::UpdateData(int Mode, PVOID pData)
 		// Deal with class name.
 		//
 		m_cClasses.GetWindowText(szBuf, 128);
-		if (strcmpi(szBuf, pEdit->GetClassName()))
+		if (_strcmpi(szBuf, pEdit->GetClassName()))
 		{
 			//
 			// Not the same - set class to be blank and 
@@ -736,7 +736,7 @@ bool COP_Entity::SaveData(void)
 			// deleting messes up our iteration.
 			//
 			int nKeyValues = pEdit->GetKeyValueCount();
-			for (i = nKeyValues - 1; i >= 0; i--)
+			for (int i = nKeyValues - 1; i >= 0; i--)
 			{
 				//
 				// If this key is in not in our local storage, delete it from the object.
@@ -820,7 +820,7 @@ void COP_Entity::SetupForMode(void)
 			//
 			// Spawnflags are handled separately - don't add that key.
 			//
-			if (strcmpi(pVar->GetName(), "spawnflags") != 0)
+			if (_strcmpi(pVar->GetName(), "spawnflags") != 0)
 			{
 				m_VarMap[j++] = i;
 
@@ -1005,7 +1005,7 @@ void COP_Entity::SetCurKey(LPCTSTR pszKey)
 		{
 			m_VarList.GetText(i, str);
 			strKey = str.Left(str.Find('\t'));
-			if (!strcmpi(strKey, pszKey))
+			if (!_strcmpi(strKey, pszKey))
 			{
 				// found it here - 
 				m_VarList.SetCurSel(i);
@@ -1022,7 +1022,7 @@ void COP_Entity::SetCurKey(LPCTSTR pszKey)
 		for (int i = 0; i < nSel; i++)
 		{
 			GDinputvariable * pVar = m_pObjClass->GetVariableAt(m_VarMap[i]);
-			if (!strcmpi(pVar->GetName(), pszKey))
+			if (!_strcmpi(pVar->GetName(), pszKey))
 			{
 				// found it here - 
 				m_VarList.SetCurSel(i);
@@ -1170,7 +1170,7 @@ void COP_Entity::CreateSmartControls(GDinputvariable *pVar)
 	bool bShowSmartAngles = false;
 	if (eType == ivAngle)
 	{
-		if (stricmp(pVar->GetName(), "angles"))
+		if (_stricmp(pVar->GetName(), "angles"))
 		{
 			bShowSmartAngles = true;
 
@@ -1187,7 +1187,7 @@ void COP_Entity::CreateSmartControls(GDinputvariable *pVar)
 			LPCTSTR pszValue = m_kv.GetValue(pVar->GetName());
 			if (pszValue != NULL)
 			{
-				if (!stricmp(pszValue, VALUE_DIFFERENT_STRING))
+				if (!_stricmp(pszValue, VALUE_DIFFERENT_STRING))
 				{
 					m_SmartAngle.SetDifferent(true);
 				}
@@ -1574,7 +1574,7 @@ void COP_Entity::OnChangeKeyorValue(void)
 
 		// This code should only be hit as a result of user input in the edit control!
 		// If they changed the "angles" key, update the main angles control.
-		if (!stricmp(szKey, "angles"))
+		if (!_stricmp(szKey, "angles"))
 		{
 			m_Angle.SetDifferent(false);
 			m_Angle.SetAngles(szValue, true);
@@ -1688,7 +1688,7 @@ void COP_Entity::UpdateClass(const char *pszClass)
 	//
 	// Remove unused keyvalues.
 	//
-	if (m_pObjClass != pOldObjClass && m_pObjClass && strcmpi(pszClass, "multi_manager"))
+	if (m_pObjClass != pOldObjClass && m_pObjClass && _strcmpi(pszClass, "multi_manager"))
 	{
 		int nKeyValues = m_kv.GetCount();
 		for (int i = nKeyValues - 1; i >= 0; i--)
@@ -1916,7 +1916,7 @@ void COP_Entity::OnChangeSmartcontrol(void)
 		if (pVar->GetType() == ivAngle)
 		{
 			// If they changed the "angles" key, update the main angles control.
-			if (!stricmp(pVar->GetName(), "angles"))
+			if (!_stricmp(pVar->GetName(), "angles"))
 			{
 				m_Angle.SetDifferent(false);
 				m_Angle.SetAngles(szValue, true);
@@ -2161,7 +2161,7 @@ void COP_Entity::OnBrowse(void)
 			APP()->GetFirstSearchDir(eSearchDir, szStripDir, pos);
 			while ((pos != NULL) && (pszCopy == NULL))
 			{
-				if (!strnicmp(dlg.m_ofn.lpstrFile, szStripDir, strlen(szStripDir)))
+				if (!_strnicmp(dlg.m_ofn.lpstrFile, szStripDir, strlen(szStripDir)))
 				{
 					pszCopy = &dlg.m_ofn.lpstrFile[strlen(szStripDir)];
 				}
@@ -2221,7 +2221,7 @@ void COP_Entity::OnCopy(void)
 	bKvClipEmpty = FALSE;
 	for (int i = 0; i < m_kv.GetCount(); i++)
 	{
-		if (stricmp(m_kv.GetKey(i), "origin"))
+		if (_stricmp(m_kv.GetKey(i), "origin"))
 		{
 			kvClipboard.SetValue(m_kv.GetKey(i), m_kv.GetValue(i));
 		}

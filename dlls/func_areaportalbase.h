@@ -19,8 +19,9 @@
 // Shared stuff between door portals and window portals.
 class CFuncAreaPortalBase : public CBaseEntity
 {
-	DECLARE_CLASS( CFuncAreaPortalBase, CBaseEntity );
 public:
+	DECLARE_CLASS( CFuncAreaPortalBase, CBaseEntity );
+
 	DECLARE_DATADESC();
 
 					CFuncAreaPortalBase();

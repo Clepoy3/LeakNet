@@ -270,7 +270,7 @@ void CMapAxisHandle::Render3D(CRender3D *pRender)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CMapAxisHandle::SerializeRMF(fstream &File, BOOL bRMF)
+int CMapAxisHandle::SerializeRMF(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -279,7 +279,7 @@ int CMapAxisHandle::SerializeRMF(fstream &File, BOOL bRMF)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CMapAxisHandle::SerializeMAP(fstream &File, BOOL bRMF)
+int CMapAxisHandle::SerializeMAP(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -350,7 +350,7 @@ void CMapAxisHandle::SetRenderColor(color32 rgbColor)
 //-----------------------------------------------------------------------------
 void CMapAxisHandle::OnParentKeyChanged(const char *szKey, const char *szValue)
 {
-	if (!stricmp(szKey, m_szKeyName))
+	if (!_stricmp(szKey, m_szKeyName))
 	{
 		Vector vecOrigin1;
 		Vector vecOrigin2;

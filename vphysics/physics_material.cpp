@@ -435,7 +435,7 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 			do
 			{
 				pText = ParseKeyvalue( pText, key, value );
-				if ( !strcmpi( key, "}" ) )
+				if ( !_strcmpi( key, "}" ) )
 				{
 					// already in the database, don't add again
 					if ( GetSurfaceIndex( m_strings.String(prop.m_name) ) >= 0 )
@@ -489,70 +489,70 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 					m_props.AddToTail( prop );
 					break;
 				}
-				else if ( !strcmpi( key, "base" ) )
+				else if ( !_strcmpi( key, "base" ) )
 				{
 					baseMaterial = GetSurfaceIndex( value );
 					CopyPhysicsProperties( &prop, baseMaterial );
 				}
-				else if ( !strcmpi( key, "thickness" ) )
+				else if ( !_strcmpi( key, "thickness" ) )
 				{
 					prop.data.thickness = atof(value);
 				}
-				else if ( !strcmpi( key, "density" ) )
+				else if ( !_strcmpi( key, "density" ) )
 				{
 					prop.data.density = atof(value);
 				}
-				else if ( !strcmpi( key, "elasticity" ) )
+				else if ( !_strcmpi( key, "elasticity" ) )
 				{
 					prop.data.elasticity = atof(value);
 				}
-				else if ( !strcmpi( key, "friction" ) )
+				else if ( !_strcmpi( key, "friction" ) )
 				{
 					prop.data.friction = atof(value);
 				}
-				else if ( !strcmpi( key, "maxspeedfactor" ) )
+				else if ( !_strcmpi( key, "maxspeedfactor" ) )
 				{
 					prop.data.maxSpeedFactor = atof(value);
 				}
-				else if ( !strcmpi( key, "jumpfactor" ) )
+				else if ( !_strcmpi( key, "jumpfactor" ) )
 				{
 					prop.data.jumpFactor = atof(value);
 				}
-				else if ( !strcmpi( key, "climbable" ) )
+				else if ( !_strcmpi( key, "climbable" ) )
 				{
 					prop.data.climbable = atoi(value);
 				}
-				else if ( !strcmpi( key, "stepleft" ) )
+				else if ( !_strcmpi( key, "stepleft" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_STEP_LEFT].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "stepright" ) )
+				else if ( !_strcmpi( key, "stepright" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_STEP_RIGHT].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "impact" ) || !strcmpi( key, "impacthard" ) || !strcmpi( key, "impactsoft" ) )
+				else if ( !_strcmpi( key, "impact" ) || !_strcmpi( key, "impacthard" ) || !_strcmpi( key, "impactsoft" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_IMPACT_SOUND].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "scrape" ) || !strcmpi( key, "scrapesmooth" ) || !strcmpi( key, "scraperough" ) )
+				else if ( !_strcmpi( key, "scrape" ) || !_strcmpi( key, "scrapesmooth" ) || !_strcmpi( key, "scraperough" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_SCRAPE_SOUND].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "bulletimpact" ) )
+				else if ( !_strcmpi( key, "bulletimpact" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_BULLET_IMPACT_SOUND].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "bulletdecal" ) )
+				else if ( !_strcmpi( key, "bulletdecal" ) )
 				{
 					CUtlSymbol sym = m_strings.AddString( value );
 					stringlists[STRING_BULLET_DECAL].AddToTail( sym );
 				}
-				else if ( !strcmpi( key, "gamematerial" ) )
+				else if ( !_strcmpi( key, "gamematerial" ) )
 				{
 					if ( strlen(value) == 1 && !isdigit(value[0]) )
 					{
@@ -563,28 +563,28 @@ int CPhysicsSurfaceProps::ParseSurfaceData( const char *pFileName, const char *p
 						prop.data.gameMaterial = atoi(value);
 					}
 				}
-				else if ( !strcmpi( key, "dampening" ) )
+				else if ( !_strcmpi( key, "dampening" ) )
 				{
 					prop.data.dampening = atof(value);
 				}
 				// VXP: Here are not all Source 2007 surfaceprop keys
-				else if ( !strcmpi( key, "audioreflectivity" ) )
+				else if ( !_strcmpi( key, "audioreflectivity" ) )
 				{
 					// VXP: TODO?
 				}
-				else if ( !strcmpi( key, "audiohardnessfactor" ) )
+				else if ( !_strcmpi( key, "audiohardnessfactor" ) )
 				{
 					// VXP: TODO?
 				}
-				else if ( !strcmpi( key, "audioroughnessfactor" ) )
+				else if ( !_strcmpi( key, "audioroughnessfactor" ) )
 				{
 					// VXP: TODO?
 				}
-				else if ( !strcmpi( key, "scraperoughthreshold" ) )
+				else if ( !_strcmpi( key, "scraperoughthreshold" ) )
 				{
 					// VXP: TODO?
 				}
-				else if ( !strcmpi( key, "impacthardthreshold" ) )
+				else if ( !_strcmpi( key, "impacthardthreshold" ) )
 				{
 					// VXP: TODO?
 				}

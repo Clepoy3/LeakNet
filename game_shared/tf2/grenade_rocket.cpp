@@ -58,7 +58,7 @@ void CGrenadeRocket::Spawn( void )
 	UTIL_SetSize( this, vec3_origin, vec3_origin );
 
 	SetCollisionGroup( TFCOLLISION_GROUP_WEAPON );
-	SetTouch( MissileTouch );
+	SetTouch( &CGrenadeRocket::MissileTouch );
 
 	SetDamage( 50 );
 
@@ -114,7 +114,7 @@ void CGrenadeRocket::MissileTouch( CBaseEntity *pOther )
 void CGrenadeRocket::LockOnto( CBaseEntity *pTarget )
 {
 	m_hLockTarget = pTarget;
-	SetThink( FollowThink );
+	SetThink( &CGrenadeRocket::FollowThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 

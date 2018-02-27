@@ -161,7 +161,7 @@ void CFunc_Dust::Activate()
 
 bool CFunc_Dust::KeyValue( const char *szKeyName, const char *szValue )
 {
-	if( stricmp( szKeyName, "StartDisabled" ) == 0 )
+	if( _stricmp( szKeyName, "StartDisabled" ) == 0 )
 	{
 		if( szValue[0] == '1' )
 			m_DustFlags &= ~DUSTFLAGS_ON;
@@ -170,12 +170,12 @@ bool CFunc_Dust::KeyValue( const char *szKeyName, const char *szValue )
 	
 		return true;
 	}
-	else if( stricmp( szKeyName, "Alpha" ) == 0 )
+	else if( _stricmp( szKeyName, "Alpha" ) == 0 )
 	{
 		m_Color.GetForModify().a = atoi( szValue );
 		return true;
 	}
-	else if( stricmp( szKeyName, "Frozen" ) == 0 )
+	else if( _stricmp( szKeyName, "Frozen" ) == 0 )
 	{
 		if( szValue[0] == '1' )
 			m_DustFlags |= DUSTFLAGS_FROZEN;

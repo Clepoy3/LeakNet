@@ -294,7 +294,7 @@ BOOL AddEntityToList(CMapEntity *pEntity, CEntityReportDlg *pDlg)
 		else
 		{
 			strcpy(szString, pEntity->GetClassName());
-			strupr(szString);
+			_strupr(szString);
 			if (!strstr(szString, pDlg->m_szFilterClass))
 			{
 				return(TRUE);
@@ -316,14 +316,14 @@ BOOL AddEntityToList(CMapEntity *pEntity, CEntityReportDlg *pDlg)
 		if (pDlg->m_bFilterByKeyvalue && !bAdd && !pDlg->m_szFilterValue.IsEmpty())
 		{
 			// first, check key
-			if (pDlg->m_szFilterKey.IsEmpty() || !strcmpi(pDlg->m_szFilterKey, pEntity->GetKey(i)))
+			if (pDlg->m_szFilterKey.IsEmpty() || !_strcmpi(pDlg->m_szFilterKey, pEntity->GetKey(i)))
 			{
 				// now, check value
 				char szTmp1[128], szTmp2[128];
 				strcpy(szTmp1, pEntity->GetKeyValue(i));
-				strupr(szTmp1);
+				_strupr(szTmp1);
 				strcpy(szTmp2, pDlg->m_szFilterValue);
-				if ((!pDlg->m_bExact && strstr(szTmp1, szTmp2)) || !strcmpi(szTmp1, szTmp2))
+				if ((!pDlg->m_bExact && strstr(szTmp1, szTmp2)) || !_strcmpi(szTmp1, szTmp2))
 				{
 					bAdd = TRUE;
 				}

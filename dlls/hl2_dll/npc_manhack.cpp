@@ -582,7 +582,7 @@ bool CNPC_Manhack::CorpseGib( const CTakeDamageInfo &info )
 	PropBreakableCreateAll( GetModelIndex(), NULL, GetAbsOrigin(), GetAbsAngles(), vecGibVelocity, vecGibAVelocity, 1.0, 60, COLLISION_GROUP_DEBRIS );
 
 	AddFlag( EF_NODRAW );
-	SetThink( SUB_Remove );
+	SetThink( &CBaseEntity::SUB_Remove );
 
 	KillSprites( 0.0 );
 

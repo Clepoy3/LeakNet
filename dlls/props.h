@@ -34,8 +34,8 @@ enum
 //-----------------------------------------------------------------------------
 class CBaseProp : public CBaseAnimating
 {
-	DECLARE_CLASS( CBaseProp, CBaseAnimating );
 public:
+	DECLARE_CLASS( CBaseProp, CBaseAnimating );
 
 	void Spawn( void );
 	void Precache( void );
@@ -122,9 +122,9 @@ protected:
 //-----------------------------------------------------------------------------
 class CDynamicProp : public CBreakableProp
 {
+public:
 	DECLARE_CLASS( CDynamicProp, CBreakableProp );
 
-public:
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 
@@ -156,10 +156,10 @@ public:
 //-----------------------------------------------------------------------------
 class CPhysicsProp : public CBreakableProp
 {
+public:
 	DECLARE_CLASS( CPhysicsProp, CBreakableProp );
 	DECLARE_SERVERCLASS();
 
-public:
 	CPhysicsProp( void ) 
 	{
 		NetworkStateManualMode( true );

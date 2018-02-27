@@ -291,8 +291,8 @@ int CStripper::CreateStrip(int tri, int vert, int maxlen, int *pswaps,
 STRIPLIST::iterator FindBestCachedStrip(STRIPLIST *pstriplist,
     const CVertCache &vertcachestate)
 {
-    if(pstriplist->empty())
-        return NULL;
+//	if(pstriplist->empty()) // VXP: Conv
+//		return NULL;
 
     bool fFlipStrip = false;
     int maxcachehits = -1;

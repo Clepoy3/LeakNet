@@ -256,7 +256,7 @@ void CFaceSmoothingDlg::UpdateControls( void )
 		CMapFace *pFace = pSheet->GetFaceListDataFace( iFace );
 		if ( pFace )
 		{
-			for ( iGroup = 1; iGroup <= SMOOTHING_GROUP_MAX_COUNT; ++iGroup )
+			for ( int iGroup = 1; iGroup <= SMOOTHING_GROUP_MAX_COUNT; ++iGroup )
 			{
 				if ( pFace->InSmoothingGroup( iGroup ) )
 				{

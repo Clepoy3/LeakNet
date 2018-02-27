@@ -275,7 +275,7 @@ int CChoreoWidgetDrawHelper::CalcTextWidthW( const char *font, int pointsize, in
 
 	va_start( args, fmt );
 	vwprintf( fmt, args );
-	vswprintf( output, fmt, args );
+	vswprintf( output, sizeof(output), fmt, args );
 
 	HFONT fnt = CreateFont(
 		 -pointsize, 
@@ -344,7 +344,7 @@ int CChoreoWidgetDrawHelper::CalcTextWidthW( HFONT fnt, const wchar_t *fmt, ... 
 
 	va_start( args, fmt );
 	vwprintf( fmt, args );
-	vswprintf( output, fmt, args );
+	vswprintf( output, sizeof(output), fmt, args );
 
 	HFONT oldFont = (HFONT)SelectObject( m_dcMemory, fnt );
 
@@ -397,7 +397,7 @@ void CChoreoWidgetDrawHelper::DrawColoredTextW( const char *font, int pointsize,
 	static wchar_t output[1024];
 
 	va_start( args, fmt );
-	vswprintf( output, fmt, args );
+	vswprintf( output, sizeof(output), fmt, args );
 	va_end( args  );
 	
 	DrawColoredTextCharsetW( font, pointsize, weight, ANSI_CHARSET, clr, rcText, output );
@@ -451,7 +451,7 @@ void CChoreoWidgetDrawHelper::DrawColoredTextW( HFONT font, COLORREF clr, RECT& 
 	static wchar_t output[1024];
 
 	va_start( args, fmt );
-	vswprintf( output, fmt, args );
+	vswprintf( output, sizeof(output), fmt, args );
 	va_end( args  );
 	
 	HFONT oldFont = (HFONT)SelectObject( m_dcMemory, font );
@@ -528,7 +528,7 @@ void CChoreoWidgetDrawHelper::DrawColoredTextCharsetW( const char *font, int poi
 	static wchar_t output[1024];
 
 	va_start( args, fmt );
-	vswprintf( output, fmt, args );
+	vswprintf( output, sizeof(output), fmt, args );
 	va_end( args  );
 	
 

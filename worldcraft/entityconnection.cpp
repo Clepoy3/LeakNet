@@ -88,7 +88,7 @@ bool CEntityConnection::ValidateTarget(CMapEntityList *pEntityList, const char* 
 	{
 		CMapEntity*	pEntity = pEntityList->GetNext(pos);
 		const char* pszTargetName = pEntity->GetKeyValue( "targetname" );
-		if (pszTargetName && !stricmp(pszTarget,pszTargetName))
+		if (pszTargetName && !_stricmp(pszTarget,pszTargetName))
 		{
 			return true;
 		}
@@ -238,7 +238,7 @@ int CEntityConnection::ValidateInputConnections(CMapEntity *pEntity)
 					// If the connection targets me
 					CEntityConnection *pConnection = pTestEntity->Connections_GetNext(pos);
 					if (pConnection != NULL && 
-						!stricmp(pConnection->GetTargetName(),pszTargetName) )
+						!_stricmp(pConnection->GetTargetName(),pszTargetName) )
 					{
 						// Validate output
 						if (!ValidateOutput(pTestEntity,pConnection->GetOutputName()))
@@ -323,11 +323,11 @@ int CALLBACK CEntityConnection::CompareOutputNames(CEntityConnection *pConn1, CE
 
 	if (eDirection == Sort_Ascending)
 	{
-		nReturn = stricmp(pConn1->GetOutputName(), pConn2->GetOutputName());
+		nReturn = _stricmp(pConn1->GetOutputName(), pConn2->GetOutputName());
 	}
 	else
 	{
-		nReturn = stricmp(pConn2->GetOutputName(), pConn1->GetOutputName());
+		nReturn = _stricmp(pConn2->GetOutputName(), pConn1->GetOutputName());
 	}
 
 	//
@@ -351,11 +351,11 @@ int CALLBACK CEntityConnection::CompareInputNames(CEntityConnection *pConn1, CEn
 
 	if (eDirection == Sort_Ascending)
 	{
-		nReturn = stricmp(pConn1->GetInputName(), pConn2->GetInputName());
+		nReturn = _stricmp(pConn1->GetInputName(), pConn2->GetInputName());
 	}
 	else
 	{
-		nReturn = stricmp(pConn2->GetInputName(), pConn1->GetInputName());
+		nReturn = _stricmp(pConn2->GetInputName(), pConn1->GetInputName());
 	}
 
 	//
@@ -378,11 +378,11 @@ int CALLBACK CEntityConnection::CompareSourceNames(CEntityConnection *pConn1, CE
 
 	if (eDirection == Sort_Ascending)
 	{
-		nReturn = stricmp(pConn1->GetSourceName(), pConn2->GetSourceName());
+		nReturn = _stricmp(pConn1->GetSourceName(), pConn2->GetSourceName());
 	}
 	else
 	{
-		nReturn = stricmp(pConn2->GetSourceName(), pConn1->GetSourceName());
+		nReturn = _stricmp(pConn2->GetSourceName(), pConn1->GetSourceName());
 	}
 
 	//
@@ -405,11 +405,11 @@ int CALLBACK CEntityConnection::CompareTargetNames(CEntityConnection *pConn1, CE
 
 	if (eDirection == Sort_Ascending)
 	{
-		nReturn = stricmp(pConn1->GetTargetName(), pConn2->GetTargetName());
+		nReturn = _stricmp(pConn1->GetTargetName(), pConn2->GetTargetName());
 	}
 	else
 	{
-		nReturn = stricmp(pConn2->GetTargetName(), pConn1->GetTargetName());
+		nReturn = _stricmp(pConn2->GetTargetName(), pConn1->GetTargetName());
 	}
 
 	//

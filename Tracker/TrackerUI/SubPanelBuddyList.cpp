@@ -144,7 +144,7 @@ void CSubPanelBuddyList::PerformLayout()
 			for (int i = 0; i < m_BuddyButtonDar.GetCount(); i++)
 			{
 				const char *buddyName = GetDoc()->GetBuddy(m_BuddyButtonDar[i]->GetBuddyID())->DisplayName();
-				if (stricmp(newName, buddyName) < 0)
+				if (_stricmp(newName, buddyName) < 0)
 				{
 					m_BuddyButtonDar.InsertElementAt(newBuddy, i);
 					bInserted = true;
@@ -213,6 +213,7 @@ void CSubPanelBuddyList::PerformLayout()
 			{
 				buddyData = GetDoc()->GetBuddy(buddy->GetBuddyID())->Data();
 
+			//	if (Tracker_GetRunGameEngineInterface()->GetUserName(buddy->GetBuddyID()))
 				if (Tracker_GetRunGameEngineInterface()->GetPlayerName(buddy->GetBuddyID()))
 				{
 					currentgameBuddies.PutElement(buddy);
@@ -379,7 +380,8 @@ void CSubPanelBuddyList::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 
 	// set background color
-	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
+//	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor(), pScheme));
 }
 
 

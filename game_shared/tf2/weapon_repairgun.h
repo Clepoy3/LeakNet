@@ -22,8 +22,9 @@
 //=========================================================
 class CWeaponRepairGun : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponRepairGun, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponRepairGun, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

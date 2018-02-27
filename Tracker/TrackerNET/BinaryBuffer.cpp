@@ -10,7 +10,8 @@
 
 #include "BinaryBuffer.h"
 #include "BufferAllocator.h"
-#include "..\public\MemPool.h"
+//#include "..\common\MemPool.h"
+#include "MemPool.h"
 #include "Threads.h"
 
 #include <assert.h>
@@ -96,7 +97,7 @@ public:
 		{
 			mem[i] = s_BBMemPool.Alloc(sizeof(CBinaryBuffer));
 		}
-		for (i = 0; i < 32; i++)
+		for (int i = 0; i < 32; i++)
 		{
 			s_BBMemPool.Free(mem[i]);
 		}

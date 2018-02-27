@@ -19,8 +19,9 @@
 //=============================================================================
 class C_WeaponBuilder : public C_WeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( C_WeaponBuilder, C_WeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( C_WeaponBuilder, C_WeaponCombatUsedWithShieldBase );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 

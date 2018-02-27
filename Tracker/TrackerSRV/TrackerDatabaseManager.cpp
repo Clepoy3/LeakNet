@@ -115,9 +115,7 @@ bool CTrackerDatabaseManager::Initialize(int serverID, const char *dbsName, Crea
 	if (!m_pDistroDatabase)
 		return false;
 
-//	m_pDistroDatabase->Initialize(serverID, dbsName, "Tracker", debugFactory);
-//	m_pDistroDatabase->Initialize(serverID, dbsName, "newtracker", debugFactory);
-	m_pDistroDatabase->Initialize(serverID, "leaknet.tk", dbsName, debugFactory);
+	m_pDistroDatabase->Initialize(serverID, dbsName, "Tracker", debugFactory);
 
 	// get the distribution map
 	if (!ReloadUserDistribution())
@@ -149,7 +147,7 @@ bool CTrackerDatabaseManager::ReloadUserDistribution()
 		for (int i = 0; i < m_UserDatabase.Size(); i++)
 		{
 			db_t &database = m_UserDatabase[i];
-			if (!stricmp(database.serverName, server.serverName) && !stricmp(database.catalogName, server.catalogName))
+			if (!_stricmp(database.serverName, server.serverName) && !_stricmp(database.catalogName, server.catalogName))
 			{
 				// the server and catalog names match, so instead just update this server
 				database.rangeMin = server.userRangeMin;
@@ -166,7 +164,7 @@ bool CTrackerDatabaseManager::ReloadUserDistribution()
 
 		ITrackerUserDatabase *db = NULL;
 		// initialize multiple threads per database
-		for (i = 0; i < threadsPerDB; i++)
+		for (int i = 0; i < threadsPerDB; i++)
 		{
 			db_t database;
 

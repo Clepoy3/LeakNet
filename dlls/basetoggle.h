@@ -19,8 +19,9 @@
 
 class CBaseToggle : public CBaseEntity
 {
-	DECLARE_CLASS( CBaseToggle, CBaseEntity );
 public:
+	DECLARE_CLASS( CBaseToggle, CBaseEntity );
+
 	CBaseToggle();
 
 	virtual bool		KeyValue( const char *szKeyName, const char *szValue );

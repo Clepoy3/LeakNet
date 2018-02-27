@@ -93,7 +93,7 @@ void CScannerShield::SetTarget( CBaseEntity *pTarget )
 {
 	if (pTarget == NULL)
 	{
-		SetThink(FadeOut);
+		SetThink(&CScannerShield::FadeOut);
 		SetNextThink( gpGlobals->curtime );
 	}
 
@@ -106,7 +106,7 @@ void CScannerShield::SetTarget( CBaseEntity *pTarget )
 		m_fEffects &= ~EF_NODRAW;
 		FollowEntity( pTarget );
 		SetOwnerEntity( pTarget );
-		SetThink(FadeIn);
+		SetThink(&CScannerShield::FadeIn);
 		SetRenderColorA( 0 );
 		SetNextThink( gpGlobals->curtime );
 		Relink();
@@ -124,7 +124,7 @@ void CScannerShield::FadeIn(void)
 	if (m_clrRender->a >= 1.0)
 	{
 		SetRenderColorA( 1 );
-		SetThink(Spark);
+		SetThink(&CScannerShield::Spark);
 	}
 
 	// Go collidable 1/3 of the way into the fade

@@ -171,7 +171,7 @@ void CPlayer_Missile::InputActivate( inputdata_t &inputdata )
 	engine->SetView( pPlayer->edict(), edict() );
 
 	m_flStatic					= 0;
-	SetThink(Launch);
+	SetThink(&CPlayer_Missile::Launch);
 	SetNextThink( gpGlobals->curtime + m_flLaunchDelay );
 }
 
@@ -194,8 +194,8 @@ void CPlayer_Missile::Launch(void)
 	EmitSound( "Player_Manhack.Fire" );
 
 
-	SetThink(FlyThink);
-	SetTouch(FlyTouch);
+	SetThink(&CPlayer_Missile::FlyThink);
+	SetTouch(&CPlayer_Missile::FlyTouch);
 	SetNextThink( gpGlobals->curtime );
 
 	// Start smoke trail
@@ -326,7 +326,7 @@ void CPlayer_Missile::BlowUp(void)
 
 	RadiusDamage ( CTakeDamageInfo( this, this, m_flDamage, DMG_BLAST ), GetAbsOrigin(), m_flDamageRadius, CLASS_NONE, NULL );
 
-	SetThink(ExplodeThink);
+	SetThink(&CPlayer_Missile::ExplodeThink);
 	SetTouch(NULL);
 	m_vBounceVel	= -0.2 * GetAbsVelocity();
 	AddSolidFlags( FSOLID_NOT_SOLID );
@@ -505,7 +505,7 @@ void CPlayer_Missile::ExplodeThink()
 
 	UTIL_ScreenFade( pPlayer, black, 2.0, 0.1, FFADE_OUT );
 
-	SetThink(RemoveThink);
+	SetThink(&CPlayer_Missile::RemoveThink);
 	SetNextThink( gpGlobals->curtime + PMISSILE_DIE_TIME );
 }
 

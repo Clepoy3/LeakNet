@@ -34,8 +34,9 @@ ConVar sk_nihilanth_zap( "sk_nihilanth_zap", "30" );
 
 class CNPC_Nihilanth : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Nihilanth, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Nihilanth, CHL1BaseNPC );
+
 	void Spawn( void );
 	void Precache( void );
 
@@ -1539,8 +1540,8 @@ void CNihilanthHVR :: ZapThink( void  )
 		UTIL_EmitAmbientSound( this, tr.endpos, "weapons/electro4.wav", 0.5, SNDLVL_NORM, 0, random->RandomInt( 140, 160 ) );
 
 		SetTouch( NULL );
-		GetSprite()->SetThink( SUB_Remove );
-		SetThink( SUB_Remove );
+		GetSprite()->SetThink( &CBaseEntity::SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.2 );
 		GetSprite()->SetNextThink( gpGlobals->curtime + 0.2 );
 		return;

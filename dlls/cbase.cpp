@@ -790,8 +790,8 @@ void CEventQueue::CancelEvents( CBaseEntity *pCaller )
 		if (pCur->m_pCaller == pCaller)
 		{
 			// Pointers match; make sure everything else matches.
-			if (!stricmp(STRING(pCur->m_pCaller->GetEntityName()), STRING(pCaller->GetEntityName())) &&
-				!stricmp(pCur->m_pCaller->GetClassname(), pCaller->GetClassname()))
+			if (!_stricmp(STRING(pCur->m_pCaller->GetEntityName()), STRING(pCaller->GetEntityName())) &&
+				!_stricmp(pCur->m_pCaller->GetClassname(), pCaller->GetClassname()))
 			{
 				// Found a matching event; delete it from the queue.
 				bDelete = true;

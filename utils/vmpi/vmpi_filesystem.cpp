@@ -704,7 +704,7 @@ int CMasterMulticastThread::FindFile( const char *pName )
 {
 	FOR_EACH_LL( m_Files, i )
 	{
-		if ( stricmp( m_Files[i]->GetFilename(), pName ) == 0 )
+		if ( _stricmp( m_Files[i]->GetFilename(), pName ) == 0 )
 			return i;
 	}
 	return -1;
@@ -1242,7 +1242,7 @@ public:
 	{
 		FOR_EACH_LL( m_WorkerFiles, i )
 		{
-			if ( stricmp( m_WorkerFiles[i]->GetFilename(), pFilename ) == 0 )
+			if ( _stricmp( m_WorkerFiles[i]->GetFilename(), pFilename ) == 0 )
 				return m_WorkerFiles[i];
 		}
 		return NULL;

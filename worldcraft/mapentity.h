@@ -80,8 +80,8 @@ class CMapEntity : public CMapClass, public CEditGameClass
 		//
 		ChunkFileResult_t LoadVMF(CChunkFile *pFile);
 		ChunkFileResult_t SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo);
-		int SerializeRMF(fstream&, BOOL);
-		int SerializeMAP(fstream&, BOOL);
+		int SerializeRMF(std::fstream&, BOOL);
+		int SerializeMAP(std::fstream&, BOOL);
 		virtual void PostloadWorld(CMapWorld *pWorld);
 
 		//

@@ -225,7 +225,7 @@ static bool __cdecl DefaultSortFunc(KeyValues *kv1, KeyValues *kv2)
 {
 	const char *string1 = kv1->GetString("text");
 	const char *string2 = kv2->GetString("text");
-	return stricmp(string1, string2) < 0;
+	return _stricmp(string1, string2) < 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1024,7 +1024,7 @@ void ListViewPanel::OnKeyTyped(wchar_t unichar)
 			{
 				KeyValues *kv = m_DataItems[ m_SortedItems[i] ]->GetData();
 				const char *pszText = kv->GetString("text");
-				if (!strnicmp(pszText, buf, 1))
+				if (!_strnicmp(pszText, buf, 1))
 				{
 					// select the next of this letter
 					SetSingleSelectedItem(m_SortedItems[i]);
@@ -1043,7 +1043,7 @@ void ListViewPanel::OnKeyTyped(wchar_t unichar)
 
 			KeyValues *kv = m_DataItems[ m_SortedItems[i] ]->GetData();
 			const char *pszText = kv->GetString("text");
-			if (!strnicmp(pszText, buf, 1))
+			if (!_strnicmp(pszText, buf, 1))
 			{
 				SetSingleSelectedItem(m_SortedItems[i]);
 				ScrollToItem(m_SortedItems[i]);

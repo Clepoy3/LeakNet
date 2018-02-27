@@ -60,8 +60,9 @@ enum TANKBULLET
 
 class CFuncTank : public CBaseEntity
 {
-	DECLARE_CLASS( CFuncTank, CBaseEntity );
 public:
+	DECLARE_CLASS( CFuncTank, CBaseEntity );
+
 	~CFuncTank( void );
 	void	Spawn( void );
 	void	Activate( void );
@@ -1343,8 +1344,9 @@ void CFuncTankPulseLaser::Fire( int bulletCount, const Vector &barrelEnd, const 
 // #############################################################################
 class CFuncTankLaser : public CFuncTank
 {
-	DECLARE_CLASS( CFuncTankLaser, CFuncTank );
 public:
+	DECLARE_CLASS( CFuncTankLaser, CFuncTank );
+
 	void	Activate( void );
 	void	Fire( int bulletCount, const Vector &barrelEnd, const Vector &forward, CBaseEntity *pAttacker );
 	void	Think( void );
@@ -1543,12 +1545,12 @@ void CMortarShell::Spawn()
 	if( m_flImpactTime < m_flWarnTime )
 	{
 		// Hrm. Not enough time to warn!
-		SetThink( ImpactThink );
+		SetThink( &CMortarShell::ImpactThink );
 		SetNextThink( m_flImpactTime );
 	}
 	else
 	{
-		SetThink( WarnThink );
+		SetThink( &CMortarShell::WarnThink );
 		SetNextThink( m_flWarnTime );
 	}
 }
@@ -1600,7 +1602,7 @@ void CMortarShell::WarnThink()
 		CSoundEnt::InsertSound ( SOUND_DANGER, GetAbsOrigin(), 300, 0.2 );
 	}
 
-	SetThink( ImpactThink );
+	SetThink( &CMortarShell::ImpactThink );
 	SetNextThink( m_flImpactTime );
 }
 

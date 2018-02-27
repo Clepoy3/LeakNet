@@ -252,7 +252,7 @@ bool CObjectMortar::FireMortar( float flFiringPower, float flFiringAccuracy, boo
 //-----------------------------------------------------------------------------
 void CObjectMortar::StartReloading( void )
 {
-	SetThink( ReloadingThink );
+	SetThink( &CObjectMortar::ReloadingThink );
 	SetNextThink( gpGlobals->curtime + MORTAR_RELOAD_TIME );
 }
 

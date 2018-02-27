@@ -219,7 +219,7 @@ void CFuncMassTeleport::MassTeleport(
 		MassTeleport( pTeam, vSourceMins - vSource + vDest, vSourceMaxs - vSource + vDest, vSource, false, bPlayersOnly, hMCV, false );
 	}
 
-	for( i = 0; i < count; i++ )
+	for( int i = 0; i < count; i++ )
 	{
 		CBaseEntity* pEnt = pList[i];
 

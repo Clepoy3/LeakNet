@@ -123,14 +123,14 @@ CAI_Schedule *CAI_SchedulesManager::CreateSchedule(char *name, int schedule_id)
 //-----------------------------------------------------------------------------
 int CAI_SchedulesManager::GetStateID(const char *state_name)
 {
-	if		(!stricmp(state_name,"NONE"))		{	return NPC_STATE_NONE;		}
-	else if (!stricmp(state_name,"IDLE"))		{	return NPC_STATE_IDLE;		}
-	else if (!stricmp(state_name,"COMBAT"))		{	return NPC_STATE_COMBAT;	}
-	else if (!stricmp(state_name,"PRONE"))		{	return NPC_STATE_PRONE;		}
-	else if (!stricmp(state_name,"ALERT"))		{	return NPC_STATE_ALERT;		}
-	else if (!stricmp(state_name,"SCRIPT"))		{	return NPC_STATE_SCRIPT;	}
-	else if (!stricmp(state_name,"PLAYDEAD"))	{	return NPC_STATE_PLAYDEAD;	}
-	else if (!stricmp(state_name,"DEAD"))		{	return NPC_STATE_DEAD;		}
+	if		(!_stricmp(state_name,"NONE"))			{	return NPC_STATE_NONE;		}
+	else if (!_stricmp(state_name,"IDLE"))			{	return NPC_STATE_IDLE;		}
+	else if (!_stricmp(state_name,"COMBAT"))		{	return NPC_STATE_COMBAT;	}
+	else if (!_stricmp(state_name,"PRONE"))			{	return NPC_STATE_PRONE;		}
+	else if (!_stricmp(state_name,"ALERT"))			{	return NPC_STATE_ALERT;		}
+	else if (!_stricmp(state_name,"SCRIPT"))		{	return NPC_STATE_SCRIPT;	}
+	else if (!_stricmp(state_name,"PLAYDEAD"))		{	return NPC_STATE_PLAYDEAD;	}
+	else if (!_stricmp(state_name,"DEAD"))			{	return NPC_STATE_DEAD;		}
 	else											return -1;
 }
 
@@ -141,19 +141,19 @@ int CAI_SchedulesManager::GetStateID(const char *state_name)
 //-----------------------------------------------------------------------------
 int CAI_SchedulesManager::GetMemoryID(const char *state_name)
 {
-	if		(!stricmp(state_name,"PROVOKED"))		{	return bits_MEMORY_PROVOKED;		}
-	else if (!stricmp(state_name,"INCOVER"))		{	return bits_MEMORY_INCOVER;			}
-	else if (!stricmp(state_name,"SUSPICIOUS"))		{	return bits_MEMORY_SUSPICIOUS;		}
-	else if (!stricmp(state_name,"PATH_FAILED"))	{	return bits_MEMORY_PATH_FAILED;		}
-	else if (!stricmp(state_name,"FLINCHED"))		{	return bits_MEMORY_FLINCHED;		}
-	else if (!stricmp(state_name,"TOURGUIDE"))		{	return bits_MEMORY_TOURGUIDE;		}
-	else if (!stricmp(state_name,"LOCKED_HINT"))	{	return bits_MEMORY_LOCKED_HINT;		}
-	else if (!stricmp(state_name,"TURNING"))		{	return bits_MEMORY_TURNING;			}
-	else if (!stricmp(state_name,"TURNHACK"))		{	return bits_MEMORY_TURNHACK;		}
-	else if (!stricmp(state_name,"CUSTOM4"))		{	return bits_MEMORY_CUSTOM4;			}
-	else if (!stricmp(state_name,"CUSTOM3"))		{	return bits_MEMORY_CUSTOM3;			}
-	else if (!stricmp(state_name,"CUSTOM2"))		{	return bits_MEMORY_CUSTOM2;			}
-	else if (!stricmp(state_name,"CUSTOM1"))		{	return bits_MEMORY_CUSTOM1;			}
+	if		(!_stricmp(state_name,"PROVOKED"))		{	return bits_MEMORY_PROVOKED;		}
+	else if (!_stricmp(state_name,"INCOVER"))		{	return bits_MEMORY_INCOVER;			}
+	else if (!_stricmp(state_name,"SUSPICIOUS"))	{	return bits_MEMORY_SUSPICIOUS;		}
+	else if (!_stricmp(state_name,"PATH_FAILED"))	{	return bits_MEMORY_PATH_FAILED;		}
+	else if (!_stricmp(state_name,"FLINCHED"))		{	return bits_MEMORY_FLINCHED;		}
+	else if (!_stricmp(state_name,"TOURGUIDE"))		{	return bits_MEMORY_TOURGUIDE;		}
+	else if (!_stricmp(state_name,"LOCKED_HINT"))	{	return bits_MEMORY_LOCKED_HINT;		}
+	else if (!_stricmp(state_name,"TURNING"))		{	return bits_MEMORY_TURNING;			}
+	else if (!_stricmp(state_name,"TURNHACK"))		{	return bits_MEMORY_TURNHACK;		}
+	else if (!_stricmp(state_name,"CUSTOM4"))		{	return bits_MEMORY_CUSTOM4;			}
+	else if (!_stricmp(state_name,"CUSTOM3"))		{	return bits_MEMORY_CUSTOM3;			}
+	else if (!_stricmp(state_name,"CUSTOM2"))		{	return bits_MEMORY_CUSTOM2;			}
+	else if (!_stricmp(state_name,"CUSTOM1"))		{	return bits_MEMORY_CUSTOM1;			}
 	else												return -1;
 }
 
@@ -164,12 +164,12 @@ int CAI_SchedulesManager::GetMemoryID(const char *state_name)
 //-----------------------------------------------------------------------------
 int CAI_SchedulesManager::GetPathID( const char *token )
 {
-	if		( !stricmp( token, "TRAVEL" ) )	{	return PATH_TRAVEL;		}
-	else if ( !stricmp( token, "LOS" ) )		{	return PATH_LOS;		}
-//	else if ( !stricmp( token, "FLANK" ) )		{	return PATH_FLANK;		}
-//	else if ( !stricmp( token, "FLANK_LOS" ) )	{	return PATH_FLANK_LOS;	}
-	else if ( !stricmp( token, "COVER" ) )		{	return PATH_COVER;		}
-//	else if ( !stricmp( token, "COVER_LOS" ) )	{	return PATH_COVER_LOS;	}
+	if		( !_stricmp( token, "TRAVEL" ) )		{	return PATH_TRAVEL;		}
+	else if ( !_stricmp( token, "LOS" ) )			{	return PATH_LOS;		}
+//	else if ( !_stricmp( token, "FLANK" ) )			{	return PATH_FLANK;		}
+//	else if ( !_stricmp( token, "FLANK_LOS" ) )		{	return PATH_FLANK_LOS;	}
+	else if ( !_stricmp( token, "COVER" ) )			{	return PATH_COVER;		}
+//	else if ( !_stricmp( token, "COVER_LOS" ) )		{	return PATH_COVER_LOS;	}
 
 	return -1;
 }
@@ -181,10 +181,10 @@ int CAI_SchedulesManager::GetPathID( const char *token )
 //-----------------------------------------------------------------------------
 int CAI_SchedulesManager::GetGoalID( const char *token )
 {
-	if		( !stricmp( token, "ENEMY" ) )			{	return GOAL_ENEMY;			}
-	else if ( !stricmp( token, "ENEMY_LKP" ) )		{	return GOAL_ENEMY_LKP;		}
-	else if ( !stricmp( token, "TARGET" ) )			{	return GOAL_TARGET;			}
-	else if ( !stricmp( token, "SAVED_POSITION" ) )	{	return GOAL_SAVED_POSITION;	}
+	if		( !_stricmp( token, "ENEMY" ) )				{	return GOAL_ENEMY;			}
+	else if ( !_stricmp( token, "ENEMY_LKP" ) )			{	return GOAL_ENEMY_LKP;		}
+	else if ( !_stricmp( token, "TARGET" ) )			{	return GOAL_TARGET;			}
+	else if ( !_stricmp( token, "SAVED_POSITION" ) )	{	return GOAL_SAVED_POSITION;	}
 
 	return -1;
 }
@@ -202,7 +202,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 	char save_token[1024];
 	pfile = engine->COM_ParseFile(pfile, token);
 
-	while (!stricmp("Schedule",token))
+	while (!_stricmp("Schedule",token))
 	{
 		pfile = engine->COM_ParseFile(pfile, token);
 
@@ -230,7 +230,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 		CAI_Schedule *new_schedule = CreateSchedule(token,scheduleID);
 
 		pfile = engine->COM_ParseFile(pfile, token);
-		if (stricmp(token,"Tasks"))
+		if (_stricmp(token,"Tasks"))
 		{
 			DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting 'Tasks' keyword.\n",prefix,new_schedule->GetName());
 			Assert(0);
@@ -245,7 +245,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 		int	   taskNum = 0;
 
 		pfile = engine->COM_ParseFile(pfile, token);
-		while ((token[0]!=NULL) && (stricmp("Interrupts",token)))
+		while ((token[0]!=NULL) && (_stricmp("Interrupts",token)))
 		{
 			// Convert generic ID to sub-class specific enum
 			int taskID = CAI_BaseNPC::GetTaskID(token);
@@ -264,11 +264,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 			// Read in the task argument
 			pfile = engine->COM_ParseFile(pfile, token);
 
-			if (!stricmp("Activity",token))
+			if (!_stricmp("Activity",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'ACTIVITY.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -285,11 +285,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Task",token))
+			else if (!_stricmp("Task",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'ACTIVITY.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -310,11 +310,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Schedule",token))
+			else if (!_stricmp("Schedule",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'ACTIVITY.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -335,11 +335,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("State",token))
+			else if (!_stricmp("State",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'STATE.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -356,12 +356,12 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Memory",token))
+			else if (!_stricmp("Memory",token))
 			{
 
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'STATE.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -378,11 +378,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Path",token))
+			else if (!_stricmp("Path",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'PATH.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -399,11 +399,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Goal",token))
+			else if (!_stricmp("Goal",token))
 			{
 				// Skip the ";", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'GOAL.\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -420,11 +420,11 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if ( !stricmp( "HintFlags",token ) )
+			else if ( !_stricmp( "HintFlags",token ) )
 			{
 				// Skip the ":", but make sure it's present
 				pfile = engine->COM_ParseFile(pfile, token);
-				if (stricmp(token,":"))
+				if (_stricmp(token,":"))
 				{
 					DevMsg( "ERROR: LoadSchd (%s): (%s) Malformed AI Schedule.  Expecting ':' after type 'HINTFLAG'\n",prefix,new_schedule->GetName());
 					Assert(0);
@@ -441,7 +441,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 					return false;
 				}
 			}
-			else if (!stricmp("Interrupts",token) || !strnicmp("TASK_",token,5) )
+			else if (!_stricmp("Interrupts",token) || !_strnicmp("TASK_",token,5) )
 			{
 				// a parse error.  Interrupts is the next section, TASK_ is probably the next task, missing task argument?
 				Warning( "ERROR: LoadSchd (%s): (%s) Bad syntax at task #%d (wasn't expecting %s)\n", prefix, new_schedule->GetName(), taskNum, token);
@@ -459,7 +459,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 			pfile = engine->COM_ParseFile(pfile, token);
 
 			// Check for malformed task argument type
-			if (!stricmp(token,":"))
+			if (!_stricmp(token,":"))
 			{
 				DevMsg( "ERROR: LoadSchd (%s): Schedule (%s),\n        Task (%s), has a malformed AI Task Argument = (%s)\n",
 						prefix,new_schedule->GetName(),taskID,save_token);
@@ -483,7 +483,7 @@ bool CAI_SchedulesManager::LoadSchedulesFromBuffer( const char *prefix, char *pf
 		// Now read in the interrupts
 		// ==========================
 		pfile = engine->COM_ParseFile(pfile, token);
-		while ((token[0]!=NULL) && (stricmp("Schedule",token)))
+		while ((token[0]!=NULL) && (_stricmp("Schedule",token)))
 		{
 			// Convert generic ID to sub-class specific enum
 			int condID = CAI_BaseNPC::GetConditionID(token);

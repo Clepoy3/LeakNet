@@ -81,9 +81,9 @@ public:
 //-----------------------------------------------------------------------------
 class Panel : public IClientPanel
 {
+public:
 	DECLARE_CLASS_SIMPLE_NOBASE( Panel );
 
-public:
 	// For property mapping
 	static void InitPropertyConverters( void );
 	static void AddPropertyConverter( char const *typeName, IPanelAnimationPropertyConverter *converter );

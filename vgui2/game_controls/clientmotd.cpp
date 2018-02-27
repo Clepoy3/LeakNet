@@ -68,7 +68,7 @@ CClientMOTD::~CClientMOTD()
 //-----------------------------------------------------------------------------
 void CClientMOTD::OnCommand( const char *command)
 {
-    if (!stricmp(command, "okay"))
+    if (!_stricmp(command, "okay"))
     {
 		// save the file to disk and then load it
 		if( filesystem()->FileExists( m_szTempFileName ) )

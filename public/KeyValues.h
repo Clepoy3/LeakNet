@@ -131,6 +131,7 @@ public:
 	void *operator new( unsigned int iAllocSize );
 	void *operator new( unsigned int iAllocSize, int nBlockUse, const char *pFileName, int nLine );
 	void operator delete( void *pMem );
+	void operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine ); // VXP: Conv
 	KeyValues& operator=( KeyValues& src );
 
 	// Adds a chain... if we don't find stuff in this keyvalue, we'll look

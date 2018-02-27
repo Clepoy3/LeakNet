@@ -15,9 +15,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectSandbagBunker : public CBaseObject
 {
+public:
 	DECLARE_CLASS( CObjectSandbagBunker, CBaseObject );
 
-public:
 	DECLARE_SERVERCLASS();
 
 	CObjectSandbagBunker( void );

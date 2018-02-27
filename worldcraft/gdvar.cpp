@@ -541,7 +541,8 @@ void GDinputvariable::Merge(GDinputvariable &Other)
 	for (int i = 0; i < Other.m_nItems; i++)
 	{
 		GDIVITEM &TheirItem = Other.m_Items[i];
-		for (int j = 0; j < nOurItems; j++)
+		int j;
+		for (j = 0; j < nOurItems; j++)
 		{
 			GDIVITEM &OurItem = m_Items[j];
 			if (TheirItem.iValue == OurItem.iValue)
@@ -625,7 +626,7 @@ void GDinputvariable::ToKeyValue(MDkeyvalue *pkv)
 	}
 	else if (eStoreAs == INTEGER)
 	{
-		itoa(m_nValue, pkv->szValue, 10);
+		_itoa(m_nValue, pkv->szValue, 10);
 	}
 }
 
@@ -640,7 +641,7 @@ LPCTSTR GDinputvariable::ItemStringForValue(const char *szValue)
 {
 	for (int i = 0; i < m_nItems; i++)
 	{
-		if (!stricmp(m_Items[i].szValue, szValue))
+		if (!_stricmp(m_Items[i].szValue, szValue))
 		{
 			return(m_Items[i].szCaption);
 		}
@@ -660,7 +661,7 @@ const char *GDinputvariable::ItemValueForString(const char *szString)
 {
 	for (int i = 0; i < m_nItems; i++)
 	{
-		if (!strcmpi(m_Items[i].szCaption, szString))
+		if (!_strcmpi(m_Items[i].szCaption, szString))
 		{
 			return(m_Items[i].szValue);
 		}

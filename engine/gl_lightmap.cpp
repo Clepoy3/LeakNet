@@ -457,7 +457,7 @@ static void AccumulateBumpedLightstyles( colorRGBExp32* pLightmap, int lightmapS
 		blocklights[1][i][1] += scalar * TexLightToLinear( pBumpedLightmaps[0][i].g, pBumpedLightmaps[0][i].exponent );
 		blocklights[1][i][2] += scalar * TexLightToLinear( pBumpedLightmaps[0][i].b, pBumpedLightmaps[0][i].exponent );
 	}
-	for ( i=0 ; i<lightmapSize ; ++i)
+	for ( int i=0 ; i<lightmapSize ; ++i)
 	{
 		blocklights[2][i][0] += scalar * TexLightToLinear( pBumpedLightmaps[1][i].r, pBumpedLightmaps[1][i].exponent );
 		blocklights[2][i][1] += scalar * TexLightToLinear( pBumpedLightmaps[1][i].g, pBumpedLightmaps[1][i].exponent );

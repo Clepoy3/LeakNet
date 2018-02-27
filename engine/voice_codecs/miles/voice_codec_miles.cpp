@@ -10,9 +10,9 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-void Con_Printf(char *pMsg, ...)
-{
-}
+//void Con_Printf(char *pMsg, ...) // VXP: Conv
+//{
+//}
 
 
 class FrameEncoder_Miles : public IFrameEncoder
@@ -119,7 +119,8 @@ bool FrameEncoder_Miles::Init(int &rawFrameSize, int &encodedFrameSize)
 	// encoder converts from RAW to v12
 	if ( !m_Encoder.Init( (void *)this, ".RAW", suffix, &FrameEncoder_Miles::EncodeStreamCB ) )
 	{
-		Con_Printf("(FrameEncoder_Miles): Can't initialize ASI encoder.\n");
+	//	Con_Printf("(FrameEncoder_Miles): Can't initialize ASI encoder.\n");
+		Msg("(FrameEncoder_Miles): Can't initialize ASI encoder.\n");
 		Shutdown();
 		return false;
 	}
@@ -127,7 +128,8 @@ bool FrameEncoder_Miles::Init(int &rawFrameSize, int &encodedFrameSize)
 	// decoder converts from v12 to RAW
 	if ( !m_Decoder.Init( (void *)this, suffix, ".RAW", &FrameEncoder_Miles::DecodeStreamCB ) )
 	{
-		Con_Printf("(FrameEncoder_Miles): Can't initialize ASI decoder.\n");
+	//	Con_Printf("(FrameEncoder_Miles): Can't initialize ASI decoder.\n");
+		Msg("(FrameEncoder_Miles): Can't initialize ASI decoder.\n");
 		Shutdown();
 		return false;
 	}

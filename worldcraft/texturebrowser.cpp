@@ -157,7 +157,7 @@ void CTextureBrowser::OnSize(UINT nType, int cx, int cy)
 		-1
 	};
 
-	for (i = 0; iIDList2[i] != -1; i++)
+	for (int i = 0; iIDList2[i] != -1; i++)
 	{
 		CWnd *pWnd = GetDlgItem(iIDList2[i]);
 		ASSERT(pWnd != NULL);
@@ -531,7 +531,8 @@ void CTextureBrowser::SaveAndExit()
 	CString str;
 	m_cFilter.GetWindowText(str);
 
-	for(int i = 0; i < m_nFilterHistory; i++)
+	int i;
+	for(i = 0; i < m_nFilterHistory; i++)
 	{
 		if(!m_FilterHistory[i].CompareNoCase(str))
 			break;

@@ -10,7 +10,8 @@
 #pragma once
 
 
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include "HelperInfo.h"
 #include "TokenReader.h"
 #include "GamePalette.h"
@@ -144,10 +145,10 @@ class CGameConfig
 		GameData GD;	// gamedata files loaded
 		CGamePalette Palette;
 
-		BOOL Import(fstream &, float fVersion);
+		BOOL Import(std::fstream &, float fVersion);
 
 		bool Load(const char *pszFileName, const char *pszSection);
-		void Save(fstream &);
+		void Save(std::fstream &);
 		bool Save(const char *pszFileName, const char *pszSection);
 		void CopyFrom(CGameConfig *pConfig);
 		void LoadGDFiles(void);

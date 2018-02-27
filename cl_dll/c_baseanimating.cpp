@@ -390,9 +390,9 @@ void C_BaseAnimating::BuildTransformations( Vector *pos, Quaternion *q, const ma
 					strcpy( weaponFBone, pfbones[j].pszName() );
 					Studio_TranslateOldBones( weaponFBone );
 
-					if ( stricmp(weaponBone, weaponFBone ) == 0 )
+					if ( _stricmp(weaponBone, weaponFBone ) == 0 )
 #else
-					if ( stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
+					if ( _stricmp(pbones[i].pszName(), pfbones[j].pszName() ) == 0 )
 #endif // TRANSLATE_OLD_BONES
 					{
 						MatrixCopy( follow->m_CachedBones[ j ], m_CachedBones[ i ] );
@@ -888,7 +888,7 @@ mstudioposeparamdesc_t *C_BaseAnimating::GetPoseParameterPtr( const char *pName 
 	{
 		mstudioposeparamdesc_t *pPose = pstudiohdr->pPoseParameter( i );
 		
-		if ( pPose && ( stricmp( pstudiohdr->pPoseParameter( i )->pszName(), pName ) == 0 ) )
+		if ( pPose && ( _stricmp( pstudiohdr->pPoseParameter( i )->pszName(), pName ) == 0 ) )
 		{
 			return pPose;
 		}
@@ -2556,7 +2556,7 @@ int C_BaseAnimating::LookupPoseParameter( const char *szName )
 
 	for (int i = 0; i < pstudiohdr->numposeparameters; i++)
 	{
-		if (stricmp( pstudiohdr->pPoseParameter( i )->pszName(), szName ) == 0)
+		if (_stricmp( pstudiohdr->pPoseParameter( i )->pszName(), szName ) == 0)
 		{
 			return i;
 		}

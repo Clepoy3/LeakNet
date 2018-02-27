@@ -487,8 +487,8 @@ int CRagdollProp::DrawDebugTextOverlays(void)
 //===============================================================================================================
 class CRagdollPropAttached : public CRagdollProp
 {
-	DECLARE_CLASS( CRagdollPropAttached, CRagdollProp );
 public:
+	DECLARE_CLASS( CRagdollPropAttached, CRagdollProp );
 
 	CRagdollPropAttached()
 	{

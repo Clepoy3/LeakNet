@@ -24,7 +24,8 @@ namespace vgui
 
 class ClientModeTFNormal : public ClientModeTFBase
 {
-DECLARE_CLASS( ClientModeTFNormal, ClientModeTFBase );
+public:
+	DECLARE_CLASS( ClientModeTFNormal, ClientModeTFBase );
 
 private:
 

@@ -810,7 +810,7 @@ int CAI_Hint::GetFlags( const char *token )
 
 	char *lowercase = (char *)_alloca( len + 1 );
 	Q_strncpy( lowercase, token, len+1 );
-	strlwr( lowercase );
+	_strlwr( lowercase );
 
 	if ( strstr( "none", lowercase ) )
 	{

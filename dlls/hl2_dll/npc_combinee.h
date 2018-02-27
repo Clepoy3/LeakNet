@@ -26,9 +26,9 @@
 //=========================================================
 class CNPC_CombineE : public CNPC_Combine
 {
+public:
 	DECLARE_CLASS( CNPC_CombineE, CNPC_Combine );
 
-public:
 	void		Spawn( void );
 	void		Precache( void );
 

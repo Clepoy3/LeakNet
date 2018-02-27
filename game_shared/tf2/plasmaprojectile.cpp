@@ -176,7 +176,7 @@ void CBasePlasmaProjectile::Spawn( void )
 	SetSolid( SOLID_BBOX );
 	SetSize( vec3_origin, vec3_origin );
 	SetCollisionGroup( TFCOLLISION_GROUP_WEAPON );
-	SetTouch( MissileTouch );
+	SetTouch( &CBasePlasmaProjectile::MissileTouch );
 	m_DamageType = DMG_ENERGYBEAM;
 	SetMoveType( MOVETYPE_CUSTOM );
 	m_flDamage = 0;

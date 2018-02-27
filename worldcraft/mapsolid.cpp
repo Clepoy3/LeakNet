@@ -674,7 +674,7 @@ void CMapSolid::DoTransform(Box3D *t)
 		// UNDONE: Recreate the face points based on the new plane points instead of this. Do this
 		//		   for all the transformation functions.
 		//
-		for (j = 0; j < curface.nPoints; j++)
+		for (int j = 0; j < curface.nPoints; j++)
 		{
 			t->TranslatePoint(curface.Points[j]);
 		}
@@ -771,7 +771,7 @@ void CMapSolid::DoTransMove(const Vector &delta)
 		//
 		// Move the face points.
 		//
-		for (i = 0; i < curface.nPoints; i++)
+		for (int i = 0; i < curface.nPoints; i++)
 		{
 			curface.Points[i][0] += delta[0];
 			curface.Points[i][1] += delta[1];
@@ -830,7 +830,7 @@ void CMapSolid::DoTransScale(const Vector &RefPoint, const Vector &Scale)
 		//
 		// Scale the face points.
 		//
-		for (i = 0; i < pFace->nPoints; i++)
+		for (int i = 0; i < pFace->nPoints; i++)
 		{
 			pFace->Points[i][0] = RefPoint[0] + ((pFace->Points[i][0] - RefPoint[0]) * Scale[0]);
 			pFace->Points[i][1] = RefPoint[1] + ((pFace->Points[i][1] - RefPoint[1]) * Scale[1]);
@@ -1703,7 +1703,7 @@ void CMapSolid::OnAddToWorld(CMapWorld *pWorld)
 	//
 	// Notify all faces that we are being added to the world.
 	//
-	for (i = 0; i < nFaceCount; i++)
+	for (int i = 0; i < nFaceCount; i++)
 	{
 		CMapFace *pFace = GetFace(i);
 		pFace->OnAddToWorld(pWorld);

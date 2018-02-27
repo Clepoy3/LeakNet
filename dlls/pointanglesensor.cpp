@@ -18,8 +18,8 @@
 
 class CPointAngleSensor : public CPointEntity
 {
-	DECLARE_CLASS(CPointAngleSensor, CPointEntity);
 public:
+	DECLARE_CLASS(CPointAngleSensor, CPointEntity);
 
 	bool KeyValue(const char *szKeyName, const char *szValue);
 	void Activate(void);

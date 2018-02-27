@@ -16,8 +16,9 @@
 
 class C_TFPlayerResource : public C_PlayerResource
 {
-	DECLARE_CLASS( C_TFPlayerResource, C_PlayerResource );
 public:
+	DECLARE_CLASS( C_TFPlayerResource, C_PlayerResource );
+
 	DECLARE_CLIENTCLASS();
 
 					C_TFPlayerResource();

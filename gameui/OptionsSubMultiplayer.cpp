@@ -212,7 +212,7 @@ COptionsSubMultiplayer::~COptionsSubMultiplayer()
 //-----------------------------------------------------------------------------
 void COptionsSubMultiplayer::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Advanced" ) )
+	if ( !_stricmp( command, "Advanced" ) )
 	{
 		if (!m_hMultiplayerAdvancedDialog.Get())
 		{
@@ -469,7 +469,7 @@ void COptionsSubMultiplayer::InitModelList( CLabeledCommandComboBox *cb )
 			_snprintf( testmodel, sizeof( testmodel ), "models/player/%s.mdl", modelname );
 		//	Msg( "currentmodel: %s, modelname: %s, testmodel: %s\n", currentmodel, modelname, testmodel );
 		//	if ( !stricmp( currentmodel, modelname ) )
-			if ( !stricmp( currentmodel, testmodel ) )
+			if ( !_stricmp( currentmodel, testmodel ) )
 			{
 				selected = c;
 			}

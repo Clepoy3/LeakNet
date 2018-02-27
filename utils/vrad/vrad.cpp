@@ -372,7 +372,7 @@ void ProcessSkyCameras()
 	{
 		entity_t *e = &entities[i];
 		const char *name = ValueForKey (e, "classname");
-		if (stricmp (name, "sky_camera"))
+		if (_stricmp (name, "sky_camera"))
 			continue;
 
 		Vector origin;
@@ -1554,7 +1554,7 @@ void BuildFacesVisibleToLights( bool bAllVisible )
 					int index = dleafs[iLeaf].firstleafface + iFace;
 					index = dleaffaces[index];
 					
-					Assert( index < numfaces );
+					assert( index < numfaces );
 					g_FacesVisibleToLights[index >> 3] |= (1 << (index & 7));
 				}
 
@@ -2181,25 +2181,25 @@ int RunVRAD( int argc, char **argv )
 				return 1;
 			}
 		}
-		else if( !stricmp( argv[i], "-low" ) )
+		else if( !_stricmp( argv[i], "-low" ) )
 		{
 			g_bLowPriority = true;
 		}
-		else if( !stricmp( argv[i], "-loghash" ) )
+		else if( !_stricmp( argv[i], "-loghash" ) )
 		{
 			g_bLogHashData = true;
 		}
-		else if( !stricmp( argv[i], "-onlydetail" ) )
+		else if( !_stricmp( argv[i], "-onlydetail" ) )
 		{
 			onlydetail = true;
 		}
-		else if ( stricmp( argv[i], "-StopOnExit" ) == 0 )
+		else if ( _stricmp( argv[i], "-StopOnExit" ) == 0 )
 		{
 			g_bStopOnExit = true;
 		}
 		else if ( !Q_strncasecmp( argv[i], "-mpi", 4 ) || !Q_strncasecmp( argv[i-1], "-mpi", 4 ) )
 		{
-			if ( stricmp( argv[i], "-mpi" ) == 0 )
+			if ( _stricmp( argv[i], "-mpi" ) == 0 )
 				g_bUseMPI = true;
 		
 			// Any other args that start with -mpi are ok too.

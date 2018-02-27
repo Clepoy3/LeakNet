@@ -90,7 +90,7 @@ CChangeTrack* GetChangeTrack( const char *pName )
 	{
 		CChangeTrack *pCur = g_Tracks[i];
 
-		if ( stricmp( pCur->m_pName, pName ) == 0 )
+		if ( _stricmp( pCur->m_pName, pName ) == 0 )
 			return pCur;
 	}
 

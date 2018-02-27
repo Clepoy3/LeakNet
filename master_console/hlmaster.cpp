@@ -149,7 +149,7 @@ char const* Sys_FindArg( char const *pArg, char const *pDefault )
 {
 	for( int i=0; i < __argc; i++ )
 	{
-		if( stricmp( __argv[i], pArg ) == 0 )
+		if( _stricmp( __argv[i], pArg ) == 0 )
 			return (i+1) < __argc ? __argv[i+1] : "";
 	}
 

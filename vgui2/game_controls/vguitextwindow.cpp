@@ -57,7 +57,7 @@ CVGUITextWindow::~CVGUITextWindow()
 
 void CVGUITextWindow::OnCommand( const char *command)
 {
-    if (!stricmp(command, "okay"))
+    if (!_stricmp(command, "okay"))
     {
 		Close();
 		gViewPortInterface->HideBackGround();

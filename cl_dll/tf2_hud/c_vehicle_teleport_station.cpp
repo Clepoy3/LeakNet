@@ -31,9 +31,9 @@ C_VehicleTeleportStation::C_VehicleTeleportStation()
 //-----------------------------------------------------------------------------
 class CVehicleTeleportStationControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CVehicleTeleportStationControlPanel, CObjectControlPanel );
 
-public:
 	CVehicleTeleportStationControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

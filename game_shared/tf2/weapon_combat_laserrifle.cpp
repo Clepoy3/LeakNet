@@ -37,8 +37,9 @@ ConVar	weapon_combat_laserrifle_ducking_mod( "weapon_combat_laserrifle_ducking_m
 //-----------------------------------------------------------------------------
 class CWeaponCombatLaserRifle : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatLaserRifle, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatLaserRifle, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 

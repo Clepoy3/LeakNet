@@ -248,7 +248,7 @@ void CHudWeaponSelection::Paint()
 					{
 						Q_snprintf(text, sizeof(text), "%s", weaponInfo.szPrintName);
 					}
-					strupr(text);
+					_strupr(text);
 					surface()->DrawSetTextColor( col );
 					surface()->DrawSetTextFont( m_hTextFont );
 

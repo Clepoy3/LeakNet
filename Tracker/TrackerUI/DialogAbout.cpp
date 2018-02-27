@@ -11,7 +11,8 @@
 #include <vgui_controls/Button.h>
 #include <vgui_controls/Controls.h>
 #include <VGUI/ISystem.h>
-#include <vgui_controls/TextEntry.h>
+//#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/RichText.h>
 
 #include <stdio.h>
 
@@ -23,10 +24,11 @@ using namespace vgui;
 CDialogAbout::CDialogAbout() : Frame(NULL, "DialogAbout")
 {
 	m_pClose = new Button(this, "CloseButton", "#TrackerUI_Close");
-	m_pText = new TextEntry(this, "AboutText");
+//	m_pText = new TextEntry(this, "AboutText");
+	m_pText = new RichText(this, "AboutText");
 
 //	m_pText->SetRichEdit(true);
-	m_pText->SetMultiline(true);
+//	m_pText->SetMultiline(true);
 	m_pText->SetVerticalScrollbar(true);
 
 	SetTitle("#TrackerUI_FriendsAboutTitle", true);

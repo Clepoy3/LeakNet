@@ -6,9 +6,9 @@
 
 class CNPC_Bullsquid : public CHL1BaseNPC
 {
+public:
 	DECLARE_CLASS( CNPC_Bullsquid, CHL1BaseNPC );
 
-public:
 	void Spawn( void );
 	void Precache( void );
 	Class_T	Classify( void );

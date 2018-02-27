@@ -582,7 +582,7 @@ bool DispInfo_LoadDisplacements( model_t *pWorld, bool bRestoring )
 			pDisp->m_bFullyTesselated = true;
 		}
 
-		for ( iDisp=0; iDisp < nDisplacements; iDisp++ )
+		for ( int iDisp=0; iDisp < nDisplacements; iDisp++ )
 		{
 			CDispInfo *pDisp = GetModelDisp( pWorld, iDisp );
 			pDisp->TesselateDisplacement();			

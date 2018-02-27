@@ -11,7 +11,8 @@
 
 
 #include <afxtempl.h>
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 
 
 class BoundBox;
@@ -184,7 +185,7 @@ public:
 	int Save(LPCTSTR pszFilename = NULL, BOOL bIndexOnly = FALSE);
 	int SetName(const char *pszName);
 
-	fstream m_file;
+	std::fstream m_file;
 
 protected:
 

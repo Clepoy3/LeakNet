@@ -38,17 +38,17 @@ struct MsgDispatch_t
 
 static MsgDispatch_t g_UserMsgDispatch[] =
 {
-	{ TSV_WHOISPRIMARY,	CTopologyManager::ReceivedMsg_WhoIsPrimary },
-	{ TSV_PRIMARYSRV,	CTopologyManager::ReceivedMsg_PrimarySrv },
-	{ TSV_REQUESTINFO,	CTopologyManager::ReceivedMsg_RequestInfo },
-	{ TSV_SRVINFO,		CTopologyManager::ReceivedMsg_SrvInfo },
-	{ TSV_REQSRVINFO,	CTopologyManager::ReceivedMsg_ReqSrvInfo },
-	{ TSV_SERVERPING,   CTopologyManager::ReceivedMsg_ServerPing },
-	{ TSV_LOCKUSERRANGE, CTopologyManager::ReceivedMsg_LockUserRange },
-	{ TSV_UNLOCKUSERRANGE, CTopologyManager::ReceivedMsg_UnlockUserRange },
-	{ TSV_REDIRECTTOUSER, CTopologyManager::ReceivedMsg_RedirectToUser },
-	{ TSV_FORCEDISCONNECTUSER, CTopologyManager::ReceivedMsg_ForceDisconnectUser },
-	{ TSV_USERCHECKMESSAGES, CTopologyManager::ReceivedMsg_UserCheckMessages },
+	{ TSV_WHOISPRIMARY,	&CTopologyManager::ReceivedMsg_WhoIsPrimary },
+	{ TSV_PRIMARYSRV,	&CTopologyManager::ReceivedMsg_PrimarySrv },
+	{ TSV_REQUESTINFO,	&CTopologyManager::ReceivedMsg_RequestInfo },
+	{ TSV_SRVINFO,		&CTopologyManager::ReceivedMsg_SrvInfo },
+	{ TSV_REQSRVINFO,	&CTopologyManager::ReceivedMsg_ReqSrvInfo },
+	{ TSV_SERVERPING,   &CTopologyManager::ReceivedMsg_ServerPing },
+	{ TSV_LOCKUSERRANGE, &CTopologyManager::ReceivedMsg_LockUserRange },
+	{ TSV_UNLOCKUSERRANGE, &CTopologyManager::ReceivedMsg_UnlockUserRange },
+	{ TSV_REDIRECTTOUSER, &CTopologyManager::ReceivedMsg_RedirectToUser },
+	{ TSV_FORCEDISCONNECTUSER, &CTopologyManager::ReceivedMsg_ForceDisconnectUser },
+	{ TSV_USERCHECKMESSAGES, &CTopologyManager::ReceivedMsg_UserCheckMessages },
 };
 
 //-----------------------------------------------------------------------------
@@ -688,7 +688,7 @@ void CTopologyManager::ReceivedMsg_SrvInfo(IReceiveMessage *dataBlock)
 			dataBlock->ReadUInt("serverID", serverID);
 
 			// if we have a lower server id, and are not involved in any complex state, then yield control
-			if (serverID < m_iServerID && m_pStateFunc == State_BasePrimaryServerFrame)
+			if (serverID < m_iServerID && m_pStateFunc == &CTopologyManager::State_BasePrimaryServerFrame)
 			{
 				// yield
 				g_pConsole->Print(8, "Yielding primary server status\n", dataBlock->NetAddress().ToStaticString());
@@ -872,7 +872,7 @@ void CTopologyManager::OnMessageFailed(IReceiveMessage *dataBlock)
 	// check to see if we should try and become primary
 	int primaryIndex = -1;
 	unsigned int lowestID = m_iServerID;
-	for (i = 0; i < m_Servers.Size(); i++)
+	for (int i = 0; i < m_Servers.Size(); i++)
 	{
 		if (m_Servers[i].primary)
 		{
@@ -903,7 +903,7 @@ void CTopologyManager::BecomePrimaryServer()
 {
 	g_pConsole->Print(4, "Designating self as primary server\n");
 	m_bPrimary = true;
-	m_pStateFunc = State_BasePrimaryServerFrame;
+	m_pStateFunc = &CTopologyManager::State_BasePrimaryServerFrame;
 	m_bFindingPrimaryServer = false;
 	m_PrimaryServerAddress = m_pLocalNET->GetLocalAddress();
 
@@ -1068,7 +1068,7 @@ void CTopologyManager::WakeUp()
 void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, void *data)
 {
 	// make sure we're still in the wait state
-	if (m_pStateFunc != State_AbortMoveUsers)
+	if (m_pStateFunc != &CTopologyManager::State_AbortMoveUsers)
 		return;
 
 	if (cmdID == CMD_USERSAREONLINE)
@@ -1076,7 +1076,7 @@ void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, 
 		if (returnVal > 0)
 		{
 			// we need to wait a bit longer, some users still logged in
-			m_pStateFunc = State_MakeSureUserRangeIsOffline;
+			m_pStateFunc = &CTopologyManager::State_MakeSureUserRangeIsOffline;
 			m_flStateThinkTime = 0.2f;
 
 			//!! need an error case for if the users never all go offline
@@ -1084,7 +1084,7 @@ void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, 
 		else
 		{
 			// all the users in the range have been logged out, proceed
-			m_pStateFunc = State_CopyUsers;
+			m_pStateFunc = &CTopologyManager::State_CopyUsers;
 			m_flStateThinkTime = 0.0f;
 		}
 	}
@@ -1093,7 +1093,7 @@ void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, 
 		if (returnVal > 0)
 		{
 			// allow a timeout on the copying to make sure we don't get stuck
-			m_pStateFunc = State_AbortMoveUsers;
+			m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 			m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 			// we've gotten the complete user data; now stuff it back into the previous database
@@ -1105,12 +1105,12 @@ void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, 
 		{
 			// no users moved, but no error
 			// proceed straight to success state
-			m_pStateFunc = State_UserDataCopied;
+			m_pStateFunc = &CTopologyManager::State_UserDataCopied;
 		}
 		else
 		{
 			// no users copied; abort
-			m_pStateFunc = State_AbortMoveUsers;
+			m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 			m_flStateThinkTime = 0.0f;
 		}
 	}
@@ -1119,20 +1119,20 @@ void CTopologyManager::SQLDBResponse(int cmdID, int returnState, int returnVal, 
 		if (returnVal > 0)
 		{
 			// finished copying
-			m_pStateFunc = State_UserDataCopied;
+			m_pStateFunc = &CTopologyManager::State_UserDataCopied;
 			m_flStateThinkTime = 0.0f;
 		}
 		else
 		{
 			// error, abort
-			m_pStateFunc = State_AbortMoveUsers;
+			m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 			m_flStateThinkTime = 0.0f;
 		}
 	}
 	else if (cmdID == CMD_UPDATEUSERDISTRIBUTION)
 	{
 		// finished updating user distribution
-		m_pStateFunc = State_UserDistributionUpdated;
+		m_pStateFunc = &CTopologyManager::State_UserDistributionUpdated;
 		m_flStateThinkTime = 0.0f;
 	}
 }
@@ -1187,7 +1187,7 @@ bool CTopologyManager::State_BasePrimaryServerFrame()
 
 	// find which server lies before it (it will be where we move the users to)
 	int destServerIndex = -1;
-	for (i = 0; i < g_pDataManager->TrackerUserCount(); i++)
+	for (int i = 0; i < g_pDataManager->TrackerUserCount(); i++)
 	{
 		ITrackerDatabaseManager::db_t &db = g_pDataManager->TrackerUserByIndex(i);
 		ITrackerDatabaseManager::db_t &srcDB = g_pDataManager->TrackerUserByIndex(srcServerIndex);
@@ -1231,7 +1231,7 @@ bool CTopologyManager::State_BasePrimaryServerFrame()
 	g_pConsole->Print(3, "Attempting to move user range [%d, %d]\n", lowRange, highRange);
 
 	LockUserRange(lowRange, highRange);
-	m_pStateFunc = State_WaitForUserRangeLock;
+	m_pStateFunc = &CTopologyManager::State_WaitForUserRangeLock;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + 0.2f;
 
 	return true;
@@ -1247,7 +1247,7 @@ bool CTopologyManager::State_WaitForUserRangeLock()
 	// theoretically everything should be fine; but if something slips through it could be bad
 
 	// move into the next state, which is making sure that all the users we are about to move are offline
-	m_pStateFunc = State_MakeSureUserRangeIsOffline;
+	m_pStateFunc = &CTopologyManager::State_MakeSureUserRangeIsOffline;
 	m_flStateThinkTime = 0.0f;
 	return true;
 }
@@ -1258,7 +1258,7 @@ bool CTopologyManager::State_WaitForUserRangeLock()
 bool CTopologyManager::State_MakeSureUserRangeIsOffline()
 {
 	// set the state to be a timeout
-	m_pStateFunc = State_AbortMoveUsers;
+	m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	// check the database, make sure all the users are offline
@@ -1278,7 +1278,7 @@ bool CTopologyManager::State_MakeSureUserRangeIsOffline()
 bool CTopologyManager::State_CopyUsers()
 {
 	// set the state to be a timeout
-	m_pStateFunc = State_AbortMoveUsers;
+	m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	if (m_bShuttingDown)
@@ -1301,7 +1301,7 @@ bool CTopologyManager::State_UserDataCopied()
 	ITrackerDatabaseManager::db_t &srcDB = g_pDataManager->TrackerUserByIndex(m_iSrcDatabaseIndex);
 	
 	// reset the state to be a timeout
-	m_pStateFunc = State_AbortMoveUsers;
+	m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	// don't continue if we're shutting down
@@ -1322,7 +1322,7 @@ bool CTopologyManager::State_UserDistributionUpdated()
 	g_pConsole->Print(4, "Successfully moved user range [%d, %d]\n", m_iMoveRangeLower, m_iMoveRangeUpper);
 
 	// set us to be in an abort state
-	m_pStateFunc = State_AbortMoveUsers;
+	m_pStateFunc = &CTopologyManager::State_AbortMoveUsers;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	// unlock user range & reload user distribution
@@ -1334,7 +1334,7 @@ bool CTopologyManager::State_UserDistributionUpdated()
 	// return to base state
 	m_iMoveRangeLower = 0;
 	m_iMoveRangeUpper = 0;
-	m_pStateFunc = State_BasePrimaryServerFrame;
+	m_pStateFunc = &CTopologyManager::State_BasePrimaryServerFrame;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	return true;
@@ -1351,7 +1351,7 @@ bool CTopologyManager::State_AbortMoveUsers()
 	UnlockUserRange();
 	m_iMoveRangeLower = 0;
 	m_iMoveRangeUpper = 0;
-	m_pStateFunc = State_BasePrimaryServerFrame;
+	m_pStateFunc = &CTopologyManager::State_BasePrimaryServerFrame;
 	m_flStateThinkTime = sessionmanager()->GetCurrentTime() + QUERY_TIMEOUT;
 
 	return true;

@@ -4,10 +4,14 @@
 //
 // $NoKeywords: $
 //=============================================================================
+
 #include "cbase.h"
 #include "ProxyEntity.h"
 #include "materialsystem/IMaterial.h"
 #include "materialsystem/IMaterialVar.h"
+
+// VXP: TODO
+#if 0 // VXP: Conv
 
 void HueToRGB( float frac, Vector& color );
 
@@ -103,3 +107,5 @@ return;
 }
 
 EXPOSE_INTERFACE( CThermalMaterialProxy, IMaterialProxy, "Thermal" IMATERIAL_PROXY_INTERFACE_VERSION );
+
+#endif // 0

@@ -676,7 +676,7 @@ int CItem_AmmoCrate::OnTakeDamage( const CTakeDamageInfo &info )
 	{
 		CBaseCombatWeapon *weapon = player->GetActiveWeapon();
 
-		if (weapon && !stricmp(weapon->GetName(), "weapon_crowbar"))
+		if (weapon && !_stricmp(weapon->GetName(), "weapon_crowbar"))
 		{
 			// play the normal use sound
 			player->EmitSound( "HL2Player.Use" );

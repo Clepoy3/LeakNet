@@ -30,9 +30,9 @@ class CBaseEntity;
 //-----------------------------------------------------------------------------
 class CObjectRespawnStation : public CBaseObject
 {
-DECLARE_CLASS( CObjectRespawnStation, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectRespawnStation, CBaseObject );
+
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 

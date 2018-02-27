@@ -409,9 +409,9 @@ void CSatchelCharge::Spawn( void )
 	UTIL_SetSize( this, Vector( -4, -4, 0), Vector(4, 4, 8) );
 	Relink();
 
-	SetTouch( SatchelTouch );
-	SetUse( SatchelUse );
-	SetThink( SatchelThink );
+	SetTouch( &CSatchelCharge::SatchelTouch );
+	SetUse( &CSatchelCharge::SatchelUse );
+	SetThink( &CSatchelCharge::SatchelThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_plr_dmg_satchel.GetFloat();
@@ -436,7 +436,7 @@ void CSatchelCharge::Spawn( void )
 //-----------------------------------------------------------------------------
 void CSatchelCharge::SatchelUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
-	SetThink( Detonate );
+	SetThink( &CBaseGrenade::Detonate );
 	SetNextThink( gpGlobals->curtime );
 }
 

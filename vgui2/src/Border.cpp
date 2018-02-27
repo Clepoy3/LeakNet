@@ -109,7 +109,7 @@ void Border::Paint(int x, int y, int wide, int tall, int breakSide, int breakSta
 	}
 
 	// draw top
-	for (i = 0; i < _sides[SIDE_TOP].count; i++)
+	for (int i = 0; i < _sides[SIDE_TOP].count; i++)
 	{
 		line_t *line = &(_sides[SIDE_TOP].lines[i]);
 		surface()->DrawSetColor(line->col[0], line->col[1], line->col[2], line->col[3]);
@@ -136,7 +136,7 @@ void Border::Paint(int x, int y, int wide, int tall, int breakSide, int breakSta
 	}
 
 	// draw right
-	for (i = 0; i < _sides[SIDE_RIGHT].count; i++)
+	for (int i = 0; i < _sides[SIDE_RIGHT].count; i++)
 	{
 		line_t *line = &(_sides[SIDE_RIGHT].lines[i]);
 		surface()->DrawSetColor(line->col[0], line->col[1], line->col[2], line->col[3]);
@@ -144,7 +144,7 @@ void Border::Paint(int x, int y, int wide, int tall, int breakSide, int breakSta
 	}
 
 	// draw bottom
-	for (i = 0; i < _sides[SIDE_BOTTOM].count; i++)
+	for (int i = 0; i < _sides[SIDE_BOTTOM].count; i++)
 	{
 		line_t *line = &(_sides[SIDE_BOTTOM].lines[i]);
 		surface()->DrawSetColor(line->col[0], line->col[1], line->col[2], line->col[3]);
@@ -207,7 +207,7 @@ void Border::ParseSideSettings(int side_index, KeyValues *inResourceData, ISchem
 	// iterate through the keys
 	//!! this loads in order, ignoring key names
 	int index = 0;
-	for (kv = inResourceData->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
+	for (KeyValues *kv = inResourceData->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
 	{
 		line_t *line = &(_sides[side_index].lines[index]);
 

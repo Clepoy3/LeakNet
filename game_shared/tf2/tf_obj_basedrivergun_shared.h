@@ -21,9 +21,9 @@
 // ------------------------------------------------------------------------ 
 class CBaseObjectDriverGun : public CBaseObjectUpgrade
 {
-DECLARE_CLASS( CBaseObjectDriverGun, CBaseObjectUpgrade );
-
 public:
+	DECLARE_CLASS( CBaseObjectDriverGun, CBaseObjectUpgrade );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

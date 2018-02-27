@@ -53,7 +53,7 @@ void SetCriteria( string_criteria_t *c, const char *value )
 	strncpy( c->value, value, VALUE_LENGTH -1 );
 	c->value[ VALUE_LENGTH-1 ] =0;
 
-	strlwr( c->value );
+	_strlwr( c->value );
 
 	// compute length
 	c->length = strlen( c->value );
@@ -97,7 +97,8 @@ char *CheckParm(const char *psz, char **ppszValue)
 		{
 			char *p2 = ++p1;
 
-			for (int i = 0; i < 128; i++)
+			int i;
+			for (i = 0; i < 128; i++)
 			{
 				if ( !*p2 || (*p2 == 32))
 					break;
@@ -331,7 +332,7 @@ void CHLMasterDlg::Peer_GetHeartbeat( void )
 	if ( pgamedir && pgamedir[0] )
 		strcpy( gamedir, pgamedir );
 
-	strlwr( gamedir );
+	_strlwr( gamedir );
 
 	pinfo = MSG_ReadString();
 
@@ -442,9 +443,9 @@ void CHLMasterDlg::Peer_GetHeartbeat2( void )
 	map[ 63 ]		= 0;
 	os[ 1 ]			= 0;
 
-	strlwr( gamedir );
-	strlwr( map );
-	strlwr( os );
+	_strlwr( gamedir );
+	_strlwr( map );
+	_strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
 	if ( !islan && !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) ) 
@@ -1434,7 +1435,7 @@ modsv_t *CHLMasterDlg::FindMod( const char *pgamedir )
 	p = mods[h];
 	while ( p )
 	{
-		if ( !stricmp( pgamedir, p->gamedir ) )
+		if ( !_stricmp( pgamedir, p->gamedir ) )
 			return p;
 
 		p = p->next;
@@ -1451,7 +1452,7 @@ int CHLMasterDlg::HashMod( const char *pgamedir )
 	char *p;
 
 	strcpy( szLowerCaseDir, pgamedir );
-	strlwr( szLowerCaseDir );
+	_strlwr( szLowerCaseDir );
 
 	p = ( char * )szLowerCaseDir;
 	while ( *p )
@@ -1729,9 +1730,9 @@ void CHLMasterDlg::Packet_Heartbeat2 (void)
 	os[ 1 ]			= 0;
 	version[ 31 ]   = 0;
 
-	strlwr( gamedir );
-	strlwr( map );
-	strlwr( os );
+	_strlwr( gamedir );
+	_strlwr( map );
+	_strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
 	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) )
@@ -1963,9 +1964,9 @@ void CHLMasterDlg::Packet_Heartbeat3 (void)
 	os[ 1 ]			= 0;
 	version[ 31 ]   = 0;
 
-	strlwr( gamedir );
-	strlwr( map );
-	strlwr( os );
+	_strlwr( gamedir );
+	_strlwr( map );
+	_strlwr( os );
 
 	// protocol != 1 for Sony stand-alone game support...1.1.1.0 engine license (EricS)
 	if ( !m_bAllowOldProtocols && ( protocol != CURRENT_PROTOCOL2 ) && ( protocol != 1 ) )
@@ -2303,7 +2304,7 @@ void CHLMasterDlg::Packet_GetModBatch2 (void)
 		return;
 	}
 
-	if ( !stricmp( pszNextMod, "start-of-list" ) )
+	if ( !_stricmp( pszNextMod, "start-of-list" ) )
 	{
 		h = 0;
 		pMod = mods[h];
@@ -2421,7 +2422,7 @@ void CHLMasterDlg::Packet_GetModBatch3 (void)
 		return;
 	}
 
-	if ( !stricmp( pszNextMod, "start-of-list" ) )
+	if ( !_stricmp( pszNextMod, "start-of-list" ) )
 	{
 		h = 0;
 		pMod = mods[h];
@@ -2555,7 +2556,7 @@ void CHLMasterDlg::Packet_GetModBatch (void)
 		return;
 	}
 
-	if ( !stricmp( pszNextMod, "start-of-list" ) )
+	if ( !_stricmp( pszNextMod, "start-of-list" ) )
 	{
 		h = 0;
 		pMod = mods[h];
@@ -3615,19 +3616,19 @@ void CHLMasterDlg::ParseServers()
 		if (strlen(token.token) <= 0)
 			break;
 
-		if (!stricmp( token.token, "Auth" ) )
+		if (!_stricmp( token.token, "Auth" ) )
 		{
 			pList = &authservers;
 		}
-		else if (!stricmp( token.token, "Master" ) )
+		else if (!_stricmp( token.token, "Master" ) )
 		{
 			pList = &masterservers;
 		}
-		else if (!stricmp( token.token, "Titan" ) )
+		else if (!_stricmp( token.token, "Titan" ) )
 		{
 			pList = &titanservers;
 		}
-		else if (!stricmp( token.token, "Banned" ) )
+		else if (!_stricmp( token.token, "Banned" ) )
 		{
 			pList = &bannedips;
 		}
@@ -3648,7 +3649,7 @@ void CHLMasterDlg::ParseServers()
 			break;
 		}
 
-		if ( stricmp ( token.token, "{" ) )
+		if ( _stricmp ( token.token, "{" ) )
 		{
 		//	AfxMessageBox("Expecting {");
 			UTIL_VPrintf("Expecting {");
@@ -3670,13 +3671,13 @@ void CHLMasterDlg::ParseServers()
 				break;
 			}
 
-			if ( !stricmp( token.token, "old" ) )
+			if ( !_stricmp( token.token, "old" ) )
 			{
 				bIsOld = TRUE;
 				token.ParseNextToken();
 			}
 
-			if ( !stricmp ( token.token, "}" ) )
+			if ( !_stricmp ( token.token, "}" ) )
 				break;
 
 			// It's an address
@@ -3896,11 +3897,11 @@ void CHLMasterDlg::Packet_GetMasterServers()
 		version = m_szHLVersion;
 
 	// we don't want to check the version of the Steam clients
-	if ( !bSteam && stricmp( szVersion, version ) )
+	if ( !bSteam && _stricmp( szVersion, version ) )
 	{
 		// Post 1009 can handle the rejection
 		// Otherwise, pass in the "old" servers
-		if ( !stricmp( szVersion, "1.0.0.9" ) )
+		if ( !_stricmp( szVersion, "1.0.0.9" ) )
 		{
 			bOldOnly = TRUE;
 		}

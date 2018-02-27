@@ -136,7 +136,8 @@ void AddIntersectingLeafSurfaces( mleaf_t *pLeaf, GetIntersectingSurfaces_Struct
 		}
 
 		// See if the sphere intersects the box.
-		for(int iDim=0; iDim < 3; iDim++)
+		int iDim;
+		for(iDim=0; iDim < 3; iDim++)
 		{
 			if(((*pStruct->m_pCenter)[iDim]+pStruct->m_Radius) < vMin[iDim] || 
 				((*pStruct->m_pCenter)[iDim]-pStruct->m_Radius) > vMax[iDim])

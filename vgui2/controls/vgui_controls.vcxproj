@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\public;..\..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\vgui_controls.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\vgui_controls.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\vgui_controls.lib</OutputFile>
+    </Lib>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>call ..\..\filecopy.bat $(TargetPath) $(ProjectDir)..\..\lib\public\$(TargetName).lib</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalIncludeDirectories>..\..\public;..\..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release\vgui_controls.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\vgui_controls.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\vgui_controls.lib</OutputFile>
+    </Lib>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>call ..\..\filecopy.bat $(TargetPath) $(ProjectDir)..\..\lib\public\$(TargetName).lib</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\public\vgui_controls\AnimatingImagePanel.h" />
+    <ClInclude Include="..\..\Public\vgui_controls\AnimationController.h" />
+    <ClInclude Include="..\..\public\vgui_controls\BuildGroup.h" />
+    <ClInclude Include="..\..\public\vgui_controls\BuildModeDialog.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Button.h" />
+    <ClInclude Include="..\..\public\vgui_controls\CheckButton.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ComboBox.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Controls.h" />
+    <ClInclude Include="..\..\public\vgui_controls\DialogManager.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Divider.h" />
+    <ClInclude Include="..\..\public\vgui_controls\EditablePanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\FileOpenDialog.h" />
+    <ClInclude Include="..\..\Public\FileSystem.h" />
+    <ClInclude Include="..\..\public\filesystem_helpers.h" />
+    <ClInclude Include="..\..\public\vgui_controls\FocusNavGroup.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Frame.h" />
+    <ClInclude Include="..\..\public\vgui_controls\GraphPanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\HTML.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Image.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ImageList.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ImagePanel.h" />
+    <ClInclude Include="..\..\Public\interface.h" />
+    <ClInclude Include="..\..\public\KeyValues.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Label.h" />
+    <ClInclude Include="..\..\public\vgui_controls\LabelComboBox.h" />
+    <ClInclude Include="..\..\public\vgui_controls\LabeledSlider.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ListPanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ListViewPanel.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgoff.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgon.h" />
+    <ClInclude Include="..\..\public\MemPool.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Menu.h" />
+    <ClInclude Include="..\..\public\vgui_controls\MenuBar.h" />
+    <ClInclude Include="..\..\public\vgui_controls\MenuButton.h" />
+    <ClInclude Include="..\..\public\vgui_controls\MenuItem.h" />
+    <ClInclude Include="..\..\public\vgui_controls\MessageBox.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Panel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PanelAnimationVar.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PanelListPanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PHandle.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ProgressBar.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ProgressBox.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PropertyDialog.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PropertyPage.h" />
+    <ClInclude Include="..\..\public\vgui_controls\PropertySheet.h" />
+    <ClInclude Include="..\..\public\vgui_controls\QueryBox.h" />
+    <ClInclude Include="..\..\public\vgui_controls\RadioButton.h" />
+    <ClInclude Include="..\..\public\vgui_controls\RichText.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ScrollBar.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ScrollBarSlider.h" />
+    <ClInclude Include="..\..\public\vgui_controls\SectionedListPanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Slider.h" />
+    <ClInclude Include="..\..\public\vgui_controls\TextEntry.h" />
+    <ClInclude Include="..\..\public\vgui_controls\TextImage.h" />
+    <ClInclude Include="..\..\public\vgui_controls\ToggleButton.h" />
+    <ClInclude Include="..\..\public\vgui_controls\Tooltip.h" />
+    <ClInclude Include="..\..\public\vgui_controls\TreeView.h" />
+    <ClInclude Include="..\..\public\vgui_controls\URLLabel.h" />
+    <ClInclude Include="..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\public\vgui_controls\WizardPanel.h" />
+    <ClInclude Include="..\..\public\vgui_controls\WizardSubPanel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimatingImagePanel.cpp" />
+    <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="BuildGroup.cpp" />
+    <ClCompile Include="BuildModeDialog.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="..\..\public\characterset.cpp" />
+    <ClCompile Include="CheckButton.cpp" />
+    <ClCompile Include="ComboBox.cpp" />
+    <ClCompile Include="controls.cpp" />
+    <ClCompile Include="Divider.cpp" />
+    <ClCompile Include="EditablePanel.cpp" />
+    <ClCompile Include="FileOpenDialog.cpp" />
+    <ClCompile Include="..\..\Public\filesystem_helpers.cpp" />
+    <ClCompile Include="FocusNavGroup.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="GraphPanel.cpp" />
+    <ClCompile Include="HTML.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageList.cpp" />
+    <ClCompile Include="ImagePanel.cpp" />
+    <ClCompile Include="..\..\public\KeyValues.cpp" />
+    <ClCompile Include="Label.cpp" />
+    <ClCompile Include="LabelComboBox.cpp" />
+    <ClCompile Include="ListPanel.cpp" />
+    <ClCompile Include="ListViewPanel.cpp" />
+    <ClCompile Include="..\..\public\MemPool.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuBar.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
+    <ClCompile Include="MessageBox.cpp" />
+    <ClCompile Include="Panel.cpp" />
+    <ClCompile Include="PanelListPanel.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="ProgressBox.cpp" />
+    <ClCompile Include="PropertyDialog.cpp" />
+    <ClCompile Include="PropertyPage.cpp" />
+    <ClCompile Include="PropertySheet.cpp" />
+    <ClCompile Include="QueryBox.cpp" />
+    <ClCompile Include="RadioButton.cpp" />
+    <ClCompile Include="RichText.cpp" />
+    <ClCompile Include="ScrollBar.cpp" />
+    <ClCompile Include="ScrollBarSlider.cpp" />
+    <ClCompile Include="SectionedListPanel.cpp" />
+    <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="TextEntry.cpp" />
+    <ClCompile Include="TextImage.cpp" />
+    <ClCompile Include="ToggleButton.cpp" />
+    <ClCompile Include="Tooltip.cpp" />
+    <ClCompile Include="TreeView.cpp" />
+    <ClCompile Include="URLLabel.cpp" />
+    <ClCompile Include="..\..\public\utlsymbol.cpp" />
+    <ClCompile Include="WizardPanel.cpp" />
+    <ClCompile Include="WizardSubPanel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\public\tier0.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

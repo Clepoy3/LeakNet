@@ -524,7 +524,7 @@ void CToolDisplace::Nudge_Do( void )
 	nudgeDelta.y = nudgePos.y - m_viewCenter.y;
 
 	float delta;
-	if( fabs( nudgeDelta.x ) < fabs( nudgeDelta.y ) )
+	if( fabs( (float)nudgeDelta.x ) < fabs( (float)nudgeDelta.y ) )
 	{
 		delta = nudgeDelta.y;
 	}
@@ -726,7 +726,7 @@ void CToolDisplace::ResizeSpatialRadius_Do( void )
 	cursorDelta.y = cursorPos.y - m_viewCenter.y;
 
 	float flDelta;
-	if( fabs( cursorDelta.x ) < fabs( cursorDelta.y ) )
+	if( fabs( (float)cursorDelta.x ) < fabs( (float)cursorDelta.y ) )
 	{
 		flDelta = cursorDelta.y;
 	}

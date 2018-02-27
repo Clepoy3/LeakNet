@@ -814,7 +814,7 @@ KeyValues::types_t KeyValues::GetDataType(const char *keyName)
 	return TYPE_NONE;
 }
 
-#include "..\public\MemPool.h"
+#include "..\common\MemPool.h"
 
 static CMemoryPool s_MemPool(sizeof(KeyValues), 4096);
 

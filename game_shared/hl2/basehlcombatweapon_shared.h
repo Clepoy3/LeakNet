@@ -18,12 +18,13 @@
 
 class CBaseHLCombatWeapon : public CBaseCombatWeapon
 {
+public:
 #if !defined( CLIENT_DLL )
 	DECLARE_DATADESC();
 #endif
 
 	DECLARE_CLASS( CBaseHLCombatWeapon, CBaseCombatWeapon );
-public:
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

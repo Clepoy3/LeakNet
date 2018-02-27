@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectEMPGenerator : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectEMPGenerator, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectEMPGenerator, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectEMPGenerator();

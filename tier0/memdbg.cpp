@@ -115,7 +115,7 @@ private:
 		MemInfoKey_t( const char *pFileName, int line ) : m_pFileName(pFileName), m_nLine(line) {}
 		bool operator<( const MemInfoKey_t &key ) const
 		{
-			int iret = stricmp( m_pFileName, key.m_pFileName );
+			int iret = _stricmp( m_pFileName, key.m_pFileName );
 			if ( iret < 0 )
 				return true;
 

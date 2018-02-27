@@ -1423,7 +1423,7 @@ typedescription_t *CRestore::FindField( const char *pszFieldName, typedescriptio
 			if ( fieldNumber == fieldCount )
 				fieldNumber = 0;
 			
-			if ( stricmp( pTest->fieldName, pszFieldName ) == 0 )
+			if ( _stricmp( pTest->fieldName, pszFieldName ) == 0 )
 				return pTest;
 		}
 	}

@@ -116,7 +116,7 @@ void CObjMCVSelectionPanel::GetControlPanelInfo( int nPanelIndex, const char *&p
 
 bool CObjMCVSelectionPanel::ClientCommand( CBaseTFPlayer *pPlayer, const char *pCmd, ICommandArguments *pArg )
 {
-	if ( stricmp( pCmd, "SelectMCV" ) == 0 )
+	if ( _stricmp( pCmd, "SelectMCV" ) == 0 )
 	{
 		int mcvID = atoi( pArg->Argv( 1 ) );
 		pPlayer->SetSelectedMCV( dynamic_cast< CVehicleTeleportStation* >( CBaseEntity::Instance( mcvID ) ) );

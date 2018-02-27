@@ -13,7 +13,6 @@
 #pragma once
 
 #include <VGUI/VGUI.h>
-#include <KeyValues.h>
 #include <vgui_controls/PHandle.h>
 
 #include "../TrackerNET/TrackerNET_Interface.h"
@@ -27,14 +26,14 @@ namespace vgui
 class Panel;
 };
 
-//using KeyValues;
+//using vgui::KeyValues;
 
 #include "UtlVector.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles Client<->server network communications
 //-----------------------------------------------------------------------------
-class CServerSession //: KeyValues
+class CServerSession
 {
 public:
 	CServerSession();

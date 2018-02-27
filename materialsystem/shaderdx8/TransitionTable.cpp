@@ -948,7 +948,7 @@ void CTransitionTable::ApplyTransition( TransitionList_t& list, int snapshot )
 			testState2.m_AlphaRef = testState1.m_AlphaRef;
 			testState2.m_AlphaFunc = testState1.m_AlphaFunc;
 		}
-		for( i = 0; i < nStageCount; i++ )
+		for( int i = 0; i < nStageCount; i++ )
 		{
 			if ( !testState1.m_UsingFixedFunction )
 			{

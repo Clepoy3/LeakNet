@@ -320,7 +320,7 @@ class RICHED_DECL CRTFBuilder
 		void push();
 		void pop();
 		
-		operator+=(CString &s);
+		int operator+=(CString &s);
 		CRTFBuilder();
 		virtual ~CRTFBuilder();
 

@@ -364,7 +364,7 @@ CAI_BaseNPC *CNPC_Osprey::MakeGrunt( Vector vecSrc )
 			pBeam->PointEntInit( vecSrc + Vector(0,0,112), pGrunt );
 			pBeam->SetBeamFlags( FBEAM_SOLID );
 			pBeam->SetColor( 255, 255, 255 );
-			pBeam->SetThink( SUB_Remove );
+			pBeam->SetThink( &CBaseEntity::SUB_Remove );
 			pBeam->SetNextThink( gpGlobals->curtime + -4096.0 * tr.fraction / pGrunt->GetAbsVelocity().z + 0.5 );
 			
 
@@ -436,8 +436,8 @@ void CNPC_Osprey::Event_Killed( CBaseEntity *pInflictor, CBaseEntity *pAttacker,
 
 	// add gravity
 	UTIL_SetSize( this, Vector( -32, -32, -64), Vector( 32, 32, 0) );
-	SetThink( DyingThink );
-	SetTouch( CrashTouch );
+	SetThink( &CNPC_Osprey::DyingThink );
+	SetTouch( &CBaseHelicopter::CrashTouch );
 //	pev->nextthink = gpGlobals->curtime + 0.1;
 	m_iHealth = 0;
 	m_takedamage = DAMAGE_NO;
@@ -1223,8 +1223,8 @@ void CBaseHelicopter::NullThink( void )
 void CBaseHelicopter::Startup( void )
 {
 	m_flGoalSpeed = m_flInitialSpeed;
-	SetThink( HelicopterThink );
-	SetTouch( FlyTouch );
+	SetThink( &CBaseHelicopter::HelicopterThink );
+	SetTouch( &CBaseHelicopter::FlyTouch );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -1239,8 +1239,8 @@ void CBaseHelicopter::Event_Killed( const CTakeDamageInfo &info )
 	// Kill the rotor sound.
 
 	UTIL_SetSize( this, Vector( -32, -32, -64), Vector( 32, 32, 0) );
-	SetThink( CallDyingThink );
-	SetTouch( CrashTouch );
+	SetThink( &CBaseHelicopter::CallDyingThink );
+	SetTouch( &CBaseHelicopter::CrashTouch );
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	m_iHealth = 0;

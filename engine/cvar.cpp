@@ -85,7 +85,7 @@ char *CCvar::CompleteVariable( char *partial, char *starting_cvar, qboolean bFir
 	{
 		for ( ; var; var = var->GetNext() )
 		{
-			if ( !stricmp(starting_cvar, var->GetName()) )
+			if ( !_stricmp(starting_cvar, var->GetName()) )
 			{
 				var = var->GetNext();
 				break;
@@ -599,11 +599,11 @@ void CCvar::CvarList_f( void )
 				ipLen = strlen(partial);
 			}
 		}
-		else if ( !stricmp( Cmd_Argv(1), "-a" ) )
+		else if ( !_stricmp( Cmd_Argv(1), "-a" ) )
 		{
 			bAOnly = true;
 		}
-		else if ( !stricmp( Cmd_Argv(1), "-s" ) )
+		else if ( !_stricmp( Cmd_Argv(1), "-s" ) )
 		{
 			bSOnly = true;
 		}
@@ -803,7 +803,7 @@ void CCvar::PrintConCommandBaseDescription( const ConCommandBase *pVar )
 		{
 			Con_Printf( "\"%s\" = \"%s\"", var->GetName(), value );
 
-			if ( stricmp( value, var->GetDefault() ) )
+			if ( _stricmp( value, var->GetDefault() ) )
 			{
 				Con_Printf( " ( def. \"%s\" )", var->GetDefault() );
 			}
@@ -906,7 +906,7 @@ void CCvar::CvarDifferences_f( void )
 		if ( var->IsCommand() )
 			continue;
 
-		if ( !stricmp( ((ConVar *)var)->GetDefault(), ((ConVar *)var)->GetString() ) )
+		if ( !_stricmp( ((ConVar *)var)->GetDefault(), ((ConVar *)var)->GetString() ) )
 			 continue;
 
 		PrintConCommandBaseDescription( (ConVar *)var );	
@@ -924,7 +924,7 @@ void CCvar::CvarRevert_f( void )
 		return;
 	}
 
-	if ( !stricmp( Cmd_Argv(1), "all" ) )
+	if ( !_stricmp( Cmd_Argv(1), "all" ) )
 	{
 		ConVar::RevertAll();
 	}

@@ -50,7 +50,7 @@ void CObjectEMPGenerator::Spawn()
 	m_takedamage = DAMAGE_YES;
 	m_iHealth = obj_empgenerator_health.GetInt();
 
-	SetThink( EMPThink );
+	SetThink( &CObjectEMPGenerator::EMPThink );
 	SetNextThink( gpGlobals->curtime + EMPGENERATOR_RATE );
 	m_flExpiresAt = gpGlobals->curtime + EMPGENERATOR_LIFETIME;
 

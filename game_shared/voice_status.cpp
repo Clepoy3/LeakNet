@@ -107,7 +107,7 @@ void ForEachBannedPlayer(char id[16])
 		id[8], id[9], id[10], id[11], 
 		id[12], id[13], id[14], id[15]
 		);
-	strupr(str);
+	_strupr(str);
 	Msg( "%s", str );
 }
 

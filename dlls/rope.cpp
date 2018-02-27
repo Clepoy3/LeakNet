@@ -505,7 +505,7 @@ bool CRopeKeyframe::Break( void )
 	pTest = gEntList.NextEntByClass( pTest );
 	while ( pTest )
 	{
-		if( stricmp( STRING(pTest->m_iNextLinkName), STRING(GetEntityName()) ) == 0 )
+		if( _stricmp( STRING(pTest->m_iNextLinkName), STRING(GetEntityName()) ) == 0 )
 		{
 			pTest->DetachPoint( 1 );
 		}
@@ -606,29 +606,29 @@ void CRopeKeyframe::EnableWind( bool bEnable )
 
 bool CRopeKeyframe::KeyValue( const char *szKeyName, const char *szValue )
 {
-	if( stricmp( szKeyName, "Breakable" ) == 0 )
+	if( _stricmp( szKeyName, "Breakable" ) == 0 )
 	{
 		if( atoi( szValue ) == 1 )
 			m_RopeFlags |= ROPE_BREAKABLE;
 	}
-	else if( stricmp( szKeyName, "Collide" ) == 0 )
+	else if( _stricmp( szKeyName, "Collide" ) == 0 )
 	{
 		if( atoi( szValue ) == 1 )
 			m_RopeFlags |= ROPE_COLLIDE;
 	}
-	else if( stricmp( szKeyName, "Barbed" ) == 0 )
+	else if( _stricmp( szKeyName, "Barbed" ) == 0 )
 	{
 		if( atoi( szValue ) == 1 )
 			m_RopeFlags |= ROPE_BARBED;
 	}
-	else if( stricmp( szKeyName, "Dangling" ) == 0 )
+	else if( _stricmp( szKeyName, "Dangling" ) == 0 )
 	{
 		if( atoi( szValue ) == 1 )
 			m_fLockedPoints &= ~ROPE_LOCK_END_POINT; // detach our dest point
 		
 		return true;
 	}
-	else if( stricmp( szKeyName, "Type" ) == 0 )
+	else if( _stricmp( szKeyName, "Type" ) == 0 )
 	{
 		int iType = atoi( szValue );
 		if( iType == 0 )
@@ -638,7 +638,7 @@ bool CRopeKeyframe::KeyValue( const char *szKeyName, const char *szValue )
 		else
 			m_nSegments = ROPE_TYPE2_NUMSEGMENTS;
 	}
-	else if ( stricmp( szKeyName, "RopeShader" ) == 0 )
+	else if ( _stricmp( szKeyName, "RopeShader" ) == 0 )
 	{
 		// Legacy support for the RopeShader parameter.
 		int iShader = atoi( szValue );
@@ -655,7 +655,7 @@ bool CRopeKeyframe::KeyValue( const char *szKeyName, const char *szValue )
 			m_iRopeMaterialModel = engine->PrecacheModel( "cable/chain.vmt" );
 		}
 	}
-	else if ( stricmp( szKeyName, "RopeMaterial" ) == 0 )
+	else if ( _stricmp( szKeyName, "RopeMaterial" ) == 0 )
 	{
 		// Make sure we have a vmt extension.
 		if ( Q_stristr( szValue, ".vmt" ) )

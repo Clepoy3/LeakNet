@@ -813,7 +813,7 @@ void CNPC_Vortigaunt::HandleAnimEvent( animevent_t *pEvent )
 			if (m_fGlowAge == 0)
 			{
 				StartHandGlow(VORTIGAUNT_BEAM_HURT);
-				SetThink(VortigauntThink);
+				SetThink(&CNPC_Vortigaunt::VortigauntThink);
 			}
 
 			CPASAttenuationFilter filter( this );
@@ -860,7 +860,7 @@ void CNPC_Vortigaunt::HandleAnimEvent( animevent_t *pEvent )
 		{
 			// Make hands glow
 			StartHandGlow(VORTIGAUNT_BEAM_HEAL);
-			SetThink(VortigauntThink);
+			SetThink(&CNPC_Vortigaunt::VortigauntThink);
 			break;
 		}
 		case VORTIGAUNT_AE_HEAL_STARTBEAMS:
@@ -1087,7 +1087,7 @@ void CNPC_Vortigaunt::Spawn()
 	m_pRightHandGlow		= NULL;
 
 	NPCInit();
-	SetUse( FollowerUse );
+	SetUse( &CNPCSimpleTalker::FollowerUse );
 }
 
 //=========================================================
@@ -1605,7 +1605,7 @@ void CNPC_Vortigaunt::VortigauntThink(void)
 	if (fScale < 0.0)
 	{
 		ClearHandGlow();
-		SetThink(CallNPCThink);
+		SetThink(&CAI_BaseNPC::CallNPCThink);
 	}
 
 	if (gpGlobals->curtime > m_flNextNPCThink)

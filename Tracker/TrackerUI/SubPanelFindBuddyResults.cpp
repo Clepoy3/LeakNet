@@ -67,7 +67,7 @@ WizardSubPanel *CSubPanelFindBuddyResults::GetNextSubPanel()
 //-----------------------------------------------------------------------------
 void CSubPanelFindBuddyResults::OnDisplayAsNext()
 {
-	GetWizardPanel()->SetNextButtonEnabled(true); // VXP: FIX THIS
+	GetWizardPanel()->SetNextButtonEnabled(false);
 
 	GetWizardPanel()->SetTitle("#TrackerUI_FriendsSearchingTitle", false);
 
@@ -107,7 +107,8 @@ void CSubPanelFindBuddyResults::OnFriendFound(KeyValues *friendData)
 	}
 
 	// add the friend to drop down list
-	m_pTable->AddItem(friendData->MakeCopy(), NULL, false, false);
+//	m_pTable->AddItem(friendData->MakeCopy());
+	m_pTable->AddItem(friendData->MakeCopy(), 0, false, false);
 
 	m_iFound++;
 	m_pInfoText->SetText("#TrackerUI_SelectFriendFromList");
@@ -174,6 +175,7 @@ void CSubPanelFindBuddyResults::PerformLayout()
 bool CSubPanelFindBuddyResults::OnNextButton()
 {
 	// don't advance unless there is a row selected
+//	if (!m_pTable->GetNumSelectedRows())
 	if (!m_pTable->GetSelectedItemsCount())
 		return false;
 
@@ -183,8 +185,11 @@ bool CSubPanelFindBuddyResults::OnNextButton()
 	users->Clear();
 
 	// walk through
-	for (int i = 0; i < m_pTable->GetSelectedItemsCount(); i++)
+	int i;
+//	for (i = 0; i < m_pTable->GetNumSelectedRows(); i++)
+	for (i = 0; i < m_pTable->GetSelectedItemsCount(); i++)
 	{
+	//	int row = m_pTable->GetSelectedRow(i);
 		int row = m_pTable->GetSelectedItem(i);
 
 		KeyValues *user = m_pTable->GetItem(row);
@@ -205,9 +210,11 @@ bool CSubPanelFindBuddyResults::OnNextButton()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CSubPanelFindBuddyResults::OnRowSelected(int startIndex, int endIndex)
+//void CSubPanelFindBuddyResults::OnRowSelected(int startIndex, int endIndex)
+void CSubPanelFindBuddyResults::OnItemSelected(int itemID)
 {
-	if (startIndex > -1)
+//	if (startIndex > -1)
+	if (itemID > -1)
 	{
 		// they've selected an item so allow the user to move forward
 		GetWizardPanel()->SetNextButtonEnabled(true);
@@ -233,7 +240,8 @@ MessageMapItem_t CSubPanelFindBuddyResults::m_MessageMap[] =
 
 	MAP_MESSAGE_INT( CSubPanelFindBuddyResults, "NoFriends", OnNoFriends, "attempt" ),
 
-	MAP_MESSAGE_INT_INT( CSubPanelFindBuddyResults, "RowSelected", OnRowSelected, "startIndex", "endIndex" ),
+//	MAP_MESSAGE_INT_INT( CSubPanelFindBuddyResults, "RowSelected", OnRowSelected, "startIndex", "endIndex" ),
+	MAP_MESSAGE_INT( CSubPanelFindBuddyResults, "ItemSelected", OnItemSelected, "itemID" ),
 };
 IMPLEMENT_PANELMAP( CSubPanelFindBuddyResults, Panel );
 

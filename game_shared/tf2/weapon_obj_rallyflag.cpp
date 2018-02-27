@@ -25,8 +25,9 @@
 //-----------------------------------------------------------------------------
 class CWeaponObjRallyFlag : public CWeaponBaseCombatObject
 {
-	DECLARE_CLASS( CWeaponObjRallyFlag, CWeaponBaseCombatObject );
 public:
+	DECLARE_CLASS( CWeaponObjRallyFlag, CWeaponBaseCombatObject );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

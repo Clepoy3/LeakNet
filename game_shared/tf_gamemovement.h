@@ -24,10 +24,9 @@ class CBasePlayer;
 //-----------------------------------------------------------------------------
 class CTFGameMovement : public CGameMovement
 {
+public:
 	// Team Fortress 2 game movement base class.
 	DECLARE_CLASS( CTFGameMovement, CGameMovement );
-
-public:
 
 	// CGameMovement public overrides.
 	virtual void ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMove );

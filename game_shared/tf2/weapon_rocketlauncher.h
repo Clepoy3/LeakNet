@@ -23,9 +23,9 @@
 //
 class CWeaponRocketLauncher : public CWeaponCombatUsedWithShieldBase
 {
+public:
 	DECLARE_CLASS( CWeaponRocketLauncher, CWeaponCombatUsedWithShieldBase );
 
-public:
 // Client & Server
 
 	DECLARE_NETWORKCLASS();

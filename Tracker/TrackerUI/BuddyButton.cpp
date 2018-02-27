@@ -128,7 +128,7 @@ void CBuddyButton::OnMouseDoublePressed(MouseCode code)
 //-----------------------------------------------------------------------------
 void CBuddyButton::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Chat"))
+	if (!_stricmp(command, "Chat"))
 	{
 		if (m_iBuddyStatus >= COnlineStatus::ONLINE)
 		{
@@ -137,7 +137,7 @@ void CBuddyButton::OnCommand(const char *command)
 		}
 		return;
 	}
-	else if (!stricmp(command, "GameInfo"))
+	else if (!_stricmp(command, "GameInfo"))
 	{
 		if (m_iBuddyStatus == COnlineStatus::INGAME)
 		{
@@ -145,7 +145,7 @@ void CBuddyButton::OnCommand(const char *command)
 		}
 		return;
 	}
-	else if (!stricmp(command, "JoinGame"))
+	else if (!_stricmp(command, "JoinGame"))
 	{
 		if (m_iBuddyStatus == COnlineStatus::INGAME)
 		{
@@ -153,7 +153,7 @@ void CBuddyButton::OnCommand(const char *command)
 		}
 		return;
 	}
-	else if (!stricmp(command, "AuthReq"))
+	else if (!_stricmp(command, "AuthReq"))
 	{
 		if (m_iBuddyStatus == COnlineStatus::REQUESTINGAUTHORIZATION)
 		{
@@ -161,21 +161,21 @@ void CBuddyButton::OnCommand(const char *command)
 		}
 		return;
 	}
-	else if (!stricmp(command, "UserInfo"))
+	else if (!_stricmp(command, "UserInfo"))
 	{
 		// open the user info dialog
 		m_pBuddy->OpenUserInfoDialog(false);
 		return;
 	}
-	else if (!stricmp(command, "Block"))
+	else if (!_stricmp(command, "Block"))
 	{
 		m_pBuddy->SetRemoteBlock(CBuddy::BLOCK_ONLINE);
 	}
-	else if (!stricmp(command, "Unblock"))
+	else if (!_stricmp(command, "Unblock"))
 	{
 		m_pBuddy->SetRemoteBlock(CBuddy::BLOCK_NONE);
 	}
-	else if (!stricmp(command, "Remove"))
+	else if (!_stricmp(command, "Remove"))
 	{
 		// open the warning dialog
 		CDialogRemoveUser *dialog = new CDialogRemoveUser(m_iBuddyID);
@@ -241,6 +241,7 @@ void CBuddyButton::PerformLayout(void)
 		// check to see if we're in the same game
 		bool bInSameGame = false;
 		// get the buddies name from the game
+	//	const char *ingameName = Tracker_GetRunGameEngineInterface()->GetUserName(m_iBuddyID);
 		const char *ingameName = Tracker_GetRunGameEngineInterface()->GetPlayerName(m_iBuddyID);
 		if (ingameName)
 		{
@@ -265,7 +266,7 @@ void CBuddyButton::PerformLayout(void)
 			char buf[256];
 			strncpy(buf, gameText, sizeof(buf) - 1);
 			buf[sizeof(buf) - 1]  = 0;
-			strlwr(buf);
+			_strlwr(buf);
 
 			_statusText->SetText(buf);
 			_statusText->SetColor(m_GameColor);
@@ -302,10 +303,12 @@ void CBuddyButton::PerformLayout(void)
 
 	char buf[128];
 	sprintf(buf, "friends/icon_%s", status);
+//	_statusImage = scheme()->GetImage(GetScheme(), buf);
 	_statusImage = scheme()->GetImage(buf, false);
 	
 	if (!_statusImage)
 	{
+	//	_statusImage = scheme()->GetImage(GetScheme(), "resource/icon_blank");
 		_statusImage = scheme()->GetImage("resource/icon_blank", false);
 	}
 
@@ -388,7 +391,7 @@ void CBuddyButton::ApplySchemeSettings(vgui::IScheme *pScheme)
 	m_FgColor1 = GetSchemeColor("BuddyButton/FgColor1", pScheme);
 	m_FgColor2 = GetSchemeColor("BuddyButton/FgColor2", pScheme);
 
-	m_BgColor = GetSchemeColor("BuddyListBgColor", pScheme);
+	m_BgColor = GetSchemeColor("BuddyListBgColor", GetBgColor(), pScheme);
 
 	m_GameColor = GetSchemeColor("StatusSelectFgColor2", pScheme);
 	m_GameNameColor = GetSchemeColor("BaseBrightText", pScheme);
@@ -565,7 +568,7 @@ void CBuddyButton::OnCursorMoved(int x, int y)
 	{
 		// get the panel the mouse is over
 	//	VPanel *mouseOver = input()->GetMouseOver();
-		vgui::VPANEL mouseOver = input()->GetMouseOver();
+		VPANEL mouseOver = input()->GetMouseOver();
 		if (mouseOver != GetVPanel())
 		{
 			bool bAccept = false;
@@ -622,11 +625,11 @@ void CBuddyButton::OnMouseReleased(vgui::MouseCode code)
 	{
 		// make sure we're over a valid panel
 	//	VPanel *imouseOver = input()->GetMouseOver();
-		vgui::VPANEL imouseOver = input()->GetMouseOver();
+		VPANEL imouseOver = input()->GetMouseOver();
 		if (imouseOver)
 		{
 		//	Panel *mouseOver = ipanel()->Client(imouseOver)->GetPanel();
-			Panel *mouseOver = ipanel()->GetPanel(imouseOver, "imouseover"); // VXP: TEST
+			Panel *mouseOver = ipanel()->GetPanel(imouseOver, GetModuleName()); // VXP: TODO: Or GetControlsModuleName()
 			KeyValues *keyVal = new KeyValues("DragDrop", "type", "TrackerFriend");
 			keyVal->SetInt("friendID", m_iBuddyID);
 

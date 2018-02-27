@@ -396,7 +396,7 @@ void CMaster::InitConnection( void )
 		bIgnore = true;
 
 		nDefaultPort = PORT_MASTER;
-		if ( !stricmp( com_token, "Master" ) )
+		if ( !_stricmp( com_token, "Master" ) )
 		{
 			bIgnore = FALSE;
 		}
@@ -406,7 +406,7 @@ void CMaster::InitConnection( void )
 		if ( strlen(com_token) <= 0 )
 			break;
 
-		if ( stricmp ( com_token, "{" ) )
+		if ( _stricmp ( com_token, "{" ) )
 			break;
 
 		// Parse addresses until we get to "}"
@@ -420,7 +420,7 @@ void CMaster::InitConnection( void )
 			if (strlen(com_token) <= 0)
 				break;
 
-			if ( !stricmp ( com_token, "}" ) )
+			if ( !_stricmp ( com_token, "}" ) )
 				break;
 			
 			Q_snprintf( base, sizeof( base ), "%s", com_token );
@@ -430,7 +430,7 @@ void CMaster::InitConnection( void )
 			if (strlen(com_token) <= 0)
 				break;
 
-			if ( stricmp( com_token, ":" ) )
+			if ( _stricmp( com_token, ":" ) )
 				break;
 
 			pstart = COM_Parse( pstart );
@@ -551,19 +551,19 @@ void CMaster::SetMaster_f (void)
 		return;
 
 	// Check for disabling...
-	if ( !stricmp( pszCmd, "disable") )
+	if ( !_stricmp( pszCmd, "disable") )
 	{
 		m_bNoMasters = true;
 		return;
 	}
-	else if (!stricmp( pszCmd, "enable") )
+	else if (!_stricmp( pszCmd, "enable") )
 	{
 		m_bNoMasters = false;
 		return;
 	}
 
-	if ( stricmp( pszCmd, "add" ) && 
-		 stricmp( pszCmd, "remove" ) )
+	if ( _stricmp( pszCmd, "add" ) && 
+		 _stricmp( pszCmd, "remove" ) )
 	{
 		Con_Printf( "Setmaster:  Unknown command %s\n", pszCmd );
 		return;
@@ -594,7 +594,7 @@ void CMaster::SetMaster_f (void)
 		return;
 	}
 
-	if ( !stricmp( pszCmd, "add" ) )
+	if ( !_stricmp( pszCmd, "add" ) )
 	{
 		master->AddServer( &adr );
 

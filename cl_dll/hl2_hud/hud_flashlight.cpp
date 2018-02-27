@@ -4,10 +4,10 @@
 //
 //=============================================================================
 
+#include "cbase.h"
 #include "hudelement.h"
 #include "hud_numericdisplay.h"
 #include <vgui_controls/Panel.h>
-#include "cbase.h"
 #include "hud.h"
 #include "parsemsg.h"
 #include "hud_suitpower.h"

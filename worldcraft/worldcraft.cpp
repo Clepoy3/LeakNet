@@ -92,7 +92,7 @@ class CWorldcraftCmdLine : public CCommandLineInfo
 			{
 				m_bShowLogo = FALSE;
 			}
-			else if (bFlag && !strcmpi(lpszParam, "makelib"))
+			else if (bFlag && !_strcmpi(lpszParam, "makelib"))
 			{
 				bMakeLib = TRUE;
 			}
@@ -630,10 +630,12 @@ BOOL CWorldcraft::InitInstance(void)
 	// other init:
 	randomize();
 
+#if _MSC_VER < 1300 // VXP: Conv
 #ifdef _AFXDLL
 	Enable3dControls();			// Call this when using MFC in a shared DLL
 #else
 	Enable3dControlsStatic();	// Call this when linking to MFC statically
+#endif
 #endif
 
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
@@ -1026,8 +1028,9 @@ BOOL CWorldcraft::PreTranslateMessage(MSG* pMsg)
 //-----------------------------------------------------------------------------
 void CWorldcraft::LoadSequences(void)
 {
-	ifstream file("CmdSeq.wc", ios::in | ios::binary | 
-		ios::nocreate);
+//	ifstream file("CmdSeq.wc", ios::in | ios::binary | 
+//		ios::nocreate);
+	std::ifstream file("CmdSeq.wc", std::ios::in | std::ios::binary); // VXP: Conv
 	
 	if(!file.is_open())
 		return;	// none to load
@@ -1078,7 +1081,7 @@ void CWorldcraft::LoadSequences(void)
 //-----------------------------------------------------------------------------
 void CWorldcraft::SaveSequences(void)
 {
-	ofstream file("CmdSeq.wc", ios::out | ios::binary);
+	std::ofstream file("CmdSeq.wc", std::ios::out | std::ios::binary);
 
 	// write header
 	file.write(pszSequenceHdr, strlen(pszSequenceHdr));
@@ -1244,21 +1247,31 @@ int CWorldcraft::Run(void)
 		//
 		// Pump messages until the message queue is empty.
 		//
-		while (::PeekMessage(&m_msgCur, NULL, NULL, NULL, PM_REMOVE))
+	//	while (::PeekMessage(&m_msgCur, NULL, NULL, NULL, PM_REMOVE))
+		while (::PeekMessage(&AfxGetThreadState()->m_msgCur, NULL, NULL, NULL, PM_REMOVE)) // VXP: Conv
 		{
-			if (m_msgCur.message == WM_QUIT)
+		//	if (m_msgCur.message == WM_QUIT)
+			if (AfxGetThreadState()->m_msgCur.message == WM_QUIT)
 			{
 				return(ExitInstance());
 			}
 
-			if (!PreTranslateMessage(&m_msgCur))
+		//	if (!PreTranslateMessage(&m_msgCur))
+		//	{
+		//		::TranslateMessage(&m_msgCur);
+		//		::DispatchMessage(&m_msgCur);
+		//	}
+
+			// VXP: Conv
+			if (!PreTranslateMessage(&AfxGetThreadState()->m_msgCur))
 			{
-				::TranslateMessage(&m_msgCur);
-				::DispatchMessage(&m_msgCur);
+				::TranslateMessage(&AfxGetThreadState()->m_msgCur);
+				::DispatchMessage(&AfxGetThreadState()->m_msgCur);
 			}
 
 			// Reset idle state after pumping idle message.
-			if (IsIdleMessage(&m_msgCur))
+		//	if (IsIdleMessage(&m_msgCur))
+			if (IsIdleMessage(&AfxGetThreadState()->m_msgCur))
 			{
 				bIdle = true;
 				lIdleCount = 0;

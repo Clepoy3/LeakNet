@@ -292,7 +292,7 @@ void COPTConfigs::OnSelchangeConfigurations(void)
 	//
 	m_cMapFormat.SetCurSel(0);
 	int nItems = m_cMapFormat.GetCount();
-	for (i = 0; i < nItems; i++)
+	for (int i = 0; i < nItems; i++)
 	{
 		if (pConfig->mapformat == (MAPFORMAT)m_cMapFormat.GetItemData(i))
 		{
@@ -306,7 +306,7 @@ void COPTConfigs::OnSelchangeConfigurations(void)
 	//
 	m_cTextureFormat.SetCurSel(0);
 	nItems = m_cTextureFormat.GetCount();
-	for (i = 0; i < nItems; i++)
+	for (int i = 0; i < nItems; i++)
 	{
 		if (pConfig->GetTextureFormat() == (TEXTUREFORMAT)m_cTextureFormat.GetItemData(i))
 		{

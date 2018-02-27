@@ -6,6 +6,8 @@
 // $NoKeywords: $
 //=============================================================================
 
+#if 0
+
 #include "tier0/dbg.h"
 #include "tier0/memalloc.h"
 #include <string.h>
@@ -470,5 +472,7 @@ int __cdecl _CrtDbgReport( int nRptType, const char * szFile,
 		volatile const char* DBG = "*** DEBUG STUB ***";                     
 
 	#endif
+
+#endif
 
 #endif

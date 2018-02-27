@@ -70,10 +70,10 @@ void CMissile::Spawn( void )
 	SetModel("models/weapons/w_missile_closed.mdl");
 	UTIL_SetSize( this, -Vector(4,4,4), Vector(4,4,4) );
 
-	SetTouch( StingerTouch );
+	SetTouch( &CMissile::StingerTouch );
 
 	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
-	SetThink( IgniteThink );
+	SetThink( &CMissile::IgniteThink );
 	
 	SetNextThink( gpGlobals->curtime + 0.3f );
 
@@ -145,7 +145,7 @@ void CMissile::AccelerateThink( void )
 	AngleVectors( GetLocalAngles(), &vecForward );
 	SetAbsVelocity( vecForward * 1500.0f );
 
-	SetThink( SeekThink );
+	SetThink( &CMissile::SeekThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -195,7 +195,7 @@ void CMissile::ShotDown( void )
 		m_pRocketTrail->m_bDamaged = true;
 	}
 
-	SetThink( AugerThink );
+	SetThink( &CMissile::AugerThink );
 	SetNextThink( gpGlobals->curtime );
 	m_flAugerTime = gpGlobals->curtime + 1.0f;
 }
@@ -267,7 +267,7 @@ void CMissile::IgniteThink( void )
 	AngleVectors( GetLocalAngles(), &vecForward );
 	SetAbsVelocity( vecForward * 1500.0f );
 
-	SetThink( SeekThink );
+	SetThink( &CMissile::SeekThink );
 	SetNextThink( gpGlobals->curtime );
 
 	if ( m_hOwner && m_hOwner->GetOwner() )
@@ -853,7 +853,7 @@ CLaserDot *CLaserDot::Create( const Vector &origin, CBaseEntity *pOwner )
 
 	pLaserDot->SetOwnerEntity( pOwner );
 
-	pLaserDot->SetThink( LaserThink );
+	pLaserDot->SetThink( &CLaserDot::LaserThink );
 	pLaserDot->SetNextThink( gpGlobals->curtime );
 	pLaserDot->SetSimulatedEveryTick( true );
 

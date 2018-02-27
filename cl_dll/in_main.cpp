@@ -253,7 +253,7 @@ struct kbutton_s *CInput::FindKey( const char *name )
 	p = m_pKeys;
 	while ( p )
 	{
-		if ( !stricmp( name, p->name ) )
+		if ( !_stricmp( name, p->name ) )
 			return p->pkey;
 
 		p = p->next;

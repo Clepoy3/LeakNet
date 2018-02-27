@@ -30,8 +30,8 @@ ConVar    sk_npc_dmg_stunstick	( "sk_npc_dmg_stunstick","0");
 
 class CWeaponStunStick : public CBaseHLBludgeonWeapon
 {
-	DECLARE_CLASS( CWeaponStunStick, CBaseHLBludgeonWeapon );
 public:
+	DECLARE_CLASS( CWeaponStunStick, CBaseHLBludgeonWeapon );
 
 	CWeaponStunStick();
 

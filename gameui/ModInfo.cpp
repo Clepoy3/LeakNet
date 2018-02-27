@@ -75,12 +75,12 @@ const char *CModInfo::GetTrainMap()
 //-----------------------------------------------------------------------------
 bool CModInfo::IsMultiplayerOnly()
 {
-	return (stricmp(m_pModData->GetString("type", ""), "multiplayer_only") == 0);
+	return (_stricmp(m_pModData->GetString("type", ""), "multiplayer_only") == 0);
 }
 
 bool CModInfo::IsSinglePlayerOnly()
 {
-	return (stricmp(m_pModData->GetString("type", ""), "singleplayer_only") == 0);
+	return (_stricmp(m_pModData->GetString("type", ""), "singleplayer_only") == 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ bool CModInfo::IsSinglePlayerOnly()
 //-----------------------------------------------------------------------------
 bool CModInfo::NoModels()
 {
-	return (stricmp(m_pModData->GetString("nomodels", "0"), "1") == 0);
+	return (_stricmp(m_pModData->GetString("nomodels", "0"), "1") == 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ bool CModInfo::NoModels()
 //-----------------------------------------------------------------------------
 bool CModInfo::NoHiModel()
 {
-	return (stricmp(m_pModData->GetString("nohimodel", "0"), "1") == 0);
+	return (_stricmp(m_pModData->GetString("nohimodel", "0"), "1") == 0);
 }
 
 //-----------------------------------------------------------------------------

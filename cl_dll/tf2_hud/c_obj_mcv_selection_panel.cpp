@@ -222,10 +222,8 @@ void CMCVMinimapPanel::OnCursorMoved( int x, int y )
 
 class CMCVSelectionPanel : public CObjectControlPanel
 {
-	DECLARE_CLASS( CMCVSelectionPanel, CObjectControlPanel );
-
-
 public:
+	DECLARE_CLASS( CMCVSelectionPanel, CObjectControlPanel );
 	
 	CMCVSelectionPanel( vgui::Panel *parent, const char *panelName );
 	virtual ~CMCVSelectionPanel();

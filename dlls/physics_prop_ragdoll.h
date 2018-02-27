@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class CRagdollProp : public CBaseAnimating
 {
-	DECLARE_CLASS( CRagdollProp, CBaseAnimating );
 public:
+	DECLARE_CLASS( CRagdollProp, CBaseAnimating );
+
 	CRagdollProp( void );
 	~CRagdollProp( void );
 

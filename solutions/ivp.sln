@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ivp_physics", "..\ivp\ivp_workspaces_src\win32\ivp_physics_lib.vcxproj", "{39135441-0A83-64C5-CDB5-1983C408B613}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ivp_compactbuilder", "..\ivp\ivp_workspaces_src\win32\ivp_compactbuilder_lib.vcxproj", "{793A2784-E27D-6FA6-EB5F-370C428CEB09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{39135441-0A83-64C5-CDB5-1983C408B613} = {39135441-0A83-64C5-CDB5-1983C408B613}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		SDK MultiThreaded|Win32 = SDK MultiThreaded|Win32
+		SDK SingleThreaded|Win32 = SDK SingleThreaded|Win32
+		Template|Win32 = Template|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Debug|Win32.Build.0 = Debug|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Release|Win32.ActiveCfg = Release|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Release|Win32.Build.0 = Release|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.SDK MultiThreaded|Win32.ActiveCfg = SDK MultiThreaded|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.SDK MultiThreaded|Win32.Build.0 = SDK MultiThreaded|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.SDK SingleThreaded|Win32.ActiveCfg = SDK SingleThreaded|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.SDK SingleThreaded|Win32.Build.0 = SDK SingleThreaded|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Template|Win32.ActiveCfg = SDK SingleThreaded|Win32
+		{39135441-0A83-64C5-CDB5-1983C408B613}.Template|Win32.Build.0 = SDK SingleThreaded|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Debug|Win32.Build.0 = Debug|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Release|Win32.ActiveCfg = Release|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Release|Win32.Build.0 = Release|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.SDK MultiThreaded|Win32.ActiveCfg = SDK MultiThreaded|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.SDK MultiThreaded|Win32.Build.0 = SDK MultiThreaded|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.SDK SingleThreaded|Win32.ActiveCfg = SDK SingleThreaded|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.SDK SingleThreaded|Win32.Build.0 = SDK SingleThreaded|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Template|Win32.ActiveCfg = Template|Win32
+		{793A2784-E27D-6FA6-EB5F-370C428CEB09}.Template|Win32.Build.0 = Template|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

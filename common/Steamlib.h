@@ -80,8 +80,8 @@ extern void STEAM_UseDaemon(int enable);
 extern unsigned int STEAM_FileSize( FILE *file );
 
 extern void STEAM_TrackProgress(int enable);
-extern STEAM_RegisterAppProgressCallback( void(*fpProgCallBack)(void), int freq );
-extern STEAM_RegisterAppKeepAliveTicCallback( void(*fpKeepAliveTicCallBack)(char* scr_msg) );
+extern int STEAM_RegisterAppProgressCallback( void(*fpProgCallBack)(void), int freq );
+extern int STEAM_RegisterAppKeepAliveTicCallback( void(*fpKeepAliveTicCallBack)(char* scr_msg) );
 extern void STEAM_UpdateProgress( void );
 extern int STEAM_ProgressCounter(void);
 

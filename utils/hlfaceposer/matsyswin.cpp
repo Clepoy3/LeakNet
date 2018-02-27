@@ -403,7 +403,7 @@ int MatSysWindow::handleEvent (mxEvent *event)
 
 			float r = 1.0/3.0 * min( w(), h() );
 
-			float d = sqrt( (event->x - w()/2) * (event->x - w()/2) + (event->y - h()/2) * (event->y - h()/2) );
+			float d = sqrt( (float)((event->x - w()/2) * (event->x - w()/2) + (event->y - h()/2) * (event->y - h()/2)) );
 
 			if (d < r)
 				g_viewerSettings.rotating = false;

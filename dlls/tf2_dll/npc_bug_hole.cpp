@@ -86,7 +86,7 @@ void CMaker_BugHole::Spawn( void )
 	m_flNextPatrolTime = gpGlobals->curtime + m_flPatrolTime;
 
 	// Override the base class think, and think with some random so bugholes don't all think at the same time
-	SetThink ( BugHoleThink );
+	SetThink ( &CMaker_BugHole::BugHoleThink );
 	SetNextThink( gpGlobals->curtime + BUGHOLE_THINK_SPEED + random->RandomFloat( -0.5, 0.5 ) );
 }
 
@@ -360,7 +360,7 @@ void CMaker_BugHole::Event_Killed( const CTakeDamageInfo &info )
 	RemoveFlag( FL_ONGROUND );
 	Relink();
 
-	SetThink( SUB_Remove );
+	SetThink( &CBaseEntity::SUB_Remove );
 	SetNextThink( gpGlobals->curtime + 5.0 );
 }
 

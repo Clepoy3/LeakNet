@@ -60,8 +60,8 @@ class CMapSolid : public CMapClass
 		virtual void PostloadWorld(CMapWorld *pWorld);
 		ChunkFileResult_t LoadVMF( CChunkFile *pFile, bool &bValid );
 		ChunkFileResult_t SaveVMF( CChunkFile *pFile, CSaveInfo *pSaveInfo );
-		int SerializeRMF( fstream &, BOOL );
-		int SerializeMAP( fstream &, BOOL );
+		int SerializeRMF( std::fstream &, BOOL );
+		int SerializeMAP( std::fstream &, BOOL );
 
         //
         // creation/copy/editing

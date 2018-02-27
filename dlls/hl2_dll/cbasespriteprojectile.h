@@ -21,10 +21,10 @@ enum MoveCollide_t;
 //=============================================================================
 class CBaseSpriteProjectile : public CSprite
 {
+public:
 	DECLARE_DATADESC();
 	DECLARE_CLASS( CBaseSpriteProjectile, CSprite );
 
-public:
 	void Touch( CBaseEntity *pOther );
 
 	void CBaseSpriteProjectile::Spawn(	char *pszModel,

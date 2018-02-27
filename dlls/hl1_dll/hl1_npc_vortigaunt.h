@@ -8,8 +8,8 @@
 //=========================================================
 class CNPC_Vortigaunt : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Vortigaunt, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Vortigaunt, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

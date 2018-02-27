@@ -7,8 +7,8 @@
 //=========================================================
 class CNPC_Barney : public CHL1NPCTalker
 {
-	DECLARE_CLASS( CNPC_Barney, CHL1NPCTalker );
 public:
+	DECLARE_CLASS( CNPC_Barney, CHL1NPCTalker );
 	
 	DECLARE_DATADESC();
 

@@ -23,6 +23,9 @@
 #include <new.h>
 #include "tier0/platform.h"
 
+#include "tier0/memalloc.h"
+#include "tier0/memdbgon.h"
+
 #pragma warning (disable:4100)
 #pragma warning (disable:4514)
 
@@ -96,7 +99,8 @@ CUtlMemory<T>::CUtlMemory( int nGrowSize, int nInitAllocationCount ) : m_pMemory
 	Assert( (nGrowSize >= 0) && (nGrowSize != EXTERNAL_BUFFER_MARKER) );
 	if (m_nAllocationCount)
 	{
-		m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (T*)malloc( m_nAllocationCount * sizeof(T) );
 	}
 }
 
@@ -177,7 +181,9 @@ bool CUtlMemory<T>::IsExternallyAllocated() const
 template< class T >
 void CUtlMemory<T>::SetGrowSize( int nSize )
 {
-	Assert( (nSize >= 0) && (nSize != EXTERNAL_BUFFER_MARKER) );
+//	Assert( (nSize >= 0) && (nSize != EXTERNAL_BUFFER_MARKER) );
+	Assert( nSize != EXTERNAL_BUFFER_MARKER );
+	Assert( nSize >= 0 );
 	m_nGrowSize = nSize;
 }
 
@@ -265,11 +271,15 @@ void CUtlMemory<T>::Grow( int num )
 
 	if (m_pMemory)
 	{
-		m_pMemory = (T*)Plat_Realloc( m_pMemory, m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (T*)Plat_Realloc( m_pMemory, m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (T*)realloc( m_pMemory, m_nAllocationCount * sizeof(T) );
+		Assert( m_pMemory );
 	}
 	else
 	{
-		m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (T*)malloc( m_nAllocationCount * sizeof(T) );
+		Assert( m_pMemory );
 	}
 }
 
@@ -293,11 +303,13 @@ inline void CUtlMemory<T>::EnsureCapacity( int num )
 	m_nAllocationCount = num;
 	if (m_pMemory)
 	{
-		m_pMemory = (T*)Plat_Realloc( m_pMemory, m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (T*)Plat_Realloc( m_pMemory, m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (T*)realloc( m_pMemory, m_nAllocationCount * sizeof(T) );
 	}
 	else
 	{
-		m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (T*)Plat_Alloc( m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (T*)malloc( m_nAllocationCount * sizeof(T) );
 	}
 }
 
@@ -312,12 +324,14 @@ void CUtlMemory<T>::Purge()
 	{
 		if (m_pMemory)
 		{
-			Plat_Free( (void*)m_pMemory );
+		//	Plat_Free( (void*)m_pMemory ); // VXP: Conv
+			free( (void*)m_pMemory );
 			m_pMemory = 0;
 		}
 		m_nAllocationCount = 0;
 	}
 }
 
+#include "tier0/memdbgoff.h"
 
 #endif // UTLSTORAGE_H

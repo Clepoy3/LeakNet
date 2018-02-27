@@ -873,7 +873,7 @@ float AngleOffset( float flBaseAngle, float flTestAngle )
 	while( flTestAngle > flBaseAngle )
 		flTestAngle -= 2 * M_PI;
 
-	return fmod( flBaseAngle - flTestAngle, 2 * M_PI );
+	return fmod( flBaseAngle - flTestAngle, 2.0f * (float)M_PI );
 }
 
 

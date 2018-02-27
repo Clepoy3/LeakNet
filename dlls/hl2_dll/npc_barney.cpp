@@ -238,7 +238,7 @@ void CNPC_Barney::Spawn( void )
 	m_iszCombatExpression = MAKE_STRING("scenes/Expressions/BarneyCombat.vcd");
 
 	NPCInit();
-	SetUse( FollowUse );
+	SetUse( &CNPC_Barney::FollowUse );
 }
 
 bool CNPC_Barney::CreateBehaviors()

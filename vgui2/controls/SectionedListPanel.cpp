@@ -760,7 +760,7 @@ void SectionedListPanel::LayoutPanels(int &contentTall)
 		else
 		{
 			// arrange all the items in this section underneath
-			for (i = iStart; i <= iEnd; i++)
+			for (int i = iStart; i <= iEnd; i++)
 			{
 				CItemButton *item = m_SortedItems[i]; //items[i];
 				item->SetBounds(x, y, wide, m_iLineSpacing);
@@ -1006,7 +1006,7 @@ bool SectionedListPanel::ModifyColumn(int sectionID, const char *columnName, con
 	int columnIndex;
 	for (columnIndex = 0; columnIndex < section.m_Columns.Count(); columnIndex++)
 	{
-		if (!stricmp(section.m_Columns[columnIndex].m_szColumnName, columnName))
+		if (!_stricmp(section.m_Columns[columnIndex].m_szColumnName, columnName))
 			break;
 	}
 	if (!section.m_Columns.IsValidIndex(columnIndex))

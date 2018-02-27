@@ -1467,7 +1467,7 @@ void COM_ChangeGameDir( const char *pszGameDir )
 	COM_AddGameDirectory ( host_parms.basedir, com_defaultgamedir );
 
 	// Adds basedir/gamedir as an override game, only if it's different from the default, of course
-	if ( stricmp( pszGameDir, com_defaultgamedir ) )
+	if ( _stricmp( pszGameDir, com_defaultgamedir ) )
 	{
 		COM_AddGameDirectory ( host_parms.basedir, pszGameDir );
 	}
@@ -1585,7 +1585,7 @@ void COM_InitFilesystem (void)
 	// Adds basedir/gamedir as an override game, only if it's different from the default, of course
 	const char *pModDir;
 	const char *pGameDir = CommandLine()->ParmValue("-game", com_defaultgamedir );
-	if ( stricmp( pGameDir, com_defaultgamedir ) )
+	if ( _stricmp( pGameDir, com_defaultgamedir ) )
 	{
 		COM_AddGameDirectory ( host_parms.basedir, pGameDir );
 		pModDir = pGameDir;

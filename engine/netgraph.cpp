@@ -62,39 +62,39 @@ public:
 	int GetFrameBytes( int frame_number, const char *fieldName )
 	{
 		frame_t *frame = &cl.frames[ frame_number & CL_UPDATE_MASK ];
-		if ( !stricmp( fieldName, "client" ) )
+		if ( !_stricmp( fieldName, "client" ) )
 		{
 			return frame->clientbytes;
 		}
-		else if ( !stricmp( fieldName, "localplayer" ) )
+		else if ( !_stricmp( fieldName, "localplayer" ) )
 		{
 			return frame->localplayerinfobytes;
 		}
-		else if ( !stricmp( fieldName, "otherplayers" ) )
+		else if ( !_stricmp( fieldName, "otherplayers" ) )
 		{
 			return frame->otherplayerinfobytes;
 		}
-		else if ( !stricmp( fieldName, "entities" ) )
+		else if ( !_stricmp( fieldName, "entities" ) )
 		{
 			return frame->packetentitybytes;
 		}
-		else if ( !stricmp( fieldName, "sounds" ) )
+		else if ( !_stricmp( fieldName, "sounds" ) )
 		{
 			return frame->soundbytes;
 		}
-		else if ( !stricmp( fieldName, "events" ) )
+		else if ( !_stricmp( fieldName, "events" ) )
 		{
 			return frame->eventbytes;
 		}
-		else if ( !stricmp( fieldName, "usermessages" ) )
+		else if ( !_stricmp( fieldName, "usermessages" ) )
 		{
 			return frame->usrbytes;
 		}
-		else if( !stricmp( fieldName, "voice" ) )
+		else if( !_stricmp( fieldName, "voice" ) )
 		{
 			return frame->voicebytes;
 		}
-		else if ( !stricmp( fieldName, "total" ) )
+		else if ( !_stricmp( fieldName, "total" ) )
 		{
 			return frame->msgbytes;
 		}

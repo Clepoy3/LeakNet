@@ -25,8 +25,9 @@ extern ConVar bugbait_distract_time;
 
 class CGrenadeBugBait : public CBaseGrenade
 {
-	DECLARE_CLASS( CGrenadeBugBait, CBaseGrenade );
 public:
+	DECLARE_CLASS( CGrenadeBugBait, CBaseGrenade );
+
 	void	Spawn( void );
 	void	Precache( void );
 

@@ -46,8 +46,9 @@ static int g_nZoomFOV[] =
 
 class CWeaponSniperRifle : public CBaseHLCombatWeapon
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CWeaponSniperRifle, CBaseHLCombatWeapon );
 
 	CWeaponSniperRifle(void);

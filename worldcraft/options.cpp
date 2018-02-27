@@ -99,7 +99,8 @@ int COptionsConfigs::ImportOldGameConfigs(const char *pszFileName)
 {
 	int nConfigsRead = 0;
 
-	fstream file(pszFileName, ios::in | ios::binary | ios::nocreate);
+//	fstream file(pszFileName, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+	std::fstream file(pszFileName, std::ios::in | std::ios::binary);
 	if (file.is_open())
 	{
 		// Read sig.
@@ -201,7 +202,7 @@ void COptionsConfigs::SaveGameConfigs(const char *pszFileName)
 		return;
 
 	char szKey[MAX_PATH];
-	WritePrivateProfileString("Configs", "NumConfigs", itoa(nConfigs, szKey, 10), pszFileName);
+	WritePrivateProfileString("Configs", "NumConfigs", _itoa(nConfigs, szKey, 10), pszFileName);
 
 	for (int i = 0; i < nConfigs; i++)
 	{

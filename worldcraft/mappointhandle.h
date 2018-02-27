@@ -61,8 +61,8 @@ public:
 	virtual void Render2D(CRender2D *pRender);
 	virtual void Render3D(CRender3D *pRender);
 
-	virtual int SerializeRMF(fstream &File, BOOL bRMF);
-	virtual int SerializeMAP(fstream &File, BOOL bRMF);
+	virtual int SerializeRMF(std::fstream &File, BOOL bRMF);
+	virtual int SerializeMAP(std::fstream &File, BOOL bRMF);
 
 	// Overridden because origin helpers don't take the color of their parent entity.
 	virtual void SetRenderColor(unsigned char red, unsigned char green, unsigned char blue);

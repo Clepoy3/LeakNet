@@ -38,7 +38,7 @@ s_source_t* GetModelLODSource( const char *pModelName,
 //		if (!pSlash)
 //			pSlash = pTempBuf1;
 
-		if( !stricmp( pTempBuf, scriptLOD.modelReplacements[i].GetSrcName() ) )
+		if( !_stricmp( pTempBuf, scriptLOD.modelReplacements[i].GetSrcName() ) )
 		{
 			*pFound = true;
 			return scriptLOD.modelReplacements[i].m_pSource;
@@ -132,7 +132,7 @@ int FindMaterialByName( const char *pMaterialName )
 
 	for( i = 0; i < g_numtextures; i++ )
 	{
-		if( stricmp( pBaseName, g_texture[i].name ) == 0 )
+		if( _stricmp( pBaseName, g_texture[i].name ) == 0 )
 		{
 			return i;
 		}
@@ -824,7 +824,7 @@ static void UnifyModelLODs( s_model_t *pSrcModel )
 	int numLODs = g_ScriptLODs.Size();
 	lods.AddMultipleToTail( numLODs );
 	
-	if( stricmp( pSrcModel->name, "blank" ) == 0 )
+	if( _stricmp( pSrcModel->name, "blank" ) == 0 )
 	{
 		return;
 	}
@@ -1006,7 +1006,7 @@ static void LoadModelLODSource( s_model_t *pSrcModel )
 	int numLODs = g_ScriptLODs.Size();
 	lods.AddMultipleToTail( numLODs );
 	
-	if( stricmp( pSrcModel->name, "blank" ) == 0 )
+	if( _stricmp( pSrcModel->name, "blank" ) == 0 )
 	{
 		return;
 	}

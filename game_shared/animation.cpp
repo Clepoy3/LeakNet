@@ -19,11 +19,12 @@
 #include "ai_activity.h"
 #include "animation.h"
 #include "bone_setup.h"
-#include "util.h"
+//#include "util.h" // VXP: Conv
 #include "scriptevent.h"
 #include "npcevent.h"
 
 #if !defined( CLIENT_DLL )
+#include "util.h" // VXP: Conv
 #include "enginecallback.h"
 #endif
 
@@ -221,7 +222,7 @@ int LookupActivity( studiohdr_t *pstudiohdr, const char *label )
 
 	for ( int i = 0; i < pstudiohdr->numseq; i++ )
 	{
-		if ( stricmp( pseqdesc[i].pszActivityName(), label ) == 0 )
+		if ( _stricmp( pseqdesc[i].pszActivityName(), label ) == 0 )
 		{
 			return pseqdesc[i].activity;
 		}
@@ -250,7 +251,7 @@ int LookupSequence( studiohdr_t *pstudiohdr, const char *label )
 	//
 	for (int i = 0; i < pstudiohdr->numseq; i++)
 	{
-		if (stricmp( pseqdesc[i].pszLabel(), label ) == 0)
+		if (_stricmp( pseqdesc[i].pszLabel(), label ) == 0)
 			return i;
 	}
 
@@ -620,7 +621,7 @@ int FindHitboxSetByName( studiohdr_t *pstudiohdr, const char *name )
 		if ( !set )
 			continue;
 
-		if ( !stricmp( set->pszName(), name ) )
+		if ( !_stricmp( set->pszName(), name ) )
 			return i;
 	}
 

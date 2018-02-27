@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectResupply : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectResupply, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectResupply, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectResupply();
@@ -46,9 +47,9 @@ C_ObjectResupply::C_ObjectResupply()
 //-----------------------------------------------------------------------------
 class CResupplyControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CResupplyControlPanel, CObjectControlPanel );
 
-public:
 	CResupplyControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnCommand( const char *command );

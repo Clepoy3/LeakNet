@@ -357,7 +357,7 @@ int FindAliasedTexData( const char *pName_, dtexdata_t *sourceTexture )
 {
 	char *pName = ( char * )_alloca( strlen( pName_ ) + 1 );
 	strcpy( pName, pName_ );
-	strlwr( pName );
+	_strlwr( pName );
 	int i, output;
 	bool found;
 	dtexdata_t *pTexData;

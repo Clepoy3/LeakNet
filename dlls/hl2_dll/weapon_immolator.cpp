@@ -115,7 +115,7 @@ void CWeaponImmolator::StartImmolating()
 	// determine whether the immolator is operating or not.
 	m_flBurnRadius = 0.1;
 	m_flTimeLastUpdatedRadius = gpGlobals->curtime;
-	SetThink( UpdateThink );
+	SetThink( &CWeaponImmolator::UpdateThink );
 	SetNextThink( gpGlobals->curtime );
 }
 

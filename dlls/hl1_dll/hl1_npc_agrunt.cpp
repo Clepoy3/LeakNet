@@ -103,8 +103,8 @@ enum
 
 class CNPC_AlienGrunt : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_AlienGrunt, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_AlienGrunt, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

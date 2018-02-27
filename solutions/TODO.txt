@@ -1,0 +1,38 @@
+if exist "$(TargetDir)"$(TargetName).map copy "$(TargetDir)"$(TargetName).map ..\..\bin\$(TargetName).map 
+или
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\$(ProjectName).map 
+
++Custom Build Step -> Post-Build Event! Иначе студия выёбывается и не копирует выходные файлы, если они уже есть в конечной директории
+Также копировать pdb?
+
+Нормально переделать build order-ы? При компиляции отдельного проекта компилятся ещё все, от которых он зависит
+	Можно компилить проекты по отдельности - Project Only
+Не работает компил:
+	+playback
+		Компилил не тот конфиг - Debug вместо Debug DX9
+	+phonemeextractor_IMS
+		Прикрутил поддержку релизной либы ims_helper.dll - всё работает
+	+phonemeextractor в Release
+		При компиле в Release phonemeextractor будет компилиться в Debug
+			Можно также ещё попробовать линковать не релизную либу TalkBack, а дебажную
+	+worldcraft
+memoverride.cpp?
+	Можно попробовать посмотреть на BSE
++Компиляция шейдеров происходит всегда, даже если их код не менялся
+	Заменил в проектах, где билдятся шейдеры, $(InputName) на %(Filename) - VS почему-то иногда выставлял $(InputName) в пустоту, и студия искала файл fxctmp9\.inc
+
+?Пофиксить vsh в шейдерах (mov на mul)
+	Ничего не изменилось
+
+Сделать по проекту на каждый build конфиг
+	+shader_nvfx -> shader_nvfx, shader_nvfx_ps20
+	+filesystem_stdio -> filesystem_stdio, filesystem_steam
+	+phonemeextractor -> phonemeextractor, phonemeextractor_ims // Можно не делать, всё равно IMS не компилится под 2010
+	+playback -> playback, playback DX9?
+	+hl -> CounterStrike, HL1, HL2, TF2
+	+client -> CounterStrike, HL1, HL2, TF2
++Собрать все проекты в один солюшн
+	+А после этого нормально переделать build order. Возможно, посмотреть каков он в Source 2007
+
+Пофиксить thermalmaterialproxy.cpp

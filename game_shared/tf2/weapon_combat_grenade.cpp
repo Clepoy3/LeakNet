@@ -28,8 +28,9 @@ class CBaseGrenade;
 //-----------------------------------------------------------------------------
 class CWeaponCombatGrenade : public CWeaponCombatBaseGrenade
 {
-	DECLARE_CLASS( CWeaponCombatGrenade, CWeaponCombatBaseGrenade );
 public:
+	DECLARE_CLASS( CWeaponCombatGrenade, CWeaponCombatBaseGrenade );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

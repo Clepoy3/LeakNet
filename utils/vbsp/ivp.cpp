@@ -661,7 +661,7 @@ void GetWaterTextureName( char const *mapname, char const *materialname, int wat
 	sprintf( temp, "maps/%s/%s_depth_%i", mapname, materialname, (int)waterdepth );
 
 	// Make sure it's lower case
-	strlwr( temp );
+	_strlwr( temp );
 
 	strcpy( fullname, temp );
 }
@@ -720,7 +720,7 @@ int FindOrCreateWaterTexInfo( texinfo_t *pBaseInfo, float depth )
 	lookup.m_nWaterDepth = (int)depth;
 	// Remember the current material name
 	sprintf( materialname, "%s", name );
-	strlwr( materialname );
+	_strlwr( materialname );
 	lookup.m_MaterialName = materialname;
 
 	texinfo_t ti;
@@ -1142,7 +1142,7 @@ static void FixupLeafWaterData( CPlaneList &planes, int *leafIDToWaterLeaf,
 	}
 }
 
-static BuildLeafIDToWaterLeafMap( CUtlVector<waterleaf_t> &waterList, int *leafIDToWaterLeaf )
+static void BuildLeafIDToWaterLeafMap( CUtlVector<waterleaf_t> &waterList, int *leafIDToWaterLeaf )
 {
 	int i;
 	for( i = 0; i < numleafs; i++ )

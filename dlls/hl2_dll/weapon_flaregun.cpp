@@ -206,8 +206,8 @@ CFlare *CFlare::Create( Vector vecOrigin, QAngle vecAngles, CBaseEntity *pOwner,
 
 	pFlare->SetLocalAngles( vecAngles );
 	pFlare->Spawn();
-	pFlare->SetTouch( FlareTouch );
-	pFlare->SetThink( FlareThink );
+	pFlare->SetTouch( &CFlare::FlareTouch );
+	pFlare->SetThink( &CFlare::FlareThink );
 	
 	//Start up the flare
 	pFlare->Start( lifetime );
@@ -398,7 +398,7 @@ void CFlare::FlareTouch( CBaseEntity *pOther )
 						SetAbsVelocity( vec3_origin );
 						SetMoveType( MOVETYPE_NONE );
 						
-						SetTouch( FlareBurnTouch );
+						SetTouch( &CFlare::FlareBurnTouch );
 						
 						int index = decalsystem->GetDecalIndexForName( "SmallScorch" );
 						if ( index >= 0 )
@@ -450,7 +450,7 @@ void CFlare::FlareTouch( CBaseEntity *pOther )
 			RemoveSolidFlags( FSOLID_NOT_SOLID );
 			AddSolidFlags( FSOLID_TRIGGER );
 			Relink();
-			SetTouch( FlareBurnTouch );
+			SetTouch( &CFlare::FlareBurnTouch );
 		}
 	}
 }
@@ -473,7 +473,7 @@ void CFlare::Start( float lifeTime )
 
 	m_fEffects &= ~EF_NODRAW;
 
-	SetThink( FlareThink );
+	SetThink( &CFlare::FlareThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -484,7 +484,7 @@ void CFlare::Die( float fadeTime )
 {
 	m_flTimeBurnOut = gpGlobals->curtime + fadeTime;
 
-	SetThink( FlareThink );
+	SetThink( &CFlare::FlareThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 

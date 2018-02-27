@@ -429,7 +429,7 @@ void CInputWin32::RunFrame()
 		pContext->_mouseDoublePressed[i] = 0;
 		pContext->_mouseReleased[i] = 0;
 	}
-	for (i = 0; i < KEY_LAST; i++)
+	for (int i = 0; i < KEY_LAST; i++)
 	{
 		pContext->_keyPressed[i] = 0;
 		pContext->_keyTyped[i] = 0;

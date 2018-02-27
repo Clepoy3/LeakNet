@@ -103,7 +103,7 @@ void CObjectSentrygun::Spawn( void )
 	// Start searching for enemies
 	m_hEnemy = NULL;
 	m_hDesignatedEnemy = NULL;
-	SetThink( SentryRotate );
+	SetThink( &CObjectSentrygun::SentryRotate );
 	SetNextThink( gpGlobals->curtime + 0.5f );
 	m_flNextLook = gpGlobals->curtime;
 	
@@ -734,7 +734,7 @@ void CObjectSentrygun::FoundTarget()
 		EmitSound( "ObjectSentrygun.FoundTarget" );
 	}
 
-	SetThink( Attack );
+	SetThink( &CObjectSentrygun::Attack );
 	SetNextThink( gpGlobals->curtime + 0.1 );
 }
 
@@ -750,7 +750,7 @@ void CObjectSentrygun::Attack( void )
 	// Turtling sentryguns don't attack
 	if ( IsTurtled() )
 	{
-		SetThink( SentryRotate );
+		SetThink( &CObjectSentrygun::SentryRotate );
 		return;
 	}
 
@@ -764,7 +764,7 @@ void CObjectSentrygun::Attack( void )
 		if ( gpGlobals->curtime > (m_flStartedSuppressing + MAX_SUPPRESSION_TIME) )
 		{
 			m_bSuppressing = false;
-			SetThink( SentryRotate );
+			SetThink( &CObjectSentrygun::SentryRotate );
 			return;
 		}
 
@@ -791,7 +791,7 @@ void CObjectSentrygun::Attack( void )
 		else
 		{
 			RecomputeOrientation();
-			SetThink( SentryRotate );
+			SetThink( &CObjectSentrygun::SentryRotate );
 			return;
 		}
 	}

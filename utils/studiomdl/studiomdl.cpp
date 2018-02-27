@@ -113,19 +113,19 @@ void Option_KeyValues( CUtlVector< char > *pKeyValue );
 
 int lookupControl( char *string )
 {
-	if (stricmp(string,"X")==0) return STUDIO_X;
-	if (stricmp(string,"Y")==0) return STUDIO_Y;
-	if (stricmp(string,"Z")==0) return STUDIO_Z;
-	if (stricmp(string,"XR")==0) return STUDIO_XR;
-	if (stricmp(string,"YR")==0) return STUDIO_YR;
-	if (stricmp(string,"ZR")==0) return STUDIO_ZR;
+	if (_stricmp(string,"X")==0) return STUDIO_X;
+	if (_stricmp(string,"Y")==0) return STUDIO_Y;
+	if (_stricmp(string,"Z")==0) return STUDIO_Z;
+	if (_stricmp(string,"XR")==0) return STUDIO_XR;
+	if (_stricmp(string,"YR")==0) return STUDIO_YR;
+	if (_stricmp(string,"ZR")==0) return STUDIO_ZR;
 
-	if (stricmp(string,"LX")==0) return STUDIO_LX;
-	if (stricmp(string,"LY")==0) return STUDIO_LY;
-	if (stricmp(string,"LZ")==0) return STUDIO_LZ;
-	if (stricmp(string,"LXR")==0) return STUDIO_LXR;
-	if (stricmp(string,"LYR")==0) return STUDIO_LYR;
-	if (stricmp(string,"LZR")==0) return STUDIO_LZR;
+	if (_stricmp(string,"LX")==0) return STUDIO_LX;
+	if (_stricmp(string,"LY")==0) return STUDIO_LY;
+	if (_stricmp(string,"LZ")==0) return STUDIO_LZ;
+	if (_stricmp(string,"LXR")==0) return STUDIO_LXR;
+	if (_stricmp(string,"LYR")==0) return STUDIO_LYR;
+	if (_stricmp(string,"LZR")==0) return STUDIO_LZR;
 
 	return -1;
 }
@@ -142,7 +142,7 @@ int LookupPoseParameter( char *name )
 	int i;
 	for ( i = 0; i < g_numposeparameters; i++)
 	{
-		if (!stricmp( name, g_pose[i].name))
+		if (!_stricmp( name, g_pose[i].name))
 		{
 			return i;
 		}
@@ -192,14 +192,14 @@ void Cmd_PoseParameter( )
 	{
 		GetToken (false);
 
-		if (!stricmp( token, "wrap" ))
+		if (!_stricmp( token, "wrap" ))
 		{
 		//	g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
 		//	g_pose[g_numposeparameters].loop = g_pose[g_numposeparameters].max - g_pose[g_numposeparameters].min;
 			g_pose[i].flags |= STUDIO_LOOPING;
 			g_pose[i].loop = g_pose[i].max - g_pose[i].min;
 		}
-		else if (!stricmp( token, "loop" ))
+		else if (!_stricmp( token, "loop" ))
 		{
 		//	g_pose[g_numposeparameters].flags |= STUDIO_LOOPING;
 			g_pose[i].flags |= STUDIO_LOOPING;
@@ -227,7 +227,7 @@ char *stristr( const char *string, const char *string2 )
 	while (string) {
 		for (; *string && tolower( *string ) != c; string++);
 		if (*string) {
-			if (strnicmp( string, string2, len ) == 0) {
+			if (_strnicmp( string, string2, len ) == 0) {
 				break;
 			}
 			string++;
@@ -253,7 +253,7 @@ int lookup_texture( char *texturename )
 
 	for (i = 0; i < g_numtextures; i++) 
 	{
-		if (stricmp( g_texture[i].name, texturename ) == 0) 
+		if (_stricmp( g_texture[i].name, texturename ) == 0) 
 		{
 			return i;
 		}
@@ -325,7 +325,7 @@ void SetSkinValues( )
 
 		// strip down till it finds "models"
 		strcpyn( szName, fullpath );
-		while (szName[0] != '\0' && strnicmp( "models", szName, 6 ) != 0)
+		while (szName[0] != '\0' && _strnicmp( "models", szName, 6 ) != 0)
 		{
 			strcpy( &szName[0], &szName[1] );
 		}
@@ -404,7 +404,7 @@ int LookupXNode( char *name )
 	int i;
 	for ( i = 1; i <= g_numxnodes; i++)
 	{
-		if (stricmp( name, g_xnodename[i] ) == 0)
+		if (_stricmp( name, g_xnodename[i] ) == 0)
 		{
 			return i;
 		}
@@ -668,25 +668,25 @@ void Option_Studio( s_model_t *pmodel )
 	while (TokenAvailable())
 	{
 		GetToken(false);
-		if (stricmp( "reverse", token ) == 0)
+		if (_stricmp( "reverse", token ) == 0)
 		{
 			flip_triangles = 0;
 		}
-		else if (stricmp( "scale", token ) == 0)
+		else if (_stricmp( "scale", token ) == 0)
 		{
 			GetToken(false);
 			pmodel->scale = g_currentscale = atof( token );
 		}
-		else if (stricmp( "faces", token ) == 0)
+		else if (_stricmp( "faces", token ) == 0)
 		{
 			GetToken( false );
 			GetToken( false );
 		}
-		else if (stricmp( "bias", token ) == 0)
+		else if (_stricmp( "bias", token ) == 0)
 		{
 			GetToken( false );
 		}
-		else if (stricmp("{", token ) == 0)
+		else if (_stricmp("{", token ) == 0)
 		{
 			UnGetToken( );
 			break;
@@ -743,7 +743,7 @@ void Cmd_Bodygroup( )
 			is_started = 1;
 		else if (token[0] == '}')
 			break;
-		else if (stricmp("studio", token ) == 0)
+		else if (_stricmp("studio", token ) == 0)
 		{
 			g_model[g_nummodels] = (s_model_t *)kalloc( 1, sizeof( s_model_t ) );
 			g_bodypart[g_numbodyparts].pmodel[g_bodypart[g_numbodyparts].nummodels] = g_model[g_nummodels];
@@ -752,7 +752,7 @@ void Cmd_Bodygroup( )
 			Option_Studio( g_model[g_nummodels] );
 			g_nummodels++;
 		}
-		else if (stricmp("blank", token ) == 0)
+		else if (_stricmp("blank", token ) == 0)
 			Option_Blank( );
 		else
 		{
@@ -947,7 +947,7 @@ void Option_IKRule( s_ikrule_t *pRule )
 	int i;
 	for ( i = 0; i < g_numikchains; i++)
 	{
-		if (stricmp( token, g_ikchain[i].name ) == 0)
+		if (_stricmp( token, g_ikchain[i].name ) == 0)
 		{
 			break;
 		}
@@ -960,7 +960,7 @@ void Option_IKRule( s_ikrule_t *pRule )
 
 	// type
 	GetToken( false );
-	if (stricmp( token, "touch" ) == 0)
+	if (_stricmp( token, "touch" ) == 0)
 	{
 		pRule->type = IK_SELF;
 
@@ -968,7 +968,7 @@ void Option_IKRule( s_ikrule_t *pRule )
 		GetToken( false );
 		strcpyn( pRule->bonename, token );
 	}
-	else if (stricmp( token, "footstep" ) == 0)
+	else if (_stricmp( token, "footstep" ) == 0)
 	{
 		pRule->type = IK_GROUND;
 
@@ -980,7 +980,7 @@ void Option_IKRule( s_ikrule_t *pRule )
 		pRule->floor = g_ikchain[pRule->chain].floor;
 		pRule->radius = g_ikchain[pRule->chain].radius;
 	}
-	else if (stricmp( token, "world" ) == 0)
+	else if (_stricmp( token, "world" ) == 0)
 	{
 		pRule->type = IK_WORLD;
 
@@ -988,7 +988,7 @@ void Option_IKRule( s_ikrule_t *pRule )
 		GetToken( false );
 		pRule->slot = atoi( token );
 	}
-	else if (stricmp( token, "release" ) == 0)
+	else if (_stricmp( token, "release" ) == 0)
 	{
 		pRule->type = IK_RELEASE;
 	}
@@ -998,12 +998,12 @@ void Option_IKRule( s_ikrule_t *pRule )
 	while (TokenAvailable())
 	{
 		GetToken( false );
-		if (stricmp( token, "height" ) == 0)
+		if (_stricmp( token, "height" ) == 0)
 		{
 			GetToken( false );
 			pRule->height = atof( token );
 		}
-		else if (stricmp( token, "range" ) == 0)
+		else if (_stricmp( token, "range" ) == 0)
 		{
 			// ramp
 			GetToken( false );
@@ -1030,27 +1030,27 @@ void Option_IKRule( s_ikrule_t *pRule )
 			else
 				pRule->end = atoi( token );
 		}
-		else if (stricmp( token, "floor" ) == 0)
+		else if (_stricmp( token, "floor" ) == 0)
 		{
 			GetToken( false );
 			pRule->floor = atof( token );
 		}
-		else if (stricmp( token, "pad" ) == 0)
+		else if (_stricmp( token, "pad" ) == 0)
 		{
 			GetToken( false );
 			pRule->radius = atof( token ) / 2.0f;
 		}
-		else if (stricmp( token, "contact" ) == 0)
+		else if (_stricmp( token, "contact" ) == 0)
 		{
 			GetToken( false );
 			pRule->contact = atoi( token );
 		}
-		else if (stricmp( token, "usesequence" ) == 0) // VXP
+		else if (_stricmp( token, "usesequence" ) == 0) // VXP
 		{
 			pRule->usesequence = true;
 			pRule->usesource = false;
 		}
-		else if (stricmp( token, "usesource" ) == 0) // VXP
+		else if (_stricmp( token, "usesource" ) == 0) // VXP
 		{
 			pRule->usesequence = false;
 			pRule->usesource = true;
@@ -1096,37 +1096,37 @@ void Cmd_UpAxis( void )
 	// (specified by the up direction) to a z up space
 	// Note: x, -x, -y are untested
 	GetToken (false);
-	if (!stricmp( token, "x" ))
+	if (!_stricmp( token, "x" ))
 	{
 		// rotate 90 degrees around y to move x into z
 		g_defaultrotation.x = 0.0f;
 		g_defaultrotation.y = M_PI / 2.0f;
 	}
-	if (!stricmp( token, "-x" ))
+	if (!_stricmp( token, "-x" ))
 	{
 		// untested
 		g_defaultrotation.x = 0.0f;
 		g_defaultrotation.y = -M_PI / 2.0f;
 	}
-	else if (!stricmp( token, "y" ))
+	else if (!_stricmp( token, "y" ))
 	{
 		// rotate 90 degrees around x to move y into z
 		g_defaultrotation.x = M_PI / 2.0f;
 		g_defaultrotation.y = 0.0f;
 	}
-	else if (!stricmp( token, "-y" ))
+	else if (!_stricmp( token, "-y" ))
 	{
 		// untested
 		g_defaultrotation.x = -M_PI / 2.0f;
 		g_defaultrotation.y = 0.0f;
 	}
-	else if (!stricmp( token, "z" ))
+	else if (!_stricmp( token, "z" ))
 	{
 		// there's still a built in 90 degree Z rotation :(
 		g_defaultrotation.x = 0.0f;
 		g_defaultrotation.y = 0.0f;
 	}
-	else if (!stricmp( token, "-z" ))
+	else if (!_stricmp( token, "-z" ))
 	{
 		// there's still a built in 90 degree Z rotation :(
 		g_defaultrotation.x = 0.0f;
@@ -1225,7 +1225,7 @@ static s_source_t *FindCachedSource( char const* name, char const* xext )
 		sprintf (g_szFilename, "%s%s.%s", cddir[numdirs], name, xext );
 		for (i = 0; i < g_numsources; i++)
 		{
-			if (stricmp( g_szFilename, g_source[i]->filename ) == 0)
+			if (_stricmp( g_szFilename, g_source[i]->filename ) == 0)
 				return g_source[i];
 		}
 	}
@@ -1235,13 +1235,13 @@ static s_source_t *FindCachedSource( char const* name, char const* xext )
 		sprintf (g_szFilename, "%s%s.vrm", cddir[numdirs], name );
 		for (i = 0; i < g_numsources; i++)
 		{
-			if (stricmp( g_szFilename, g_source[i]->filename ) == 0)
+			if (_stricmp( g_szFilename, g_source[i]->filename ) == 0)
 				return g_source[i];
 		}
 		sprintf (g_szFilename, "%s%s.smd", cddir[numdirs], name );
 		for (i = 0; i < g_numsources; i++)
 		{
-			if (stricmp( g_szFilename, g_source[i]->filename ) == 0)
+			if (_stricmp( g_szFilename, g_source[i]->filename ) == 0)
 				return g_source[i];
 		}
 		/*
@@ -1289,19 +1289,19 @@ s_source_t *Load_Source( char const *name, const char *ext, bool reverse )
 	g_source[g_numsources] = (s_source_t *)kalloc( 1, sizeof( s_source_t ) );
 	strcpyn( g_source[g_numsources]->filename, g_szFilename );
 
-	if ( xext[0] == '\0' || stricmp( xext, "vrm" ) == 0)
+	if ( xext[0] == '\0' || _stricmp( xext, "vrm" ) == 0)
 	{
 		sprintf (g_szFilename, "%s%s.vrm", cddir[numdirs], pTempName );
 		strcpyn( g_source[g_numsources]->filename, g_szFilename );
 		result = Load_VRM( g_source[g_numsources] );
 	}
-	if ( ( !result && xext[0] == '\0' ) || stricmp( xext, "smd" ) == 0)
+	if ( ( !result && xext[0] == '\0' ) || _stricmp( xext, "smd" ) == 0)
 	{
 		sprintf (g_szFilename, "%s%s.smd", cddir[numdirs], pTempName );
 		strcpyn( g_source[g_numsources]->filename, g_szFilename );
 		result = Load_SMD( g_source[g_numsources] );
 	}
-	if (( !result && xext[0] == '\0' ) || stricmp( xext, "vta" ) == 0)
+	if (( !result && xext[0] == '\0' ) || _stricmp( xext, "vta" ) == 0)
 	{
 		sprintf (g_szFilename, "%s%s.vta", cddir[numdirs], pTempName );
 		strcpyn( g_source[g_numsources]->filename, g_szFilename );
@@ -1327,7 +1327,7 @@ s_sequence_t *LookupSequence( char *name ) // VXP
 	int i;
 	for (i = 0; i < g_numseq; i++)
 	{
-		if (stricmp( g_sequence[i].name, token ) == 0)
+		if (_stricmp( g_sequence[i].name, token ) == 0)
 		{
 			return &g_sequence[i];
 		}
@@ -1341,7 +1341,7 @@ s_animation_t *LookupAnimation( char *name )
 	int i;
 	for ( i = 0; i < g_numani; i++)
 	{
-		if (stricmp( g_panimation[i]->name, token ) == 0)
+		if (_stricmp( g_panimation[i]->name, token ) == 0)
 		{
 			return g_panimation[i];
 		}
@@ -1349,7 +1349,7 @@ s_animation_t *LookupAnimation( char *name )
 
 	for (i = 0; i < g_numseq; i++)
 	{
-		if (stricmp( g_sequence[i].name, token ) == 0)
+		if (_stricmp( g_sequence[i].name, token ) == 0)
 		{
 			return g_sequence[i].panim[0][0];
 		}
@@ -1365,7 +1365,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		return false;
 	}
 	s_animcmd_t *pcmd = &cmds[numcmds];
-	if (stricmp("fixuploop", token ) == 0)
+	if (_stricmp("fixuploop", token ) == 0)
 	{
 		pcmd->cmd = CMD_FIXUP;
 
@@ -1374,14 +1374,14 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.fixuploop.end = atoi( token );
 	}
-	else if (strnicmp("weightlist", token, 6 ) == 0)
+	else if (_strnicmp("weightlist", token, 6 ) == 0)
 	{
 		GetToken( false );
 
 		int i;
 		for ( i = 1; i < g_numweightlist; i++)
 		{
-			if (stricmp( g_weightlist[i].name, token ) == 0)
+			if (_stricmp( g_weightlist[i].name, token ) == 0)
 			{
 				break;
 			}
@@ -1393,7 +1393,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		pcmd->cmd = CMD_WEIGHTS;
 		pcmd->u.weightlist.index = i;
 	}
-	else if (stricmp("subtract", token ) == 0)
+	else if (_stricmp("subtract", token ) == 0)
 	{
 		pcmd->cmd = CMD_SUBTRACT;
 
@@ -1412,7 +1412,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 
 		pcmd->u.subtract.flags |= STUDIO_POST;
 	}
-	else if (stricmp("presubtract", token ) == 0) // FIXME: rename this to something better
+	else if (_stricmp("presubtract", token ) == 0) // FIXME: rename this to something better
 	{
 		pcmd->cmd = CMD_SUBTRACT;
 
@@ -1429,7 +1429,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.subtract.frame = atoi( token );
 	}
-	else if (stricmp( "alignto", token ) == 0)
+	else if (_stricmp( "alignto", token ) == 0)
 	{
 		pcmd->cmd = CMD_AO;
 
@@ -1448,7 +1448,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		pcmd->u.ao.srcframe = 0;
 		pcmd->u.ao.destframe = 0;
 	}
-	else if (stricmp( "align", token ) == 0)
+	else if (_stricmp( "align", token ) == 0)
 	{
 		pcmd->cmd = CMD_AO;
 
@@ -1485,7 +1485,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.ao.destframe = atoi( token );
 	}
-	else if (stricmp( "alignboneto", token ) == 0)
+	else if (_stricmp( "alignboneto", token ) == 0)
 	{
 		pcmd->cmd = CMD_AO;
 
@@ -1504,7 +1504,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		pcmd->u.ao.srcframe = 0;
 		pcmd->u.ao.destframe = 0;
 	}
-	else if (stricmp( "match", token ) == 0)
+	else if (_stricmp( "match", token ) == 0)
 	{
 		pcmd->cmd = CMD_MATCH;
 
@@ -1518,14 +1518,14 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 
 		pcmd->u.match.ref = extanim;
 	}
-	else if (stricmp( "rotateto", token ) == 0)
+	else if (_stricmp( "rotateto", token ) == 0)
 	{
 		pcmd->cmd = CMD_ANGLE;
 
 		GetToken( false );
 		pcmd->u.angle.angle = atof( token );
 	}
-	else if (stricmp( "ikrule", token ) == 0)
+	else if (_stricmp( "ikrule", token ) == 0)
 	{
 		pcmd->cmd = CMD_IKRULE;
 
@@ -1535,7 +1535,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 
 		// Option_IKRule( &panim->ikrule[panim->numikrules++] );
 	}
-	else if (stricmp( "ikfixup", token ) == 0)
+	else if (_stricmp( "ikfixup", token ) == 0)
 	{
 		pcmd->cmd = CMD_IKFIXUP;
 
@@ -1545,7 +1545,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 
 		// Option_IKRule( &panim->ikrule[panim->numikrules++] );
 	}
-	else if (stricmp( "walkframe", token ) == 0)
+	else if (_stricmp( "walkframe", token ) == 0)
 	{
 		pcmd->cmd = CMD_MOTION;
 
@@ -1581,7 +1581,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		pcmd->u.motion.zr = atof( token );
 		*/
 	}
-	else if (stricmp( "walkalignto", token ) == 0)
+	else if (_stricmp( "walkalignto", token ) == 0)
 	{
 		pcmd->cmd = CMD_REFMOTION;
 
@@ -1629,7 +1629,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		pcmd->u.motion.zr = atof( token );
 		*/
 	}
-	else if (stricmp( "walkalign", token ) == 0)
+	else if (_stricmp( "walkalign", token ) == 0)
 	{
 		pcmd->cmd = CMD_REFMOTION;
 
@@ -1674,7 +1674,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.motion.iSrcFrame = atoi( token );
 	}
-	else if (stricmp("derivative", token ) == 0)
+	else if (_stricmp("derivative", token ) == 0)
 	{
 		pcmd->cmd = CMD_DERIVATIVE;
 
@@ -1682,22 +1682,22 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.derivative.scale = atof( token );
 	}
-	else if (stricmp("noanimation", token ) == 0)
+	else if (_stricmp("noanimation", token ) == 0)
 	{
 		pcmd->cmd = CMD_NOANIMATION;
 	}
-	else if (stricmp("lineardelta", token ) == 0)
+	else if (_stricmp("lineardelta", token ) == 0)
 	{
 		pcmd->cmd = CMD_LINEARDELTA;
 		pcmd->u.linear.flags |= STUDIO_POST;
 	}
-	else if (stricmp("splinedelta", token ) == 0)
+	else if (_stricmp("splinedelta", token ) == 0)
 	{
 		pcmd->cmd = CMD_LINEARDELTA;
 		pcmd->u.linear.flags |= STUDIO_POST;
 		pcmd->u.linear.flags |= STUDIO_SPLINE;
 	}
-	else if (stricmp("compress", token ) == 0)
+	else if (_stricmp("compress", token ) == 0)
 	{
 		pcmd->cmd = CMD_COMPRESS;
 
@@ -1705,7 +1705,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 		GetToken( false );
 		pcmd->u.compress.frames = atoi( token );
 	}
-	else if (stricmp("numframes", token ) == 0)
+	else if (_stricmp("numframes", token ) == 0)
 	{
 		pcmd->cmd = CMD_NUMFRAMES;
 
@@ -1724,7 +1724,7 @@ int ParseCmdlistToken( int &numcmds, s_animcmd_t *cmds )
 
 int ParseAnimationToken( s_animation_t *panim )
 {
-	if (stricmp("fps", token ) == 0)
+	if (_stricmp("fps", token ) == 0)
 	{
 		GetToken( false );
 		panim->fps = atof( token );
@@ -1733,7 +1733,7 @@ int ParseAnimationToken( s_animation_t *panim )
 			Error( "ParseAnimationToken:  fps (%f from '%s') <= 0.0\n", panim->fps, token );
 		}
 	}
-	else if (stricmp("origin", token ) == 0)
+	else if (_stricmp("origin", token ) == 0)
 	{
 		GetToken (false);
 		panim->adjust.x = atof (token);
@@ -1744,13 +1744,13 @@ int ParseAnimationToken( s_animation_t *panim )
 		GetToken (false);
 		panim->adjust.z = atof (token);
 	}
-	else if (stricmp("rotate", token ) == 0)
+	else if (_stricmp("rotate", token ) == 0)
 	{
 		GetToken( false );
 		// FIXME: broken for Maya
 		panim->rotation.z = DEG2RAD( atof( token ) + 90 );
 	}
-	else if (stricmp("angles", token ) == 0)
+	else if (_stricmp("angles", token ) == 0)
 	{
 		GetToken( false );
 		panim->rotation.x = DEG2RAD( atof( token ) );
@@ -1759,31 +1759,31 @@ int ParseAnimationToken( s_animation_t *panim )
 		GetToken( false );
 		panim->rotation.z = DEG2RAD( atof( token ) + 90.0);
 	}
-	else if (stricmp("scale", token ) == 0)
+	else if (_stricmp("scale", token ) == 0)
 	{
 		GetToken( false );
 		panim->scale = atof( token );
 	}
-	else if (strnicmp("loop", token, 4 ) == 0)
+	else if (_strnicmp("loop", token, 4 ) == 0)
 	{
 		panim->flags |= STUDIO_LOOPING;
 	}
-	else if (strnicmp("startloop", token, 5 ) == 0)
+	else if (_strnicmp("startloop", token, 5 ) == 0)
 	{
 		GetToken( false );
 		panim->looprestart = atoi( token );
 		panim->flags |= STUDIO_LOOPING;
 	}
-	else if (stricmp("fudgeloop", token ) == 0)
+	else if (_stricmp("fudgeloop", token ) == 0)
 	{
 		panim->fudgeloop = true;
 		panim->flags |= STUDIO_LOOPING;
 	}
-	else if (strnicmp("snap", token, 4 ) == 0)
+	else if (_strnicmp("snap", token, 4 ) == 0)
 	{
 		panim->flags |= STUDIO_SNAP;
 	}
-	else if (strnicmp("frame", token, 5 ) == 0)
+	else if (_strnicmp("frame", token, 5 ) == 0)
 	{
 		GetToken( false );
 		panim->startframe = atoi( token );
@@ -1801,7 +1801,7 @@ int ParseAnimationToken( s_animation_t *panim )
 
 		panim->numframes = panim->endframe - panim->startframe + 1;
 	}
-	else if (stricmp("post", token) == 0)
+	else if (_stricmp("post", token) == 0)
 	{
 		panim->flags |= STUDIO_POST;
 	}
@@ -1809,14 +1809,14 @@ int ParseAnimationToken( s_animation_t *panim )
 	{
 
 	}
-	else if (stricmp("cmdlist", token) == 0)
+	else if (_stricmp("cmdlist", token) == 0)
 	{
 		GetToken( false ); // A
 
 		int i;
 		for ( i = 0; i < g_numcmdlists; i++)
 		{
-			if (stricmp( g_cmdlist[i].name, token) == 0)
+			if (_stricmp( g_cmdlist[i].name, token) == 0)
 			{
 				break;
 			}
@@ -1884,11 +1884,11 @@ int Cmd_Cmdlist( )
 			}
 			return 1;
 		}
-		if (stricmp("{", token ) == 0)
+		if (_stricmp("{", token ) == 0)
 		{
 			depth++;
 		}
-		else if (stricmp("}", token ) == 0)
+		else if (_stricmp("}", token ) == 0)
 		{
 			depth--;
 		}
@@ -1990,11 +1990,11 @@ int ParseAnimation( s_animation_t *panim, bool isAppend )
 			}
 			return 1;
 		}
-		if (stricmp("{", token ) == 0)
+		if (_stricmp("{", token ) == 0)
 		{
 			depth++;
 		}
-		else if (stricmp("}", token ) == 0)
+		else if (_stricmp("}", token ) == 0)
 		{
 			depth--;
 		}
@@ -2180,11 +2180,11 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			}
 			return 1;
 		}
-		if (stricmp("{", token ) == 0)
+		if (_stricmp("{", token ) == 0)
 		{
 			depth++;
 		}
-		else if (stricmp("}", token ) == 0)
+		else if (_stricmp("}", token ) == 0)
 		{
 			depth--;
 		}
@@ -2195,32 +2195,32 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 		}
 		*/
 
-		else if (stricmp("event", token ) == 0)
+		else if (_stricmp("event", token ) == 0)
 		{
 			depth -= Option_Event( pseq );
 		}
-		else if (stricmp("activity", token ) == 0)
+		else if (_stricmp("activity", token ) == 0)
 		{
 			Option_Activity( pseq );
 		}
-		else if (strnicmp( token, "ACT_", 4 ) == 0)
+		else if (_strnicmp( token, "ACT_", 4 ) == 0)
 		{
 			UnGetToken( );
 			Option_Activity( pseq );
 		}
 
-		else if (stricmp("snap", token ) == 0)
+		else if (_stricmp("snap", token ) == 0)
 		{
 			pseq->flags |= STUDIO_SNAP;
 		}
 
-		else if (stricmp("blendwidth", token ) == 0)
+		else if (_stricmp("blendwidth", token ) == 0)
 		{
 			GetToken( false );
 			pseq->groupsize[0] = atoi( token );
 		}
 
-		else if (stricmp("blend", token ) == 0)
+		else if (_stricmp("blend", token ) == 0)
 		{
 			i = 0;
 			if (pseq->paramindex[0] != -1)
@@ -2242,7 +2242,7 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			g_pose[j].max  = max( g_pose[j].max, pseq->paramstart[i] );
 			g_pose[j].max  = max( g_pose[j].max, pseq->paramend[i] );
 		}
-		else if (stricmp("calcblend", token ) == 0)
+		else if (_stricmp("calcblend", token ) == 0)
 		{
 			i = 0;
 			if (pseq->paramindex[0] != -1)
@@ -2264,7 +2264,7 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			GetToken( false );
 			pseq->paramcontrol[i] = lookupControl( token );
 		}
-		else if (stricmp("blendref", token ) == 0) // VXP
+		else if (_stricmp("blendref", token ) == 0) // VXP
 		{
 			GetToken( false );
 			pseq->paramanim = LookupAnimation( token );
@@ -2273,7 +2273,7 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 				Error( "Unknown blendref animation \"%s\"\n", token );
 			}
 		}
-		else if (stricmp("blendcomp", token ) == 0) // VXP
+		else if (_stricmp("blendcomp", token ) == 0) // VXP
 		{
 			GetToken( false );
 			pseq->paramcompanim = LookupAnimation( token );
@@ -2282,7 +2282,7 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 				Error( "Unknown blendcomp animation \"%s\"\n", token );
 			}
 		}
-		else if (stricmp("blendcenter", token ) == 0) // VXP
+		else if (_stricmp("blendcenter", token ) == 0) // VXP
 		{
 			GetToken( false );
 			pseq->paramcenter = LookupAnimation( token );
@@ -2291,19 +2291,19 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 				Error( "Unknown blendcenter animation \"%s\"\n", token );
 			}
 		}
-		else if (stricmp("node", token ) == 0)
+		else if (_stricmp("node", token ) == 0)
 		{
 			GetToken( false );
 			pseq->entrynode = pseq->exitnode = LookupXNode( token );
 		}
-		else if (stricmp("transition", token ) == 0)
+		else if (_stricmp("transition", token ) == 0)
 		{
 			GetToken( false );
 			pseq->entrynode = LookupXNode( token );
 			GetToken( false );
 			pseq->exitnode = LookupXNode( token );
 		}
-		else if (stricmp("rtransition", token ) == 0)
+		else if (_stricmp("rtransition", token ) == 0)
 		{
 			GetToken( false );
 			pseq->entrynode = LookupXNode( token );
@@ -2311,59 +2311,59 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			pseq->exitnode = LookupXNode( token );
 			pseq->nodeflags |= 1;
 		}
-		else if (stricmp("exitphase", token ) == 0)
+		else if (_stricmp("exitphase", token ) == 0)
 		{
 			GetToken( false );
 			pseq->exitphase = atof( token );
 		}
-		else if (stricmp("delta", token) == 0)
+		else if (_stricmp("delta", token) == 0)
 		{
 			pseq->flags |= STUDIO_DELTA;
 			pseq->flags |= STUDIO_POST;
 		}
-		else if (stricmp("fadedelta", token) == 0)
+		else if (_stricmp("fadedelta", token) == 0)
 		{
 			pseq->flags |= STUDIO_DELTA;
 			pseq->flags |= STUDIO_POST;
 			pseq->flags |= STUDIO_WEIGHT;
 		}
-		else if (stricmp("post", token) == 0) // remove
+		else if (_stricmp("post", token) == 0) // remove
 		{
 			pseq->flags |= STUDIO_POST; 
 		}
-		else if (stricmp("predelta", token) == 0)
+		else if (_stricmp("predelta", token) == 0)
 		{
 			pseq->flags |= STUDIO_DELTA;
 		}
-		else if (stricmp("autoplay", token) == 0)
+		else if (_stricmp("autoplay", token) == 0)
 		{
 			pseq->flags |= STUDIO_AUTOPLAY;
 		}
-		else if (stricmp( "fadein", token ) == 0)
+		else if (_stricmp( "fadein", token ) == 0)
 		{
 			GetToken( false );
 			pseq->fadeintime = atof( token );
 		}
-		else if (stricmp( "fadeout", token ) == 0)
+		else if (_stricmp( "fadeout", token ) == 0)
 		{
 			GetToken( false );
 			pseq->fadeouttime = atof( token );
 		}
-		else if (stricmp( "realtime", token ) == 0) // VXP
+		else if (_stricmp( "realtime", token ) == 0) // VXP
 		{
 			pseq->flags |= STUDIO_REALTIME;
 		}
-		else if (stricmp( "hidden", token ) == 0) // VXP
+		else if (_stricmp( "hidden", token ) == 0) // VXP
 		{
 			pseq->flags |= STUDIO_HIDDEN;
 		}
-		else if (stricmp( "addlayer", token ) == 0)
+		else if (_stricmp( "addlayer", token ) == 0)
 		{
 			GetToken( false );
 			strcpyn( pseq->autolayer[pseq->numautolayers].name, token );
 			pseq->numautolayers++;
 		}
-		else if (stricmp( "iklock", token ) == 0)
+		else if (_stricmp( "iklock", token ) == 0)
 		{
 			GetToken(false);
 			strcpyn( pseq->iklock[pseq->numiklocks].name, token );
@@ -2376,11 +2376,11 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 		
 			pseq->numiklocks++;
 		}
-		else if (stricmp( "keyvalues", token ) == 0)
+		else if (_stricmp( "keyvalues", token ) == 0)
 		{
 			Option_KeyValues( &pseq->KeyValue );
 		}
-		else if (stricmp( "blendlayer", token ) == 0)
+		else if (_stricmp( "blendlayer", token ) == 0)
 		{
 			pseq->autolayer[pseq->numautolayers].flags |= STUDIO_WEIGHT;
 
@@ -2402,11 +2402,11 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			while (TokenAvailable( ))
 			{
 				GetToken( false );
-				if (stricmp( "fullweight", token ) == 0)
+				if (_stricmp( "fullweight", token ) == 0)
 				{
 					pseq->autolayer[pseq->numautolayers].flags &= ~STUDIO_WEIGHT;
 				}
-				else if (stricmp( "spline", token ) == 0)
+				else if (_stricmp( "spline", token ) == 0)
 				{
 					pseq->autolayer[pseq->numautolayers].flags |= STUDIO_SPLINE;
 				}
@@ -2429,7 +2429,7 @@ int ParseSequence( s_sequence_t *pseq, bool isAppend )
 			// first look up an existing animation
 			for (n = 0; n < g_numani; n++)
 			{
-				if (stricmp( token, g_panimation[n]->name ) == 0)
+				if (_stricmp( token, g_panimation[n]->name ) == 0)
 				{
 					animations[numblends++] = g_panimation[n];
 					break;
@@ -2665,11 +2665,11 @@ int Cmd_Weightlist( )
 			}
 			return 1;
 		}
-		if (stricmp("{", token ) == 0)
+		if (_stricmp("{", token ) == 0)
 		{
 			depth++;
 		}
-		else if (stricmp("}", token ) == 0)
+		else if (_stricmp("}", token ) == 0)
 		{
 			depth--;
 		}
@@ -2713,7 +2713,7 @@ void Option_Eyeball( s_model_t *pmodel )
 	GetToken (false);
 	for (i = 0; i < pmodel->source->numbones; i++)
 	{
-		if (stricmp( pmodel->source->localBone[i].name, token ) == 0)
+		if (_stricmp( pmodel->source->localBone[i].name, token ) == 0)
 		{
 			eyeball->bone = i;
 			break;
@@ -2859,7 +2859,7 @@ int Add_Flexdesc( const char *name )
 	int flexdesc;
 	for ( flexdesc = 0; flexdesc < g_numflexdesc; flexdesc++)
 	{
-		if (stricmp( name, g_flexdesc[flexdesc].FACS ) == 0)
+		if (_stricmp( name, g_flexdesc[flexdesc].FACS ) == 0)
 		{
 			break;
 		}
@@ -2901,18 +2901,18 @@ void Option_Flex( char *name, char *vtafile, int imodel )
 	{
 		GetToken(false);
 
-		if (stricmp( token, "frame") == 0)
+		if (_stricmp( token, "frame") == 0)
 		{
 			GetToken (false);
 
 			g_flexkey[g_numflexkeys].frame = atoi( token );
 		}
-		else if (stricmp( token, "position") == 0)
+		else if (_stricmp( token, "position") == 0)
 		{
 			GetToken (false);
 			g_flexkey[g_numflexkeys].target1 = atof( token );
 		}
-		else if (stricmp( token, "split") == 0)
+		else if (_stricmp( token, "split") == 0)
 		{
 			GetToken (false);
 			g_flexkey[g_numflexkeys].split = atof( token );
@@ -2975,7 +2975,7 @@ void Option_Eyelid( int imodel )
 		strcat( localdesc, "_" );
 		strcat( localdesc, token );
 
-		if (stricmp( token, "lowerer") == 0)
+		if (_stricmp( token, "lowerer") == 0)
 		{
 			GetToken (false);
 			lowererframe = atoi( token );
@@ -2984,7 +2984,7 @@ void Option_Eyelid( int imodel )
 			lowererdesc = g_numflexdesc;
 			strcpyn( g_flexdesc[g_numflexdesc++].FACS, localdesc );
 		}
-		else if (stricmp( token, "neutral") == 0)
+		else if (_stricmp( token, "neutral") == 0)
 		{
 			GetToken (false);
 			neutralframe = atoi( token );
@@ -2993,7 +2993,7 @@ void Option_Eyelid( int imodel )
 			neutraldesc = g_numflexdesc;
 			strcpyn( g_flexdesc[g_numflexdesc++].FACS, localdesc );
 		}
-		else if (stricmp( token, "raiser") == 0)
+		else if (_stricmp( token, "raiser") == 0)
 		{
 			GetToken (false);
 			raiserframe = atoi( token );
@@ -3002,12 +3002,12 @@ void Option_Eyelid( int imodel )
 			raiserdesc = g_numflexdesc;
 			strcpyn( g_flexdesc[g_numflexdesc++].FACS, localdesc );
 		}
-		else if (stricmp( token, "split") == 0)
+		else if (_stricmp( token, "split") == 0)
 		{
 			GetToken (false);
 			split = atof( token );
 		}
-		else if (stricmp( token, "eyeball") == 0)
+		else if (_stricmp( token, "eyeball") == 0)
 		{
 			GetToken (false);
 			strcpy( szEyeball, token );
@@ -3059,7 +3059,7 @@ void Option_Eyelid( int imodel )
 
 		if (szEyeball[0] != '\0')
 		{
-			if (stricmp( peyeball->name, szEyeball ) != 0)
+			if (_stricmp( peyeball->name, szEyeball ) != 0)
 				continue;
 		}
 
@@ -3133,7 +3133,7 @@ void Option_Flexcontroller( s_model_t *pmodel )
 	{
 		GetToken(false);
 
-		if (stricmp( token, "range") == 0)
+		if (_stricmp( token, "range") == 0)
 		{
 			GetToken(false);
 			range_min = atof( token );
@@ -3191,7 +3191,7 @@ void Option_Flexrule( s_model_t *pmodel, char *name )
 	int flexdesc;
 	for ( flexdesc = 0; flexdesc < g_numflexdesc; flexdesc++)
 	{
-		if (stricmp( name, g_flexdesc[flexdesc].FACS ) == 0)
+		if (_stricmp( name, g_flexdesc[flexdesc].FACS ) == 0)
 		{
 			break;
 		}
@@ -3251,7 +3251,7 @@ void Option_Flexrule( s_model_t *pmodel, char *name )
 
 				for (k = 0; k < g_numflexdesc; k++)
 				{
-					if (stricmp( token, g_flexdesc[k].FACS ) == 0)
+					if (_stricmp( token, g_flexdesc[k].FACS ) == 0)
 					{
 						stream[i].op = STUDIO_FETCH2;
 						stream[i].d.index = k;
@@ -3267,7 +3267,7 @@ void Option_Flexrule( s_model_t *pmodel, char *name )
 			{
 				for (k = 0; k < g_numflexcontrollers; k++)
 				{
-					if (stricmp( token, g_flexcontroller[k].name ) == 0)
+					if (_stricmp( token, g_flexcontroller[k].name ) == 0)
 					{
 						stream[i].op = STUDIO_FETCH1;
 						stream[i].d.index = k;
@@ -3406,23 +3406,23 @@ int Cmd_Model( )
 			}
 			return 1;
 		}
-		if (stricmp("{", token ) == 0)
+		if (_stricmp("{", token ) == 0)
 		{
 			depth++;
 		}
-		else if (stricmp("}", token ) == 0)
+		else if (_stricmp("}", token ) == 0)
 		{
 			depth--;
 		}
-		else if (stricmp("eyeball", token ) == 0)
+		else if (_stricmp("eyeball", token ) == 0)
 		{
 			Option_Eyeball( g_model[g_nummodels] );
 		}
-		else if (stricmp("eyelid", token ) == 0)
+		else if (_stricmp("eyelid", token ) == 0)
 		{
 			Option_Eyelid( g_nummodels );
 		}
-		else if (stricmp("flex", token ) == 0)
+		else if (_stricmp("flex", token ) == 0)
 		{
 			// g_flex
 			GetToken (false);
@@ -3435,7 +3435,7 @@ int Cmd_Model( )
 			}
 			Option_Flex( FAC, vtafile, g_nummodels ); // FIXME: this needs to point to a model used, not loaded!!!
 		}
-		else if (stricmp("defaultflex", token ) == 0)
+		else if (_stricmp("defaultflex", token ) == 0)
 		{
 			if (depth == 0)
 			{
@@ -3448,13 +3448,13 @@ int Cmd_Model( )
 			Option_Flex( "default", vtafile, g_nummodels ); // FIXME: this needs to point to a model used, not loaded!!!
 			g_defaultflexkey = &g_flexkey[g_numflexkeys-1];
 		}
-		else if (stricmp("flexfile", token ) == 0)
+		else if (_stricmp("flexfile", token ) == 0)
 		{
 			// file
 			GetToken (false);
 			strcpy( vtafile, token );
 		}
-		else if (stricmp("localvar", token ) == 0)
+		else if (_stricmp("localvar", token ) == 0)
 		{
 			while (TokenAvailable())
 			{
@@ -3462,11 +3462,11 @@ int Cmd_Model( )
 				Add_Flexdesc( token );
 			}
 		}
-		else if (stricmp("mouth", token ) == 0)
+		else if (_stricmp("mouth", token ) == 0)
 		{
 			Option_Mouth( g_model[g_nummodels] );
 		}
-		else if (stricmp("flexcontroller", token ) == 0)
+		else if (_stricmp("flexcontroller", token ) == 0)
 		{
 			Option_Flexcontroller( g_model[g_nummodels] );
 		}
@@ -3474,11 +3474,11 @@ int Cmd_Model( )
 		{
 			Option_Flexrule( g_model[g_nummodels], &token[1] );
 		}
-		else if (stricmp("attachment", token ) == 0)
+		else if (_stricmp("attachment", token ) == 0)
 		{
 		// 	Option_Attachment( g_model[g_nummodels] );
 		}
-		else if (stricmp( token, "spherenormals") == 0)
+		else if (_stricmp( token, "spherenormals") == 0)
 		{
 			Option_Spherenormals( g_model[g_nummodels]->source );
 		}
@@ -3528,17 +3528,17 @@ int Cmd_IKChain( )
 			GetToken(false);
 			g_ikchain[g_numikchains].value = atof( token );
 		}
-		else if (stricmp( "height", token ) == 0)
+		else if (_stricmp( "height", token ) == 0)
 		{
 			GetToken(false);
 			g_ikchain[g_numikchains].height = atof( token );
 		}
-		else if (stricmp( "pad", token ) == 0)
+		else if (_stricmp( "pad", token ) == 0)
 		{
 			GetToken(false);
 			g_ikchain[g_numikchains].radius = atof( token ) / 2.0;
 		}
-		else if (stricmp( "floor", token ) == 0)
+		else if (_stricmp( "floor", token ) == 0)
 		{
 			GetToken(false);
 			g_ikchain[g_numikchains].floor = atof( token );
@@ -3590,7 +3590,7 @@ int Cmd_Controller (void)
 {
 	if (GetToken (false))
 	{
-		if (!stricmp("mouth",token))
+		if (!_stricmp("mouth",token))
 		{
 			g_bonecontroller[g_numbonecontrollers].inputfield = 4;
 		}
@@ -3654,11 +3654,11 @@ void Cmd_ScreenAlign ( void )
 
 		if( GetToken( false ) )
 		{
-			if( !strcmpi( "sphere", token )  )
+			if( !_strcmpi( "sphere", token )  )
 			{
 				g_screenalignedbone[g_numscreenalignedbones].flags = BONE_SCREEN_ALIGN_SPHERE;				
 			}
-			else if( !strcmpi( "cylinder", token ) )
+			else if( !_strcmpi( "cylinder", token ) )
 			{
 				g_screenalignedbone[g_numscreenalignedbones].flags = BONE_SCREEN_ALIGN_CYLINDER;				
 			}
@@ -3927,7 +3927,7 @@ int	Cmd_JointSurfaceProp ()
 	int i;
 	for ( i = s_JointSurfaceProp.Count(); --i >= 0; )
 	{
-		if (!stricmp(s_JointSurfaceProp[i].m_pJointName, token))
+		if (!_stricmp(s_JointSurfaceProp[i].m_pJointName, token))
 		{
 			break;
 		}
@@ -3963,7 +3963,7 @@ static char* FindSurfaceProp ( char const* pJointName )
 {
 	for ( int i = s_JointSurfaceProp.Count(); --i >= 0; )
 	{
-		if (!stricmp(s_JointSurfaceProp[i].m_pJointName, pJointName))
+		if (!_stricmp(s_JointSurfaceProp[i].m_pJointName, pJointName))
 		{
 			return s_JointSurfaceProp[i].m_pSurfaceProp;
 		}
@@ -4048,24 +4048,24 @@ static void ParseContents( int *pAddFlags, int *pRemoveFlags )
 	{
 		GetToken (false);
 
-		if ( !stricmp( token, "grate" ) )
+		if ( !_stricmp( token, "grate" ) )
 		{
 			*pAddFlags |= CONTENTS_GRATE;
 			*pRemoveFlags |= CONTENTS_SOLID;
 		}
-		else if ( !stricmp( token, "ladder" ) )
+		else if ( !_stricmp( token, "ladder" ) )
 		{
 			*pAddFlags |= CONTENTS_LADDER;
 		}
-		else if ( !stricmp( token, "solid" ) )
+		else if ( !_stricmp( token, "solid" ) )
 		{
 			*pAddFlags |= CONTENTS_SOLID;
 		}
-		else if ( !stricmp( token, "monster" ) )
+		else if ( !_stricmp( token, "monster" ) )
 		{
 			*pAddFlags |= CONTENTS_MONSTER;
 		}
-		else if ( !stricmp( token, "notsolid" ) )
+		else if ( !_stricmp( token, "notsolid" ) )
 		{
 			*pRemoveFlags |= CONTENTS_SOLID;
 		}
@@ -4098,7 +4098,7 @@ int	Cmd_JointContents ()
 	int i;
 	for ( i = s_JointContents.Count(); --i >= 0; )
 	{
-		if (!stricmp(s_JointContents[i].m_pJointName, token))
+		if (!_stricmp(s_JointContents[i].m_pJointName, token))
 		{
 			break;
 		}
@@ -4136,7 +4136,7 @@ static int FindContents( char const* pJointName )
 {
 	for ( int i = s_JointContents.Count(); --i >= 0; )
 	{
-		if (!stricmp(s_JointContents[i].m_pJointName, pJointName))
+		if (!_stricmp(s_JointContents[i].m_pJointName, pJointName))
 		{
 			return s_JointContents[i].m_nContents;
 		}
@@ -4242,17 +4242,17 @@ int Cmd_Attachment( )
 	{
 		GetToken (false);
 
-		if (stricmp(token,"absolute") == 0)
+		if (_stricmp(token,"absolute") == 0)
 		{
 			g_attachment[g_numattachments].type |= IS_ABSOLUTE;
 			AngleIMatrix( g_defaultrotation, g_attachment[g_numattachments].local );
 			// AngleIMatrix( Vector( 0, 0, 0 ), g_attachment[g_numattachments].local );
 		}
-		else if (stricmp(token,"rigid") == 0)
+		else if (_stricmp(token,"rigid") == 0)
 		{
 			g_attachment[g_numattachments].type |= IS_RIGID;
 		}
-		else if (stricmp(token,"rotate") == 0)
+		else if (_stricmp(token,"rotate") == 0)
 		{
 			QAngle angles;
 			for (int i = 0; i < 3; ++i)
@@ -4265,7 +4265,7 @@ int Cmd_Attachment( )
 			}
 			AngleMatrix( angles, g_attachment[g_numattachments].local );
 		}
-		else if (stricmp(token,"x_and_z_axes") == 0)
+		else if (_stricmp(token,"x_and_z_axes") == 0)
 		{
 			int i;
 			Vector xaxis, yaxis, zaxis;
@@ -4314,7 +4314,7 @@ int LookupAttachment( char *name )
 	int i;
 	for (i = 0; i < g_numattachments; i++)
 	{
-		if (stricmp( g_attachment[i].name, name ) == 0)
+		if (_stricmp( g_attachment[i].name, name ) == 0)
 		{
 			return i;
 		}
@@ -4406,7 +4406,7 @@ static void Cmd_ReplaceModel( LodScriptData_t& lodData )
 	bool reverse =  false;
 	if( TokenAvailable() && GetToken( false ) )
 	{
-		if( stricmp( "reverse", token ) == 0 )
+		if( _stricmp( "reverse", token ) == 0 )
 		{
 			reverse = true;
 		}
@@ -4418,7 +4418,7 @@ static void Cmd_ReplaceModel( LodScriptData_t& lodData )
 
 	// If the LOD system tells us to replace "blank", let's forget
 	// we ever read this. Have to do it here so parsing works
-	if( !stricmp( newReplacement.GetSrcName(), "blank" ) )
+	if( !_stricmp( newReplacement.GetSrcName(), "blank" ) )
 	{
 		lodData.modelReplacements.FastRemove( i );
 		return;
@@ -4453,7 +4453,7 @@ static void Cmd_RemoveModel( LodScriptData_t& lodData )
 
 	// If the LOD system tells us to replace "blank", let's forget
 	// we ever read this. Have to do it here so parsing works
-	if( !stricmp( newReplacement.GetSrcName(), "blank" ) )
+	if( !_stricmp( newReplacement.GetSrcName(), "blank" ) )
 	{
 		lodData.modelReplacements.FastRemove( i );
 	}
@@ -4551,7 +4551,7 @@ static void Cmd_LOD( char const *cmdname )
 	// Shadow lod has -1 as switch value
 	newLOD.switchValue = -1.0f;
 
-	bool isShadowCall = ( !stricmp( cmdname, "$shadowlod" ) ) ? true : false;
+	bool isShadowCall = ( !_stricmp( cmdname, "$shadowlod" ) ) ? true : false;
 
 	if ( isShadowCall )
 	{
@@ -4589,39 +4589,39 @@ static void Cmd_LOD( char const *cmdname )
 	while( 1 )
 	{
 		GetToken( true );
-		if( stricmp( "replacemodel", token ) == 0 )
+		if( _stricmp( "replacemodel", token ) == 0 )
 		{
 			Cmd_ReplaceModel(newLOD);
 		}
-		else if( stricmp( "removemodel", token ) == 0 )
+		else if( _stricmp( "removemodel", token ) == 0 )
 		{
 			Cmd_RemoveModel(newLOD);
 		}
-		else if( stricmp( "replacebone", token ) == 0 )
+		else if( _stricmp( "replacebone", token ) == 0 )
 		{
 			Cmd_ReplaceBone( newLOD );
 		}
-		else if( stricmp( "bonetreecollapse", token ) == 0 )
+		else if( _stricmp( "bonetreecollapse", token ) == 0 )
 		{
 			Cmd_BoneTreeCollapse( newLOD );
 		}
-		else if( stricmp( "replacematerial", token ) == 0 )
+		else if( _stricmp( "replacematerial", token ) == 0 )
 		{
 			Cmd_ReplaceMaterial( newLOD );
 		}
-		else if( stricmp( "removemesh", token ) == 0 )
+		else if( _stricmp( "removemesh", token ) == 0 )
 		{
 			Cmd_RemoveMesh( newLOD );
 		}
-		else if( stricmp( "nofacial", token ) == 0 )
+		else if( _stricmp( "nofacial", token ) == 0 )
 		{
 			newLOD.EnableFacialAnimation( false );
 		}
-		else if( stricmp( "facial", token ) == 0 )
+		else if( _stricmp( "facial", token ) == 0 )
 		{
 			newLOD.EnableFacialAnimation( true );
 		}
-		else if ( stricmp( "use_shadowlod_materials", token ) == 0 )
+		else if ( _stricmp( "use_shadowlod_materials", token ) == 0 )
 		{
 			if (isShadowCall)
 			{
@@ -5113,7 +5113,7 @@ void Grab_AxisInterpBones( )
 		}
 	//	int i = sscanf( g_szLine, "%s \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d", cmd, pBone->bonename, tmp, pBone->controlname, tmp, &pBone->axis );
 		int i = sscanf( g_szLine, "%1023s \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d", cmd, pBone->bonename, tmp, pBone->controlname, tmp, &pBone->axis );
-		if (i == 6 && stricmp( cmd, "bone") == 0)
+		if (i == 6 && _stricmp( cmd, "bone") == 0)
 		{
 			// printf( "\"%s\" \"%s\" \"%s\" \"%s\"\n", cmd, pBone->bonename, tmp, pBone->controlname );
 			pAxis = pBone;
@@ -5121,20 +5121,20 @@ void Grab_AxisInterpBones( )
 			g_numaxisinterpbones++;
 			pBone = &g_axisinterpbones[g_numaxisinterpbones];
 		}
-		else if (stricmp( cmd, "display" ) == 0)
+		else if (_stricmp( cmd, "display" ) == 0)
 		{
 			// skip all display info
 		}
-		else if (stricmp( cmd, "type" ) == 0)
+		else if (_stricmp( cmd, "type" ) == 0)
 		{
 			// skip all type info
 		}
-		else if (stricmp( cmd, "basepos" ) == 0)
+		else if (_stricmp( cmd, "basepos" ) == 0)
 		{
 			i = sscanf( g_szLine, "basepos %f %f %f", &basepos.x, &basepos.y, &basepos.z );
 			// skip all type info
 		}
-		else if (stricmp( cmd, "axis" ) == 0)
+		else if (_stricmp( cmd, "axis" ) == 0)
 		{
 			Vector pos;
 			QAngle rot;
@@ -5166,14 +5166,14 @@ void Grab_QuatInterpBones( )
 			return;
 		}
 		int i = sscanf( g_szLine, "%s %s %s %s %s", cmd, pBone->bonename, pBone->parentname, pBone->controlparentname, pBone->controlname );
-		if (i == 5 && stricmp( cmd, "<helper>") == 0)
+		if (i == 5 && _stricmp( cmd, "<helper>") == 0)
 		{
 			// printf( "\"%s\" \"%s\" \"%s\" \"%s\"\n", cmd, pBone->bonename, tmp, pBone->controlname );
 			pAxis = pBone;
 			g_numquatinterpbones++;
 			pBone = &g_quatinterpbones[g_numquatinterpbones];
 		}
-		else if (stricmp( cmd, "<display>" ) == 0)
+		else if (_stricmp( cmd, "<display>" ) == 0)
 		{
 			// skip all display info
 			Vector size;
@@ -5193,12 +5193,12 @@ void Grab_QuatInterpBones( )
 				Error("unable to parse procedual bones\n");
 			}
 		}
-		else if (stricmp( cmd, "<basepos>" ) == 0)
+		else if (_stricmp( cmd, "<basepos>" ) == 0)
 		{
 			i = sscanf( g_szLine, "<basepos> %f %f %f", &basepos.x, &basepos.y, &basepos.z );
 			// skip all type info
 		}
-		else if (stricmp( cmd, "<trigger>" ) == 0)
+		else if (_stricmp( cmd, "<trigger>" ) == 0)
 		{
 			float tolerance;
 			RadianEuler trigger;
@@ -5258,7 +5258,7 @@ int Load_ProceduralBones( )
 	char ext[32];
 	ExtractFileExtension( filename, ext, sizeof( ext ) );
 
-	if (stricmp( ext, "vrd") == 0)
+	if (_stricmp( ext, "vrd") == 0)
 	{
 		Grab_QuatInterpBones( );
 	}
@@ -5308,11 +5308,11 @@ void ParseScript (void)
 				GetToken (false);
 		} while (1);
 	
-		if (!stricmp (token, "$modelname"))
+		if (!_stricmp (token, "$modelname"))
 		{
 			Cmd_Modelname ();
 		}
-		else if (!stricmp (token, "$cd"))
+		else if (!_stricmp (token, "$cd"))
 		{
 			if (cdset)
 				Error ("Two $cd in one model");
@@ -5322,7 +5322,7 @@ void ParseScript (void)
 			strcat (cddir[0], "/" );
 			numdirs = 0;
 		}
-		else if (!stricmp (token, "$cdmaterials"))
+		else if (!_stricmp (token, "$cdmaterials"))
 		{
 			while (TokenAvailable())
 			{
@@ -5335,7 +5335,7 @@ void ParseScript (void)
 				numcdtextures++;
 			}
 		}
-		else if (!stricmp (token, "$pushd"))
+		else if (!_stricmp (token, "$pushd"))
 		{
 			GetToken(false);
 
@@ -5344,145 +5344,145 @@ void ParseScript (void)
 			strcat( cddir[numdirs+1], "/" );
 			numdirs++;
 		}
-		else if (!stricmp (token, "$popd"))
+		else if (!_stricmp (token, "$popd"))
 		{
 			if (numdirs > 0)
 				numdirs--;
 		}
 
-		else if (!stricmp (token, "$scale"))
+		else if (!_stricmp (token, "$scale"))
 		{
 			Cmd_ScaleUp ();
 		}
 
-		else if (!stricmp (token, "$root"))
+		else if (!_stricmp (token, "$root"))
 		{
 			Cmd_Root ();
 		}
-		else if (!stricmp (token, "$controller"))
+		else if (!_stricmp (token, "$controller"))
 		{
 			Cmd_Controller ();
 		}
-		else if (!stricmp( token, "$screenalign" ))
+		else if (!_stricmp( token, "$screenalign" ))
 		{
 			Cmd_ScreenAlign( );
 		}
-		else if (!stricmp (token, "$model"))
+		else if (!_stricmp (token, "$model"))
 		{
 			Cmd_Model();
 		}
-		else if (!stricmp (token, "$collisionmodel"))
+		else if (!_stricmp (token, "$collisionmodel"))
 		{
 			Cmd_CollisionModel( false );
 		}
-		else if (!stricmp (token, "$collisionjoints"))
+		else if (!_stricmp (token, "$collisionjoints"))
 		{
 			Cmd_CollisionModel( true );
 		}
-		else if (!stricmp (token, "$collisiontext"))
+		else if (!_stricmp (token, "$collisiontext"))
 		{
 			Cmd_CollisionText();
 		}
-		else if (!stricmp (token, "$body"))
+		else if (!_stricmp (token, "$body"))
 		{
 			Cmd_Body();
 		}
 
-		else if (!stricmp (token, "$bodygroup"))
+		else if (!_stricmp (token, "$bodygroup"))
 		{
 			Cmd_Bodygroup();
 		}
 
-		else if (!stricmp (token, "$animation" ))
+		else if (!_stricmp (token, "$animation" ))
 		{
 			Cmd_Animation();
 		}
-		else if (!stricmp (token, "$autocenter" ))
+		else if (!_stricmp (token, "$autocenter" ))
 		{
 			Cmd_Autocenter();
 		}
 
 		/*
-		else if (!stricmp (token, "$pose" ))
+		else if (!_stricmp (token, "$pose" ))
 		{
 			Cmd_Pose();
 		}
 		*/
 
-		else if (!stricmp (token, "$sequence"))
+		else if (!_stricmp (token, "$sequence"))
 		{
 			Cmd_Sequence ();
 		}
 
-		else if (!stricmp (token, "$cmdlist"))
+		else if (!_stricmp (token, "$cmdlist"))
 		{
 			Cmd_Cmdlist ();
 		}
 
-		else if (!stricmp (token, "$sequencegroup"))
+		else if (!_stricmp (token, "$sequencegroup"))
 		{
 			Cmd_SequenceGroup ();
 		}
 
-		else if (!stricmp (token, "$sequencegroupsize"))
+		else if (!_stricmp (token, "$sequencegroupsize"))
 		{
 			Cmd_SequenceGroupSize ();
 		}
 
-		else if (!stricmp (token, "$weightlist"))
+		else if (!_stricmp (token, "$weightlist"))
 		{
 			Cmd_Weightlist();
 		}
 
-		else if (!stricmp (token, "$ikchain"))
+		else if (!_stricmp (token, "$ikchain"))
 		{
 			Cmd_IKChain();
 		}
 
-		else if (!stricmp (token, "$ikautoplaylock"))
+		else if (!_stricmp (token, "$ikautoplaylock"))
 		{
 			Cmd_IKAutoplayLock();
 		}
 
-		else if (!stricmp (token, "$eyeposition"))
+		else if (!_stricmp (token, "$eyeposition"))
 		{
 			Cmd_Eyeposition ();
 		}
 
-		else if (!stricmp (token, "$illumposition"))
+		else if (!_stricmp (token, "$illumposition"))
 		{
 			Cmd_Illumposition ();
 		}
 
-		else if (!stricmp (token, "$origin"))
+		else if (!_stricmp (token, "$origin"))
 		{
 			Cmd_Origin ();
 		}
-		else if (!stricmp (token, "$upaxis"))
+		else if (!_stricmp (token, "$upaxis"))
 		{
 			Cmd_UpAxis( );
 		}
-		else if (!stricmp (token, "$bbox"))
+		else if (!_stricmp (token, "$bbox"))
 		{
 			Cmd_BBox ();
 		}
-		else if (!stricmp (token, "$cbox"))
+		else if (!_stricmp (token, "$cbox"))
 		{
 			Cmd_CBox ();
 		}
-		else if (!stricmp (token, "$gamma"))
+		else if (!_stricmp (token, "$gamma"))
 		{
 			Cmd_Gamma ();
 		}
-		else if (!stricmp (token, "$texturegroup"))
+		else if (!_stricmp (token, "$texturegroup"))
 		{
 			Cmd_TextureGroup ();
 		}
-		else if (!stricmp (token, "$hgroup"))
+		else if (!_stricmp (token, "$hgroup"))
 		{
 			Cmd_Hitgroup ();
 		}
-		else if (!stricmp (token, "$hbox"))
+		else if (!_stricmp (token, "$hbox"))
 		{
 			Cmd_Hitbox ();
 		}
@@ -5490,138 +5490,138 @@ void ParseScript (void)
 		{
 			Cmd_HitboxSet ();
 		}
-		else if (!stricmp (token, "$surfaceprop"))
+		else if (!_stricmp (token, "$surfaceprop"))
 		{
 			Cmd_SurfaceProp ();
 		}
-		else if (!stricmp (token, "$jointsurfaceprop"))
+		else if (!_stricmp (token, "$jointsurfaceprop"))
 		{
 			Cmd_JointSurfaceProp ();
 		}
-		else if (!stricmp (token, "$contents"))
+		else if (!_stricmp (token, "$contents"))
 		{
 			Cmd_Contents ();
 		}
-		else if (!stricmp (token, "$jointcontents"))
+		else if (!_stricmp (token, "$jointcontents"))
 		{
 			Cmd_JointContents ();
 		}
-		else if (!stricmp (token, "$attachment"))
+		else if (!_stricmp (token, "$attachment"))
 		{
 			Cmd_Attachment ();
 		}
-		else if (!stricmp (token, "$externaltextures"))
+		else if (!_stricmp (token, "$externaltextures"))
 		{
 			split_textures = 1;
 		}
-		else if (!stricmp (token, "$cliptotextures"))
+		else if (!_stricmp (token, "$cliptotextures"))
 		{
 			clip_texcoords = 1;
 		}
-		else if (!stricmp (token, "$renamebone"))
+		else if (!_stricmp (token, "$renamebone"))
 		{
 			Cmd_Renamebone ();
 		}
-		else if (!stricmp (token, "$collapsebones"))
+		else if (!_stricmp (token, "$collapsebones"))
 		{
 			g_collapse_bones = true;
 		}
-		else if (!stricmp (token, "$alwayscollapse"))
+		else if (!_stricmp (token, "$alwayscollapse"))
 		{
 			g_collapse_bones = true;
 			GetToken(false);
 			g_collapse[g_numcollapse++] = strdup( token );
 		}
-		else if (!stricmp (token, "$proceduralbones"))
+		else if (!_stricmp (token, "$proceduralbones"))
 		{
 			Load_ProceduralBones( );
 		}
-		else if (!stricmp (token, "$skiptransition"))
+		else if (!_stricmp (token, "$skiptransition"))
 		{
 			Cmd_Skiptransition( );
 		}
-		else if (!stricmp (token, "$staticprop"))
+		else if (!_stricmp (token, "$staticprop"))
 		{
 			g_staticprop = true;
 			gflags |= STUDIOHDR_FLAGS_STATIC_PROP;
 		}
-		else if (!stricmp (token, "$realignbones"))
+		else if (!_stricmp (token, "$realignbones"))
 		{
 			g_realignbones = true;
 		}
-		else if (!stricmp (token, "$forcerealign"))
+		else if (!_stricmp (token, "$forcerealign"))
 		{
 			Cmd_ForceRealign( );
 		}
-		else if (!stricmp (token, "$lod"))
+		else if (!_stricmp (token, "$lod"))
 		{
 			Cmd_LOD( "$lod" );
 		}
-		else if (!stricmp (token, "$shadowlod"))
+		else if (!_stricmp (token, "$shadowlod"))
 		{
 			Cmd_ShadowLOD();
 		}
-		else if (!stricmp (token, "$includemodel") )
+		else if (!_stricmp (token, "$includemodel") )
 		{
 			Cmd_IncludeModel();
 		}
-		else if (!stricmp( token, "$poseparameter" ))
+		else if (!_stricmp( token, "$poseparameter" ))
 		{
 			Cmd_PoseParameter( );
 		}
-		else if (!stricmp( token, "$heirarchy" ) || !stricmp( token, "$hierarchy" ))
+		else if (!_stricmp( token, "$heirarchy" ) || !_stricmp( token, "$hierarchy" ))
 		{
 			Cmd_ForcedHierarchy( );
 		}
-		else if (!stricmp( token, "$insertbone" ))
+		else if (!_stricmp( token, "$insertbone" ))
 		{
 			Cmd_InsertHierarchy( );
 		}
-		else if (!stricmp( token, "$limitrotation" ))
+		else if (!_stricmp( token, "$limitrotation" ))
 		{
 			Cmd_LimitRotation( );
 		}
-		else if (!stricmp( token, "$opaque" ))
+		else if (!_stricmp( token, "$opaque" ))
 		{
 			Cmd_Opaque( );
 		}
-		else if (!stricmp( token, "$mostlyopaque" ))
+		else if (!_stricmp( token, "$mostlyopaque" ))
 		{
 			Cmd_TranslucentTwoPass( );
 		}
-		else if (!stricmp( token, "$platform" ))
+		else if (!_stricmp( token, "$platform" ))
 		{
 			Cmd_Platform( );
 		}
-		else if (!stricmp (token, "$keyvalues"))
+		else if (!_stricmp (token, "$keyvalues"))
 		{
 			Option_KeyValues( &g_KeyValueText );
 		}
-		else if (!stricmp (token, "$bonemerge")) // VXP
+		else if (!_stricmp (token, "$bonemerge")) // VXP
 		{
 			Cmd_BoneMerge();
 		}
-		else if (!stricmp (token, "$definebone")) // VXP
+		else if (!_stricmp (token, "$definebone")) // VXP
 		{
 			Cmd_DefineBone();
 		}
-		else if (!stricmp (token, "$lockbonelengths")) // VXP
+		else if (!_stricmp (token, "$lockbonelengths")) // VXP
 		{
 			Cmd_LockBoneLengths();
 		}
-		else if (!stricmp (token, "$lockdefinebones")) // VXP
+		else if (!_stricmp (token, "$lockdefinebones")) // VXP
 		{
 			Cmd_LockDefineBones();
 		}
-		else if (!stricmp (token, "$continue")) // VXP
+		else if (!_stricmp (token, "$continue")) // VXP
 		{
 			Cmd_Continue();
 		}
-		else if (!stricmp (token, "$append")) // VXP
+		else if (!_stricmp (token, "$append")) // VXP
 		{
 			Cmd_Append();
 		}
-		else if (!stricmp (token, "$prepend")) // VXP
+		else if (!_stricmp (token, "$prepend")) // VXP
 		{
 			Cmd_Prepend();
 		}
@@ -5677,45 +5677,45 @@ int main (int argc, char **argv)
 	{
 		if (argv[i][0] == '-') 
 		{
-			if (!stricmp(argv[i], "-ihvtest"))
+			if (!_stricmp(argv[i], "-ihvtest"))
 			{
 				++i;
 				g_IHVTest = true;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-game"))
+			if (!_stricmp(argv[i], "-game"))
 			{
 				++i;
 				gameIdx = i;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-quiet"))
+			if (!_stricmp(argv[i], "-quiet"))
 			{
 				g_quiet = true;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-fullcollide"))
+			if (!_stricmp(argv[i], "-fullcollide"))
 			{
 				g_badCollide = true;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-checklengths"))
+			if (!_stricmp(argv[i], "-checklengths"))
 			{
 				g_bCheckLengths = true;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-printbones"))
+			if (!_stricmp(argv[i], "-printbones"))
 			{
 				g_bPrintBones = true;
 				continue;
 			}
 
-			if (!stricmp(argv[i], "-perf"))
+			if (!_stricmp(argv[i], "-perf"))
 			{
 				g_bPerf = true;
 				continue;

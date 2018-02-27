@@ -162,7 +162,7 @@ void *C_BaseFlex::FindSceneFile( const char *filename )
 	for ( i = 0; i < m_FileList.Size(); i++ )
 	{
 		CFlexSceneFile *file = m_FileList[ i ];
-		if ( file && !stricmp( file->filename, filename ) )
+		if ( file && !_stricmp( file->filename, filename ) )
 		{
 			return file->buffer;
 		}
@@ -276,7 +276,7 @@ void C_BaseFlex::SetViewTarget( void )
 		m_iEyeAttachment = -2;
 		for (int i = 0; i < hdr->numattachments; i++)
 		{
-			if (stricmp( hdr->pAttachment( i )->pszName(), "eyes" ) == 0)
+			if (_stricmp( hdr->pAttachment( i )->pszName(), "eyes" ) == 0)
 			{
 				m_iEyeAttachment = i;
 				break;
@@ -818,7 +818,7 @@ int C_BaseFlex::AddGlobalFlexController( char *szName )
 	int i;
 	for (i = 0; i < g_numflexcontrollers; i++)
 	{
-		if (stricmp( g_flexcontroller[i], szName ) == 0)
+		if (_stricmp( g_flexcontroller[i], szName ) == 0)
 		{
 			return i;
 		}
@@ -826,7 +826,7 @@ int C_BaseFlex::AddGlobalFlexController( char *szName )
 
 	if (g_numflexcontrollers < MAXSTUDIOFLEXCTRL * 4)
 	{
-		g_flexcontroller[g_numflexcontrollers++] = strdup( szName );
+		g_flexcontroller[g_numflexcontrollers++] = _strdup( szName );
 	}
 	else
 	{
@@ -848,7 +848,7 @@ const flexsetting_t *C_BaseFlex::FindNamedSetting( const flexsettinghdr_t *pSett
 
 		const char *name = pSetting->pszName();
 
-		if ( !stricmp( name, expr ) )
+		if ( !_stricmp( name, expr ) )
 			break;
 	}
 

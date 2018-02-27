@@ -38,9 +38,8 @@
 //=========================================================
 class CNPC_Roach : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Roach, CHL1BaseNPC );
-	
 public:
+	DECLARE_CLASS( CNPC_Roach, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

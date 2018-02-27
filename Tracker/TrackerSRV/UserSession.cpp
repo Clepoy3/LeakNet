@@ -9,6 +9,7 @@
 //=============================================================================
 
 #include "UserSession.h"
+//#include "Random.h"
 #include "GameUI/Random.h"
 #include "SessionManager.h"
 #include "TrackerDatabaseManager.h"
@@ -216,15 +217,15 @@ struct UserMsgDispatch_t
 // ordered from most called to least called
 static UserMsgDispatch_t g_UserMsgDispatch[] =
 {
-	{ TCLS_HEARTBEAT, CUserSession::ReceivedMsg_Heartbeat },
-	{ TCLS_ROUTETOFRIEND, CUserSession::ReceivedMsg_RouteToFriend },
-	{ TCLS_MESSAGE, CUserSession::ReceivedMsg_Message },
-	{ TCLS_RESPONSE, CUserSession::ReceivedMsg_Response },
-	{ TCLS_FRIENDINFO, CUserSession::ReceivedMsg_FriendInfo },
-	{ TCLS_AUTHUSER, CUserSession::ReceivedMsg_AuthUser },
-	{ TCLS_REQAUTH, CUserSession::ReceivedMsg_ReqAuth },
-	{ TCLS_FRIENDSEARCH, CUserSession::ReceivedMsg_FindUser },
-	{ TCLS_SETINFO, CUserSession::ReceivedMsg_SetInfo },
+	{ TCLS_HEARTBEAT, &CUserSession::ReceivedMsg_Heartbeat },
+	{ TCLS_ROUTETOFRIEND, &CUserSession::ReceivedMsg_RouteToFriend },
+	{ TCLS_MESSAGE, &CUserSession::ReceivedMsg_Message },
+	{ TCLS_RESPONSE, &CUserSession::ReceivedMsg_Response },
+	{ TCLS_FRIENDINFO, &CUserSession::ReceivedMsg_FriendInfo },
+	{ TCLS_AUTHUSER, &CUserSession::ReceivedMsg_AuthUser },
+	{ TCLS_REQAUTH, &CUserSession::ReceivedMsg_ReqAuth },
+	{ TCLS_FRIENDSEARCH, &CUserSession::ReceivedMsg_FindUser },
+	{ TCLS_SETINFO, &CUserSession::ReceivedMsg_SetInfo },
 };
 
 
@@ -239,24 +240,24 @@ struct DBReplyMapItem_t
 
 static DBReplyMapItem_t g_DBMsgDispatch[] =
 {
-	{ CMD_LOGIN,			STATE_NORMAL,			CUserSession::DBMsg_Login },
-	{ CMD_LOGOFF,			STATE_NORMAL,			CUserSession::DBMsg_Logoff },
-	{ CMD_GETSESSIONINFO,	STATE_SENDINGSTATUS,	CUserSession::DBMsg_GetSessionInfo_SendingStatus },
-	{ CMD_GETSESSIONINFO,	STATE_EXCHANGESTATUS,	CUserSession::DBMsg_GetSessionInfo_ExchangeStatus },
-	{ CMD_GETSESSIONINFO,	STATE_SENDINGOFFLINESTATUS,	CUserSession::DBMsg_GetSessionInfo_SendingOfflineStatus },
-	{ CMD_GETSESSIONINFO,	STATE_ADDWATCH,			CUserSession::DBMsg_GetSessionInfo_AddWatch },
-	{ CMD_GETSESSIONINFO,	STATE_DISCONNECTINGUSER,CUserSession::DBMsg_GetSessionInfo_DisconnectingUser },
-	{ CMD_GETSESSIONINFO,	STATE_CHECKMESSAGES,	CUserSession::DBMsg_GetSessionInfo_CheckMessages },
-	{ CMD_FINDUSERS,		STATE_NORMAL,			CUserSession::DBMsg_FindUsers },
-	{ CMD_GETINFO,			STATE_NORMAL,			CUserSession::DBMsg_GetInfo },
-	{ CMD_ISAUTHED,			STATE_GETFRIENDINFO,	CUserSession::DBMsg_GetFriendInfo_IsAuthed },
-	{ CMD_ISAUTHED,			STATE_REQUESTINGAUTH,	CUserSession::DBMsg_RequestAuth_IsAuthed },
-	{ CMD_GETWATCHERS,		STATE_NORMAL,			CUserSession::DBMsg_GetWatchers },
-	{ CMD_GETFRIENDLIST,	STATE_NORMAL,			CUserSession::DBMsg_GetFriendList },
-	{ CMD_GETFRIENDSTATUS,	STATE_NORMAL,			CUserSession::DBMsg_GetFriendStatus },
-	{ CMD_GETFRIENDSGAMESTATUS, STATE_NORMAL,		CUserSession::DBMsg_GetFriendsGameStatus },
-	{ CMD_GETMESSAGE,		STATE_NORMAL,			CUserSession::DBMsg_GetMessage },
-	{ CMD_DELETEMESSAGE,	STATE_NORMAL,			CUserSession::DBMsg_DeleteMessage },
+	{ CMD_LOGIN,			STATE_NORMAL,			&CUserSession::DBMsg_Login },
+	{ CMD_LOGOFF,			STATE_NORMAL,			&CUserSession::DBMsg_Logoff },
+	{ CMD_GETSESSIONINFO,	STATE_SENDINGSTATUS,	&CUserSession::DBMsg_GetSessionInfo_SendingStatus },
+	{ CMD_GETSESSIONINFO,	STATE_EXCHANGESTATUS,	&CUserSession::DBMsg_GetSessionInfo_ExchangeStatus },
+	{ CMD_GETSESSIONINFO,	STATE_SENDINGOFFLINESTATUS,	&CUserSession::DBMsg_GetSessionInfo_SendingOfflineStatus },
+	{ CMD_GETSESSIONINFO,	STATE_ADDWATCH,			&CUserSession::DBMsg_GetSessionInfo_AddWatch },
+	{ CMD_GETSESSIONINFO,	STATE_DISCONNECTINGUSER,&CUserSession::DBMsg_GetSessionInfo_DisconnectingUser },
+	{ CMD_GETSESSIONINFO,	STATE_CHECKMESSAGES,	&CUserSession::DBMsg_GetSessionInfo_CheckMessages },
+	{ CMD_FINDUSERS,		STATE_NORMAL,			&CUserSession::DBMsg_FindUsers },
+	{ CMD_GETINFO,			STATE_NORMAL,			&CUserSession::DBMsg_GetInfo },
+	{ CMD_ISAUTHED,			STATE_GETFRIENDINFO,	&CUserSession::DBMsg_GetFriendInfo_IsAuthed },
+	{ CMD_ISAUTHED,			STATE_REQUESTINGAUTH,	&CUserSession::DBMsg_RequestAuth_IsAuthed },
+	{ CMD_GETWATCHERS,		STATE_NORMAL,			&CUserSession::DBMsg_GetWatchers },
+	{ CMD_GETFRIENDLIST,	STATE_NORMAL,			&CUserSession::DBMsg_GetFriendList },
+	{ CMD_GETFRIENDSTATUS,	STATE_NORMAL,			&CUserSession::DBMsg_GetFriendStatus },
+	{ CMD_GETFRIENDSGAMESTATUS, STATE_NORMAL,		&CUserSession::DBMsg_GetFriendsGameStatus },
+	{ CMD_GETMESSAGE,		STATE_NORMAL,			&CUserSession::DBMsg_GetMessage },
+	{ CMD_DELETEMESSAGE,	STATE_NORMAL,			&CUserSession::DBMsg_DeleteMessage },
 };
 
 //-----------------------------------------------------------------------------
@@ -909,7 +910,7 @@ void CUserSession::UnauthUser(unsigned int targetID)
 		g_pDataManager->TrackerUser(targetID)->User_RemoveAuth(targetID, m_iUserID);
 	}
 
-	m_pDB->User_SetBlock(m_iUserID, targetID, true);
+//	m_pDB->User_SetBlock(m_iUserID, targetID, true); // VXP: FIXME: Why blocking user?
 
 	// tell the user that we've gone offline
 	g_pDataManager->TrackerUser(targetID)->User_GetSessionInfo(this, STATE_SENDINGOFFLINESTATUS, targetID);
@@ -1444,7 +1445,8 @@ void CUserSession::DBMsg_GetSessionInfo_SendingOfflineStatus(int returnVal, void
 	CUtlMsgBuffer msgBuffer;
 	msgBuffer.WriteInt("_id", TSVC_FRIENDS);
 	msgBuffer.WriteInt("count", 1);
-	int msgBuf[5];
+//	int msgBuf[5];
+	int msgBuf[6]; // VXP
 	int intsWritten = 0;
 	msgBuf[intsWritten++] = m_iUserID;
 	// write status second
@@ -1703,7 +1705,7 @@ void CUserSession::DBMsg_GetFriendStatus(int returnVal, void *dataBlock)
 
 		// batch up users per database
 		ITrackerUserDatabase *previousDatabase = g_pDataManager->BaseTrackerUser(gamers[0].userID);
-		i = 0;
+		int i = 0;
 		int batchCount = 0;
 		ITrackerUserDatabase::simpleuser_t *batchStart = gamers + 0;
 		while (previousDatabase)

@@ -264,9 +264,9 @@ void UTIL_TraceModel( const Vector &vecStart, const Vector &vecEnd, const Vector
 //-----------------------------------------------------------------------------
 class CTraceFilterEntity : public CTraceFilterSimple
 {
+public:
 	DECLARE_CLASS( CTraceFilterEntity, CTraceFilterSimple );
 
-public:
 	CTraceFilterEntity( CBaseEntity *pEntity, int nCollisionGroup ) : CTraceFilterSimple( pEntity, nCollisionGroup )
 	{
 		if (!pEntity->GetMoveParent())
@@ -316,8 +316,9 @@ private:
 
 class CTraceFilterEntityIgnoreOther : public CTraceFilterEntity
 {
-	DECLARE_CLASS( CTraceFilterEntityIgnoreOther, CTraceFilterEntity ); // VXP
 public:
+	DECLARE_CLASS( CTraceFilterEntityIgnoreOther, CTraceFilterEntity ); // VXP
+
 	CTraceFilterEntityIgnoreOther( CBaseEntity *pEntity, const IHandleEntity *pIgnore, int nCollisionGroup ) : 
 		CTraceFilterEntity( pEntity, nCollisionGroup ), m_pIgnoreOther( pIgnore )
 	{

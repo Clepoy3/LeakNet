@@ -247,7 +247,7 @@ inline T const& CUtlMultiList<T,I>::operator[]( I i ) const
 // list creation/destruction
 //-----------------------------------------------------------------------------
 template <class T, class I>
-CUtlMultiList<T,I>::ListHandle_t CUtlMultiList<T,I>::CreateList()
+typename CUtlMultiList<T,I>::ListHandle_t CUtlMultiList<T,I>::CreateList()
 {
 	ListHandle_t l = m_List.AddToTail();
 	m_List[l].m_Head = m_List[l].m_Tail = InvalidIndex();

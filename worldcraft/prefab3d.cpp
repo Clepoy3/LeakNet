@@ -190,7 +190,7 @@ CMapClass *CPrefab3D::CreateInBox(BoundBox *pBox)
 
 		Vector center;
 		pObject->GetBoundsCenter(center);
-		for (i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			move[i] -= center[i];
 		}
@@ -252,7 +252,7 @@ CPrefabRMF::~CPrefabRMF()
 //			dwFlags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CPrefabRMF::DoLoad(fstream& file, DWORD dwFlags)
+int CPrefabRMF::DoLoad(std::fstream& file, DWORD dwFlags)
 {
 	int iRvl;
 
@@ -291,7 +291,7 @@ int CPrefabRMF::DoLoad(fstream& file, DWORD dwFlags)
 //			dwFlags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CPrefabRMF::DoSave(fstream& file, DWORD dwFlags)
+int CPrefabRMF::DoSave(std::fstream& file, DWORD dwFlags)
 {
 	// save world
 	if(dwFlags & lsMAP)
@@ -317,7 +317,7 @@ int CPrefabRMF::Load(DWORD dwFlags)
 		return -1;
 	}
 
-	fstream &file = pLibrary->m_file;
+	std::fstream &file = pLibrary->m_file;
 	file.seekg(dwFileOffset);
 
 	return(DoLoad(file, dwFlags));
@@ -333,7 +333,8 @@ int CPrefabRMF::Load(DWORD dwFlags)
 //-----------------------------------------------------------------------------
 int CPrefabRMF::Init(LPCTSTR pszFilename, BOOL bLoadNow, DWORD dwFlags)
 {
-	fstream file(pszFilename, ios::in | ios::binary | ios::nocreate);
+//	fstream file(pszFilename, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+	std::fstream file(pszFilename, std::ios::in | std::ios::binary);
 
 	// ensure we're named
 	memset(szName, 0, sizeof szName);
@@ -349,7 +350,7 @@ int CPrefabRMF::Init(LPCTSTR pszFilename, BOOL bLoadNow, DWORD dwFlags)
 //			dwFlags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CPrefabRMF::Init(fstream &file, BOOL bLoadNow, DWORD dwFlags)
+int CPrefabRMF::Init(std::fstream &file, BOOL bLoadNow, DWORD dwFlags)
 {
 	int iRvl = 1;	// start off ok
 	
@@ -377,7 +378,7 @@ int CPrefabRMF::Init(fstream &file, BOOL bLoadNow, DWORD dwFlags)
 //-----------------------------------------------------------------------------
 int CPrefabRMF::Save(LPCTSTR pszFilename, DWORD dwFlags)
 {
-	fstream file(pszFilename, ios::out | ios::binary);
+	std::fstream file(pszFilename, std::ios::out | std::ios::binary);
 	return Save(file, dwFlags);
 }
 
@@ -388,7 +389,7 @@ int CPrefabRMF::Save(LPCTSTR pszFilename, DWORD dwFlags)
 //			dwFlags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CPrefabRMF::Save(fstream& file, DWORD dwFlags)
+int CPrefabRMF::Save(std::fstream& file, DWORD dwFlags)
 {
 	if (!IsLoaded() && (Load() == -1))
 	{

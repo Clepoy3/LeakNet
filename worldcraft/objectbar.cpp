@@ -720,7 +720,7 @@ void CObjectBar::OnCreatelistSelchange()
 	m_FacesSpin.SetRange(SolidTypes[nSolidIndex].nFacesMin, SolidTypes[nSolidIndex].nFacesMax);
 	m_FacesSpin.SetPos(SolidTypes[nSolidIndex].nFaces);
 	
-	itoa(SolidTypes[nSolidIndex].nFaces, szBuf, 10);
+	_itoa(SolidTypes[nSolidIndex].nFaces, szBuf, 10);
 	m_Faces.SetWindowText(szBuf);
 }
 

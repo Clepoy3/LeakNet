@@ -149,13 +149,13 @@ bool CSchemeManager::BitmapHandleSearchFunc(const CachedBitmapHandle_t &lhs, con
 	// a NULL bitmap indicates to use the search string instead
 	if (lhs.bitmap && rhs.bitmap)
 	{
-		return stricmp(lhs.bitmap->GetName(), rhs.bitmap->GetName()) > 0;
+		return _stricmp(lhs.bitmap->GetName(), rhs.bitmap->GetName()) > 0;
 	}
 	else if (lhs.bitmap)
 	{
-		return stricmp(lhs.bitmap->GetName(), s_pszSearchString) > 0;
+		return _stricmp(lhs.bitmap->GetName(), s_pszSearchString) > 0;
 	}
-	return stricmp(s_pszSearchString, rhs.bitmap->GetName()) > 0;
+	return _stricmp(s_pszSearchString, rhs.bitmap->GetName()) > 0;
 }
 
 
@@ -237,7 +237,7 @@ HScheme CSchemeManager::FindLoadedScheme(const char *fileName)
 	for (int i = 1; i < _scheme.Count(); i++)
 	{
 		char const *schemeFileName = _scheme[i]->GetFileName();
-		if (!stricmp(schemeFileName, fileName))
+		if (!_stricmp(schemeFileName, fileName))
 			return i;
 	}
 
@@ -513,7 +513,7 @@ HScheme CSchemeManager::GetScheme(const char *tag)
 {
 	for (int i=1;i<_scheme.Count();i++)
 	{
-		if ( !stricmp(tag,_scheme[i]->GetName()) )
+		if ( !_stricmp(tag,_scheme[i]->GetName()) )
 		{
 			return i;
 		}
@@ -600,7 +600,7 @@ IBorder *CScheme::GetBorder(const char *borderName)
 {
 	for (int i = 0; i < _borderVec.Count(); i++)
 	{
-		if (!stricmp(_borderVec[i]->GetName(), borderName))
+		if (!_stricmp(_borderVec[i]->GetName(), borderName))
 		{
 			return _borderVec[i];
 		}
@@ -618,7 +618,7 @@ HFont CScheme::FindFontInAliasList( const char *fontName )
 	for (int i = _fontAliases.Count(); --i >= 0; )
 	{
 		const char *name = _fontAliases[i]._fontName;
-		if (!strnicmp(fontName, _fontAliases[i]._fontName, FONT_ALIAS_NAME_LENGTH ))
+		if (!_strnicmp(fontName, _fontAliases[i]._fontName, FONT_ALIAS_NAME_LENGTH ))
 			return _fontAliases[i]._font;
 	}
 

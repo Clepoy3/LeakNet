@@ -390,7 +390,7 @@ void CPakFile::ParseFromBuffer( byte *buffer, int bufferlength )
 		char tmpString[1024];
 		buf.Get( tmpString, fileHeader.fileNameLength );
 		tmpString[fileHeader.fileNameLength] = '\0';
-		strlwr( tmpString );
+		_strlwr( tmpString );
 		newfiles[i].m_Name = tmpString;
 		newfiles[i].filepos = fileHeader.relativeOffsetOfLocalHeader;
 		newfiles[i].filelen = fileHeader.compressedSize;
@@ -496,7 +496,7 @@ void CPakFile::AddBufferToPack( const char *relativename, void *data, int length
 	// Lower case only
 	char name[ 512 ];
 	strcpy( name, relativename );
-	strlwr( name );
+	_strlwr( name );
 
 	int dstLength = length;
 	if( bTextMode )
@@ -876,7 +876,7 @@ int	TexDataStringTable_AddOrFindString( const char *pString )
 	// garymcthack: Make this use an RBTree!
 	for( i = 0; i < g_nTexDataStringTable; i++ )
 	{
-		if( stricmp( pString, &g_TexDataStringData[g_TexDataStringTable[i]] ) == 0 )
+		if( _stricmp( pString, &g_TexDataStringData[g_TexDataStringTable[i]] ) == 0 )
 		{
 			return i;
 		}
@@ -1623,7 +1623,7 @@ void	WriteBSPFile (char *filename)
 #define ENTRIES(a)		(sizeof(a)/sizeof(*(a)))
 #define ENTRYSIZE(a)	(sizeof(*(a)))
 
-ArrayUsage( char *szItem, int items, int maxitems, int itemsize )
+int ArrayUsage( char *szItem, int items, int maxitems, int itemsize )
 {
 	float	percentage = maxitems ? items * 100.0 / maxitems : 0.0;
 
@@ -1640,7 +1640,7 @@ ArrayUsage( char *szItem, int items, int maxitems, int itemsize )
 	return items * itemsize;
 }
 
-GlobUsage( char *szItem, int itemstorage, int maxstorage )
+int GlobUsage( char *szItem, int itemstorage, int maxstorage )
 {
 	float	percentage = maxstorage ? itemstorage * 100.0 / maxstorage : 0.0;
     Msg("%-12s     [variable]    %7i/%-7i  (%4.1f%%)", 

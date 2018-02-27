@@ -153,7 +153,7 @@ public:
 		int size = 0;
 		for( i = 0; i < m_Strings.Size(); i++ )
 		{
-			if( stricmp( m_Strings[i].Base(), string ) == 0 )
+			if( _stricmp( m_Strings[i].Base(), string ) == 0 )
 			{
 				return size;
 			}
@@ -166,7 +166,7 @@ public:
 		int i;
 		for( i = 0; i < m_Strings.Size(); i++ )
 		{
-			if( stricmp( m_Strings[i].Base(), string ) == 0 )
+			if( _stricmp( m_Strings[i].Base(), string ) == 0 )
 			{
 				return true;
 			}
@@ -1957,7 +1957,7 @@ bool COptimizedModel::MeshNeedsRemoval( studiohdr_t *pHdr, mstudiomesh_t *pStudi
 	{
 		const char *meshName = scriptLOD.meshRemovals[i].GetSrcName();
 		const char *blahName = ptexture->material->GetName();
-		if( stricmp( meshName, blahName ) == 0 )
+		if( _stricmp( meshName, blahName ) == 0 )
 		{
 			return true;
 		}

@@ -21,8 +21,9 @@ class C_BasePlayer;
 
 class C_Team : public C_BaseNetworkable
 {
-	DECLARE_CLASS( C_Team, C_BaseNetworkable );
 public:
+	DECLARE_CLASS( C_Team, C_BaseNetworkable );
+
 	DECLARE_CLIENTCLASS();
 
 					C_Team();

@@ -178,19 +178,19 @@ public:
 	virtual void ParseKeyValue( void *pCustom, const char *pKey, const char *pValue )
 	{
 		editparams_t *pEdit = (editparams_t *)pCustom;
-		if ( !strcmpi( pKey, "rootname" ) )
+		if ( !_strcmpi( pKey, "rootname" ) )
 		{
 			strncpy( pEdit->rootName, pValue, sizeof(pEdit->rootName) );
 		}
-		else if ( !strcmpi( pKey, "totalmass" ) )
+		else if ( !_strcmpi( pKey, "totalmass" ) )
 		{
 			pEdit->totalMass = atof( pValue );
 		}
-		else if ( !strcmpi( pKey, "concave" ) )
+		else if ( !_strcmpi( pKey, "concave" ) )
 		{
 			pEdit->concave = atoi( pValue );
 		}
-		else if ( !strcmpi( pKey, "jointmerge" ) )
+		else if ( !_strcmpi( pKey, "jointmerge" ) )
 		{
 			char tmp[1024];
 			char parentName[512], childName[512];
@@ -221,7 +221,7 @@ public:
 	virtual void ParseKeyValue( void *pCustom, const char *pKey, const char *pValue )
 	{
 		hlmvsolid_t *pSolid = (hlmvsolid_t *)pCustom;
-		if ( !strcmpi( pKey, "massbias" ) )
+		if ( !_strcmpi( pKey, "massbias" ) )
 		{
 			pSolid->massBias = atof( pValue );
 		}
@@ -244,7 +244,7 @@ void CStudioPhysics::ParseKeydata( void )
 	while ( !pParser->Finished() )
 	{
 		const char *pBlock = pParser->GetCurrentBlockName();
-		if ( !stricmp( pBlock, "solid" ) )
+		if ( !_stricmp( pBlock, "solid" ) )
 		{
 			hlmvsolid_t solid;
 			CSolidParse solidParse;
@@ -258,7 +258,7 @@ void CStudioPhysics::ParseKeydata( void )
 				memcpy( &m_pList[solid.index].m_solid, &solid, sizeof(solid) );
 			}
 		}
-		else if ( !stricmp( pBlock, "ragdollconstraint" ) )
+		else if ( !_stricmp( pBlock, "ragdollconstraint" ) )
 		{
 			constraint_ragdollparams_t constraint;
 			pParser->ParseRagdollConstraint( &constraint, NULL );
@@ -267,7 +267,7 @@ void CStudioPhysics::ParseKeydata( void )
 				m_pList[constraint.childIndex].m_constraint = constraint;
 			}
 		}
-		else if ( !stricmp( pBlock, "editparams" ) )
+		else if ( !_stricmp( pBlock, "editparams" ) )
 		{
 			CEditParse editParse;
 			pParser->ParseCustom( &m_edit, &editParse );
@@ -289,7 +289,7 @@ int FindPhysprop( const char *pPropname )
 		int count = physprop->SurfacePropCount();
 		for ( int i = 0; i < count; i++ )
 		{
-			if ( !strcmpi( pPropname, physprop->GetPropName(i) ) )
+			if ( !_strcmpi( pPropname, physprop->GetPropName(i) ) )
 				return i;
 		}
 	}

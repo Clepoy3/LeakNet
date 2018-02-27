@@ -47,8 +47,9 @@ public:
 
 class CWeaponGaussGun : public CBaseHLCombatWeapon
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CWeaponGaussGun, CBaseHLCombatWeapon );
 
 	CWeaponGaussGun( void );

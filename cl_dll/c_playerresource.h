@@ -16,8 +16,9 @@
 
 class C_PlayerResource : public C_BaseEntity
 {
-	DECLARE_CLASS( C_PlayerResource, C_BaseEntity );
 public:
+	DECLARE_CLASS( C_PlayerResource, C_BaseEntity );
+
 	DECLARE_CLIENTCLASS();
 
 					C_PlayerResource();

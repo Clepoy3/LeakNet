@@ -92,9 +92,9 @@ private:
 //=========================================================
 class CNPC_Roller : public CAI_BaseNPC
 {
+public:
 	DECLARE_CLASS( CNPC_Roller, CAI_BaseNPC );
 
-public:
 	~CNPC_Roller( void );
 	void	Precache( void );
 	void	Spawn( void );

@@ -6,9 +6,9 @@
 
 class CNPC_Houndeye : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Houndeye, CHL1BaseNPC );
-	
 public:
+	DECLARE_CLASS( CNPC_Houndeye, CHL1BaseNPC );
+
 	void Spawn( void );
 	void Precache( void );
 

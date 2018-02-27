@@ -75,7 +75,7 @@ CNewGameDialog::~CNewGameDialog()
 //-----------------------------------------------------------------------------
 void CNewGameDialog::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Play" ) )
+	if ( !_stricmp( command, "Play" ) )
 	{
 		// Determine mode
 		m_nPlayMode = 0;

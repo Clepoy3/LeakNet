@@ -82,7 +82,7 @@ ClientClass* FindClientClass(ClientClass *pHead, const char *pClassName)
 
 	for(pCur=pHead; pCur; pCur=pCur->m_pNext)
 	{
-		if(stricmp(pCur->m_pNetworkName, pClassName) == 0)
+		if(_stricmp(pCur->m_pNetworkName, pClassName) == 0)
 			return pCur;
 	}
 
@@ -156,7 +156,7 @@ void CL_ParseClassInfo_EndClasses(CClientState *pState )
 	ClientClass *pClasses = g_ClientDLL->GetAllClasses();
 
 	// Match the server classes to the client classes.
-	for ( i=0; i < pState->m_nServerClasses; i++ )
+	for ( int i=0; i < pState->m_nServerClasses; i++ )
 	{
 		C_ServerClassInfo *pServerClass = &pState->m_pServerClasses[i];
 
@@ -171,7 +171,7 @@ void CL_ParseClassInfo_EndClasses(CClientState *pState )
 			const char *pServerName = pServerClass->m_DatatableName;
 			const char *pClientName = pServerClass->m_pClientClass->m_pRecvTable->GetName();
 
-			if ( stricmp( pServerName, pClientName ) != 0 )
+			if ( _stricmp( pServerName, pClientName ) != 0 )
 			{
 				Host_EndGame( "CL_ParseClassInfo_EndClasses: server and client classes for '%s' use different datatables (server: %s, client: %s)",
 					pServerClass->m_ClassName, pServerName, pClientName );
@@ -783,7 +783,7 @@ void CL_CheckGameDirectory( char *gamedir )
 	// Rip out the current gamedir.
 	COM_FileBase( com_gamedir, szGD );
 
-	if ( stricmp( szGD, gamedir ) )
+	if ( _stricmp( szGD, gamedir ) )
 	{
 		// Changing game directories without restarting is not permitted any more
 		Error( "CL_CheckGameDirectory: game directories don't match (%s / %s)", szGD, gamedir ); // VXP: This is temp

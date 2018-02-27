@@ -75,7 +75,7 @@ void CGrenadeStickyBomb::Spawn( void )
 	SetFriction( 1.0 );
 	SetModel( "models/weapons/w_grenade.mdl");
 	UTIL_SetSize(this, Vector( -4, -4, -4), Vector(4, 4, 4));
-	SetTouch( StickyTouch );
+	SetTouch( &CGrenadeStickyBomb::StickyTouch );
 	SetCollisionGroup( TFCOLLISION_GROUP_WEAPON );
 
 	// Create a red light
@@ -97,7 +97,7 @@ void CGrenadeStickyBomb::Spawn( void )
 //-----------------------------------------------------------------------------
 void CGrenadeStickyBomb::SetTimer( float timer )
 {
-	SetThink( Detonate );
+	SetThink( &CBaseGrenade::Detonate );
 	SetNextThink( gpGlobals->curtime + timer );
 }
 

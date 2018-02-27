@@ -68,7 +68,7 @@ CClassMenu::~CClassMenu()
 
 Panel *CClassMenu::CreateControlByName(const char *controlName)
 {
-	if( !stricmp( "MouseOverPanelButton", controlName ) )
+	if( !_stricmp( "MouseOverPanelButton", controlName ) )
 	{
 		ClassHelperPanel *classPanel = new ClassHelperPanel( this, NULL );
 		classPanel->SetVisible( false );
@@ -100,7 +100,7 @@ Panel *CClassMenu::CreateControlByName(const char *controlName)
 //-----------------------------------------------------------------------------
 void CClassMenu::OnCommand( const char *command)
 {
-	if ( stricmp( command, "vguicancel" ) )
+	if ( _stricmp( command, "vguicancel" ) )
 	{
 		gViewPortInterface->GetClientDllInterface()->ClientCmd( const_cast<char *>( command ));
 	}
@@ -142,7 +142,7 @@ void CClassMenu::Update( int *validClasses, int numClasses)
 	{
 		for( i = 0; i < m_pClassButtons.Count(); i++ )
 		{
-			if( !stricmp(m_pClassButtons[i]->GetName(), "civilian") )
+			if( !_stricmp(m_pClassButtons[i]->GetName(), "civilian") )
 			{
 				m_pClassButtons[i]->SetEnabled(true);
 			}

@@ -164,7 +164,7 @@ extern CGlobalVars *gpGlobals;
 // Misc useful
 inline bool FStrEq(const char *sz1, const char *sz2)
 {
-	return(stricmp(sz1, sz2) == 0);
+	return(_stricmp(sz1, sz2) == 0);
 }
 
 #if 0

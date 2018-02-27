@@ -12,10 +12,8 @@
 
 class C_PropVehicleDriveable : public C_BaseAnimating, public IClientVehicle
 {
-
-	DECLARE_CLASS( C_PropVehicleDriveable, C_BaseAnimating );
-
 public:
+	DECLARE_CLASS( C_PropVehicleDriveable, C_BaseAnimating );
 
 	DECLARE_CLIENTCLASS();
 	DECLARE_INTERPOLATION();

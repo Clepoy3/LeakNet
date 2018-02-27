@@ -743,7 +743,7 @@ void CNPC_RollerBull::Open( void )
 	controller.SoundChangePitch( m_pRollSoundFast, 130, 0.0 );
 // CHIACHIN
 
-	SetTouch( SpikeTouch );
+	SetTouch( &CNPC_RollerBull::SpikeTouch );
 	m_fIsOpen = true;
 }
 

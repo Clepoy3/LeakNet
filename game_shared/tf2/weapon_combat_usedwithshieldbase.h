@@ -21,8 +21,9 @@ class CBasePlayer;
 
 class CWeaponCombatUsedWithShieldBase : public CBaseTFCombatWeapon
 {
-	DECLARE_CLASS( CWeaponCombatUsedWithShieldBase, CBaseTFCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponCombatUsedWithShieldBase, CBaseTFCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

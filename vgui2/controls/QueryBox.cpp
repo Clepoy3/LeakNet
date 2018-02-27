@@ -115,7 +115,7 @@ void QueryBox::PerformLayout()
 //-----------------------------------------------------------------------------
 void QueryBox::OnCommand(const char *command)
 {
-	if (!stricmp(command, "OK"))
+	if (!_stricmp(command, "OK"))
 	{
 		OnCommand("Close");
 
@@ -125,7 +125,7 @@ void QueryBox::OnCommand(const char *command)
 		}
 		MarkForDeletion();
 	}
-	else if (!stricmp(command, "Cancel"))
+	else if (!_stricmp(command, "Cancel"))
 	{
 		OnCommand("Close");	
 

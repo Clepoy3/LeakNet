@@ -67,8 +67,9 @@ public:
 //-----------------------------------------------------------------------------
 class CBaseFlex : public CBaseAnimatingOverlay
 {
-	DECLARE_CLASS( CBaseFlex, CBaseAnimatingOverlay );
 public:
+	DECLARE_CLASS( CBaseFlex, CBaseAnimatingOverlay );
+
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 	DECLARE_PREDICTABLE();

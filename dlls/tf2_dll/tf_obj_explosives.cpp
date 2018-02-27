@@ -102,7 +102,7 @@ void CObjectExplosives::Killed( void )
 	DetachObjectFromObject();
 
 	// Delay the explosion & death so that it's not blocked by the entity we were built on
-	SetThink( ExplodeThink );
+	SetThink( &CObjectExplosives::ExplodeThink );
 	SetNextThink( gpGlobals->curtime + 0.3 );
 }
 

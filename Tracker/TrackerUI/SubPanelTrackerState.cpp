@@ -10,7 +10,8 @@
 #include <vgui_controls/Controls.h>
 #include <VGUI/IScheme.h>
 
-#include <vgui_controls/TextEntry.h>
+//#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/RichText.h>
 #include <vgui_controls/Button.h>
 
 #include "TrackerDoc.h"
@@ -26,9 +27,11 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 CSubPanelTrackerState::CSubPanelTrackerState(Panel *parent, const char *panelName) : EditablePanel(parent, panelName)
 {
-	m_pMessage = new TextEntry(this, "Message");
-	m_pMessage->SetMultiline(true);
+//	m_pMessage = new TextEntry(this, "Message");
+	m_pMessage = new RichText(this, "Message");
+//	m_pMessage->SetMultiline(true);
 //	m_pMessage->SetRichEdit(true);
+	m_pMessage->SetVerticalScrollbar( false ); // VXP
 	m_pSignInButton = new Button(this, "SigninButton", "");
 }
 
@@ -44,12 +47,12 @@ CSubPanelTrackerState::~CSubPanelTrackerState()
 //-----------------------------------------------------------------------------
 void CSubPanelTrackerState::OnCommand(const char *command)
 {
-	if (!stricmp("Cancel", command))
+	if (!_stricmp("Cancel", command))
 	{
 		ServerSession().CancelConnect();
 		InvalidateLayout();
 	}
-	else if (!stricmp("Signin", command))
+	else if (!_stricmp("Signin", command))
 	{
 		ServerSession().SendInitialLogin(COnlineStatus::ONLINE);
 	}
@@ -103,11 +106,14 @@ void CSubPanelTrackerState::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
 
-	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
+//	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor()));
+	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor(), pScheme));
+//	SetBorder(scheme()->GetBorder(GetScheme(), "ButtonDepressedBorder"));
 	SetBorder(pScheme->GetBorder("ButtonDepressedBorder"));
 
 	// force the message box to have no border
 	m_pMessage->InvalidateLayout(true);
 	m_pMessage->SetBorder(NULL);
+//	m_pMessage->SetFgColor(GetSchemeColor("LabelDimText"));
 	m_pMessage->SetFgColor(GetSchemeColor("LabelDimText", pScheme));
 }

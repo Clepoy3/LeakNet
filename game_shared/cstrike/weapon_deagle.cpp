@@ -6,7 +6,7 @@
 
 #include "cbase.h" 
 #include "decals.h" 
-#include "util.h" 
+//#include "util.h" // VXP: Conv
 #include "cbase.h" 
 #include "shake.h" 
 #include "weapon_csbase.h"

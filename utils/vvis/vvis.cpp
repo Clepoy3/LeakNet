@@ -912,7 +912,7 @@ int RunVVis( int argc, char **argv )
 			strcpy (inbase, "/tmp");
 		else if (!strcmp (argv[i],"-tmpout"))
 			strcpy (outbase, "/tmp");
-		else if( !stricmp( argv[i], "-low" ) )
+		else if( !_stricmp( argv[i], "-low" ) )
 		{
 			g_bLowPriority = true;
 		}
@@ -924,7 +924,7 @@ int RunVVis( int argc, char **argv )
 		}
 		else if ( !Q_strncasecmp( argv[i], "-mpi", 4 ) || !Q_strncasecmp( argv[i-1], "-mpi", 4 ) )
 		{
-			if ( stricmp( argv[i], "-mpi" ) == 0 )
+			if ( _stricmp( argv[i], "-mpi" ) == 0 )
 				g_bUseMPI = true;
 		
 			// Any other args that start with -mpi are ok too.

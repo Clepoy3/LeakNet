@@ -378,7 +378,7 @@ CBaseEntity *CGlobalEntityList::FindEntityByName( CBaseEntity *pStartEntity, con
 
 		if ( !wildcard )
 		{
-			if ( stricmp( STRING(e->m_iName), szName ) == 0 )
+			if ( _stricmp( STRING(e->m_iName), szName ) == 0 )
 				return e;
 		}
 		else

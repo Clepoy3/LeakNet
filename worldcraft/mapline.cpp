@@ -324,12 +324,12 @@ void CMapLine::OnParentKeyChanged( LPCSTR key, LPCSTR value )
 	CMapWorld *pWorld = (CMapWorld *)GetWorldObject(this);
 	if (pWorld != NULL)
 	{
-		if (stricmp(key, m_szStartValueKey) == 0)
+		if (_stricmp(key, m_szStartValueKey) == 0)
 		{
 			m_pStartEntity = (CMapEntity *)UpdateDependency(m_pStartEntity, pWorld->FindChildByKeyValue(m_szStartKey, value));
 			BuildLine();
 		}
-		else if (stricmp(key, m_szEndValueKey) == 0)
+		else if (_stricmp(key, m_szEndValueKey) == 0)
 		{
 			m_pEndEntity = (CMapEntity *)UpdateDependency(m_pEndEntity, pWorld->FindChildByKeyValue(m_szEndKey, value));
 			BuildLine();
@@ -429,7 +429,7 @@ void CMapLine::Render3D(CRender3D *pRender)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapLine::SerializeRMF(fstream &File, BOOL bRMF)
+int CMapLine::SerializeRMF(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -441,7 +441,7 @@ int CMapLine::SerializeRMF(fstream &File, BOOL bRMF)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapLine::SerializeMAP(fstream &File, BOOL bRMF)
+int CMapLine::SerializeMAP(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }

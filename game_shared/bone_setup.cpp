@@ -3538,7 +3538,7 @@ int Studio_FindAttachment( const studiohdr_t *pStudioHdr, const char *pAttachmen
 		// Extract the bone index from the name
 		for (int i = 0; i < pStudioHdr->numattachments; i++)
 		{
-			if (!stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName( ))) 
+			if (!_stricmp(pAttachmentName,pStudioHdr->pAttachment(i)->pszName( ))) 
 			{
 				return i;
 			}
@@ -3826,7 +3826,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 	for ( int i = 0; i < pStudioHdr->numbones; i++ )
 	{
 #ifndef TRANSLATE_OLD_BONES
-		if (!stricmp(pName,pbones[i].pszName( ))) 
+		if (!_stricmp(pName,pbones[i].pszName( ))) 
 			return i;
 #else
 
@@ -3846,7 +3846,7 @@ int Studio_BoneIndexByName( const studiohdr_t *pStudioHdr, const char *pName ) /
 		strcpy( szBufHaystack, pbones[i].pszName() );
 		Studio_TranslateOldBones( szBufHaystack );
 
-		if (!stricmp( szBufNeedle, szBufHaystack ))
+		if (!_stricmp( szBufNeedle, szBufHaystack ))
 			return i;
 #endif // TRANSLATE_OLD_BONES
 	}

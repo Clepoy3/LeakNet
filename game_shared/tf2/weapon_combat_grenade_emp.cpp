@@ -29,8 +29,9 @@
 //-----------------------------------------------------------------------------
 class CWeaponCombatGrenadeEMP : public CWeaponCombatBaseGrenade
 {
-	DECLARE_CLASS( CWeaponCombatGrenadeEMP, CWeaponCombatBaseGrenade );
 public:
+	DECLARE_CLASS( CWeaponCombatGrenadeEMP, CWeaponCombatBaseGrenade );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

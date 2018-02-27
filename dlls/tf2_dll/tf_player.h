@@ -61,7 +61,7 @@ enum ResupplyReason_t;
 
 
 // Setup for class specific touch functions.
-#define SetClassTouch( _player, a ) _player->SetTouch( CBaseTFPlayer::ClassTouch ); _player->m_pfnClassTouch = static_cast<void (CPlayerClass::*)(CBaseEntity*)>(a)
+#define SetClassTouch( _player, a ) _player->SetTouch( &CBaseTFPlayer::ClassTouch ); _player->m_pfnClassTouch = static_cast<void (CPlayerClass::*)(CBaseEntity*)>(a)
 
 //=====================================================================
 // TF PLAYER

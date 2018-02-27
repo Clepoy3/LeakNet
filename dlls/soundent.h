@@ -133,9 +133,9 @@ inline int CSound::NextSound() const
 //=========================================================
 class CSoundEnt : public CPointEntity
 {
+public:
 	DECLARE_DATADESC();
 
-public:
 	DECLARE_CLASS( CSoundEnt, CPointEntity );
 
 	// Construction, destruction

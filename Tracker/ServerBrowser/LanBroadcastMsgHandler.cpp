@@ -58,7 +58,7 @@ bool CLanBroadcastMsgHandler::Process( netadr_t *from, CMsgBuffer *msg )
 	v_strncpy(server.name, Info_ValueForKey(info, "hostname"), sizeof(server.name));
 	v_strncpy(server.map, Info_ValueForKey(info, "map"), sizeof(server.map));
 	v_strncpy(server.gameDir, Info_ValueForKey(info, "gamedir"), sizeof(server.gameDir));
-	strlwr(server.gameDir);
+	_strlwr(server.gameDir);
 	v_strncpy(server.gameDescription, Info_ValueForKey(info, "description"), sizeof(server.gameDescription));
 	server.players = atoi(Info_ValueForKey(info, "players"));
 	server.maxPlayers = atoi(Info_ValueForKey(info, "max"));

@@ -270,7 +270,7 @@ void CLoadingDialog::OnClose()
 //-----------------------------------------------------------------------------
 void CLoadingDialog::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Cancel"))
+	if (!_stricmp(command, "Cancel"))
 	{
 		// disconnect from the server
 		engine->ClientCmd("disconnect\n");

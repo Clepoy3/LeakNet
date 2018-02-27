@@ -328,7 +328,7 @@ void CPlayerClassCommando::GainedNewTechnology( CBaseTechnology *pTechnology )
 void CPlayerClassCommando::PreBullRush( void )
 {
 	// Set the touch function to look for collisions!
-	SetClassTouch( m_pPlayer, BullRushTouch );
+	SetClassTouch( m_pPlayer, &CPlayerClassCommando::BullRushTouch );
 
 	// Clear the player hit list.
 	m_aHitPlayers.RemoveAll();

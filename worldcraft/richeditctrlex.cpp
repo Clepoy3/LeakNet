@@ -78,7 +78,8 @@ CRTFBuilder &doUnderline(CRTFBuilder &r, bool b)
 
 CRTFBuilder &doFont(CRTFBuilder &r, int n)
 {
-	r.font(n);
+//	r.font(n); // VXP: Conv
+	r.font((const CString &)n);
 	return r;
 }
 

@@ -24,8 +24,9 @@ class CBaseTechnology;
 //-----------------------------------------------------------------------------
 class C_CSTeam : public C_Team
 {
-	DECLARE_CLASS( C_CSTeam, C_Team );
 public:
+	DECLARE_CLASS( C_CSTeam, C_Team );
+
 	DECLARE_CLIENTCLASS();
 
 					C_CSTeam();

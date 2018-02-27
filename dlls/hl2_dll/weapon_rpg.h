@@ -84,8 +84,8 @@ protected:
 
 class CWeaponRPG : public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponRPG, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponRPG, CBaseHLCombatWeapon );
 
 	CWeaponRPG();
 

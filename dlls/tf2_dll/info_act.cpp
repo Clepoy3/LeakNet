@@ -141,11 +141,11 @@ void CInfoAct::Spawn( void )
 void CInfoAct::SetUpRespawnTimers()
 {
 	// NOTE: Need to add the second there so the respawn timers don't immediately trigger
-	SetContextThink( RespawnTimerThink, gpGlobals->curtime + 1.0f, RESPAWN_TIMER_CONTEXT );
+	SetContextThink( &CInfoAct::RespawnTimerThink, gpGlobals->curtime + 1.0f, RESPAWN_TIMER_CONTEXT );
 
 	if (m_nRespawnTeam1Delay != 0)
 	{
-		SetContextThink( Team1RespawnDelayThink, gpGlobals->curtime + m_nRespawnTeam1Delay, RESPAWN_TEAM_1_DELAY_CONTEXT );
+		SetContextThink( &CInfoAct::Team1RespawnDelayThink, gpGlobals->curtime + m_nRespawnTeam1Delay, RESPAWN_TEAM_1_DELAY_CONTEXT );
 	}
 	else
 	{
@@ -154,7 +154,7 @@ void CInfoAct::SetUpRespawnTimers()
 
 	if (m_nRespawnTeam2Delay != 0)
 	{
-		SetContextThink( Team2RespawnDelayThink, gpGlobals->curtime + m_nRespawnTeam2Delay, RESPAWN_TEAM_2_DELAY_CONTEXT );
+		SetContextThink( &CInfoAct::Team2RespawnDelayThink, gpGlobals->curtime + m_nRespawnTeam2Delay, RESPAWN_TEAM_2_DELAY_CONTEXT );
 	}
 	else
 	{
@@ -292,7 +292,7 @@ void CInfoAct::StartAct( void )
 	if ( m_flActTimeLimit )
 	{
 		SetNextThink( gpGlobals->curtime + m_flActTimeLimit );
-		SetThink( ActThink );
+		SetThink( &CInfoAct::ActThink );
 	}
 
 	SetUpRespawnTimers();
@@ -333,7 +333,7 @@ void CInfoAct::StartAct( void )
 	if ( !HasSpawnFlags(SF_ACT_INTERMISSION) )
 	{
 		SetNextThink( gpGlobals->curtime + MIN_ACT_OVERLAY_TIME );
-		SetThink( ActThinkEndActOverlayTime );
+		SetThink( &CInfoAct::ActThinkEndActOverlayTime );
 	}
 }
 
@@ -457,7 +457,7 @@ void CInfoAct::ActThinkEndActOverlayTime( void )
 	if ( m_flActTimeLimit )
 	{
 		SetNextThink( gpGlobals->curtime + m_flActTimeLimit - MIN_ACT_OVERLAY_TIME );
-		SetThink( ActThink );
+		SetThink( &CInfoAct::ActThink );
 	}
 }
 

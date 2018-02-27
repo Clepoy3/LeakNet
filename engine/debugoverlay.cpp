@@ -631,7 +631,7 @@ void DrawGridOverlay(void)
 
 		// Draw y axis lines
 		VectorCopy(startGrid,startLine);
-		for (j=0;j<numHorzSpaces+1;j++)
+		for (int j=0;j<numHorzSpaces+1;j++)
 		{
 			Vector endLine;
 			VectorCopy(startLine,endLine);

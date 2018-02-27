@@ -860,11 +860,11 @@ ChunkFileResult_t CMapWorld::LoadHiddenCallback(CChunkFile *pFile, CMapWorld *pW
 //-----------------------------------------------------------------------------
 ChunkFileResult_t CMapWorld::LoadKeyCallback(const char *szKey, const char *szValue, CMapWorld *pWorld)
 {
-	if (!stricmp(szKey, "id"))
+	if (!_stricmp(szKey, "id"))
 	{
 		pWorld->SetID(atoi(szValue));
 	}
-	else if (stricmp(szKey, "mapversion") != 0)
+	else if (_stricmp(szKey, "mapversion") != 0)
 	{
 		pWorld->SetKeyValue(szKey, szValue);
 	}
@@ -1187,7 +1187,7 @@ bool CMapWorld::FaceID_FaceIDListsToString(char *pszList, int nSize, CMapFaceIDL
 			int nFace = pFullFaceIDList->Element(i);
 
 			char szID[64];
-			itoa(nFace, szID, 10);
+			_itoa(nFace, szID, 10);
 			if (!EnsureTrailingChar(pszList, ' ', nSize) || !AppendString(pszList, szID, nSize))
 			{
 				return(false);
@@ -1214,7 +1214,7 @@ bool CMapWorld::FaceID_FaceIDListsToString(char *pszList, int nSize, CMapFaceIDL
 				int nFace = pPartialFaceIDList->Element(i);
 
 				char szID[64];
-				itoa(nFace, szID, 10);
+				_itoa(nFace, szID, 10);
 				if (!bFirst)
 				{
 					if (!EnsureTrailingChar(pszList, ' ', nSize))
@@ -1266,7 +1266,7 @@ bool CMapWorld::FaceID_FaceListsToString(char *pszList, int nSize, CMapFaceList 
 			CMapFace *pFace = pFullFaceList->Element(i);
 
 			char szID[64];
-			itoa(pFace->GetFaceID(), szID, 10);
+			_itoa(pFace->GetFaceID(), szID, 10);
 			if (!EnsureTrailingChar(pszList, ' ', nSize) || !AppendString(pszList, szID, nSize))
 			{
 				return(false);
@@ -1293,7 +1293,7 @@ bool CMapWorld::FaceID_FaceListsToString(char *pszList, int nSize, CMapFaceList 
 				CMapFace *pFace = pPartialFaceList->Element(i);
 
 				char szID[64];
-				itoa(pFace->GetFaceID(), szID, 10);
+				_itoa(pFace->GetFaceID(), szID, 10);
 				if (!bFirst)
 				{
 					if (!EnsureTrailingChar(pszList, ' ', nSize))

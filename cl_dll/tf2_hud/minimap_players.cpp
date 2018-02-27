@@ -22,9 +22,9 @@
 //-----------------------------------------------------------------------------
 class CMinimapPlayerPanel : public CMinimapTracePanel
 {
+public:
 	DECLARE_CLASS( CMinimapPlayerPanel, CMinimapTracePanel );
 
-public:
 	CMinimapPlayerPanel( vgui::Panel *parent, const char *panelName )
 		: BaseClass( parent, "CMinimapPlayerPanel" )
 	{

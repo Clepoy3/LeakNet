@@ -264,7 +264,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 	int i;
 	for( i = 0; i < numtexdata; i++ )
 	{
-		if( stricmp( TexDataStringTable_GetString( GetTexData( i )->nameStringTableID ), 
+		if( _stricmp( TexDataStringTable_GetString( GetTexData( i )->nameStringTableID ), 
 			generatedTexDataName ) == 0 )
 		{
 			hasTexData = true;
@@ -282,7 +282,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		sprintf( generatedMatName, "maps/%s/%s_%d_%d_%d", mapbase, 
 			TexDataStringTable_GetString( pTexData->nameStringTableID ), 
 			( int )origin[0], ( int )origin[1], ( int )origin[2] );
-		strlwr( generatedTexDataName );
+		_strlwr( generatedTexDataName );
 
 		char envmapVal[512];
 		GetValueFromMaterial( originalMatName, "$envmap", envmapVal, 511 );
@@ -295,7 +295,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 			}
 			return originalTexInfo;
 		}
-		if( stricmp( envmapVal, "env_cubemap" ) != 0 )
+		if( _stricmp( envmapVal, "env_cubemap" ) != 0 )
 		{
 			if( UTL_INVAL_SYMBOL == complainedSymbolTable.Find( originalMatName ) )
 			{
@@ -327,7 +327,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 		{
 			Error( "generatedTexDataName: %s too long!\n", generatedTexDataName );
 		}
-		strlwr( generatedTexDataName );
+		_strlwr( generatedTexDataName );
 		texDataID = AddCloneTexData( pTexData, generatedTexDataName );
 		
 	}
@@ -494,7 +494,7 @@ void Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials( void )
 			continue;
 		}
 
-		if( !g_bNoEnvmapFix && stricmp( oldEnvmapName, "env_cubemap" ) != 0 )
+		if( !g_bNoEnvmapFix && _stricmp( oldEnvmapName, "env_cubemap" ) != 0 )
 		{
 			Warning( "Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials: Ignoring env_cubemap on \"%s\" which uses envmap \"%s\"\n", originalMaterialName, oldEnvmapName );
 			continue;

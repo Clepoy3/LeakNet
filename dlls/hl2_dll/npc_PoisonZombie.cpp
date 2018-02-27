@@ -151,9 +151,8 @@ ConVar sk_zombie_poison_dmg_spit( "sk_zombie_poison_dmg_spit","0");
 
 class CNPC_PoisonZombie : public CNPC_BaseZombie
 {
-	DECLARE_CLASS( CNPC_PoisonZombie, CNPC_BaseZombie );
-
 public:
+	DECLARE_CLASS( CNPC_PoisonZombie, CNPC_BaseZombie );
 
 	//
 	// CBaseZombie implemenation.

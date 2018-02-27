@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\mxToolKit - Debug\</OutDir>
+    <IntDir>.\mxToolKit - Debug\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\mxToolKit - Release\</OutDir>
+    <IntDir>.\mxToolKit - Release\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../include;../../../common/MaterialSystem;../../../Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\mxToolKit - Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\mxToolKit - Debug\mxtoolkitwin32.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\mxToolKit - Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\mxToolKit - Debug\</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\mxToolKit - Debug\mxtoolkitwin32.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>mxToolKit - Debug\mxtk.lib</OutputFile>
+    </Lib>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\lib\common\mxtk.lib attrib -r ..\..\..\lib\common\mxtk.lib 
+copy "$(TargetDir)mxtk.lib" ..\..\..\lib\common\mxtk.lib </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../include;../../../common/MaterialSystem;../../../Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\mxToolKit - Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\mxToolKit - Release\mxtoolkitwin32.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\mxToolKit - Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\mxToolKit - Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\mxToolKit - Release\mxtoolkitwin32.bsc</OutputFile>
+    </Bscmake>
+    <Lib>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\mxToolKit - Release\mxtk.lib</OutputFile>
+    </Lib>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\lib\common\mxtk.lib attrib -r ..\..\..\lib\common\mxtk.lib 
+copy "$(TargetDir)mxtk.lib" ..\..\..\lib\common\mxtk.lib </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\win32\mx.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mxBmp.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxButton.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxCheckBox.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxChoice.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxChooseColor.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxFileDialog.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxGlWindow.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxGroupBox.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxLabel.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxLineEdit.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxListBox.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxlistview.cpp" />
+    <ClCompile Include="..\src\win32\mxMatSysWindow.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxMenu.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxMenuBar.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxMessageBox.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mxpath.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mxPcx.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxPopupMenu.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxProgressBar.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxRadioButton.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxScrollbar.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxSlider.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mxstring.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxTab.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\common\mxTga.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxToolTip.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxTreeView.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxWidget.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="..\src\win32\mxWindow.cpp">
+      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\mx\gl.h" />
+    <ClInclude Include="..\include\mx\mx.h" />
+    <ClInclude Include="..\include\mx\mxBmp.h" />
+    <ClInclude Include="..\include\mx\mxButton.h" />
+    <ClInclude Include="..\include\mx\mxCheckBox.h" />
+    <ClInclude Include="..\include\mx\mxChoice.h" />
+    <ClInclude Include="..\include\mx\mxChooseColor.h" />
+    <ClInclude Include="..\include\mx\mxEvent.h" />
+    <ClInclude Include="..\include\mx\mxFileDialog.h" />
+    <ClInclude Include="..\include\mx\mxGlWindow.h" />
+    <ClInclude Include="..\include\mx\mxGroupBox.h" />
+    <ClInclude Include="..\include\mx\mxImage.h" />
+    <ClInclude Include="..\include\mx\mxInit.h" />
+    <ClInclude Include="..\include\mx\mxLabel.h" />
+    <ClInclude Include="..\include\mx\mxLineEdit.h" />
+    <ClInclude Include="..\include\mx\mxLinkedList.h" />
+    <ClInclude Include="..\include\mx\mxListBox.h" />
+    <ClInclude Include="..\include\mx\mxlistview.h" />
+    <ClInclude Include="..\include\mx\mxMatSysWindow.h" />
+    <ClInclude Include="..\include\mx\mxMenu.h" />
+    <ClInclude Include="..\include\mx\mxMenuBar.h" />
+    <ClInclude Include="..\include\mx\mxMessageBox.h" />
+    <ClInclude Include="..\include\mx\mxpath.h" />
+    <ClInclude Include="..\include\mx\mxPcx.h" />
+    <ClInclude Include="..\include\mx\mxPopupMenu.h" />
+    <ClInclude Include="..\include\mx\mxProgressBar.h" />
+    <ClInclude Include="..\include\mx\mxRadioButton.h" />
+    <ClInclude Include="..\include\mx\mxScrollbar.h" />
+    <ClInclude Include="..\include\mx\mxSlider.h" />
+    <ClInclude Include="..\include\mx\mxstring.h" />
+    <ClInclude Include="..\include\mx\mxTab.h" />
+    <ClInclude Include="..\include\mx\mxTga.h" />
+    <ClInclude Include="..\include\mx\mxToggleButton.h" />
+    <ClInclude Include="..\include\mx\mxToolTip.h" />
+    <ClInclude Include="..\include\mx\mxTreeView.h" />
+    <ClInclude Include="..\include\mx\mxWidget.h" />
+    <ClInclude Include="..\include\mx\mxWindow.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

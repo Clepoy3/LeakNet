@@ -1025,7 +1025,7 @@ void CNPC_Stalker::StartAttackBeam( void )
 		}
 	}
 
-	SetThink( StalkerThink );
+	SetThink( &CNPC_Stalker::StalkerThink );
 
 	m_flNextNPCThink = GetNextThink();
 	SetNextThink( gpGlobals->curtime );
@@ -1215,7 +1215,7 @@ void CNPC_Stalker::KillAttackBeam(void)
 	m_bPlayingHitWall = false;
 	m_bPlayingHitFlesh = false;
 
-	SetThink(CallNPCThink);
+	SetThink(&CAI_BaseNPC::CallNPCThink);
 	if ( m_flNextNPCThink > gpGlobals->curtime )
 	{
 		SetNextThink( gpGlobals->curtime + m_flNextNPCThink );

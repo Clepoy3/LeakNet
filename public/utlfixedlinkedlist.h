@@ -210,26 +210,26 @@ inline int CUtlFixedLinkedList<T>::Count() const
 // Traversing the list
 //-----------------------------------------------------------------------------
 template <class T>
-inline CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Head() const  
+inline typename CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Head() const  
 { 
 	return m_Head; 
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Tail() const  
+inline typename CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Tail() const  
 { 
 	return m_Tail; 
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Previous( I i ) const  
+inline typename CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Previous( I i ) const  
 { 
 	Assert( IsValidIndex(i) ); 
 	return InternalElement(i).m_Previous; 
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Next( I i ) const  
+inline typename CUtlFixedLinkedList<T>::I  CUtlFixedLinkedList<T>::Next( I i ) const  
 { 
 	Assert( IsValidIndex(i) ); 
 	return InternalElement(i).m_Next; 
@@ -293,7 +293,7 @@ void CUtlFixedLinkedList<T>::PurgeAndDeleteElements()
 // Node allocation/deallocation
 //-----------------------------------------------------------------------------
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AllocInternal( bool multilist )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AllocInternal( bool multilist )
 {
 	I elem;
 	if (m_FirstFree == InvalidIndex())
@@ -327,7 +327,7 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AllocInternal( bool multilist 
 }
 
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::Alloc( bool multilist )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::Alloc( bool multilist )
 {
 	I elem = AllocInternal( multilist );
 	Construct( &Element(elem) );
@@ -352,7 +352,7 @@ void  CUtlFixedLinkedList<T>::Free( I elem )
 // Insertion methods; allocates and links (uses default constructor)
 //-----------------------------------------------------------------------------
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before )
 {
 	// Make a new node
 	I   newNode = AllocInternal();
@@ -367,7 +367,7 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before )
 }
 
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after )
 {
 	// Make a new node
 	I   newNode = AllocInternal();
@@ -382,13 +382,13 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after )
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToHead( ) 
+inline typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToHead( ) 
 { 
 	return InsertAfter( InvalidIndex() ); 
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( ) 
+inline typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( ) 
 { 
 	return InsertBefore( InvalidIndex() ); 
 }
@@ -398,7 +398,7 @@ inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( )
 // Insertion methods; allocates and links (uses copy constructor)
 //-----------------------------------------------------------------------------
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before, T const& src )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before, T const& src )
 {
 	// Make a new node
 	I   newNode = AllocInternal();
@@ -413,7 +413,7 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertBefore( I before, T cons
 }
 
 template <class T>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after, T const& src )
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after, T const& src )
 {
 	// Make a new node
 	I   newNode = AllocInternal();
@@ -428,13 +428,13 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::InsertAfter( I after, T const&
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToHead( T const& src ) 
+inline typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToHead( T const& src ) 
 { 
 	return InsertAfter( InvalidIndex(), src ); 
 }
 
 template <class T>
-inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( T const& src ) 
+inline typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( T const& src ) 
 { 
 	return InsertBefore( InvalidIndex(), src ); 
 }
@@ -444,8 +444,9 @@ inline CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::AddToTail( T const& src
 // Removal methods
 //-----------------------------------------------------------------------------
 
-template<class T, class I>
-CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::Find( const T &src ) const
+//template<class T, class I> // VXP: Conv
+template<class T>
+typename CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::Find( const T &src ) const
 {
 	for ( I i=Head(); i != InvalidIndex(); i = Next( i ) )
 	{
@@ -456,7 +457,8 @@ CUtlFixedLinkedList<T>::I CUtlFixedLinkedList<T>::Find( const T &src ) const
 }
 
 
-template<class T, class I>
+//template<class T, class I> // VXP: Conv
+template<class T>
 bool CUtlFixedLinkedList<T>::FindAndRemove( const T &src )
 {
 	I i = Find( src );

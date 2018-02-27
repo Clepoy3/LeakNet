@@ -62,8 +62,8 @@ public:
 
 	virtual void Render2D(CRender2D *pRender);
 
-	virtual int SerializeRMF(fstream &File, BOOL bRMF);
-	virtual int SerializeMAP(fstream &File, BOOL bRMF);
+	virtual int SerializeRMF(std::fstream &File, BOOL bRMF);
+	virtual int SerializeMAP(std::fstream &File, BOOL bRMF);
 
 	// Overridden to chain down to our endpoints, which are not children.
 	void SetOrigin(Vector &vecOrigin);

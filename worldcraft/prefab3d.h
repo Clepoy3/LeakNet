@@ -79,13 +79,13 @@ class CPrefabRMF : public CPrefab3D
 		int Load(DWORD dwFlags = 0);
 		int Save(LPCTSTR pszFilename, DWORD = 0);
 
-		int Init(fstream &file, BOOL bLoadNow = FALSE, DWORD = 0);
-		int Save(fstream &file, DWORD = 0);
+		int Init(std::fstream &file, BOOL bLoadNow = FALSE, DWORD = 0);
+		int Save(std::fstream &file, DWORD = 0);
 
 	private:
 
-		int DoLoad(fstream&, DWORD = 0);
-		int DoSave(fstream&, DWORD = 0);
+		int DoLoad(std::fstream&, DWORD = 0);
+		int DoSave(std::fstream&, DWORD = 0);
 }; 
 
 

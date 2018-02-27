@@ -362,7 +362,7 @@ void CBaseMoveBehavior::Activate( void )
 	SetMoveDoneTime( 0.5 );	// start moving in 0.2 seconds time
 
 	// if we are just the basic keyframed entity, cycle our animation
-	if ( !stricmp(GetClassname(), "move_keyframed") )
+	if ( !_stricmp(GetClassname(), "move_keyframed") )
 	{
 		StartMoving( 1 );
 	}
@@ -585,7 +585,7 @@ void CBaseMoveBehavior::StopMoving( void )
 void CBaseMoveBehavior::MoveDone( void )
 {
 	// if we're just a base then keep playing the anim
-	if ( !stricmp(STRING(m_iClassname), "move_keyframed") )
+	if ( !_stricmp(STRING(m_iClassname), "move_keyframed") )
 	{
 		int direction = m_iDirection;
 		// start moving from the keyframe we've just reached

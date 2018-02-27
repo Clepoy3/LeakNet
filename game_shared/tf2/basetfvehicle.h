@@ -47,9 +47,8 @@ class CBaseTFVehicle : public CBaseObject, public IClientVehicle
 class CBaseTFVehicle : public CBaseObject, public IServerVehicle
 #endif
 {
-	DECLARE_CLASS( CBaseTFVehicle, CBaseObject );
-
 public:
+	DECLARE_CLASS( CBaseTFVehicle, CBaseObject );
 
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();

@@ -22,7 +22,8 @@
 
 //=============================================================================
 
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include <UtlVector.h>
 #include "MapAtom.h"
 #include "Render3D.h"
@@ -289,8 +290,8 @@ public:
 	//
 	ChunkFileResult_t LoadVMF(CChunkFile *pFile);
 	ChunkFileResult_t SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo);
-	bool SerializedLoadMAP( fstream &file, CMapFace *pFace, UINT version );
-	bool SerializedLoadRMF( fstream &file, CMapFace *pFace, float version );
+	bool SerializedLoadMAP( std::fstream &file, CMapFace *pFace, UINT version );
+	bool SerializedLoadRMF( std::fstream &file, CMapFace *pFace, float version );
 
 	void PostLoad( void );
 

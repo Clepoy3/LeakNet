@@ -28,9 +28,9 @@
 //-----------------------------------------------------------------------------
 class CBasePanel : public vgui::Panel
 {
+public:
 	typedef vgui::Panel BaseClass;
 
-public:
 					CBasePanel( vgui::Panel *parent, char const *panelName );
 	virtual			~CBasePanel( void );
 

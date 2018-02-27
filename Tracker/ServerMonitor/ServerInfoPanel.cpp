@@ -8,9 +8,9 @@
 #include "ServerInfoPanel.h"
 #include "ServerList.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
+#include <vgui_controls/TextEntry.h>
 
 #include <stdio.h>
 

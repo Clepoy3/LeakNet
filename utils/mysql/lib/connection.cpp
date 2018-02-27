@@ -110,8 +110,6 @@ bool Connection::real_connect(cchar* db, cchar* host, cchar* user,
 	locked = true;
 
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
-	mysql_options(&mysql, MYSQL_SECURE_AUTH, "0");
-	mysql_options(&mysql, MYSQL_SET_CHARSET_NAME, "latin1");
 
 	if (mysql_real_connect(&mysql, host, user, passwd, db, port,
 			socket_name, client_flag)) {
@@ -177,8 +175,6 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 	locked = true;
 	
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
-	mysql_options(&mysql, MYSQL_SECURE_AUTH, "0");
-	mysql_options(&mysql, MYSQL_SET_CHARSET_NAME, "latin1");
 
 	if (mysql_real_connect(&mysql, host, user, passwd, db, 3306, NULL, 0)) {
 		locked = false;

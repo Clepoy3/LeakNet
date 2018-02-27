@@ -78,8 +78,8 @@ bool CMySqlDistroDatabase::GetUserDistribution(CUtlVector<trackerserver_t> &serv
 
 	// get the new userID
 	query << "select serverName, catalogName, backupServerName, backupCatalogName, useridminimum, useridmaximum, nextValidUserId "
-		//	<< "from UserDistribution where 1";
-			<< "from userdistribution where 1";
+		//	<< "from UserDistribution where dbtype = 0";
+		<< "from UserDistribution";
 
 	Result res = query.store();
 	if (!query.success())
@@ -148,7 +148,7 @@ public:
 		// lock the database
 		// no one else will be able to access the table until this is complete
 		query << "lock tables UserDistribution WRITE";
-		query.execute();
+		query.execute(RESET_QUERY);
 		int result = 0;
 
 		try
@@ -159,7 +159,7 @@ public:
 				<< " where serverName = '" << m_szDestServer << "'"
 				<< " and catalogName = '" << m_szDestCatalog << "' LIMIT 1";
 
-			query.execute();
+			query.execute(RESET_QUERY);
 			if (query.success())
 			{
 				query << "update UserDistribution set userIDMinimum = "
@@ -167,7 +167,7 @@ public:
 					<< " where serverName = '" << m_szSrcServer << "'"
 					<< " and catalogName = '" << m_szSrcCatalog << "' LIMIT 1";
 
-				query.execute();
+				query.execute(RESET_QUERY);
 				result = 1;
 
 				if (!query.success())
@@ -240,14 +240,14 @@ public:
 		// lock the database
 		// no one else will be able to access the table until this is complete
 		query << "lock tables UserDistribution WRITE";
-		query.execute();
+		query.execute(RESET_QUERY);
 
 		int userID = -2;	// flag as error by default
 		try
 		{
 			// get the new userID
 			query << "select nextValidUserId from UserDistribution where nextValidUserID > 0 LIMIT 1";
-			Result res = query.store();
+			Result res = query.store(RESET_QUERY);
 			if (res)
 			{
 				Row row = res[0];
@@ -256,8 +256,9 @@ public:
 				userID = row[0];
 
 				// update database
-				query << "update UserDistribution set nextValidUserId = nextValidUserId + 1, userIDMaximum = userIDMaximum + 1 where nextValidUserID > 0 and dbtype = 0 LIMIT 1";
-				query.execute();
+			//	query << "update UserDistribution set nextValidUserId = nextValidUserId + 1, userIDMaximum = userIDMaximum + 1 where nextValidUserID > 0 and dbtype = 0 LIMIT 1";
+				query << "update UserDistribution set nextValidUserId = nextValidUserId + 1, userIDMaximum = userIDMaximum + 1 where nextValidUserID > 0 LIMIT 1";
+				query.execute(RESET_QUERY);
 				if (!query.success())
 				{
 					g_pConsole->Print(5, "** ReserveUserID Error: %s", query.error().c_str());

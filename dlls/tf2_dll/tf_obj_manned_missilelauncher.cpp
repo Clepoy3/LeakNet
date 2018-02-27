@@ -79,7 +79,7 @@ void CObjectMannedMissileLauncher::Spawn()
 	SetSolid( SOLID_BBOX );
 	UTIL_SetSize(this, MANNED_MISSILELAUNCHER_MINS, MANNED_MISSILELAUNCHER_MAXS);
 
-	SetThink( MissileRechargeThink );
+	SetThink( &CObjectMannedMissileLauncher::MissileRechargeThink );
 	SetNextThink( gpGlobals->curtime + MANNED_MISSILELAUNCHER_RECHARGE_TIME );
 
 	SetType( OBJ_MANNED_MISSILELAUNCHER );

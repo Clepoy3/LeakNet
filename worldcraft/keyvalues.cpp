@@ -65,7 +65,7 @@ LPCTSTR KeyValues::GetValue(LPCTSTR pszKey, int *piIndex) const
 {
 	for(int i = 0; i < m_nKeyValueCount; i++)
 	{
-		if(!strcmpi(pszKey, m_KeyValues.GetData()[i].szKey))
+		if(!_strcmpi(pszKey, m_KeyValues.GetData()[i].szKey))
 		{
 			if(piIndex)
 				piIndex[0] = i;
@@ -146,7 +146,7 @@ void KeyValues::SetValue(const char *pszKey, const char *pszValue)
 		//
 		// If we find the key...
 		//
-		if (!strcmpi(kv.szKey, szTmpKey))
+		if (!_strcmpi(kv.szKey, szTmpKey))
 		{
 			//
 			// If we are setting to a non-NULL value, set the value.

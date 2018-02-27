@@ -175,7 +175,7 @@ void ShowMPIStats(
 
 			qsort( sortedProcs.Base(), nProcs, sizeof( int ), SortByWUCount );
 
-			for ( i=0; i < nProcs; i++ )
+			for ( int i=0; i < nProcs; i++ )
 			{
 				if ( sortedProcs[i] == 0 )
 					continue;

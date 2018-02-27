@@ -47,10 +47,10 @@ envelopePoint_t envZombieMoanVolume[] =
 //=============================================================================
 class CZombie : public CNPC_BaseZombie
 {
+public:
 	DECLARE_DATADESC();
 	DECLARE_CLASS( CZombie, CNPC_BaseZombie );
 
-public:
 	CZombie()
 	 : m_DurationDoorBash( 2, 6),
 	   m_NextTimeToStartDoorBash( 3.0 )

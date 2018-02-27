@@ -18,9 +18,9 @@
 
 class CMinimapResourceZonePanel : public CMinimapTracePanel
 {
+public:
 	DECLARE_CLASS( CMinimapResourceZonePanel, CMinimapTracePanel );
 
-public:
 	CMinimapResourceZonePanel( vgui::Panel *parent, const char *panelName );
 	virtual ~CMinimapResourceZonePanel();
 

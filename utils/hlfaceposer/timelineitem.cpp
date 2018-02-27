@@ -693,7 +693,7 @@ void TimelineItem::Draw( CChoreoWidgetDrawHelper& drawHelper )
 					
 					POINT pt;
 
-					if ( segments.Count == 0 )
+					if ( segments.Count() == 0 )
 					{
 						pt.x = prevx;	
 						pt.y = bottom - prev_value * height;
@@ -1068,7 +1068,7 @@ CFlexAnimationTrack *TimelineItem::GetSafeTrack( void )
 	for ( int i = 0; i < ev->GetNumFlexAnimationTracks() ; i++ )
 	{
 		CFlexAnimationTrack *track = ev->GetFlexAnimationTrack( i );
-		if ( track && !stricmp( track->GetFlexControllerName(), m_szTrackName ) )
+		if ( track && !_stricmp( track->GetFlexControllerName(), m_szTrackName ) )
 		{
 			return track;
 		}

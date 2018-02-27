@@ -71,7 +71,7 @@ void CTripmineGrenade::Spawn( void )
 
 	m_flPowerUp = gpGlobals->curtime + 2.0;
 	
-	SetThink( PowerupThink );
+	SetThink( &CTripmineGrenade::PowerupThink );
 	SetNextThink( gpGlobals->curtime + 0.2 );
 
 	m_takedamage		= DAMAGE_YES;
@@ -98,7 +98,7 @@ void CTripmineGrenade::Precache( void )
 void CTripmineGrenade::WarningThink( void  )
 {
 	// set to power up
-	SetThink( PowerupThink );
+	SetThink( &CTripmineGrenade::PowerupThink );
 	SetNextThink( gpGlobals->curtime + 1.0f );
 }
 
@@ -157,7 +157,7 @@ void CTripmineGrenade::MakeBeam( void )
 	}
 
 	// set to follow laser spot
-	SetThink( BeamBreakThink );
+	SetThink( &CTripmineGrenade::BeamBreakThink );
 
 	// Delay first think slightly so beam has time
 	// to appear if person right in front of it
@@ -224,7 +224,7 @@ int CTripmineGrenade::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	{
 		// disable
 		// Create( "weapon_tripmine", GetLocalOrigin() + m_vecDir * 24, GetAngles() );
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 		KillBeam();
 		return FALSE;
@@ -241,7 +241,7 @@ void CTripmineGrenade::Event_Killed( const CTakeDamageInfo &info )
 {
 	m_takedamage		= DAMAGE_NO;
 
-	SetThink( DelayDeathThink );
+	SetThink( &CTripmineGrenade::DelayDeathThink );
 	SetNextThink( gpGlobals->curtime + random->RandomFloat( 0.1, 0.3 ) );
 
 	EmitSound( "TripmineGrenade.StopSound" );

@@ -22,10 +22,8 @@ class CTFMoveData;
 //
 class CTFGameMovementInfiltrator : public CTFGameMovement
 {
-
-	DECLARE_CLASS( CTFGameMovementInfiltrator, CTFGameMovement );
-
 public:
+	DECLARE_CLASS( CTFGameMovementInfiltrator, CTFGameMovement );
 
 	CTFGameMovementInfiltrator();
 

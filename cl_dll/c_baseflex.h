@@ -34,8 +34,9 @@ class CSentence;
 //-----------------------------------------------------------------------------
 class C_BaseFlex : public C_BaseAnimatingOverlay
 {
-	DECLARE_CLASS( C_BaseFlex, C_BaseAnimatingOverlay );
 public:
+	DECLARE_CLASS( C_BaseFlex, C_BaseAnimatingOverlay );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_INTERPOLATION();

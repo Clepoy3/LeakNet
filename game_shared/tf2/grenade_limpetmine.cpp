@@ -111,9 +111,9 @@ void CLimpetMine::Spawn( void )
 	m_bLive = false;
 	m_bFizzleInit = false;
 	m_bEMPed = false;
-	SetThink( LiveThink );
+	SetThink( &CLimpetMine::LiveThink );
 	SetNextThink( gpGlobals->curtime + LIMPET_LIVE_TIME );
-	SetTouch( StickyTouch );
+	SetTouch( &CLimpetMine::StickyTouch );
 
 	// Causes these to collide with everything but NPCs and players
 	SetCollisionGroup( TFCOLLISION_GROUP_GRENADE );
@@ -149,7 +149,7 @@ void CLimpetMine::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE u
 		{
 			// Set the defuse - fizzle think
 			m_flFizzleDuration = gpGlobals->curtime + 0.3;
-			SetThink( LimpetThink );
+			SetThink( &CLimpetMine::LimpetThink );
 			SetNextThink( gpGlobals->curtime + 0.1f );
 			m_bFizzleInit = true;
 		}
@@ -194,7 +194,7 @@ void CLimpetMine::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE u
 			// Beep and detonate soon afterwards
 			EmitSound( "LimpetMine.Beep" );
 
-			SetThink( Detonate );
+			SetThink( &CLimpetMine::Detonate );
 			SetNextThink( gpGlobals->curtime + 0.5f );
 
 			// Pretend I'm not live anymore so I don't get exploded again
@@ -222,7 +222,7 @@ bool CLimpetMine::TakeEMPDamage( float duration )
 		// Set the defuse - fizzle think
 		float flDuration = min( duration, LIMPET_FIZZLE_DURATION );
 		m_flFizzleDuration = gpGlobals->curtime + ( flDuration - 1.0f );
-		SetThink( LimpetThink );
+		SetThink( &CLimpetMine::LimpetThink );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 		m_bFizzleInit = true;
 		m_bEMPed = true;
@@ -266,7 +266,7 @@ void CLimpetMine::LiveThink( void )
 	// Remove myself after a while
 	m_flFizzleDuration = gpGlobals->curtime + LIMPET_LIFETIME + 0.3;
 	SetNextThink( gpGlobals->curtime + 0.1f );
-	SetThink( LimpetThink );
+	SetThink( &CLimpetMine::LimpetThink );
 }
 
 //-----------------------------------------------------------------------------
@@ -366,7 +366,7 @@ void CLimpetMine::LimpetThink( void )
 			m_bStuckToTarget = false;
 			// Fall to the ground
 			SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_CUSTOM );
-			SetTouch( StickyTouch );
+			SetTouch( &CLimpetMine::StickyTouch );
 		}
 	}
 

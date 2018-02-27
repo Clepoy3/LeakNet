@@ -267,12 +267,12 @@ void Info_SetValueForStarKey ( char *s, const char *key, const char *value, int 
 		c = (unsigned char)*v++;
 #ifndef SERVERONLY
 		// client only allows highbits on name
-		if (stricmp(key, "name") != 0) {
+		if (_stricmp(key, "name") != 0) {
 			c &= 127;
 			if (c < 32 || c > 127)
 				continue;
 			// auto lowercase team
-			if (stricmp(key, "team") == 0)
+			if (_stricmp(key, "team") == 0)
 				c = tolower(c);
 		}
 #else

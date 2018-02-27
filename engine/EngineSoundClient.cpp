@@ -119,7 +119,8 @@ void CEngineSoundClient::EmitSoundInternal( IRecipientFilter& filter, int iEntIn
 
 	// See if local player is a recipient
 	int c = filter.GetRecipientCount();
-	for ( int i = 0; i < c ; i++ )
+	int i;
+	for ( i = 0; i < c ; i++ )
 	{
 		int index = filter.GetRecipientIndex( i );
 		if ( index == cl.playernum + 1 )

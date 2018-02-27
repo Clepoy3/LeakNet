@@ -35,9 +35,9 @@
 #include "tier0/memdbgon.h"
 
 template<class Type>
-CUtlFixedLinkedList< CInterpolatedVar<Type>::CInterpolatedVarEntry >	CInterpolatedVar<Type>::m_VarHistory;
+CUtlFixedLinkedList< typename CInterpolatedVar<Type>::CInterpolatedVarEntry >	CInterpolatedVar<Type>::m_VarHistory;
 template<class Type, int COUNT>
-CUtlFixedLinkedList< CInterpolatedVarArray<Type,COUNT>::CInterpolatedVarEntry >	CInterpolatedVarArray<Type,COUNT>::m_VarHistory;
+CUtlFixedLinkedList< typename CInterpolatedVarArray<Type,COUNT>::CInterpolatedVarEntry >	CInterpolatedVarArray<Type,COUNT>::m_VarHistory;
 
 static ConVar  cl_interpolate( "cl_interpolate", "1.0", 0, "Interpolate entities on the client." );
 
@@ -4017,13 +4017,13 @@ void C_BaseEntity::ShiftIntermediateDataForward( int slots_to_remove, int number
 	}
 
 	// Move rest of slots forward up to last slot
-	for ( ; i < number_of_commands_run; i++ )
+	for ( int i = 0; i < number_of_commands_run; i++ )
 	{
 		m_pIntermediateData[ i - slots_to_remove ] = m_pIntermediateData[ i ];
 	}
 
 	// Put remembered slots onto end
-	for ( i = 0; i < slots_to_remove; i++ )
+	for ( int i = 0; i < slots_to_remove; i++ )
 	{
 		int slot = number_of_commands_run - slots_to_remove + i;
 
@@ -4370,7 +4370,7 @@ void DrawBBox( const Vector &mins, const Vector &maxs, const color32 &color )
 	{
 		FX_DrawLine( verts[i], verts[i+1], 0.5, pMaterial, color );
 	}
-	for ( i = 7; i > 4; i-- )
+	for ( int i = 7; i > 4; i-- )
 	{
 		FX_DrawLine( verts[i], verts[i-1], 0.5, pMaterial, color );
 	}

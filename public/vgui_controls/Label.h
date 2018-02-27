@@ -203,6 +203,7 @@ private:
 
 	wchar_t	   _hotkey;		// the hotkey contained in the text
 
+public:
 	typedef vgui::Panel BaseClass;
 };
 

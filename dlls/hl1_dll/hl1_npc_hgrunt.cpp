@@ -1922,7 +1922,7 @@ void CNPC_HGruntRepel::Spawn( void )
 	Precache( );
 	SetSolid( SOLID_NONE );
 
-	SetUse( RepelUse );
+	SetUse( &CNPC_HGruntRepel::RepelUse );
 }
 
 void CNPC_HGruntRepel::Precache( void )
@@ -1948,7 +1948,7 @@ void CNPC_HGruntRepel::RepelUse ( CBaseEntity *pActivator, CBaseEntity *pCaller,
 	pBeam->PointEntInit( GetAbsOrigin() + Vector(0,0,112), pGrunt );
 	pBeam->SetBeamFlags( FBEAM_SOLID );
 	pBeam->SetColor( 255, 255, 255 );
-	pBeam->SetThink( SUB_Remove );
+	pBeam->SetThink( &CBaseEntity::SUB_Remove );
 	SetNextThink( gpGlobals->curtime + -4096.0 * tr.fraction / pGrunt->GetAbsVelocity().z + 0.5 );
 
 	UTIL_Remove( this );

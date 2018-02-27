@@ -233,7 +233,7 @@ ConVar ammo_flashbang_max( "ammo_flashbang_max", "1", FCVAR_REPLICATED );
 		int nArgs = engine->Cmd_Argc();
 		for ( int i=1; i < nArgs; i++ )
 		{
-			if ( stricmp( engine->Cmd_Argv(i), pName ) == 0 )
+			if ( _stricmp( engine->Cmd_Argv(i), pName ) == 0 )
 				return (i+1) < nArgs ? engine->Cmd_Argv(i+1) : "";
 		}
 		return 0;

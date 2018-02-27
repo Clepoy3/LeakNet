@@ -6,7 +6,8 @@
 //=============================================================================
 
 #include "stdafx.h"
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include "Worldcraft.h"
 #include "TextureWindow.h"
 #include "TextureBrowser.h"
@@ -347,7 +348,7 @@ void CTextureWindow::SetNameFilter(LPCTSTR pszFilter)
 
 	// set filter
 	strcpy(m_szFilter, pszFilter);
-	strupr(m_szFilter);
+	_strupr(m_szFilter);
 
 	// delimit the filter
 	m_nFilters = 0;
@@ -386,7 +387,7 @@ void CTextureWindow::SetKeywords(LPCTSTR pszKeywords)
 
 	// set keyword filter
 	strcpy(m_szKeywords, pszKeywords);
-	strupr(m_szKeywords);
+	_strupr(m_szKeywords);
 
 	// delimit the filter
 	m_nKeywords = 0;
@@ -482,7 +483,7 @@ void CTextureWindow::OnPaint(void)
 	{
 		TE.pTex->GetShortName(szDrawTexture);
 
-		if (!strcmpi(szCurTexture, szDrawTexture))
+		if (!_strcmpi(szCurTexture, szDrawTexture))
 		{
 			rectHighlight = TE.texrect;
 			rectHighlight.InflateRect(2, 4);

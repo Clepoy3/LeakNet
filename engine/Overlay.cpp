@@ -475,7 +475,7 @@ bool COverlayMgr::Surf_PreClipFragment( moverlay_t *pOverlay, moverlayfragment_t
 
 	// Surface
 	int nVertCount = surfaceFrag.m_aPrimVerts.Count();
-	for ( iVert = 0; iVert < nVertCount; ++iVert )
+	for ( int iVert = 0; iVert < nVertCount; ++iVert )
 	{
 		// Position.
 		Overlay_WorldToOverlayPlane( pOverlay->m_vecOrigin, pOverlay->m_vecBasis[2], 
@@ -817,7 +817,7 @@ bool COverlayMgr::Disp_PreClipFragment( moverlay_t *pOverlay, OverlayFragmentVec
 	int iPointStart = pDispInfo->m_iPointStart;
 
 	Vector2D vecTmpUV;
-	for ( iVert = 0; iVert < nVertCount; ++iVert )
+	for ( int iVert = 0; iVert < nVertCount; ++iVert )
 	{
 		PointInQuadToBarycentric( surfaceFrag.m_aPrimVerts[iPointStart].pos,
 								  surfaceFrag.m_aPrimVerts[(iPointStart+3)%4].pos,
@@ -1048,7 +1048,8 @@ void COverlayMgr::DoClipFragment( moverlayfragment_t *pFragment, cplane_t *pClip
 	// Determine "sidedness" of all the polygon points.
 	//
 	nSideCounts[0] = nSideCounts[1] = nSideCounts[2] = 0;
-	for ( int iVert = 0; iVert < pFragment->m_aPrimVerts.Count(); ++iVert )
+	int iVert;
+	for ( iVert = 0; iVert < pFragment->m_aPrimVerts.Count(); ++iVert )
 	{
 		flDists[iVert] = pClipPlane->normal.Dot( pFragment->m_aPrimVerts[iVert].pos ) - pClipPlane->dist;
 

@@ -5,12 +5,12 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
 
-#include <VGUI_Panel.h>
+#include <vgui_controls/Panel.h>
 
 #include "interface.h"
 #include "FileSystem.h"

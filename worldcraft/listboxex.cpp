@@ -135,7 +135,7 @@ void CListBoxEx::GetItemText(int iItem, char *pszText)
 		strcpy(pszText, lbis.szDataString);
 		break;
 	case lbdInteger:
-		ltoa(lbis.iDataValue, pszText, 10);
+		_ltoa(lbis.iDataValue, pszText, 10);
 		break;
 	}
 }

@@ -22,8 +22,9 @@
 //-----------------------------------------------------------------------------
 class CBaseEMPableGrenade : public CBaseGrenade
 {
-	DECLARE_CLASS( CBaseEMPableGrenade, CBaseGrenade );
 public:
+	DECLARE_CLASS( CBaseEMPableGrenade, CBaseGrenade );
+
 	DECLARE_PREDICTABLE();
 	DECLARE_NETWORKCLASS();
 

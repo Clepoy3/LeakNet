@@ -77,7 +77,7 @@ void CDialogRemoveUser::Open()
 //-----------------------------------------------------------------------------
 void CDialogRemoveUser::OnCommand(const char *command)
 {
-	if (!stricmp("OK", command))
+	if (!_stricmp("OK", command))
 	{
 		GetDoc()->RemoveBuddy(m_iUserID);
 		CTrackerDialog::GetInstance()->InvalidateLayout();

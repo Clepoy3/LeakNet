@@ -433,7 +433,7 @@ void CNPC_BounceBomb::Spawn()
 
 	m_takedamage = DAMAGE_YES;
 
-	SetThink( SearchThink );
+	SetThink( &CNPC_BounceBomb::SearchThink );
 	SetNextThink( gpGlobals->curtime );
 }
 
@@ -631,7 +631,7 @@ void CNPC_BounceBomb::SearchThink()
 
 			EmitSound( "NPC_RollerMine.Hurt" );
 			
-			SetThink( ExplodeThink );
+			SetThink( &CNPC_BounceBomb::ExplodeThink );
 			SetNextThink( gpGlobals->curtime + m_flExplosionDelay );
 			return;
 		}
@@ -642,7 +642,7 @@ void CNPC_BounceBomb::SearchThink()
 		if( flNearestBCCDist <= m_flDetonateRadius )
 		{
 			EmitSound( "NPC_RollerMine.Hurt" );
-			SetThink( ExplodeThink );
+			SetThink( &CNPC_BounceBomb::ExplodeThink );
 			SetNextThink( gpGlobals->curtime + m_flExplosionDelay );
 		}
 	}

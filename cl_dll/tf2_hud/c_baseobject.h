@@ -33,8 +33,9 @@ class C_BaseTFPlayer;
 //-----------------------------------------------------------------------------
 class C_BaseObject : public C_BaseCombatCharacter, public IHasBuildPoints
 {
-	DECLARE_CLASS( C_BaseObject, C_BaseCombatCharacter );
 public:
+	DECLARE_CLASS( C_BaseObject, C_BaseCombatCharacter );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 	DECLARE_MINIMAP_PANEL();

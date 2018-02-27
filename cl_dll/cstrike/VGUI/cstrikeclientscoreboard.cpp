@@ -103,7 +103,7 @@ void CCSClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// recalc the team scores, then draw them
-	for ( i = 1; i < MAX_PLAYERS; i++ )
+	for ( int i = 1; i < MAX_PLAYERS; i++ )
 	{
 		VGuiLibraryPlayer_t playerInfo = gViewPortInterface->GetClientDllInterface()->GetPlayerInfo( i );
 
@@ -128,7 +128,7 @@ void CCSClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// find team ping/packetloss averages
-	for ( i = 1; i <= m_iNumTeams; i++ )
+	for ( int i = 1; i <= m_iNumTeams; i++ )
 	{
 		m_TeamInfo[i].already_drawn = false;
 
@@ -140,16 +140,16 @@ void CCSClientScoreBoardDialog::UpdateTeamInfo()
 	}
 
 	// update the team sections in the scoreboard
-	for ( i = 1; i <= m_iNumTeams; i++ )
+	for ( int i = 1; i <= m_iNumTeams; i++ )
 	{
 		wchar_t *teamName = NULL;;
 		int sectionID = 0;
-		if ( !stricmp( m_TeamInfo[i].name, "CT" ) )
+		if ( !_stricmp( m_TeamInfo[i].name, "CT" ) )
 		{
 			sectionID = SCORESECTION_CT;
 			teamName = localize()->Find("#Cstrike_ScoreBoard_CT");
 		}
-		else if ( !stricmp( m_TeamInfo[i].name, "TERRORIST" ) )
+		else if ( !_stricmp( m_TeamInfo[i].name, "TERRORIST" ) )
 		{
 			sectionID = SCORESECTION_TERRORIST;
 			teamName = localize()->Find("#Cstrike_ScoreBoard_Ter");
@@ -181,7 +181,7 @@ void CCSClientScoreBoardDialog::UpdateTeamInfo()
 
 		// update stats
 		wchar_t val[6];
-		swprintf(val, L"%d", m_TeamInfo[i].frags);
+		swprintf(val, sizeof(val), L"%d", m_TeamInfo[i].frags);
 		m_pPlayerList->ModifyColumn(sectionID, "frags", val);
 		if (m_TeamInfo[i].ping < 1)
 		{
@@ -189,7 +189,7 @@ void CCSClientScoreBoardDialog::UpdateTeamInfo()
 		}
 		else
 		{
-			swprintf(val, L"%d", m_TeamInfo[i].ping);
+			swprintf(val, sizeof(val), L"%d", m_TeamInfo[i].ping);
 			m_pPlayerList->ModifyColumn(sectionID, "ping", val);
 		}
 	}

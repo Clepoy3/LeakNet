@@ -27,7 +27,7 @@ IMPLEMENT_MAPCLASS(CMapAlignedBox)
 //-----------------------------------------------------------------------------
 CMapClass *CMapAlignedBox::Create(CHelperInfo *pHelperInfo, CMapEntity *pParent)
 {
-	if (stricmp(pHelperInfo->GetName(), "wirebox") == 0)
+	if (_stricmp(pHelperInfo->GetName(), "wirebox") == 0)
 	{
 		const char *pMinsKeyName, *pMaxsKeyName;
 		POSITION pos;
@@ -276,7 +276,7 @@ void CMapAlignedBox::Render3D(CRender3D *pRender)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapAlignedBox::SerializeRMF(fstream &File, BOOL bRMF)
+int CMapAlignedBox::SerializeRMF(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -288,7 +288,7 @@ int CMapAlignedBox::SerializeRMF(fstream &File, BOOL bRMF)
 //			bRMF - 
 // Output : int
 //-----------------------------------------------------------------------------
-int CMapAlignedBox::SerializeMAP(fstream &File, BOOL bRMF)
+int CMapAlignedBox::SerializeMAP(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -306,11 +306,11 @@ void CMapAlignedBox::OnParentKeyChanged( LPCSTR key, LPCSTR value )
 		return;
 	}
 
-	if (stricmp(key, m_MinsKeyName) == 0)
+	if (_stricmp(key, m_MinsKeyName) == 0)
 	{
 		sscanf(value, "%f %f %f", &m_Mins[0], &m_Mins[1], &m_Mins[2]);
 	}
-	else if (stricmp(key, m_MaxsKeyName) == 0)
+	else if (_stricmp(key, m_MaxsKeyName) == 0)
 	{
 		sscanf(value, "%f %f %f", &m_Maxs[0], &m_Maxs[1], &m_Maxs[2]);
 	}

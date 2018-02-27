@@ -25,9 +25,29 @@ namespace vgui
 
 ////////////// MESSAGEMAP DEFINITIONS //////////////
 
-#ifndef offsetof
-#define offsetof(s,m)	(size_t)&(((s *)0)->m)
+//#ifndef offsetof
+//#define offsetof(s,m)	(size_t)&(((s *)0)->m)
+//#endif
+	
+// VXP: Conv: Straight from stddef.h
+/* Define offsetof macro */
+#ifdef __cplusplus
+
+#ifdef  _WIN64
+#define offsetof(s,m)   (size_t)( (ptrdiff_t)&reinterpret_cast<const volatile char&>((((s *)0)->m)) )
+#else
+#define offsetof(s,m)   (size_t)&reinterpret_cast<const volatile char&>((((s *)0)->m))
 #endif
+
+#else
+
+#ifdef  _WIN64
+#define offsetof(s,m)   (size_t)( (ptrdiff_t)&(((s *)0)->m) )
+#else
+#define offsetof(s,m)   (size_t)&(((s *)0)->m)
+#endif
+
+#endif	/* __cplusplus */
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(p)	(sizeof(p)/sizeof(p[0]))
@@ -83,31 +103,31 @@ struct MessageMapItem_t
 // only macros defined work, other variable combinations not supported yet
 
 // no parameters
-#define MAP_MESSAGE( type, name, func )						{ name, 0, (vgui::MessageFunc_t)(type::func), 0 }
-#define MAP_MSGID( type, name, func )						{ "", name, (vgui::MessageFunc_t)(type::func), 0 }
+#define MAP_MESSAGE( type, name, func )						{ name, 0, (vgui::MessageFunc_t)(&type::func), 0 }
+#define MAP_MSGID( type, name, func )						{ "", name, (vgui::MessageFunc_t)(&type::func), 0 }
 
 // implicit single parameter (params is the data store)
-#define MAP_MESSAGE_PARAMS( type, name, func )				{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_KEYVALUES, NULL }
-#define MAP_MSGID_PARAMS( type, name, func )				{ "", name, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_KEYVALUES, NULL }
+#define MAP_MESSAGE_PARAMS( type, name, func )				{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_KEYVALUES, NULL }
+#define MAP_MSGID_PARAMS( type, name, func )				{ "", name, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_KEYVALUES, NULL }
 
 // single parameter
-#define MAP_MESSAGE_PTR( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_PTR, param1 }
-#define MAP_MESSAGE_INT( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_INT, param1 }
-#define MAP_MSGID_INT( type, name, func, param1 )			{ "", name,(vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_INT, param1 }
-#define MAP_MESSAGE_BOOL( type, name, func, param1 )		{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_BOOL, param1 }
-#define MAP_MESSAGE_FLOAT( type, name, func, param1 )		{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_FLOAT, param1 }
-#define MAP_MESSAGE_PTR( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_PTR, param1 }
-#define MAP_MESSAGE_CONSTCHARPTR( type, name, func, param1) { name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_CONSTCHARPTR, param1 }
-#define MAP_MESSAGE_CONSTWCHARPTR( type, name, func, param1) { name, 0, (vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_CONSTWCHARPTR, param1 }
-#define MAP_MSGID_CONSTCHARPTR( type, name, func, param1 )	{ "", name,(vgui::MessageFunc_t)(type::func), 1, vgui::DATATYPE_CONSTCHARPTR, param1 }
+#define MAP_MESSAGE_PTR( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_PTR, param1 }
+#define MAP_MESSAGE_INT( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_INT, param1 }
+#define MAP_MSGID_INT( type, name, func, param1 )			{ "", name,(vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_INT, param1 }
+#define MAP_MESSAGE_BOOL( type, name, func, param1 )		{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_BOOL, param1 }
+#define MAP_MESSAGE_FLOAT( type, name, func, param1 )		{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_FLOAT, param1 }
+#define MAP_MESSAGE_PTR( type, name, func, param1 )			{ name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_PTR, param1 }
+#define MAP_MESSAGE_CONSTCHARPTR( type, name, func, param1) { name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_CONSTCHARPTR, param1 }
+#define MAP_MESSAGE_CONSTWCHARPTR( type, name, func, param1) { name, 0, (vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_CONSTWCHARPTR, param1 }
+#define MAP_MSGID_CONSTCHARPTR( type, name, func, param1 )	{ "", name,(vgui::MessageFunc_t)(&type::func), 1, vgui::DATATYPE_CONSTCHARPTR, param1 }
 
 // two parameters
-#define MAP_MESSAGE_INT_INT( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_INT, param1, vgui::DATATYPE_INT, param2 }
-#define MAP_MESSAGE_PTR_INT( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_INT, param2 }
-#define MAP_MESSAGE_INT_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_INT, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
-#define MAP_MESSAGE_PTR_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
-#define MAP_MESSAGE_PTR_CONSTWCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_CONSTWCHARPTR, param2 }
-#define MAP_MESSAGE_CONSTCHARPTR_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)type::func, 2, vgui::DATATYPE_CONSTCHARPTR, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
+#define MAP_MESSAGE_INT_INT( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_INT, param1, vgui::DATATYPE_INT, param2 }
+#define MAP_MESSAGE_PTR_INT( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_INT, param2 }
+#define MAP_MESSAGE_INT_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_INT, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
+#define MAP_MESSAGE_PTR_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
+#define MAP_MESSAGE_PTR_CONSTWCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_PTR, param1, vgui::DATATYPE_CONSTWCHARPTR, param2 }
+#define MAP_MESSAGE_CONSTCHARPTR_CONSTCHARPTR( type, name, func, param1, param2 ) { name, 0, (vgui::MessageFunc_t)(&type::func), 2, vgui::DATATYPE_CONSTCHARPTR, param1, vgui::DATATYPE_CONSTCHARPTR, param2 }
 
 // if more parameters are needed, just use MAP_MESSAGE_PARAMS() and pass the keyvalue set into the function
 

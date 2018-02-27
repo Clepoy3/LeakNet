@@ -1088,7 +1088,7 @@ Vector SolveGJKSet( simplex_t &simplex, const simplexvert_t &w )
 // and this is an intersection from the initial object position.
 int ClassifySweepVerts( simplex_t &simplex, int skipVert, int moveIndex[4], int staticIndex[4] )
 {
-	Assert( simplex.vertCount <= 4 );
+	assert( simplex.vertCount <= 4 );
 	int moveCount = 0, staticCount = 0;
 	for ( int i = 0; i < simplex.vertCount; i++ )
 	{
@@ -1448,7 +1448,7 @@ void CalculateSeparatingPlane( trace_t *ptr, ITraceObject *sweepObject, CTraceRa
 	int testCount = 1, obstacleCount = 1, testIndex[4], obstacleIndex[4];
 	testIndex[0] = simplex.verts[0].testIndex;
 	obstacleIndex[0] = simplex.verts[0].obstacleIndex;
-	Assert( simplex.vertCount <= 4 );
+	assert( simplex.vertCount <= 4 );
 	for ( int i = 1; i < simplex.vertCount; i++ )
 	{
 		int j;
@@ -1589,7 +1589,7 @@ float CTraceSolverSweptObject::SolveMeshIntersection( simplex_t &simplex )
 		simplex.vertCount++;
 		iterate = true;
 
-		Assert( simplex.vertCount <= 4 );
+		assert( simplex.vertCount <= 4 );
 		// expanded from edge to tri, check to make sure it's planar
 		if ( simplex.vertCount == 3 )
 		{

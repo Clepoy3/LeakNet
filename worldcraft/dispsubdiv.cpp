@@ -271,7 +271,7 @@ void CEditDispSubdivMesh::Point_PointOrdinary( SubdivPoint_t *pPoint )
 	int					quadListCount = 0;
 	SubdivQuadHandle_t	quadList[32];
 
-	for ( ndxEdge = 0; ndxEdge < pPoint->m_uValence; ndxEdge++ )
+	for ( int ndxEdge = 0; ndxEdge < pPoint->m_uValence; ndxEdge++ )
 	{
 		SubdivEdge_t *pEdge = GetEdge( pPoint->m_EdgeHandles[ndxEdge] );
 		if ( pEdge )
@@ -280,7 +280,8 @@ void CEditDispSubdivMesh::Point_PointOrdinary( SubdivPoint_t *pPoint )
 			{
 				if ( pEdge->m_QuadHandles[ndxQuad] != m_Quads.InvalidIndex() )
 				{
-					for ( int ndxList = 0; ndxList < quadListCount; ndxList++ )
+					int ndxList;
+					for ( ndxList = 0; ndxList < quadListCount; ndxList++ )
 					{
 						if( pEdge->m_QuadHandles[ndxQuad] == quadList[ndxList] )
 							break;
@@ -578,7 +579,8 @@ CEditDispSubdivMesh::SubdivPointHandle_t CEditDispSubdivMesh::BuildSubdivPoint( 
 	//
 	// build a "unique" point
 	//
-	for ( SubdivPointHandle_t ptHandle = m_Points.Head(); ptHandle != m_Points.InvalidIndex();
+	SubdivPointHandle_t ptHandle;
+	for ( ptHandle = m_Points.Head(); ptHandle != m_Points.InvalidIndex();
 	      ptHandle = m_Points.Next( ptHandle ) )
 	{
 		SubdivPoint_t *pPoint = GetPoint( ptHandle );
@@ -614,7 +616,8 @@ CEditDispSubdivMesh::SubdivEdgeHandle_t CEditDispSubdivMesh::BuildSubdivEdge( in
 	//
 	// define a unique edge (m_PointHandlesX2, m_QuadHandle)
 	//
-	for ( SubdivEdgeHandle_t edgeHandle = m_Edges.Head(); edgeHandle != m_Edges.InvalidIndex();
+	SubdivEdgeHandle_t edgeHandle;
+	for ( edgeHandle = m_Edges.Head(); edgeHandle != m_Edges.InvalidIndex();
 	      edgeHandle = m_Edges.Next( edgeHandle ) )
 	{
 		SubdivEdge_t *pEdge = GetEdge( edgeHandle );
@@ -889,7 +892,7 @@ void CEditDispSubdivMesh::AddDispTo( CMapDisp *pDisp )
 	}
 
 	// build subdivision points
-	for( ndxPt = 0; ndxPt < EDITDISP_QUADSIZE; ndxPt++ )
+	for( int ndxPt = 0; ndxPt < EDITDISP_QUADSIZE; ndxPt++ )
 	{
 		pQuad->m_PointHandles[ndxPt] = BuildSubdivPoint( vPoints[ndxPt], vPointNormals[ndxPt] );
 	}
@@ -984,7 +987,8 @@ void CEditDispSubdivMesh::CatmullClarkSubdivision( void )
 	//
 	// step 2: calculate the valence and edge list
 	//
-	for ( SubdivPointHandle_t ptHandle = m_Points.Head(); ptHandle != m_Points.InvalidIndex();
+	SubdivPointHandle_t ptHandle;
+	for ( ptHandle = m_Points.Head(); ptHandle != m_Points.InvalidIndex();
 	      ptHandle = m_Points.Next( ptHandle ) )
 	{
 		for ( SubdivEdgeHandle_t edgeHandle = m_Edges.Head(); edgeHandle != m_Edges.InvalidIndex();

@@ -1538,7 +1538,7 @@ bool CBaseTFPlayer::ClientCommand(const char *cmd)
 		}
 	}
 
-	if ( !stricmp( cmd, "kd" ) )
+	if ( !_stricmp( cmd, "kd" ) )
 	{
 		Vector force( 0, 0, 0 );
 		if ( engine->Cmd_Argc() == 1 )
@@ -1562,38 +1562,38 @@ bool CBaseTFPlayer::ClientCommand(const char *cmd)
 			Vector right;
 			AngleVectors( GetAbsAngles(), &fwd, &right, NULL );
 
-			if ( !stricmp( engine->Cmd_Argv( 1 ), "f" ) )
+			if ( !_stricmp( engine->Cmd_Argv( 1 ), "f" ) )
 			{
 				force = fwd * -1.0f;
 			}
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "b" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "b" ) )
 			{
 				force = fwd;
 			}
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "r" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "r" ) )
 			{
 				force = right * -1.0f;
 			}			
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "l" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "l" ) )
 			{
 				force = right;
 			}
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "fr" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "fr" ) )
 			{
 				force = fwd * -1.0f;
 				force += right * -1.0f;
 			}
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "br" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "br" ) )
 			{
 				force = fwd;
 				force += right * -1.0f;
 			}
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "fl" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "fl" ) )
 			{
 				force = fwd * -1.0f;
 				force += right;
 			}			
-			else if ( !stricmp( engine->Cmd_Argv( 1 ), "bl" ) )
+			else if ( !_stricmp( engine->Cmd_Argv( 1 ), "bl" ) )
 			{
 				force = fwd;
 				force += right;

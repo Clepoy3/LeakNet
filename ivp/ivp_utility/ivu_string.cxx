@@ -445,7 +445,7 @@ long p_get_time(){ // returns seconds since 1970
 int	strcasecmp(const char *a,const char *b)
 {
 // chris, Sept 2000
-	return stricmp(a,b);
+	return _stricmp(a,b);
 
 /*
 	if(a==NULL) return -1;

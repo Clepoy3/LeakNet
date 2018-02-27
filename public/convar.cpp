@@ -139,7 +139,7 @@ ConCommandBase const *ConCommandBase::FindCommand( char const *name )
 	ConCommandBase const *cmd = GetCommands();
 	for ( ; cmd; cmd = cmd->GetNext() )
 	{
-		if ( !stricmp( name, cmd->GetName() ) )
+		if ( !_stricmp( name, cmd->GetName() ) )
 			return cmd;
 	}
 	return NULL;

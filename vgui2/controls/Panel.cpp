@@ -643,7 +643,7 @@ Panel *Panel::FindChildByName(const char *childName, bool recurseDown)
 {
 	for (int i = 0; i < GetChildCount(); i++)
 	{
-		if (!stricmp(GetChild(i)->GetName(), childName))
+		if (!_stricmp(GetChild(i)->GetName(), childName))
 		{
 			return GetChild(i);
 		}
@@ -1126,7 +1126,7 @@ VPANEL Panel::IsWithinTraverse(int x, int y, bool traversePopups)
 		// check children recursive, if you find one, just return first one
 		// this checks in backwards order so the last child drawn for this panel is chosen which
 		// coincides to how it would be visibly displayed
-		for (i = GetChildCount() - 1; i >= 0; i--)
+		for (int i = GetChildCount() - 1; i >= 0; i--)
 		{
 			VPANEL panel = ipanel()->GetChild(GetVPanel(), i);
 			// we've already checked popups so ignore
@@ -1431,7 +1431,8 @@ void Panel::PostActionSignal( KeyValues *message )
 	// add who it was from the message
 	message->SetPtr("panel", this);
 
-	for (int i = _actionSignalTargetDar.GetCount() - 1; i > 0; i--)
+	int i;
+	for (i = _actionSignalTargetDar.GetCount() - 1; i > 0; i--)
 	{
 		VPANEL panel = ivgui()->HandleToPanel(_actionSignalTargetDar[i]);
 		if (panel)
@@ -2715,7 +2716,7 @@ public:
 	{
 		void *data = ( void * )( (*entry->m_pfnLookup)( panel ) );
 		bool b = false;
-		if ( !stricmp( entry->defaultvalue(), "true" )||
+		if ( !_stricmp( entry->defaultvalue(), "true" )||
 			atoi( entry->defaultvalue() )!= 0 )
 		{
 			b = true;
@@ -2968,7 +2969,7 @@ PanelAnimationMapEntry *Panel::FindPanelAnimationEntry( char const *scriptname, 
 	{
 		PanelAnimationMapEntry *e = &map->entries[ i ];
 
-		if ( !stricmp( e->name(), scriptname ) )
+		if ( !_stricmp( e->name(), scriptname ) )
 		{
 			return e;
 		}

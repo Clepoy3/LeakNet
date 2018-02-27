@@ -50,7 +50,7 @@ public:
 	void GlobalNotify(int nCode);
 	void OnDeleteActiveDocument(void);
 
-	void LoadWindowStates(fstream *pFile = NULL);
+	void LoadWindowStates(std::fstream *pFile = NULL);
 
 	inline CFaceEditSheet *GetFaceEditSheet( void ) { return m_pFaceEditSheet; }
 	inline CStatusBar *GetStatusBar() { return &m_wndStatusBar; }
@@ -109,7 +109,8 @@ protected:
 	afx_msg void OnToolsOptions();
 	afx_msg void OnViewShowconnections();
 	afx_msg void OnToolsPrefabfactory();
-	afx_msg void OnHelpOpenURL(int nID);
+//	afx_msg void OnHelpOpenURL(int nID); // VXP: Conv
+	afx_msg BOOL OnHelpOpenURL(UINT nID);
 	afx_msg void OnHelpFinder();
 	afx_msg void OnEditUndoredoactive();
 	afx_msg void OnUpdateEditUndoredoactive(CCmdUI* pCmdUI);
@@ -118,7 +119,8 @@ protected:
 	afx_msg void OnLoadwindowstate();
 	afx_msg void OnFileOpen();
 	afx_msg BOOL OnChange3dViewType(UINT nID);
-	afx_msg void OnUnits(int nID);
+//	afx_msg void OnUnits(int nID); // VXP: Conv
+	afx_msg BOOL OnUnits(UINT nID);
 	afx_msg void OnUpdateUnits(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateView3d(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateView2d(CCmdUI *pCmdUI);
@@ -126,9 +128,15 @@ protected:
 	afx_msg BOOL OnView3dChangeBrightness(UINT nID);
 	afx_msg void OnUpdateApplicatorUI(CCmdUI *pUI);
 	afx_msg BOOL OnHelpInfo(HELPINFO*);
+//	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask); // VXP: Conv
+#if _MSC_VER < 1300
 	afx_msg void OnActivateApp(BOOL bActive, HTASK hTask);
+#else
+	afx_msg void OnActivateApp(BOOL bActive, DWORD hThread);
+#endif
 	afx_msg void OnUpdateEditFunction(CCmdUI *pCmdUI);
-	afx_msg void OnApplicator(UINT nID);
+//	afx_msg void OnApplicator(UINT nID);
+	afx_msg BOOL OnApplicator(UINT nID);
 	afx_msg void OnUpdateOpaqueMaterials(CCmdUI *pCmdUI);
 	afx_msg void OnOpaqueMaterials();
 
@@ -142,7 +150,7 @@ private:
 
 	void DockControlBarLeftOf(CControlBar *Bar, CControlBar *LeftOf);
 
-	void SaveWindowStates(fstream *pFile = NULL);
+	void SaveWindowStates(std::fstream *pFile = NULL);
 
 	CChildFrame *GetNextMDIChildWnd(CChildFrame *pCurChild);
 	CChildFrame *GetNextMDIChildWndRecursive(CWnd *pCurChild);

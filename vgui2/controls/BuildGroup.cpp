@@ -388,7 +388,7 @@ void BuildGroup::MousePressed(MouseCode code, Panel *panel)
 		_dragStartPanelPos[1]=y;
 
 		// figure out the deltas of the other panels from the base panel
-		for (i=0; i<_controlGroup.Size(); ++i)
+		for (int i=0; i<_controlGroup.Size(); ++i)
 		{
 			int cx, cy;
 			_controlGroup[i].Get()->GetPos(cx, cy);
@@ -799,7 +799,7 @@ void BuildGroup::ApplySettings( KeyValues *resourceData )
 			Assert (panel);
 
 			// make the control name match CASE INSENSITIVE!
-			if (!stricmp(panel->GetName(), controlKeys->GetName()))
+			if (!_stricmp(panel->GetName(), controlKeys->GetName()))
 			{
 				// apply the settings
 				panel->ApplySettings(controlKeys);
@@ -1004,7 +1004,7 @@ void BuildGroup::RemoveSettings()
 	}
 	
 	// remove deleted panels from the handle list
-	for( i = 0; i < _panelDar.Size(); i++ )
+	for( int i = 0; i < _panelDar.Size(); i++ )
 	{
 		if ( !_panelDar[i].Get() )	
 		{	

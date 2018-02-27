@@ -129,7 +129,7 @@ void CLookDoor::Spawn(void)
 	CLookDoorThinker* pLookThinker = (CLookDoorThinker*)CreateEntityByName("lookdoorthinker");
 	if (pLookThinker)
 	{
-		pLookThinker->SetThink(CLookDoorThinker::LookThink);
+		pLookThinker->SetThink(&CLookDoorThinker::LookThink);
 		pLookThinker->m_hLookDoor = this;
 		pLookThinker->SetNextThink( gpGlobals->curtime + 0.1f );
 	}

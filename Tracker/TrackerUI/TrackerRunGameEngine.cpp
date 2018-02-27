@@ -44,19 +44,19 @@ public:
 
 		// quick hack, gamedir -> steam game name mapping
 		const char *gameName = "0";
-		if (!stricmp(gameDir, "cstrike"))
+		if (!_stricmp(gameDir, "cstrike"))
 		{
 			gameName = "1";
 		}
-		else if (!stricmp(gameDir, "tfc"))
+		else if (!_stricmp(gameDir, "tfc"))
 		{
 			gameName = "2";
 		}
-		else if (!stricmp(gameDir, "dmc"))
+		else if (!_stricmp(gameDir, "dmc"))
 		{
 			gameName = "3";
 		}
-		else if (!stricmp(gameDir, "dod"))
+		else if (!_stricmp(gameDir, "dod"))
 		{
 			gameName = "4";
 		}
@@ -92,7 +92,7 @@ public:
 		{
 			// we're not running in steam, look in the directory below us
 			// Run the game
-			strcpy(path, "..\\hl2.exe");
+			strcpy(path, "..\\hl.exe");
 			success = ::_spawnl(_P_NOWAIT, path, path, " -console", commandLineParams, NULL);
 		}
 
@@ -128,26 +128,21 @@ public:
 	{
 	}
 
-	virtual const char *GetUserName(int userID)
-	{
-		return NULL;
-	}
-
 	virtual int GetPlayerCount()
 	{
 		return 0;
 	}
-	
+
 	virtual unsigned int GetPlayerUserID(int playerIndex)
 	{
 		return 0;
 	}
-	
+
+//	virtual const char *GetUserName(int userID)
 	virtual const char *GetPlayerName(int userID)
 	{
-		return 0;
+		return NULL;
 	}
-
 
 };
 

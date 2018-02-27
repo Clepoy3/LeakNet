@@ -156,7 +156,7 @@ void CPlayerListDialog::RefreshPlayerProperties()
 			friends = true;
 		}
 		const char *botValue = engine ? engine->PlayerInfo_ValueForKey(playerIndex, "*bot") : NULL;
-		if (botValue && !stricmp("1", botValue))
+		if (botValue && !_stricmp("1", botValue))
 		{
 			bot = true;
 		}
@@ -190,11 +190,11 @@ void CPlayerListDialog::RefreshPlayerProperties()
 //-----------------------------------------------------------------------------
 void CPlayerListDialog::OnCommand(const char *command)
 {
-	if (!stricmp(command, "AddFriend"))
+	if (!_stricmp(command, "AddFriend"))
 	{
 		RequestAuthorizationFromSelectedUser();
 	}
-	else if (!stricmp(command, "Mute"))
+	else if (!_stricmp(command, "Mute"))
 	{
 		ToggleMuteStateOfSelectedUser();
 	}
@@ -290,7 +290,7 @@ void CPlayerListDialog::OnItemSelected()
 	{
 		KeyValues *data = m_pPlayerList->GetItem(m_pPlayerList->GetSelectedItem(0));
 		const char *botValue = data ? engine->PlayerInfo_ValueForKey(data->GetInt("index"), "*bot") : NULL;
-		bool isValidPlayer = botValue ? !stricmp("1", botValue) : false;
+		bool isValidPlayer = botValue ? !_stricmp("1", botValue) : false;
 		// make sure the player is valid
 		if (!engine->PlayerInfo_ValueForKey(data->GetInt("index"), "name"))
 		{

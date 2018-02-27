@@ -16,8 +16,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectSentrygun : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectSentrygun, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectSentrygun, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 
@@ -83,8 +84,9 @@ private:
 
 class C_ObjectSentrygunPlasma : public C_ObjectSentrygun
 {
-	DECLARE_CLASS( C_ObjectSentrygunPlasma, C_ObjectSentrygun );
 public:
+	DECLARE_CLASS( C_ObjectSentrygunPlasma, C_ObjectSentrygun );
+
 	C_ObjectSentrygunPlasma();
 	DECLARE_CLIENTCLASS();
 

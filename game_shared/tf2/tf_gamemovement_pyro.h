@@ -22,10 +22,8 @@ class CTFMoveData;
 //
 class CTFGameMovementPyro : public CTFGameMovement
 {
-
-	DECLARE_CLASS( CTFGameMovementPyro, CTFGameMovement );
-
 public:
+	DECLARE_CLASS( CTFGameMovementPyro, CTFGameMovement );
 
 	CTFGameMovementPyro();
 

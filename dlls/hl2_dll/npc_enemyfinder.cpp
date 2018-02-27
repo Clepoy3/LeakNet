@@ -85,7 +85,7 @@ void CNPC_EnemyFinder::InitCustomSchedules( void )
 //-----------------------------------------------------------------------------
 void CNPC_EnemyFinder::InputTurnOn( inputdata_t &inputdata )
 {
-	SetThink(CallNPCThink);
+	SetThink(&CAI_BaseNPC::CallNPCThink);
 	SetNextThink( gpGlobals->curtime );
 }
 

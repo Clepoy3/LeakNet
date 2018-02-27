@@ -316,7 +316,7 @@ void CNPC_Conscript::Spawn()
 	CapabilitiesAdd	( bits_CAP_DUCK );			// In reloading and cover
 
 	NPCInit();
-	SetUse( FollowerUse );
+	SetUse( &CNPCSimpleTalker::FollowerUse );
 }
 
 //=========================================================

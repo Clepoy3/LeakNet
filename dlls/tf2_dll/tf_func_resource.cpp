@@ -623,7 +623,7 @@ void CResourceSpawner::SetActive( bool bActive )
 	{
 		// Randomize the thinks a little to reduce network usage ong chunk spawning 
 		SetNextThink( gpGlobals->curtime + m_hZone->GetResourceRate() + random->RandomFloat( 0.0, 1.0 ) );
-		SetThink( SpawnChunkThink );
+		SetThink( &CResourceSpawner::SpawnChunkThink );
 		m_fEffects &= ~EF_NODRAW;
 	}
 	else if ( m_bActive && !bActive )

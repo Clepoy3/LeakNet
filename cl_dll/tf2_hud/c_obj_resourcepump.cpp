@@ -51,9 +51,9 @@ void C_ObjectResourcePump::SetDormant( bool bDormant )
 //-----------------------------------------------------------------------------
 class CResourcePumpControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CResourcePumpControlPanel, CObjectControlPanel );
 
-public:
 	CResourcePumpControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

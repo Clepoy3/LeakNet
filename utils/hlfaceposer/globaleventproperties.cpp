@@ -28,7 +28,7 @@ static void ExtractAutoStateFromParams( CGlobalEventParams *params )
 	if ( TokenAvailable() )
 	{
 		GetToken( false );
-		params->m_bAutomate = !stricmp( token, "automate" ) ? true : false;
+		params->m_bAutomate = !_stricmp( token, "automate" ) ? true : false;
 	}
 
 	if ( params->m_bAutomate )

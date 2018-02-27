@@ -1416,7 +1416,7 @@ BOOL CMapFace::ValidLightmapSize( void )
 	//
 	// check for valid lightmap coord dimensions in u and v
 	//
-	for( i = 0; i < 2; i++ )
+	for( int i = 0; i < 2; i++ )
 	{
 		//
 		// bloat points a little
@@ -1463,7 +1463,7 @@ void CMapFace::AdjustLightmapScale( void )
 	//
 	int nMaxIdx = -1;
 	int nMaxWidth = -9999;
-	for( i = 0; i < 2; i++ )
+	for( int i = 0; i < 2; i++ )
 	{
 		int nWidth = ceil( maxCoord[i] ) - floor( minCoord[i] );
 		if( nWidth > nMaxWidth )
@@ -2208,15 +2208,15 @@ ChunkFileResult_t CMapFace::LoadKeyCallback(const char *szKey, const char *szVal
 {
 	CMapFace *pFace = pLoadFace->pFace;
 
-	if (!stricmp(szKey, "id"))
+	if (!_stricmp(szKey, "id"))
 	{
 		CChunkFile::ReadKeyValueInt(szValue, pFace->m_nFaceID);
 	}
-	else if (!stricmp(szKey, "rotation"))
+	else if (!_stricmp(szKey, "rotation"))
 	{
 		pFace->texture.rotate = atof(szValue);
 	}
-	else if (!stricmp(szKey, "plane"))
+	else if (!_stricmp(szKey, "plane"))
 	{
 		int nRead = sscanf(szValue, "(%f %f %f) (%f %f %f) (%f %f %f)", 
 			&pFace->plane.planepts[0][0], &pFace->plane.planepts[0][1], &pFace->plane.planepts[0][2],
@@ -2229,11 +2229,11 @@ ChunkFileResult_t CMapFace::LoadKeyCallback(const char *szKey, const char *szVal
 			return(ChunkFile_Fail);
 		}
 	}
-	else if (!stricmp(szKey, "material"))
+	else if (!_stricmp(szKey, "material"))
 	{
 		strcpy(pLoadFace->szTexName, szValue);
 	}
-	else if (!stricmp(szKey, "uaxis"))
+	else if (!_stricmp(szKey, "uaxis"))
 	{
 		int nRead = sscanf(szValue, "[%f %f %f %f] %f",
 			&pFace->texture.UAxis[0], &pFace->texture.UAxis[1], &pFace->texture.UAxis[2], &pFace->texture.UAxis[3], &pFace->texture.scale[0]);
@@ -2244,7 +2244,7 @@ ChunkFileResult_t CMapFace::LoadKeyCallback(const char *szKey, const char *szVal
 			return(ChunkFile_Fail);
 		}
 	}
-	else if (!stricmp(szKey, "vaxis"))
+	else if (!_stricmp(szKey, "vaxis"))
 	{
 		int nRead = sscanf(szValue, "[%f %f %f %f] %f",
 			&pFace->texture.VAxis[0], &pFace->texture.VAxis[1], &pFace->texture.VAxis[2], &pFace->texture.VAxis[3], &pFace->texture.scale[1]);
@@ -2255,11 +2255,11 @@ ChunkFileResult_t CMapFace::LoadKeyCallback(const char *szKey, const char *szVal
 			return(ChunkFile_Fail);
 		}
 	}
-	else if (!stricmp(szKey, "lightmapscale"))
+	else if (!_stricmp(szKey, "lightmapscale"))
 	{
 		pFace->texture.nLightmapScale = atoi(szValue);
 	}
-	else if (!stricmp(szKey, "smoothing_groups"))
+	else if (!_stricmp(szKey, "smoothing_groups"))
 	{
 		pFace->m_fSmoothingGroups = atoi(szValue);
 	}
@@ -2395,7 +2395,7 @@ ChunkFileResult_t CMapFace::SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo)
 	{
 		char szTexture[MAX_PATH];
 		strcpy(szTexture, texture.texture);
-		strupr(szTexture);
+		_strupr(szTexture);
 
 		eResult = pFile->WriteKeyValue("material", szTexture);
 	}
@@ -2809,7 +2809,7 @@ void CMapFaceList::Intersect(CMapFaceList &IntersectWith, CMapFaceList &In, CMap
 	//
 	// Now go the other way.
 	//
-	for (i = 0; i < IntersectWith.Count(); i++)
+	for (int i = 0; i < IntersectWith.Count(); i++)
 	{
 		CMapFace *pFace = IntersectWith.Element(i);
 
@@ -2864,7 +2864,7 @@ void CMapFaceIDList::Intersect(CMapFaceIDList &IntersectWith, CMapFaceIDList &In
 	//
 	// Now go the other way.
 	//
-	for (i = 0; i < IntersectWith.Count(); i++)
+	for (int i = 0; i < IntersectWith.Count(); i++)
 	{
 		int nFaceID = IntersectWith.Element(i);
 

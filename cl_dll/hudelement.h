@@ -12,7 +12,11 @@
 
 #include "hud.h"
 #include "hud_element_helper.h"
-#include "crtdbg.h"
+//#include "crtdbg.h" // VXP: Conv
+#include "networkvar.h"
+
+#include "tier0/memdbgon.h"
+#undef new
 
 //-----------------------------------------------------------------------------
 // Purpose: Base class for all hud elements
@@ -71,7 +75,11 @@ public:
 	void* operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine )  
 	{ 
 		Assert( stAllocateBlock != 0 );				
+#if defined( _DEBUG )
 		void *pMem = _malloc_dbg( stAllocateBlock, nBlockUse, pFileName, nLine );
+#else
+		void *pMem = malloc( stAllocateBlock );
+#endif
 		memset( pMem, 0, stAllocateBlock );
 		return pMem;												
 	}
@@ -83,6 +91,11 @@ public:
 		memset( pMem, 0xcd, size );					
 #endif
 		free( pMem );								
+	}
+
+	void operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine )				
+	{
+		operator delete( pMem );
 	}
 
 	void SetNeedsRemove( bool needsremove );

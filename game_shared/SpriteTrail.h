@@ -25,9 +25,8 @@ typedef	struct
 
 class CSpriteTrail : public CSprite
 {
-	DECLARE_CLASS( CSpriteTrail, CSprite );
-
 public:
+	DECLARE_CLASS( CSpriteTrail, CSprite );
 
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();

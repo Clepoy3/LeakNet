@@ -50,8 +50,8 @@ class CMapSprite : public CMapHelper
 
 		void GetAngles(QAngle &Angles);
 
-		int SerializeRMF(fstream &File, BOOL bRMF);
-		int SerializeMAP(fstream &File, BOOL bRMF);
+		int SerializeRMF(std::fstream &File, BOOL bRMF);
+		int SerializeMAP(std::fstream &File, BOOL bRMF);
 
 		static void SetRenderDistance(float fRenderDistance);
 		static void EnableAnimation(BOOL bEnable);

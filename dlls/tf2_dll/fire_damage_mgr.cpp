@@ -113,7 +113,7 @@ void CFireDamageMgr::FrameUpdatePostEntityThink()
 
 	//   													   (-kt)
 	// Figure out how much all the damage decays this frame:  e
-	float flFrameDecay = pow( 2.718281828459045235360, -m_flDecayConstant * frametime );
+	float flFrameDecay = pow( 2.718281828459045235360f, -m_flDecayConstant * frametime ); // VXP: Conv: Added f - possible data loss?
 
 
 	int iNext;
@@ -141,7 +141,7 @@ void CFireDamageMgr::FrameUpdatePostEntityThink()
 
 		// Figure out each attacker's contribution.
 		float flContributionPercent[CDamageEnt::MAX_ATTACKERS];
-		for ( i=0; i < pEnt->m_nAttackers; i++ )
+		for ( int i=0; i < pEnt->m_nAttackers; i++ )
 			flContributionPercent[i] = pEnt->m_Attackers[i].m_flVelocity / flTotalVelocity;
 		
 		
@@ -153,7 +153,7 @@ void CFireDamageMgr::FrameUpdatePostEntityThink()
 		if ( flTotalVelocity > m_flMaxDamagePerSecond )
 			flPercentScale = m_flMaxDamagePerSecond / flTotalVelocity;
 
-		for ( i=0; i < pEnt->m_nAttackers; i++ )
+		for ( int i=0; i < pEnt->m_nAttackers; i++ )
 		{
 			CDamageAttacker *pAttacker = &pEnt->m_Attackers[i];
 

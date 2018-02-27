@@ -166,7 +166,7 @@ void VVIS_SetupMPI( int argc, char **argv )
 	int i;
 	for (i=1; i<argc; ++i) 
 	{
-		if (!stricmp(argv[i], "-mpi")) {
+		if (!_stricmp(argv[i], "-mpi")) {
 			g_bUseMPI = true;
 			break;
 		}
@@ -441,7 +441,8 @@ void RunMPIPortalFlow()
 		g_PortalMCAddr.ip[3] = (unsigned char)RandomInt( 3, 255 );
 
 		g_pPortalMCSocket = CreateIPSocket();
-		for ( int i=0; i < 5; i++ )
+		int i;
+		for ( i=0; i < 5; i++ )
 		{
 			if ( g_pPortalMCSocket->BindToAny( randomStream.RandomInt( 20000, 30000 ) ) )
 				break;

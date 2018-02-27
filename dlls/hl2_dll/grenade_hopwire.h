@@ -60,10 +60,10 @@ private:
 
 class CGrenadeHopWire : public CBaseGrenade
 {
+public:
 	DECLARE_CLASS( CGrenadeHopWire, CBaseGrenade );
 	DECLARE_DATADESC();
 
-public:
 	void	Spawn( void );
 	void	Precache( void );
 	bool	CreateVPhysics( void );

@@ -16,7 +16,8 @@
 #pragma once
 
 
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 #include <afxtempl.h>
 #include <afxcoll.h>
 #include "BoundBox.h"
@@ -203,8 +204,8 @@ class CMapClass : public CMapPoint
 
 		virtual bool ShouldSerialize(void) { return(m_bShouldSerialize); }
 		virtual void SetShouldSerialize(bool bShouldSerialize) { m_bShouldSerialize = bShouldSerialize; }
-		virtual int SerializeRMF(fstream &File, BOOL bRMF);
-		virtual int SerializeMAP(fstream &File, BOOL bRMF);
+		virtual int SerializeRMF(std::fstream &File, BOOL bRMF);
+		virtual int SerializeMAP(std::fstream &File, BOOL bRMF);
 		virtual void PostloadWorld(CMapWorld *pWorld);
 		virtual void PresaveWorld(void) {}
 

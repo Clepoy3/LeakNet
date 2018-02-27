@@ -437,9 +437,9 @@ void C_ObjectSentrygun::ClientThink( void )
 //-----------------------------------------------------------------------------
 class CSentrygunControlPanel : public CRotatingObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CSentrygunControlPanel, CRotatingObjectControlPanel );
 
-public:
 	CSentrygunControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

@@ -304,11 +304,11 @@ void Camera3D::RenderTool2D(CRender2D *pRender)
 //-----------------------------------------------------------------------------
 ChunkFileResult_t Camera3D::LoadCameraKeyCallback(const char *szKey, const char *szValue, CAMSTRUCT *pCam)
 {
-	if (!stricmp(szKey, "look"))
+	if (!_stricmp(szKey, "look"))
 	{
 		CChunkFile::ReadKeyValueVector3(szValue, pCam->look);
 	}
-	else if (!stricmp(szKey, "position"))
+	else if (!_stricmp(szKey, "position"))
 	{
 		CChunkFile::ReadKeyValueVector3(szValue, pCam->position);
 	}
@@ -326,7 +326,7 @@ ChunkFileResult_t Camera3D::LoadCameraKeyCallback(const char *szKey, const char 
 //-----------------------------------------------------------------------------
 ChunkFileResult_t Camera3D::LoadCamerasKeyCallback(const char *szKey, const char *szValue, Camera3D *pCameras)
 {
-	if (!stricmp(szKey, "activecamera"))
+	if (!_stricmp(szKey, "activecamera"))
 	{
 		pCameras->iActiveCamera = atoi(szValue);
 	}
@@ -429,7 +429,7 @@ void Camera3D::Update(const Vector &dir, const Vector &pos)
 
 	camPos = pos;
 
-	for(i = 0; i < 3; i++)
+	for(int i = 0; i < 3; i++)
 		lookPos[i] = camPos[i] + dir[i] * length;
 }
 
@@ -485,7 +485,7 @@ void Camera3D::DeleteActiveCamera()
 // Input  : file - 
 //			fIsStoring - 
 //-----------------------------------------------------------------------------
-void Camera3D::SerializeRMF(fstream& file, BOOL fIsStoring)
+void Camera3D::SerializeRMF(std::fstream& file, BOOL fIsStoring)
 {
 	float fVersion = 0.2f, fThisVersion;
 

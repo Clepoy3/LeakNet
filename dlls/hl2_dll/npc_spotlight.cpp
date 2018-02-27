@@ -1484,7 +1484,7 @@ void CNPC_Spotlight::Spawn(void)
 	else
 	{
 		NPCInit();
-		SetThink(CallNPCThink);
+		SetThink(&CAI_BaseNPC::CallNPCThink);
 	}
 
 	m_fEffects			|= EF_NODRAW;

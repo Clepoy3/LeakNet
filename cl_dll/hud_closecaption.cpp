@@ -494,7 +494,7 @@ void CHudCloseCaption::ComputeStreamSize( int available_width, const CCloseCapti
 		vgui::HFont useF = FindFont( bold | italic );
 		
 		wchar_t sz[ 1024 ];
-		swprintf( sz, L"%s ", token );
+		swprintf( sz, sizeof(sz), L"%s ", token );
 
 		vgui::surface()->GetTextSize( useF, sz, w, h );
 
@@ -606,7 +606,7 @@ void CHudCloseCaption::DrawStream( wrect_t &rcText, const CCloseCaptionPhrase *p
 		vgui::HFont useF = FindFont( bold | italic );
 		
 		wchar_t sz[ 1024 ];
-		swprintf( sz, L"%s ", token );
+		swprintf( sz, sizeof(sz), L"%s ", token );
 
 		vgui::surface()->GetTextSize( useF, sz, w, h );
 

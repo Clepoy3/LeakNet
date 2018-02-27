@@ -156,7 +156,7 @@ void CGunshipCrashFX::Spawn( void )
 {
 	BaseClass::Spawn();
 
-	SetThink( FXThink );
+	SetThink( &CGunshipCrashFX::FXThink );
 
 	m_flStopExplodeTime = gpGlobals->curtime + 0.5f;
 
@@ -201,7 +201,7 @@ void CGunshipCrashFX::FXThink( void )
 			
 			if( vecVelocity.Length() < 100.0 )
 			{
-				SetThink( SUB_Remove );
+				SetThink( &CBaseEntity::SUB_Remove );
 			}
 		}
 	}
@@ -1341,7 +1341,7 @@ void CNPC_CombineGunship::BeginCrash( void )
 
 	//FIXME: The below code needs to be rethought with the new navigation setup (jdw)
 
-	SetTouch( ExplodeTouch );
+	SetTouch( &CNPC_CombineGunship::ExplodeTouch );
 	m_lifeState = LIFE_DYING;
 
 	CBaseEntity *pPathCorner;
@@ -1379,7 +1379,7 @@ void CNPC_CombineGunship::BeginCrash( void )
 		//SetThink(NULL);
 		
 		// In this case, just have him plummet
-		SetTouch( ExplodeTouch );
+		SetTouch( &CNPC_CombineGunship::ExplodeTouch );
 		m_lifeState = LIFE_DYING;
 
 		return;
@@ -1412,7 +1412,7 @@ void CNPC_CombineGunship::BeginCrash( void )
 //	MoveHead();
 //	SetTrack( pPathCorner );
 	
-	SetTouch( ExplodeTouch );
+	SetTouch( &CNPC_CombineGunship::ExplodeTouch );
 
 	m_lifeState = LIFE_DYING;
 	//*/

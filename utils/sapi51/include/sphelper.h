@@ -766,7 +766,7 @@ inline HRESULT SpFindBestToken(
     HRESULT hr = S_OK;
     
     const WCHAR *pszVendorPreferred = L"VendorPreferred";
-    const ulLenVendorPreferred = wcslen(pszVendorPreferred);
+    const size_t ulLenVendorPreferred = wcslen(pszVendorPreferred);
 
     // append VendorPreferred to the end of pszOptAttribs to force this preference
     ULONG ulLen = pszOptAttribs ? wcslen(pszOptAttribs) + ulLenVendorPreferred + 1 : ulLenVendorPreferred;
@@ -1415,7 +1415,7 @@ public:
     WAVEFORMATEX  * m_pCoMemWaveFormatEx; 
 
 
-    static CoMemCopyWFEX(const WAVEFORMATEX * pSrc, WAVEFORMATEX ** ppCoMemWFEX)
+    static HRESULT CoMemCopyWFEX(const WAVEFORMATEX * pSrc, WAVEFORMATEX ** ppCoMemWFEX)
     {
         ULONG cb = sizeof(WAVEFORMATEX) + pSrc->cbSize;
         *ppCoMemWFEX = (WAVEFORMATEX *)::CoTaskMemAlloc(cb);
@@ -2557,7 +2557,8 @@ inline HRESULT CreatePhraseFromWordArray(const WCHAR ** ppWords, ULONG cWords,
         ::CoTaskMemFree(pStringPtrArray);
         return E_OUTOFMEMORY;
     }
-    SPPHONEID* pphoneId = dsPhoneId;
+//	SPPHONEID* pphoneId = dsPhoneId;
+	SPPHONEID* pphoneId = (SPPHONEID*)dsPhoneId.m_psz; // VXP: Conv
 
     SPPHRASE Phrase;
     memset(&Phrase, 0, sizeof(Phrase));
@@ -2631,7 +2632,8 @@ inline HRESULT CreatePhraseFromWordArray(const WCHAR ** ppWords, ULONG cWords,
                 if (SUCCEEDED(hr))
                 {
                     pPhraseElement[i].pszPronunciation = pphoneId;
-                    pphoneId += wcslen(pphoneId) + 1;
+				//	pphoneId += wcslen(pphoneId) + 1;
+					pphoneId += wcslen((const wchar_t *)pphoneId) + 1;
                 }
             }
         }

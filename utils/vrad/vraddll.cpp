@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include <strstrea.h>
+//#include <strstrea.h> // VXP: Conv
 #include "vraddll.h"
 #include "bsplib.h"
 #include "vrad.h"

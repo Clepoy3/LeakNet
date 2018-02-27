@@ -44,7 +44,7 @@ void CTriggerFall::Spawn( void )
 {
 	BaseClass::Spawn();
 	InitTrigger();
-	SetTouch( FallTouch );
+	SetTouch( &CTriggerFall::FallTouch );
 }
 
 //-----------------------------------------------------------------------------

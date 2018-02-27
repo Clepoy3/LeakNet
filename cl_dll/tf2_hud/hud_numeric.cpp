@@ -543,7 +543,7 @@ float CHudNumeric::MaxCharacterDiff( const char *prev, const char *next )
 			}
 		}
 
-		float diff = (float)fabs( FindPrintableIndex( c ) - FindPrintableIndex( prevc ) );
+		float diff = (float)fabs( (float)(FindPrintableIndex( c ) - FindPrintableIndex( prevc )) );
 
 		if ( diff > maxdiff )
 		{
@@ -678,7 +678,7 @@ void CHudNumeric::PaintStringRotary( float t, const char *text, int textlen, HFo
 			}
 		}
 
-		float diff = (float)fabs( FindPrintableIndex( c ) - FindPrintableIndex( prevc ) );
+		float diff = (float)fabs( (float)(FindPrintableIndex( c ) - FindPrintableIndex( prevc )) );
 
 		if ( m_nRotaryMaxDelta != 0 )
 		{
@@ -726,7 +726,7 @@ void CHudNumeric::PaintStringRotary( float t, const char *text, int textlen, HFo
 			}
 		}
 
-		float diff = (float)fabs( FindPrintableIndex( c ) - FindPrintableIndex( prevc ) );
+		float diff = (float)fabs( (float)(FindPrintableIndex( c ) - FindPrintableIndex( prevc )) );
 
 		if ( m_nRotaryMaxDelta != 0 )
 		{

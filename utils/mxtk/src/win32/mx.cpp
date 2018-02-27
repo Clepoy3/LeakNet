@@ -193,17 +193,17 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 			CHAR className[128];
 			GetClassName (hwndCtrl, className, 128);
-			if (!strcmpi (className, "edit"))
+			if (!_strcmpi (className, "edit"))
 			{
 				if (wNotifyCode != EN_CHANGE)
 					break;
 			}
-			else if (!strcmpi (className, "combobox"))
+			else if (!_strcmpi (className, "combobox"))
 			{
 				if (wNotifyCode != CBN_SELCHANGE)
 					break;
 			}
-			else if (!strcmpi (className, "listbox"))
+			else if (!_strcmpi (className, "listbox"))
 			{
 				if (wNotifyCode != LBN_SELCHANGE)
 					break;

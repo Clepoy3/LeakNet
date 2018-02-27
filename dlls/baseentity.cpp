@@ -522,7 +522,7 @@ void CBaseEntity::ValidateDataDescription(void)
 	{
 		for (int j = i - 1; --j >= 0; )
 		{
-			if (!stricmp(names[i], names[j]))
+			if (!_stricmp(names[i], names[j]))
 			{
 				Msg( "%s has multiple data description entries for \"%s\"\n", STRING(m_iClassname), names[i]);
 				break;
@@ -544,7 +544,7 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 {
 	//!! temp hack, until worldcraft is fixed
 	// strip the # tokens from (duplicate) key names
-	char *s = strchr( szKeyName, '#' );
+	char *s = (char *)strchr( szKeyName, '#' );
 	if ( s )
 	{
 		*s = '\0';
@@ -660,7 +660,7 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 		bool printKeyHits = false;
 		const char *debugName = "";
 
-		if ( *ent_debugkeys.GetString() && !stricmp(ent_debugkeys.GetString(), STRING(m_iClassname)) )
+		if ( *ent_debugkeys.GetString() && !_stricmp(ent_debugkeys.GetString(), STRING(m_iClassname)) )
 		{
 			// Msg( "-- found entity of type %s\n", STRING(m_iClassname) );
 			printKeyHits = true;
@@ -670,7 +670,7 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 		// loop through the data description, and try and place the keys in
 		for ( datamap_t *dmap = GetDataDescMap(); dmap != NULL; dmap = dmap->baseMap )
 		{
-			if ( !printKeyHits && *ent_debugkeys.GetString() && !stricmp(dmap->dataClassName, ent_debugkeys.GetString()) )
+			if ( !printKeyHits && *ent_debugkeys.GetString() && !_stricmp(dmap->dataClassName, ent_debugkeys.GetString()) )
 			{
 				// Msg( "-- found class of type %s\n", dmap->dataClassName );
 				printKeyHits = true;
@@ -3098,7 +3098,7 @@ bool CBaseEntity::AcceptInput( const char *szInputName, CBaseEntity *pActivator,
 		{
 			if ( dmap->dataDesc[i].flags & FTYPEDESC_INPUT )
 			{
-				if ( !stricmp(dmap->dataDesc[i].externalName, szInputName) )
+				if ( !_stricmp(dmap->dataDesc[i].externalName, szInputName) )
 				{
 					// found a match
 
@@ -3219,7 +3219,7 @@ bool CBaseEntity::ReadKeyField( const char *varName, variant_t *var )
 		{
 			if ( dmap->dataDesc[i].flags & (FTYPEDESC_OUTPUT | FTYPEDESC_KEY) )
 			{
-				if ( !stricmp(dmap->dataDesc[i].externalName, varName) )
+				if ( !_stricmp(dmap->dataDesc[i].externalName, varName) )
 				{
 					var->Set( dmap->dataDesc[i].fieldType, ((char*)this) + dmap->dataDesc[i].fieldOffset[ TD_OFFSET_NORMAL ] );
 					return true;
@@ -3911,7 +3911,7 @@ void CC_Ent_Dump( void )
 						}
 
 						// don't print out the duplicate keys
-						if ( !stricmp("parentname",dmap->dataDesc[i].externalName) || !stricmp("targetname",dmap->dataDesc[i].externalName) )
+						if ( !_stricmp("parentname",dmap->dataDesc[i].externalName) || !_stricmp("targetname",dmap->dataDesc[i].externalName) )
 							continue;
 
 						// don't print out empty keys

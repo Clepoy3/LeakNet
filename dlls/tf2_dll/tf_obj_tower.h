@@ -17,9 +17,9 @@ class CObjectTowerLadder;
 // ------------------------------------------------------------------------ //
 class CObjectTower : public CBaseObject
 {
+public:
 	DECLARE_CLASS( CObjectTower, CBaseObject );
 
-public:
 	DECLARE_SERVERCLASS();
 
 	CObjectTower( void );

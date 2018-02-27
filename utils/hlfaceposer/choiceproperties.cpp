@@ -83,7 +83,7 @@ static BOOL CALLBACK ChoicePropertiesDialogProc( HWND hwndDlg, UINT uMsg, WPARAM
 				for ( int i = 0; i < c; i++ )
 				{
 					char const *text = g_Params.m_Choices[ i ].choice;
-					if ( stricmp( text, selected ) )
+					if ( _stricmp( text, selected ) )
 					{
 						continue;
 					}

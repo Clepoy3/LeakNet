@@ -116,7 +116,7 @@ void C_TFBaseHint::ParseFromData( KeyValues *pkv )
 	int priority = pkv->GetInt( "priority", 100 );
 	SetPriority( priority );
 	int width = pkv->GetInt( "width", TFBASEHINT_DEFAULT_WIDTH );
-	if ( !width && !stricmp( pkv->GetString( "width" ), "default" ) )
+	if ( !width && !_stricmp( pkv->GetString( "width" ), "default" ) )
 	{
 		width = TFBASEHINT_DEFAULT_WIDTH;
 	}

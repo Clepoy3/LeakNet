@@ -51,13 +51,13 @@ void CHandGrenade::Spawn( void )
 	VectorAngles( vel, angles );
 	SetAbsAngles( angles );
 	
-	SetTouch( BounceTouch );	// Bounce if touched
+	SetTouch( &CHandGrenade::BounceTouch );	// Bounce if touched
 	
 	// Take one second off of the desired detonation time and set the think to PreDetonate. PreDetonate
 	// will insert a DANGER sound into the world sound list and delay detonation for one second so that 
 	// the grenade explodes after the exact amount of time specified in the call to ShootTimed(). 
 
-	SetThink( TumbleThink );
+	SetThink( &CBaseGrenade::TumbleThink );
 	SetNextThink( gpGlobals->curtime + 0.1 );
 
 	// if the delay is < 0.1 seconds, don't fly anywhere

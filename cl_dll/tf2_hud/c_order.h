@@ -24,8 +24,9 @@ class COrderLabel;
 //-----------------------------------------------------------------------------
 class C_Order : public C_BaseEntity
 {
-	DECLARE_CLASS( C_Order, C_BaseEntity );
 public:
+	DECLARE_CLASS( C_Order, C_BaseEntity );
+
 	DECLARE_CLIENTCLASS();
 
 	C_Order( void );

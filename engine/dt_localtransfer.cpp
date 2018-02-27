@@ -40,7 +40,7 @@ void LocalTransfer_TransferEntity(
 			unsigned char *pRecvBase = clientStack.GetCurStructBase();
 			if ( pSendBase && pRecvBase )
 			{
-				Assert( stricmp( pSendProp->GetName(), pRecvProp->GetName() ) == 0 );
+				Assert( _stricmp( pSendProp->GetName(), pRecvProp->GetName() ) == 0 );
 
 				g_PropTypeFns[pRecvProp->GetType()].FastCopy( pSendProp, pRecvProp, pSendBase, pRecvBase, objectID );
 			}

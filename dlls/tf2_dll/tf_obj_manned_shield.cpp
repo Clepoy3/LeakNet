@@ -99,7 +99,7 @@ void CObjectMannedShield::Spawn()
 
 	SetType( OBJ_MANNED_SHIELD );
 	
-	SetContextThink( ShieldRotationThink, gpGlobals->curtime + 0.1, g_pMannedShieldThinkContextName );
+	SetContextThink( &CObjectMannedShield::ShieldRotationThink, gpGlobals->curtime + 0.1, g_pMannedShieldThinkContextName );
 }
 
 //-----------------------------------------------------------------------------
@@ -166,7 +166,7 @@ void CObjectMannedShield::ShieldRotationThink( void )
 		m_hDeployedShield->SetCenterAngles( vAngles );
 	}
 
-	SetContextThink( ShieldRotationThink, gpGlobals->curtime + 0.1, g_pMannedShieldThinkContextName );
+	SetContextThink( &CObjectMannedShield::ShieldRotationThink, gpGlobals->curtime + 0.1, g_pMannedShieldThinkContextName );
 }
 
 

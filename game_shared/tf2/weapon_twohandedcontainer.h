@@ -26,8 +26,9 @@ class CBaseViewModel;
 //-----------------------------------------------------------------------------
 class CWeaponTwoHandedContainer : public CBaseTFCombatWeapon
 {
-	DECLARE_CLASS( CWeaponTwoHandedContainer, CBaseTFCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponTwoHandedContainer, CBaseTFCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

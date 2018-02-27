@@ -1024,7 +1024,7 @@ float SND_GetGain( channel_t *ch, bool fplayersound, bool flooping, vec_t dist )
 
 			// calculate crossover point
 
-			Y = -1.0 / ( pow(SND_GAIN_COMP_THRESH, snd_gain_comp_power) * (SND_GAIN_COMP_THRESH - 1) );
+			Y = -1.0 / ( pow((float)SND_GAIN_COMP_THRESH, snd_gain_comp_power) * (SND_GAIN_COMP_THRESH - 1.0f) );
 			
 			// calculate compressed gain
 
@@ -2658,7 +2658,7 @@ void S_Play( const char *pszName, bool flush = false )
 
 void S_Play(void)
 {
-	bool flush = !strcmpi( Cmd_Argv(0), "playflush" );
+	bool flush = !_strcmpi( Cmd_Argv(0), "playflush" );
 	int  i = 1;
 	
 	i = 1;

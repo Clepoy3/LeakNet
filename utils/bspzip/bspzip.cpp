@@ -33,7 +33,7 @@ int main( int argc, char **argv )
 	CmdLib_InitFileSystem( argv[2] );
 
 	MathLib_Init( 2.2f, 2.2f, 0.0f, 2.0f );
-	if( ( stricmp( argv[1], "-extract" ) == 0 ) && argc == 4 )
+	if( ( _stricmp( argv[1], "-extract" ) == 0 ) && argc == 4 )
 	{
 		char bspName[1024];
 		strcpy( bspName, argv[2] );
@@ -45,7 +45,7 @@ int main( int argc, char **argv )
 
 		ExtractZipFileFromBSP( bspName, zipName );
 	}
-	else if( ( stricmp( argv[1], "-dir" ) == 0 ) && argc == 3 )
+	else if( ( _stricmp( argv[1], "-dir" ) == 0 ) && argc == 3 )
 	{
 		char bspName[1024];
 		strcpy( bspName, argv[2] );
@@ -53,7 +53,7 @@ int main( int argc, char **argv )
 		LoadBSPFile (bspName);		
 		PrintBSPPackDirectory();
 	}
-	else if( ( stricmp( argv[1], "-addfile" ) == 0 ) && argc == 6 )
+	else if( ( _stricmp( argv[1], "-addfile" ) == 0 ) && argc == 6 )
 	{
 		char bspName[1024];
 		strcpy( bspName, argv[2] );
@@ -74,7 +74,7 @@ int main( int argc, char **argv )
 		AddFileToPack( relativeName, fullpathName );
 		WriteBSPFile(newbspName);
 	}
-	else if( ( stricmp( argv[1], "-addlist" ) == 0 ) && argc == 5 )
+	else if( ( _stricmp( argv[1], "-addlist" ) == 0 ) && argc == 5 )
 	{
 		char bspName[1024];
 		strcpy( bspName, argv[2] );

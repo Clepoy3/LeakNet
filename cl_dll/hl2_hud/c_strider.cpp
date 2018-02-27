@@ -64,8 +64,9 @@ public:
 //-----------------------------------------------------------------------------
 class C_Strider : public C_AI_BaseNPC, public IClientVehicle
 {
-	DECLARE_CLASS( C_Strider, C_AI_BaseNPC );
 public:
+	DECLARE_CLASS( C_Strider, C_AI_BaseNPC );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_INTERPOLATION();
 

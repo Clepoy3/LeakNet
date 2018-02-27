@@ -195,8 +195,9 @@ END_DATADESC()
 
 class CWeaponCGuard : public CBaseHLCombatWeapon
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CWeaponCGuard, CBaseHLCombatWeapon );
 
 	DECLARE_SERVERCLASS();

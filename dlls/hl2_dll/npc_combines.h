@@ -17,9 +17,9 @@
 //=========================================================
 class CNPC_CombineS : public CNPC_Combine
 {
+public:
 	DECLARE_CLASS( CNPC_CombineS, CNPC_Combine );
 
-public:
 	void		Spawn( void );
 	void		Precache( void );
 	void		DeathSound( void );

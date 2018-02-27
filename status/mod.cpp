@@ -124,18 +124,18 @@ bool CMod::ReadFromFile( char **data )
 	bool bret = false;
 
 	p = COM_Parse( p );
-	if ( stricmp( com_token, "{" ) )
+	if ( _stricmp( com_token, "{" ) )
 	{
 		goto finish_read;
 	}
 
 	p = COM_Parse( p );
-	if ( !stricmp( com_token, "}" ) )
+	if ( !_stricmp( com_token, "}" ) )
 	{
 		goto finish_read;
 	}
 
-	if ( stricmp( com_token, "gamedir" ) )
+	if ( _stricmp( com_token, "gamedir" ) )
 	{
 		goto finish_read;
 	}
@@ -177,7 +177,7 @@ bool CMod::ReadFromFile( char **data )
 	}
 
 	p = COM_Parse( p );
-	if ( stricmp( com_token, "}" ) )
+	if ( _stricmp( com_token, "}" ) )
 	{
 		goto finish_read;
 	}
@@ -245,7 +245,7 @@ void CModList::CheckGrow( int newcount )
 			pNew[ i ] = m_ppMods[ i ];
 		}
 
-		for ( ; i < m_nMaxcount; i++ )
+		for ( int i = 0; i < m_nMaxcount; i++ )
 		{
 			pNew[ i ] = NULL;
 		}
@@ -266,7 +266,7 @@ int __cdecl FnGameDirectoryCompare(const void *elem1, const void *elem2 )
 		return 0;  
 	}
 
-	return stricmp( p1->GetGameDir(), p2->GetGameDir() );
+	return _stricmp( p1->GetGameDir(), p2->GetGameDir() );
 }
 
 // Sort it by game directory:
@@ -282,7 +282,7 @@ int __cdecl FnGameDirectorySearch(const void *elem1, const void *elem2 )
 		return 0;  
 	}
 
-	return stricmp( str, p2->GetGameDir() );
+	return _stricmp( str, p2->GetGameDir() );
 }
 
 void CModList::AddMod( CMod *pAdd )
@@ -326,7 +326,7 @@ CMod * CModList::FindMod( const char *gamedir )
 		return NULL;
 	if ( nCount == 1 )
 	{
-		if ( !stricmp( gamedir, m_ppMods[ 0 ]->GetGameDir() ) )
+		if ( !_stricmp( gamedir, m_ppMods[ 0 ]->GetGameDir() ) )
 			return m_ppMods[ 0 ];
 		else
 			return NULL;

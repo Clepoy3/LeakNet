@@ -355,7 +355,7 @@ bool FindSpewGroup( char const* pGroupName, int* pInd )
 		while ( s <= e )
 		{
 			int m = (s+e) >> 1;
-			int cmp = stricmp( pGroupName, s_pSpewGroups[m].m_GroupName );
+			int cmp = _stricmp( pGroupName, s_pSpewGroups[m].m_GroupName );
 			if ( !cmp )
             {
 				*pInd = m;

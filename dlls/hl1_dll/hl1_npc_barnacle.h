@@ -37,9 +37,9 @@
 //-----------------------------------------------------------------------------
 class CNPC_Barnacle : public CHL1BaseNPC
 {
+public:
 	DECLARE_CLASS( CNPC_Barnacle, CHL1BaseNPC );
 
-public:
 	void			Spawn( void );
 	void			InitTonguePosition( void );
 	void			Precache( void );

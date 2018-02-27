@@ -258,7 +258,7 @@ IEditorTexture *CTextureSystem::FindActiveTexture(LPCSTR pszName, int *piIndex, 
 	//
 	// Check the cache first.
 	//
-	if (pLastTex && !stricmp(pszName, pLastTex->GetName()))
+	if (pLastTex && !_stricmp(pszName, pLastTex->GetName()))
 	{
 		if (piIndex)
 		{
@@ -273,7 +273,7 @@ IEditorTexture *CTextureSystem::FindActiveTexture(LPCSTR pszName, int *piIndex, 
 
 	while (pTex = EnumActiveTextures(&iIndex, g_pGameConfig->GetTextureFormat()))
 	{
-		if (!strcmpi(pszName, pTex->GetName()))
+		if (!_strcmpi(pszName, pTex->GetName()))
 		{
 			if (piIndex)
 			{
@@ -303,7 +303,7 @@ IEditorTexture *CTextureSystem::FindActiveTexture(LPCSTR pszName, int *piIndex, 
 				szBuf[i] = '\\';
 		}
 
-		strlwr(szBuf);
+		_strlwr(szBuf);
 
 		while (pTex = EnumActiveTextures(&iIndex, g_pGameConfig->GetTextureFormat()))
 		{
@@ -339,7 +339,7 @@ IEditorTexture *CTextureSystem::FindActiveTexture(LPCSTR pszName, int *piIndex, 
 	while (p)
 	{
 		IEditorTexture *pTex = m_Dummies.GetNext(p);
-		if ((!strcmpi(pszName, pTex->GetName())) && (pTex->GetTextureFormat() == g_pGameConfig->GetTextureFormat()))
+		if ((!_strcmpi(pszName, pTex->GetName())) && (pTex->GetTextureFormat() == g_pGameConfig->GetTextureFormat()))
 		{
 			pLastTex = pTex;
 			nLastIndex = -1;
@@ -415,7 +415,7 @@ void CTextureSystem::SetActiveGroup(const char *pcszName)
 		POSITION p = m_Groups.FindIndex(i);
 		ASSERT(p);
 		pGroup = m_Groups.GetAt(p);
-		if (!strcmpi(pGroup->GetName(), pcszName))
+		if (!_strcmpi(pGroup->GetName(), pcszName))
 		{
 			m_pActiveGroup = pGroup;
 			return;
@@ -548,7 +548,7 @@ static int __cdecl SortGraphicsProc(const void *elem1, const void *elem2)
 	if (IsSortChr(ch1) && !IsSortChr(ch2))
 	{
 		int iFamilyLen = strlen(pszName1+2);
-		int iFamily = strnicmp(pszName1+2, pszName2, iFamilyLen);
+		int iFamily = _strnicmp(pszName1+2, pszName2, iFamilyLen);
 		if (!iFamily)
 		{
 			return(-1);	// same family - put elem1 before elem2
@@ -558,7 +558,7 @@ static int __cdecl SortGraphicsProc(const void *elem1, const void *elem2)
 	else if (!IsSortChr(ch1) && IsSortChr(ch2))
 	{
 		int iFamilyLen = strlen(pszName2+2);
-		int iFamily = strnicmp(pszName1, pszName2+2, iFamilyLen);
+		int iFamily = _strnicmp(pszName1, pszName2+2, iFamilyLen);
 		if (!iFamily)
 		{
 			return(1);	// same family - put elem2 before elem1
@@ -568,7 +568,7 @@ static int __cdecl SortGraphicsProc(const void *elem1, const void *elem2)
 	else if (IsSortChr(ch1) && IsSortChr(ch2))
 	{
 		// do family name sorting
-		int iFamily = strcmpi(pszName1+2, pszName2+2);
+		int iFamily = _strcmpi(pszName1+2, pszName2+2);
 
 		if (!iFamily)
 		{
@@ -580,7 +580,7 @@ static int __cdecl SortGraphicsProc(const void *elem1, const void *elem2)
 		return(iFamily);
 	}
 
-	return(strcmpi(pszName1, pszName2));
+	return(_strcmpi(pszName1, pszName2));
 }
 
 
@@ -914,7 +914,7 @@ void CTextureSystem::RegisterTextureKeywords( IEditorTexture *pTexture )
 			while (pos != NULL)
 			{
 				char *pszTest = m_Keywords.GetNext(pos);
-				if (!stricmp(pszTest, pch))
+				if (!_stricmp(pszTest, pch))
 				{
 					bFound = true;
 					break;

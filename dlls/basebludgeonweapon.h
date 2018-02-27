@@ -20,8 +20,9 @@
 //=========================================================
 class CBaseHLBludgeonWeapon : public CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CBaseHLBludgeonWeapon, CBaseHLCombatWeapon );
 public:
+	DECLARE_CLASS( CBaseHLBludgeonWeapon, CBaseHLCombatWeapon );
+
 	CBaseHLBludgeonWeapon();
 
 	DECLARE_SERVERCLASS();

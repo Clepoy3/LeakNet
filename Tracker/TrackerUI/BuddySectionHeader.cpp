@@ -32,8 +32,9 @@ void CBuddySectionHeader::ApplySchemeSettings(vgui::IScheme *pScheme)
 	Label::ApplySchemeSettings(pScheme);
 	SetFgColor(GetSchemeColor("SectionTextColor", pScheme));
 	m_SectionDividerColor = GetSchemeColor("SectionDividerColor", pScheme);
-	SetBgColor(GetSchemeColor("BuddyListBgColor", pScheme));
-	SetFont(pScheme->GetFont("DefaultVerySmall", IsProportional())); // VXP: TEST
+	SetBgColor(GetSchemeColor("BuddyListBgColor", GetBgColor(), pScheme));
+//	SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "DefaultVerySmall"));
+	SetFont(pScheme->GetFont("DefaultVerySmall"));
 }
 
 //-----------------------------------------------------------------------------

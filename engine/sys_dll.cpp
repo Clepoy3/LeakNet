@@ -896,37 +896,37 @@ IgnoreThisDLL:
 
 void DLL_SetModKey( modinfo_t *pinfo, char *pkey, char *pvalue )
 {
-	if ( !stricmp( pkey, "url_info" ) )
+	if ( !_stricmp( pkey, "url_info" ) )
 	{
 		pinfo->bIsMod = true;
 		strcpy( pinfo->szInfo, pvalue );
 	}
-	else if ( !stricmp( pkey, "url_dl" ) )
+	else if ( !_stricmp( pkey, "url_dl" ) )
 	{
 		pinfo->bIsMod = true;
 		strcpy( pinfo->szDL, pvalue );
 	}
-	else if ( !stricmp( pkey, "version" ) )
+	else if ( !_stricmp( pkey, "version" ) )
 	{
 		pinfo->bIsMod = true;
 		pinfo->version = atoi( pvalue );
 	}
-	else if ( !stricmp( pkey, "size" ) )
+	else if ( !_stricmp( pkey, "size" ) )
 	{
 		pinfo->bIsMod = true;
 		pinfo->size = atoi( pvalue );
 	}
-	else if ( !stricmp( pkey, "svonly" ) )
+	else if ( !_stricmp( pkey, "svonly" ) )
 	{
 		pinfo->bIsMod = true;
 		pinfo->svonly = atoi( pvalue ) ? true : false;
 	}
-	else if ( !stricmp( pkey, "cldll" ) )
+	else if ( !_stricmp( pkey, "cldll" ) )
 	{
 		pinfo->bIsMod = true;
 		pinfo->cldll = atoi( pvalue ) ? true : false;
 	}
-	else if ( !stricmp( pkey, "hlversion" ) )
+	else if ( !_stricmp( pkey, "hlversion" ) )
 	{
 		strcpy( pinfo->szHLVersion, pvalue );
 	}

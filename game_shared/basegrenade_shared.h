@@ -29,8 +29,8 @@ class CTakeDamageInfo;
 
 class CBaseGrenade : public CBaseCombatCharacter
 {
-	DECLARE_CLASS( CBaseGrenade, CBaseCombatCharacter );
 public:
+	DECLARE_CLASS( CBaseGrenade, CBaseCombatCharacter );
 
 	CBaseGrenade(void);
 	~CBaseGrenade(void);

@@ -31,8 +31,9 @@
 //=========================================================
 class CWeaponFlameThrower : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponFlameThrower, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponFlameThrower, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

@@ -436,7 +436,7 @@ LRESULT CTextureBox::OnSelectString(WPARAM wParam, LPARAM lParam)
 		{
 			char szName[MAX_PATH];
 			pTex->GetShortName(szName);
-			if (!stricmp(szName, pszSelect))
+			if (!_stricmp(szName, pszSelect))
 			{
 				SetCurSel(i);
 				return i;

@@ -861,7 +861,7 @@ void Cmd_ForwardToServer (bool bReliable)
 	if (cls.state != ca_connected &&
 		cls.state != ca_active)
 	{
-		if ( stricmp( Cmd_Argv(0), "setinfo" ) )
+		if ( _stricmp( Cmd_Argv(0), "setinfo" ) )
 		{
 			Con_Printf ("Can't \"%s\", not connected\n", Cmd_Argv(0));
 		}

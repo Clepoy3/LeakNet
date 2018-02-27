@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\common;..\..\public;..\..\common;..\vmpi;..\vmpi\mysql\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_WIN32;_USRDLL;WIN32;WINDOWS;MPI;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\vvis.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Debug\vvis.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\vvis.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\Debug\vvis.dll</OutputFile>
+      <ImportLibrary>.\Debug\vvis.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\lib\public;..\..\lib\common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceFileOutput>
+      </ForceFileOutput>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\$(TargetName).dll attrib -r ..\..\..\bin\$(TargetName).dll 
+copy $(TargetPath) ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying to bin</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalIncludeDirectories>..\common;..\..\public;..\..\common;..\vmpi;..\vmpi\mysql\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WIN32;_USRDLL;WIN32;_WINDOWS;MPI;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\vvis.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\vvis.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\vvis.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Release\vvis.dll</OutputFile>
+      <ImportLibrary>.\Release\vvis.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\lib\public;..\..\lib\common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\$(TargetName).dll attrib -r ..\..\..\bin\$(TargetName).dll 
+copy $(TargetPath) ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+      <Message>Copying</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\bsplib.cpp" />
+    <ClCompile Include="..\..\public\characterset.cpp" />
+    <ClCompile Include="..\..\Public\checksum_crc.cpp" />
+    <ClCompile Include="..\..\public\checksum_md5.cpp" />
+    <ClCompile Include="..\common\cmdlib.cpp" />
+    <ClCompile Include="..\..\public\collisionutils.cpp" />
+    <ClCompile Include="..\..\public\filesystem_helpers.cpp" />
+    <ClCompile Include="flow.cpp" />
+    <ClCompile Include="..\..\public\interface.cpp" />
+    <ClCompile Include="..\..\Public\Mathlib.cpp" />
+    <ClCompile Include="..\common\mpi_stats.cpp" />
+    <ClCompile Include="mpivis.cpp" />
+    <ClCompile Include="..\vmpi\mysql_wrapper.cpp" />
+    <ClCompile Include="..\common\MySqlDatabase.cpp" />
+    <ClCompile Include="..\common\pacifier.cpp" />
+    <ClCompile Include="..\common\scriplib.cpp" />
+    <ClCompile Include="..\common\threads.cpp" />
+    <ClCompile Include="..\..\Public\UtlBuffer.cpp" />
+    <ClCompile Include="..\..\Public\utlsymbol.cpp" />
+    <ClCompile Include="..\vmpi\vmpi_distribute_work.cpp" />
+    <ClCompile Include="..\common\vmpi_tools_shared.cpp" />
+    <ClCompile Include="vvis.cpp" />
+    <ClCompile Include="WaterDist.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Public\amd3dx.h" />
+    <ClInclude Include="..\..\Public\basetypes.h" />
+    <ClInclude Include="..\..\Public\BSPFILE.H" />
+    <ClInclude Include="..\..\Public\bspflags.h" />
+    <ClInclude Include="..\common\bsplib.h" />
+    <ClInclude Include="..\..\Public\BSPTreeData.h" />
+    <ClInclude Include="..\..\Public\bumpvects.h" />
+    <ClInclude Include="..\..\public\checksum_crc.h" />
+    <ClInclude Include="..\..\public\checksum_md5.h" />
+    <ClInclude Include="..\common\cmdlib.h" />
+    <ClInclude Include="..\..\Public\cmodel.h" />
+    <ClInclude Include="..\..\Public\commonmacros.h" />
+    <ClInclude Include="..\..\Public\dbg\dbg.h" />
+    <ClInclude Include="..\..\public\platform\fasttimer.h" />
+    <ClInclude Include="..\..\Public\GameBSPFile.h" />
+    <ClInclude Include="..\common\ISQLDBReplyTarget.h" />
+    <ClInclude Include="..\common\ivvisdll.h" />
+    <ClInclude Include="..\..\Public\MATHLIB.H" />
+    <ClInclude Include="mpivis.h" />
+    <ClInclude Include="..\common\MySqlDatabase.h" />
+    <ClInclude Include="..\common\pacifier.h" />
+    <ClInclude Include="..\..\Public\plane.h" />
+    <ClInclude Include="..\..\public\platform\platform.h" />
+    <ClInclude Include="..\common\scriplib.h" />
+    <ClInclude Include="..\..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\common\threads.h" />
+    <ClInclude Include="..\..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\..\Public\utllinkedlist.h" />
+    <ClInclude Include="..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\Public\utlsymbol.h" />
+    <ClInclude Include="..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\Public\vcollide.h" />
+    <ClInclude Include="..\..\Public\vector.h" />
+    <ClInclude Include="..\..\Public\vector2d.h" />
+    <ClInclude Include="vis.h" />
+    <ClInclude Include="..\vmpi\vmpi_distribute_work.h" />
+    <ClInclude Include="..\..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="..\..\Public\wadtypes.h" />
+    <ClInclude Include="..\..\public\mpi\mpi.h" />
+    <ClInclude Include="..\..\public\mpi\mpi_errno.h" />
+    <ClInclude Include="..\..\public\mpi\mpidefs.h" />
+    <ClInclude Include="..\..\public\mpi\mpio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\lib\vmpi\vmpi.lib" />
+    <Library Include="..\vmpi\mysql\lib\opt\libmySQL.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

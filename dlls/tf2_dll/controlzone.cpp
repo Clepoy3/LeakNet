@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================
 
-#include "tf_shareddefs.h"
 #include "cbase.h"
+#include "tf_shareddefs.h"
 #include "EntityOutput.h"
 #include "tf_player.h"
 #include "controlzone.h"

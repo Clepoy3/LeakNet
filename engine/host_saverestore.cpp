@@ -497,7 +497,7 @@ int CSaveRestore::SaveGameSlot( const char *pSaveName, const char *pSaveComment 
 	COM_FixSlashes( name );
 	Con_DPrintf( "Saving game to %s...\n", name );
 	// Output to disk
-	if ( stricmp(pSaveName, "quick") || stricmp(pSaveName,"autosave") )
+	if ( _stricmp(pSaveName, "quick") || _stricmp(pSaveName,"autosave") )
 		AgeSaveList( pSaveName, SAVE_AGED_COUNT );
 
 	pFile = g_pFileSystem->Open( name, "wb" );
@@ -1622,7 +1622,7 @@ void CSaveRestore::LoadAdjacentEnts( const char *pOldLevel, const char *pLandmar
 	{
 		// make sure the previous level is in the connection list so we can
 		// bring over the player.
-		if ( !strcmpi( currentLevelData.levelInfo.levelList[i].mapName, pOldLevel ) )
+		if ( !_strcmpi( currentLevelData.levelInfo.levelList[i].mapName, pOldLevel ) )
 		{
 			foundprevious = true;
 		}

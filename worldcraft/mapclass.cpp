@@ -1178,15 +1178,15 @@ ChunkFileResult_t CMapClass::LoadEditorCallback(CChunkFile *pFile, CMapClass *pO
 //-----------------------------------------------------------------------------
 ChunkFileResult_t CMapClass::LoadEditorKeyCallback(const char *szKey, const char *szValue, CMapClass *pObject)
 {
-	if (!stricmp(szKey, "color"))
+	if (!_stricmp(szKey, "color"))
 	{
 		CChunkFile::ReadKeyValueColor(szValue, pObject->r, pObject->g, pObject->b);
 	}
-	else if (!stricmp(szKey, "id"))
+	else if (!_stricmp(szKey, "id"))
 	{
 		CChunkFile::ReadKeyValueInt(szValue, pObject->m_nID);
 	}
-	else  if (!stricmp(szKey, "comments"))
+	else  if (!_stricmp(szKey, "comments"))
 	{
 		//
 		// Load the object comments.

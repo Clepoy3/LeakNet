@@ -1228,7 +1228,7 @@ void CNPC_Hydra::PrescheduleThink()
 #ifdef _DEBUG
 		Msg( "Hydra was removed.\n" );
 #endif
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 	}
 }	
 
@@ -1872,7 +1872,7 @@ IPhysicsConstraint *CHydraImpale::CreateConstraint( CNPC_Hydra *pHydra, IPhysics
 		m_pConstraint->SetGameData( (void *)this );
 	}
 
-	SetThink( ImpaleThink );
+	SetThink( &CHydraImpale::ImpaleThink );
 	SetNextThink( gpGlobals->curtime );
 	return m_pConstraint;
 }

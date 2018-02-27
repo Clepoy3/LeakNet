@@ -7,8 +7,8 @@
 
 class CNPC_Headcrab : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Headcrab, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Headcrab, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

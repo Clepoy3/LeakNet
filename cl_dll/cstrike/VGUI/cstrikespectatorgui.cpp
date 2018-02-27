@@ -48,7 +48,7 @@ void CCSSpectatorGUI::UpdateSpectatorPlayerList()
 		if ( ! team_info.name ) 
 			continue;
 
-		if ( !stricmp( team_info.name, "TERRORIST" ) )
+		if ( !_stricmp( team_info.name, "TERRORIST" ) )
 		{
 			wchar_t frags[ 10 ];
 			_snwprintf( frags, sizeof( frags ), L"%i", team_info.frags );
@@ -56,7 +56,7 @@ void CCSSpectatorGUI::UpdateSpectatorPlayerList()
 			SetLabelText( "TERScoreValue", frags );
 			bFoundT = true;
 		}
-		else if ( !stricmp( team_info.name, "CT" ) )
+		else if ( !_stricmp( team_info.name, "CT" ) )
 		{
 			wchar_t frags[ 10 ];
 			_snwprintf( frags, sizeof( frags ), L"%i",  team_info.frags  );

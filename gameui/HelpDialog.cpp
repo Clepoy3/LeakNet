@@ -68,7 +68,7 @@ void CHelpDialog::OnClose()
 //-----------------------------------------------------------------------------
 void CHelpDialog::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Close"))
+	if (!_stricmp(command, "Close"))
 	{
 		PostMessage(this, new KeyValues("Close"));
 	}

@@ -93,7 +93,7 @@ InputOutputType_t CClassInputOutputBase::SetType(const char *szType)
 {
 	for (int i = 0; i < sizeof(TypeMap) / sizeof(TypeMap[0]); i++)
 	{
-		if (!stricmp(TypeMap[i].pszName, szType))
+		if (!_stricmp(TypeMap[i].pszName, szType))
 		{
 			m_eType = TypeMap[i].eType;
 			return(m_eType);

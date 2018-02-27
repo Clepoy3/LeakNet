@@ -79,7 +79,7 @@ void CHudNumericDisplay::PaintNumbers(HFont font, int xpos, int ypos, int value)
 {
 	surface()->DrawSetTextFont(font);
 	wchar_t unicode[6];
-	swprintf(unicode, L"%d", value);
+	swprintf(unicode, sizeof(unicode), L"%d", value);
 	// adjust the position to take into account 3 characters
 	int charWidth = surface()->GetCharacterWidth(font, '0');
 	if (value < 100)

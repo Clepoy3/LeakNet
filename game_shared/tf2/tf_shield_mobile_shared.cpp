@@ -350,7 +350,7 @@ void CShieldMobile::Spawn( void )
 	// All movement occurs during think
 	SetMoveType( MOVETYPE_NONE );
 
-	SetThink( ShieldThink );
+	SetThink( &CShieldMobile::ShieldThink );
 	SetNextThink( gpGlobals->curtime + 0.01f );
 
 #ifdef CLIENT_DLL

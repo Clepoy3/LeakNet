@@ -33,17 +33,17 @@ struct ShellDispatchTable_t
 //-----------------------------------------------------------------------------
 ShellDispatchTable_t CShell::m_DispatchTable[] =
 {
-	{ "session_begin", CShell::BeginSession },
-	{ "session_end", CShell::EndSession },
-	{ "entity_create", CShell::EntityCreate },
-	{ "entity_delete", CShell::EntityDelete },
-	{ "map_check_version", CShell::CheckMapVersion },
-	{ "node_create", CShell::NodeCreate },
-	{ "node_delete", CShell::NodeDelete },
-	{ "nodelink_create", CShell::NodeLinkCreate },
-	{ "nodelink_delete", CShell::NodeLinkDelete },
-	{ "release_video_memory", CShell::ReleaseVideoMemory },
-	{ "grab_video_memory", CShell::GrabVideoMemory },
+	{ "session_begin", &CShell::BeginSession },
+	{ "session_end", &CShell::EndSession },
+	{ "entity_create", &CShell::EntityCreate },
+	{ "entity_delete", &CShell::EntityDelete },
+	{ "map_check_version", &CShell::CheckMapVersion },
+	{ "node_create", &CShell::NodeCreate },
+	{ "node_delete", &CShell::NodeDelete },
+	{ "nodelink_create", &CShell::NodeLinkCreate },
+	{ "nodelink_delete", &CShell::NodeLinkDelete },
+	{ "release_video_memory", &CShell::ReleaseVideoMemory },
+	{ "grab_video_memory", &CShell::GrabVideoMemory },
 };
 
 
@@ -129,7 +129,7 @@ bool CShell::DoVersionCheck(const char *pszArguments)
 
 			int nDocVersion = m_pDoc->GetDocVersion();
 
-			if (!stricmp(szDocName, szEngineMapName) && (nDocVersion == nEngineMapVersion))
+			if (!_stricmp(szDocName, szEngineMapName) && (nDocVersion == nEngineMapVersion))
 			{
 				return(true);
 			}
@@ -342,8 +342,8 @@ bool CShell::NodeLinkDelete(const char *pszCommand, const char *pszArguments)
 					const char *pszNode2 = pEntity->GetKeyValue("endnode");
 					if ((pszNode1 != NULL) && (pszNode2 != NULL))
 					{
-						if (((!stricmp(pszNode1, szIDStart)) && (!stricmp(pszNode2, szIDEnd))) ||
-							((!stricmp(pszNode1, szIDEnd)) && (!stricmp(pszNode2, szIDStart))))
+						if (((!_stricmp(pszNode1, szIDStart)) && (!_stricmp(pszNode2, szIDEnd))) ||
+							((!_stricmp(pszNode1, szIDEnd)) && (!_stricmp(pszNode2, szIDStart))))
 						{
 							m_pDoc->DeleteObject(pEntity);
 							bFound = true;

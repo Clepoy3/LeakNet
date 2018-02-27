@@ -321,7 +321,7 @@ void CObjectBaseMannedGun::BaseMannedGunThink( void )
 	}
 
 	// Keep thinking
-	SetContextThink( BaseMannedGunThink, gpGlobals->curtime + 0.1, OBJ_BASE_MANNEDGUN_THINK_CONTEXT );
+	SetContextThink( &CObjectBaseMannedGun::BaseMannedGunThink, gpGlobals->curtime + 0.1, OBJ_BASE_MANNEDGUN_THINK_CONTEXT );
 	NetworkStateChanged();
 }
 
@@ -337,7 +337,7 @@ void CObjectBaseMannedGun::SetPassenger( int nRole, CBasePlayer *pEnt )
 	if ( !GetDriverPlayer() && (m_flGunPitch || m_flGunYaw) )
 	{
 		StopDesignating();
-		SetContextThink( BaseMannedGunThink, gpGlobals->curtime + MANNEDGUN_RESTORE_TIME, OBJ_BASE_MANNEDGUN_THINK_CONTEXT );
+		SetContextThink( &CObjectBaseMannedGun::BaseMannedGunThink, gpGlobals->curtime + MANNEDGUN_RESTORE_TIME, OBJ_BASE_MANNEDGUN_THINK_CONTEXT );
 	}
 }
 #endif

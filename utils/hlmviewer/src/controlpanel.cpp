@@ -124,7 +124,7 @@ static int FindSurfaceProp( char const* pSurfaceProp )
 {
 	for (int i = 0; i < physprop->SurfacePropCount(); ++i)
 	{
-		if (!stricmp( physprop->GetPropName( i ), pSurfaceProp ))
+		if (!_stricmp( physprop->GetPropName( i ), pSurfaceProp ))
 			return i;
 	}
 	return -1;
@@ -917,7 +917,7 @@ bool CBoneControlWindow::SerializeQC( CUtlBuffer& buf )
 		// surface prop as the parent does
 		if (pBone->parent >= 0)
 		{
-			if (!stricmp( g_pStudioModel->m_SurfaceProps[i].String(), 
+			if (!_stricmp( g_pStudioModel->m_SurfaceProps[i].String(), 
 							g_pStudioModel->m_SurfaceProps[pBone->parent].String() ))
 				continue;
 		}
@@ -2297,7 +2297,7 @@ ControlPanel::initSequences ()
 		setBlend( i, 0.0 );
 	}
 
-	for (i = 0; i < hdr->numposeparameters; i++)
+	for (int i = 0; i < hdr->numposeparameters; i++)
 	{
 		setBlend( i, 0.0 );
 	}
@@ -2918,7 +2918,7 @@ void ControlPanel::setupPhysicsBone( int boneIndex )
 	for ( int i = 0; i < pHdr->numbones; i++ )
 	{
 		mstudiobone_t* pBone = pHdr->pBone(i);
-		if (!stricmp(pBone->pszName(), solid.name ))
+		if (!_stricmp(pBone->pszName(), solid.name ))
 		{
 			// Once found, set the surface property accordingly
 			lPhysicsMaterial->setLabel( g_pStudioModel->m_SurfaceProps[i].String() );

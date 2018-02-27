@@ -27,8 +27,9 @@
 //-----------------------------------------------------------------------------
 class C_VehicleTank : public C_BaseTFFourWheelVehicle
 {
-	DECLARE_CLASS( C_VehicleTank, C_BaseTFFourWheelVehicle );
 public:
+	DECLARE_CLASS( C_VehicleTank, C_BaseTFFourWheelVehicle );
+
 	DECLARE_CLIENTCLASS();
 
 	C_VehicleTank();

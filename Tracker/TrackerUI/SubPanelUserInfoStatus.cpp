@@ -22,7 +22,8 @@ using namespace vgui;
 // Purpose: Constructor
 // Input  : userID - 
 //-----------------------------------------------------------------------------
-CSubPanelUserInfoStatus::CSubPanelUserInfoStatus(int userID) : PropertyPage(NULL, "SubPanelUserInfoStatus")
+CSubPanelUserInfoStatus::CSubPanelUserInfoStatus(int userID)
+	: PropertyPage(NULL, "SubPanelUserInfoStatus")
 {
 	m_iUserID = userID;
 
@@ -50,7 +51,7 @@ void CSubPanelUserInfoStatus::PerformLayout()
 //-----------------------------------------------------------------------------
 void CSubPanelUserInfoStatus::OnCommand(const char *command)
 {
-	if (!stricmp(command, "RemoveUser"))
+	if (!_stricmp(command, "RemoveUser"))
 	{
 		// open the warning dialog
 		CDialogRemoveUser *dialog = new CDialogRemoveUser(m_iUserID);

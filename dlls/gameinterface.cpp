@@ -798,7 +798,7 @@ void CServerGameDLL::GetSaveComment( char *text, int maxlength )
 	// Try to find a matching title comment for this mapname
 	for ( i = 0; i < ARRAYSIZE(gTitleComments) && !pName; i++ )
 	{
-		if ( !strnicmp( mapname, gTitleComments[i].pBSPName, strlen(gTitleComments[i].pBSPName) ) )
+		if ( !_strnicmp( mapname, gTitleComments[i].pBSPName, strlen(gTitleComments[i].pBSPName) ) )
 		{
 			// Found one, read the corresponding message from titles.txt (so it can be localized)
 			client_textmessage_t *pMessage = engine->TextMessageGet( gTitleComments[i].pTitleName );
@@ -828,7 +828,7 @@ void CServerGameDLL::GetSaveComment( char *text, int maxlength )
 		pName = mapname;
 	}
 
-	Q_snprintf( text, maxlength, "%-64.64s %02d:%02d", pName, (int)(gpGlobals->curtime/60.0), (int)fmod(gpGlobals->curtime, 60.0) );
+	Q_snprintf( text, maxlength, "%-64.64s %02d:%02d", pName, (int)(gpGlobals->curtime/60.0), (int)fmod((float)gpGlobals->curtime, 60.0f) );
 }
 
 void CServerGameDLL::WriteSaveHeaders( CSaveRestoreData *s )

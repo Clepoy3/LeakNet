@@ -43,9 +43,9 @@ void CCreateMultiplayerGameBotPage::SetJoinTeamCombo( const char *team )
 {
 	if (team)
 	{
-		if (!stricmp( team, "T" ))
+		if (!_stricmp( team, "T" ))
 			m_joinTeamCombo->ActivateItemByRow( BOT_GUI_TEAM_T );
-		else if (!stricmp( team, "CT" ))
+		else if (!_stricmp( team, "CT" ))
 			m_joinTeamCombo->ActivateItemByRow( BOT_GUI_TEAM_CT );
 		else
 			m_joinTeamCombo->ActivateItemByRow( BOT_GUI_TEAM_RANDOM );

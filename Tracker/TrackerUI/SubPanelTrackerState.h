@@ -15,7 +15,8 @@
 
 namespace vgui
 {
-class TextEntry;
+//class TextEntry;
+class RichText;
 class Button;
 };
 
@@ -33,7 +34,8 @@ private:
 	virtual void PerformLayout();
 	virtual void OnCommand(const char *command);
 
-	vgui::TextEntry *m_pMessage;
+//	vgui::TextEntry *m_pMessage;
+	vgui::RichText *m_pMessage;
 	vgui::Button *m_pSignInButton;
 
 	typedef vgui::EditablePanel BaseClass;

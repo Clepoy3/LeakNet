@@ -133,7 +133,12 @@ public:
 	virtual bool				FileExists( const char *pFileName, const char *pPathID = NULL );
 	virtual long				GetFileTime( const char *pFileName, const char *pPathID = NULL );
 	virtual bool				IsFileWritable( char const *pFileName, const char *pPathID = NULL );
+
+#if _MSC_VER < 1300
 	virtual void				FileTimeToString( char *pString, int maxChars, long fileTime );
+#else
+	virtual void				FileTimeToString( char *pString, int maxChars, const time_t fileTime ); // VXP: Conv
+#endif
 	
 	virtual const char			*FindFirst( const char *pWildCard, FileFindHandle_t *pHandle );
 	virtual const char			*FindNext( FileFindHandle_t handle );

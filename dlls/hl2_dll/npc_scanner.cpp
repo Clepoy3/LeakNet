@@ -211,9 +211,9 @@ class CSpotlightEnd;
 
 class CNPC_CScanner : public CAI_BaseFlyingBot
 {
-DECLARE_CLASS( CNPC_CScanner, CAI_BaseFlyingBot );
-
 public:
+	DECLARE_CLASS( CNPC_CScanner, CAI_BaseFlyingBot );
+
 	CNPC_CScanner();
 	Class_T			Classify(void);
 

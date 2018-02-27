@@ -28,8 +28,9 @@
 //-----------------------------------------------------------------------------
 class C_VehicleMortar : public C_BaseTFFourWheelVehicle, public IUsesMortarPanel
 {
-	DECLARE_CLASS( C_VehicleMortar, C_BaseTFFourWheelVehicle );
 public:
+	DECLARE_CLASS( C_VehicleMortar, C_BaseTFFourWheelVehicle );
+
 	DECLARE_CLIENTCLASS();
 
 	C_VehicleMortar();
@@ -479,9 +480,8 @@ void CMortarMinimapPanel::OnMouseReleased( vgui::MouseCode code )
 //-----------------------------------------------------------------------------
 class CVehicleMortarControlPanel : public CObjectControlPanel
 {
-	DECLARE_CLASS( CVehicleMortarControlPanel, CObjectControlPanel );
-
 public:
+	DECLARE_CLASS( CVehicleMortarControlPanel, CObjectControlPanel );
 	
 	CVehicleMortarControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual ~CVehicleMortarControlPanel();

@@ -48,6 +48,7 @@ public:
 //###########################################################
 class CAI_TestHull : public CAI_BaseNPC
 {
+public:
 	DECLARE_CLASS( CAI_TestHull, CAI_BaseNPC );
 private:
 	static CAI_TestHull*	pTestHull;								// Hull for testing connectivity

@@ -29,7 +29,7 @@ int VString::Strcmp(const char *pStr)
 
 int VString::Stricmp(const char *pStr)
 {
-	return stricmp(m_pStr, pStr);
+	return _stricmp(m_pStr, pStr);
 }
 
 

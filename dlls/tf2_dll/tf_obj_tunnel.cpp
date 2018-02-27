@@ -26,8 +26,8 @@ static ConVar tf_tunnel_time( "tf_tunnel_time", "2", 0, "Takes this long to trav
 
 class CObjectTunnel : public CObjectMapDefined
 {
-	DECLARE_CLASS( CObjectTunnel, CObjectMapDefined );
 public:
+	DECLARE_CLASS( CObjectTunnel, CObjectMapDefined );
 
 	DECLARE_SERVERCLASS();
 
@@ -429,7 +429,7 @@ void CObjectTunnelTrigger::Activate( void )
 
 	SetActive( true );
 
-	SetThink( TunnelThink );
+	SetThink( &CObjectTunnelTrigger::TunnelThink );
 	SetNextThink( gpGlobals->curtime + TUNNEL_THINK_INTERVAL );
 
 	NetworkStateChanged();

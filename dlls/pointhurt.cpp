@@ -15,9 +15,9 @@ const int SF_PHURT_START_ON			= 1;
 
 class CPointHurt : public CPointEntity
 {
+public:
 	DECLARE_CLASS( CPointHurt, CPointEntity );
 
-public:
 	void	Spawn( void );
 	void	Precache( void );
 	void	HurtThink( void );

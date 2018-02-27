@@ -21,8 +21,8 @@
 
 class CNPC_Bloater : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Bloater, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Bloater, CHL1BaseNPC );
 
 	void Spawn( void );
 	void Precache( void );

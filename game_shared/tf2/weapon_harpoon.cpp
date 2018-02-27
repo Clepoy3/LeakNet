@@ -104,8 +104,8 @@ void CHarpoon::Spawn( void )
 	UTIL_SetSize(this, Vector( -4, -4, -4), Vector(4, 4, 4));
 	SetCollisionGroup( TFCOLLISION_GROUP_GRENADE );
 
-	SetTouch( HarpoonTouch );
-	SetThink( FlyThink );
+	SetTouch( &CHarpoon::HarpoonTouch );
+	SetThink( &CHarpoon::FlyThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -161,7 +161,7 @@ void CHarpoon::HarpoonTouch( CBaseEntity *pOther )
 	SetCollisionGroup( COLLISION_GROUP_DEBRIS );
 
 	// Remove myself soon
-	SetThink( SUB_Remove );
+	SetThink( &CBaseEntity::SUB_Remove );
 	SetNextThink( gpGlobals->curtime + 30.0 );
 
 	m_hImpaledTarget = pOther;
@@ -232,7 +232,7 @@ void CHarpoon::CheckLinkedHarpoon( void )
 
 					// Start checking the length
 					pPlayerHarpoon->m_flConstrainLength = m_flConstrainLength;
-					pPlayerHarpoon->SetThink( ConstrainThink );
+					pPlayerHarpoon->SetThink( &CHarpoon::ConstrainThink );
 					pPlayerHarpoon->SetNextThink( gpGlobals->curtime + 0.1f );
 
 					// Make the rope taught, and prevent it resizing
@@ -655,7 +655,7 @@ void CWeaponHarpoon::YankHarpoon( void )
 				PlayAttackAnimation( ACT_VM_HAULBACK );
 			}
 		}
-		m_hHarpoon->SetThink( SUB_Remove );
+		m_hHarpoon->SetThink( &CBaseEntity::SUB_Remove );
 		m_hHarpoon->SetNextThink( gpGlobals->curtime + 5.0 );
 		m_hHarpoon = NULL;
 		m_bActiveHarpoon = false;

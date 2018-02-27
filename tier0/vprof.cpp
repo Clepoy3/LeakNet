@@ -716,7 +716,8 @@ int CVProfile::FindBudgetGroupName( const char *pBudgetGroupName )
 	int i;
 	for( i = 0; i < m_nBudgetGroupNames; i++ )
 	{
-		if( stricmp( pBudgetGroupName, m_pBudgetGroupNames[i] ) == 0 )
+	//	if( stricmp( pBudgetGroupName, m_pBudgetGroupNames[i] ) == 0 ) // VXP: Conv
+		if( _stricmp( pBudgetGroupName, m_pBudgetGroupNames[i] ) == 0 )
 		{
 			return i;
 		}

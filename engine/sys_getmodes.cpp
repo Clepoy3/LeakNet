@@ -362,6 +362,7 @@ bool CVideoMode_Common::Init( void *pvInstance )
 		qsort( (void *)&m_rgModeList[0], m_nNumModes, sizeof(vmode_t), VideoModeCompare );
 	}
 
+	int i;
 	for ( i = 0; i < m_nNumModes; i++)
 	{
 		// Match width first

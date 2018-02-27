@@ -105,6 +105,7 @@ private:
 	enum { MAX_FILTERSTRING = 512 };
 	char m_szMasterServerFilterString[MAX_FILTERSTRING];
 
+public:
 	DECLARE_PANELMAP();
 	typedef vgui::PropertyPage BaseClass;
 };

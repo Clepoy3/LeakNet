@@ -387,7 +387,8 @@ int CWorldEditDispMgr::NumSharedPoints( CMapDisp *pDisp, CMapDisp *pNeighborDisp
 
 	for( int i = 0; i < 4; i++ )
 	{
-		for( int j = 0; j < 4; j++ )
+		int j;
+		for( j = 0; j < 4; j++ )
 		{
 			Vector pt1, pt2;
 			pDisp->GetSurfPoint( i, pt1 );
@@ -545,7 +546,7 @@ void CWorldEditDispMgr::CatmullClarkSubdivide( void )
 	// add all of the displacements in the selection list into the 
 	// subdivision mesh
 	//
-	for( ndxSelect = 0; ndxSelect < selectCount; ndxSelect++ )
+	for( int ndxSelect = 0; ndxSelect < selectCount; ndxSelect++ )
 	{
 		// get the current displacement surface
 		CMapDisp *pDisp = GetFromSelect( ndxSelect );
@@ -562,7 +563,7 @@ void CWorldEditDispMgr::CatmullClarkSubdivide( void )
 	// get back subdivided data for all displacement surfaces in the
 	// selection list
 	//
-	for( ndxSelect = 0; ndxSelect < selectCount; ndxSelect++ )
+	for( int ndxSelect = 0; ndxSelect < selectCount; ndxSelect++ )
 	{
 		// get the current displacement surface
 		CMapDisp *pDisp = GetFromSelect( ndxSelect );

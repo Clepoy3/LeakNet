@@ -422,17 +422,21 @@ void CGameUI::Start(struct cl_enginefuncs_s *engineFuncs, int interfaceVersion, 
 	{
 		// add the tracker directory to the search path
 		// add localized version first if we're not in english
+		/* // VXP: Conv: FIXME: Do not do this. BuildGroup fucks up with this - can edit .res-s only from platform_russian folder
 		char language[128];
 		if (vgui::system()->GetRegistryString("HKEY_LOCAL_MACHINE\\Software\\Valve\\Steam\\Language", language, sizeof(language)))
 		{
-			if (strlen(language) > 0 && stricmp(language, "english"))
+			if (strlen(language) > 0 && _stricmp(language, "english"))
 			{
 				char path[256];
-				sprintf(path, "platform_%s", language);
+				sprintf(path, "platform_%s", language); // VXP: TODO: Make it m_szPlatformDir too, but cut ending "\"
 				vgui::filesystem()->AddSearchPath(path, "PLATFORM");
 			}
 		}
-		vgui::filesystem()->AddSearchPath("platform", "PLATFORM");
+		*/
+
+	//	vgui::filesystem()->AddSearchPath("platform", "PLATFORM");
+		vgui::filesystem()->AddSearchPath(m_szPlatformDir, "PLATFORM");
 
 		// setup config file directory
 		char szConfigDir[512];
@@ -973,7 +977,7 @@ void CGameUI::LoadingStarted(const char *resourceType, const char *resourceName)
 	g_hLoadingDialog->Activate();
 	g_VModuleLoader.PostMessageToAllModules(new KeyValues("LoadingStarted", "type", resourceType, "name", resourceName));
 
-	if (!stricmp(resourceType, "transition"))
+	if (!_stricmp(resourceType, "transition"))
 	{
 		// activate the loading image
 		staticPanel->SetBackgroundRenderState(CBasePanel::BACKGROUND_LOADINGTRANSITION);

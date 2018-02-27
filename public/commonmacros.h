@@ -19,11 +19,22 @@
 #define STRING_MATCHES_ID( p, id )		( (*((int *)(p)) == (id) ) ? true : false )
 #define ID_TO_STRING( id, p )			( (p)[3] = (((id)>>24) & 0xFF), (p)[2] = (((id)>>16) & 0xFF), (p)[1] = (((id)>>8) & 0xFF), (p)[0] = (((id)>>0) & 0xFF) )
 
+// VXP: Conv
+#pragma warning(disable : 4005) // VXP: Conv: Extra suppressing warning stuff
+#ifdef ARRAYSIZE
+#undef ARRAYSIZE
+#endif
+
 #define ARRAYSIZE(p)		(sizeof(p)/sizeof(p[0]))
 
 // Keeps clutter down a bit, when using a float as a bit-vector
 #define SETBITS(flBitVector, bits)		((flBitVector) = (int)(flBitVector) | (bits))
 #define CLEARBITS(flBitVector, bits)	((flBitVector) = (int)(flBitVector) & ~(bits))
 #define FBitSet(flBitVector, bit)		((flBitVector) & (bit))
+
+// VXP: Conv
+#if _MSC_VER < 1300
+#define for if(0);else for // VXP: This should suppress C2374 error
+#endif
 
 #endif		// COMMONMACROS_H

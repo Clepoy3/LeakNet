@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\HLMV - Release\</OutDir>
+    <IntDir>.\HLMV - Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\HLMV - Debug\</OutDir>
+    <IntDir>.\HLMV - Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalIncludeDirectories>..\..\..\statemachine;..\..\mxtk\include;..\..\common;..\..\..\Public;..\..\..\Game_Shared;..\..\..\game_shared\tf2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;NDEBUG;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\HLMV - Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\HLMV - Release\hlmv.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\HLMV - Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\HLMV - Release\</ProgramDataBaseFileName>
+      <AdditionalOptions> /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\HLMV - Release\hlmv.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <RedirectOutputAndErrors>NUL</RedirectOutputAndErrors>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0807</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\HLMV - Release\hlmv.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\HLMV - Release\hlmv.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\lib\common;..\..\..\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SetChecksum>true</SetChecksum>
+      <AdditionalDependencies>comctl32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Version>1.2</Version>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\..\bin\$(TargetName).exe" 
+copy "$(TargetPath)" ..\..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\..\bin\ </Command>
+      <Message>Performing Custom Build Step on %(FullPath)</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <AdditionalIncludeDirectories>..\..\..\statemachine;..\..\mxtk\include;..\..\common;..\..\..\Public;..\..\..\Game_Shared;..\..\..\game_shared\tf2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VECTOR;WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;_DEBUG;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\HLMV - Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\HLMV - Debug\hlmv.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\HLMV - Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\HLMV - Debug\</ProgramDataBaseFileName>
+      <AdditionalOptions> /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\HLMV - Debug\hlmv.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <RedirectOutputAndErrors>NUL</RedirectOutputAndErrors>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0807</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\HLMV - Debug\hlmv.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\HLMV - Debug\hlmv.exe</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\lib\common;..\..\..\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Version>1.1</Version>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib</IgnoreSpecificDefaultLibraries>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\..\bin\$(TargetName).exe" 
+copy "$(TargetPath)" ..\..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\..\bin\ </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="attachments_window.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_shared\bone_setup.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\characterset.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\common\cmdlib.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\CollisionUtils.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ControlPanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="FileAssociation.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\filesystem_helpers.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\FileSystem_Tools.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\ImageLoader.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\interface.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\Mathlib.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="matsyswin.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="mdlviewer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="mxLineEdit2.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="pakviewer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\physdll.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="physmesh.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="studio_flex.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="studio_render.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="studio_utils.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_win.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\UtlBuffer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Public\utlsymbol.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ViewerSettings.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\public\studio.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /I /mxtk/include" "  /I /mxtk/include" "</AdditionalOptions>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Public\amd3dx.h" />
+    <ClInclude Include="attachments_window.h" />
+    <ClInclude Include="..\..\..\public\basehandle.h" />
+    <ClInclude Include="..\..\..\Public\basetypes.h" />
+    <ClInclude Include="..\..\..\game_shared\bone_setup.h" />
+    <ClInclude Include="..\..\..\Public\bspflags.h" />
+    <ClInclude Include="..\..\..\public\characterset.h" />
+    <ClInclude Include="..\..\common\cmdlib.h" />
+    <ClInclude Include="..\..\..\Public\cmodel.h" />
+    <ClInclude Include="..\..\..\Public\CollisionUtils.h" />
+    <ClInclude Include="..\..\..\Public\commonmacros.h" />
+    <ClInclude Include="..\..\..\public\const.h" />
+    <ClInclude Include="..\..\..\public\vphysics\constraints.h" />
+    <ClInclude Include="ControlPanel.h" />
+    <ClInclude Include="..\..\..\public\tier0\dbg.h" />
+    <ClInclude Include="..\..\..\public\tier0\fasttimer.h" />
+    <ClInclude Include="FileAssociation.h" />
+    <ClInclude Include="..\..\..\Public\FileSystem.h" />
+    <ClInclude Include="..\..\..\public\filesystem_helpers.h" />
+    <ClInclude Include="..\..\..\Public\FileSystem_Tools.h" />
+    <ClInclude Include="..\..\..\public\gametrace.h" />
+    <ClInclude Include="..\..\..\public\appframework\IAppSystem.h" />
+    <ClInclude Include="..\..\..\public\vstdlib\ICommandLine.h" />
+    <ClInclude Include="..\..\..\public\ihandleentity.h" />
+    <ClInclude Include="..\..\..\Public\ImageLoader.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imaterial.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imaterialproxyfactory.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imaterialsystem.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imaterialsystemhardwareconfig.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imaterialvar.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\imesh.h" />
+    <ClInclude Include="..\..\..\Public\interface.h" />
+    <ClInclude Include="..\..\..\Public\IStudioRender.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\itexture.h" />
+    <ClInclude Include="..\..\..\public\materialsystem\materialsystem_config.h" />
+    <ClInclude Include="..\..\..\Public\MATHLIB.H" />
+    <ClInclude Include="matsyswin.h" />
+    <ClInclude Include="mdlviewer.h" />
+    <ClInclude Include="..\..\..\public\tier0\memdbgoff.h" />
+    <ClInclude Include="..\..\..\public\tier0\memdbgon.h" />
+    <ClInclude Include="..\..\..\public\mempool.h" />
+    <ClInclude Include="..\..\..\Public\mouthinfo.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mx.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxBmp.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxButton.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxCheckBox.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxChoice.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxChooseColor.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxEvent.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxFileDialog.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxGlWindow.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxGroupBox.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxImage.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxInit.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxLabel.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxLineEdit.h" />
+    <ClInclude Include="mxLineEdit2.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxLinkedList.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxListBox.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxMatSysWindow.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxMenu.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxMenuBar.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxMessageBox.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxpath.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxPcx.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxPopupMenu.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxProgressBar.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxRadioButton.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxScrollbar.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxSlider.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxstring.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxTab.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxTga.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxToggleButton.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxToolTip.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxTreeView.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxWidget.h" />
+    <ClInclude Include="..\..\mxtk\include\mx\mxWindow.h" />
+    <ClInclude Include="pakviewer.h" />
+    <ClInclude Include="..\..\..\Public\phyfile.h" />
+    <ClInclude Include="..\..\..\Public\physdll.h" />
+    <ClInclude Include="physmesh.h" />
+    <ClInclude Include="..\..\..\public\tier0\platform.h" />
+    <ClInclude Include="..\..\..\public\protected_things.h" />
+    <ClInclude Include="..\..\..\public\vstdlib\random.h" />
+    <ClInclude Include="..\..\..\Public\s3_intrf.h" />
+    <ClInclude Include="..\..\..\Public\string_t.h" />
+    <ClInclude Include="..\..\..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\..\..\Public\studio.h" />
+    <ClInclude Include="studio_render.h" />
+    <ClInclude Include="StudioModel.h" />
+    <ClInclude Include="sys.h" />
+    <ClInclude Include="..\..\..\game_shared\tf_shareddefs.h" />
+    <ClInclude Include="..\..\..\Public\TGALoader.h" />
+    <ClInclude Include="..\..\..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\..\..\Public\utllinkedlist.h" />
+    <ClInclude Include="..\..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\..\Public\utlsymbol.h" />
+    <ClInclude Include="..\..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\..\Public\vcollide.h" />
+    <ClInclude Include="..\..\..\Public\vcollide_parse.h" />
+    <ClInclude Include="..\..\..\Public\vector.h" />
+    <ClInclude Include="..\..\..\Public\vector2d.h" />
+    <ClInclude Include="..\..\..\Public\vector4d.h" />
+    <ClInclude Include="ViewerSettings.h" />
+    <ClInclude Include="..\..\..\Public\vphysics_interface.h" />
+    <ClInclude Include="..\..\..\public\tier0\vprof.h" />
+    <ClInclude Include="..\..\..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="hlmviewer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="icon1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\lib\common\mxtk.lib" />
+    <Library Include="..\..\..\lib\common\s3tc.lib" />
+    <Library Include="..\..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\..\lib\public\tier0.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

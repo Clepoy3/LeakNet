@@ -37,9 +37,9 @@ enum SScannerState_t
 //-----------------------------------------------------------------------------
 class CNPC_SScanner : public CAI_BaseFlyingBot
 {
+public:
 	DECLARE_CLASS( CNPC_SScanner, CAI_BaseFlyingBot );
 
-public:
 	CNPC_SScanner();
 	Class_T			Classify(void);
 

@@ -15,8 +15,9 @@
 
 class CPlayerResource : public CBaseEntity
 {
-	DECLARE_CLASS( CPlayerResource, CBaseEntity );
 public:
+	DECLARE_CLASS( CPlayerResource, CBaseEntity );
+
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 

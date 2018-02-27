@@ -108,7 +108,7 @@ bool CBaseTFFourWheelVehicle::Deploy( void )
 
 	m_flDeployFinishTime = gpGlobals->curtime + flDeployTime;
 
-	SetContextThink( BaseFourWheeledVehicleDeployThink, gpGlobals->curtime + flDeployTime, 
+	SetContextThink( &CBaseTFFourWheelVehicle::BaseFourWheeledVehicleDeployThink, gpGlobals->curtime + flDeployTime, 
 		             BASEFOURWHEELEDVEHICLE_DEPLOYTHINK_CONTEXT );
 
 	// Set the deploy mode.
@@ -140,7 +140,7 @@ void CBaseTFFourWheelVehicle::UnDeploy( void )
 
 	m_flDeployFinishTime = gpGlobals->curtime + flUnDeployTime;
 
-	SetContextThink( BaseFourWheeledVehicleDeployThink, gpGlobals->curtime + flUnDeployTime, 
+	SetContextThink( &CBaseTFFourWheelVehicle::BaseFourWheeledVehicleDeployThink, gpGlobals->curtime + flUnDeployTime, 
 		             BASEFOURWHEELEDVEHICLE_DEPLOYTHINK_CONTEXT );
 
 	// Set the deploy mode.
@@ -203,7 +203,7 @@ void CBaseTFFourWheelVehicle::BaseFourWheeledVehicleStopTheRodeoMadnessThink( vo
 	SetContextThink( NULL, 0, BASEFOURWHEELEDVEHICLE_STOPTHERODEO_CONTEXT );
 
 	// Start our base think
-	SetContextThink( BaseFourWheeledVehicleThink, gpGlobals->curtime + 0.1, BASEFOURWHEELEDVEHICLE_THINK_CONTEXT );
+	SetContextThink( &CBaseTFFourWheelVehicle::BaseFourWheeledVehicleThink, gpGlobals->curtime + 0.1, BASEFOURWHEELEDVEHICLE_THINK_CONTEXT );
 }
 
 //-----------------------------------------------------------------------------
@@ -356,7 +356,7 @@ void CBaseTFFourWheelVehicle::FinishedBuilding( void )
 	//  set.  We create and activate it, but then release the handbrake for a single Think function call and 
 	//  then zero out the controls right then.  This seems to stabilize something in the physics simulator.
 	m_VehiclePhysics.ReleaseHandbrake();
-	SetContextThink( BaseFourWheeledVehicleStopTheRodeoMadnessThink, gpGlobals->curtime, BASEFOURWHEELEDVEHICLE_STOPTHERODEO_CONTEXT );
+	SetContextThink( &CBaseTFFourWheelVehicle::BaseFourWheeledVehicleStopTheRodeoMadnessThink, gpGlobals->curtime, BASEFOURWHEELEDVEHICLE_STOPTHERODEO_CONTEXT );
 	
 	ResetDeteriorationTime();
 }
@@ -392,7 +392,7 @@ void CBaseTFFourWheelVehicle::InputTurnOn( inputdata_t &inputdata )
 {
 	if (!m_VehiclePhysics.IsOn())
 	{
-		SetContextThink( BaseFourWheeledVehicleThink, gpGlobals->curtime + 0.1, BASEFOURWHEELEDVEHICLE_THINK_CONTEXT );
+		SetContextThink( &CBaseTFFourWheelVehicle::BaseFourWheeledVehicleThink, gpGlobals->curtime + 0.1, BASEFOURWHEELEDVEHICLE_THINK_CONTEXT );
 		m_VehiclePhysics.TurnOn( );
 	}
 }

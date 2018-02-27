@@ -20,9 +20,8 @@
 //
 class C_ObjectBuffStation : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectBuffStation, C_BaseObject );
-
 public:
+	DECLARE_CLASS( C_ObjectBuffStation, C_BaseObject );
 
 	DECLARE_CLIENTCLASS();
 
@@ -162,9 +161,8 @@ void C_ObjectBuffStation::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 class CBuffStationControlPanel : public CObjectControlPanel
 {
-	DECLARE_CLASS( CBuffStationControlPanel, CObjectControlPanel );
-
 public:
+	DECLARE_CLASS( CBuffStationControlPanel, CObjectControlPanel );
 
 	CBuffStationControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

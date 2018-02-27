@@ -579,7 +579,7 @@ void PropertySheet::EnDisPage(const char *title,bool state)
 		{
 			char tmp[50];
 			_pageTabs[i]->GetText(tmp,50);
-			if (!strnicmp(title,tmp,strlen(tmp)))
+			if (!_strnicmp(title,tmp,strlen(tmp)))
 			{	
 				_pageTabs[i]->SetEnabled(state);
 			}
@@ -776,7 +776,7 @@ void PropertySheet::OnTextChanged(Panel *panel,const wchar_t *wszText)
 		{
 			tabText[0] = 0;
 			_pageTabs[i]->GetText(tabText,30);
-			if ( !wcsicmp(wszText,tabText) )
+			if ( !_wcsicmp(wszText,tabText) )
 			{
 				ChangeActiveTab(i);
 			}
@@ -790,7 +790,7 @@ void PropertySheet::OnTextChanged(Panel *panel,const wchar_t *wszText)
 void PropertySheet::OnCommand(const char *command)
 {
     // propogate the close command to our parent
-	if (!stricmp(command, "Close") && GetParent())
+	if (!_stricmp(command, "Close") && GetParent())
     {
         GetParent()->OnCommand(command);
     }

@@ -103,9 +103,9 @@ bool CBreakable::KeyValue( const char *szKeyName, const char *szValue )
 	// UNDONE_WC: explicitly ignoring these fields, but they shouldn't be in the map file!
 	if (FStrEq(szKeyName, "explosion"))
 	{
-		if (!stricmp(szValue, "directed"))
+		if (!_stricmp(szValue, "directed"))
 			m_Explosion = expDirected;
-		else if (!stricmp(szValue, "random"))
+		else if (!_stricmp(szValue, "random"))
 			m_Explosion = expRandom;
 		else
 			m_Explosion = expRandom;

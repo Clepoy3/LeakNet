@@ -154,7 +154,7 @@ string_t CNPC_Citizen::GetModelName( void ) const
 	}
 */
 
-	if ( !strnicmp(STRING(iszModelName), "random", 6) )
+	if ( !_strnicmp(STRING(iszModelName), "random", 6) )
 	{
 		string_t rndmodel = GetRandomCitizenModel( random->RandomInt(0, 7) );
 		return rndmodel;

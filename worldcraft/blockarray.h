@@ -36,7 +36,7 @@ void BlockArray<T,nBlockSize,nMaxBlocks>::
 	{
 		Blocks[i] = new T[nBlockSize];
 	}
-	for(i = nNewBlocks; i < nBlocks; i++)
+	for(int i = nNewBlocks; i < nBlocks; i++)
 	{
 		delete[] Blocks[i];
 	}

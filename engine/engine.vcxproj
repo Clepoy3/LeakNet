@@ -1,0 +1,1674 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\GLRelease\</OutDir>
+    <IntDir>.\GLRelease\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\GLDebug\</OutDir>
+    <IntDir>.\GLDebug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>.\audio\public;..\public;..\common;..\vgui2\include;..\vgui2\controls;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;fopen=dont_use_fopen;USE_CONVARS;WIN32;VOICE_OVER_IP;BUMPMAP;_WINDOWS;__USEA3D;_ADD_EAX_;ENGINE_DLL;_WIN32;PROTECTED_THINGS_ENABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\GLRelease\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\GLRelease\engine.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\GLRelease\</ObjectFileName>
+      <ProgramDataBaseFileName>.\GLRelease\</ProgramDataBaseFileName>
+      <AdditionalOptions> /GM </AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\GLRelease\engine.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <ResourceOutputFileName>.\GLRelease\hw.res</ResourceOutputFileName>
+      <PreprocessorDefinitions>NDEBUG;GLQUAKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\GLRelease\hw.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\GLRelease\engine.dll</OutputFile>
+      <ImportLibrary>.\GLRelease\engine.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\lib\public;..\lib\common;..\dx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <BaseAddress>0x20000000</BaseAddress>
+      <AdditionalDependencies>dinput8.lib;winmm.lib;wsock32.lib;Ws2_32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist  ..\..\bin\engine.dll attrib -r ..\..\bin\engine.dll 
+if exist $(TargetPath) copy $(TargetPath) ..\..\bin\engine.dll 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying to game dir</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>.\audio\public;..\public;..\common;..\vgui2\include;..\vgui2\controls;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;fopen=dont_use_fopen;USE_CONVARS;WIN32;VOICE_OVER_IP;BUMPMAP;_WINDOWS;__USEA3D;_ADD_EAX_;ENGINE_DLL;_WIN32;PROTECTED_THINGS_ENABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\GLDebug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\GLDebug\engine.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\GLDebug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\GLDebug\</ProgramDataBaseFileName>
+      <AdditionalOptions> /GM </AdditionalOptions>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\GLDebug\engine.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <ResourceOutputFileName>.\GLDebug\hw.res</ResourceOutputFileName>
+      <PreprocessorDefinitions>_DEBUG;GLQUAKE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\GLDebug\hw.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\GLDebug\engine.dll</OutputFile>
+      <ImportLibrary>.\GLDebug\engine.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\lib\public;..\lib\common;..\dx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <BaseAddress>0x20000000</BaseAddress>
+      <AdditionalDependencies>vgui_controls.lib;dinput8.lib;winmm.lib;wsock32.lib;Ws2_32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ForceFileOutput>
+      </ForceFileOutput>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist  ..\..\bin\engine.dll attrib -r ..\..\bin\engine.dll 
+if exist $(TargetPath) copy $(TargetPath) ..\..\bin\engine.dll 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying to game dir</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="EngineSoundClient.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="EngineSoundServer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="EngSoundService.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\riff.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\audio\private;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="snd_io.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\audio\private;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="baseautocompletefilelist.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\bitbuf.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="bitbuf_errorhandler.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\BSPTreeData.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="bugreporter.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\common\builddisp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="buildnum.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\bumpvects.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cbenchmark.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cd.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cdll_engine_int.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cdll_exp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="changeframelist.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\characterset.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\checksum_crc.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="checksum_engine.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\checksum_md5.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Cl_demo.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demoaction.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demoaction_types.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demoactioneditors.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demoactionmanager.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demoeditorpanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demosmootherpanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_demouipanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_entityreport.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_ents.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_ents_parse.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_localnetworkbackdoor.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Cl_main.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_null.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Cl_parse.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_parse_event.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cl_pred.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="client.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Cmd.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cmodel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cmodel_bsp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="cmodel_disp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\CollisionUtils.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="conproc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\convar.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\crtmemdebug.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="CSharedModelCache.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="CSpatialPartition.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Cvar.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="debug_leafvis.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="DebugOverlay.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="decal_clip.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="decals.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dinput.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\common\disp_common.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp_defs.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp_helpers.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp_interface.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp_leaflink.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="disp_mapload.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\common\disp_powerinfo.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="DispBuild.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="DispChain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\common\DispColl_Common.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="DisplayStats.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_common_eng.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_encode.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_instrumentation.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_instrumentation_server.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_localtransfer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\dt_recv.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_recv_decoder.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_recv_eng.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\dt_send.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_send_eng.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_stack.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="dt_test.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\Editor_SendCommand.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="enginesingleuserfilter.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="EngineStats.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="enginetrace.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="FileSystem_Engine.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\filesystem_helpers.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="GameEventManager.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gametrace_engine.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Gl_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_drawlights.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_lightmap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_matsysiface.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_rlight.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_rmain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Gl_rmisc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_rsurf.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_screen.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="gl_shader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Gl_test.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Gl_vidnt.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Gl_warp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="glquake.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Host.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Host_cmd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="host_listmaps.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="host_saverestore.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="host_state.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImageLoader.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="info.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="initmathlib.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\interface.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Keys.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="l_studio.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="lightcache.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="LocalNetworkBackdoor.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="MaterialProxyFactory.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\Mathlib.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="matsys_interface.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\measure_section.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\mem_fgets.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\tier0\memoverride.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\MemPool.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="mod_vis.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ModelInfo.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="modelloader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="net_chan.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="net_synctags.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="net_ws.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="netgraph.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="NetworkStringTable.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="NetworkStringTableClient.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="NetworkStringTableItem.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="NetworkStringTableServer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\networkvar.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="OcclusionSystem.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Overlay.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="packed_entity.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Pr_edict.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="precache.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="quakedef.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="r_areaportal.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="r_efx.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="r_linefile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">glquake.h</PrecompiledHeaderFile>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="randomstream.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="recventlist.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\registry.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\ScratchPad3D.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\sentence.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="ShadowMgr.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_dsp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="StaticPropMgr.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="stun_request.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_ents_write.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_filter.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_framesnapshot.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_log.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Sv_main.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_master.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_packedentities.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Sv_phys.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_precache.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_rcom.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sv_redirect.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Sv_user.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_dll.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_dll2.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_engine.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_getmodes.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="sys_mainwind.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="terrainmod_functions.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="testscriptmgr.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\TGAWriter.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="thread.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="tmessage.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="traceinit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\UtlBuffer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\utlsymbol.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\vallocator.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vengineserver_impl.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vgui_BasePanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vgui_baseui_interface.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vgui_DebugSystemPanel.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vgui_int.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="View.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\Public\vmatrix.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="voiceserver_impl.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="vprof_engine.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\common\vstring.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="Zone.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\public\studio.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\CircularBuffer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_audio_source.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_dev_direct.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_dev_wave.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_dma.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_mem.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_mix.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_mp3_source.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_sentence_mixer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_data.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_mixer.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_mixer_adpcm.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_mixer_mp3.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_source.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_wave_temp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\snd_win.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice_gain.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice_mixer_controls.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice_record_dsound.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice_sound_engine_interface.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\voice_wavefile.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="audio\private\vox.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /GM   /GM </AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /GM   /GM </AdditionalOptions>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="baseautocompletefilelist.h" />
+    <ClInclude Include="cd.h" />
+    <ClInclude Include="cd_internal.h" />
+    <ClInclude Include="cl_demoaction.h" />
+    <ClInclude Include="cl_demoaction_types.h" />
+    <ClInclude Include="cl_demoactioneditors.h" />
+    <ClInclude Include="cl_demoactionmanager.h" />
+    <ClInclude Include="cl_demoeditorpanel.h" />
+    <ClInclude Include="cl_demosmootherpanel.h" />
+    <ClInclude Include="cl_demosmoothing.h" />
+    <ClInclude Include="cl_demouipanel.h" />
+    <ClInclude Include="dinput.h" />
+    <ClInclude Include="dt_common_eng.h" />
+    <ClInclude Include="enginebugreporter.h" />
+    <ClInclude Include="IOcclusionSystem.h" />
+    <ClInclude Include="ithread.h" />
+    <ClInclude Include="ModelInfo.h" />
+    <ClInclude Include="..\common\proto_oob.h" />
+    <ClInclude Include="..\common\proto_version.h" />
+    <ClInclude Include="stun_request.h" />
+    <ClInclude Include="sys_mainwind.h" />
+    <ClInclude Include="vgui_baseui_interface.h" />
+    <ClInclude Include="clientsound_impl.h" />
+    <ClInclude Include="ASM_I386.H" />
+    <ClInclude Include="bitbuf_errorhandler.h" />
+    <ClInclude Include="..\Public\BSPTreeData.h" />
+    <ClInclude Include="bugreporter.h" />
+    <ClInclude Include="cache.h" />
+    <ClInclude Include="cbenchmark.h" />
+    <ClInclude Include="cdll_engine_int.h" />
+    <ClInclude Include="changeframelist.h" />
+    <ClInclude Include="checksum_engine.h" />
+    <ClInclude Include="cl_entityreport.h" />
+    <ClInclude Include="cl_ents.h" />
+    <ClInclude Include="cl_ents_parse.h" />
+    <ClInclude Include="cl_localnetworkbackdoor.h" />
+    <ClInclude Include="cl_main.h" />
+    <ClInclude Include="cl_parse.h" />
+    <ClInclude Include="cl_parse_event.h" />
+    <ClInclude Include="cl_pred.h" />
+    <ClInclude Include="cl_servercache.h" />
+    <ClInclude Include="CLIENT.H" />
+    <ClInclude Include="CMD.H" />
+    <ClInclude Include="cmodel_engine.h" />
+    <ClInclude Include="cmodel_private.h" />
+    <ClInclude Include="..\Public\CollisionUtils.h" />
+    <ClInclude Include="color.h" />
+    <ClInclude Include="ColorQuant.h" />
+    <ClInclude Include="conprint.h" />
+    <ClInclude Include="conproc.h" />
+    <ClInclude Include="CONSOLE.H" />
+    <ClInclude Include="CSharedModelCache.h" />
+    <ClInclude Include="CVAR.H" />
+    <ClInclude Include="debug_leafvis.h" />
+    <ClInclude Include="DebugOverlay.h" />
+    <ClInclude Include="decal.h" />
+    <ClInclude Include="decal_clip.h" />
+    <ClInclude Include="decal_private.h" />
+    <ClInclude Include="demo.h" />
+    <ClInclude Include="disp.h" />
+    <ClInclude Include="..\common\disp_common.h" />
+    <ClInclude Include="disp_defs.h" />
+    <ClInclude Include="disp_helpers.h" />
+    <ClInclude Include="disp_leaflink.h" />
+    <ClInclude Include="..\common\disp_powerinfo.h" />
+    <ClInclude Include="DispBuild.h" />
+    <ClInclude Include="DispChain.h" />
+    <ClInclude Include="..\common\DispColl_Common.h" />
+    <ClInclude Include="DisplayStats.h" />
+    <ClInclude Include="DispNode.h" />
+    <ClInclude Include="..\Public\dll_state.h" />
+    <ClInclude Include="DRAW.H" />
+    <ClInclude Include="dt.h" />
+    <ClInclude Include="..\public\dt_common.h" />
+    <ClInclude Include="dt_encode.h" />
+    <ClInclude Include="dt_instrumentation.h" />
+    <ClInclude Include="dt_instrumentation_server.h" />
+    <ClInclude Include="dt_localtransfer.h" />
+    <ClInclude Include="..\public\dt_recv.h" />
+    <ClInclude Include="dt_recv_decoder.h" />
+    <ClInclude Include="dt_recv_eng.h" />
+    <ClInclude Include="..\public\dt_send.h" />
+    <ClInclude Include="dt_send_eng.h" />
+    <ClInclude Include="dt_stack.h" />
+    <ClInclude Include="dt_test.h" />
+    <ClInclude Include="..\public\engine_hlds_api.h" />
+    <ClInclude Include="..\Public\engine_launcher_api.h" />
+    <ClInclude Include="enginesingleuserfilter.h" />
+    <ClInclude Include="EngineSoundInternal.h" />
+    <ClInclude Include="EngineStats.h" />
+    <ClInclude Include="enginetrace.h" />
+    <ClInclude Include="..\Public\exefuncs.h" />
+    <ClInclude Include="..\Public\FileSystem.h" />
+    <ClInclude Include="FileSystem_Engine.h" />
+    <ClInclude Include="filter.h" />
+    <ClInclude Include="frame.h" />
+    <ClInclude Include="framesnapshot.h" />
+    <ClInclude Include="game_interface.h" />
+    <ClInclude Include="GameEventManager.h" />
+    <ClInclude Include="getintersectingsurfaces_struct.h" />
+    <ClInclude Include="gl_cvars.h" />
+    <ClInclude Include="gl_drawlights.h" />
+    <ClInclude Include="gl_hw.h" />
+    <ClInclude Include="gl_lightmap.h" />
+    <ClInclude Include="gl_matsysiface.h" />
+    <ClInclude Include="GL_MODEL.H" />
+    <ClInclude Include="gl_model_private.h" />
+    <ClInclude Include="gl_rmain.h" />
+    <ClInclude Include="gl_rsurf.h" />
+    <ClInclude Include="gl_shader.h" />
+    <ClInclude Include="gl_shaderutil.h" />
+    <ClInclude Include="gl_texture.h" />
+    <ClInclude Include="gl_warp_sin.h" />
+    <ClInclude Include="gl_water.h" />
+    <ClInclude Include="GLQUAKE.H" />
+    <ClInclude Include="host.h" />
+    <ClInclude Include="host_cmd.h" />
+    <ClInclude Include="host_jmp.h" />
+    <ClInclude Include="host_saverestore.h" />
+    <ClInclude Include="host_state.h" />
+    <ClInclude Include="hud_handlers.h" />
+    <ClInclude Include="..\Public\icliententity.h" />
+    <ClInclude Include="..\public\idedicatedexports.h" />
+    <ClInclude Include="IDispInfo.h" />
+    <ClInclude Include="..\Public\engine\IEngineSound.h" />
+    <ClInclude Include="..\public\engine\IEngineTrace.h" />
+    <ClInclude Include="..\Public\INetworkStringTableClient.h" />
+    <ClInclude Include="..\Public\INetworkStringTableServer.h" />
+    <ClInclude Include="info.h" />
+    <ClInclude Include="..\Public\IScratchPad3D.h" />
+    <ClInclude Include="..\Public\iserverentity.h" />
+    <ClInclude Include="..\Public\engine\IShadowMgr.h" />
+    <ClInclude Include="..\Public\ISpatialPartition.h" />
+    <ClInclude Include="ISpatialPartitionInternal.h" />
+    <ClInclude Include="..\Public\IStudioRender.h" />
+    <ClInclude Include="..\Public\ivoicetweak.h" />
+    <ClInclude Include="KEYS.H" />
+    <ClInclude Include="l_studio.h" />
+    <ClInclude Include="..\Public\launcher_int.h" />
+    <ClInclude Include="lightcache.h" />
+    <ClInclude Include="LLIST.HPP" />
+    <ClInclude Include="LocalNetworkBackdoor.h" />
+    <ClInclude Include="lowpassstream.h" />
+    <ClInclude Include="master.h" />
+    <ClInclude Include="MaterialProxyFactory.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="..\Public\mem_fgets.h" />
+    <ClInclude Include="MODELGEN.H" />
+    <ClInclude Include="modelloader.h" />
+    <ClInclude Include="..\public\modes.h" />
+    <ClInclude Include="NET.H" />
+    <ClInclude Include="net_synctags.h" />
+    <ClInclude Include="NetworkStringTable.h" />
+    <ClInclude Include="NetworkStringTableClient.h" />
+    <ClInclude Include="networkstringtablecontainerclient.h" />
+    <ClInclude Include="networkstringtablecontainerserver.h" />
+    <ClInclude Include="..\Public\NetworkStringTableDefs.h" />
+    <ClInclude Include="networkstringtableitem.h" />
+    <ClInclude Include="NetworkStringTableServer.h" />
+    <ClInclude Include="..\Public\nmatrix.h" />
+    <ClInclude Include="..\Public\nvector.h" />
+    <ClInclude Include="..\common\optimize.h" />
+    <ClInclude Include="Overlay.h" />
+    <ClInclude Include="packed_entity.h" />
+    <ClInclude Include="packedentityarray.h" />
+    <ClInclude Include="pr_edict.h" />
+    <ClInclude Include="precache.h" />
+    <ClInclude Include="procinfo.h" />
+    <ClInclude Include="profile.h" />
+    <ClInclude Include="profiling.h" />
+    <ClInclude Include="PROGS.H" />
+    <ClInclude Include="..\public\protected_things.h" />
+    <ClInclude Include="..\common\protocol.h" />
+    <ClInclude Include="r_areaportal.h" />
+    <ClInclude Include="r_efxextern.h" />
+    <ClInclude Include="R_LOCAL.H" />
+    <ClInclude Include="recventlist.h" />
+    <ClInclude Include="RENDER.H" />
+    <ClInclude Include="..\Public\savegame_version.h" />
+    <ClInclude Include="SBAR.H" />
+    <ClInclude Include="..\Public\ScratchPad3D.h" />
+    <ClInclude Include="SCREEN.H" />
+    <ClInclude Include="SERVER.H" />
+    <ClInclude Include="ShadowMgr.h" />
+    <ClInclude Include="audio\private\snd_mp3_source.h" />
+    <ClInclude Include="audio\private\snd_wave_data.h" />
+    <ClInclude Include="..\public\soundinfo.h" />
+    <ClInclude Include="SPRITEGN.H" />
+    <ClInclude Include="StaticPropMgr.h" />
+    <ClInclude Include="studio_internal.h" />
+    <ClInclude Include="..\Public\surfinfo.h" />
+    <ClInclude Include="sv_ents_write.h" />
+    <ClInclude Include="sv_filter.h" />
+    <ClInclude Include="sv_log.h" />
+    <ClInclude Include="sv_main.h" />
+    <ClInclude Include="sv_packedentities.h" />
+    <ClInclude Include="sv_precache.h" />
+    <ClInclude Include="SYS.H" />
+    <ClInclude Include="sys_dll.h" />
+    <ClInclude Include="sysexternal.h" />
+    <ClInclude Include="terrainmod_functions.h" />
+    <ClInclude Include="testscriptmgr.h" />
+    <ClInclude Include="textures.h" />
+    <ClInclude Include="..\Public\TGAWriter.h" />
+    <ClInclude Include="tmessage.h" />
+    <ClInclude Include="..\Public\trace.h" />
+    <ClInclude Include="traceinit.h" />
+    <ClInclude Include="usermsg.h" />
+    <ClInclude Include="..\public\utlfixedlinkedlist.h" />
+    <ClInclude Include="..\public\utlfixedmemory.h" />
+    <ClInclude Include="..\Public\utlsymbol.h" />
+    <ClInclude Include="vengineserver_impl.h" />
+    <ClInclude Include="vgui_BasePanel.h" />
+    <ClInclude Include="vgui_DebugSystemPanel.h" />
+    <ClInclude Include="vgui_int.h" />
+    <ClInclude Include="VID.H" />
+    <ClInclude Include="VIEW.H" />
+    <ClInclude Include="vprof_engine.h" />
+    <ClInclude Include="WINQUAKE.H" />
+    <ClInclude Include="WORLD.H" />
+    <ClInclude Include="ZONE.H" />
+    <ClInclude Include="..\Public\amd3dx.h" />
+    <ClInclude Include="..\Public\ANORMS.H" />
+    <ClInclude Include="..\common\authchallenge.h" />
+    <ClInclude Include="..\Public\basetypes.h" />
+    <ClInclude Include="..\Public\bitbuf.h" />
+    <ClInclude Include="..\Public\bitvec.h" />
+    <ClInclude Include="..\Public\BSPFILE.H" />
+    <ClInclude Include="..\Public\bspflags.h" />
+    <ClInclude Include="..\common\builddisp.h" />
+    <ClInclude Include="..\Public\bumpvects.h" />
+    <ClInclude Include="..\Public\cache_user.h" />
+    <ClInclude Include="..\Public\cdll_int.h" />
+    <ClInclude Include="..\Public\characterset.h" />
+    <ClInclude Include="..\Public\checksum_crc.h" />
+    <ClInclude Include="..\Public\checksum_md5.h" />
+    <ClInclude Include="..\Public\client_class.h" />
+    <ClInclude Include="..\Public\client_command.h" />
+    <ClInclude Include="..\Public\clientstats.h" />
+    <ClInclude Include="..\Public\cmodel.h" />
+    <ClInclude Include="..\common\COMMON.H" />
+    <ClInclude Include="..\Public\commonmacros.h" />
+    <ClInclude Include="..\common\con_nprint.h" />
+    <ClInclude Include="..\Public\const.h" />
+    <ClInclude Include="..\Public\convar.h" />
+    <ClInclude Include="..\Public\coordsize.h" />
+    <ClInclude Include="..\Public\crtmemdebug.h" />
+    <ClInclude Include="..\Public\custom.h" />
+    <ClInclude Include="..\Public\datamap.h" />
+    <ClInclude Include="..\Public\dbg\dbg.h" />
+    <ClInclude Include="..\Public\dlight.h" />
+    <ClInclude Include="..\Public\edict.h" />
+    <ClInclude Include="..\Public\Editor_SendCommand.h" />
+    <ClInclude Include="..\Public\eiface.h" />
+    <ClInclude Include="..\Public\event_flags.h" />
+    <ClInclude Include="..\common\event_system.h" />
+    <ClInclude Include="..\Public\platform\fasttimer.h" />
+    <ClInclude Include="..\Public\GameBSPFile.h" />
+    <ClInclude Include="..\gameui\GameUI_Interface.h" />
+    <ClInclude Include="..\public\appframework\IAppSystem.h" />
+    <ClInclude Include="..\Public\ibsppack.h" />
+    <ClInclude Include="..\public\iclientcollideable.h" />
+    <ClInclude Include="..\Public\icliententitylist.h" />
+    <ClInclude Include="..\public\iclientnetworkable.h" />
+    <ClInclude Include="..\Public\iclientrenderable.h" />
+    <ClInclude Include="..\public\iclientthinkable.h" />
+    <ClInclude Include="..\public\iclientunknown.h" />
+    <ClInclude Include="..\public\engine\ICollideable.h" />
+    <ClInclude Include="..\public\vstdlib\ICommandLine.h" />
+    <ClInclude Include="..\Public\icreatevfont.h" />
+    <ClInclude Include="..\Public\icvar.h" />
+    <ClInclude Include="..\Public\iefx.h" />
+    <ClInclude Include="iengine.h" />
+    <ClInclude Include="..\Public\ienginevgui.h" />
+    <ClInclude Include="igame.h" />
+    <ClInclude Include="..\common\GameUI\IGameConsole.h" />
+    <ClInclude Include="..\public\IGameUIFuncs.h" />
+    <ClInclude Include="..\Public\ImageLoader.h" />
+    <ClInclude Include="..\public\materialsystem\imaterial.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialproxy.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialproxyfactory.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialsystem.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialsystemhardwareconfig.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialsystemstats.h" />
+    <ClInclude Include="..\public\materialsystem\imaterialvar.h" />
+    <ClInclude Include="..\public\VGuiMatSurface\IMatSystemSurface.h" />
+    <ClInclude Include="..\public\materialsystem\imesh.h" />
+    <ClInclude Include="..\Public\inetgraph.h" />
+    <ClInclude Include="..\Public\interface.h" />
+    <ClInclude Include="..\Public\iprediction.h" />
+    <ClInclude Include="..\Public\engine\iprops.h" />
+    <ClInclude Include="..\public\iregistry.h" />
+    <ClInclude Include="..\public\iservernetworkable.h" />
+    <ClInclude Include="..\public\materialsystem\itexture.h" />
+    <ClInclude Include="..\Public\engine\ivdebugoverlay.h" />
+    <ClInclude Include="..\Public\ivguicenterprint.h" />
+    <ClInclude Include="ivideomode.h" />
+    <ClInclude Include="..\Public\engine\IVModelRender.h" />
+    <ClInclude Include="..\Public\ivoiceserver.h" />
+    <ClInclude Include="..\Public\ivrenderview.h" />
+    <ClInclude Include="..\Public\ivtex.h" />
+    <ClInclude Include="..\Public\kbutton.h" />
+    <ClInclude Include="..\Public\keydefs.h" />
+    <ClInclude Include="..\public\materialsystem\materialsystem_config.h" />
+    <ClInclude Include="..\Public\MATHLIB.H" />
+    <ClInclude Include="..\Public\measure_section.h" />
+    <ClInclude Include="..\Public\MemPool.h" />
+    <ClInclude Include="..\Public\model_types.h" />
+    <ClInclude Include="..\Public\mouthinfo.h" />
+    <ClInclude Include="..\Public\netadr.h" />
+    <ClInclude Include="..\Public\overlaytext.h" />
+    <ClInclude Include="..\Public\phyfile.h" />
+    <ClInclude Include="..\Public\plane.h" />
+    <ClInclude Include="..\Public\platform\platform.h" />
+    <ClInclude Include="..\common\qlimits.h" />
+    <ClInclude Include="..\common\QUAKEDEF.H" />
+    <ClInclude Include="..\Public\r_efx.h" />
+    <ClInclude Include="..\public\vstdlib\random.h" />
+    <ClInclude Include="..\Public\riff.h" />
+    <ClInclude Include="..\Public\s3_intrf.h" />
+    <ClInclude Include="..\Public\sentence.h" />
+    <ClInclude Include="..\Public\server_class.h" />
+    <ClInclude Include="..\Public\shake.h" />
+    <ClInclude Include="..\Public\soundflags.h" />
+    <ClInclude Include="..\Public\string_t.h" />
+    <ClInclude Include="..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\Public\studio.h" />
+    <ClInclude Include="..\Public\terrainmod.h" />
+    <ClInclude Include="..\Public\TGALoader.h" />
+    <ClInclude Include="..\Public\usercmd.h" />
+    <ClInclude Include="..\Public\utlbidirectionalset.h" />
+    <ClInclude Include="..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\Public\utldict.h" />
+    <ClInclude Include="..\Public\utllinkedlist.h" />
+    <ClInclude Include="..\Public\UtlMemory.h" />
+    <ClInclude Include="..\Public\utlrbtree.h" />
+    <ClInclude Include="..\public\UtlSortVector.h" />
+    <ClInclude Include="..\Public\UtlVector.h" />
+    <ClInclude Include="..\Public\vallocator.h" />
+    <ClInclude Include="..\Public\vcollide.h" />
+    <ClInclude Include="..\public\platform\vcr_shared.h" />
+    <ClInclude Include="..\public\platform\vcrmode.h" />
+    <ClInclude Include="..\Public\vector.h" />
+    <ClInclude Include="..\Public\vector2d.h" />
+    <ClInclude Include="..\Public\vector4d.h" />
+    <ClInclude Include="..\vgui2\include\VGUI.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_Color.h" />
+    <ClInclude Include="..\vgui2\controls\VGUI_Controls.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_Cursor.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_Dar.h" />
+    <ClInclude Include="..\vgui2\controls\VGUI_EditablePanel.h" />
+    <ClInclude Include="..\vgui2\controls\VGUI_FocusNavGroup.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IClientPanel.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IHTML.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IImage.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IInput.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_ILocalize.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IPanel.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IScheme.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_ISurface.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_IVGui.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_KeyCode.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_KeyValues.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_MessageMap.h" />
+    <ClInclude Include="..\vgui2\include\VGUI_MouseCode.h" />
+    <ClInclude Include="..\vgui2\controls\VGUI_Panel.h" />
+    <ClInclude Include="..\vgui2\controls\VGUI_PHandle.h" />
+    <ClInclude Include="..\Public\view_shared.h" />
+    <ClInclude Include="..\Public\vmatrix.h" />
+    <ClInclude Include="..\common\vmodes.h" />
+    <ClInclude Include="..\Public\vphysics_interface.h" />
+    <ClInclude Include="..\Public\vplane.h" />
+    <ClInclude Include="..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="..\common\vstring.h" />
+    <ClInclude Include="..\Public\worldsize.h" />
+    <ClInclude Include="audio\public\ivoicecodec.h" />
+    <ClInclude Include="audio\public\ivoicerecord.h" />
+    <ClInclude Include="audio\public\snd_audio_source.h" />
+    <ClInclude Include="audio\public\snd_device.h" />
+    <ClInclude Include="audio\public\snd_io.h" />
+    <ClInclude Include="audio\public\sound.h" />
+    <ClInclude Include="audio\public\SoundService.h" />
+    <ClInclude Include="audio\public\Voice.h" />
+    <ClInclude Include="audio\public\vox.h" />
+    <ClInclude Include="audio\private\CircularBuffer.h" />
+    <ClInclude Include="audio\private\EAX.H" />
+    <ClInclude Include="audio\private\snd_asm_i386.h" />
+    <ClInclude Include="audio\private\snd_channels.h" />
+    <ClInclude Include="audio\private\snd_convars.h" />
+    <ClInclude Include="audio\private\snd_dev_direct.h" />
+    <ClInclude Include="audio\private\snd_dev_wave.h" />
+    <ClInclude Include="audio\private\snd_dma.h" />
+    <ClInclude Include="audio\private\snd_env_fx.h" />
+    <ClInclude Include="audio\private\snd_fixedint.h" />
+    <ClInclude Include="audio\private\snd_mix_buf.h" />
+    <ClInclude Include="audio\private\snd_sfx.h" />
+    <ClInclude Include="audio\private\snd_wave_mixer.h" />
+    <ClInclude Include="audio\private\snd_wave_mixer_adpcm.h" />
+    <ClInclude Include="audio\private\snd_wave_mixer_private.h" />
+    <ClInclude Include="audio\private\snd_wave_source.h" />
+    <ClInclude Include="audio\private\snd_wave_temp.h" />
+    <ClInclude Include="audio\private\sound_private.h" />
+    <ClInclude Include="audio\private\voice_gain.h" />
+    <ClInclude Include="audio\private\voice_mixer_controls.h" />
+    <ClInclude Include="audio\private\voice_sound_engine_interface.h" />
+    <ClInclude Include="audio\private\voice_wavefile.h" />
+    <ClInclude Include="audio\private\vox_private.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="math.s">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="sys_wina.s">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="worlda.s">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /EP &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="ICON1.ICO" />
+    <CustomBuild Include="icon3.ico" />
+    <CustomBuild Include="valve.ico" />
+    <CustomBuild Include="audio\private\snd_mixa.s">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cl /EP /DGLQUAKE &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cl /EP /DGLQUAKE &gt; $(OutDir)$(InputName).spp %(FullPath) 
+gas2masm\debug\gas2masm &lt; $(OutDir)$(InputName).spp &gt;                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+..\devtools\bin\ml /c /Cp /coff /Fo$(OutDir)$(InputName).obj /Zm /Zi                                                                                                                                                                                                                                                                                                                                                                                                                                 $(OutDir)$(InputName).asm 
+del $(OutDir)$(InputName).spp </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mycoolbuild</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR)\$(InputName).obj;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="halflife.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\lib\public\vgui_controls.lib" />
+    <Library Include="..\lib\public\vstdlib.lib" />
+    <Library Include="..\lib\common\s3tc.lib" />
+    <Library Include="..\DX8SDK\lib\dsound.lib" />
+    <Library Include="..\DX8SDK\lib\dxguid.lib" />
+    <Library Include="..\lib\public\tier0.lib" />
+    <Library Include="..\lib\public\vtf.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -138,7 +138,7 @@ int FindLocalBoneNamed( const s_source_t *pSource, const char *pName )
 		int i;
 		for ( i = 0; i < pSource->numbones; i++ )
 		{
-			if ( !strcmpi( pName, pSource->localBone[i].name ) )
+			if ( !_strcmpi( pName, pSource->localBone[i].name ) )
 				return i;
 		}
 
@@ -146,7 +146,7 @@ int FindLocalBoneNamed( const s_source_t *pSource, const char *pName )
 
 		for ( i = 0; i < pSource->numbones; i++ )
 		{
-			if ( !strcmpi( pName, pSource->localBone[i].name ) )
+			if ( !_strcmpi( pName, pSource->localBone[i].name ) )
 				return i;
 		}
 	}
@@ -344,7 +344,7 @@ int CJointedModel::BoneIndex( const char *pName )
 	pName = RenameBone( pName );
 	for ( int boneIndex = 0; boneIndex < m_pModel->numbones; boneIndex++ )
 	{
-		if ( !strcmpi( m_pModel->localBone[boneIndex].name, pName ) )
+		if ( !_strcmpi( m_pModel->localBone[boneIndex].name, pName ) )
 			return boneIndex;
 	}
 
@@ -393,7 +393,7 @@ int CJointedModel::CollisionIndex( const char *pName )
 	int index = 0;
 	while ( pList )
 	{
-		if ( !strcmpi( pName, pList->m_name ) )
+		if ( !_strcmpi( pName, pList->m_name ) )
 			return index;
 		
 		pList = pList->m_pNext;
@@ -447,7 +447,7 @@ void CJointedModel::SortCollisionList( void )
 				if ( j == i )
 					continue;
 
-				if ( !strcmpi( pPhys->m_parent, pArray[j]->m_name ) )
+				if ( !_strcmpi( pPhys->m_parent, pArray[j]->m_name ) )
 					break;
 			}
 
@@ -515,7 +515,7 @@ CPhysCollisionModel *CJointedModel::GetCollisionModel( const char *pName )
 	CPhysCollisionModel *pList = m_pCollisionList;
 	while ( pList )
 	{
-		if ( !strcmpi( pName, pList->m_name ) )
+		if ( !_strcmpi( pName, pList->m_name ) )
 			return pList;
 		
 		pList = pList->m_pNext;
@@ -1038,7 +1038,7 @@ CPhysCollisionModel *FindObjectInList( CPhysCollisionModel *pHead, const char *p
 {
 	while ( pHead )
 	{
-		if ( !strcmpi( pName, pHead->m_name ) )
+		if ( !_strcmpi( pName, pHead->m_name ) )
 			break;
 		pHead = pHead->m_pNext;
 	}
@@ -1581,15 +1581,15 @@ void CCmd_JointConstrain( CJointedModel &joints, const char *pJointName, const c
 	}
 
 	jointlimit_t jointType = JOINT_FREE;
-	if ( !stricmp( pJointType, "free" ) )
+	if ( !_stricmp( pJointType, "free" ) )
 	{
 		jointType = JOINT_FREE;
 	}
-	else if ( !stricmp( pJointType, "fixed" ) )
+	else if ( !_stricmp( pJointType, "fixed" ) )
 	{
 		jointType = JOINT_FIXED;
 	}
-	else if ( !stricmp( pJointType, "limit" ) )
+	else if ( !_stricmp( pJointType, "limit" ) )
 	{
 		jointType = JOINT_LIMIT;
 	}
@@ -1685,42 +1685,42 @@ void ParseCollisionCommands( CJointedModel &joints )
 
 		strcpy( command, token );
 
-		if ( !stricmp( command, "$mass" ) )
+		if ( !_stricmp( command, "$mass" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			CCmd_TotalMass( joints, args[0] );
 		}
 		// default properties
-		else if ( !stricmp( command, "$automass" ) )
+		else if ( !_stricmp( command, "$automass" ) )
 		{
 			joints.SetAutoMass();
 		}
-		else if ( !stricmp( command, "$inertia" ) )
+		else if ( !_stricmp( command, "$inertia" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			joints.DefaultInertia( Safe_atof( args[0] ) );
 		}
-		else if ( !stricmp( command, "$damping" ) )
+		else if ( !_stricmp( command, "$damping" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			joints.DefaultDamping( Safe_atof( args[0] ) );
 		}
-		else if ( !stricmp( command, "$rotdamping" ) )
+		else if ( !_stricmp( command, "$rotdamping" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			joints.DefaultRotdamping( Safe_atof( args[0] ) );
 		}
-		else if ( !stricmp( command, "$drag" ) )
+		else if ( !_stricmp( command, "$drag" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			joints.DefaultDrag( Safe_atof( args[0] ) );
 		}
-		else if ( !stricmp( command, "$rollingDrag" ) )
+		else if ( !_stricmp( command, "$rollingDrag" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			joints.DefaultRollingDrag( Safe_atof( args[0] ) );
 		}
-		else if ( !stricmp( command, "$concave" ) )
+		else if ( !_stricmp( command, "$concave" ) )
 		{
 			joints.AllowConcave();
 		}
@@ -1730,17 +1730,17 @@ void ParseCollisionCommands( CJointedModel &joints )
 			argCount = ReadArgs( args, 1 );
 			CCmd_JointSkip( joints, args[0] );
 		}
-		else if ( !stricmp( command, "$jointmerge" ) )
+		else if ( !_stricmp( command, "$jointmerge" ) )
 		{
 			argCount = ReadArgs( args, 2 );
 			CCmd_JointMerge( joints, args[0], args[1] );
 		}
-		else if ( !stricmp( command, "$rootbone" ) )
+		else if ( !_stricmp( command, "$rootbone" ) )
 		{
 			argCount = ReadArgs( args, 1 );
 			CCmd_JointRoot( joints, args[0] );
 		}
-		else if ( !stricmp( command, "$jointconstrain" ) )
+		else if ( !_stricmp( command, "$jointconstrain" ) )
 		{
 			argCount = ReadArgs( args, 6 );
 			char *pFriction = args[5];
@@ -1751,32 +1751,32 @@ void ParseCollisionCommands( CJointedModel &joints )
 			CCmd_JointConstrain( joints, args[0], args[1], args[2], args[3], args[4], pFriction );
 		}
 		// joint properties
-		else if ( !stricmp( command, "$jointinertia" ) )
+		else if ( !_stricmp( command, "$jointinertia" ) )
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.JointInertia( args[0], Safe_atof( args[1] ) );
 		}
-		else if ( !stricmp( command, "$jointdamping" ) )
+		else if ( !_stricmp( command, "$jointdamping" ) )
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.JointDamping( args[0], Safe_atof( args[1] ) );
 		}
-		else if ( !stricmp( command, "$jointrotdamping" ) )
+		else if ( !_stricmp( command, "$jointrotdamping" ) )
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.JointRotdamping( args[0], Safe_atof( args[1] ) );
 		}
-		else if ( !stricmp( command, "$jointmassbias" ) )
+		else if ( !_stricmp( command, "$jointmassbias" ) )
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.JointMassBias( args[0], Safe_atof( args[1] ) );
 		}
-		else if ( !stricmp( command, "$jointcollide" ) ) // VXP
+		else if ( !_stricmp( command, "$jointcollide" ) ) // VXP
 		{
 			argCount = ReadArgs( args, 2 );
 			joints.AppendCollisionPair( args[0], args[1] );
 		}
-		else if ( !stricmp( command, "$animatedfriction" ) )
+		else if ( !_stricmp( command, "$animatedfriction" ) )
 		{
 			argCount = ReadArgs( args, 5 );
 
@@ -2120,7 +2120,7 @@ void BuildRagdollConstraint( CPhysCollisionModel *pPhys, constraint_ragdollparam
 		{
 			Error("ERROR: Rotation constraint on bone \"%s\" which does not appear in collision model!!!\n", pList->m_pJointName );
 		}
-		else if ( (!pListModel->m_parent || g_JointedModel.CollisionIndex(pListModel->m_parent) < 0) && strcmpi( pList->m_pJointName, g_JointedModel.m_rootName ) )
+		else if ( (!pListModel->m_parent || g_JointedModel.CollisionIndex(pListModel->m_parent) < 0) && _strcmpi( pList->m_pJointName, g_JointedModel.m_rootName ) )
 		{
 			Error("ERROR: Rotation constraint on bone \"%s\" which has no parent!!!\n", pList->m_pJointName );
 		}

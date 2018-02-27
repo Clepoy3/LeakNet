@@ -16,7 +16,8 @@
 namespace vgui
 {
 class Button;
-class TextEntry;
+//class TextEntry;
+class RichText;
 };
 
 //-----------------------------------------------------------------------------
@@ -39,7 +40,8 @@ private:
 	virtual void OnClose();
 
 	vgui::Button *m_pClose;
-	vgui::TextEntry *m_pText;
+//	vgui::TextEntry *m_pText;
+	vgui::RichText *m_pText;
 
 	typedef vgui::Frame BaseClass;
 };

@@ -70,6 +70,7 @@ bool CTrackerUIVGuiModule::Initialize(CreateInterfaceFn *factories, int factoryC
 	Tracker_SetStandaloneMode(true);
 
 	// load the vgui interfaces
+//	if ( vgui::VGui_InitInterfacesList(factories, factoryCount) )
 	if ( vgui::VGui_InitInterfacesList("TrackerUI", factories, factoryCount) )
 	{
 		// load localization file
@@ -176,6 +177,7 @@ void CTrackerUIVGuiModule::Shutdown()
 //-----------------------------------------------------------------------------
 // Purpose: returns a handle to the main panel
 //-----------------------------------------------------------------------------
+//vgui::VPanel *CTrackerUIVGuiModule::GetPanel()
 vgui::VPANEL CTrackerUIVGuiModule::GetPanel()
 {
 	return CTrackerDialog::GetInstance() ? CTrackerDialog::GetInstance()->GetVPanel() : NULL;
@@ -190,11 +192,11 @@ IRunGameEngine *Tracker_GetRunGameEngineInterface()
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: returns a handle to the main panel
+// Purpose: sets the parent panel of the main module panel
 //-----------------------------------------------------------------------------
 void CTrackerUIVGuiModule::SetParent(vgui::VPANEL parent)
 {
-	if (CTrackerDialog::GetInstance())
+	if(CTrackerDialog::GetInstance())
 	{
 		CTrackerDialog::GetInstance()->SetParent(parent);
 	}

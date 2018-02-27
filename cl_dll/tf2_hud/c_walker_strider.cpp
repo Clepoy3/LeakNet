@@ -56,15 +56,15 @@ bool C_WalkerStrider::GetAttachment( int iAttachment, matrix3x4_t &attachmentToW
 
 	Vector vLocalPos( 0, 0, 0 );
 	mstudioattachment_t *pAttachment = pStudioHdr->pAttachment( iAttachment-1 );
-	if ( stricmp( pAttachment->pszName(), "build_point_left_gun" ) == 0 )
+	if ( _stricmp( pAttachment->pszName(), "build_point_left_gun" ) == 0 )
 	{
 		vLocalPos.y = sideDist;
 	}
-	else if ( stricmp( pAttachment->pszName(), "build_point_right_gun" ) == 0 )
+	else if ( _stricmp( pAttachment->pszName(), "build_point_right_gun" ) == 0 )
 	{
 		vLocalPos.y = -sideDist;
 	}
-	else if ( stricmp( pAttachment->pszName(), "ThirdPersonCameraOrigin" ) == 0 )
+	else if ( _stricmp( pAttachment->pszName(), "ThirdPersonCameraOrigin" ) == 0 )
 	{
 	}
 	else
@@ -141,7 +141,7 @@ void C_WalkerStrider::OnDataChanged( DataUpdateType_t type )
 			m_hRopes[4] = C_RopeKeyframe::Create( this, this, indices[3], indices[5] );
 			m_hRopes[5] = C_RopeKeyframe::Create( this, this, indices[3], indices[6] );
 
-			for ( i=3; i < 6; i++ )
+			for ( int i=3; i < 6; i++ )
 			{
 				if ( m_hRopes[i].Get() )
 					m_hRopes[i]->SetSlack( flTestSlack2 );

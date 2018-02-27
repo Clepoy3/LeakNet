@@ -51,8 +51,8 @@ class CMapSphere : public CMapHelper
 		virtual void Render2D(CRender2D *pRender);
 		virtual void Render3D(CRender3D *pRender);
 
-		virtual int SerializeRMF(fstream &File, BOOL bRMF) { return(0); }
-		virtual int SerializeMAP(fstream &File, BOOL bRMF) { return(0); }
+		virtual int SerializeRMF(std::fstream &File, BOOL bRMF) { return(0); }
+		virtual int SerializeMAP(std::fstream &File, BOOL bRMF) { return(0); }
 
 		virtual bool IsVisualElement(void) { return false; } // Only visible when the parent entity is selected.
 		virtual bool IsScaleable(void) { return false; } // TODO: allow for scaling the sphere by itself

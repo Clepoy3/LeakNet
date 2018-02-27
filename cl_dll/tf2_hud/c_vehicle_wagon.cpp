@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_VehicleWagon : public C_BaseTFFourWheelVehicle
 {
-	DECLARE_CLASS( C_VehicleWagon, C_BaseTFFourWheelVehicle );
 public:
+	DECLARE_CLASS( C_VehicleWagon, C_BaseTFFourWheelVehicle );
+
 	DECLARE_CLIENTCLASS();
 
 	C_VehicleWagon();
@@ -46,9 +47,9 @@ C_VehicleWagon::C_VehicleWagon()
 //-----------------------------------------------------------------------------
 class CVehicleWagonControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CVehicleWagonControlPanel, CObjectControlPanel );
 
-public:
 	CVehicleWagonControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

@@ -53,7 +53,7 @@ bool CServerMsgHandlerDetails::Process( netadr_t *from, CMsgBuffer *msg )
 	v_strncpy(name, Info_ValueForKey(info, "hostname"), 255);
 	v_strncpy(map, Info_ValueForKey(info, "map"), 255);
 	v_strncpy(gamedir, Info_ValueForKey(info, "gamedir"), 255);
-	strlwr(gamedir);
+	_strlwr(gamedir);
 	v_strncpy(desc, Info_ValueForKey(info, "description"), 255);
 	int players = atoi(Info_ValueForKey(info, "players"));
 	int maxplayers = atoi(Info_ValueForKey(info, "max"));

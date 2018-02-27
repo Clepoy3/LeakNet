@@ -920,7 +920,8 @@ void VoiceTweak_SetControlFloat(VoiceTweakControl iControl, float value)
 
 	if(iControl == MicrophoneVolume)
 	{
-		g_pMixerControls->SetValue_Float(IMixerControls::Control::MicVolume, value);
+	//	g_pMixerControls->SetValue_Float(IMixerControls::Control::MicVolume, value);
+		g_pMixerControls->SetValue_Float(IMixerControls::MicVolume, value);
 	}
 	else if(iControl == OtherSpeakerScale)
 	{
@@ -936,7 +937,8 @@ float VoiceTweak_GetControlFloat(VoiceTweakControl iControl)
 	if(iControl == MicrophoneVolume)
 	{
 		float value = 1;
-		g_pMixerControls->GetValue_Float(IMixerControls::Control::MicVolume, value);
+	//	g_pMixerControls->GetValue_Float(IMixerControls::Control::MicVolume, value);
+		g_pMixerControls->GetValue_Float(IMixerControls::MicVolume, value);
 		return value;
 	}
 	else if(iControl == OtherSpeakerScale)

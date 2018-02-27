@@ -1128,7 +1128,7 @@ void CNPC_ControllerHeadBall :: HuntThink( void  )
 	if (gpGlobals->curtime - m_flSpawnTime > 5 || m_pSprite->GetBrightness() < 64 /*|| GetEnemy() == NULL || m_hOwner == NULL*/ || !IsInWorld() )
 	{
 		SetTouch( NULL );
-		SetThink( KillThink );
+		SetThink( &CNPC_ControllerHeadBall::KillThink );
 		SetNextThink( gpGlobals->curtime );
 		return;
 	}
@@ -1169,7 +1169,7 @@ void CNPC_ControllerHeadBall :: HuntThink( void  )
 
 		SetNextAttack( gpGlobals->curtime + 3.0 );
 
-		SetThink( KillThink );
+		SetThink( &CNPC_ControllerHeadBall::KillThink );
 		SetNextThink( gpGlobals->curtime + 0.3 );
 	}
 }

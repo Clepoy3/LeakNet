@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug_nvfx_ps20\</OutDir>
+    <IntDir>.\Debug_nvfx_ps20\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release_nvfx_ps20\</OutDir>
+    <IntDir>.\Release_nvfx_ps20\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\common;..\..\public;fxctmp9_nv3x_ps20;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;NV3X;_WINDOWS;_USRDLL;fopen=dont_use_fopen;shader_nvfx_DLL_EXPORT;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug_nvfx_ps20\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug_nvfx_ps20\shader_nvfx_ps20.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug_nvfx_ps20\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug_nvfx_ps20\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\shader_nvfx___Win32_Debug_ps20\shader_nvfx.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>Debug_nvfx_ps20/shader_nvfx_ps20.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>Debug_nvfx_ps20/shader_nvfx_ps20.dll</OutputFile>
+      <ImportLibrary>Debug_nvfx_ps20/shader_nvfx_ps20.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\lib\common\;..\..\lib\public\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib</IgnoreSpecificDefaultLibraries>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\shader_nvfx_ps20.dll attrib -r ..\..\..\bin\shader_nvfx_ps20.dll 
+copy $(TargetPath) ..\..\..\bin\shader_nvfx_ps20.dll 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Publishing to target directory (..\..\..\bin\)...</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level4</WarningLevel>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>..\..\common;..\..\public;fxctmp9_nv3x_ps20;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;NV3X;_WINDOWS;_USRDLL;fopen=dont_use_fopen;shader_nvfx_DLL_EXPORT;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release_nvfx_ps20\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release_nvfx_ps20\shader_nvfx_ps20.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release_nvfx_ps20\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release_nvfx_ps20\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TypeLibraryName>.\shader_nvfx___Win32_Release_ps20\shader_nvfx.tlb</TypeLibraryName>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release_nvfx_ps20\shader_nvfx_ps20.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Release_nvfx_ps20\shader_nvfx_ps20.dll</OutputFile>
+      <ImportLibrary>.\Release_nvfx_ps20\shader_nvfx_ps20.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\lib\common\;..\..\lib\public\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib</IgnoreSpecificDefaultLibraries>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\shader_nvfx_ps20.dll attrib -r ..\..\..\bin\shader_nvfx_ps20.dll 
+copy $(TargetPath) ..\..\..\bin\shader_nvfx_ps20.dll 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+      <Message>Publishing to target directory (..\..\..\bin\)...</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BaseVSShader.cpp" />
+    <ClCompile Include="..\..\public\bumpvects.cpp" />
+    <ClCompile Include="hsv.cpp" />
+    <ClCompile Include="lightmappedgeneric.cpp" />
+    <ClCompile Include="..\..\public\mathlib.cpp" />
+    <ClCompile Include="..\..\public\tier0\memoverride.cpp" />
+    <ClCompile Include="refract.cpp" />
+    <ClCompile Include="shadow.cpp" />
+    <ClCompile Include="shatteredglass.cpp" />
+    <ClCompile Include="sky.cpp" />
+    <ClCompile Include="teeth.cpp" />
+    <ClCompile Include="unlitgeneric.cpp" />
+    <ClCompile Include="vertexlitgeneric.cpp" />
+    <ClCompile Include="..\..\public\vmatrix.cpp" />
+    <ClCompile Include="water.cpp" />
+    <ClCompile Include="worldvertexalpha.cpp" />
+    <ClCompile Include="worldvertextransition.cpp" />
+    <ClCompile Include="shader_nvfx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseVSShader.h" />
+    <ClInclude Include="common_fxc.h" />
+    <ClInclude Include="common_hlsl_cpp_consts.h" />
+    <ClInclude Include="common_ps_fxc.h" />
+    <ClInclude Include="common_vs_fxc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="hsv_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="vertexlit_and_unlit_generic_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="vertexlit_and_unlit_generic_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="lightmappedgeneric_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="lightmappedgeneric_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="shadow_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="shadow_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="ShatteredGlass_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="ShatteredGlass_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="teeth_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="Water_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="Water_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="screenspaceeffect_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="Refract_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="Refract_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="WaterCheap_vs20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_vs_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="WaterCheap_ps20.fxc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\devtools\bin\perl ..\..\devtools\bin\fxc_prep.pl -dx9 -nv3x %(Filename).fxc</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fxctmp9_nv3x_ps20\%(Filename).inc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">common_fxc.h;common_hlsl_cpp_consts.h;common_ps_fxc.h;..\..\devtools\bin\fxc.exe;..\..\devtools\bin\fxc_prep.pl;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\devtools\bin\fxc_prep.pl">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="shader_nvfx.txt" />
+    <CustomBuild Include="..\..\devtools\bin\updateshaders.pl">
+      <FileType>Document</FileType>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\lib\public\shaderlib.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -76,8 +76,9 @@ class CSprite : public CBaseEntity
 	, public C_SpriteRenderer
 #endif
 {
-	DECLARE_CLASS( CSprite, CBaseEntity );
 public:
+	DECLARE_CLASS( CSprite, CBaseEntity );
+
 	DECLARE_PREDICTABLE();
 	DECLARE_NETWORKCLASS();
 

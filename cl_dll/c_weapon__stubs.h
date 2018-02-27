@@ -24,8 +24,8 @@
 #define STUB_WEAPON_CLASS( entityName, className, baseClassName )	\
 	class C_##className## : public baseClassName					\
 	{																\
-		DECLARE_CLASS( C_##className##, baseClassName );							\
 	public:															\
+		DECLARE_CLASS( C_##className##, baseClassName );							\
 		DECLARE_PREDICTABLE();										\
 		DECLARE_CLIENTCLASS();										\
 		C_##className() {};											\

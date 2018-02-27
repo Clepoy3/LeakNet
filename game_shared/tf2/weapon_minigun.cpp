@@ -34,8 +34,9 @@ extern ConVar default_fov;
 //-----------------------------------------------------------------------------
 class CWeaponMinigun : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponMinigun, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponMinigun, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 

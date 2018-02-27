@@ -20,8 +20,9 @@
 
 class CWeaponShotgun : public CBaseHLCombatWeapon
 {
-	DECLARE_DATADESC();
 public:
+	DECLARE_DATADESC();
+
 	DECLARE_CLASS( CWeaponShotgun, CBaseHLCombatWeapon );
 
 	DECLARE_SERVERCLASS();

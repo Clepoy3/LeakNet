@@ -260,7 +260,7 @@ void CCreateMultiplayerGameGameplayPage::GatherCurrentValues()
 
 			while ( pItem )
 			{
-				if ( !stricmp( pItem->szItemText, strValue ) )
+				if ( !_stricmp( pItem->szItemText, strValue ) )
 				{
 					break;
 				}

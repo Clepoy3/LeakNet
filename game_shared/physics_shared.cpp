@@ -140,7 +140,7 @@ bool PhysModelParseSolidByIndex( solid_t &solid, CBaseEntity *pEntity, int model
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "solid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) )
 		{
 			solid_t tmpSolid;
 			memset( &tmpSolid, 0, sizeof(tmpSolid) );
@@ -203,7 +203,7 @@ bool PhysModelParseSolidByIndex( solid_t &solid, CBaseEntity *pEntity, vcollide_
 	while ( !pParse->Finished() )
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "solid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) )
 		{
 			solid_t tmpSolid;
 			memset( &tmpSolid, 0, sizeof(tmpSolid) );
@@ -496,7 +496,7 @@ IPhysicsObject *PhysCreateWorld_Shared( CBaseEntity *pWorld, vcollide_t *pWorldC
 	{
 		const char *pBlock = pParse->GetCurrentBlockName();
 
-		if ( !strcmpi( pBlock, "solid" ) || !strcmpi( pBlock, "staticsolid" ) )
+		if ( !_strcmpi( pBlock, "solid" ) || !_strcmpi( pBlock, "staticsolid" ) )
 		{
 			solid.params = defaultParams;
 			pParse->ParseSolid( &solid, &g_SolidSetup );
@@ -516,7 +516,7 @@ IPhysicsObject *PhysCreateWorld_Shared( CBaseEntity *pWorld, vcollide_t *pWorldC
 				pWorldPhysics = pObject;
 			}
 		}
-		else if ( !strcmpi( pBlock, "fluid" ) )
+		else if ( !_strcmpi( pBlock, "fluid" ) )
 		{
 			pParse->ParseFluid( &fluid, NULL );
 
@@ -537,7 +537,7 @@ IPhysicsObject *PhysCreateWorld_Shared( CBaseEntity *pWorld, vcollide_t *pWorldC
 				physenv->CreateFluidController( pWater, &fluid.params );
 			}
 		}
-		else if ( !strcmpi( pBlock, "materialtable" ) )
+		else if ( !_strcmpi( pBlock, "materialtable" ) )
 		{
 			int surfaceTable[128];
 			memset( surfaceTable, 0, sizeof(surfaceTable) );

@@ -708,7 +708,7 @@ const char *CExpression::GetBitmapFilename( int modelindex )
 	sprintf( filename, "%s/expressions/%s/%s/%s.bmp", GetGameDirectory(), models->GetModelName( modelindex ), classname, GetBitmapCheckSum() );
 
 	COM_FixSlashes( filename );
-	strlwr( filename );
+	_strlwr( filename );
 	
 	in = filename;
 	out = outfile;

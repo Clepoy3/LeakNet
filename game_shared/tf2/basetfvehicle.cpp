@@ -89,7 +89,7 @@ void CBaseTFVehicle::Spawn()
 	m_pIconDefaultCrosshair = NULL;
 #else
 	m_fObjectFlags |= OF_DOESNT_NEED_POWER | OF_MUST_BE_BUILT_ON_ATTACHMENT;
-	SetContextThink( VehiclePassengerThink, 2.0, PASSENGER_THINK_CONTEXT );
+	SetContextThink( &CBaseTFVehicle::VehiclePassengerThink, 2.0, PASSENGER_THINK_CONTEXT );
 #endif
 }
 
@@ -265,7 +265,7 @@ void CBaseTFVehicle::ItemPostFrame( CBasePlayer *pPassenger )
 void CBaseTFVehicle::ResetDeteriorationTime( void )
 {
 #if !defined (CLIENT_DLL)
-	SetContextThink( VehicleDeteriorationThink, gpGlobals->curtime + vehicle_deterioration_start_time.GetFloat(), DETERIORATION_THINK_CONTEXT );
+	SetContextThink( &CBaseTFVehicle::VehicleDeteriorationThink, gpGlobals->curtime + vehicle_deterioration_start_time.GetFloat(), DETERIORATION_THINK_CONTEXT );
 #endif
 }
 

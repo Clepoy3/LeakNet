@@ -23,8 +23,9 @@ ConVar	weapon_plasmarifle_damage( "weapon_plasmarifle_damage","0", FCVAR_NONE, "
 //-----------------------------------------------------------------------------
 class CWeaponPlasmaRifle : public CTFMachineGun
 {
-	DECLARE_CLASS( CWeaponPlasmaRifle, CTFMachineGun );
 public:
+	DECLARE_CLASS( CWeaponPlasmaRifle, CTFMachineGun );
+
 	virtual void	FireBullets( CBaseTFCombatWeapon *pWeapon, int cShots, const Vector &vecSrc, const Vector &vecDirShooting, const Vector &vecSpread, float flDistance, int iBulletType, int iTracerFreq);
 	virtual const Vector& GetBulletSpread( void ); 
 	virtual float	GetFireRate( void );

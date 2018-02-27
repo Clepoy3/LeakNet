@@ -93,7 +93,7 @@ void CHL1BaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	m_fEffects		|= EF_NODRAW;
 	SetAbsVelocity( vec3_origin );
 
-	SetThink( Smoke );
+	SetThink( &CBaseGrenade::Smoke );
 	SetNextThink( gpGlobals->curtime + 0.3);
 
 	if ( GetWaterLevel() == 0 )

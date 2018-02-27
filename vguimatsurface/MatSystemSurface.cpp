@@ -1210,7 +1210,7 @@ bool CMatSystemSurface::AddCustomFontFile(const char *fontFileName)
 		Msg("Couldn't find custom font file '%s'\n", fontFileName);
 		return false;
 	}
-	strlwr(fullPath);
+	_strlwr(fullPath);
 
 	// only add if it's not already in the list
 	CUtlSymbol sym(fullPath);

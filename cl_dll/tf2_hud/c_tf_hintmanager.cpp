@@ -266,7 +266,7 @@ void C_TFHintManager::ResetDisplayStats( void )
 	while ( kv )
 	{
 		KeyValues *subKey = kv->GetFirstSubKey();
-		if ( subKey && stricmp( subKey->GetName(), "times_shown") )
+		if ( subKey && _stricmp( subKey->GetName(), "times_shown") )
 		{
 			while ( subKey )
 			{

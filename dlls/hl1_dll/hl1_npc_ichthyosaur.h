@@ -21,8 +21,8 @@
 
 class CNPC_Ichthyosaur : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Ichthyosaur, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Ichthyosaur, CHL1BaseNPC );
 
 	void	Precache( void );
 	void	Spawn( void );

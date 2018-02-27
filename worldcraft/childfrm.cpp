@@ -175,7 +175,7 @@ void CChildFrame::SetSplitterMode(BOOL bSplitter)
 	else
 	{
 		CView * pActiveView = GetActiveView();
-		ASSERT(pActiveView);
+		Assert(pActiveView);
 		CMapDoc* pDoc = (CMapDoc*) pActiveView->GetDocument();
 
 	    BOOL bAutoDelete=pDoc->m_bAutoDelete;
@@ -254,7 +254,7 @@ CView *CChildFrame::ReplaceView(CRuntimeClass *pViewClass)
     BOOL bAutoDelete = pDoc->m_bAutoDelete;
     pDoc->m_bAutoDelete=FALSE;
 
-	int iRow, iCol;
+	int iRow = 0, iCol = 0;
 	CRect rect;
 
 	// Delete existing view
@@ -358,7 +358,8 @@ void CChildFrame::SaveOptions(void)
 		{
 			for (int nCol = 0; nCol < 2; nCol++)
 			{
-				CMapView *pView = (CMapView *)m_wndSplitter->GetPane(nRow, nCol);
+			//	CMapView *pView = (CMapView *)m_wndSplitter->GetPane(nRow, nCol);
+				CMapView *pView =  dynamic_cast<CMapView*>(m_wndSplitter->GetPane(nRow, nCol));
 				if (pView != NULL)
 				{
 					char szKey[30];
@@ -415,7 +416,9 @@ void CChildFrame::SetViewType(DrawType_t eViewType)
 
 	if (pNewView != NULL)
 	{
-		SetActiveView(pNewView);
+	//	SetActiveView(pNewView);
+	//	SetActiveView( dynamic_cast<CView*>(pNewView->GetViewWnd()) );
+		SetActiveView( dynamic_cast<CView*>(pNewView) );
 		pNewView->SetDrawType(eViewType);
 		pNewView->UpdateWindow();
 	}
@@ -508,7 +511,7 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext *pContext)
 	if (bUsingSplitter)
 	{
 		m_wndSplitter = new CMySplitterWnd;
-		ASSERT(m_wndSplitter != NULL);
+		Assert(m_wndSplitter != NULL);
 		
 		if (m_wndSplitter == NULL)
 		{
@@ -572,7 +575,8 @@ BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext *pContext)
 					}
 				}
 
-				CMapView *pView = (CMapView *)m_wndSplitter->GetPane(nRow, nCol);
+			//	CMapView *pView = (CMapView *)m_wndSplitter->GetPane(nRow, nCol);
+				CMapView *pView = dynamic_cast<CMapView*>(m_wndSplitter->GetPane(nRow, nCol));
 				if (pView != NULL)
 				{
 					pView->SetDrawType(eDrawType[nRow][nCol]);
@@ -748,7 +752,8 @@ void CMySplitterWnd::ToggleMax(CWnd *pWnd)
 		int iRow, iCol;
 		CRect r;
 		GetClientRect(r);
-		VERIFY(IsChildPane(pWnd, iRow, iCol));
+	//	VERIFY(IsChildPane(pWnd, iRow, iCol)); // VXP: Conv
+		VERIFY(IsChildPane(pWnd, &iRow, &iCol));
 
 		for(ir = 0; ir < 2; ir++)
 		{

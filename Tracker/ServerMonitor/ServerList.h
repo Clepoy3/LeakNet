@@ -14,7 +14,7 @@
 #include "UtlVector.h"
 #include "../TrackerNET/NetAddress.h"
 
-#include <VGUI_Panel.h>
+#include <vgui_controls/Panel.h>
 
 class IReceiveMessage;
 

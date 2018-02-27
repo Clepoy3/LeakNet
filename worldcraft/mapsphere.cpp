@@ -279,7 +279,7 @@ CMapClass *CMapSphere::HitTest2D(CMapView2D *pView, const Vector2D &vecPoint, in
 //-----------------------------------------------------------------------------
 void CMapSphere::OnParentKeyChanged(const char *szKey, const char *szValue)
 {
-	if (!stricmp(szKey, m_szKeyName))
+	if (!_stricmp(szKey, m_szKeyName))
 	{
 		m_flRadius = atof(szValue);
 		PostUpdate(Notify_Changed);

@@ -443,8 +443,9 @@ AI_END_CUSTOM_SCHEDULE_PROVIDER()
 class CAI_LeadGoal : public CAI_GoalEntity,
 					 public CAI_LeadBehaviorHandler
 {
-	DECLARE_CLASS( CAI_LeadGoal, CAI_GoalEntity );
 public:
+	DECLARE_CLASS( CAI_LeadGoal, CAI_GoalEntity );
+
 	CAI_LeadGoal()
 	 :	m_fArrived( false )
 	{

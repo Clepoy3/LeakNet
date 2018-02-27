@@ -18,8 +18,9 @@
 
 class CBaseHL1CombatWeapon : public CBaseCombatWeapon
 {
-	DECLARE_CLASS( CBaseHL1CombatWeapon, CBaseCombatWeapon );
 public:
+	DECLARE_CLASS( CBaseHL1CombatWeapon, CBaseCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

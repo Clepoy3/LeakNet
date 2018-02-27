@@ -21,8 +21,9 @@
 //-----------------------------------------------------------------------------
 class CPointSpotlight : public CPointEntity
 {
-	DECLARE_CLASS( CPointSpotlight, CPointEntity );
 public:
+	DECLARE_CLASS( CPointSpotlight, CPointEntity );
+
 	DECLARE_DATADESC();
 
 	CPointSpotlight();
@@ -189,7 +190,7 @@ void CPointSpotlight::Spawn(void)
 
 	m_bSpotlightOn = HasSpawnFlags( SF_SPOTLIGHT_START_LIGHT_ON );
 
-	SetThink( SpotlightThink );
+	SetThink( &CPointSpotlight::SpotlightThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	Relink();

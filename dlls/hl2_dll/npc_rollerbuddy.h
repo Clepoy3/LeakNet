@@ -5,10 +5,10 @@
 //=========================================================
 class CNPC_RollerBuddy : public CNPC_Roller
 {
+public:
 	DECLARE_CLASS( CNPC_RollerBuddy, CNPC_Roller );
 	DECLARE_DATADESC();
 
-public:
 	void Spawn( void );
 	void GatherConditions( void );
 	void PrescheduleThink( void );

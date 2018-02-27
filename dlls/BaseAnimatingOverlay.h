@@ -52,9 +52,9 @@ public:
 
 class CBaseAnimatingOverlay : public CBaseAnimating
 {
+public:
 	DECLARE_CLASS( CBaseAnimatingOverlay, CBaseAnimating );
 
-public:
 	enum 
 	{
 		MAX_OVERLAYS = 8,

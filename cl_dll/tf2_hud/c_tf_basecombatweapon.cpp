@@ -268,7 +268,7 @@ void C_BaseTFCombatWeapon::OnDataChanged( DataUpdateType_t updateType )
 				continue;
 
 			// Is this tech associating the weapon
-			if ( stricmp( GetName(), associated_weapon ) )
+			if ( _stricmp( GetName(), associated_weapon ) )
 				continue;
 
 			if ( t->GetHintsGiven( TF_HINT_WEAPONRECEIVED ) )

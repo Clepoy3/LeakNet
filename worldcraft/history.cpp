@@ -591,7 +591,7 @@ CHistoryTrack::CHistoryTrack(CHistory *pParent, CMapObjectList *pSelected)
 	nData = 0;
 	uDataSize = 0;
 
-	static dwTrackerID = 1;	// objects start at 0, so we don't want to
+	static int dwTrackerID = 1;	// objects start at 0, so we don't want to
 	dwID = dwTrackerID ++;
 	
 	// add to local list of selected objects at time of creation
@@ -744,7 +744,7 @@ void CHistoryTrack::Undo()
 	// Do notification separately so that objects are dealing with the
 	// correct data set when they calculate bounds, etc.
 	//
-	for (i = nData - 1; i >= 0; i--)
+	for (int i = nData - 1; i >= 0; i--)
 	{
 		Data[i].DispatchUndoNotify();
 	}

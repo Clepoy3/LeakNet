@@ -28,9 +28,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectResupply : public CBaseObject
 {
-DECLARE_CLASS( CObjectResupply, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectResupply, CBaseObject );
+
 	DECLARE_SERVERCLASS();
 
 	CObjectResupply();

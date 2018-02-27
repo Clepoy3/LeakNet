@@ -7,9 +7,9 @@
 //=========================================================
 class CNPC_Scientist : public CHL1NPCTalker
 {
-	DECLARE_CLASS( CNPC_Scientist, CHL1NPCTalker );
 public:
-	
+	DECLARE_CLASS( CNPC_Scientist, CHL1NPCTalker );
+
 //	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 
@@ -104,8 +104,8 @@ private:
 
 class CNPC_SittingScientist : public CNPC_Scientist // kdb: changed from public CBaseMonster so he can speak
 {
-	DECLARE_CLASS( CNPC_SittingScientist, CNPC_Scientist );
 public:
+	DECLARE_CLASS( CNPC_SittingScientist, CNPC_Scientist );
 
 //	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();

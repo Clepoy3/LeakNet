@@ -127,7 +127,7 @@ void CInitTracker::Shutdown( const char *shutdown, int listnum )
 			break;
 	}
 	
-	if ( f && f->referencecount && stricmp( f->shutdownname, shutdown ) )
+	if ( f && f->referencecount && _stricmp( f->shutdownname, shutdown ) )
 	{
 		if ( !f->warningprinted )
 		{
@@ -140,7 +140,7 @@ void CInitTracker::Shutdown( const char *shutdown, int listnum )
 	{
 		InitFunc *f = m_Funcs[ listnum ][ i ];
 
-		if ( !stricmp( f->shutdownname, shutdown ) )
+		if ( !_stricmp( f->shutdownname, shutdown ) )
 		{
 			Assert( f->referencecount );
 			//f->shutdowntime = Sys_FloatTime();

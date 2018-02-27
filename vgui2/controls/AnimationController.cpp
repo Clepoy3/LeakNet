@@ -121,6 +121,7 @@ bool AnimationController::LoadScriptFile(const char *fileName)
 
 AnimationController::RelativeAlignmentLookup AnimationController::g_AlignmentLookup[] =
 {
+/*
 	{ AnimationController::RelativeAlignment::a_northwest	, "northwest" },
 	{ AnimationController::RelativeAlignment::a_north		, "north" },
 	{ AnimationController::RelativeAlignment::a_northeast	, "northeast" },
@@ -140,6 +141,26 @@ AnimationController::RelativeAlignmentLookup AnimationController::g_AlignmentLoo
 	{ AnimationController::RelativeAlignment::a_southwest	, "sw" },
 	{ AnimationController::RelativeAlignment::a_south		, "s" },
 	{ AnimationController::RelativeAlignment::a_southeast	, "se" },
+*/
+	{ AnimationController::a_northwest	, "northwest" },
+	{ AnimationController::a_north		, "north" },
+	{ AnimationController::a_northeast	, "northeast" },
+	{ AnimationController::a_west		, "west" },
+	{ AnimationController::a_center		, "center" },
+	{ AnimationController::a_east		, "east" },
+	{ AnimationController::a_southwest	, "southwest" },
+	{ AnimationController::a_south		, "south" },
+	{ AnimationController::a_southeast	, "southeast" },
+
+	{ AnimationController::a_northwest	, "nw" },
+	{ AnimationController::a_north		, "n" },
+	{ AnimationController::a_northeast	, "ne" },
+	{ AnimationController::a_west		, "w" },
+	{ AnimationController::a_center		, "c" },
+	{ AnimationController::a_east		, "e" },
+	{ AnimationController::a_southwest	, "sw" },
+	{ AnimationController::a_south		, "s" },
+	{ AnimationController::a_southeast	, "se" },
 };
 
 //-----------------------------------------------------------------------------
@@ -159,7 +180,8 @@ AnimationController::RelativeAlignment AnimationController::LookupAlignment( cha
 		}
 	}
 
-	return AnimationController::RelativeAlignment::a_northwest;
+//	return AnimationController::RelativeAlignment::a_northwest; // VXP: Conv
+	return AnimationController::a_northwest;
 }
 
 //-----------------------------------------------------------------------------
@@ -259,7 +281,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 	while (token[0])
 	{
 		// should be 'event'
-		if (stricmp(token, "event"))
+		if (_stricmp(token, "event"))
 		{
 			Warning("Couldn't parse script file: expected 'event', found '%s'\n", token);
 			return false;
@@ -280,7 +302,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 
 		// get the open brace
 		pMem = ParseFile(pMem, token, NULL);
-		if (stricmp(token, "{"))
+		if (_stricmp(token, "{"))
 		{
 			Warning("Couldn't parse script sequence '%s': expected '{', found '%s'\n", g_ScriptSymbols.String(seq.name), token);
 			return false;
@@ -300,7 +322,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 			int cmdIndex = seq.cmdList.AddToTail();
 			AnimCommand_t &animCmd = seq.cmdList[cmdIndex];
 			memset(&animCmd, 0, sizeof(animCmd));
-			if (!stricmp(token, "animate"))
+			if (!_stricmp(token, "animate"))
 			{
 				animCmd.commandType = CMD_ANIMATE;
 				// parse out the animation commands
@@ -366,26 +388,26 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				
 				// interpolation function
 				pMem = ParseFile(pMem, token, NULL);
-				if (!stricmp(token, "Accel"))
+				if (!_stricmp(token, "Accel"))
 				{
 					cmdAnimate.interpolationFunction = INTERPOLATOR_ACCEL;
 				}
-				else if (!stricmp(token, "Deaccel"))
+				else if (!_stricmp(token, "Deaccel"))
 				{
 					cmdAnimate.interpolationFunction = INTERPOLATOR_DEACCEL;
 				}
-				else if ( !stricmp(token, "Spline"))
+				else if ( !_stricmp(token, "Spline"))
 				{
 					cmdAnimate.interpolationFunction = INTERPOLATOR_SIMPLESPLINE;
 				}
-				else if (!stricmp(token,"Pulse"))
+				else if (!_stricmp(token,"Pulse"))
 				{
 					cmdAnimate.interpolationFunction = INTERPOLATOR_PULSE;
 					// frequencey
 					pMem = ParseFile(pMem, token, NULL);
 					cmdAnimate.interpolationParameter = (float)atof(token);
 				}
-				else if ( !stricmp( token, "Flicker"))
+				else if ( !_stricmp( token, "Flicker"))
 				{
 					cmdAnimate.interpolationFunction = INTERPOLATOR_FLICKER;
 					// noiseamount
@@ -408,7 +430,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 					seq.duration = cmdAnimate.startTime + cmdAnimate.duration;
 				}
 			}
-			else if (!stricmp(token, "runevent"))
+			else if (!_stricmp(token, "runevent"))
 			{
 				animCmd.commandType = CMD_RUNEVENT;
 				pMem = ParseFile(pMem, token, NULL);
@@ -416,7 +438,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if (!stricmp(token, "stopevent"))
+			else if (!_stricmp(token, "stopevent"))
 			{
 				animCmd.commandType = CMD_STOPEVENT;
 				pMem = ParseFile(pMem, token, NULL);
@@ -424,7 +446,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if (!stricmp(token, "StopPanelAnimations"))
+			else if (!_stricmp(token, "StopPanelAnimations"))
 			{
 				animCmd.commandType = CMD_STOPPANELANIMATIONS;
 				pMem = ParseFile(pMem, token, NULL);
@@ -432,7 +454,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if (!stricmp(token, "stopanimation"))
+			else if (!_stricmp(token, "stopanimation"))
 			{
 				animCmd.commandType = CMD_STOPANIMATION;
 				pMem = ParseFile(pMem, token, NULL);
@@ -442,7 +464,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if ( !stricmp( token, "SetFont" ))
+			else if ( !_stricmp( token, "SetFont" ))
 			{
 				animCmd.commandType = CMD_SETFONT;
 				// Panel name
@@ -459,7 +481,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if ( !stricmp( token, "SetTexture" ))
+			else if ( !_stricmp( token, "SetTexture" ))
 			{
 				animCmd.commandType = CMD_SETTEXTURE;
 				// Panel name
@@ -476,7 +498,7 @@ bool AnimationController::ParseScriptFile(char *pMem, int length)
 				pMem = ParseFile(pMem, token, NULL);
 				animCmd.cmdData.runEvent.timeDelay = (float)atof(token);
 			}
-			else if ( !stricmp( token, "SetString" ))
+			else if ( !_stricmp( token, "SetString" ))
 			{
 				animCmd.commandType = CMD_SETSTRING;
 				// Panel name

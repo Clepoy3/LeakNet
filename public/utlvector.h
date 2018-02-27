@@ -136,14 +136,23 @@ protected:
 	void ShiftElementsLeft( int elem, int num = 1 );
 
 	// For easier access to the elements through the debugger
-	void ResetDbgInfo();
+//	void ResetDbgInfo();
 
 	CUtlMemory<T> m_Memory;
 	int m_Size;
 
+#if defined(_DEBUG)
 	// For easier access to the elements through the debugger
 	// it's in release builds so this can be used in libraries correctly
 	T *m_pElements;
+
+	inline void ResetDbgInfo()
+	{
+		m_pElements = Base();
+	}
+#else
+	void ResetDbgInfo() {}
+#endif
 };
 
 
@@ -151,11 +160,13 @@ protected:
 // For easier access to the elements through the debugger
 //-----------------------------------------------------------------------------
 
+/*
 template< class T >
 inline void CUtlVector<T>::ResetDbgInfo()
 {
 	m_pElements = m_Memory.Base();
 }
+*/
 
 //-----------------------------------------------------------------------------
 // constructor, destructor
@@ -400,6 +411,9 @@ inline int CUtlVector<T>::InsertAfter( int elem, T const& src )
 template< class T >
 int CUtlVector<T>::InsertBefore( int elem, T const& src )
 {
+	// VXP: Can't insert something that's in the list... reallocation may hose us
+	Assert( (&src < Base()) || (&src >= (Base() + Count()) ) ); 
+
 	// Can insert at the end
 	Assert( (elem == Count()) || IsValidIndex(elem) );
 
@@ -423,6 +437,9 @@ inline int CUtlVector<T>::AddMultipleToHead( int num )
 template< class T >
 inline int CUtlVector<T>::AddMultipleToTail( int num, const T *pToCopy )
 {
+	// VXP: Can't insert something that's in the list... reallocation may hose us
+	Assert( !pToCopy || (pToCopy + num < Base()) || (pToCopy >= (Base() + Count()) ) ); 
+
 	return InsertMultipleBefore( m_Size, num, pToCopy );
 }
 
@@ -449,14 +466,21 @@ inline void CUtlVector<T>::SetSize( int size )
 template< class T >
 void CUtlVector<T>::CopyArray( T const *pArray, int size )
 {
+	// VXP: Can't insert something that's in the list... reallocation may hose us
+	Assert( !pArray || (Base() >= (pArray + size)) || (pArray >= (Base() + Count()) ) ); 
+
 	SetSize( size );
 	for( int i=0; i < size; i++ )
+	{
 		(*this)[i] = pArray[i];
+	}
 }
 
 template< class T >
 int CUtlVector<T>::AddVectorToTail( CUtlVector const &src )
 {
+	Assert( &src != this );
+
 	int base = Count();
 	
 	// Make space.
@@ -464,7 +488,9 @@ int CUtlVector<T>::AddVectorToTail( CUtlVector const &src )
 
 	// Copy the elements.	
 	for ( int i=0; i < src.Count(); i++ )
+	{
 		(*this)[base + i] = src[i];
+	}
 
 	return base;
 }
@@ -569,7 +595,9 @@ template< class T >
 void CUtlVector<T>::RemoveAll()
 {
 	for (int i = m_Size; --i >= 0; )
+	{
 		Destruct(&Element(i));
+	}
 
 	m_Size = 0;
 }
@@ -592,7 +620,9 @@ template<class T>
 inline void CUtlVector<T>::PurgeAndDeleteElements()
 {
 	for( int i=0; i < m_Size; i++ )
+	{
 		delete Element(i);
+	}
 
 	Purge();
 }

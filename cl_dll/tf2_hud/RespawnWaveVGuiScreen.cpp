@@ -18,9 +18,9 @@
 //-----------------------------------------------------------------------------
 class CRespawnWaveVGuiScreen : public CVGuiScreenPanel
 {
+public:
 	DECLARE_CLASS( CRespawnWaveVGuiScreen, CVGuiScreenPanel );
 
-public:
 	CRespawnWaveVGuiScreen( vgui::Panel *parent, const char *panelName );
 
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );

@@ -79,7 +79,7 @@ void CObjectDriverMachinegun::Spawn()
 	SetType( OBJ_DRIVER_MACHINEGUN );
 	m_fObjectFlags |= OF_SUPPRESS_NOTIFY_UNDER_ATTACK | OF_DONT_AUTO_REPAIR;
 
-	SetThink( RechargeThink );
+	SetThink( &CObjectDriverMachinegun::RechargeThink );
 #endif
 
  	m_nBarrelAttachment = LookupAttachment( "barrel" );

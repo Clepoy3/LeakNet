@@ -52,7 +52,7 @@ const char *Info_ValueForKey ( const char *s, const char *key )
 		}
 		*o = 0;
 
-		if (!stricmp(key, pkey) )
+		if (!_stricmp(key, pkey) )
 			return value[valueindex];
 
 		if (!*s)
@@ -97,7 +97,7 @@ void Info_RemoveKey ( char *s, const char *key )
 		}
 		*o = 0;
 
-		if (!stricmp (key, pkey) )
+		if (!_stricmp (key, pkey) )
 		{
 			strcpy (start, s);	// remove this part
 			return;
@@ -156,7 +156,7 @@ bool Info_IsKeyImportant( const char *key )
 {
 	if ( key[0] == '*' )
 		return true;
-	if ( !stricmp( key, "tracker" ) )
+	if ( !_stricmp( key, "tracker" ) )
 		return true;
 
 	return false;

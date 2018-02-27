@@ -57,7 +57,7 @@ bool CBaseEMPableGrenade::TakeEMPDamage( float duration )
 
 	// Fizzle away in a couple of seconds
 	m_flFizzleDuration = gpGlobals->curtime + min( duration, GRENADE_FIZZLE_DURATION );
-	SetThink( FizzleThink );
+	SetThink( &CBaseEMPableGrenade::FizzleThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	return true;
 }

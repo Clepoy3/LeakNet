@@ -44,8 +44,8 @@ void CGrenadeMP5::Spawn( void )
 	UTIL_SetSize(this, Vector(-3, -3, -3), Vector(3, 3, 3));
 //	UTIL_SetSize(this, Vector(0, 0, 0), Vector(0, 0, 0));
 
-	SetUse( DetonateUse );
-	SetTouch( GrenadeMP5Touch );
+	SetUse( &CBaseGrenade::DetonateUse );
+	SetTouch( &CGrenadeMP5::GrenadeMP5Touch );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_plr_dmg_mp5_grenade.GetFloat();

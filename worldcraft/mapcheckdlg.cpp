@@ -263,7 +263,7 @@ void CMapCheckDlg::Fix(int iSel, UpdateBox &ub)
 
 	pError->Fix = Fixed;
 
-	for(i = 0; i < 2; i++)
+	for(int i = 0; i < 2; i++)
 	{
 		if(!pError->pObjects[i])
 			continue;
@@ -545,7 +545,8 @@ static BOOL FindMixedSolids(CMapSolid *pSolid, CListBox *pList)
 	// run thru faces..
 	int iFaces = pSolid->GetFaceCount();
 	int iSolid = 2;	// start off ambivalent
-	for(int i = 0; i < iFaces; i++)
+	int i;
+	for(i = 0; i < iFaces; i++)
 	{
 		CMapFace *pFace = pSolid->GetFace(i);
 
@@ -763,7 +764,7 @@ static void CheckDuplicateFaceIDs(CListBox *pList, CMapWorld *pWorld)
 static BOOL FindKeyValue(CMapEntity *pEntity, MDkeyvalue *pKV)
 {
 	LPCTSTR pszValue = pEntity->GetKeyValue(pKV->szKey);
-	if (!pszValue || strcmpi(pszValue, pKV->szValue))
+	if (!pszValue || _strcmpi(pszValue, pKV->szValue))
 	{
 		return TRUE;
 	}
@@ -801,7 +802,7 @@ static BOOL CheckTarget(CMapEntity *pEntity, CListBox *pList)
 		while(p)
 		{
 			CMapPath *pPath = pWorld->m_Paths.GetNext(p);
-			if(!strcmpi(pPath->GetName(), pszValue))
+			if(!_strcmpi(pPath->GetName(), pszValue))
 				return TRUE;	// found it
 		}
 
@@ -1083,7 +1084,7 @@ static BOOL _CheckDuplicateKeys(CMapEntity *pEntity, CListBox *pList)
 				continue;
 			}
 
-			if (!strcmpi(pEntity->GetKey(i), pEntity->GetKey(j)))
+			if (!_strcmpi(pEntity->GetKey(i), pEntity->GetKey(j)))
 			{
 				AddError(pList, ErrorDuplicateKeys, (DWORD)pEntity->GetClassName(), pEntity);
 				return TRUE;
@@ -1339,7 +1340,7 @@ DoAgain:
 				continue;
 			}
 
-			if (!strcmpi(pEntity->GetKey(i), pEntity->GetKey(j)))
+			if (!_strcmpi(pEntity->GetKey(i), pEntity->GetKey(j)))
 			{
 				pEntity->RemoveKey(i);
 				//--kv.nkv;

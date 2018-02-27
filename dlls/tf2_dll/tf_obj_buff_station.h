@@ -12,10 +12,8 @@
 //
 class CObjectBuffStation : public CBaseObject  
 {
-
-DECLARE_CLASS( CObjectBuffStation, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectBuffStation, CBaseObject );
 
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();

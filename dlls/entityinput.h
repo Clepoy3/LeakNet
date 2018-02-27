@@ -38,6 +38,7 @@ public:
 		static void *operator new( size_t stAllocBlock );	
 		static void *operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine );
 		static void operator delete( void *pMem );
+		static void operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine ) { operator delete(pMem); }
 	};
 
 	inputitem_t *m_InputList;	// list of data

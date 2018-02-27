@@ -60,8 +60,9 @@ enum
 //-----------------------------------------------------------------------------
 class CNPC_CraneDriver : public CNPC_VehicleDriver
 {
-	DECLARE_CLASS( CNPC_VehicleDriver, CNPC_VehicleDriver );
 public:
+	DECLARE_CLASS( CNPC_VehicleDriver, CNPC_VehicleDriver );
+
 	DECLARE_DATADESC();
 	DEFINE_CUSTOM_AI;
 

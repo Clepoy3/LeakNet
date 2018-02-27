@@ -678,7 +678,7 @@ void CNPC_Gargantua::RunTask( const Task_t *pTask )
 			SetRenderColor( 255, 0, 0 , 255 );
 			StopAnimation();
 			SetNextThink( gpGlobals->curtime + 0.15 );
-			SetThink( SUB_Remove );
+			SetThink( &CBaseEntity::SUB_Remove );
 
 			int i;
 		
@@ -702,7 +702,7 @@ void CNPC_Gargantua::RunTask( const Task_t *pTask )
 				pGib->SetAbsVelocity( UTIL_RandomBloodVector() * random->RandomFloat( 300, 500 ) );
 	
 				pGib->SetNextThink( gpGlobals->curtime + 1.25 );
-				pGib->SetThink( SUB_FadeOut );
+				pGib->SetThink( &CBaseEntity::SUB_FadeOut );
 				pGib->m_flModelScale = 10;
 			}
 	

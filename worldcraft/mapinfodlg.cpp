@@ -220,22 +220,22 @@ BOOL CMapInfoDlg::OnInitDialog(void)
 	pWorld->EnumChildren(ENUMMAPCHILDRENPROC(CountObject), (DWORD)this);
 
 	char szBuf[128];
-	ultoa(m_uSolidCount, szBuf, 10);
+	_ultoa(m_uSolidCount, szBuf, 10);
 	m_Solids.SetWindowText(szBuf);
 
-	ultoa(m_uSolidEntityCount, szBuf, 10);
+	_ultoa(m_uSolidEntityCount, szBuf, 10);
 	m_SolidEntities.SetWindowText(szBuf);
 
-	ultoa(m_uPointEntityCount, szBuf, 10);
+	_ultoa(m_uPointEntityCount, szBuf, 10);
 	m_PointEntities.SetWindowText(szBuf);
 	
-	ultoa(m_uFaceCount, szBuf, 10);
+	_ultoa(m_uFaceCount, szBuf, 10);
 	m_Faces.SetWindowText(szBuf);
 
-	ultoa(m_uUniqueTextures, szBuf, 10);
+	_ultoa(m_uUniqueTextures, szBuf, 10);
 	m_UniqueTextures.SetWindowText(szBuf);
 
-	ultoa(m_uTextureMemory, szBuf, 10);
+	_ultoa(m_uTextureMemory, szBuf, 10);
 	sprintf(szBuf, "%u bytes (%.2f MB)", m_uTextureMemory, (float)m_uTextureMemory / 1024000.0);
 	m_TextureMemory.SetWindowText(szBuf);
 	

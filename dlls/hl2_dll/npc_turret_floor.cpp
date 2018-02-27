@@ -388,7 +388,7 @@ void CNPC_FloorTurret::Spawn( void )
 	//Do we start active?
 	if ( m_bAutoStart && m_bEnabled )
 	{
-		SetThink( AutoSearchThink );
+		SetThink( &CNPC_FloorTurret::AutoSearchThink );
 		SetEyeState( TURRET_EYE_DORMANT );
 	}
 	else
@@ -406,7 +406,7 @@ void CNPC_FloorTurret::Spawn( void )
 	ADD_CUSTOM_ACTIVITY( CNPC_FloorTurret, ACT_FLOOR_TURRET_OPEN_IDLE );
 	ADD_CUSTOM_ACTIVITY( CNPC_FloorTurret, ACT_FLOOR_TURRET_FIRE );
 	
-	SetUse( ToggleUse );
+	SetUse( &CNPC_FloorTurret::ToggleUse );
 
 	CreateVPhysics();
 }
@@ -473,14 +473,14 @@ void CNPC_FloorTurret::Retire( void )
 		//Go back to auto searching
 		if ( m_bAutoStart )
 		{
-			SetThink( AutoSearchThink );
+			SetThink( &CNPC_FloorTurret::AutoSearchThink );
 			SetNextThink( gpGlobals->curtime + 0.05f );
 		}
 		else
 		{
 			//Set our visible state to dormant
 			SetEyeState( TURRET_EYE_DISABLED );
-			SetThink( SUB_DoNothing );
+			SetThink( &CBaseEntity::SUB_DoNothing );
 		}
 	}
 }
@@ -519,7 +519,7 @@ void CNPC_FloorTurret::Deploy( void )
 		m_flShotTime  = gpGlobals->curtime + 1.0f;
 
 		m_flPlaybackRate = 0;
-		SetThink( SearchThink );
+		SetThink( &CNPC_FloorTurret::SearchThink );
 
 		EmitSound( "NPC_FloorTurret.Move" );
 	}
@@ -621,7 +621,7 @@ void CNPC_FloorTurret::SuppressThink( void )
 //	if ( pEnemy != NULL )
 	if ( !GetEnemy() )
 	{
-		SetThink( ActiveThink );
+		SetThink( &CNPC_FloorTurret::ActiveThink );
 		return;
 	}
 
@@ -631,7 +631,7 @@ void CNPC_FloorTurret::SuppressThink( void )
 		// Should we look for a new target?
 		ClearEnemyMemory();
 		SetEnemy( NULL );
-		SetThink( SearchThink );
+		SetThink( &CNPC_FloorTurret::SearchThink );
 		m_vecGoalAngles = GetAbsAngles();
 		
 		SpinDown();
@@ -723,7 +723,7 @@ void CNPC_FloorTurret::ActiveThink( void )
 	{
 		SetEnemy( NULL );
 		m_flLastSight = gpGlobals->curtime + FLOOR_TURRET_MAX_WAIT;
-		SetThink( SearchThink );
+		SetThink( &CNPC_FloorTurret::SearchThink );
 		m_vecGoalAngles = GetAbsAngles();
 		return;
 	}
@@ -781,7 +781,7 @@ void CNPC_FloorTurret::ActiveThink( void )
 			m_flLastSight = gpGlobals->curtime + FLOOR_TURRET_MAX_WAIT;
 		}
 
-		SetThink( SearchThink );
+		SetThink( &CNPC_FloorTurret::SearchThink );
 		m_vecGoalAngles = GetAbsAngles();
 		
 		SpinDown();
@@ -796,7 +796,7 @@ void CNPC_FloorTurret::ActiveThink( void )
 
 		ClearEnemyMemory();
 		SetEnemy( NULL );
-		SetThink( SuppressThink );
+		SetThink( &CNPC_FloorTurret::SuppressThink );
 
 		return;
 	}
@@ -882,7 +882,7 @@ void CNPC_FloorTurret::SearchThink( void )
 		}
 
 		m_flLastSight = 0;
-		SetThink( ActiveThink );
+		SetThink( &CNPC_FloorTurret::ActiveThink );
 		SetEyeState( TURRET_EYE_SEE_TARGET );
 
 		SpinUp();
@@ -895,7 +895,7 @@ void CNPC_FloorTurret::SearchThink( void )
 	{
 		//Before we retrace, make sure that we are spun down.
 		m_flLastSight = 0;
-		SetThink( Retire );
+		SetThink( &CNPC_FloorTurret::Retire );
 		return;
 	}
 	
@@ -937,7 +937,7 @@ void CNPC_FloorTurret::AutoSearchThink( void )
 	//Deploy if we've got an active target
 	if ( GetEnemy() != NULL )
 	{
-		SetThink( Deploy );
+		SetThink( &CNPC_FloorTurret::Deploy );
 		EmitSound( "NPC_FloorTurret.Alert" );
 	}
 }
@@ -1120,7 +1120,7 @@ bool CNPC_FloorTurret::PreThink( turretState_e state )
 		m_flThrashTime = gpGlobals->curtime + random->RandomFloat( 2.0f, 2.5f );
 		SetNextThink( gpGlobals->curtime + 0.05f );
 
-		SetThink( TippedThink );
+		SetThink( &CNPC_FloorTurret::TippedThink );
 
 		//Stop being targetted
 		SetState( NPC_STATE_DEAD );
@@ -1271,7 +1271,7 @@ void CNPC_FloorTurret::Enable( void )
 		m_bAutoStart = true;
 	}
 
-	SetThink( Deploy );
+	SetThink( &CNPC_FloorTurret::Deploy );
 	SetNextThink( gpGlobals->curtime + 0.05f );
 }
 
@@ -1291,7 +1291,7 @@ void CNPC_FloorTurret::Disable( void )
 		m_bAutoStart = false;
 
 		SetEnemy( NULL );
-		SetThink( Retire );
+		SetThink( &CNPC_FloorTurret::Retire );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 	}
 }

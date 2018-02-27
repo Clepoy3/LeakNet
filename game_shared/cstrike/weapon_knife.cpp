@@ -5,7 +5,7 @@
 //=============================================================================
 
 #include "cbase.h"
-#include "util.h"
+//#include "util.h" // VXP: Conv
 #include "weapon_knife.h"
 
 #if defined( CLIENT_DLL )

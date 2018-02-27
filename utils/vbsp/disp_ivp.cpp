@@ -135,7 +135,7 @@ void Disp_AddCollisionModels( CUtlVector<CPhysCollisionEntry *> &collisionList, 
 			}
 
 			Vector tmpVerts[3];
-			for ( iTri = 0; iTri < nTriCount; ++iTri )
+			for ( int iTri = 0; iTri < nTriCount; ++iTri )
 			{
 				float flAlphaTotal = 0.0f;
 				for ( int iTriVert = 0; iTriVert < 3; ++iTriVert )

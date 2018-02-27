@@ -173,7 +173,7 @@ bool AddMacroToStack( char *macroname )
 	int i;
 	for (i = 0; i < nummacros; i++)
 	{
-		if (strcmpi( macrolist[i]->filename, &macroname[1] ) == 0)
+		if (_strcmpi( macrolist[i]->filename, &macroname[1] ) == 0)
 		{
 			break;
 		}
@@ -249,7 +249,7 @@ bool ExpandMacroToken( char *&token_p )
 		int index = 0;
 		for (index = 0; index < script->nummacroparams; index++)
 		{
-			if (stricmp( script->macroparam[index], tp ) == 0)
+			if (_stricmp( script->macroparam[index], tp ) == 0)
 				break;
 		}
 		if (index >= script->nummacroparams)
@@ -456,7 +456,7 @@ skipspace:
 		AddScriptToStack (token);
 		return GetToken (crossline);
 	}
-	else if (!stricmp (token, "$definemacro"))
+	else if (!_stricmp (token, "$definemacro"))
 	{
 		GetToken (false);
 		DefineMacro(token);

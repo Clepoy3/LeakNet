@@ -38,8 +38,9 @@ ConVar weapon_arcwelder_rate( "weapon_arcwelder_rate", "15", FCVAR_REPLICATED );
 //-----------------------------------------------------------------------------
 class CWeaponArcWelder : public CWeaponRepairGun
 {
-	DECLARE_CLASS( CWeaponArcWelder, CWeaponRepairGun );
 public:
+	DECLARE_CLASS( CWeaponArcWelder, CWeaponRepairGun );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

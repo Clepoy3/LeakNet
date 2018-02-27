@@ -571,8 +571,9 @@ protected:
 //==================================================
 class CNPC_Strider : public CAI_TrackPather, public IMinigunHost, public IDrivableVehicle
 {
-	DECLARE_CLASS( CNPC_Strider, CAI_TrackPather );
 public:
+	DECLARE_CLASS( CNPC_Strider, CAI_TrackPather );
+
 	DECLARE_SERVERCLASS();
 
 	CNPC_Strider( void );

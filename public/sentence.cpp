@@ -8,6 +8,9 @@
 #include "mathlib.h"
 #include <ctype.h>
 
+// memdbgon must be the last include file in a .cpp file!!!
+#include "tier0/memdbgon.h"
+
 //-----------------------------------------------------------------------------
 // Purpose: converts an english string to unicode
 //-----------------------------------------------------------------------------
@@ -79,11 +82,14 @@ CWordTag::~CWordTag( void )
 {
 	delete[] m_pszWord;
 
+/*
 	while ( m_Phonemes.Size() > 0 )
 	{
 		delete m_Phonemes[ 0 ];
 		m_Phonemes.Remove( 0 );
 	}
+*/
+	m_Phonemes.RemoveAll(); // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -109,8 +115,16 @@ int CWordTag::IndexOfPhoneme( CPhonemeTag *tag )
 void CWordTag::SetWord( const char *word )
 {
 	delete[] m_pszWord;
-	m_pszWord = new char[ strlen( word ) + 1 ];
-	strcpy( m_pszWord, word );
+
+	if ( !word || !word[ 0 ] )
+		return;
+
+//	m_pszWord = new char[ strlen( word ) + 1 ];
+//	strcpy( m_pszWord, word );
+	int len = strlen( word ) + 1;
+	m_pszWord = new char[ len ];
+	Assert( m_pszWord );
+	Q_strncpy( m_pszWord, word, len );
 }
 
 //-----------------------------------------------------------------------------
@@ -188,7 +202,7 @@ CPhonemeTag::~CPhonemeTag( void )
 //-----------------------------------------------------------------------------
 void CPhonemeTag::SetTag( const char *phoneme )
 {
-	Assert( strlen( phoneme ) <= MAX_PHONEME_LENGTH - 1 );
+	assert( strlen( phoneme ) <= MAX_PHONEME_LENGTH - 1 );
 	strcpy( m_szPhoneme, phoneme );
 }
 
@@ -239,7 +253,7 @@ int CCloseCaptionPhrase::LanguageForName( char const *name )
 	{
 		CCLanguage *entry = &g_CCLanguageLookup[ l ];
 		Assert( entry->type == l );
-		if ( !stricmp( entry->name, name ) )
+		if ( !_stricmp( entry->name, name ) )
 			return l;
 	}
 	return -1;
@@ -511,7 +525,7 @@ void CSentence::ParsePlaintext( CUtlBuffer& buf )
 	while ( 1 )
 	{
 		buf.GetString( token );
-		if ( !stricmp( token, "}" ) )
+		if ( !_stricmp( token, "}" ) )
 			break;
 
 		strcat( text, token );
@@ -530,10 +544,10 @@ void CSentence::ParseWords( CUtlBuffer& buf )
 	while ( 1 )
 	{
 		buf.GetString( token );
-		if ( !stricmp( token, "}" ) )
+		if ( !_stricmp( token, "}" ) )
 			break;
 
-		if ( stricmp( token, "WORD" ) )
+		if ( _stricmp( token, "WORD" ) )
 			break;
 
 		buf.GetString( token );
@@ -545,20 +559,20 @@ void CSentence::ParseWords( CUtlBuffer& buf )
 		end = atof( token );
 
 		CWordTag *wt = new CWordTag( word );
-		Assert( wt );
+		assert( wt );
 		wt->m_flStartTime = start;
 		wt->m_flEndTime = end;
 
 		AddWordTag( wt );
 
 		buf.GetString( token );
-		if ( stricmp( token, "{" ) )
+		if ( _stricmp( token, "{" ) )
 			break;
 
 		while ( 1 )
 		{
 			buf.GetString( token );
-			if ( !stricmp( token, "}" ) )
+			if ( !_stricmp( token, "}" ) )
 				break;
 
 			// Parse phoneme
@@ -579,7 +593,7 @@ void CSentence::ParseWords( CUtlBuffer& buf )
 			volume = atof( token );
 
 			CPhonemeTag *pt = new CPhonemeTag();
-			Assert( pt );
+			assert( pt );
 			pt->m_nPhonemeCode = code;
 			strcpy( pt->m_szPhoneme, phonemename );
 			pt->m_flStartTime = start;
@@ -597,7 +611,7 @@ void CSentence::ParseEmphasis( CUtlBuffer& buf )
 	while ( 1 )
 	{
 		buf.GetString( token );
-		if ( !stricmp( token, "}" ) )
+		if ( !_stricmp( token, "}" ) )
 			break;
 
 		char t[ 256 ];
@@ -630,7 +644,7 @@ void CSentence::ParseCloseCaption( CUtlBuffer& buf )
 		//   PHRASE unicode streamlength "streambytes" starttime endtime
 		// }
 		buf.GetString( token );
-		if ( !stricmp( token, "}" ) )
+		if ( !_stricmp( token, "}" ) )
 			break;
 
 		char language_name[ 128 ];
@@ -640,17 +654,17 @@ void CSentence::ParseCloseCaption( CUtlBuffer& buf )
 		Assert( language_id != -1 );
 
 		buf.GetString( token );
-		if ( stricmp( token, "{" ) )
+		if ( _stricmp( token, "{" ) )
 			break;
 
 		buf.GetString( token );
 		while ( 1 )
 		{
 
-			if ( !stricmp( token, "}" ) )
+			if ( !_stricmp( token, "}" ) )
 				break;
 
-			if ( stricmp( token, "PHRASE" ) )
+			if ( _stricmp( token, "PHRASE" ) )
 				break;
 
 			char cc_type[32];
@@ -665,11 +679,11 @@ void CSentence::ParseCloseCaption( CUtlBuffer& buf )
 			strcpy( cc_type, token );
 
 			bool unicode = false;
-			if ( !stricmp( cc_type, "unicode" ) )
+			if ( !_stricmp( cc_type, "unicode" ) )
 			{
 				unicode = true;
 			}
-			else if ( stricmp( cc_type, "char" ) )
+			else if ( _stricmp( cc_type, "char" ) )
 			{
 				Assert( 0 );
 			}
@@ -722,7 +736,7 @@ void CSentence::ParseOptions( CUtlBuffer& buf )
 	while ( 1 )
 	{
 		buf.GetString( token );
-		if ( !stricmp( token, "}" ) )
+		if ( !_stricmp( token, "}" ) )
 			break;
 
 		char key[ 256 ];
@@ -731,7 +745,7 @@ void CSentence::ParseOptions( CUtlBuffer& buf )
 		buf.GetString( token );
 		strcpy( value, token );
 
-		if ( !strcmpi( key, "voice_duck" ) )
+		if ( !_strcmpi( key, "voice_duck" ) )
 		{
 			SetVoiceDuck( atoi(value) ? true : false );
 		}
@@ -758,26 +772,26 @@ void CSentence::ParseDataVersionOnePointZero( CUtlBuffer& buf )
 		strcpy( section, token );
 
 		buf.GetString( token );
-		if ( stricmp( token, "{" ) )
+		if ( _stricmp( token, "{" ) )
 			break;
 
-		if ( !stricmp( section, "PLAINTEXT" ) )
+		if ( !_stricmp( section, "PLAINTEXT" ) )
 		{
 			ParsePlaintext( buf );
 		}
-		else if ( !stricmp( section, "WORDS" ) )
+		else if ( !_stricmp( section, "WORDS" ) )
 		{
 			ParseWords( buf );
 		}
-		else if ( !stricmp( section, "EMPHASIS" ) )
+		else if ( !_stricmp( section, "EMPHASIS" ) )
 		{
 			ParseEmphasis( buf );
 		}		
-		else if ( !stricmp( section, "CLOSECAPTION" ) )
+		else if ( !_stricmp( section, "CLOSECAPTION" ) )
 		{
 			ParseCloseCaption( buf );
 		}
-		else if ( !stricmp( section, "OPTIONS" ) )
+		else if ( !_stricmp( section, "OPTIONS" ) )
 		{
 			ParseOptions( buf );
 		}
@@ -894,7 +908,7 @@ void CSentence::InitFromDataChunk( void *data, int size )
 	char token[ 4096 ];
 	buf.GetString( token );
 
-	if ( stricmp( token, "VERSION" ) )
+	if ( _stricmp( token, "VERSION" ) )
 		return;
 
 	buf.GetString( token );
@@ -904,7 +918,7 @@ void CSentence::InitFromDataChunk( void *data, int size )
 	}
 	else
 	{
-		Assert( 0 );
+		assert( 0 );
 		return;
 	}
 }
@@ -946,11 +960,14 @@ void CSentence::Reset( void )
 {
 	m_nResetWordBase = 0;
 
+/*
 	while ( m_Words.Size() > 0 )
 	{
 		delete m_Words[ 0 ];
 		m_Words.Remove( 0 );
 	}
+*/
+	m_Words.RemoveAll(); // VXP
 
 	m_EmphasisSamples.RemoveAll();
 
@@ -1107,7 +1124,7 @@ CSentence& CSentence::operator=( const CSentence& src )
 	m_nResetWordBase = src.m_nResetWordBase;
 
 	int c = src.m_EmphasisSamples.Size();
-	for ( i = 0; i < c; i++ )
+	for ( int i = 0; i < c; i++ )
 	{
 		CEmphasisSample s = src.m_EmphasisSamples[ i ];
 		m_EmphasisSamples.AddToTail( s );
@@ -1116,7 +1133,7 @@ CSentence& CSentence::operator=( const CSentence& src )
 	for ( int l = 0; l < CC_NUM_LANGUAGES; l++ )
 	{
 		c = src.m_CloseCaption[ l ].Count();
-		for ( i = 0; i < c; i++ )
+		for ( int i = 0; i < c; i++ )
 		{
 			CCloseCaptionPhrase *phrase = new CCloseCaptionPhrase( (*src.m_CloseCaption[ l ][ i ]) );
 			m_CloseCaption[ l ].AddToTail( phrase );

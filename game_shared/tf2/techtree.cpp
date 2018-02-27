@@ -77,7 +77,7 @@ static bool NameStartsWith( const char *name, const char *prefix )
 	if ( !name || !name[ 0 ] || !prefix || !prefix[ 0 ] )
 		return false;
 
-	if ( !strnicmp( name, prefix, strlen( prefix ) ) )
+	if ( !_strnicmp( name, prefix, strlen( prefix ) ) )
 		return true;
 
 	return false;
@@ -1018,7 +1018,7 @@ CBaseTechnology* CTechnologyTree::GetTechnology( const char *pName )
 {
 	for ( int i=0; i < m_Technologies.Size(); i++)
 	{
-		if( stricmp( pName, m_Technologies[i]->GetName() ) == 0 )
+		if( _stricmp( pName, m_Technologies[i]->GetName() ) == 0 )
 			return m_Technologies[i];
 	}
 	

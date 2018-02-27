@@ -957,7 +957,7 @@ void CDynamicProp::PropSetSequence( int nSequence )
 	ResetClientsideFrame();
 
 	RemoveFlag( FL_STATICPROP );
-	SetThink( AnimThink );
+	SetThink( &CDynamicProp::AnimThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 
@@ -978,8 +978,9 @@ void CDynamicProp::InputTurnOff( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 class COrnamentProp : public CDynamicProp
 {
-	DECLARE_CLASS( COrnamentProp, CDynamicProp );
 public:
+	DECLARE_CLASS( COrnamentProp, CDynamicProp );
+
 	DECLARE_DATADESC();
 
 	void Spawn();
@@ -1401,7 +1402,7 @@ public:
 		{
 			char tmp[1024];
 			Q_strncpy( tmp, pValue, sizeof(pModel->modelName) );
-			if ( strnicmp( tmp, "models/", 7 ) )
+			if ( _strnicmp( tmp, "models/", 7 ) )
 			{
 				Q_strncpy( pModel->modelName, "models/" ,sizeof(pModel->modelName));
 				Q_strncat( pModel->modelName, tmp, sizeof(pModel->modelName) );
@@ -1411,20 +1412,20 @@ public:
 				Q_strncpy( pModel->modelName, tmp ,sizeof(pModel->modelName));
 			}
 			int len = strlen(pModel->modelName);
-			if ( len < 4 || strcmpi( pModel->modelName + (len-4), ".mdl" ) )
+			if ( len < 4 || _strcmpi( pModel->modelName + (len-4), ".mdl" ) )
 			{
 				Q_strncat( pModel->modelName, ".mdl", sizeof(pModel->modelName) );
 			}
 		}
-		else if ( !strcmpi( pKey, "offset" ) )
+		else if ( !_strcmpi( pKey, "offset" ) )
 		{
 			UTIL_StringToVector( pModel->offset.Base(), pValue );
 		}
-		else if ( !strcmpi( pKey, "health" ) )
+		else if ( !_strcmpi( pKey, "health" ) )
 		{
 			pModel->health = atof(pValue);
 		}
-		else if ( !strcmpi( pKey, "fadetime" ) )
+		else if ( !_strcmpi( pKey, "fadetime" ) )
 		{
 			pModel->fadeTime = atof(pValue);
 			if ( !m_wroteCollisionGroup )
@@ -1432,12 +1433,12 @@ public:
 				pModel->collisionGroup = COLLISION_GROUP_DEBRIS;
 			}
 		}
-		else if ( !strcmpi( pKey, "debris" ) )
+		else if ( !_strcmpi( pKey, "debris" ) )
 		{
 			pModel->collisionGroup = atoi(pValue) > 0 ? COLLISION_GROUP_DEBRIS : COLLISION_GROUP_INTERACTIVE;
 			m_wroteCollisionGroup = true;
 		}
-		else if ( !strcmpi( pKey, "burst" ) )
+		else if ( !_strcmpi( pKey, "burst" ) )
 		{
 			pModel->burstScale = atof( pValue );
 		}
@@ -1472,7 +1473,7 @@ static void BreakModelList( CUtlVector<breakmodel_t> &list, int modelindex, floa
 		CBreakParser breakParser( defBurstScale, defCollisionGroup );
 		
 		const char *pBlock = pParse->GetCurrentBlockName();
-		if ( !strcmpi( pBlock, "break" ) )
+		if ( !_strcmpi( pBlock, "break" ) )
 		{
 			int index = list.AddToTail();
 			breakmodel_t &breakModel = list[index];
@@ -2706,8 +2707,9 @@ LINK_ENTITY_TO_CLASS(prop_door_rotating, CPropDoorRotating);
 // Debug sphere
 class CPhysSphere : public CPhysicsProp
 {
-	DECLARE_CLASS( CPhysSphere, CPhysicsProp );
 public:
+	DECLARE_CLASS( CPhysSphere, CPhysicsProp );
+
 	virtual bool OverridePropdata() { return true; }
 	bool CreateVPhysics()
 	{

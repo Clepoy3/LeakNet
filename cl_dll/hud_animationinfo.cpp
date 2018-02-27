@@ -304,7 +304,7 @@ static void HudAnimationInfo_f( void )
 	
 	for ( int i = 0; i < gHUD.m_HudList.Size(); i++ )
 	{
-		if ( stricmp( gHUD.m_HudList[i]->GetName(), engine->Cmd_Argv(1)  ) == 0 )
+		if ( _stricmp( gHUD.m_HudList[i]->GetName(), engine->Cmd_Argv(1)  ) == 0 )
 		{
 			element =  gHUD.m_HudList[i];
 			break;

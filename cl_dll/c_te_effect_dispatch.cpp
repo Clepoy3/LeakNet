@@ -72,7 +72,7 @@ void DispatchEffectToCallback( const char *pEffectName, const CEffectData &m_Eff
 {
 	for ( CClientEffectRegistration *pReg = CClientEffectRegistration::s_pHead; pReg; pReg = pReg->m_pNext )
 	{
-		if ( stricmp( pReg->m_pEffectName, pEffectName ) == 0 )
+		if ( _stricmp( pReg->m_pEffectName, pEffectName ) == 0 )
 		{
 			pReg->m_pFunction( m_EffectData );
 			// VXP: Should be "return" here?

@@ -329,7 +329,7 @@ void Slider::DrawTicks()
     		surface()->DrawFilledRect( xpos+1, y+1, xpos + 2, y + tickHeight + 1 );
     	}
         surface()->DrawSetColor( GetSchemeColor("DisabledFgColor2", pScheme) ); //vgui::Color( 127, 140, 127, 255 ) );
-    	for ( i = 0; i <= m_nNumTicks; i++ )
+    	for ( int i = 0; i <= m_nNumTicks; i++ )
     	{
     		int xpos = (int)( leftpixel + i * pixelspertick );
     		surface()->DrawFilledRect( xpos, y, xpos + 1, y + tickHeight );

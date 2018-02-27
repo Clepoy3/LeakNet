@@ -312,7 +312,7 @@ static int __cdecl DefaultSortFunc(const void *elem1, const void *elem2)
 			const char *s1 = p1->kv->GetString(col, "");
 			const char *s2 = p2->kv->GetString(col, "");
 
-			return stricmp(s1, s2);
+			return _stricmp(s1, s2);
 		}
 	}
 	else    // its an imagePanel column
@@ -712,7 +712,7 @@ int ListPanel::FindColumn(const char *columnName)
 {
 	for (int i = 0; i < m_CurrentColumns.Count(); i++)
 	{
-		if (!stricmp(columnName, m_ColumnsData[m_CurrentColumns[i]].m_pHeader->GetName()))
+		if (!_stricmp(columnName, m_ColumnsData[m_CurrentColumns[i]].m_pHeader->GetName()))
 		{
 			return i;
 		}
@@ -779,7 +779,7 @@ int ListPanel::GetItem(const char *itemName)
 {
 	FOR_EACH_LL( m_DataItems, i )
 	{
-		if (!stricmp(m_DataItems[i]->kv->GetName(), itemName))
+		if (!_stricmp(m_DataItems[i]->kv->GetName(), itemName))
 		{
 			return i;
 		}
@@ -894,7 +894,7 @@ void ListPanel::IndexItem(int itemID)
 	s_pCurrentSortingListPanel = this;
 
 	// add the item into the RB tree for each column
-	for (i = 0; i < m_ColumnsHistory.Count(); i++)
+	for (int i = 0; i < m_ColumnsHistory.Count(); i++)
 	{
 		// skip over any removed columns
 		if ( m_ColumnsHistory[i] == m_ColumnsData.InvalidIndex() )

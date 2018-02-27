@@ -1794,7 +1794,7 @@ void Selection3D::EyedropperPick(CMapView *pView, CMapClass *pObject)
 	// Apply the key to all selected entities with the chosen keyvalue.
 	//
 	nSelCount = m_SelectionList.Count();
-	for (i = 0; i < nSelCount; i++)
+	for (int i = 0; i < nSelCount; i++)
 	{
 		CMapClass *pObject = m_SelectionList.Element(i);
 	

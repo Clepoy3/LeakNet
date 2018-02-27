@@ -31,8 +31,9 @@
 
 class CWeaponShieldGrenade: public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponShieldGrenade, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponShieldGrenade, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

@@ -205,7 +205,7 @@ const char *GDclass::GetDescription(void)
 bool GDclass::IsClass(const char *pszClass)
 {
 	ASSERT(pszClass != NULL);
-	return(!stricmp(pszClass, m_szName));
+	return(!_stricmp(pszClass, m_szName));
 }
 
 
@@ -214,7 +214,7 @@ bool GDclass::IsClass(const char *pszClass)
 //-----------------------------------------------------------------------------
 bool GDclass::IsNodeClass(const char *pszClassName)
 {
-	return((strnicmp(pszClassName, "info_node", 9) == 0) && (stricmp(pszClassName, "info_node_link") != 0));
+	return((_strnicmp(pszClassName, "info_node", 9) == 0) && (_stricmp(pszClassName, "info_node_link") != 0));
 }
 
 

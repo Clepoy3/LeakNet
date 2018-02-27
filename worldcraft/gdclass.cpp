@@ -312,7 +312,7 @@ CClassInput *GDclass::FindInput(const char *szName)
 	CClassInput *pInput = GetFirstInput(pos);
 	while (pInput != NULL)
 	{
-		if (!stricmp(pInput->GetName(), szName))
+		if (!_stricmp(pInput->GetName(), szName))
 		{
 			return(pInput);
 		}
@@ -335,7 +335,7 @@ CClassOutput *GDclass::FindOutput(const char *szName)
 	CClassOutput *pOutput = GetFirstOutput(pos);
 	while (pOutput != NULL)
 	{
-		if (!stricmp(pOutput->GetName(), szName))
+		if (!_stricmp(pOutput->GetName(), szName))
 		{
 			return(pOutput);
 		}
@@ -953,7 +953,7 @@ bool GDclass::ParseVariables(TokenReader &tr)
 			break;
 		}
 
-		if (!stricmp(szToken, "input"))
+		if (!_stricmp(szToken, "input"))
 		{
 			if (!ParseInput(tr))
 			{
@@ -963,7 +963,7 @@ bool GDclass::ParseVariables(TokenReader &tr)
 			continue;
 		}
 
-		if (!stricmp(szToken, "output"))
+		if (!_stricmp(szToken, "output"))
 		{
 			if (!ParseOutput(tr))
 			{
@@ -973,7 +973,7 @@ bool GDclass::ParseVariables(TokenReader &tr)
 			continue;
 		}
 
-		if (!stricmp(szToken, "key"))
+		if (!_stricmp(szToken, "key"))
 		{
 			GDGetToken(tr, szToken, sizeof(szToken));
 		}
@@ -1051,7 +1051,7 @@ GDinputvariable *GDclass::VarForName(LPCTSTR pszName, int *piIndex)
 	for(int i = 0; i < GetVariableCount(); i++)
 	{
 		GDinputvariable *pVar = GetVariableAt(i);
-		if(!strcmpi(pVar->GetName(), pszName))
+		if(!_strcmpi(pVar->GetName(), pszName))
 		{
 			if(piIndex)
 				piIndex[0] = i;

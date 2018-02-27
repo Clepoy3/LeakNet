@@ -26,6 +26,8 @@
 #include <new.h>
 #include "tier0/platform.h"
 
+#include "tier0/memdbgon.h"
+
 #pragma warning (disable:4100)
 #pragma warning (disable:4514)
 
@@ -104,7 +106,8 @@ private:
 // constructor, destructor
 //-----------------------------------------------------------------------------
 template< class T >
-CUtlFixedMemory<T>::CUtlFixedMemory( int nGrowSize, int nInitAllocationCount ) : m_pMemory(0), 
+//CUtlFixedMemory<T>::CUtlFixedMemory( int nGrowSize, int nInitAllocationCount ) : m_pMemory(0), // VXP: Conv
+CUtlFixedMemory<T>::CUtlFixedMemory( int nGrowSize, int nInitAllocationCount ) : m_pMemory(0), m_pFirstFree(0), 
 	m_nAllocationCount( nInitAllocationCount ), m_nGrowSize( nGrowSize )
 {
 	// T must be at least as big as a pointer or the free list fails
@@ -113,7 +116,8 @@ CUtlFixedMemory<T>::CUtlFixedMemory( int nGrowSize, int nInitAllocationCount ) :
 	Assert( (nGrowSize >= 0) && (nGrowSize != EXTERNAL_BUFFER_MARKER) );
 	if (m_nAllocationCount)
 	{
-		m_pMemory = (BlockHeader_t*)Plat_Alloc( sizeof(BlockHeader_t) + m_nAllocationCount * sizeof(T) );
+	//	m_pMemory = (BlockHeader_t*)Plat_Alloc( sizeof(BlockHeader_t) + m_nAllocationCount * sizeof(T) ); // VXP: Conv
+		m_pMemory = (BlockHeader_t*)malloc( sizeof(BlockHeader_t) + m_nAllocationCount * sizeof(T) );
 		m_pMemory->m_pNext = NULL;
 		m_pMemory->m_nBlockCount = m_nAllocationCount;
 		SetupFreeList( m_pMemory );
@@ -325,7 +329,8 @@ void CUtlFixedMemory<T>::Grow( int num )
 	// Use the grow rules specified for this memory (in m_nGrowSize)
 	int nNewAllocationCount = m_nAllocationCount - nOldAllocation;
 
-	BlockHeader_t *pHeader = (BlockHeader_t*)Plat_Alloc( sizeof(BlockHeader_t) + nNewAllocationCount * sizeof(T) );
+//	BlockHeader_t *pHeader = (BlockHeader_t*)Plat_Alloc( sizeof(BlockHeader_t) + nNewAllocationCount * sizeof(T) ); // VXP: Conv
+	BlockHeader_t *pHeader = (BlockHeader_t*)malloc( sizeof(BlockHeader_t) + nNewAllocationCount * sizeof(T) );
 	pHeader->m_pNext = NULL;
 	pHeader->m_nBlockCount = nNewAllocationCount;
 	SetupFreeList( pHeader );
@@ -358,7 +363,8 @@ void CUtlFixedMemory<T>::Purge()
 	for ( pHeader = m_pMemory; pHeader; pHeader = pNext )
 	{
 		pNext = pHeader->m_pNext;
-		Plat_Free( pHeader );
+	//	Plat_Free( pHeader );
+		free( pHeader );
 	}
 
 	m_pMemory = NULL;
@@ -366,5 +372,7 @@ void CUtlFixedMemory<T>::Purge()
 	m_nAllocationCount = 0;
 }
 
+
+#include "tier0/memdbgoff.h"
 
 #endif // UTLFIXEDMEMORY_H

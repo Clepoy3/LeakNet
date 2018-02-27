@@ -132,11 +132,11 @@ SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\public\MemPool.cpp
+SOURCE=..\..\common\MemPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\common\GameUI\Random.cpp
+SOURCE=..\..\common\Random.cpp
 # End Source File
 # Begin Source File
 

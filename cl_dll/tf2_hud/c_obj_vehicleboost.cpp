@@ -14,10 +14,8 @@
 //-----------------------------------------------------------------------------
 class C_ObjectVehicleBoost : public C_BaseObjectUpgrade
 {
-
-	DECLARE_CLASS( C_ObjectVehicleBoost, C_BaseObjectUpgrade );
-
 public:
+	DECLARE_CLASS( C_ObjectVehicleBoost, C_BaseObjectUpgrade );
 
 	DECLARE_CLIENTCLASS();
 

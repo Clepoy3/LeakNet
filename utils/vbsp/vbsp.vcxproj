@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\Public;..\common;..\vmpi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;DEBUG;MACRO_MATHLIB;_WIN32;_CONSOLE;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Debug\vbsp.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Debug\vbsp.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\vbsp.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>libcd;libc;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <OutputFile>.\Debug\vbsp.exe</OutputFile>
+      <AdditionalDependencies>ws2_32.lib;odbc32.lib;odbccp32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\$(TargetName).exe attrib -r ..\..\..\bin\$(TargetName).exe 
+copy $(TargetPath)  ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>..\..\Public;..\common;..\vmpi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;MACRO_MATHLIB;_WIN32;_CONSOLE;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release\vbsp.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\vbsp.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\vbsp.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>libc;libcd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Release\vbsp.exe</OutputFile>
+      <AdditionalDependencies>ws2_32.lib;odbc32.lib;odbccp32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist ..\..\..\bin\$(TargetName).exe attrib -r ..\..\..\bin\$(TargetName).exe 
+copy $(TargetPath)  ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\common\bsplib.cpp" />
+    <ClCompile Include="..\..\common\builddisp.cpp" />
+    <ClCompile Include="..\..\public\characterset.cpp" />
+    <ClCompile Include="..\..\Public\checksum_crc.cpp" />
+    <ClCompile Include="..\..\Public\ChunkFile.cpp" />
+    <ClCompile Include="..\common\cmdlib.cpp" />
+    <ClCompile Include="..\..\public\filesystem_helpers.cpp" />
+    <ClCompile Include="..\..\public\filesystem_tools.cpp" />
+    <ClCompile Include="..\..\Public\interface.cpp" />
+    <ClCompile Include="..\common\map_shared.cpp" />
+    <ClCompile Include="..\common\pacifier.cpp" />
+    <ClCompile Include="..\common\polylib.cpp" />
+    <ClCompile Include="..\common\scriplib.cpp" />
+    <ClCompile Include="..\common\threads.cpp" />
+    <ClCompile Include="..\..\Public\TokenReader.cpp" />
+    <ClCompile Include="brushbsp.cpp" />
+    <ClCompile Include="..\..\Public\CollisionUtils.cpp" />
+    <ClCompile Include="csg.cpp" />
+    <ClCompile Include="cubemap.cpp" />
+    <ClCompile Include="detail.cpp" />
+    <ClCompile Include="detailObjects.cpp" />
+    <ClCompile Include="..\..\common\disp_common.cpp" />
+    <ClCompile Include="disp_ivp.cpp" />
+    <ClCompile Include="disp_lightmap_alpha.cpp" />
+    <ClCompile Include="..\..\common\disp_powerinfo.cpp" />
+    <ClCompile Include="disp_vbsp.cpp" />
+    <ClCompile Include="faces.cpp" />
+    <ClCompile Include="glfile.cpp" />
+    <ClCompile Include="ivp.cpp" />
+    <ClCompile Include="..\..\public\KeyValues.cpp" />
+    <ClCompile Include="leakfile.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="materialpatch.cpp" />
+    <ClCompile Include="..\..\Public\Mathlib.cpp" />
+    <ClCompile Include="..\..\Public\mempool.cpp" />
+    <ClCompile Include="..\common\mstristrip.cpp" />
+    <ClCompile Include="nodraw.cpp" />
+    <ClCompile Include="normals.cpp" />
+    <ClCompile Include="overlay.cpp" />
+    <ClCompile Include="..\..\Public\physdll.cpp" />
+    <ClCompile Include="portals.cpp" />
+    <ClCompile Include="prtfile.cpp" />
+    <ClCompile Include="..\..\Public\ScratchPad3D.cpp" />
+    <ClCompile Include="StaticProp.cpp" />
+    <ClCompile Include="textures.cpp" />
+    <ClCompile Include="tree.cpp" />
+    <ClCompile Include="..\common\utilmatlib.cpp" />
+    <ClCompile Include="..\..\Public\UtlBuffer.cpp" />
+    <ClCompile Include="..\..\Public\utlsymbol.cpp" />
+    <ClCompile Include="vbsp.cpp" />
+    <ClCompile Include="..\..\Public\vmatrix.cpp" />
+    <ClCompile Include="writebsp.cpp" />
+    <ClCompile Include="..\..\public\studio.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\bsplib.h" />
+    <ClInclude Include="..\..\common\builddisp.h" />
+    <ClInclude Include="..\..\Public\ChunkFile.h" />
+    <ClInclude Include="..\common\cmdlib.h" />
+    <ClInclude Include="disp_ivp.h" />
+    <ClInclude Include="..\..\Public\FileSystem.h" />
+    <ClInclude Include="..\..\public\filesystem_helpers.h" />
+    <ClInclude Include="..\..\Public\FileSystem_Tools.h" />
+    <ClInclude Include="..\..\Public\GameBSPFile.h" />
+    <ClInclude Include="..\..\Public\interface.h" />
+    <ClInclude Include="ivp.h" />
+    <ClInclude Include="..\common\map_shared.h" />
+    <ClInclude Include="..\common\pacifier.h" />
+    <ClInclude Include="..\common\polylib.h" />
+    <ClInclude Include="..\..\Public\TokenReader.h" />
+    <ClInclude Include="..\common\utilmatlib.h" />
+    <ClInclude Include="..\vmpi\vmpi.h" />
+    <ClInclude Include="detail.h" />
+    <ClInclude Include="disp_lightmap_alpha.h" />
+    <ClInclude Include="..\..\common\disp_powerinfo.h" />
+    <ClInclude Include="disp_vbsp.h" />
+    <ClInclude Include="..\..\common\disp_vertindex.h" />
+    <ClInclude Include="faces.h" />
+    <ClInclude Include="materialpatch.h" />
+    <ClInclude Include="vbsp.h" />
+    <ClInclude Include="writebsp.h" />
+    <ClInclude Include="..\..\Public\amd3dx.h" />
+    <ClInclude Include="..\..\Public\arraystack.h" />
+    <ClInclude Include="..\..\Public\basetypes.h" />
+    <ClInclude Include="..\..\Public\BSPFILE.H" />
+    <ClInclude Include="..\..\Public\bspflags.h" />
+    <ClInclude Include="..\..\Public\BSPTreeData.h" />
+    <ClInclude Include="..\..\Public\bumpvects.h" />
+    <ClInclude Include="..\..\Public\cmodel.h" />
+    <ClInclude Include="..\..\Public\CollisionUtils.h" />
+    <ClInclude Include="..\..\Public\commonmacros.h" />
+    <ClInclude Include="..\..\Public\dbg\dbg.h" />
+    <ClInclude Include="..\..\common\disp_common.h" />
+    <ClInclude Include="..\..\Public\ImageLoader.h" />
+    <ClInclude Include="..\..\Public\IScratchPad3D.h" />
+    <ClInclude Include="..\..\Public\MATHLIB.H" />
+    <ClInclude Include="..\common\mstristrip.h" />
+    <ClInclude Include="..\..\Public\nmatrix.h" />
+    <ClInclude Include="..\..\Public\NTree.h" />
+    <ClInclude Include="..\..\Public\nvector.h" />
+    <ClInclude Include="..\..\Public\phyfile.h" />
+    <ClInclude Include="..\..\Public\physdll.h" />
+    <ClInclude Include="..\..\Public\plane.h" />
+    <ClInclude Include="..\common\qfiles.h" />
+    <ClInclude Include="..\..\Public\ScratchPad3D.h" />
+    <ClInclude Include="..\common\scriplib.h" />
+    <ClInclude Include="..\..\Public\studio.h" />
+    <ClInclude Include="..\common\threads.h" />
+    <ClInclude Include="..\..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\..\Public\utllinkedlist.h" />
+    <ClInclude Include="..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\Public\utlsymbol.h" />
+    <ClInclude Include="..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\Public\vcollide.h" />
+    <ClInclude Include="..\..\Public\vector.h" />
+    <ClInclude Include="..\..\Public\vector2d.h" />
+    <ClInclude Include="..\..\Public\vector4d.h" />
+    <ClInclude Include="..\..\Public\vmatrix.h" />
+    <ClInclude Include="..\..\Public\vphysics_interface.h" />
+    <ClInclude Include="..\..\Public\vplane.h" />
+    <ClInclude Include="..\..\Public\wadtypes.h" />
+    <ClInclude Include="..\..\Public\worldsize.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="notes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\public\vtf.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

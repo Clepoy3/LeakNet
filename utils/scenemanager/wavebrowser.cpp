@@ -839,7 +839,8 @@ void CWaveBrowser::JumpToItem( CWaveFile *wav )
 	PopulateTree( usepath );
 
 	int c = m_pListView->getItemCount();
-	for ( int idx = 0; idx < c; idx++ )
+	int idx;
+	for ( idx = 0; idx < c; idx++ )
 	{
 		CWaveFile *item = (CWaveFile *)m_pListView->getUserData( idx, 0 );
 		if ( !Q_stricmp( item->GetFileName(), wav->GetFileName() ) )

@@ -80,8 +80,8 @@ void CNPC_Hornet::Spawn( void )
 	SetModel( "models/hornet.mdl" );
 	UTIL_SetSize( this, Vector( -4, -4, -4 ), Vector( 4, 4, 4 ) );
 
-	SetTouch( DieTouch );
-	SetThink( StartTrack );
+	SetTouch( &CNPC_Hornet::DieTouch );
+	SetThink( &CNPC_Hornet::StartTrack );
 
 	if ( GetOwnerEntity() && (GetOwnerEntity()->GetFlags() & FL_CLIENT) )
 	{
@@ -147,9 +147,9 @@ void CNPC_Hornet::StartDart ( void )
 {
 	IgniteTrail();
 
-	SetTouch( DartTouch );
+	SetTouch( &CNPC_Hornet::DartTouch );
 
-	SetThink( SUB_Remove );
+	SetThink( &CBaseEntity::SUB_Remove );
 	SetNextThink( gpGlobals->curtime + 4 );
 }
 
@@ -192,8 +192,8 @@ void CNPC_Hornet :: StartTrack ( void )
 {
 	IgniteTrail();
 
-	SetTouch( TrackTouch );
-	SetThink( TrackTarget );
+	SetTouch( &CNPC_Hornet::TrackTouch );
+	SetThink( &CNPC_Hornet::TrackTarget );
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
@@ -282,7 +282,7 @@ void CNPC_Hornet::TrackTarget ( void )
 	if (gpGlobals->curtime > m_flStopAttack)
 	{
 		SetTouch( NULL );
-		SetThink( SUB_Remove );
+		SetThink( &CBaseEntity::SUB_Remove );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 		return;
 	}

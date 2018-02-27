@@ -263,9 +263,9 @@ private:
 
 class CAI_ExpressiveNPC : public CAI_BaseNPC, private CAI_ExpresserSink
 {
+public:
 	DECLARE_CLASS( CAI_ExpressiveNPC, CAI_BaseNPC );
 
-public:
 	virtual void		NoteSpeaking( float duration, float delay );
 
 	DECLARE_DATADESC();

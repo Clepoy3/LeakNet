@@ -26,8 +26,9 @@ namespace vgui
 // it and override functions should forward them to the base class.
 class ClientModeTFBase : public ClientModeShared
 {
-	DECLARE_CLASS( ClientModeTFBase, ClientModeShared );
 public:
+	DECLARE_CLASS( ClientModeTFBase, ClientModeShared );
+
 					ClientModeTFBase( void );
 	virtual			~ClientModeTFBase( void );
 

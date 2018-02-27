@@ -100,7 +100,7 @@ void Host_SetRenderer_f( void )
 		return;
 	}
 
-	if ( !stricmp( Cmd_Argv(1), "windowed" ) )
+	if ( !_stricmp( Cmd_Argv(1), "windowed" ) )
 	{
 		fullscreen = false;
 	}
@@ -250,7 +250,7 @@ void Host_Status_f (void)
 	// Early exit for this server.
 	if ( Cmd_Argc() == 2 )
 	{
-		if ( !stricmp( Cmd_Argv(1), "short" ) )
+		if ( !_stricmp( Cmd_Argv(1), "short" ) )
 		{
 			for ( j=0, client = svs.clients ; j < svs.maxclients ; j++, client++)
 			{

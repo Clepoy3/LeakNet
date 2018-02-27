@@ -120,7 +120,7 @@ public:
 	{
 		for ( int i=0; i < m_Files.Count(); i++ )
 		{
-			if ( stricmp( pFilename, m_Files[i]->m_Name ) == 0 )
+			if ( _stricmp( pFilename, m_Files[i]->m_Name ) == 0 )
 				return m_Files[i];
 		}
 		return NULL;
@@ -267,7 +267,7 @@ const char* VMPI_FindArg( int argc, char **argv, const char *pName, const char *
 {
 	for ( int i=0; i < argc; i++ )
 	{
-		if ( stricmp( argv[i], pName ) == 0 )
+		if ( _stricmp( argv[i], pName ) == 0 )
 		{
 			if ( (i+1) < argc )
 				return argv[i+1];
@@ -327,7 +327,7 @@ void SetupDependencyFilename( CDependencyInfo *pInfo )
 		strcpy( pInfo->m_OriginalExeDir, "." );
 	}
 
-	strupr( pInfo->m_OriginalExeDir );
+	_strupr( pInfo->m_OriginalExeDir );
 }
 
 
@@ -910,7 +910,7 @@ bool InitMasterModal( int argc, char **argv, const char *pDependencyFilename, in
 		if ( g_nConnections > nMaxWorkers )
 			break;
 
-		if ( kbhit() && getch() == ' ' )
+		if ( _kbhit() && _getch() == ' ' )
 		{
 			Msg( "Spacebar pressed.. starting early.\n" );
 			break;
@@ -1058,7 +1058,7 @@ void InternalHandleSocketErrors()
 	csLock.Unlock();
 
 	// Handle the errors.
-	for ( i=0; i < errorSockets.Count(); i++ )
+	for ( int i=0; i < errorSockets.Count(); i++ )
 	{
 		errorSockets[i]->HandleDisconnect();
 	}
@@ -1257,7 +1257,7 @@ bool VMPI_SendChunks( void const * const *pChunks, const int *pChunkLengths, int
 		if ( iDest == VMPI_PERSISTENT )
 		{
 			PersistentPacket *pNew = new PersistentPacket;
-			for ( i=0; i < nChunks; i++ )
+			for ( int i=0; i < nChunks; i++ )
 				pNew->AddMultipleToTail( pChunkLengths[i], (const char*)pChunks[i] );
 
 			g_PersistentPackets.AddToTail( pNew );

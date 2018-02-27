@@ -22,10 +22,8 @@ class CTFMoveData;
 //
 class CTFGameMovementSupport : public CTFGameMovement
 {
-
-	DECLARE_CLASS( CTFGameMovementSupport, CTFGameMovement );
-
 public:
+	DECLARE_CLASS( CTFGameMovementSupport, CTFGameMovement );
 
 	CTFGameMovementSupport();
 

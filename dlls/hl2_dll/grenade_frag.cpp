@@ -60,7 +60,7 @@ void CGrenadeFrag::Precache( void )
 
 void CGrenadeFrag::SetTimer( float timer )
 {
-	SetThink( PreDetonate );
+	SetThink( &CBaseGrenade::PreDetonate );
 	SetNextThink( gpGlobals->curtime + timer );
 }
 

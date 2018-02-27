@@ -999,9 +999,9 @@ LINK_ENTITY_TO_CLASS( simple_physics_brush, CSimplePhysicsBrush );
 
 class CSimplePhysicsProp : public CBaseProp
 {
+public:
 	DECLARE_CLASS( CSimplePhysicsProp, CBaseProp );
 
-public:
 	void Spawn()
 	{
 		BaseClass::Spawn();

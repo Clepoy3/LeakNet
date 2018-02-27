@@ -26,9 +26,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectEMPGenerator : public CBaseObject
 {
-DECLARE_CLASS( CObjectEMPGenerator, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectEMPGenerator, CBaseObject );
+
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 

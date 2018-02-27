@@ -140,7 +140,7 @@ void CContentControlDialog::Explain( char const *fmt, ... )
 //-----------------------------------------------------------------------------
 void CContentControlDialog::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Ok" ) )
+	if ( !_stricmp( command, "Ok" ) )
 	{
 		bool canclose = false;
 
@@ -174,7 +174,7 @@ void CContentControlDialog::OnCommand( const char *command )
 			OnClose();
 		}
 	}
-	else if ( !stricmp( command, "Cancel" ) )
+	else if ( !_stricmp( command, "Cancel" ) )
 	{
 		OnClose();
 	}
@@ -350,7 +350,7 @@ bool CContentControlDialog::DisablePassword(const char *oldPW)
 	char digestedPW[ 128 ];
     HashPassword(oldPW, digestedPW);
 
-    if( stricmp( m_szGorePW, digestedPW ) )
+    if( _stricmp( m_szGorePW, digestedPW ) )
     {
         Explain( "#GameUI_IncorrectPassword" );
         return false;

@@ -165,8 +165,9 @@ struct PredictionContext
 //-----------------------------------------------------------------------------
 struct thinkfunc_t
 {
-	const char	*m_pszContext;
+//	const char	*m_pszContext; // VXP: Conv
 	BASEPTR m_pfnThink;
+	const char	*m_pszContext;
 	int		m_nNextThinkTick;
 	int		m_nLastThinkTick;
 };
@@ -179,9 +180,11 @@ struct thinkfunc_t
 //-----------------------------------------------------------------------------
 class C_BaseEntity : public IClientEntity
 {
+public:
 // Construction
 	DECLARE_CLASS_NOBASE( C_BaseEntity );
 
+private:
 	friend class CPrediction;
 
 public:
@@ -215,6 +218,7 @@ public:
     void							*operator new( size_t stAllocateBlock );
     void							*operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine );
 	void							operator delete( void *pMem );
+	void							operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine ) { operator delete( pMem ); }
 
 	// This just picks one of the routes to IClientUnknown.
 	IClientUnknown*					GetIClientUnknown()	{ return this; }

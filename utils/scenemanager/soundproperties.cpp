@@ -172,7 +172,7 @@ static void PopulateScriptList( HWND wnd, char const *curscript )
 
 static bool WaveLessFunc( const char *const& name1, const char *const& name2 )
 {
-	if ( stricmp( name1, name2 ) < 0 )
+	if ( _stricmp( name1, name2 ) < 0 )
 		return true;
 	return false;
 }

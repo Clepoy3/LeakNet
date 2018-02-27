@@ -2,7 +2,21 @@
 #ifndef _GAMEPALETTE_H
 #define _GAMEPALETTE_H
 
-#include <d3drmdef.h>
+//#include <d3drmdef.h> // VXP: Conv
+typedef enum _D3DRMPALETTEFLAGS
+{
+	D3DRMPALETTE_FREE,
+	D3DRMPALETTE_READONLY,
+	D3DRMPALETTE_RESERVED 
+} D3DRMPALETTEFLAGS, *LPD3DRMPALETTEFLAGS;
+
+typedef struct _D3DRMPALETTEENTRY
+{
+	unsigned char red; 
+	unsigned char green; 
+	unsigned char blue; 
+	unsigned char flags; 
+} D3DRMPALETTEENTRY, *LPD3DRMPALETTEENTRY;
 
 class CGamePalette
 {

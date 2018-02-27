@@ -250,7 +250,7 @@ bool CBSPLighting::Load( char const *pFilename )
 	sortInfos.SetSize( pMatSys->GetNumSortIDs() );
 	pMatSys->GetSortInfo( sortInfos.Base() );
 
-	for( iFace=0; iFace < faces.Count(); iFace++ )
+	for( int iFace=0; iFace < faces.Count(); iFace++ )
 	{
 		m_StoredFaces[iFace].m_LightmapPageID = sortInfos[faces[iFace].m_LightmapSortID].lightmapPageID;
 	}
@@ -260,7 +260,7 @@ bool CBSPLighting::Load( char const *pFilename )
 
 
 	// Set lightmap texture coordinates.
-	for( iFace=0; iFace < faces.Size(); iFace++ )
+	for( int iFace=0; iFace < faces.Size(); iFace++ )
 	{
 		CFace *pFace = &faces[iFace];
 		CStoredFace *pStoredFace = &m_StoredFaces[iFace];

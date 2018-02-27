@@ -443,7 +443,7 @@ void CBaseGamesPage::OnButtonToggled(Panel *panel, int state)
 //-----------------------------------------------------------------------------
 void CBaseGamesPage::OnTextChanged(Panel *panel, const char *text)
 {
-	if (!stricmp(text, "<All>"))
+	if (!_stricmp(text, "<All>"))
 	{
 		ComboBox *box = dynamic_cast<ComboBox *>(panel);
 		if (box)
@@ -547,11 +547,11 @@ void CBaseGamesPage::UpdateFilterSettings()
 		m_pGameFilter->GetText(m_szGameFilter, sizeof(m_szGameFilter) - 1);
 		m_pGameFilter->SetEnabled(true);
 	}
-	strlwr(m_szGameFilter);
+	_strlwr(m_szGameFilter);
 
 	// map
 	m_pMapFilter->GetText(m_szMapFilter, sizeof(m_szMapFilter) - 1);
-	strlwr(m_szMapFilter);
+	_strlwr(m_szMapFilter);
 	
 	// ping
 	char buf[256];
@@ -632,7 +632,7 @@ void CBaseGamesPage::RecalculateFilterString()
 	if (m_iPingFilter)
 	{
 		char tmpBuf[16];
-		itoa( m_iPingFilter, tmpBuf, 10 );
+		_itoa( m_iPingFilter, tmpBuf, 10 );
 
 		wcscat( unicode, localize()->Find( "#ServerBrowser_FilterDescLatency" ) );
 		localize()->ConvertANSIToUnicode( " < ", tempUnicode, iTempUnicodeSize );
@@ -675,7 +675,7 @@ void CBaseGamesPage::RecalculateFilterString()
 //-----------------------------------------------------------------------------
 bool CBaseGamesPage::CheckPrimaryFilters(serveritem_t &server)
 {
-	if (m_szGameFilter[0] && stricmp(m_szGameFilter, server.gameDir))
+	if (m_szGameFilter[0] && _stricmp(m_szGameFilter, server.gameDir))
 	{
 		return false;
 	}
@@ -714,7 +714,7 @@ bool CBaseGamesPage::CheckSecondaryFilters(serveritem_t &server)
 
 	// compare the first few characters of the filter name
 	int count = strlen(m_szMapFilter);
-	if (count && strnicmp(server.map, m_szMapFilter, count))
+	if (count && _strnicmp(server.map, m_szMapFilter, count))
 	{
 		return false;
 	}
@@ -775,21 +775,21 @@ void CBaseGamesPage::SetRefreshing(bool state)
 //-----------------------------------------------------------------------------
 void CBaseGamesPage::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Connect"))
+	if (!_stricmp(command, "Connect"))
 	{
 		OnBeginConnect();
 	}
-	else if (!stricmp(command, "stoprefresh"))
+	else if (!_stricmp(command, "stoprefresh"))
 	{
 		// cancel the existing refresh
 		StopRefresh();
 	}
-	else if (!stricmp(command, "refresh"))
+	else if (!_stricmp(command, "refresh"))
 	{
 		// Start a new refresh
 		StartRefresh();
 	}
-	else if (!stricmp(command, "GetNewList"))
+	else if (!_stricmp(command, "GetNewList"))
 	{
 		GetNewServerList();
 	}

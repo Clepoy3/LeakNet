@@ -458,11 +458,11 @@ void CFavoriteGames::ImportFavorites()
 //-----------------------------------------------------------------------------
 void CFavoriteGames::OnCommand(const char *command)
 {
-	if (!stricmp(command, "OnImportFavoritesFile"))
+	if (!_stricmp(command, "OnImportFavoritesFile"))
 	{
 		OnImportFavoritesFile();
 	}
-	else if (!stricmp(command, "AddServerByName"))
+	else if (!_stricmp(command, "AddServerByName"))
 	{
 		OnAddServerByName();
 	}

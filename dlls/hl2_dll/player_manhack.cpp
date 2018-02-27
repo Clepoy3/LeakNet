@@ -138,7 +138,7 @@ void CPlayer_Manhack::InputActivate( inputdata_t &inputdata )
 {
 	BaseClass::InputActivate( inputdata );
 
-	SetThink(FlyThink);
+	SetThink(&CPlayer_Manhack::FlyThink);
 
 	// Switch to a bigger model (a sphere) that keeps the player's
 	// camera outside of walls

@@ -246,12 +246,12 @@ void CModInfoSocket::BatchModInfo( bool oldStyle )
 		if ( !pszModName || !pszModName[0] && ( pMessageBuffer->GetReadCount() >= pMessageBuffer->GetCurSize() ) )
 			break;
 
-		if ( !stricmp( pszModName, "end-of-list" ) )
+		if ( !_stricmp( pszModName, "end-of-list" ) )
 		{
 			break;
 		}
 
-		if ( !stricmp( pszModName, "more-in-list" ) )
+		if ( !_stricmp( pszModName, "more-in-list" ) )
 		{
 			break;
 		}
@@ -315,50 +315,50 @@ void CModInfoSocket::BatchModInfo( bool oldStyle )
 				strcpy( key, pMessageBuffer->MSG_ReadString() ); 
 				strcpy( value,  pMessageBuffer->MSG_ReadString() );
 
-				if ( !stricmp( key, "end" ) )
+				if ( !_stricmp( key, "end" ) )
 				{
 					break;
 				}
 
 				if ( pMod )
 				{
-					if ( !stricmp( key, "ip" ) )
+					if ( !_stricmp( key, "ip" ) )
 					{
 						pMod->stats[ MOD_INTERNET ].players = atoi( value );
 					}
-					else if ( !stricmp( key, "is" ) )
+					else if ( !_stricmp( key, "is" ) )
 					{
 						pMod->stats[ MOD_INTERNET ].servers = atoi( value );
 					}
-					else if ( !stricmp( key, "lp" ) )
+					else if ( !_stricmp( key, "lp" ) )
 					{
 						pMod->stats[ MOD_LAN ].players = atoi( value );
 					}
-					else if ( !stricmp( key, "ls" ) )
+					else if ( !_stricmp( key, "ls" ) )
 					{
 						pMod->stats[ MOD_LAN ].servers = atoi( value );
 					}
-					else if ( !stricmp( key, "lbs" ) )
+					else if ( !_stricmp( key, "lbs" ) )
 					{
 						pMod->stats[ MOD_LAN ].bots_servers = atoi( value );
 					}	
-					else if ( !stricmp( key, "pp" ) )
+					else if ( !_stricmp( key, "pp" ) )
 					{
 						pMod->stats[ MOD_PROXY ].players = atoi( value );
 					}
-					else if ( !stricmp( key, "ps" ) )
+					else if ( !_stricmp( key, "ps" ) )
 					{
 						pMod->stats[ MOD_PROXY ].servers = atoi( value );
 					}		
-					else if ( !stricmp( key, "ib" ) )
+					else if ( !_stricmp( key, "ib" ) )
 					{
 						pMod->stats[ MOD_INTERNET ].bots = atoi( value );
 					}	
-					else if ( !stricmp( key, "ibs" ) )
+					else if ( !_stricmp( key, "ibs" ) )
 					{
 						pMod->stats[ MOD_INTERNET ].bots_servers = atoi( value );
 					}	
-					else if ( !stricmp( key, "lb" ) )
+					else if ( !_stricmp( key, "lb" ) )
 					{
 						pMod->stats[ MOD_LAN ].bots = atoi( value );
 					}
@@ -374,7 +374,7 @@ void CModInfoSocket::BatchModInfo( bool oldStyle )
 		}
 	}
 
-	if ( ( nCount >= 1 ) && pszModName && pszModName[0] && !stricmp( pszModName, "more-in-list" ) ) // More
+	if ( ( nCount >= 1 ) && pszModName && pszModName[0] && !_stricmp( pszModName, "more-in-list" ) ) // More
 	{
 		// This will reset the state flags.
 		RequestModInfo( szName );

@@ -880,7 +880,7 @@ void Morph3D::RenderTool2D(CRender2D *pRender)
 			//
 			pRender->SetLineType(CRender2D::LINE_SOLID, CRender2D::LINE_THIN, 0, 0, 0);
 
-			for (i = 0; i < pStrucSolid->m_nVertices; i++)
+			for (int i = 0; i < pStrucSolid->m_nVertices; i++)
 			{
 				CSSVertex &v = pStrucSolid->m_Vertices[i];
 
@@ -1160,10 +1160,11 @@ void Morph3D::SelectInBox()
 	{	
 		CSSolid *pStrucSolid = m_StrucSolids.GetNext(p);
 
-		for(i = 0; i < pStrucSolid->m_nVertices; i++)
+		for(int i = 0; i < pStrucSolid->m_nVertices; i++)
 		{
 			CSSVertex& v = pStrucSolid->m_Vertices[i];
-			for(int i2 = 0; i2 < 3; i2++)
+			int i2;
+			for(i2 = 0; i2 < 3; i2++)
 			{
 				if(v.pos[i2] < bmins[i2] || v.pos[i2] > bmaxs[i2])
 					break;

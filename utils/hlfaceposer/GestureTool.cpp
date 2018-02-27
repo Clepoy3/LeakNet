@@ -153,7 +153,7 @@ CChoreoEvent *GestureTool::GetSafeEvent( void )
 		if ( !e || e->GetType() != CChoreoEvent::GESTURE )
 			continue;
 
-		if ( !stricmp( m_szEvent, e->GetName() ) )
+		if ( !_stricmp( m_szEvent, e->GetName() ) )
 		{
 			return e;
 		}

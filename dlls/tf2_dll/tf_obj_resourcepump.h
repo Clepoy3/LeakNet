@@ -27,9 +27,9 @@ class CResourceZone;
 // ------------------------------------------------------------------------ //
 class CObjectResourcePump : public CBaseObject
 {
-DECLARE_CLASS( CObjectResourcePump, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectResourcePump, CBaseObject );
+
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 

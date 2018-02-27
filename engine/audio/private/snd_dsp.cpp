@@ -4862,7 +4862,8 @@ pset_t * PSET_Alloc ( int ipsettemplate )
 
 	// find free slot
 
-	for (int i = 0; i < CPSETS; i++)
+	int i;
+	for (i = 0; i < CPSETS; i++)
 	{
 		if ( !psets[i].fused )
 			break;
@@ -5628,7 +5629,7 @@ void DSP_SetPreset( int idsp, int ipsetnew)
 
 	DSP_FreePrevPreset( pdsp );
 
-	for (i = 0; i < pdsp->cchan; i++)
+	for (int i = 0; i < pdsp->cchan; i++)
 	{
 		// current becomes previous
 

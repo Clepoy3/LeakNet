@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\common;..\..\Public;..\..\Common;..\mxtk\include;..\..\game_shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Debug\scenemanager.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cbase.h</PrecompiledHeaderFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Debug\scenemanager.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug\scenemanager.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>.\Debug\scenemanager.exe</OutputFile>
+      <AdditionalDependencies>Winmm.lib;Msimg32.lib;comctl32.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <ForceFileOutput>
+      </ForceFileOutput>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\bin\$(TargetName).exe" 
+if exist "$(TargetPath)" copy "$(TargetPath)" ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>..\common;..\..\Public;..\..\Common;..\mxtk\include;..\..\game_shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;PROTECTED_THINGS_DISABLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\scenemanager.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>cbase.h</PrecompiledHeaderFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\scenemanager.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\scenemanager.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBCD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Release\scenemanager.exe</OutputFile>
+      <AdditionalDependencies>Winmm.lib;Msimg32.lib;comctl32.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>if exist "..\..\..\bin\$(TargetName).exe" attrib -r "..\..\..\bin\$(TargetName).exe" 
+if exist "$(TargetPath)" copy "$(TargetPath)" ..\..\..\bin 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\bin\ </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="cbase.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cbase.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cbase.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="basedialogparams.cpp" />
+    <ClCompile Include="..\..\public\characterset.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\common\cmdlib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="drawhelper.cpp" />
+    <ClCompile Include="fileloaderthread.cpp" />
+    <ClCompile Include="..\..\public\filesystem_helpers.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\filesystem_tools.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="inputproperties.cpp" />
+    <ClCompile Include="..\..\public\interface.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\game_shared\interval.cpp" />
+    <ClCompile Include="itreeitem.cpp" />
+    <ClCompile Include="..\..\public\KeyValues.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\mathlib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\tier0\memoverride.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\mempool.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="multiplerequest.cpp" />
+    <ClCompile Include="project.cpp" />
+    <ClCompile Include="scene.cpp" />
+    <ClCompile Include="scenemanager.cpp" />
+    <ClCompile Include="scenemanager_tools.cpp" />
+    <ClCompile Include="..\common\scriplib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="soundbrowser.cpp" />
+    <ClCompile Include="..\..\game_shared\SoundEmitterSystemBase.cpp" />
+    <ClCompile Include="soundentry.cpp" />
+    <ClCompile Include="soundproperties.cpp" />
+    <ClCompile Include="soundproperties_multiple.cpp" />
+    <ClCompile Include="statuswindow.cpp" />
+    <ClCompile Include="tabwindow.cpp" />
+    <ClCompile Include="..\..\public\utlbuffer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\utlsymbol.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vcdfile.cpp" />
+    <ClCompile Include="vssproperties.cpp" />
+    <ClCompile Include="wavebrowser.cpp" />
+    <ClCompile Include="wavefile.cpp" />
+    <ClCompile Include="waveproperties.cpp" />
+    <ClCompile Include="workspace.cpp" />
+    <ClCompile Include="workspacebrowser.cpp" />
+    <ClCompile Include="workspacemanager.cpp" />
+    <ClCompile Include="..\..\game_shared\choreoactor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\game_shared\choreochannel.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\game_shared\choreoevent.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\game_shared\choreoscene.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="riff.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\public\sentence.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="snd_audio_source.cpp" />
+    <ClCompile Include="snd_wave_mixer.cpp" />
+    <ClCompile Include="snd_wave_mixer_adpcm.cpp" />
+    <ClCompile Include="snd_wave_source.cpp" />
+    <ClCompile Include="sound.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="basedialogparams.h" />
+    <ClInclude Include="cbase.h" />
+    <ClInclude Include="drawhelper.h" />
+    <ClInclude Include="ifileloader.h" />
+    <ClInclude Include="inputproperties.h" />
+    <ClInclude Include="itreeitem.h" />
+    <ClInclude Include="multiplerequest.h" />
+    <ClInclude Include="project.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="scenemanager_tools.h" />
+    <ClInclude Include="soundbrowser.h" />
+    <ClInclude Include="soundentry.h" />
+    <ClInclude Include="soundproperties.h" />
+    <ClInclude Include="soundproperties_multiple.h" />
+    <ClInclude Include="statuswindow.h" />
+    <ClInclude Include="tabwindow.h" />
+    <ClInclude Include="vcdfile.h" />
+    <ClInclude Include="vssproperties.h" />
+    <ClInclude Include="wavebrowser.h" />
+    <ClInclude Include="wavefile.h" />
+    <ClInclude Include="waveproperties.h" />
+    <ClInclude Include="workspace.h" />
+    <ClInclude Include="workspacebrowser.h" />
+    <ClInclude Include="workspacemanager.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\Public\amd3dx.h" />
+    <ClInclude Include="..\..\Public\basetypes.h" />
+    <ClInclude Include="..\..\Public\characterset.h" />
+    <ClInclude Include="..\common\cmdlib.h" />
+    <ClInclude Include="..\..\Public\commonmacros.h" />
+    <ClInclude Include="..\..\Public\convar.h" />
+    <ClInclude Include="..\..\public\tier0\dbg.h" />
+    <ClInclude Include="..\..\game_shared\ExpressionSample.h" />
+    <ClInclude Include="..\..\public\tier0\fasttimer.h" />
+    <ClInclude Include="..\..\Public\FileSystem.h" />
+    <ClInclude Include="..\..\public\filesystem_helpers.h" />
+    <ClInclude Include="..\..\public\filesystem_tools.h" />
+    <ClInclude Include="..\..\public\appframework\IAppSystem.h" />
+    <ClInclude Include="..\..\game_shared\ichoreoeventcallback.h" />
+    <ClInclude Include="..\..\Public\engine\IEngineSound.h" />
+    <ClInclude Include="..\..\Public\interface.h" />
+    <ClInclude Include="..\..\game_shared\interval.h" />
+    <ClInclude Include="..\..\public\irecipientfilter.h" />
+    <ClInclude Include="..\..\game_shared\iscenetokenprocessor.h" />
+    <ClInclude Include="..\..\public\KeyValues.h" />
+    <ClInclude Include="..\..\Public\MATHLIB.H" />
+    <ClInclude Include="..\..\public\tier0\mem.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgoff.h" />
+    <ClInclude Include="..\..\public\tier0\memdbgon.h" />
+    <ClInclude Include="..\..\Public\MemPool.h" />
+    <ClInclude Include="..\mxtk\include\mx\mx.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxCheckBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxChoice.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxChooseColor.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxEvent.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxFileDialog.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxGlWindow.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxGroupBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxInit.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLabel.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLineEdit.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxLinkedList.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxListBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxlistview.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMenu.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMenuBar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxMessageBox.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxpath.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxPopupMenu.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxProgressBar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxRadioButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxScrollbar.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxSlider.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxstring.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxTab.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxToggleButton.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxToolTip.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxTreeView.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxWidget.h" />
+    <ClInclude Include="..\mxtk\include\mx\mxWindow.h" />
+    <ClInclude Include="..\..\public\networkvar.h" />
+    <ClInclude Include="..\..\public\tier0\platform.h" />
+    <ClInclude Include="..\..\public\processor_detect.h" />
+    <ClInclude Include="..\..\public\protected_things.h" />
+    <ClInclude Include="..\..\public\vstdlib\random.h" />
+    <ClInclude Include="..\common\scriplib.h" />
+    <ClInclude Include="..\..\game_shared\sharedInterface.h" />
+    <ClInclude Include="..\..\game_shared\SoundEmitterSystemBase.h" />
+    <ClInclude Include="..\..\Public\soundflags.h" />
+    <ClInclude Include="..\..\public\string_t.h" />
+    <ClInclude Include="..\..\public\vstdlib\strtools.h" />
+    <ClInclude Include="..\..\Public\UtlBuffer.h" />
+    <ClInclude Include="..\..\Public\utldict.h" />
+    <ClInclude Include="..\..\public\utllinkedlist.h" />
+    <ClInclude Include="..\..\Public\UtlMemory.h" />
+    <ClInclude Include="..\..\Public\utlrbtree.h" />
+    <ClInclude Include="..\..\Public\utlsymbol.h" />
+    <ClInclude Include="..\..\Public\UtlVector.h" />
+    <ClInclude Include="..\..\Public\vector.h" />
+    <ClInclude Include="..\..\Public\vector2d.h" />
+    <ClInclude Include="..\..\public\vstdlib\vstdlib.h" />
+    <ClInclude Include="..\..\game_shared\choreoactor.h" />
+    <ClInclude Include="..\..\game_shared\choreochannel.h" />
+    <ClInclude Include="..\..\game_shared\choreoevent.h" />
+    <ClInclude Include="..\..\game_shared\choreoscene.h" />
+    <ClInclude Include="audiowaveoutput.h" />
+    <ClInclude Include="iscenemanagersound.h" />
+    <ClInclude Include="riff.h" />
+    <ClInclude Include="..\..\Public\sentence.h" />
+    <ClInclude Include="snd_audio_source.h" />
+    <ClInclude Include="snd_wave_mixer.h" />
+    <ClInclude Include="snd_wave_mixer_adpcm.h" />
+    <ClInclude Include="snd_wave_mixer_private.h" />
+    <ClInclude Include="snd_wave_source.h" />
+    <ClInclude Include="sound.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ico00001.ico" />
+    <CustomBuild Include="ico00002.ico" />
+    <CustomBuild Include="ico00003.ico" />
+    <CustomBuild Include="ico00004.ico" />
+    <CustomBuild Include="ico00005.ico" />
+    <CustomBuild Include="ico00006.ico" />
+    <CustomBuild Include="ico00007.ico" />
+    <CustomBuild Include="icon1.ico" />
+    <CustomBuild Include="project1.ico" />
+    <CustomBuild Include="vcd1.ico" />
+    <CustomBuild Include="wav1.ico" />
+    <CustomBuild Include="workspac.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="scenemanager.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\lib\common\mxtk.lib" />
+    <Library Include="..\..\lib\public\tier0.lib" />
+    <Library Include="..\..\lib\public\vstdlib.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -97,9 +97,9 @@ enum Zombie_Conds
 //=========================================================
 class CNPC_BaseZombie : public CAI_BaseNPC
 {
+public:
 	DECLARE_CLASS( CNPC_BaseZombie, CAI_BaseNPC );
 
-public:
 	CNPC_BaseZombie( void );
 	~CNPC_BaseZombie( void );
 

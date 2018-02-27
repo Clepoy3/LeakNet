@@ -807,7 +807,7 @@ void CHudWeaponSelection::GetSlotInfo( const CWeaponMenuItem *w, C_BaseCombatWea
 		info.weapon = pWeapon;
 	}
 
-	strupr(info.printname);
+	_strupr(info.printname);
 }
 
 void CHudWeaponSelection::SetupWeaponMenu( WeaponMenu& menu, C_BaseCombatWeapon *activeItem, bool drawNumbers )

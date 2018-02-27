@@ -32,7 +32,7 @@ TokenReader::TokenReader(void)
 //-----------------------------------------------------------------------------
 bool TokenReader::Open(const char *pszFilename)
 {
-	open(pszFilename, ios::in | ios::binary | ios::nocreate);
+	open(pszFilename, std::ios::in | std::ios::binary /*| ios::nocreate*/); // VXP: Conv
 	strcpy(m_szFilename, pszFilename);
 	m_nLine = 1;
 	m_nErrorCount = 0;
@@ -90,6 +90,16 @@ trtoken_t TokenReader::GetString(char *pszStore, int nSize)
 		// Fetch the next batch of text from the file.
 		//
 		get(szBuf, sizeof(szBuf), '\"');
+		if (eof())
+		{
+			return TOKENEOF;
+		}
+
+		if (fail())
+		{
+			// Just means nothing was read (empty string probably "")
+			clear();
+		}
 
 		//
 		// Transfer the text to the destination buffer.
@@ -221,6 +231,11 @@ trtoken_t TokenReader::NextToken(char *pszStore, int nSize)
 	SkipWhiteSpace();
 
 	if (eof())
+	{
+		return TOKENEOF;
+	}
+
+	if (fail())
 	{
 		return TOKENEOF;
 	}

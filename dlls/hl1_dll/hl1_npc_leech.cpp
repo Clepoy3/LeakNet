@@ -42,8 +42,8 @@ ConVar sk_leech_dmg_bite( "sk_leech_dmg_bite", "2" );
 
 class CNPC_Leech : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_Leech, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_Leech, CHL1BaseNPC );
 
 	DECLARE_DATADESC();
 	

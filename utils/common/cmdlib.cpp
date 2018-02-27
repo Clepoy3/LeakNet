@@ -97,7 +97,8 @@ void CmdLib_FPrintf( FileHandle_t hFile, const char *pFormat, ... )
 
 char* CmdLib_FGets( char *pOut, int outSize, FileHandle_t hFile )
 {
-	for ( int iCur=0; iCur < (outSize-1); iCur++ )
+	int iCur;
+	for ( iCur=0; iCur < (outSize-1); iCur++ )
 	{
 		char c;
 		if ( !g_pFileSystem->Read( &c, 1, hFile ) )
@@ -138,7 +139,7 @@ public:
 		if ( g_bStopOnExit )
 		{
 			Warning( "\nPress any key to quit.\n" );
-			getch();
+			_getch();
 		}
 	}
 } g_ExitStopper;
@@ -720,7 +721,7 @@ qboolean FindGamedir( const char *path )
 
 	// cleanup the path
 	COM_FixSlashes( gamedir );
-	strlwr( gamedir );
+	_strlwr( gamedir );
 	AppendSlash( gamedir, sizeof( gamedir ) );
 
 	// strip off the end
@@ -813,7 +814,7 @@ void SetQdirFromPath( const char *path )
 	
 	// qdir
 	COM_FixSlashes( qdir );
-	strlwr( qdir );
+	_strlwr( qdir );
 	StripFilename( qdir );
 	if (qdir[0] != '\0')
 	{

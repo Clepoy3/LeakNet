@@ -353,13 +353,13 @@ void CCDAudio::CD_f ( void )
 
 	command = Cmd_Argv (1);
 
-	if (stricmp(command, "on") == 0)
+	if (_stricmp(command, "on") == 0)
 	{
 		m_bEnabled = true;
 		return;
 	}
 
-	if (stricmp(command, "off") == 0)
+	if (_stricmp(command, "off") == 0)
 	{
 		if (m_bIsPlaying)
 			Stop();
@@ -367,7 +367,7 @@ void CCDAudio::CD_f ( void )
 		return;
 	}
 
-	if (stricmp(command, "reset") == 0)
+	if (_stricmp(command, "reset") == 0)
 	{
 		m_bEnabled = true;
 		if (m_bIsPlaying)
@@ -378,7 +378,7 @@ void CCDAudio::CD_f ( void )
 		return;
 	}
 
-	if (stricmp(command, "remap") == 0)
+	if (_stricmp(command, "remap") == 0)
 	{
 		ret = Cmd_Argc() - 2;
 		if ( ret > 0)
@@ -391,7 +391,7 @@ void CCDAudio::CD_f ( void )
 		return;
 	}
 
-	if (stricmp(command, "close") == 0)
+	if (_stricmp(command, "close") == 0)
 	{
 		CloseDoor();
 		return;
@@ -406,37 +406,37 @@ void CCDAudio::CD_f ( void )
 		}
 	}
 
-	if (stricmp(command, "play") == 0)
+	if (_stricmp(command, "play") == 0)
 	{
 		Play( atoi(Cmd_Argv (2)), false );
 		return;
 	}
 
-	if (stricmp(command, "loop") == 0)
+	if (_stricmp(command, "loop") == 0)
 	{
 		Play( atoi(Cmd_Argv (2)), true );
 		return;
 	}
 
-	if (stricmp(command, "stop") == 0)
+	if (_stricmp(command, "stop") == 0)
 	{
 		Stop();
 		return;
 	}
 
-	if (stricmp(command, "pause") == 0)
+	if (_stricmp(command, "pause") == 0)
 	{
 		Pause();
 		return;
 	}
 
-	if (stricmp(command, "resume") == 0)
+	if (_stricmp(command, "resume") == 0)
 	{
 		Resume();
 		return;
 	}
 
-	if (stricmp(command, "eject") == 0)
+	if (_stricmp(command, "eject") == 0)
 	{
 		if (m_bIsPlaying)
 			Stop();
@@ -445,7 +445,7 @@ void CCDAudio::CD_f ( void )
 		return;
 	}
 
-	if (stricmp(command, "info") == 0)
+	if (_stricmp(command, "info") == 0)
 	{
 		Msg("%u tracks\n", m_nMaxTrack);
 		if ( m_bIsPlaying )
@@ -562,7 +562,7 @@ void CCDAudio::_CDReset( int, int )
 //-----------------------------------------------------------------------------
 void CCDAudio::Reset( void )
 {
-	thread->AddThreadItem( _CDReset, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_CDReset, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -570,7 +570,7 @@ void CCDAudio::Reset( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::Stop( void )
 {
-	thread->AddThreadItem(  _Stop, 0, 0 );
+	thread->AddThreadItem(  &CCDAudio::_Stop, 0, 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -578,7 +578,7 @@ void CCDAudio::Stop( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::Pause( void )
 {
-	thread->AddThreadItem( _Pause, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_Pause, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -586,7 +586,7 @@ void CCDAudio::Pause( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::Eject( void )
 {
-	thread->AddThreadItem( _Eject, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_Eject, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -594,7 +594,7 @@ void CCDAudio::Eject( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::CloseDoor( void )
 {
-	thread->AddThreadItem( _CloseDoor, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_CloseDoor, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -602,7 +602,7 @@ void CCDAudio::CloseDoor( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::GetAudioDiskInfo( void )
 {
-	thread->AddThreadItem( _GetAudioDiskInfo, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_GetAudioDiskInfo, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -612,7 +612,7 @@ void CCDAudio::GetAudioDiskInfo( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::Play( int track, bool looping )
 {
-	thread->AddThreadItem( _Play, track, looping ? 1 : 0 );
+	thread->AddThreadItem( &CCDAudio::_Play, track, looping ? 1 : 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -620,7 +620,7 @@ void CCDAudio::Play( int track, bool looping )
 //-----------------------------------------------------------------------------
 void CCDAudio::Resume( void )
 {
-	thread->AddThreadItem( _Resume, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_Resume, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -628,7 +628,7 @@ void CCDAudio::Resume( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::SwitchToLauncher( void )
 {
-	thread->AddThreadItem( _SwitchToLauncher, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_SwitchToLauncher, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -636,7 +636,7 @@ void CCDAudio::SwitchToLauncher( void )
 //-----------------------------------------------------------------------------
 void CCDAudio::SwitchToEngine( void )
 {
-	thread->AddThreadItem( _SwitchToEngine, 0, 0);
+	thread->AddThreadItem( &CCDAudio::_SwitchToEngine, 0, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -662,5 +662,5 @@ void CCDAudio::Frame( void )
 		bgmvolume.SetValue( m_flVolume );
 	}
 
-	thread->AddThreadItem( _CDUpdate, 0, 0 );
+	thread->AddThreadItem( &CCDAudio::_CDUpdate, 0, 0 );
 }

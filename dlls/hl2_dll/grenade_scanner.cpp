@@ -43,9 +43,9 @@ void CGrenadeScanner::Spawn( void )
 	SetModel( "models/Weapons/wscanner_grenade.mdl" );
 	UTIL_SetSize(this, Vector(0, 0, 0), Vector(0, 0, 0));
 
-	SetUse( DetonateUse );
-	SetTouch( GrenadeScannerTouch );
-	SetThink( AimThink );
+	SetUse( &CBaseGrenade::DetonateUse );
+	SetTouch( &CGrenadeScanner::GrenadeScannerTouch );
+	SetThink( &CGrenadeScanner::AimThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_dmg_wscanner_grenade.GetFloat();

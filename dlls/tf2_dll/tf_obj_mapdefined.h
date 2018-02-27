@@ -16,9 +16,9 @@
 // ------------------------------------------------------------------------ //
 class CObjectMapDefined : public CBaseObject
 {
-DECLARE_CLASS( CObjectMapDefined, CBaseObject );
-
 public:
+	DECLARE_CLASS( CObjectMapDefined, CBaseObject );
+
 	DECLARE_DATADESC();
 	DECLARE_SERVERCLASS();
 

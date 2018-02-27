@@ -153,7 +153,7 @@ bool CToolPickFace::OnLMouseDown3D(CMapView3D *pView, UINT nFlags, CPoint point)
 				}
 
 				nFaceCount = pSolid->GetFaceCount();
-				for (nFace = 0; nFace < nFaceCount; nFace++)
+				for (int nFace = 0; nFace < nFaceCount; nFace++)
 				{
 					CMapFace *pFace = pSolid->GetFace(nFace);
 					if (bAllSelected)
@@ -309,7 +309,7 @@ void CToolPickFace::SetSelectedFaces(CMapFaceList &FaceListFull, CMapFaceList &F
 		pFace->SetSelectionState(SELECT_NORMAL);
 	}
 
-	for (i = 0; i < FaceListPartial.Count(); i++)
+	for (int i = 0; i < FaceListPartial.Count(); i++)
 	{
 		CMapFace *pFace = FaceListPartial.Element(i);
 

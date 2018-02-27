@@ -20,8 +20,9 @@
 // ###################################################################
 class CBaseFilter : public CLogicalEntity
 {
-	DECLARE_CLASS( CBaseFilter, CLogicalEntity );
 public:
+	DECLARE_CLASS( CBaseFilter, CLogicalEntity );
+
 	DECLARE_DATADESC();
 
 	bool PassesFilter(CBaseEntity *pEntity);

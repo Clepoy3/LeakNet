@@ -180,7 +180,7 @@ void CNPC_Scientist::Spawn( void )
 	
 	NPCInit();
 
-	SetUse( FollowerUse );
+	SetUse( &CHL1NPCTalker::FollowerUse );
 }
 
 //-----------------------------------------------------------------------------
@@ -951,7 +951,7 @@ void CNPC_SittingScientist :: Spawn( )
 
 	NPCInit();
 	
-	SetThink (SittingThink);
+	SetThink (&CNPC_SittingScientist::SittingThink);
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }
 

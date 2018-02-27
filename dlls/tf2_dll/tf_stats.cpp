@@ -105,7 +105,7 @@ static const char *GetTeamStatString( int stat )
 		for ( int i=0; i < TFCLASS_CLASS_COUNT; i++ )
 			s_pTeamStatStrings[i] = GetTFClassInfo( i )->m_pClassName;
 
-		for ( i=TFCLASS_CLASS_COUNT; i < TF_TEAM_STAT_COUNT; i++ )
+		for ( int i=TFCLASS_CLASS_COUNT; i < TF_TEAM_STAT_COUNT; i++ )
 			s_pTeamStatStrings[i] = s_pNonClassTeamStatStrings[i - TFCLASS_CLASS_COUNT];
 	}
 	

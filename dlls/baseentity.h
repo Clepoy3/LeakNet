@@ -285,6 +285,7 @@ public:
     void *operator new( size_t stAllocateBlock );
     void *operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine );
 	void operator delete( void *pMem );
+	void operator delete( void *pMem, int nBlockUse, const char *pFileName, int nLine ) { operator delete(pMem); }
 
 	// Class factory
 	static CBaseEntity				*CreatePredictedEntityByName( const char *classname, const char *module, int line, bool persist = false );
@@ -1606,7 +1607,7 @@ inline bool CBaseEntity::NameMatches( const char *pszNameOrWildcard )
 		return ( m_iName == NULL_STRING );
 	
 	if ( pszNameOrWildcard[ len - 1 ] != '*' )
-		return ( stricmp( STRING(m_iName), pszNameOrWildcard ) == 0 );
+		return ( _stricmp( STRING(m_iName), pszNameOrWildcard ) == 0 );
 
 	return ( _strnicmp( STRING(m_iName), pszNameOrWildcard, len - 1 ) == 0 );
 }
@@ -1622,7 +1623,7 @@ inline bool CBaseEntity::ClassMatches( const char *pszClassOrWildcard )
 		return ( m_iName == NULL_STRING );
 	
 	if ( pszClassOrWildcard[ len - 1 ] != '*' )
-		return ( stricmp( STRING(m_iClassname), pszClassOrWildcard ) == 0 );
+		return ( _stricmp( STRING(m_iClassname), pszClassOrWildcard ) == 0 );
 
 	return ( _strnicmp( STRING(m_iClassname), pszClassOrWildcard, len - 1 ) == 0 );
 }
@@ -2146,8 +2147,9 @@ inline bool FClassnameIs(CBaseEntity *pEntity, const char *szClassname)
 
 class CPointEntity : public CBaseEntity
 {
-	DECLARE_CLASS( CPointEntity, CBaseEntity );
 public:
+	DECLARE_CLASS( CPointEntity, CBaseEntity );
+
 	void	Spawn( void );
 	virtual int	ObjectCaps( void ) { return BaseClass::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 private:
@@ -2155,8 +2157,9 @@ private:
 
 class CLogicalEntity : public CBaseEntity
 {
-	DECLARE_CLASS( CLogicalEntity, CBaseEntity );
 public:
+	DECLARE_CLASS( CLogicalEntity, CBaseEntity );
+
 	CLogicalEntity() : CBaseEntity( true ) {}
 	
 	virtual int ObjectCaps( void ) { return (BaseClass::ObjectCaps() & ~FCAP_ACROSS_TRANSITION); }
@@ -2164,9 +2167,9 @@ public:
 
 class CLogicalPointEntity : public CLogicalEntity
 {
+public:
 	DECLARE_CLASS( CLogicalPointEntity, CLogicalEntity );
 
-public:
 	virtual void SetOwnerEntity( CBaseEntity* pOwner );
 
 	// Returns the owner, origin, and angles

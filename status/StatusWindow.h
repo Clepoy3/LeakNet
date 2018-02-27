@@ -20,7 +20,7 @@ class CStatusWindow : public CWnd
 public:
 	CStatusWindow( CStatusDlg *pParent );
 	
-	CStatusWindow::Create( DWORD dwStyle );
+	BOOL CStatusWindow::Create( DWORD dwStyle );
 
 // Attributes
 public:

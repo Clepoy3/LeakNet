@@ -21,9 +21,9 @@
 //-----------------------------------------------------------------------------
 class CMannedPlasmagunControlPanel : public CRotatingObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CMannedPlasmagunControlPanel, CRotatingObjectControlPanel );
 
-public:
 	CMannedPlasmagunControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

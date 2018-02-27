@@ -61,7 +61,7 @@ CPrefabLibrary *CreatePrefabLibrary(const char *szFile)
 {
 	CPrefabLibrary *pLibrary;
 
-	if (stricmp(&szFile[strlen(szFile) - 2], ".ol") != 0)
+	if (_stricmp(&szFile[strlen(szFile) - 2], ".ol") != 0)
 	{
 		pLibrary = new CPrefabLibraryVMF;
 	}
@@ -193,18 +193,19 @@ void CPrefab::FreeAllData()
 CPrefab::pfiletype_t CPrefab::CheckFileType(LPCTSTR pszFilename)
 {
 	// first check extensions
-	char *p = strrchr(pszFilename, '.');
+	const char *p = strrchr(pszFilename, '.');
 	if(p)
 	{
-		if(!strcmpi(p, ".rmf"))
+		if(!_strcmpi(p, ".rmf"))
 			return pftRMF;
-		else if(!strcmpi(p, ".map"))
+		else if(!_strcmpi(p, ".map"))
 			return pftMAP;
-		else if(!strcmpi(p, ".os"))
+		else if(!_strcmpi(p, ".os"))
 			return pftScript;
 	}
 
-	fstream file(pszFilename, ios::in | ios::binary | ios::nocreate);
+//	fstream file(pszFilename, ios::in | ios::binary | ios::nocreate);
+	std::fstream file(pszFilename, std::ios::in | std::ios::binary);
 
 	// read first 16 bytes of file
 	char szBuf[255];
@@ -220,7 +221,7 @@ CPrefab::pfiletype_t CPrefab::CheckFileType(LPCTSTR pszFilename)
 	}
 
 	// check 2: script
-	if(!strnicmp(szBuf, "[Script", 7))
+	if(!_strnicmp(szBuf, "[Script", 7))
 	{
 		return pftScript;
 	}
@@ -229,7 +230,8 @@ CPrefab::pfiletype_t CPrefab::CheckFileType(LPCTSTR pszFilename)
 	int i = 500;
 	while(i--)
 	{
-		file.eatwhite();
+	//	file.eatwhite(); // VXP: Conv
+		file >> std::ws;
 		file.getline(szBuf, 255);
 		if(szBuf[0] == '{')
 			return pftMAP;
@@ -275,7 +277,7 @@ CPrefabLibrary::~CPrefabLibrary()
 //-----------------------------------------------------------------------------
 static int SortPrefabs(CPrefab *a, CPrefab *b)
 {
-	return(strcmpi(a->GetName(), b->GetName()));
+	return(_strcmpi(a->GetName(), b->GetName()));
 }
 
 
@@ -328,7 +330,7 @@ void CPrefabLibrary::Sort(void)
 //-----------------------------------------------------------------------------
 void CPrefabLibrary::SetNameFromFilename(LPCTSTR pszFilename)
 {
-	char *p = strrchr(pszFilename, '\\');
+	char *p = (char *)strrchr(pszFilename, '\\');
 	strcpy(m_szName, p ? (p + 1) : pszFilename);
 	p = strchr(m_szName, '.');
 	if (p != NULL)
@@ -544,7 +546,7 @@ CPrefabLibraryRMF::~CPrefabLibraryRMF()
 //-----------------------------------------------------------------------------
 bool CPrefabLibraryRMF::IsFile(const char *szFilename)
 {
-	return(strcmpi(m_strOpenFileName, szFilename) == 0);
+	return(_strcmpi(m_strOpenFileName, szFilename) == 0);
 }
 
 
@@ -558,7 +560,8 @@ int CPrefabLibraryRMF::Load(LPCTSTR pszFilename)
 	m_eType = LibType_HalfLife;
 
 	// open file
-	m_file.open(pszFilename, ios::in | ios::binary | ios::nocreate);
+//	m_file.open(pszFilename, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+	m_file.open(pszFilename, std::ios::in | std::ios::binary);
 	m_strOpenFileName = pszFilename;
 	
 	if(!m_file.is_open())
@@ -650,7 +653,7 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 			_close(iHandle);
 		}
 
-		fstream file(m_strOpenFileName, ios::binary | ios::out);
+		std::fstream file(m_strOpenFileName, std::ios::binary | std::ios::out);
 
 		// write string header
 		file << pLibHeader;
@@ -687,7 +690,8 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 		file.close();
 
 		// re-open
-		m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate);
+	//	m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate);
+		m_file.open(m_strOpenFileName, std::ios::in | std::ios::binary); // VXP: Conv
 		return 1;
 	}
 
@@ -717,8 +721,8 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 
 	// open temp file to save to.. then delete & rename old one.
 	CString strTempFileName = "Temporary Prefab Library.$$$";
-	fstream file;
-	file.open(strTempFileName, ios::binary | ios::out);
+	std::fstream file;
+	file.open(strTempFileName, std::ios::binary | std::ios::out);
 
 	// write string header
 	file << pLibHeader;
@@ -777,7 +781,8 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 
 		// set size info
 		ph[iCur].dwSize = pPrefab->dwFileSize = 
-			file.tellp() - ph[iCur].dwOffset;
+		//	file.tellp() - ph[iCur].dwOffset; // VXP: Conv
+			(std::streamoff)file.tellp() - ph[iCur].dwOffset;
 
 		++iCur;	// increase current directory entry
 	}
@@ -789,7 +794,7 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 	plh.dwDirOffset = m_dwDirOffset = file.tellp();
 	file.seekp(dwBinaryHeaderOffset);
 	file.write((char*)&plh, sizeof(plh));
-	file.seekp(0, ios::end);
+	file.seekp(0, std::ios::end);
 
 	// write directory
 	file.write((char*)ph, sizeof(*ph) * plh.dwNumEntries);
@@ -803,7 +808,8 @@ int CPrefabLibraryRMF::Save(LPCTSTR pszFilename, BOOL bIndexOnly)
 	int iRvl = rename(strTempFileName, m_strOpenFileName);
 	
 	// reopen original
-	m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate);
+//	m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+	m_file.open(m_strOpenFileName, std::ios::in | std::ios::binary);
 
 	return 1;
 }
@@ -841,7 +847,8 @@ int CPrefabLibraryRMF::SetName(LPCTSTR pszName)
 	// rename and reopen
 	rename(m_strOpenFileName, szNewFilename);
 	m_strOpenFileName = szNewFilename;
-	m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate);
+//	m_file.open(m_strOpenFileName, ios::in | ios::binary | ios::nocreate); // VXP: Conv
+	m_file.open(m_strOpenFileName, std::ios::in | std::ios::binary);
 
 	return 1;
 }
@@ -869,7 +876,7 @@ CPrefabLibraryVMF::~CPrefabLibraryVMF()
 //-----------------------------------------------------------------------------
 bool CPrefabLibraryVMF::IsFile(const char *szFilename)
 {
-	return(strcmpi(m_szFolderName, szFilename) == 0);
+	return(_strcmpi(m_szFolderName, szFilename) == 0);
 }
 
 

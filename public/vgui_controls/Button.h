@@ -189,6 +189,7 @@ private:
 	unsigned short	   m_sArmedSoundName, m_sDepressedSoundName, m_sReleasedSoundName;
 	bool _defaultButton;	// true if this is the button that gets activated by default when the user hits enter
 
+public:
 	typedef Label BaseClass;
 };
 

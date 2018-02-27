@@ -43,7 +43,7 @@ int CAmmoDef::Index(const char *psz)
 
 	for (i = 1; i < m_nAmmoIndex; i++)
 	{
-		if (stricmp( psz, m_AmmoType[i].pName ) == 0)
+		if (_stricmp( psz, m_AmmoType[i].pName ) == 0)
 			return i;
 	}
 

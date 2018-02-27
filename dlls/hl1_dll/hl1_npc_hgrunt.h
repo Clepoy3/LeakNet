@@ -6,8 +6,8 @@
 
 class CNPC_HGrunt : public CHL1BaseNPC
 {
-	DECLARE_CLASS( CNPC_HGrunt, CHL1BaseNPC );
 public:
+	DECLARE_CLASS( CNPC_HGrunt, CHL1BaseNPC );
 
 	void	Precache( void );
 	void	Spawn( void );

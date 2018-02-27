@@ -24,8 +24,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectMortar : public C_BaseObject, public IUsesMortarPanel
 {
-	DECLARE_CLASS( C_ObjectMortar, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectMortar, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 	DECLARE_ENTITY_PANEL();
 
@@ -225,8 +226,9 @@ void C_ObjectMortar::ForceClientYawCountdown( float flTime )
 //-----------------------------------------------------------------------------
 class CMortarControlPanel : public CObjectControlPanel
 {
-	DECLARE_CLASS( CMortarControlPanel, CObjectControlPanel );
 public:
+	DECLARE_CLASS( CMortarControlPanel, CObjectControlPanel );
+
 	CMortarControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual ~CMortarControlPanel();
 	

@@ -163,15 +163,15 @@ CMapWorld *Cordon3D::CreateTempWorld(void)
 //-----------------------------------------------------------------------------
 ChunkFileResult_t Cordon3D::LoadCordonKeyCallback(const char *szKey, const char *szValue, Cordon3D *pCordon)
 {
-	if (!stricmp(szKey, "mins"))
+	if (!_stricmp(szKey, "mins"))
 	{
 		CChunkFile::ReadKeyValuePoint(szValue, pCordon->bmins);
 	}
-	else if (!stricmp(szKey, "maxs"))
+	else if (!_stricmp(szKey, "maxs"))
 	{
 		CChunkFile::ReadKeyValuePoint(szValue, pCordon->bmaxs);
 	}
-	else if (!stricmp(szKey, "active"))
+	else if (!_stricmp(szKey, "active"))
 	{
 		bool bActive = false;
 		CChunkFile::ReadKeyValueBool(szValue, bActive);

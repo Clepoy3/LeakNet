@@ -17,9 +17,9 @@ class CObjectBunkerLadder;
 // ------------------------------------------------------------------------ //
 class CObjectBunker : public CBaseObject
 {
+public:
 	DECLARE_CLASS( CObjectBunker, CBaseObject );
 
-public:
 	DECLARE_SERVERCLASS();
 
 	CObjectBunker( void );

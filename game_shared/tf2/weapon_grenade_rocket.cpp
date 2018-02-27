@@ -114,7 +114,7 @@ void CWeaponGrenadeRocket::SetMaxRange( float flRange )
 		m_flExceedRangeTime = gpGlobals->curtime + (m_flMaxRange / flSpeed);
 
 		// Start looking for designators
-		SetThink( TrackThink );
+		SetThink( &CWeaponGrenadeRocket::TrackThink );
 		SetNextThink( gpGlobals->curtime + 0.1f );
 	}
 #endif
@@ -141,7 +141,7 @@ void CWeaponGrenadeRocket::Spawn( void )
 	AngleVectors( GetLocalAngles(), &forward, NULL, NULL );
 	SetAbsVelocity( forward * WEAPON_GRENADE_ROCKET_VELOCITY );
 	
-	SetTouch( RocketTouch );
+	SetTouch( &CWeaponGrenadeRocket::RocketTouch );
 #else
 	// Start our flying sound loop
 	CPASAttenuationFilter filter( this );
@@ -202,7 +202,7 @@ void CWeaponGrenadeRocket::TrackThink( void )
 	// Have I exceeded my range?
 	if ( gpGlobals->curtime > m_flExceedRangeTime )
 	{
-		SetThink( ExceededRangeThink );
+		SetThink( &CWeaponGrenadeRocket::ExceededRangeThink );
 		// Start falling immediately
 		ExceededRangeThink();
 		return;

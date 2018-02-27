@@ -15,6 +15,7 @@
 #include "PhonemeConverter.h"
 #include "sentence.h"
 #include "tier0/dbg.h"
+#include "vstdlib/icommandline.h"
 
 // Extract phoneme grammar id
 #define EP_GRAM_ID			101
@@ -527,11 +528,55 @@ SR_RESULT ExtractPhonemes( const char *wavname, CSpDynamicString& text, CSentenc
 	}
 
 	// Create a phoneme converter ( so we can convert to IPA codes )
-	hr = SpCreatePhoneConverter( SpGetUserDefaultUILanguage(), NULL, NULL, &cpPhoneConv );
+//	hr = SpCreatePhoneConverter( SpGetUserDefaultUILanguage(), NULL, NULL, &cpPhoneConv );
+
+	LANGID englishID = 0x409; // 1033 decimal
+
+	bool userSpecified = false;
+	LANGID langID = SpGetUserDefaultUILanguage();
+	pfnPrint( "Default SAPI language is %i\n", langID );
+
+	// Allow commandline override
+	if ( CommandLine()->FindParm( "-languageid" ) != 0 )
+	{
+		userSpecified = true;
+		langID = CommandLine()->ParmValue( "-languageid", langID );
+	}
+
+	// Create a phoneme converter ( so we can convert to IPA codes )
+	hr = SpCreatePhoneConverter( langID, NULL, NULL, &cpPhoneConv );
 	if ( FAILED( hr ) )
 	{
-		pfnPrint( "Error:  SAPI 5.1 Unable to create phoneme converter for language %i\n", SpGetUserDefaultUILanguage() );
-		return result;
+		if ( langID != englishID )
+		{
+			if ( userSpecified )
+			{
+				pfnPrint( "Warning:  SAPI 5.1 Unable to create phoneme converter for command line override -languageid %i\n", langID );
+			}
+			else
+			{
+				pfnPrint( "Warning:  SAPI 5.1 Unable to create phoneme converter for default UI language %i\n",langID );
+			}
+
+			// Try english!!!
+			langID = englishID;
+			hr = SpCreatePhoneConverter( langID, NULL, NULL, &cpPhoneConv );
+		}
+
+		if ( FAILED( hr ) )
+		{
+		//	pfnPrint( "Error:  SAPI 5.1 Unable to create phoneme converter for language %i\n", SpGetUserDefaultUILanguage() );
+			pfnPrint( "Error:  SAPI 5.1 Unable to create phoneme converter for English language id %i\n", langID );
+			return result;
+		}
+		else
+		{
+			pfnPrint( "Note:  SAPI 5.1 Falling back to use english -languageid %i\n", langID );
+		}
+	}
+	else if ( userSpecified )
+	{
+		pfnPrint( "Note:  SAPI 5.1 Using user specified -languageid %i\n",langID );
 	}
 
 	SPSTATEHANDLE hStateRoot;
@@ -1221,7 +1266,7 @@ static SR_RESULT SAPI_ExtractPhonemes(
 				if ( tag )
 				{
 					// Skip '...' tag
-					if ( stricmp( tag->m_pszWord, "..." ) )
+					if ( _stricmp( tag->m_pszWord, "..." ) )
 					{
 						CWordTag *newTag = new CWordTag( *tag );
 
@@ -1269,7 +1314,7 @@ static SR_RESULT SAPI_ExtractPhonemes(
 				const CWordTag *toTag = outwords.m_Words[ topos ];
 
 				// Words match, just skip ahead
-				if ( !stricmp( fromTag->m_pszWord, toTag->m_pszWord ) )
+				if ( !_stricmp( fromTag->m_pszWord, toTag->m_pszWord ) )
 				{
 					frompos++;
 					topos++;
@@ -1284,7 +1329,7 @@ static SR_RESULT SAPI_ExtractPhonemes(
 				while ( skipAhead < inwords.m_Words.Size() )
 				{
 					const CWordTag *sourceWord = inwords.m_Words[ skipAhead ];
-					if ( !stricmp( sourceWord->m_pszWord, toTag->m_pszWord ) )
+					if ( !_stricmp( sourceWord->m_pszWord, toTag->m_pszWord ) )
 					{
 						found = true;
 						break;

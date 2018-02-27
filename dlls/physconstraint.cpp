@@ -79,8 +79,9 @@ static CAnchorList g_AnchorList;
 
 class CConstraintAnchor : public CPointEntity
 {
-	DECLARE_CLASS( CConstraintAnchor, CPointEntity );
 public:
+	DECLARE_CLASS( CConstraintAnchor, CPointEntity );
+
 	void Spawn( void )
 	{
 		if ( GetParent() )
@@ -164,8 +165,8 @@ void PhysTeleportConstrainedEntity( CBaseEntity *pTeleportSource, IPhysicsObject
 
 class CPhysConstraint : public CLogicalEntity
 {
-	DECLARE_CLASS( CPhysConstraint, CLogicalEntity );
 public:
+	DECLARE_CLASS( CPhysConstraint, CLogicalEntity );
 
 	CPhysConstraint();
 	~CPhysConstraint();
@@ -513,9 +514,9 @@ void CPhysConstraint::NotifySystemEvent( CBaseEntity *pNotify, notify_system_eve
 
 class CPhysHinge : public CPhysConstraint
 {
+public:
 	DECLARE_CLASS( CPhysHinge, CPhysConstraint );
 
-public:
 	void Spawn( void );
 	IPhysicsConstraint *CreateConstraint( IPhysicsConstraintGroup *pGroup, const hl_constraint_info_t &info )
 	{
@@ -674,8 +675,9 @@ IPhysicsConstraint *CPhysSlideConstraint::CreateConstraint( IPhysicsConstraintGr
 //-----------------------------------------------------------------------------
 class CPhysFixed : public CPhysConstraint
 {
-	DECLARE_CLASS( CPhysFixed, CPhysConstraint );
 public:
+	DECLARE_CLASS( CPhysFixed, CPhysConstraint );
+
 	IPhysicsConstraint *CreateConstraint( IPhysicsConstraintGroup *pGroup, const hl_constraint_info_t &info );
 };
 
@@ -707,8 +709,9 @@ IPhysicsConstraint *CPhysFixed::CreateConstraint( IPhysicsConstraintGroup *pGrou
 //-----------------------------------------------------------------------------
 class CPhysPulley : public CPhysConstraint
 {
-	DECLARE_CLASS( CPhysPulley, CPhysConstraint );
 public:
+	DECLARE_CLASS( CPhysPulley, CPhysConstraint );
+
 	DECLARE_DATADESC();
 
 	void DrawDebugGeometryOverlays()
@@ -806,8 +809,9 @@ IPhysicsConstraint *CPhysPulley::CreateConstraint( IPhysicsConstraintGroup *pGro
 //-----------------------------------------------------------------------------
 class CPhysLength : public CPhysConstraint
 {
-	DECLARE_CLASS( CPhysLength, CPhysConstraint );
 public:
+	DECLARE_CLASS( CPhysLength, CPhysConstraint );
+
 	DECLARE_DATADESC();
 
 	void DrawDebugGeometryOverlays()
@@ -887,8 +891,9 @@ IPhysicsConstraint *CPhysLength::CreateConstraint( IPhysicsConstraintGroup *pGro
 //-----------------------------------------------------------------------------
 class CRagdollConstraint : public CPhysConstraint
 {
-	DECLARE_CLASS( CRagdollConstraint, CPhysConstraint );
 public:
+	DECLARE_CLASS( CRagdollConstraint, CPhysConstraint );
+
 	DECLARE_DATADESC();
 #if 0
 	void DrawDebugGeometryOverlays()

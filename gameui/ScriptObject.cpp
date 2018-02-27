@@ -352,7 +352,7 @@ objtype_t CScriptObject::GetType( char *pszType )
 
 	for ( i = 0; i < nTypes; i++ )
 	{
-		if ( !stricmp( objtypes[i].szDescription, pszType ) )
+		if ( !_stricmp( objtypes[i].szDescription, pszType ) )
 			return objtypes[i].type;
 	}
 
@@ -539,7 +539,7 @@ bool CScriptObject::ReadFromBuffer( char **pBuffer )
 	if ( strlen( token ) <= 0 )
 		return false;
 
-	if ( !stricmp( token, "SetInfo" ) )
+	if ( !_stricmp( token, "SetInfo" ) )
 	{
 		bSetInfo = true;
 		// Parse the final }
@@ -618,7 +618,7 @@ bool CDescription::ReadFromBuffer( char **pBuffer )
 		return false;
 
 	// Read VERSION #
-	if ( stricmp ( token, "VERSION" ) )
+	if ( _stricmp ( token, "VERSION" ) )
 	{
 		Msg( "Expecting 'VERSION', got '%s'", token );
 		return false;
@@ -648,7 +648,7 @@ bool CDescription::ReadFromBuffer( char **pBuffer )
 		return false;
 
 	// Read DESCRIPTION
-	if ( stricmp ( token, "DESCRIPTION" ) )
+	if ( _stricmp ( token, "DESCRIPTION" ) )
 	{
 		Msg( "Expecting 'DESCRIPTION', got '%s'", token );
 		return false;
@@ -662,7 +662,7 @@ bool CDescription::ReadFromBuffer( char **pBuffer )
 		return false;
 	}
 
-	if ( stricmp ( token, m_pszDescriptionType ) )
+	if ( _stricmp ( token, m_pszDescriptionType ) )
 	{
 		Msg( "Expecting %s, got %s", m_pszDescriptionType, token );
 		return false;
@@ -692,7 +692,7 @@ bool CDescription::ReadFromBuffer( char **pBuffer )
 			return false;
 
 		// Read "cvar name" or  } when done
-		if ( !stricmp ( token, "}" ) )
+		if ( !_stricmp ( token, "}" ) )
 			break;
 
 		// Unget the token

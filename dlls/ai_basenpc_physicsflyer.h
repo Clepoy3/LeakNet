@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 class CAI_BasePhysicsFlyingBot : public CAI_BaseNPC, public IMotionEvent
 {
-	DECLARE_CLASS( CAI_BasePhysicsFlyingBot, CAI_BaseNPC );
 public:
+	DECLARE_CLASS( CAI_BasePhysicsFlyingBot, CAI_BaseNPC );
+
 	DECLARE_DATADESC();
 
 	void			StartTask( const Task_t *pTask );

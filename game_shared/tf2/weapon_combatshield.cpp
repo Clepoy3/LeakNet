@@ -554,7 +554,7 @@ float CWeaponCombatShield::AttemptToBlock( float flDamage )
 	RemoveShieldHealth( flPowerUsed );
 
 	// Start recharging shortly after taking damage
-	SetThink( ShieldRechargeThink );
+	SetThink( &CWeaponCombatShield::ShieldRechargeThink );
 	SetNextThink( gpGlobals->curtime + weapon_combat_shield_rechargetime.GetFloat() );
 #endif
 
@@ -710,7 +710,7 @@ void CWeaponCombatShield::DrawAmmo( void )
 	float flFlash = 0;
 	if ( gpGlobals->curtime < m_flFlashTimeEnd && !GetPrimaryAmmo() )
 	{
-		flFlash = fmod( gpGlobals->curtime, 0.25 );
+		flFlash = fmod( gpGlobals->curtime, 0.25f );
 		flFlash *= 2 * M_PI;
 		flFlash = cos( flFlash );
 	}

@@ -68,7 +68,7 @@ void CWeaponBox::Spawn( void )
 	SetModel( WEAPONBOX_MODEL );
 	BaseClass::Spawn();
 
-	SetTouch( BoxTouch );
+	SetTouch( &CWeaponBox::BoxTouch );
 }
 
 
@@ -134,51 +134,51 @@ bool CWeaponBox::PackAmmo( char *szName, int iCount )
 	}
 	
 	Q_snprintf( szConvertedName, 32, "%s", szName );
-	if ( !stricmp( szName, "bolts" ) )
+	if ( !_stricmp( szName, "bolts" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "XBowBolt" );
 	}
-	if ( !stricmp( szName, "uranium" ) )
+	if ( !_stricmp( szName, "uranium" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Uranium" );
 	}
-	if ( !stricmp( szName, "9mm" ) )
+	if ( !_stricmp( szName, "9mm" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "9mmRound" );
 	}
-	if ( !stricmp( szName, "Hand Grenade" ) )
+	if ( !_stricmp( szName, "Hand Grenade" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Grenade" );
 	}
-	if ( !stricmp( szName, "Hornets" ) )
+	if ( !_stricmp( szName, "Hornets" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Hornet" );
 	}
-	if ( !stricmp( szName, "ARgrenades" ) )
+	if ( !_stricmp( szName, "ARgrenades" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "MP5_Grenade" );
 	}
-	if ( !stricmp( szName, "357" ) )
+	if ( !_stricmp( szName, "357" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "357Round" );
 	}
-	if ( !stricmp( szName, "rockets" ) )
+	if ( !_stricmp( szName, "rockets" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "RPG_Rocket" );
 	}
-	if ( !stricmp( szName, "Satchel Charge" ) )
+	if ( !_stricmp( szName, "Satchel Charge" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Satchel" );
 	}
-	if ( !stricmp( szName, "buckshot" ) )
+	if ( !_stricmp( szName, "buckshot" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Buckshot" );
 	}
-	if ( !stricmp( szName, "Snarks" ) )
+	if ( !_stricmp( szName, "Snarks" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "Snark" );
 	}
-	if ( !stricmp( szName, "Trip Mine" ) )
+	if ( !_stricmp( szName, "Trip Mine" ) )
 	{
 		Q_snprintf( szConvertedName, 32, "TripMine" );
 	}
@@ -204,7 +204,7 @@ int CWeaponBox::GiveAmmo( int iCount, char *szName, int iMax, int *pIndex )
 
 	for ( i = 1; ( i < MAX_AMMO_SLOTS ) && ( m_rgiszAmmo[i] != NULL_STRING ); i++ )
 	{
-		if ( stricmp( szName, STRING( m_rgiszAmmo[i] ) ) == 0 )
+		if ( _stricmp( szName, STRING( m_rgiszAmmo[i] ) ) == 0 )
 		{
 			if (pIndex)
 				*pIndex = i;

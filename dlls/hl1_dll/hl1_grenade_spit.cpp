@@ -48,9 +48,9 @@ void CGrenadeSpit::Spawn( void )
 	SetRenderColor( 255, 255, 255, 255 );
 	m_nRenderFX		= kRenderFxNone;
 
-	SetThink( SpitThink );
-	SetUse( DetonateUse ); 
-	SetTouch( GrenadeSpitTouch );
+	SetThink( &CGrenadeSpit::SpitThink );
+	SetUse( &CGrenadeSpit::DetonateUse ); 
+	SetTouch( &CGrenadeSpit::GrenadeSpitTouch );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_bullsquid_dmg_spit.GetFloat();

@@ -629,7 +629,7 @@ CExpression *CExpClass::FindExpression( const char *name )
 	for ( int i = 0 ; i < m_Expressions.Size(); i++ )
 	{
 		CExpression *exp = &m_Expressions[ i ];
-		if ( !stricmp( exp->name, name ) )
+		if ( !_stricmp( exp->name, name ) )
 		{
 			return exp;
 		}
@@ -648,7 +648,7 @@ void CExpClass::DeleteExpression( const char *name )
 	for ( int i = 0 ; i < m_Expressions.Size(); i++ )
 	{
 		CExpression *exp = &m_Expressions[ i ];
-		if ( !stricmp( exp->name, name ) )
+		if ( !_stricmp( exp->name, name ) )
 		{
 			// If this class hav overrides, remove it from there, too
 			if ( !IsOverrideClass() && HasOverrideClass() )
@@ -805,7 +805,7 @@ CExpression *CExpClass::FindBitmapForChecksum( const char *checksum )
 		if ( !checkval )
 			continue;
 
-		if ( !stricmp( checksum, checkval ) )
+		if ( !_stricmp( checksum, checkval ) )
 			return exp;
 	}
 

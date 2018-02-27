@@ -15,8 +15,9 @@
 #pragma warning(disable: 4355)  // 'this' : used in base member initializer list
 #pragma warning(disable: 4786)  // identifier was truncated to '255' characters in the debug information
 
-#include <iostream>
-#include <iomanip>
+#include <iostream> 
+#include <iomanip> 
+//#include <sqlplus.hh> 
 using namespace std;
 
 #include <mysql++.h>
@@ -87,6 +88,8 @@ private:
 	CUtlLinkedList<msg_t, int> m_InQueue;
 	CUtlLinkedList<msg_t, int> m_OutQueue;
 };
+
+//class Connection;
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface to a command

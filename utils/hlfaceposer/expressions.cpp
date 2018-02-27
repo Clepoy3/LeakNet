@@ -318,7 +318,7 @@ CExpClass *CExpressionManager::FindClass( const char *classname )
 		if ( cl->IsOverrideClass() )
 			continue;
 
-		if ( !stricmp( classname, cl->GetName() ) )
+		if ( !_stricmp( classname, cl->GetName() ) )
 		{
 			return cl;
 		}
@@ -344,7 +344,7 @@ const char *CExpressionManager::GetClassnameFromFilename( const char *filename )
 
 	COM_FixSlashes( cleanname );
 	ExtractFileBase( cleanname, classname, sizeof( classname ) );
-	strlwr( classname );
+	_strlwr( classname );
 	return classname;
 };
 
@@ -419,7 +419,7 @@ void CExpressionManager::LoadOverrides( CExpClass *baseClass, char const *inpath
 		GetToken (true);
 		if (endofscript)
 			break;
-		if (stricmp( token, "$keys" ) == 0)
+		if (_stricmp( token, "$keys" ) == 0)
 		{
 			numflexmaps = 0;
 			while (TokenAvailable())
@@ -427,7 +427,7 @@ void CExpressionManager::LoadOverrides( CExpClass *baseClass, char const *inpath
 				GetToken( false );
 				for (int i = 0; i < hdr->numflexcontrollers; i++)
 				{
-					if (stricmp( hdr->pFlexcontroller(i)->pszName(), token ) == 0)
+					if (_stricmp( hdr->pFlexcontroller(i)->pszName(), token ) == 0)
 					{
 						flexmap[numflexmaps++] = i;
 						break;
@@ -435,7 +435,7 @@ void CExpressionManager::LoadOverrides( CExpClass *baseClass, char const *inpath
 				}
 			}
 		}
-		else if ( !stricmp( token, "$group" ) )
+		else if ( !_stricmp( token, "$group" ) )
 		{
 			char name[ 256 ];
 			char member[ 256 ];
@@ -481,7 +481,7 @@ void CExpressionManager::LoadOverrides( CExpClass *baseClass, char const *inpath
 				}
 			}
 		}
-		else if ( !stricmp( token, "$groupname" ) )
+		else if ( !_stricmp( token, "$groupname" ) )
 		{
 			char name[ 256 ];
 			char desc[ 256 ];
@@ -495,7 +495,7 @@ void CExpressionManager::LoadOverrides( CExpClass *baseClass, char const *inpath
 
 			overrides->AddGroupExpression( name, desc );
 		}
-		else if ( !stricmp( token, "$hasweighting" ) )
+		else if ( !_stricmp( token, "$hasweighting" ) )
 		{
 			bHasWeighting = true;
 		}
@@ -610,7 +610,7 @@ void CExpressionManager::LoadClass( const char *inpath )
 		GetToken (true);
 		if (endofscript)
 			break;
-		if (stricmp( token, "$keys" ) == 0)
+		if (_stricmp( token, "$keys" ) == 0)
 		{
 			numflexmaps = 0;
 			while (TokenAvailable())
@@ -619,7 +619,7 @@ void CExpressionManager::LoadClass( const char *inpath )
 				GetToken( false );
 				for (int i = 0; i < hdr->numflexcontrollers; i++)
 				{
-					if (stricmp( hdr->pFlexcontroller(i)->pszName(), token ) == 0)
+					if (_stricmp( hdr->pFlexcontroller(i)->pszName(), token ) == 0)
 					{
 						flexmap[numflexmaps] = i;
 						break;
@@ -628,7 +628,7 @@ void CExpressionManager::LoadClass( const char *inpath )
 				numflexmaps++;
 			}
 		}
-		else if ( !stricmp( token, "$group" ) )
+		else if ( !_stricmp( token, "$group" ) )
 		{
 			char name[ 256 ];
 			char member[ 256 ];
@@ -674,7 +674,7 @@ void CExpressionManager::LoadClass( const char *inpath )
 				}
 			}
 		}
-		else if ( !stricmp( token, "$groupname" ) )
+		else if ( !_stricmp( token, "$groupname" ) )
 		{
 			char name[ 256 ];
 			char desc[ 256 ];
@@ -688,7 +688,7 @@ void CExpressionManager::LoadClass( const char *inpath )
 
 			active->AddGroupExpression( name, desc );
 		}
-		else if ( !stricmp( token, "$hasweighting" ) )
+		else if ( !_stricmp( token, "$hasweighting" ) )
 		{
 			bHasWeighting = true;
 		}
@@ -920,7 +920,7 @@ CExpClass *CExpressionManager::FindOverrideClass( char const *classname )
 		if ( !cl->IsOverrideClass() )
 			continue;
 
-		if ( !stricmp( classname, cl->GetName() ) )
+		if ( !_stricmp( classname, cl->GetName() ) )
 		{
 			return cl;
 		}

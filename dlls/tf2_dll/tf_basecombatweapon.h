@@ -24,8 +24,8 @@ class CBaseTFPlayer;
 //-----------------------------------------------------------------------------
 class CTFMachineGun : public CBaseTFCombatWeapon
 {
-	DECLARE_CLASS( CTFMachineGun, CBaseTFCombatWeapon );
 public:
+	DECLARE_CLASS( CTFMachineGun, CBaseTFCombatWeapon );
 
 	DECLARE_SERVERCLASS();
 

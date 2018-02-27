@@ -38,8 +38,9 @@ ConVar	weapon_combat_burstrifle_ducking_mod( "weapon_combat_burstrifle_ducking_m
 //-----------------------------------------------------------------------------
 class CWeaponCombatBurstRifle : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatBurstRifle, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatBurstRifle, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

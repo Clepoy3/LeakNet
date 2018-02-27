@@ -61,8 +61,8 @@ void CGrenade_Molotov::Spawn( void )
 	UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 	Relink();
 
-	SetTouch( MolotovTouch );
-	SetThink( MolotovThink );
+	SetTouch( &CGrenade_Molotov::MolotovTouch );
+	SetThink( &CGrenade_Molotov::MolotovThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage		= sk_plr_dmg_molotov.GetFloat();

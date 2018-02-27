@@ -29,9 +29,10 @@
 //class CNPC_Conscript : public CAI_PlayerAlly
 class CNPC_Conscript : public CNPCSimpleTalker
 {
+public:
 //	DECLARE_CLASS( CNPC_Conscript, CAI_PlayerAlly );
 	DECLARE_CLASS( CNPC_Conscript, CNPCSimpleTalker );
-public:
+
 	void			Spawn( void );
 	void			Precache( void );
 	float			MaxYawSpeed( void );

@@ -743,14 +743,14 @@ void CSceneEntity::DispatchPauseScene( CChoreoScene *scene, const char *paramete
 	// Check for auto resume/cancel
 	char *buffer = (char *)parameters;
 	buffer = engine->COM_ParseFile( buffer, token );
-	if ( !stricmp( token, "automate" ) )
+	if ( !_stricmp( token, "automate" ) )
 	{
 		buffer = engine->COM_ParseFile( buffer, token );
-		if ( !stricmp( token, "Cancel" ) )
+		if ( !_stricmp( token, "Cancel" ) )
 		{
 			m_nAutomatedAction = SCENE_ACTION_CANCEL;
 		}
-		else if ( !stricmp( token, "Resume" ) )
+		else if ( !_stricmp( token, "Resume" ) )
 		{
 			m_nAutomatedAction = SCENE_ACTION_RESUME;
 		}
@@ -1733,11 +1733,11 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 {
 	CBaseEntity *entity = NULL;
 
-	if ( !stricmp( name, "Player" ) || !stricmp( name, "!player" ))
+	if ( !_stricmp( name, "Player" ) || !_stricmp( name, "!player" ))
 	{
 		entity = ( CBaseEntity * )UTIL_PlayerByIndex( 1 );
 	}
-	else if ( !stricmp( name, "!target1" ) )
+	else if ( !_stricmp( name, "!target1" ) )
 	{
 		if (m_hTarget1 == NULL)
 		{
@@ -1745,7 +1745,7 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 		}
 		return m_hTarget1;
 	}
-	else if ( !stricmp( name, "!target2" ) )
+	else if ( !_stricmp( name, "!target2" ) )
 	{
 		if (m_hTarget2 == NULL)
 		{
@@ -1753,7 +1753,7 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 		}
 		return m_hTarget2;
 	}
-	else if ( !stricmp( name, "!target3" ) )
+	else if ( !_stricmp( name, "!target3" ) )
 	{
 		if (m_hTarget3 == NULL)
 		{
@@ -1761,7 +1761,7 @@ CBaseEntity *CSceneEntity::FindNamedEntity( const char *name, CBaseEntity *pActo
 		}
 		return m_hTarget3;
 	}
-	else if ( !stricmp( name, "!target4" ) )
+	else if ( !_stricmp( name, "!target4" ) )
 	{
 		if (m_hTarget4 == NULL)
 		{

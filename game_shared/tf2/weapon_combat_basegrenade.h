@@ -23,8 +23,9 @@
 //-----------------------------------------------------------------------------
 class CWeaponCombatBaseGrenade : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatBaseGrenade, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatBaseGrenade, CWeaponCombatUsedWithShieldBase );
+
 	CWeaponCombatBaseGrenade();
 
 	DECLARE_NETWORKCLASS();

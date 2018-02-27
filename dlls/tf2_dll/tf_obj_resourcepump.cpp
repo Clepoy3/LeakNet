@@ -158,7 +158,7 @@ void CObjectResourcePump::SetupPump( void )
 		m_hResourceZone->SetObjectOnBuildPoint( 0, this );
 	}
 
-	SetContextThink( ResourcePumpThink, gpGlobals->curtime + m_flPumpSpeed, RESOURCE_PUMP_CONTEXT );
+	SetContextThink( &CObjectResourcePump::ResourcePumpThink, gpGlobals->curtime + m_flPumpSpeed, RESOURCE_PUMP_CONTEXT );
 
 	// Start the pump animation
 	ResetSequence( SelectWeightedSequence( ACT_IDLE ) );

@@ -72,9 +72,11 @@ enum filter_t
 
 class CFilterMultiple : public CBaseFilter
 {
+public:
 	DECLARE_CLASS( CFilterMultiple, CBaseFilter );
 	DECLARE_DATADESC();
 
+private:
 	filter_t	m_nFilterType;
 	string_t	m_iFilterName[MAX_FILTERS];
 	EHANDLE		m_hFilter[MAX_FILTERS];
@@ -168,10 +170,10 @@ bool CFilterMultiple::PassesFilterImpl(CBaseEntity *pEntity)
 // ###################################################################
 class CFilterName : public CBaseFilter
 {
+public:
 	DECLARE_CLASS( CFilterName, CBaseFilter );
 	DECLARE_DATADESC();
 
-public:
 	string_t m_iFilterName;
 
 	bool PassesFilterImpl(CBaseEntity *pEntity)
@@ -216,10 +218,10 @@ END_DATADESC()
 // ###################################################################
 class CFilterClass : public CBaseFilter
 {
+public:
 	DECLARE_CLASS( CFilterClass, CBaseFilter );
 	DECLARE_DATADESC();
 
-public:
 	string_t m_iFilterClass;
 
 	bool PassesFilterImpl(CBaseEntity *pEntity)
@@ -243,10 +245,10 @@ END_DATADESC()
 // ###################################################################
 class FilterTeam : public CBaseFilter
 {
+public:
 	DECLARE_CLASS( FilterTeam, CBaseFilter );
 	DECLARE_DATADESC();
 
-public:
 	int		m_iFilterTeam;
 
 	bool PassesFilterImpl(CBaseEntity *pEntity)

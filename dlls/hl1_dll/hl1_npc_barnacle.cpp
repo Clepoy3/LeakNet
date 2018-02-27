@@ -131,7 +131,7 @@ void CNPC_Barnacle::Spawn()
 
 	SetActivity ( ACT_IDLE );
 
-	SetThink ( BarnacleThink );
+	SetThink ( &CNPC_Barnacle::BarnacleThink );
 	SetNextThink( gpGlobals->curtime + 0.5f );
 
 	Relink();
@@ -413,7 +413,7 @@ void CNPC_Barnacle::Event_Killed( const CTakeDamageInfo &info )
 	StudioFrameAdvance();
 
 	SetNextThink( gpGlobals->curtime + 0.1f );
-	SetThink ( WaitTillDead );
+	SetThink ( &CNPC_Barnacle::WaitTillDead );
 }
 
 //-----------------------------------------------------------------------------

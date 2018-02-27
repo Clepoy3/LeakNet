@@ -53,8 +53,8 @@ enum
 //=========================================================
 class CHLSelectFireMachineGun : public CHLMachineGun
 {
-	DECLARE_CLASS( CHLSelectFireMachineGun, CHLMachineGun );
 public:
+	DECLARE_CLASS( CHLSelectFireMachineGun, CHLMachineGun );
 
 	CHLSelectFireMachineGun( void );
 	

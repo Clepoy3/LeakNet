@@ -34,8 +34,9 @@ ConVar	weapon_combat_shotgun_energy_cost( "weapon_combat_shotgun_energy_cost", "
 //-----------------------------------------------------------------------------
 class CWeaponCombatShotgun : public CWeaponCombatUsedWithShieldBase
 {
-	DECLARE_CLASS( CWeaponCombatShotgun, CWeaponCombatUsedWithShieldBase );
 public:
+	DECLARE_CLASS( CWeaponCombatShotgun, CWeaponCombatUsedWithShieldBase );
+
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 

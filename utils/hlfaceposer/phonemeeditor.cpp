@@ -704,7 +704,7 @@ void PhonemeEditor::StartDragging( int dragtype, int startx, int starty, HCURSOR
 		break;
 	case DRAGTYPE_MOVEWORD:
 		{
-			TraverseWords( ITER_AddFocusRectSelectedWords, 0.0f );
+			TraverseWords( &PhonemeEditor::ITER_AddFocusRectSelectedWords, 0.0f );
 			addrect = false;
 			m_bWordsActive = true;
 		}
@@ -716,13 +716,13 @@ void PhonemeEditor::StartDragging( int dragtype, int startx, int starty, HCURSOR
 		break;
 	case DRAGTYPE_MOVEPHRASE:
 		{
-			TraversePhrases( ITER_AddFocusRectSelectedPhrases, 0.0f );
+			TraversePhrases( &PhonemeEditor::ITER_AddFocusRectSelectedPhrases, 0.0f );
 			addrect = false;
 		}
 		break;
 	case DRAGTYPE_MOVEPHONEME:
 		{
-			TraversePhonemes( ITER_AddFocusRectSelectedPhonemes, 0.0f );
+			TraversePhonemes( &PhonemeEditor::ITER_AddFocusRectSelectedPhonemes, 0.0f );
 			addrect = false;
 			m_bWordsActive = false;
 		}
@@ -2359,7 +2359,7 @@ void PhonemeEditor::ReadLinguisticTags( void )
 void PhonemeEditor::SetCurrentWaveFile( const char *wavefile, bool force /*=false*/, CChoreoEvent *event /*=NULL*/ )
 {
 	// No change?
-	if ( !force && !stricmp( m_WorkFile.m_szWaveFile, wavefile ) )
+	if ( !force && !_stricmp( m_WorkFile.m_szWaveFile, wavefile ) )
 		return;
 
 	if ( GetDirty() )
@@ -2695,7 +2695,7 @@ void PhonemeEditor::ShowWordMenu( CWordTag *word, int mx, int my )
 
 	pop->add( va( "Edit sentence text..." ), IDC_EDITWORDLIST );
 	
-	if ( m_nSelectedWordCount > 0 )
+	if ( m_nSelectedWordCount > 0 && word )
 	{
 		pop->addSeparator();
 
@@ -3071,7 +3071,7 @@ void PhonemeEditor::FinishWordDrag( int startx, int endx )
 
 	PushUndo();
 
-	TraverseWords( ITER_MoveSelectedWords, dt );
+	TraverseWords( &PhonemeEditor::ITER_MoveSelectedWords, dt );
 
 	CleanupWordsAndPhonemes( false );
 
@@ -3165,7 +3165,7 @@ void PhonemeEditor::FinishPhonemeDrag( int startx, int endx )
 
 	PushUndo();
 
-	TraversePhonemes( ITER_MoveSelectedPhonemes, dt );
+	TraversePhonemes( &PhonemeEditor::ITER_MoveSelectedPhonemes, dt );
 
 	CleanupWordsAndPhonemes( false );
 
@@ -3461,10 +3461,11 @@ void PhonemeEditor::EditInsertWordBefore( void )
 		return;
 	}
 
-	if ( CountWords( params.m_szInputText ) > 1 )
+	int wordCount = CountWords( params.m_szInputText );
+	if ( wordCount > 1 )
 	{
 		Con_Printf( "Can only insert one word at a time, %s has %i words in it!\n",
-			params.m_szInputText, CountWords( params.m_szInputText ) );
+			params.m_szInputText, wordCount );
 		return;
 	}
 
@@ -3560,10 +3561,11 @@ void PhonemeEditor::EditInsertWordAfter( void )
 		return;
 	}
 
-	if ( CountWords( params.m_szInputText ) > 1 )
+	int wordCount = CountWords( params.m_szInputText );
+	if ( wordCount > 1 )
 	{
 		Con_Printf( "Can only insert one word at a time, %s has %i words in it!\n",
-			params.m_szInputText, CountWords( params.m_szInputText ) );
+			params.m_szInputText, wordCount );
 		return;
 	}
 
@@ -4273,7 +4275,7 @@ void PhonemeEditor::SelectSamples( int start, int end )
 
 	// Select any words that span the selection
 	//
-	TraverseWords( ITER_SelectSpanningWords, 0.0f );
+	TraverseWords( &PhonemeEditor::ITER_SelectSpanningWords, 0.0f );
 
 	redraw();
 }
@@ -4295,7 +4297,7 @@ void PhonemeEditor::FinishMoveSelection( int startx, int mx )
 
 	// Select any words that span the selection
 	//
-	TraverseWords( ITER_SelectSpanningWords, 0.0f );
+	TraverseWords( &PhonemeEditor::ITER_SelectSpanningWords, 0.0f );
 
 	redraw();
 }
@@ -4319,7 +4321,7 @@ void PhonemeEditor::FinishMoveSelectionStart( int startx, int mx )
 
 	// Select any words that span the selection
 	//
-	TraverseWords( ITER_SelectSpanningWords, 0.0f );
+	TraverseWords( &PhonemeEditor::ITER_SelectSpanningWords, 0.0f );
 
 	redraw();
 }
@@ -4343,7 +4345,7 @@ void PhonemeEditor::FinishMoveSelectionEnd( int startx, int mx )
 
 	// Select any words that span the selection
 	//
-	TraverseWords( ITER_SelectSpanningWords, 0.0f );
+	TraverseWords( &PhonemeEditor::ITER_SelectSpanningWords, 0.0f );
 
 	redraw();
 }
@@ -4617,7 +4619,7 @@ void PhonemeEditor::OnImport()
 {
 	char workingdir[ 256 ];
 	Q_getwd( workingdir );
-	strlwr( workingdir );
+	_strlwr( workingdir );
 	COM_FixSlashes( workingdir );
 
 	bool inSoundAlready = false;
@@ -4649,7 +4651,7 @@ void PhonemeEditor::OnExport()
 
 	char workingdir[ 256 ];
 	Q_getwd( workingdir );
-	strlwr( workingdir );
+	_strlwr( workingdir );
 	COM_FixSlashes( workingdir );
 
 	bool inSoundAlready = false;
@@ -5294,7 +5296,7 @@ void PhonemeEditor::LoadWaveFile( void )
 
 	char workingdir[ 256 ];
 	Q_getwd( workingdir );
-	strlwr( workingdir );
+	_strlwr( workingdir );
 	COM_FixSlashes( workingdir );
 
 	if ( strstr( workingdir, va( "%s/sound", GetGameDirectory() ) ) )
@@ -5939,9 +5941,9 @@ void PhonemeEditor::CountSelected( void )
 	m_nSelectedWordCount = 0;
 	m_nSelectedPhraseCount = 0;
 
-	TraverseWords( ITER_CountSelectedWords, 0.0f );
-	TraversePhonemes( ITER_CountSelectedPhonemes, 0.0f );
-	TraversePhrases( ITER_CountSelectedPhrases, 0.0f );
+	TraverseWords( &PhonemeEditor::ITER_CountSelectedWords, 0.0f );
+	TraversePhonemes( &PhonemeEditor::ITER_CountSelectedPhonemes, 0.0f );
+	TraversePhrases( &PhonemeEditor::ITER_CountSelectedPhrases, 0.0f );
 }
 
 void PhonemeEditor::ITER_CountSelectedWords( CWordTag *word, float amount )
@@ -6320,7 +6322,7 @@ void PhonemeEditor::ShiftSelectedPhoneme( int direction )
 
 	PushUndo();
 
-	TraversePhonemes( ITER_MoveSelectedPhonemes, movetime );
+	TraversePhonemes( &PhonemeEditor::ITER_MoveSelectedPhonemes, movetime );
 
 	PushRedo();
 
@@ -6358,7 +6360,7 @@ void PhonemeEditor::ExtendSelectedPhonemeEndTime( int direction )
 
 	PushUndo();
 
-	TraversePhonemes( ITER_ExtendSelectedPhonemeEndTimes, movetime );
+	TraversePhonemes( &PhonemeEditor::ITER_ExtendSelectedPhonemeEndTimes, movetime );
 
 	PushRedo();
 
@@ -6605,7 +6607,7 @@ void PhonemeEditor::ShiftSelectedWord( int direction )
 
 	PushUndo();
 
-	TraverseWords( ITER_MoveSelectedWords, movetime );
+	TraverseWords( &PhonemeEditor::ITER_MoveSelectedWords, movetime );
 
 	PushRedo();
 
@@ -6643,7 +6645,7 @@ void PhonemeEditor::ExtendSelectedWordEndTime( int direction )
 
 	PushUndo();
 
-	TraverseWords( ITER_ExtendSelectedWordEndTimes, movetime );
+	TraverseWords( &PhonemeEditor::ITER_ExtendSelectedWordEndTimes, movetime );
 
 	PushRedo();
 

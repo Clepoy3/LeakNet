@@ -181,7 +181,7 @@ int CBaseFlex::FindFlexController( const char *szName )
 {
 	for (int i = 0; i < GetNumFlexControllers(); i++)
 	{
-		if (stricmp( GetFlexControllerName( i ), szName ) == 0)
+		if (_stricmp( GetFlexControllerName( i ), szName ) == 0)
 		{
 			return i;
 		}
@@ -396,7 +396,7 @@ void *CBaseFlex::FindSceneFile( const char *filename )
 	for ( i = 0; i < m_FileList.Size(); i++ )
 	{
 		CFacialExpressionFile *file = m_FileList[ i ];
-		if ( file && !stricmp( file->filename, filename ) )
+		if ( file && !_stricmp( file->filename, filename ) )
 		{
 			return file->buffer;
 		}
@@ -603,7 +603,7 @@ flexsetting_t const *CBaseFlex::FindNamedSetting( flexsettinghdr_t const *pSetti
 
 		const char *name = pSetting->pszName();
 
-		if ( !stricmp( name, expr ) )
+		if ( !_stricmp( name, expr ) )
 			break;
 	}
 
@@ -761,7 +761,7 @@ void CBaseFlex::AddExpression( const char *expr, float scale,
 
 		const char *name = pSetting->pszName();
 
-		if ( !stricmp( name, expr ) )
+		if ( !_stricmp( name, expr ) )
 			break;
 	}
 
@@ -964,9 +964,9 @@ void CSceneEntity::DispatchProcessSequence( CChoreoScene *scene, CBaseFlex *acto
 
 class CFlexCycler : public CBaseFlex
 {
-private:
-	DECLARE_CLASS( CFlexCycler, CBaseFlex );
 public:
+	DECLARE_CLASS( CFlexCycler, CBaseFlex );
+
 	DECLARE_DATADESC();
 
 	CFlexCycler() { m_iszSentence = NULL_STRING; m_sentence = 0; }
@@ -1165,7 +1165,7 @@ void CFlexCycler::SetFlexTarget( int flexnum )
 		if (i != flexnum)
 		{
 			const char *pszOtherType = GetFlexControllerType( i );
-			if (stricmp( pszType, pszOtherType ) == 0)
+			if (_stricmp( pszType, pszOtherType ) == 0)
 			{
 				m_flextarget[i] = 0;
 			}
@@ -1189,7 +1189,7 @@ int CFlexCycler::LookupFlex( const char *szTarget  )
 	for (int i = 0; i < GetNumFlexControllers(); i++)
 	{
 		const char *pszFlex = GetFlexControllerName( i );
-		if (stricmp( szTarget, pszFlex ) == 0)
+		if (_stricmp( szTarget, pszFlex ) == 0)
 		{
 			return i;
 		}
@@ -1305,7 +1305,7 @@ void CFlexCycler :: Think( void )
 				m_flextarget[m_flexnum] = 0;
 				// pflex->time = cl.time + 0.1;
 			}
-			else if (stricmp( GetFlexControllerType( m_flexnum ), "phoneme" ) != 0)
+			else if (_stricmp( GetFlexControllerType( m_flexnum ), "phoneme" ) != 0)
 			{
 				if (strstr( GetFlexControllerName( m_flexnum ), "upper_raiser" ) == NULL)
 				{

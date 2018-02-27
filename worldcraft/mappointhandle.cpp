@@ -38,7 +38,7 @@ CMapClass *CMapPointHandle::Create(CHelperInfo *pHelperInfo, CMapEntity *pParent
 {
 	static char *pszDefaultKeyName = "origin";
 
-	bool bDrawLineToParent = !stricmp(pHelperInfo->GetName(), "vecline");
+	bool bDrawLineToParent = !_stricmp(pHelperInfo->GetName(), "vecline");
 
 	POSITION pos;
 	const char *pszKey = pHelperInfo->GetFirstParameter(pos);
@@ -273,7 +273,7 @@ void CMapPointHandle::Render3D(CRender3D *pRender)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CMapPointHandle::SerializeRMF(fstream &File, BOOL bRMF)
+int CMapPointHandle::SerializeRMF(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -282,7 +282,7 @@ int CMapPointHandle::SerializeRMF(fstream &File, BOOL bRMF)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CMapPointHandle::SerializeMAP(fstream &File, BOOL bRMF)
+int CMapPointHandle::SerializeMAP(std::fstream &File, BOOL bRMF)
 {
 	return(0);
 }
@@ -315,7 +315,7 @@ void CMapPointHandle::SetRenderColor(color32 rgbColor)
 //-----------------------------------------------------------------------------
 void CMapPointHandle::OnParentKeyChanged(const char *szKey, const char *szValue)
 {
-	if (stricmp(szKey, m_szKeyName) == 0)
+	if (_stricmp(szKey, m_szKeyName) == 0)
 	{
 		sscanf(szValue, "%f %f %f", &m_Origin.x, &m_Origin.y, &m_Origin.z);
 		CalcBounds();

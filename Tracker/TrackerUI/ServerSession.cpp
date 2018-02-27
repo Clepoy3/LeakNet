@@ -101,10 +101,11 @@ CServerSession::CServerSession()
 	// load the server info file
 
 	KeyValues *masterServers = ::GetDoc()->Data()->FindKey("MasterServers", true);
-	masterServers->LoadFromFile(filesystem(), "Friends/servers.vdf", "PLATFORM");
+	masterServers->LoadFromFile(filesystem(), "Friends/servers.dat", "PLATFORM");
 
 	// iterate through the servers adding them to the list
-	for (KeyValues *kv = masterServers->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
+	KeyValues *kv;
+	for (kv = masterServers->GetFirstSubKey(); kv != NULL; kv = kv->GetNextKey())
 	{
 		const char *addr = kv->GetString("address", NULL);
 
@@ -117,8 +118,7 @@ CServerSession::CServerSession()
 	// make sure we have at least one server
 	if (m_ServerList.Size() < 1)
 	{
-	//	m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
-		m_ServerList.AddToTail(m_pNet->GetNetAddress("94.158.153.11:1200")); // VXP: Need to be 127.0.0.1 for debug
+		m_ServerList.AddToTail(m_pNet->GetNetAddress("tracker.valvesoftware.com:1200"));
 	}
 	
 	// check to see if we have a server saved
@@ -381,15 +381,15 @@ struct ServerMsgDispatch_t
 
 static ServerMsgDispatch_t g_ServerMsgDispatch[] =
 {
-	{ TSVC_CHALLENGE,	CServerSession::ReceivedMsg_Challenge },
-	{ TSVC_LOGINOK,		CServerSession::ReceivedMsg_LoginOK },
-	{ TSVC_LOGINFAIL,	CServerSession::ReceivedMsg_LoginFail },
-	{ TSVC_DISCONNECT,	CServerSession::ReceivedMsg_Disconnect },
-	{ TSVC_FRIENDS,		CServerSession::ReceivedMsg_Friends },
-	{ TSVC_FRIENDUPDATE, CServerSession::ReceivedMsg_FriendUpdate },
-	{ TSVC_GAMEINFO,	CServerSession::ReceivedMsg_GameInfo },
-	{ TSVC_HEARTBEAT,	CServerSession::ReceivedMsg_Heartbeat },
-	{ TSVC_PINGACK,		CServerSession::ReceivedMsg_PingAck },
+	{ TSVC_CHALLENGE,	&CServerSession::ReceivedMsg_Challenge },
+	{ TSVC_LOGINOK,		&CServerSession::ReceivedMsg_LoginOK },
+	{ TSVC_LOGINFAIL,	&CServerSession::ReceivedMsg_LoginFail },
+	{ TSVC_DISCONNECT,	&CServerSession::ReceivedMsg_Disconnect },
+	{ TSVC_FRIENDS,		&CServerSession::ReceivedMsg_Friends },
+	{ TSVC_FRIENDUPDATE, &CServerSession::ReceivedMsg_FriendUpdate },
+	{ TSVC_GAMEINFO,	&CServerSession::ReceivedMsg_GameInfo },
+	{ TSVC_HEARTBEAT,	&CServerSession::ReceivedMsg_Heartbeat },
+	{ TSVC_PINGACK,		&CServerSession::ReceivedMsg_PingAck },
 };
 
 // optimizer problem with the dispatch code
@@ -1069,15 +1069,15 @@ void CServerSession::SendTextMessageToUser(unsigned int targetID, const char *te
 	}
 	
 	// see how it should be sent
-	if (buddy->SendViaServer())
+//	if (buddy->SendViaServer())
 	{
 		// send the message via the server
 		SendRoutedUserMessage(targetID, TCL_MESSAGE, msgBuffer);
 	}
-	else
-	{
-		SendUserMessage(targetID, TCL_MESSAGE, msgBuffer);
-	}
+//	else
+//	{
+//		SendUserMessage(targetID, TCL_MESSAGE, msgBuffer);
+//	}
 }
 
 //-----------------------------------------------------------------------------

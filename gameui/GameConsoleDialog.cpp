@@ -336,7 +336,7 @@ void CGameConsoleDialog::RebuildCompletionList(const char *text)
 	bool normalbuild = true;
 
 	// if there is a space in the text, and the command isn't of the type to know how to autocomplet, then command completion is over
-	char *space = strstr( text, " " );
+	char *space = (char *)strstr( text, " " );
 	if (space)
 	{
 		char commandname[ 128 ];
@@ -374,7 +374,7 @@ void CGameConsoleDialog::RebuildCompletionList(const char *text)
 		ConCommandBase const *cmd = (ConCommandBase const *)cvar->GetCommands();
 		while (cmd)
 		{
-			if (!strnicmp(text, cmd->GetName(), len))
+			if (!_strnicmp(text, cmd->GetName(), len))
 			{
 				// match found, add to list
 				int node = m_CompletionList.AddToTail();
@@ -416,7 +416,7 @@ void CGameConsoleDialog::RebuildCompletionList(const char *text)
 					c2 = i2->cmd.cmd;
 					Assert( c1 && c2 );
 
-					if ( stricmp( c1->GetName(), c2->GetName() ) > 0 )
+					if ( _stricmp( c1->GetName(), c2->GetName() ) > 0 )
 					{
 						temp = m_CompletionList[ i ];
 						m_CompletionList[ i ] = m_CompletionList[ j ];
@@ -579,7 +579,7 @@ void CGameConsoleDialog::OnTextChanged(Panel *panel)
 //-----------------------------------------------------------------------------
 void CGameConsoleDialog::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Submit"))
+	if (!_stricmp(command, "Submit"))
 	{
 		// submit the entry as a console commmand
 		char szCommand[256];
@@ -816,7 +816,7 @@ void CGameConsoleDialog::AddToHistory( const char *commandText, const char *extr
 		if ( !item )
 			continue;
 
-		if ( stricmp( item->GetText(), command ) )
+		if ( _stricmp( item->GetText(), command ) )
 			continue;
 
 		if ( extra || item->GetExtra() )
@@ -825,7 +825,7 @@ void CGameConsoleDialog::AddToHistory( const char *commandText, const char *extr
 				continue;
 
 			// stricmp so two commands with the same starting text get added
-			if ( stricmp( item->GetExtra(), extra ) )	
+			if ( _stricmp( item->GetExtra(), extra ) )	
 				continue;
 		}
 		m_CommandHistory.Remove( i );

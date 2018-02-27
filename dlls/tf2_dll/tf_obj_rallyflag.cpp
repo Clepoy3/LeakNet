@@ -48,7 +48,7 @@ void CObjectRallyFlag::Spawn()
 	m_takedamage = DAMAGE_YES;
 	m_iHealth = obj_rallyflag_health.GetInt();
 
-	SetThink( RallyThink );
+	SetThink( &CObjectRallyFlag::RallyThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	m_flExpiresAt = gpGlobals->curtime + RALLYFLAG_LIFETIME;
 

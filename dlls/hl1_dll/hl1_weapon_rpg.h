@@ -26,10 +26,10 @@ class CWeaponRPG;
 //###########################################################################
 class CRpgRocket : public CHL1BaseGrenade
 {
+public:
 	DECLARE_CLASS( CRpgRocket, CHL1BaseGrenade );
 	DECLARE_SERVERCLASS();
 
-public:
 	CRpgRocket();
 
 	Class_T Classify( void ) { return CLASS_MISSILE; }

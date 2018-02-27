@@ -22,10 +22,8 @@ class CTFMoveData;
 //
 class CTFGameMovementEscort : public CTFGameMovement
 {
-
-	DECLARE_CLASS( CTFGameMovementEscort, CTFGameMovement );
-
 public:
+	DECLARE_CLASS( CTFGameMovementEscort, CTFGameMovement );
 
 	CTFGameMovementEscort();
 

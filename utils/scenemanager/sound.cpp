@@ -1046,7 +1046,7 @@ CAudioSource *CSceneManagerSound::FindOrAddSound( const char *filename )
 	{
 		s = &m_ActiveSounds[ i ];
 		Assert( s );
-		if ( !stricmp( s->filename, filename ) )
+		if ( !_stricmp( s->filename, filename ) )
 		{
 			long filetime = filesystem->GetFileTime( filename );
 			if ( filetime != s->filetime )

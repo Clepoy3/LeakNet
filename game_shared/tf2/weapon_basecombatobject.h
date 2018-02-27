@@ -26,8 +26,9 @@ class CBaseTFPlayer;
 //-----------------------------------------------------------------------------
 class CWeaponBaseCombatObject : public CBaseTFCombatWeapon
 {
-	DECLARE_CLASS( CWeaponBaseCombatObject, CBaseTFCombatWeapon );
 public:
+	DECLARE_CLASS( CWeaponBaseCombatObject, CBaseTFCombatWeapon );
+
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 

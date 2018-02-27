@@ -250,7 +250,7 @@ void CToolPickEntity::SetSelectedEntities(CMapEntityList &EntityListFull, CMapEn
 		pEntity->SetSelectionState(SELECT_NORMAL);
 	}
 
-	for (i = 0; i < EntityListPartial.Count(); i++)
+	for (int i = 0; i < EntityListPartial.Count(); i++)
 	{
 		CMapEntity *pEntity = EntityListPartial.Element(i);
 

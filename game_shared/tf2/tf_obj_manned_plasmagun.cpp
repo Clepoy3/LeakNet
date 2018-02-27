@@ -135,7 +135,7 @@ void CObjectMannedPlasmagun::Spawn()
 	m_nAmmoCount = m_nMaxAmmoCount = obj_manned_plasmagun_clip.GetInt();
 	m_flNextAttack = gpGlobals->curtime;
 	m_nAmmoType = GetAmmoDef()->Index( "RechargeEnergy" );
-	SetThink( RechargeThink );
+	SetThink( &CObjectMannedPlasmagun::RechargeThink );
 
 	BaseClass::Spawn();
 }

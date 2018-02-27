@@ -67,7 +67,7 @@ void CAutoSelComboBox::OnUpdateText(void)
 	// the current selection. This won't do anything if they are deleting characters
 	// from the end of the text.
 	//
-	if (strnicmp(szTypedText, m_szLastText, strlen(szTypedText)))
+	if (_strnicmp(szTypedText, m_szLastText, strlen(szTypedText)))
 	{
 		int curSel = GetCurSel();
 		DWORD dwEditSel = GetEditSel();

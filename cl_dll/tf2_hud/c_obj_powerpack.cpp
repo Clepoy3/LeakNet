@@ -24,8 +24,9 @@
 //-----------------------------------------------------------------------------
 class C_ObjectPowerPack : public C_BaseObject
 {
-	DECLARE_CLASS( C_ObjectPowerPack, C_BaseObject );
 public:
+	DECLARE_CLASS( C_ObjectPowerPack, C_BaseObject );
+
 	DECLARE_CLIENTCLASS();
 
 	C_ObjectPowerPack();
@@ -271,9 +272,9 @@ int C_ObjectPowerPack::DrawModel( int flags )
 //-----------------------------------------------------------------------------
 class CPowerPackControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CPowerPackControlPanel, CObjectControlPanel );
 
-public:
 	CPowerPackControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

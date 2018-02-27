@@ -1478,7 +1478,7 @@ void CWeaponPhysCannon::StopEffects( void )
 	}
 
 	//Turn off sprites
-	for ( i = 0; i < NUM_SPRITES; i++ )
+	for ( int i = 0; i < NUM_SPRITES; i++ )
 	{
 		if ( m_pGlowSprites[i] != NULL )
 		{
@@ -1486,7 +1486,7 @@ void CWeaponPhysCannon::StopEffects( void )
 		}
 	}
 
-	for ( i = 0; i < 2; i++ )
+	for ( int i = 0; i < 2; i++ )
 	{
 		if ( m_pEndSprites[i] != NULL )
 		{
@@ -1546,7 +1546,7 @@ void CWeaponPhysCannon::StartEffects( void )
 	}
 
 	//Create the glow sprites
-	for ( i = 0; i < NUM_SPRITES; i++ )
+	for ( int i = 0; i < NUM_SPRITES; i++ )
 	{
 		if ( m_pGlowSprites[i] == NULL )
 		{
@@ -1570,7 +1570,7 @@ void CWeaponPhysCannon::StartEffects( void )
 	}
 
 	//Create the endcap sprites
-	for ( i = 0; i < 2; i++ )
+	for ( int i = 0; i < 2; i++ )
 	{
 		if ( m_pEndSprites[i] == NULL )
 		{
@@ -1644,7 +1644,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn off the lightning
-			for ( i = 0; i < NUM_BEAMS; i++ )
+			for ( int i = 0; i < NUM_BEAMS; i++ )
 			{
 				if ( m_pBeams[i] != NULL )
 				{
@@ -1653,7 +1653,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn on the glow sprites
-			for ( i = 0; i < NUM_SPRITES; i++ )
+			for ( int i = 0; i < NUM_SPRITES; i++ )
 			{
 				if ( m_pGlowSprites[i] != NULL )
 				{
@@ -1694,7 +1694,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn off the lightning
-			for ( i = 0; i < NUM_BEAMS; i++ )
+			for ( int i = 0; i < NUM_BEAMS; i++ )
 			{
 				if ( m_pBeams[i] != NULL )
 				{
@@ -1703,7 +1703,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn on the glow sprites
-			for ( i = 0; i < NUM_SPRITES; i++ )
+			for ( int i = 0; i < NUM_SPRITES; i++ )
 			{
 				if ( m_pGlowSprites[i] != NULL )
 				{
@@ -1743,7 +1743,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn off the lightning
-			for ( i = 0; i < NUM_BEAMS; i++ )
+			for ( int i = 0; i < NUM_BEAMS; i++ )
 			{
 				if ( m_pBeams[i] != NULL )
 				{
@@ -1752,7 +1752,7 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 			}
 
 			//Turn on the glow sprites
-			for ( i = 0; i < NUM_SPRITES; i++ )
+			for ( int i = 0; i < NUM_SPRITES; i++ )
 			{
 				if ( m_pGlowSprites[i] != NULL )
 				{

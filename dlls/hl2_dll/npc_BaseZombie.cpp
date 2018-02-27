@@ -143,7 +143,7 @@ ConVar zombie_ambushdist( "zombie_ambushdist", "16000" );
 // For a couple of reasons, we keep a running count of how
 // many zombies in the world are angry at any given time.
 //=========================================================
-static s_iAngryZombies = 0;
+static int s_iAngryZombies = 0;
 
 //=========================================================
 //=========================================================

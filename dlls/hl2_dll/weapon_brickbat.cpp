@@ -152,7 +152,7 @@ bool CWeaponBrickbat::Deploy( void )
 //------------------------------------------------------------------------------
 void CWeaponBrickbat::SetPickupTouch( void )
 {
-	SetTouch( BrickbatTouch );
+	SetTouch( &CWeaponBrickbat::BrickbatTouch );
 }
 
 //------------------------------------------------------------------------------

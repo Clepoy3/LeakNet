@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 class CHintItemOrderBase : public CHintItemBase
 {
-	DECLARE_CLASS( CHintItemOrderBase, CHintItemBase );
 public:
+	DECLARE_CLASS( CHintItemOrderBase, CHintItemBase );
+
 	CHintItemOrderBase( vgui::Panel *parent, const char *panelName );
 
 	virtual void		DrawAxialLineToOrder( void );

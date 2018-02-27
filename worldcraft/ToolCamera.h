@@ -13,7 +13,8 @@
 #include "Tool3D.h"
 #include "ToolInterface.h"
 #include "afxtempl.h"
-#include <fstream.h>
+//#include <fstream.h> // VXP: Conv
+#include <fstream>
 
 
 class CChunkFile;
@@ -63,7 +64,7 @@ public:
 	//
 	ChunkFileResult_t LoadVMF(CChunkFile *pFile);
 	ChunkFileResult_t SaveVMF(CChunkFile *pFile, CSaveInfo *pSaveInfo);
-	void SerializeRMF(fstream &file, BOOL fIsStoring);
+	void SerializeRMF(std::fstream &file, BOOL fIsStoring);
 
 	//
 	// Tool3D implementation.

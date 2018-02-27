@@ -467,13 +467,13 @@ void FaceListSewEdges( void )
 	}
 
 	count = s_TJData.Size();
-	for( i = 0; i < count; i++ )
+	for( int i = 0; i < count; i++ )
 	{
 		SewTJunc_Destroy( s_TJData.Element( i ) );
 	}
 	
 	count = s_EdgeData.Size();
-	for( i = 0; i < count; i++ )
+	for( int i = 0; i < count; i++ )
 	{
 		SewEdge_Destroy( s_EdgeData.Element( i ) );
 	}
@@ -717,7 +717,7 @@ void SewCorner_ResolveDisp( SewCornerData_t *pCornerData )
 	vAvgSubdivPos /= pCornerData->faceCount;
 	vAvgSubdivNormal /= pCornerData->faceCount;
 
-	for( i = 0; i < pCornerData->faceCount; i++ )
+	for( int i = 0; i < pCornerData->faceCount; i++ )
 	{
 		// get the current corner face
 		CMapFace *pFace = pCornerData->pFaces[i];
@@ -1058,7 +1058,7 @@ void SewTJunc_ResolveDisp( SewTJuncData_t *pTJData )
 	vAvgSubdivPos /= pTJData->faceCount;
 	vAvgSubdivNormal /= pTJData->faceCount;
 
-	for( i = 0; i < pTJData->faceCount; i++ )
+	for( int i = 0; i < pTJData->faceCount; i++ )
 	{
 		// get the current t-junction face
 		CMapFace *pFace = pTJData->pFaces[i];
@@ -1278,7 +1278,8 @@ void SewEdge_AddToListMerge( SewEdgeData_t *pEdgeData, SewEdgeData_t *pCmpData )
 		if( pEdgeData->type[i] == DISPSEW_EDGE_TJ )
 			continue;
 
-		for( int j = 0; j < pCmpData->faceCount; j++ )
+		int j;
+		for( j = 0; j < pCmpData->faceCount; j++ )
 		{
 			// t-junction edges already exist in both (skip it!)
 			if( pCmpData->type[j] == DISPSEW_EDGE_TJ )
@@ -1812,7 +1813,7 @@ void SewEdge_ResolveDispNormal( SewEdgeData_t *pEdgeData )
 	//
 	float blendRatio = 1.0f / ratio;
 	
-	for( ndxLg = 0; ndxLg < ( lgInterval - 1 ); ndxLg += ratio )
+	for( int ndxLg = 0; ndxLg < ( lgInterval - 1 ); ndxLg += ratio )
 	{
 		int ndxStart = ndxLg;
 		int ndxEnd = ( ndxLg + ratio );

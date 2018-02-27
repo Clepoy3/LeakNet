@@ -95,7 +95,8 @@ private:
 	vgui::Label  *m_pNameLabel;
 	vgui::Label  *m_pMessageState;
 	vgui::TextEntry *m_pTextEntry;
-	vgui::TextEntry *m_pChatHistory;
+//	vgui::TextEntry *m_pChatHistory;
+	vgui::RichText *m_pChatHistory;
 	CButtonInvite *m_pInviteButton;
 	CSubPanelBuddyList *m_pBuddyList;
 

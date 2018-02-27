@@ -17,8 +17,9 @@
 //-----------------------------------------------------------------------------
 class C_VehicleBatteringRam : public C_BaseTFFourWheelVehicle
 {
-	DECLARE_CLASS( C_VehicleBatteringRam, C_BaseTFFourWheelVehicle );
 public:
+	DECLARE_CLASS( C_VehicleBatteringRam, C_BaseTFFourWheelVehicle );
+
 	DECLARE_CLIENTCLASS();
 
 	C_VehicleBatteringRam();
@@ -71,9 +72,9 @@ void C_VehicleBatteringRam::UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserC
 //-----------------------------------------------------------------------------
 class CVehicleBatteringRamControlPanel : public CObjectControlPanel
 {
+public:
 	DECLARE_CLASS( CVehicleBatteringRamControlPanel, CObjectControlPanel );
 
-public:
 	CVehicleBatteringRamControlPanel( vgui::Panel *parent, const char *panelName );
 	virtual bool Init( KeyValues* pKeyValues, VGuiScreenInitData_t* pInitData );
 	virtual void OnTick();

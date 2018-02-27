@@ -18,7 +18,8 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CSubPanelOptionsPersonal::CSubPanelOptionsPersonal() : PropertyPage(NULL, "SubPanelOptionsPersonal")
+CSubPanelOptionsPersonal::CSubPanelOptionsPersonal()
+	: PropertyPage(NULL, "SubPanelOptionsPersonal")
 {
 	LoadControlSettings("Friends/SubPanelOptionsPersonal.res");
 }
@@ -51,9 +52,9 @@ void CSubPanelOptionsPersonal::OnApplyChanges()
 	KeyValues *docData = GetDoc()->Data()->FindKey("User", true);
 
 	// if anything has changed, reset data on server
-	if (stricmp(GetControlString("UserNameEdit", ""), docData->GetString("UserName")) 
-		|| stricmp(GetControlString("FirstNameEdit", ""), docData->GetString("FirstName")) 
-		|| stricmp(GetControlString("LastNameEdit", ""), docData->GetString("LastName")))
+	if (_stricmp(GetControlString("UserNameEdit", ""), docData->GetString("UserName")) 
+		|| _stricmp(GetControlString("FirstNameEdit", ""), docData->GetString("FirstName")) 
+		|| _stricmp(GetControlString("LastNameEdit", ""), docData->GetString("LastName")))
 	{
 		// update document
 		docData->SetString("UserName", GetControlString("UserNameEdit", ""));

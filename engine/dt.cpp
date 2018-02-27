@@ -261,7 +261,7 @@ const ExcludeProp* FindExcludeProp(
 {
 	for ( int i=0; i < nExcludeProps; i++ )
 	{
-		if ( stricmp(pExcludeProps[i].m_pTableName, pTableName) == 0 && stricmp(pExcludeProps[i].m_pPropName, pPropName ) == 0 )
+		if ( _stricmp(pExcludeProps[i].m_pTableName, pTableName) == 0 && _stricmp(pExcludeProps[i].m_pPropName, pPropName ) == 0 )
 			return &pExcludeProps[i];
 	}
 
@@ -501,7 +501,7 @@ bool ShouldWatchThisProp(int objectID, const char *pPropName)
 		const char *pStr = g_CV_DTWatchVar.GetString();
 		if ( pStr && pStr[0] != 0 )
 		{
-			return stricmp( pStr, pPropName ) == 0;
+			return _stricmp( pStr, pPropName ) == 0;
 		}
 		else
 		{

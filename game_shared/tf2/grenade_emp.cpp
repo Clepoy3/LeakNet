@@ -88,11 +88,11 @@ void CGrenadeEMP::Spawn( void )
 	SetFriction( 0.75 );
 	SetModel( "models/weapons/w_grenade.mdl" );
 	SetSize( Vector( -4, -4, -4), Vector(4, 4, 4) );
-	SetTouch( BounceTouch );
+	SetTouch( &CGrenadeEMP::BounceTouch );
 	SetCollisionGroup( TFCOLLISION_GROUP_GRENADE );
 
 	m_flDetonateTime = gpGlobals->curtime + 4.0;
-	SetThink( TumbleThink );
+	SetThink( &CBaseGrenade::TumbleThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	// Set my damages to the cvar values

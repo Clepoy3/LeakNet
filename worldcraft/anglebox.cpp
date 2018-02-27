@@ -214,7 +214,7 @@ char *CAngleBox::GetAngleEditText(char *szBuf)
 	}
 	else if (m_vecAngles[YAW] >= 0)
 	{
-		itoa((int)m_vecAngles[YAW], szBuf, 10);
+		_itoa((int)m_vecAngles[YAW], szBuf, 10);
 	}
 
 	return(szBuf);
@@ -554,7 +554,7 @@ void CAngleCombo::UpdateAngleBox(char *szText)
 			QAngle vecAngles(0, atoi(szText), 0);
 			m_pBox->SetAnglesInternal(vecAngles, true);
 		}
-		else if (!stricmp(szText, "down"))
+		else if (!_stricmp(szText, "down"))
 		{
 			m_pBox->SetAnglesInternal(QAngle(90, 0, 0), true);
 		}

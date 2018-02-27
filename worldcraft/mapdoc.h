@@ -362,7 +362,7 @@ class CMapDoc : public CDocument
 		virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 		//}}AFX_VIRTUAL
 
-		BOOL Serialize(fstream &file, BOOL fIsStoring, BOOL bRMF);
+		BOOL Serialize(std::fstream &file, BOOL fIsStoring, BOOL bRMF);
 		
 		// Save a VMF file. saveFlags is a combination of SAVEFLAGS_ defines.
 		bool SaveVMF(const char *pszFileName, int saveFlags);

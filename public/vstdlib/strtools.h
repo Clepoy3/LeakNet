@@ -24,6 +24,22 @@
 #include <stdlib.h>
 #include "vstdlib/vstdlib.h"
 
+
+#if defined( _WIN32 ) || defined( WIN32 )
+#define PATHSEPARATOR(c) ((c) == '\\' || (c) == '/')
+#else	//_WIN32
+#define PATHSEPARATOR(c) ((c) == '/')
+#endif	//_WIN32
+
+#ifdef _WIN32
+#define CORRECT_PATH_SEPARATOR '\\'
+#define INCORRECT_PATH_SEPARATOR '/'
+#elif _LINUX
+#define CORRECT_PATH_SEPARATOR '/'
+#define INCORRECT_PATH_SEPARATOR '\\'
+#endif
+
+
 //-----------------------------------------------------------------------------
 // Portable versions of standard string functions
 //-----------------------------------------------------------------------------
@@ -90,10 +106,10 @@ inline int		Q_strlen (const char *str)							{ return strlen ( str ); }
 inline void		Q_strcpy (char *dest, const char *src)				{ strcpy( dest, src ); }
 inline char*	Q_strrchr (const char *s, char c)					{ return (char*)strrchr( s, c ); }
 inline int		Q_strcmp (const char *s1, const char *s2)			{ return strcmp( s1, s2 ); }
-inline int		Q_stricmp( const char *s1, const char *s2 )			{ return stricmp( s1, s2 ); }
+inline int		Q_stricmp( const char *s1, const char *s2 )			{ return _stricmp( s1, s2 ); }
 inline char*	Q_strstr( const char *s1, const char *search )		{ return (char*)strstr( s1, search ); }
-inline char*	Q_strupr (char *start)								{ return strupr( start ); }
-inline char*	Q_strlower (char *start)							{ return strlwr( start ); }
+inline char*	Q_strupr (char *start)								{ return _strupr( start ); }
+inline char*	Q_strlower (char *start)							{ return _strlwr( start ); }
 
 #endif
 
@@ -131,5 +147,15 @@ VSTDLIB_INTERFACE char *Q_pretifymem( float value, int digitsafterdecimal = 2, b
 
 // Returns true if the path is an absolute path.
 VSTDLIB_INTERFACE bool Q_IsAbsolutePath( const char *pPath );
+
+
+// VXP
+VSTDLIB_INTERFACE void Q_StripTrailingSlash( char *ppath );
+
+// VXP: Changes all '/' or '\' characters into separator
+VSTDLIB_INTERFACE void Q_FixSlashes( char *pname, char separator = CORRECT_PATH_SEPARATOR );
+
+// VXP: Strip off the last directory from dirName
+VSTDLIB_INTERFACE bool Q_StripLastDir( char *dirName, int maxlen );
 
 #endif	// VSTDLIB_STRTOOLS_H

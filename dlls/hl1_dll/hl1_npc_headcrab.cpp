@@ -161,7 +161,7 @@ void CNPC_Headcrab::StartTask( const Task_t *pTask )
 		case TASK_RANGE_ATTACK1:
 		{
 			SetIdealActivity( ACT_RANGE_ATTACK1 );
-			SetTouch( LeapTouch );
+			SetTouch( &CNPC_Headcrab::LeapTouch );
 			break;
 		}
 
@@ -625,8 +625,9 @@ AI_END_CUSTOM_NPC()
 
 class CNPC_BabyCrab : public CNPC_Headcrab
 {
-	DECLARE_CLASS( CNPC_BabyCrab, CNPC_Headcrab );
 public:
+	DECLARE_CLASS( CNPC_BabyCrab, CNPC_Headcrab );
+
 	void Spawn( void );
 	void Precache( void );
 	

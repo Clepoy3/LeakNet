@@ -355,7 +355,7 @@ void COptionsSubKeyboard::CreateKeyBindingList()
 //-----------------------------------------------------------------------------
 void COptionsSubKeyboard::OnCommand( const char *command )
 {
-	if ( !stricmp( command, "Defaults" )  )
+	if ( !_stricmp( command, "Defaults" )  )
 	{
 		// open a box asking if we want to restore defaults
 		QueryBox *box = new QueryBox("#GameUI_KeyboardSettings", "#GameUI_KeyboardSettingsText");
@@ -363,17 +363,17 @@ void COptionsSubKeyboard::OnCommand( const char *command )
 		box->SetOKCommand(new KeyValues("Command", "command", "DefaultsOK"));
 		box->DoModal();
 	}
-	else if ( !stricmp(command, "DefaultsOK"))
+	else if ( !_stricmp(command, "DefaultsOK"))
 	{
 		// Restore defaults from default keybindings file
 		FillInDefaultBindings();
 		m_pKeyBindList->RequestFocus();
 	}
-	else if ( !m_pKeyBindList->IsCapturing() && !stricmp( command, "ChangeKey" ) )
+	else if ( !m_pKeyBindList->IsCapturing() && !_stricmp( command, "ChangeKey" ) )
 	{
 		m_pKeyBindList->StartCaptureMode(dc_none);
 	}
-	else if ( !m_pKeyBindList->IsCapturing() && !stricmp( command, "ClearKey" ) )
+	else if ( !m_pKeyBindList->IsCapturing() && !_stricmp( command, "ClearKey" ) )
 	{
 		OnKeyCodePressed(KEY_DELETE);
         m_pKeyBindList->RequestFocus();
@@ -468,7 +468,7 @@ void COptionsSubKeyboard::ParseActionDescriptions( void )
 		if ( szDescription[ 0 ] != '=' )
 		{
 			// Flag as special header row if binding is "blank"
-			if (!stricmp(szBinding, "blank"))
+			if (!_stricmp(szBinding, "blank"))
 			{
 				// add header item
 				m_pKeyBindList->AddSection(++sectionIndex, szDescription);
@@ -515,7 +515,7 @@ KeyValues *COptionsSubKeyboard::GetItemForBinding( const char *binding )
 		const char *bindString = bindingItem->GetString();
 
 		// Check the "Binding" key
-		if (!stricmp(bindString, binding))
+		if (!_stricmp(bindString, binding))
 			return item;
 	}
 	// Didn't find it
@@ -549,7 +549,7 @@ int COptionsSubKeyboard::FindKeyForName( char const *keyname )
 		}
 		else	// more than one character, use case insensitive
 		{
-			if ( !stricmp( keyname, name ) )
+			if ( !_stricmp( keyname, name ) )
 				return i;
 		}
 	}
@@ -564,7 +564,7 @@ int COptionsSubKeyboard::FindKeyForName( char const *keyname )
 void COptionsSubKeyboard::AddBinding( KeyValues *item, const char *keyname )
 {
 	// See if it's already there as a primary or alternate binding
-	if ( !stricmp( item->GetString( "Key", "" ), keyname ) )
+	if ( !_stricmp( item->GetString( "Key", "" ), keyname ) )
 		return;
 
 	// Make sure it doesn't live anywhere
@@ -615,7 +615,7 @@ void COptionsSubKeyboard::RemoveKeyFromBindItems( const char *key )
 
 		// If it's bound to the alternate: just unbind it and
 		//  remove the alternate key
-		if ( !stricmp( key, item->GetString( "AltKey", "" ) ) )
+		if ( !_stricmp( key, item->GetString( "AltKey", "" ) ) )
 		{
 			// Tell the item
 			item->SetString( "AltKey", "" );
@@ -624,7 +624,7 @@ void COptionsSubKeyboard::RemoveKeyFromBindItems( const char *key )
 
 		// If it's bound to the primary: then remove it and copy
 		//  any alternate over to the primary to take its place
-		if ( !stricmp( key, item->GetString( "Key", "" ) ) )
+		if ( !_stricmp( key, item->GetString( "Key", "" ) ) )
 		{
 			// Clear it out
 			item->SetString( "Key", "" );

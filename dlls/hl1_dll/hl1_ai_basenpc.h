@@ -32,9 +32,9 @@
 
 class CHL1BaseNPC : public CAI_BaseNPC
 {
-	DECLARE_CLASS( CHL1BaseNPC, CAI_BaseNPC );
-	
 public:
+	DECLARE_CLASS( CHL1BaseNPC, CAI_BaseNPC );
+
 	CHL1BaseNPC( void )
 	{
 

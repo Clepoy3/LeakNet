@@ -288,7 +288,7 @@ void CBaseObject::Spawn( void )
 	m_flHealth = m_iMaxHealth = m_iHealth;
 	m_iAmountPlayerPaidForMe = CalculateObjectCost( GetType(), 0, GetTeamNumber() );
 
-	SetContextThink( BaseObjectThink, gpGlobals->curtime + 0.1, OBJ_BASE_THINK_CONTEXT );
+	SetContextThink( &CBaseObject::BaseObjectThink, gpGlobals->curtime + 0.1, OBJ_BASE_THINK_CONTEXT );
 	m_szAmmoName = NULL;
 	NetworkStateManualMode( true );
 
@@ -967,7 +967,7 @@ bool CBaseObject::CalculatePlacement( CBaseTFPlayer *pPlayer )
 
 	// See if there's any mapdefined build points near me
 	int iCount = g_MapDefinedBuildPoints.Count();
-	for ( i = 0; i < iCount; i++ )
+	for ( int i = 0; i < iCount; i++ )
 	{
 		if ( !InSameTeam(g_MapDefinedBuildPoints[i]) )
 			continue;
@@ -1121,7 +1121,8 @@ bool CBaseObject::CheckBuildOrigin( CBaseTFPlayer *pPlayer, const Vector &vecIni
 		int nIterations = 6;
 		float topZ = flBoxTopZ;
 		float topZInc = (flBoxBottomZ - flBoxTopZ) / (nIterations-1);
-		for ( int iIteration = 0; iIteration < nIterations; iIteration++ )
+		int iIteration;
+		for ( iIteration = 0; iIteration < nIterations; iIteration++ )
 		{
 			UTIL_TraceHull( 
 				Vector( m_vecBuildOrigin.x, m_vecBuildOrigin.y, topZ ), 
@@ -1751,7 +1752,7 @@ void Cmd_DamageDump_f(void)
 	// Dump the column names:
 	FileHandle_t f = filesystem->Open("damage.txt","wt+");
 
-	for( idx = g_UniqueColumns.First(); idx != g_UniqueColumns.InvalidIndex(); idx = g_UniqueColumns.Next(idx) )
+	for( int idx = g_UniqueColumns.First(); idx != g_UniqueColumns.InvalidIndex(); idx = g_UniqueColumns.Next(idx) )
 	{
 		filesystem->FPrintf(f,"\t%s",g_UniqueColumns.GetElementName(idx));
 	}
@@ -1768,7 +1769,7 @@ void Cmd_DamageDump_f(void)
 	{
 		bDidRow = false;
 
-		for( idx = g_DamageMap.First(); idx != g_DamageMap.InvalidIndex(); idx = g_DamageMap.Next(idx) )
+		for( int idx = g_DamageMap.First(); idx != g_DamageMap.InvalidIndex(); idx = g_DamageMap.Next(idx) )
 		{
 			char szRowName[256];
 
@@ -1799,7 +1800,7 @@ void Cmd_DamageDump_f(void)
 					// Fine to reuse idx since we are going to break anyways.
 					for( idx = g_DamageMap.First(); idx != g_DamageMap.InvalidIndex(); idx = g_DamageMap.Next(idx) )
 					{
-						if( !stricmp( g_DamageMap.GetElementName(idx), szRowNameCommaColumn ) )
+						if( !_stricmp( g_DamageMap.GetElementName(idx), szRowNameCommaColumn ) )
 						{
 							nDamageAmount = g_DamageMap[idx];
 							break;
@@ -2804,7 +2805,7 @@ void CBaseObject::SetPowerPack( CObjectPowerPack *pPack )
 		// Lose power in a second, to give any nearby powerpacks time to connect to me and replace the power
 		if ( bHadPower )
 		{
-			SetContextThink( LostPowerThink, gpGlobals->curtime + 1.0, OBJ_LOSTPOWER_THINK_CONTEXT );
+			SetContextThink( &CBaseObject::LostPowerThink, gpGlobals->curtime + 1.0, OBJ_LOSTPOWER_THINK_CONTEXT );
 			if ( GetTFTeam() )
 			{
 				// Dirty hack to make powerpack think I need power
@@ -3000,7 +3001,7 @@ void CBaseObject::AttachObjectToObject( const CBaseEntity *pEntity, int iPoint, 
 		}
 	}
 
-	Assert( m_hBuiltOnEntity == GetMoveParent() );
+	Assert( (CBaseEntity *)m_hBuiltOnEntity == GetMoveParent() );
 }
 
 //-----------------------------------------------------------------------------

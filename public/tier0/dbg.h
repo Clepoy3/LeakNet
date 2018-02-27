@@ -445,7 +445,7 @@ private:
 
 	#ifdef _DEBUG
 		#pragma comment(compiler)
-		#pragma comment(exestr,"*** DEBUG file detected, Last Compile: " __DATE__ ", " __TIME__ " ***")
+	//	#pragma comment(exestr,"*** DEBUG file detected, Last Compile: " __DATE__ ", " __TIME__ " ***") // VXP: Conv: suppress LNK4229 warning "invalid directive '/COMMENT: ..."
 	#endif
 
 #endif

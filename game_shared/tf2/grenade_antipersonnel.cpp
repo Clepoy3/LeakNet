@@ -63,11 +63,11 @@ void CGrenadeAntiPersonnel::Spawn( void )
 	SetElasticity( 2.0f );
 	SetModel( "models/weapons/w_grenade.mdl" );
 	UTIL_SetSize(this, vec3_origin, vec3_origin);
-	SetTouch( BounceTouch );
+	SetTouch( &CGrenadeAntiPersonnel::BounceTouch );
 	SetCollisionGroup( TFCOLLISION_GROUP_GRENADE );
 
 	m_flDetonateTime = gpGlobals->curtime + 3.0;
-	SetThink( TumbleThink );
+	SetThink( &CGrenadeAntiPersonnel::TumbleThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	// Set my damages to the cvar values

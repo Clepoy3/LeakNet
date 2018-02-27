@@ -38,7 +38,8 @@ private:
 	virtual void OnFriendFound(KeyValues *friendData);
 	virtual void OnNoFriends(int attemptID);
 	
-	virtual void OnRowSelected(int startIndex, int endIndex);
+//	virtual void OnRowSelected(int startIndex, int endIndex);
+	virtual void OnItemSelected(int itemID);
 
 	vgui::ListPanel *m_pTable;
 	vgui::Label *m_pInfoText;

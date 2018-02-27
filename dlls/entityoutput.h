@@ -46,6 +46,7 @@ public:
 	static void *operator new( size_t stAllocateBlock );
 	static void *operator new( size_t stAllocateBlock, int nBlockUse, const char *pFileName, int nLine );
 	static void operator delete( void *pMem );
+	static void operator delete( void *pMem , int nBlockUse, const char *pFileName, int nLine ) { operator delete(pMem); }
 
 	static typedescription_t m_SaveData[];
 };

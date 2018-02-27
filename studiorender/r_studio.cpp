@@ -205,7 +205,7 @@ void CStudioRender::LoadMaterials( studiohdr_t *phdr, OptimizedModel::FileHeader
 			IMaterialVar *clientShaderVar = pMaterial->FindVar( "$clientShader", &found, false );
 			if( found )
 			{
-				if (stricmp( clientShaderVar->GetStringValue(), "MouthShader") == 0)
+				if (_stricmp( clientShaderVar->GetStringValue(), "MouthShader") == 0)
 				{
 					lodData.pMaterialFlags[i] = 1;
 				}

@@ -19,8 +19,9 @@
 //-----------------------------------------------------------------------------
 class CAI_BaseFlyingBot : public CAI_BaseNPC
 {
-	DECLARE_CLASS( CAI_BaseFlyingBot, CAI_BaseNPC );
 public:
+	DECLARE_CLASS( CAI_BaseFlyingBot, CAI_BaseNPC );
+
 	DECLARE_DATADESC();
 
 	void			StartTask( const Task_t *pTask );

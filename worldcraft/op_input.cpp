@@ -220,7 +220,7 @@ void COP_Input::AddEntityConnections(const char *pTargetName, CMapEntity *pTestE
 		{
 			CEntityConnection *pConnection = pTestEntity->Connections_GetNext(pos);
 			if (pConnection != NULL && 
-				!stricmp(pConnection->GetTargetName(),pTargetName) )
+				!_stricmp(pConnection->GetTargetName(),pTargetName) )
 			{
 				// Update source name for correct sorting
 				const char *pszTestName = pTestEntity->GetKeyValue("targetname");
