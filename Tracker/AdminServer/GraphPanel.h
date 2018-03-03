@@ -18,9 +18,8 @@
 #include <vgui_controls/PropertyPage.h>
 #include <vgui_controls/Image.h>
 #include <vgui_controls/ImagePanel.h>
-#include <vgui/point.h>
 
-class KeyValues;
+//class KeyValues;
 
 namespace vgui
 {
@@ -35,7 +34,6 @@ class ComboBox;
 class Panel;
 class PropertySheet;
 class CheckButton;
-class Point;
 };
 
 #include "point.h"

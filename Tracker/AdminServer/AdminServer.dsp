@@ -145,6 +145,10 @@ SOURCE=.\DialogServerPassword.cpp
 
 SOURCE=.\BaseGamesPage.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\FavoriteGames.cpp
+# End Source File
 # End Group
 # Begin Group "Manage"
 
@@ -211,6 +215,10 @@ SOURCE=.\BanPanel.cpp
 # Begin Source File
 
 SOURCE=.\ChatPanel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\GraphPanel.cpp
 # End Source File
 # Begin Source File
 
@@ -408,7 +416,15 @@ SOURCE=.\DialogServerPassword.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\FavoriteGames.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\GamePanelInfo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GraphPanel.h
 # End Source File
 # Begin Source File
 

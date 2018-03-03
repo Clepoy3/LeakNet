@@ -15,34 +15,38 @@
 //
 // $NoKeywords: $
 //=============================================================================
+
+// VXP: !!! Changed CServerPage to CServerPage !!!
+
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
 
 // base vgui interfaces
-#include <VGUI_Controls.h>
-#include <VGUI_IInput.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_MouseCode.h>
+#include <VGUI/VGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IInput.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IScheme.h>
+#include <VGUI/IVGui.h>
+#include <VGUI/MouseCode.h>
 #include "FileSystem.h"
 
 
 // vgui controls
-#include <VGUI_Button.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_FocusNavGroup.h>
-#include <VGUI_Frame.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_Panel.h>
-#include <VGUI_PropertySheet.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_QueryBox.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/FocusNavGroup.h>
+#include <vgui_controls/Frame.h>
+//#include <KeyValues.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/MessageBox.h>
+#include <vgui_controls/Panel.h>
+#include <vgui_controls/PropertySheet.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/QueryBox.h>
 
 
 // serverbrowser headers
@@ -52,7 +56,10 @@
 #include "ServerContextMenu.h"
 #include "socket.h"
 #include "util.h"
-#include "vinternetdlg.h"
+
+//#include "CServerPage.h"
+#include "serverpage.h"
+
 #include "dialogcvarchange.h"
 //#include "ModList.h"
 #include "DialogGameInfo.h"
@@ -74,13 +81,13 @@
 
 using namespace vgui;
 
-static VInternetDlg *s_InternetDlg = NULL;
+static CServerPage *s_InternetDlg = NULL;
 CSysModule * g_hTrackerNetModule = NULL;
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-VInternetDlg::VInternetDlg( unsigned int userid ) : Frame(NULL, "VInternetDlg")
+CServerPage::CServerPage( unsigned int userid ) : Frame(NULL, "CServerPage")
 {
 	s_InternetDlg = this;
 	
@@ -94,6 +101,8 @@ VInternetDlg::VInternetDlg( unsigned int userid ) : Frame(NULL, "VInternetDlg")
 	// create the controls
 	m_pContextMenu = new CServerContextMenu(this);
 //	m_pContextMenu->SetVisible(false);
+
+	m_pStatusLabel = new Label(this, "StatusLabel", "");
 
 	m_pFavoriteGames = new CFavoriteGames(this);
 
@@ -109,9 +118,9 @@ VInternetDlg::VInternetDlg( unsigned int userid ) : Frame(NULL, "VInternetDlg")
 	m_pTabPanel->AddPage(m_pFavoriteGames, "My Servers");
 	m_pTabPanel->AddActionSignalTarget(this);
 
-	m_pStatusLabel = new Label(this, "StatusLabel", "");
+//	m_pStatusLabel = new Label(this, "StatusLabel", "");
 
-	LoadControlSettings("Admin\\DialogAdminServer.res");
+	LoadControlSettings("Admin\\DialogAdminServer.res", "PLATFORM");
 
 	m_pStatusLabel->SetText("");
 
@@ -155,7 +164,7 @@ VInternetDlg::VInternetDlg( unsigned int userid ) : Frame(NULL, "VInternetDlg")
 //-----------------------------------------------------------------------------
 // Purpose: Destructor
 //-----------------------------------------------------------------------------
-VInternetDlg::~VInternetDlg()
+CServerPage::~CServerPage()
 {
 	// set a flag indicating the threads should kill themselves
 //	m_pNet->Shutdown(false);
@@ -170,7 +179,7 @@ VInternetDlg::~VInternetDlg()
 //-----------------------------------------------------------------------------
 // Purpose: Called once to set up
 //-----------------------------------------------------------------------------
-void VInternetDlg::Initialize()
+void CServerPage::Initialize()
 {
 	SetTitle("Admin", true);
 	SetVisible(false);
@@ -181,7 +190,7 @@ void VInternetDlg::Initialize()
 // Input  : serverID - 
 // Output : serveritem_t
 //-----------------------------------------------------------------------------
-serveritem_t &VInternetDlg::GetServer(unsigned int serverID)
+serveritem_t &CServerPage::GetServer(unsigned int serverID)
 {
 	return m_pGameList->GetServer(serverID);
 }
@@ -189,7 +198,7 @@ serveritem_t &VInternetDlg::GetServer(unsigned int serverID)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void VInternetDlg::Open( void )
+void CServerPage::Open( void )
 {	
 	m_pTabPanel->RequestFocus();
 	// if serverbrowser file is not there we will try to transfer the favorites list.
@@ -210,7 +219,7 @@ void VInternetDlg::Open( void )
 //-----------------------------------------------------------------------------
 // Purpose: relayouts the dialogs controls
 //-----------------------------------------------------------------------------
-void VInternetDlg::PerformLayout()
+void CServerPage::PerformLayout()
 {
 	BaseClass::PerformLayout();
 
@@ -232,7 +241,7 @@ void VInternetDlg::PerformLayout()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void VInternetDlg::OnClose()
+void CServerPage::OnClose()
 {
 	// bug here if you exit before logging in.
 	SaveDialogState(this, "AdminServer");
@@ -244,7 +253,7 @@ void VInternetDlg::OnClose()
 //-----------------------------------------------------------------------------
 // Purpose: Loads filter settings from disk
 //-----------------------------------------------------------------------------
-void VInternetDlg::LoadFilters()
+void CServerPage::LoadFilters()
 {
   	// free any old filters
   	if (m_pSavedData)
@@ -253,7 +262,8 @@ void VInternetDlg::LoadFilters()
   	}
 
 	m_pSavedData = new KeyValues ("Filters");
-	if (!m_pSavedData->LoadFromFile(filesystem(), "Admin\\AdminServer.vdf", true, "PLATFORM"))
+//	if (!m_pSavedData->LoadFromFile(filesystem(), "Admin\\AdminServer.vdf", true, "PLATFORM"))
+	if (!m_pSavedData->LoadFromFile(filesystem(), "Admin\\AdminServer.vdf", "PLATFORM"))
 	{
 		// file not successfully loaded, create the default key
 		m_pSavedData->FindKey("List", true);
@@ -296,7 +306,7 @@ void VInternetDlg::LoadFilters()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void VInternetDlg::SaveFilters()
+void CServerPage::SaveFilters()
 {
 
 	// get the favorites list
@@ -306,7 +316,7 @@ void VInternetDlg::SaveFilters()
 
 }
 
-void VInternetDlg::SetConfig(bool autorefresh,bool savercon,int refreshtime,bool graphs,int graphsrefreshtime,bool getlogs)
+void CServerPage::SetConfig(bool autorefresh,bool savercon,int refreshtime,bool graphs,int graphsrefreshtime,bool getlogs)
 {
 	m_bAutoRefresh=autorefresh;
 	m_bDoLogging = getlogs;
@@ -346,7 +356,7 @@ void VInternetDlg::SetConfig(bool autorefresh,bool savercon,int refreshtime,bool
 // Input  : *fmt - 
 //			... - 
 //-----------------------------------------------------------------------------
-void VInternetDlg::UpdateStatusText(const char *fmt, ...)
+void CServerPage::UpdateStatusText(const char *fmt, ...)
 {
 	if ( !m_pStatusLabel )
 		return;
@@ -362,9 +372,9 @@ void VInternetDlg::UpdateStatusText(const char *fmt, ...)
 
 //-----------------------------------------------------------------------------
 // Purpose: returns a pointer to a static instance of this dialog
-// Output : VInternetDlg
+// Output : CServerPage
 //----------------------------------------------------------------------------
-VInternetDlg *VInternetDlg::GetInstance()
+CServerPage *CServerPage::GetInstance()
 {
 	return s_InternetDlg;
 }
@@ -373,7 +383,7 @@ VInternetDlg *VInternetDlg::GetInstance()
 // Purpose: 
 // Output : CServerContextMenu
 //-----------------------------------------------------------------------------
-CServerContextMenu *VInternetDlg::GetContextMenu()
+CServerContextMenu *CServerPage::GetContextMenu()
 {
 	return m_pContextMenu;
 }
@@ -382,7 +392,7 @@ CServerContextMenu *VInternetDlg::GetContextMenu()
 // Purpose: begins the process of joining a server from a game list
 //			the game info dialog it opens will also update the game list
 //-----------------------------------------------------------------------------
-CDialogGameInfo *VInternetDlg::JoinGame(IGameList *gameList, unsigned int serverIndex)
+CDialogGameInfo *CServerPage::JoinGame(IGameList *gameList, unsigned int serverIndex)
 {
 	// open the game info dialog, then mark it to attempt to connect right away
 	CDialogGameInfo *gameDialog = OpenGameInfoDialog(gameList, serverIndex);
@@ -396,7 +406,7 @@ CDialogGameInfo *VInternetDlg::JoinGame(IGameList *gameList, unsigned int server
 //-----------------------------------------------------------------------------
 // Purpose: joins a game by a specified IP, not attached to any game list
 //-----------------------------------------------------------------------------
-CDialogGameInfo *VInternetDlg::JoinGame(int serverIP, int serverPort, const char *titleName)
+CDialogGameInfo *CServerPage::JoinGame(int serverIP, int serverPort, const char *titleName)
 {
 	// open the game info dialog, then mark it to attempt to connect right away
 	CDialogGameInfo *gameDialog = OpenGameInfoDialog(serverIP, serverPort, titleName);
@@ -410,7 +420,7 @@ CDialogGameInfo *VInternetDlg::JoinGame(int serverIP, int serverPort, const char
 //-----------------------------------------------------------------------------
 // Purpose: opens a game info dialog from a game list
 //-----------------------------------------------------------------------------
-CDialogGameInfo *VInternetDlg::OpenGameInfoDialog(IGameList *gameList, unsigned int serverIndex)
+CDialogGameInfo *CServerPage::OpenGameInfoDialog(IGameList *gameList, unsigned int serverIndex)
 {
 	CDialogGameInfo *gameDialog = new CDialogGameInfo(gameList, serverIndex);
 	serveritem_t &server = gameList->GetServer(serverIndex);
@@ -421,7 +431,7 @@ CDialogGameInfo *VInternetDlg::OpenGameInfoDialog(IGameList *gameList, unsigned 
 //-----------------------------------------------------------------------------
 // Purpose: opens a game info dialog by a specified IP, not attached to any game list
 //-----------------------------------------------------------------------------
-CDialogGameInfo *VInternetDlg::OpenGameInfoDialog(int serverIP, int serverPort, const char *titleName)
+CDialogGameInfo *CServerPage::OpenGameInfoDialog(int serverIP, int serverPort, const char *titleName)
 {
 	CDialogGameInfo *gameDialog = new CDialogGameInfo(NULL, 0, serverIP, serverPort);
 	gameDialog->Run(titleName);
@@ -433,7 +443,7 @@ CDialogGameInfo *VInternetDlg::OpenGameInfoDialog(int serverIP, int serverPort, 
 // Input  : *dialog - panel we are setting position and size 
 //			*dialogName -  name of dialog in the .vdf file
 //-----------------------------------------------------------------------------
-void VInternetDlg::SaveDialogState(Panel *dialog, const char *dialogName)
+void CServerPage::SaveDialogState(Panel *dialog, const char *dialogName)
 {
 	// write the size and position to the document
 	int x, y, wide, tall;
@@ -453,7 +463,7 @@ void VInternetDlg::SaveDialogState(Panel *dialog, const char *dialogName)
 // Input  : *dialog - panel we are setting position and size 
 //			*dialogName -  name of dialog in the .vdf file
 //-----------------------------------------------------------------------------
-void VInternetDlg::LoadDialogState(Panel *dialog, const char *dialogName)
+void CServerPage::LoadDialogState(Panel *dialog, const char *dialogName)
 {						   
 	// read the size and position from the document
 	KeyValues *data;
@@ -509,13 +519,13 @@ void v_strncpy(char *dest, const char *src, int bufsize)
 	dest[bufsize - 1] = 0;
 }
 
-void VInternetDlg::ConfigPanel()
+void CServerPage::ConfigPanel()
 {
 		CConfigPanel *config = new CConfigPanel(m_bAutoRefresh,m_bSaveRcon,m_iRefreshTime,m_bGraphs,m_iGraphsRefreshTime,m_bDoLogging);
 		config->Run();
 }
 
-void VInternetDlg::OnManageServer(int serverID) 
+void CServerPage::OnManageServer(int serverID) 
 {
 	int i;
 	serveritem_t &server = m_pFavoriteGames->GetServer(serverID); 
@@ -531,7 +541,7 @@ void VInternetDlg::OnManageServer(int serverID)
 	{
 
 		m_pTabPanel->GetTabTitle(i,tabName,20);
-		if(!stricmp(netString,tabName))
+		if(!_stricmp(netString,tabName))
 		{
 			break;
 		}
@@ -567,11 +577,11 @@ void VInternetDlg::OnManageServer(int serverID)
 	}
 }
 
-void VInternetDlg::OnPlayerDialog(vgui::KeyValues *data)
+void CServerPage::OnPlayerDialog(KeyValues *data)
 {
 	const char *type=data->GetString("type");
 	const char *playerName=data->GetString("player");
-	if(!stricmp(type,"rconpassword")) 
+	if(!_stricmp(type,"rconpassword")) 
 	{
 		const char *value=data->GetString("value");
 		serveritem_t &server = m_pFavoriteGames->GetServer(atoi(playerName)); // we encode the serverid in the name field :)
@@ -581,7 +591,7 @@ void VInternetDlg::OnPlayerDialog(vgui::KeyValues *data)
 	}
 }
 
-void VInternetDlg::ManageServer(int serverID,const char *pass)
+void CServerPage::ManageServer(int serverID,const char *pass)
 {
 	serveritem_t &server = m_pFavoriteGames->GetServer(serverID); 
 	netadr_t addr;
@@ -597,12 +607,12 @@ void VInternetDlg::ManageServer(int serverID,const char *pass)
 	m_pTabPanel->SetActivePage(m_pGamePanelInfo);
 }
 
-void VInternetDlg::UpdateServer(serveritem_t &server)
+void CServerPage::UpdateServer(serveritem_t &server)
 {
 	m_pFavoriteGames->UpdateServer(server); 
 }
 
-void VInternetDlg::OnDeleteServer(int chosenPanel)
+void CServerPage::OnDeleteServer(int chosenPanel)
 {
 	Panel *delPanel =m_pTabPanel->GetPage(chosenPanel);
 	m_pTabPanel->DeletePage(delPanel);
@@ -612,15 +622,15 @@ void VInternetDlg::OnDeleteServer(int chosenPanel)
 
 }
 
-vgui::PropertySheet *VInternetDlg::GetTabPanel() 
+vgui::PropertySheet *CServerPage::GetTabPanel() 
 {
 	return m_pTabPanel;
 }
 
 
-void VInternetDlg::OnOpenContextMenu()
+void CServerPage::OnOpenContextMenu()
 {
-//	CServerContextMenu *menu = VInternetDlg::GetInstance()->GetContextMenu();
+//	CServerContextMenu *menu = CServerPage::GetInstance()->GetContextMenu();
 		// no selected rows, so don't display default stuff in menu
 	if( m_pTabPanel->GetActiveTab()->IsCursorOver() || 
 		m_pFavoriteGames->IsCursorOver() )
@@ -636,7 +646,7 @@ void VInternetDlg::OnOpenContextMenu()
 
 
 
-void VInternetDlg::OnTick()
+void CServerPage::OnTick()
 {
 
 //FIX ME!!!
@@ -794,7 +804,7 @@ void VInternetDlg::OnTick()
 	*/
 }
 
-void VInternetDlg::SearchForFriend(unsigned int uid, const char *email, const char *username, const char *firstname, const char *lastname)
+void CServerPage::SearchForFriend(unsigned int uid, const char *email, const char *username, const char *firstname, const char *lastname)
 {
 	ISendMessage *msg = CreateServerMessage(TCLS_FRIENDSEARCH);
 	msg->WriteUInt("uid", uid);
@@ -806,7 +816,7 @@ void VInternetDlg::SearchForFriend(unsigned int uid, const char *email, const ch
 	m_pNet->SendMessage(msg, NET_RELIABLE);
 }
 
-ISendMessage *VInternetDlg::CreateServerMessage(int msgID)
+ISendMessage *CServerPage::CreateServerMessage(int msgID)
 {
 	ISendMessage *msg = m_pNet->CreateMessage(msgID);
 	msg->SetNetAddress(GetServerAddress());
@@ -816,7 +826,7 @@ ISendMessage *VInternetDlg::CreateServerMessage(int msgID)
 	return msg;
 }
 
-CNetAddress VInternetDlg::GetServerAddress()
+CNetAddress CServerPage::GetServerAddress()
 {
 	return m_iServerAddr;// m_pNet->GetNetAddress("tracker.valvesoftware.com:1200");
 }
@@ -825,7 +835,7 @@ CNetAddress VInternetDlg::GetServerAddress()
 //-----------------------------------------------------------------------------
 // Purpose: Sends the first pack in the login sequence
 //-----------------------------------------------------------------------------
-void VInternetDlg::SendInitialLogin()
+void CServerPage::SendInitialLogin()
 {
 //	assert(m_iLoginState == LOGINSTATE_WAITINGTORECONNECT || m_iLoginState == LOGINSTATE_DISCONNECTED);
 
@@ -867,7 +877,7 @@ void VInternetDlg::SendInitialLogin()
 // Purpose: Checks to see if the current message is valid
 //			replies with a message telling the sender if it's not
 //-----------------------------------------------------------------------------
-bool VInternetDlg::CheckMessageValidity(IReceiveMessage *dataBlock)
+bool CServerPage::CheckMessageValidity(IReceiveMessage *dataBlock)
 {
 	int msgID = dataBlock->GetMsgID();
 	if (msgID == TSVC_FRIENDS || msgID == TSVC_GAMEINFO || msgID == TSVC_HEARTBEAT || msgID == TSVC_FRIENDUPDATE)
@@ -895,12 +905,12 @@ bool VInternetDlg::CheckMessageValidity(IReceiveMessage *dataBlock)
 //-----------------------------------------------------------------------------
 // Purpose: Message map
 //-----------------------------------------------------------------------------
-MessageMapItem_t VInternetDlg::m_MessageMap[] =
+MessageMapItem_t CServerPage::m_MessageMap[] =
 {
-//	MAP_MESSAGE( VInternetDlg, "PageChanged", OnGameListChanged ),
-	MAP_MESSAGE_INT( VInternetDlg, "Manage", OnManageServer, "serverID" ),
-	MAP_MESSAGE_PARAMS( VInternetDlg, "CvarChangeValue", OnPlayerDialog ),
-	MAP_MESSAGE_INT( VInternetDlg, "DeleteServer", OnDeleteServer, "panelid" ),
-	MAP_MESSAGE( VInternetDlg, "OpenContextMenu", OnOpenContextMenu ),
+//	MAP_MESSAGE( CServerPage, "PageChanged", OnGameListChanged ),
+	MAP_MESSAGE_INT( CServerPage, "Manage", OnManageServer, "serverID" ),
+	MAP_MESSAGE_PARAMS( CServerPage, "CvarChangeValue", OnPlayerDialog ),
+	MAP_MESSAGE_INT( CServerPage, "DeleteServer", OnDeleteServer, "panelid" ),
+	MAP_MESSAGE( CServerPage, "OpenContextMenu", OnOpenContextMenu ),
 };
-IMPLEMENT_PANELMAP(VInternetDlg, vgui::Frame);
+IMPLEMENT_PANELMAP(CServerPage, vgui::Frame);

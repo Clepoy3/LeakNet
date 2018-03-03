@@ -4,10 +4,13 @@
 #include <vgui_controls/Controls.h>
 #include "FileSystem.h"
 
+#include "filesystem_tools.h"
+
 CHLDSServer server;
 
 #ifdef _WIN32
-static const char *g_pszengine = "swds.dll";
+//static const char *g_pszengine = "swds.dll";
+static const char *g_pszengine = "engine.dll";
 #endif
 
 // System Memory & Size
@@ -202,6 +205,7 @@ EXPOSE_SINGLE_INTERFACE( CDedicatedExports, IDedicatedExports, VENGINE_DEDICATED
 DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 {
 //	int		iret = DLL_NORMAL;
+	int		iret = DLL_ACTIVE;
 	IDedicatedServerAPI *engineAPI;
 
 	char cur[1024];
@@ -209,13 +213,31 @@ DWORD WINAPI ServerThreadFunc( LPVOID threadobject )
 
 	CSysModule *engineModule = NULL;
 	CreateInterfaceFn engineFactory = NULL;
+
+	CSysModule *filesystemModule = NULL;
+	CreateInterfaceFn filesystemFactory = NULL;
 	
-//	while(iret!=DLL_CLOSE )
-	while(true )
+	while(iret!=DLL_CLOSE )
 	{
 	
 		//_chdir(UTIL_GetBaseDir());
 	//	vgui::filesystem()->Unmount();
+
+	/*
+		filesystemModule = Sys_LoadModule("bin/filesystem_stdio.dll");
+		if (!filesystemModule)
+		{
+			filesystemModule = Sys_LoadModule("filesystem_stdio.dll");
+		}
+
+		filesystemFactory = Sys_GetFactory(filesystemModule);
+		if (!filesystemFactory)
+		{
+			printf("Fatal error: Could not load bin/filesystem_stdio.dll\n");
+			goto cleanup;
+		}	  
+	*/
+		FileSystem_Init( true );
 		
 		engineModule = Sys_LoadModule( g_pszengine );
 	

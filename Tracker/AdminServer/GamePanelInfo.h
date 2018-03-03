@@ -13,12 +13,12 @@
 
 //#include <string.h>
 
-#include <VGUI_Frame.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_Image.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_PropertyPage.h>
+#include <vgui_controls/Frame.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/Image.h>
+#include <KeyValues.h>
+#include <vgui_controls/PropertyPage.h>
 #include "serverinfo.h"
 #include "playerlist.h"
 #include "rcon.h"
@@ -47,7 +47,7 @@
 // make sure we define it our way..
 #undef PropertySheet
 
-class KeyValues;
+//class KeyValues;
 
 namespace vgui
 {
@@ -128,7 +128,7 @@ protected:
 	void OnJoinServerWithPassword(const char *password);
 
 	// response from player dialog
-	void OnPlayerDialog(vgui::KeyValues *data);
+	void OnPlayerDialog(KeyValues *data);
 
 
 	// vgui overrides

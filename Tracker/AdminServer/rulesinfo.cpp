@@ -41,7 +41,7 @@ CRulesInfo::~CRulesInfo() {
 void CRulesInfo::Query()
 {
 	CMsgBuffer *buffer = m_pQuery->GetSendBuffer();
-	assert( buffer );
+	Assert( buffer );
 	
 	if ( !buffer ) 
 	{
@@ -88,7 +88,7 @@ void CRulesInfo::RunFrame()
 
 }
 
-void CRulesInfo::UpdateServer(netadr_t *adr, CUtlVector<vgui::KeyValues *> *Rules)
+void CRulesInfo::UpdateServer(netadr_t *adr, CUtlVector<KeyValues *> *Rules)
 {
 
 	m_Server.hadSuccessfulResponse = true;
@@ -126,7 +126,7 @@ bool CRulesInfo::Refreshed()
 	return val;
 }
 
-CUtlVector<vgui::KeyValues *> *CRulesInfo::Rules() 
+CUtlVector<KeyValues *> *CRulesInfo::Rules() 
 {
 	return m_vRules;
 }

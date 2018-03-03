@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_KeyValues.h>
+#include <KeyValues.h>
 
 
 //-----------------------------------------------------------------------------
@@ -28,7 +28,7 @@ public:
 
 private:
 
-	vgui::KeyValues *m_pHelpData;
+	KeyValues *m_pHelpData;
 
 };
 

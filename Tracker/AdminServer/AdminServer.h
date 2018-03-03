@@ -11,10 +11,13 @@
 #pragma once
 #endif
 
-#include "AdminServer/IAdminServer.h"
+#define ADMINSERVER_INTERFACE_VERSION "AdminServer001"
+
+//#include "AdminServer/IAdminServer.h"
+#include "IAdminServer.h"
 #include "IVGuiModule.h"
 
-#include <VGUI_PHandle.h>
+#include <vgui_controls/PHandle.h>
 
 class CServerPage;
 
@@ -30,7 +33,8 @@ public:
 	// IVGui module implementation
 	virtual bool Initialize(CreateInterfaceFn *factorylist, int numFactories);
 	virtual bool PostInitialize(CreateInterfaceFn *modules, int factoryCount);
-	virtual vgui::VPanel *GetPanel();
+//	virtual vgui::VPanel *GetPanel();
+	virtual vgui::VPANEL GetPanel();
 	virtual bool Activate();
 	virtual bool IsValid();
 	virtual void Shutdown();
@@ -53,6 +57,8 @@ public:
 	// methods
 	virtual void CreateDialog();
 	virtual void Open();
+
+	virtual void SetParent(vgui::VPANEL parent);
 
 private:
 	vgui::DHANDLE<CServerPage> m_hServerPage;

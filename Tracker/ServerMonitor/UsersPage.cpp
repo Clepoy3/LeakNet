@@ -8,9 +8,10 @@
 #include "UsersPage.h" 
 #include "ServerList.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_IScheme.h>
-#include <VGUI_TextEntry.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/IScheme.h>
+//#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/RichText.h>
 
 #include <stdio.h>
 
@@ -23,11 +24,13 @@ extern CServerList *g_pServerList;
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
 CUsersPage::CUsersPage()
+	: PropertyPage(NULL, "UsersPage")
 {
-	m_pText = new TextEntry(this, "UsersText");
-	m_pText->SetMultiline(true);
-	m_pText->SetRichEdit(true);
-	m_pText->SetEditable(false);
+//	m_pText = new TextEntry(this, "UsersText");
+	m_pText = new RichText(this, "UsersText");
+//	m_pText->SetMultiline(true);
+//	m_pText->SetRichEdit(true);
+//	m_pText->SetEditable(false);
 	m_pText->SetVerticalScrollbar(true);
 }
 
@@ -83,57 +86,57 @@ void CUsersPage::PerformLayout()
 		load = (float)underLoad / (float)g_pServerList->ServerCount();
 	}
 
-	Color col1 = GetSchemeColor("DimBaseText");
-	Color col2 = GetSchemeColor("BaseText");
-	Color col3 = GetSchemeColor("BrightBaseText");
+	Color col1 = GetSchemeColor("DimBaseText", scheme()->GetIScheme(scheme()->GetDefaultScheme()));
+	Color col2 = GetSchemeColor("BaseText", scheme()->GetIScheme(scheme()->GetDefaultScheme()));
+	Color col3 = GetSchemeColor("BrightBaseText", scheme()->GetIScheme(scheme()->GetDefaultScheme()));
 
-	m_pText->DoInsertColorChange(col1);
-	m_pText->DoInsertString("Active Users: ");
-	m_pText->DoInsertColorChange(col2);
+	m_pText->InsertColorChange(col1);
+	m_pText->InsertString("Active Users: ");
+	m_pText->InsertColorChange(col2);
 	char buf[64];
 	sprintf(buf, "%d / %d", userCount, maxCount);
-	m_pText->DoInsertString(buf);
-	m_pText->DoInsertString("\n");
+	m_pText->InsertString(buf);
+	m_pText->InsertString("\n");
 
-	m_pText->DoInsertColorChange(col1);
-	m_pText->DoInsertString("Active Servers: ");
-	m_pText->DoInsertColorChange(col2);
+	m_pText->InsertColorChange(col1);
+	m_pText->InsertString("Active Servers: ");
+	m_pText->InsertColorChange(col2);
 	sprintf(buf, "%d / %d", activeServers, g_pServerList->ServerCount());
-	m_pText->DoInsertString(buf);
-	m_pText->DoInsertString("\n");
+	m_pText->InsertString(buf);
+	m_pText->InsertString("\n");
 
-	m_pText->DoInsertColorChange(col1);
-	m_pText->DoInsertString("Server Load: ");
+	m_pText->InsertColorChange(col1);
+	m_pText->InsertString("Server Load: ");
 
 	if (load < 0.2f)
 	{
-		m_pText->DoInsertColorChange(col2);
-		m_pText->DoInsertString("Light");
+		m_pText->InsertColorChange(col2);
+		m_pText->InsertString("Light");
 	}
 	else if (load < 0.5f)
 	{
-		m_pText->DoInsertColorChange(col2);
-		m_pText->DoInsertString("Medium");
+		m_pText->InsertColorChange(col2);
+		m_pText->InsertString("Medium");
 	}
 	else if (load < 0.8f)
 	{
-		m_pText->DoInsertColorChange(col3);
-		m_pText->DoInsertString("High");
+		m_pText->InsertColorChange(col3);
+		m_pText->InsertString("High");
 	}
 	else
 	{
-		m_pText->DoInsertColorChange(col3);
-		m_pText->DoInsertString("Very High");
+		m_pText->InsertColorChange(col3);
+		m_pText->InsertString("Very High");
 	}
 
-	m_pText->DoInsertString("\n");
+	m_pText->InsertString("\n");
 
 	float flRecvKB = bandwidthRecv / 1024.0f;
 	float flSentKB = bandwidthSent / 1024.0f;
 
-	m_pText->DoInsertColorChange(col1);
-	m_pText->DoInsertString("Data receive rate: ");
-	m_pText->DoInsertColorChange(col2);
+	m_pText->InsertColorChange(col1);
+	m_pText->InsertString("Data receive rate: ");
+	m_pText->InsertColorChange(col2);
 	if (flRecvKB < 0.01f)
 	{
 		sprintf(buf, "%d kb/s", 0);
@@ -150,12 +153,12 @@ void CUsersPage::PerformLayout()
 	{
 		sprintf(buf, "%d kb/s", (int)flRecvKB);
 	}
-	m_pText->DoInsertString(buf);
-	m_pText->DoInsertString("\n");
+	m_pText->InsertString(buf);
+	m_pText->InsertString("\n");
 
-	m_pText->DoInsertColorChange(col1);
-	m_pText->DoInsertString("Data send rate: ");
-	m_pText->DoInsertColorChange(col2);
+	m_pText->InsertColorChange(col1);
+	m_pText->InsertString("Data send rate: ");
+	m_pText->InsertColorChange(col2);
 	if (flSentKB < 0.01f)
 	{
 		sprintf(buf, "%d kb/s", 0);
@@ -172,6 +175,6 @@ void CUsersPage::PerformLayout()
 	{
 		sprintf(buf, "%d kb/s", (int)flSentKB);
 	}
-	m_pText->DoInsertString(buf);
-	m_pText->DoInsertString("\n");
+	m_pText->InsertString(buf);
+	m_pText->InsertString("\n");
 }

@@ -5,12 +5,26 @@
 // $NoKeywords: $
 //=============================================================================
 
+/*
+#include <stdio.h>
+
+#include <vgui_controls/Controls.h>
+#include "FileSystem.h"
+#include "HelpText.h"
+using namespace vgui;
+*/
 
 #include <stdio.h>
 
-#include <VGUI_Controls.h>
-#include "FileSystem.h"
 #include "HelpText.h"
+
+#include <VGUI/VGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include "filesystem.h"
+
 using namespace vgui;
 
 //-----------------------------------------------------------------------------
@@ -54,7 +68,8 @@ void CHelpText::LoadHelpFile(const char *filename)
 {
 
 
-	if (!m_pHelpData->LoadFromFile(filesystem(), filename, true, "PLATFORM"))
+//	if (!m_pHelpData->LoadFromFile(filesystem(), filename, true, "PLATFORM"))
+	if (!m_pHelpData->LoadFromFile(filesystem(), filename, "PLATFORM"))
 	{
 		// failed to load...
 	}

@@ -35,6 +35,7 @@ CRulesContextMenu::~CRulesContextMenu()
 //-----------------------------------------------------------------------------
 void CRulesContextMenu::ShowMenu(Panel *target, unsigned int cvarID)
 {
+//	ClearMenu();
 	DeleteAllItems();
 		
 	AddMenuItem("cvar", "&Change Value", new KeyValues("cvar", "cvarID", cvarID), CRulesContextMenu::parent);

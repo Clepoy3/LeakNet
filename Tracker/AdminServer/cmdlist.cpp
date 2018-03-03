@@ -16,7 +16,7 @@
 #include "proto_oob.h"
 #include "DialogGameInfo.h"
 #include "inetapi.h"
-#include "TokenLine.h"
+//#include "TokenLine.h" // VXP: TODO
 #include "dialogkickplayer.h"
 
 extern void v_strncpy(char *dest, const char *src, int bufsize);
@@ -147,10 +147,11 @@ bool CCMDList::QueryCommand(char *cmd)
 		return false;
 
 
-	for(int i=0;i<m_CMDList.Count();i++)
+	int i;
+	for(i=0;i<m_CMDList.Count();i++)
 	{
 		char *cmd_in = m_CMDList[i];
-		if(!stricmp(cmd,m_CMDList[i]))
+		if(!_stricmp(cmd,m_CMDList[i]))
 			break;
 	}
 	if(i!=m_CMDList.Count())

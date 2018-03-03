@@ -9,18 +9,18 @@
 #include "Info.h"
 #include "serverpage.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_CheckButton.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_RadioButton.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/CheckButton.h>
+#include <vgui_controls/MessageBox.h>
+#include <vgui_controls/RadioButton.h>
 
 #include <stdio.h>
 
@@ -53,7 +53,7 @@ CConfigPanel::CConfigPanel(bool autorefresh,bool savercon,int refreshtime,
 
 	SetTitle("Admin Configuration",true);
 
-	LoadControlSettings("Admin\\ConfigPanel.res");
+	LoadControlSettings("Admin\\ConfigPanel.res", "PLATFORM");
 
 	m_pRefreshCheckButton->SetSelected(autorefresh);
 	m_pRconCheckButton->SetSelected(savercon);
@@ -147,16 +147,16 @@ void CConfigPanel::SetControlText(const char *textEntryName, const char *text)
 void CConfigPanel::OnCommand(const char *command)
 {
 
-	if(!stricmp(command,"okay"))
+	if(!_stricmp(command,"okay"))
 	{ // save away the new settings
 		char timeText[20];
 		int time,timeGraphs;
 
-		m_pRefreshTextEntry->GetText(0,timeText,20);
+		m_pRefreshTextEntry->GetText(timeText,20);
 		sscanf(timeText,"%i",&time);
 	
 		memset(timeText,0x0,sizeof(timeText));
-		m_pGraphsRefreshTimeTextEntry->GetText(0,timeText,20);
+		m_pGraphsRefreshTimeTextEntry->GetText(timeText,20);
 		sscanf(timeText,"%i",&timeGraphs);
 
 
@@ -178,7 +178,7 @@ void CConfigPanel::OnCommand(const char *command)
 			dlg->DoModal();
 		}
 	}
-	else if(!stricmp(command,"close") )
+	else if(!_stricmp(command,"close") )
 	{
 		OnClose();
 	}

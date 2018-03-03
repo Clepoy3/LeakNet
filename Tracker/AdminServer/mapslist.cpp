@@ -12,7 +12,7 @@
 #include "proto_oob.h"
 #include "DialogGameInfo.h"
 #include "inetapi.h"
-#include "TokenLine.h"
+//#include "TokenLine.h" // VXP: TODO
 #include "dialogkickplayer.h"
 #include <string.h>
 
@@ -125,6 +125,7 @@ void CMapsList::ServerResponded()
 
 		if( strncmp(cur,"Dir:",4) && strncmp(cur,"-------------",13)  )
 		{	
+		/* VXP: TODO: TokenLine
 			TokenLine mapsLine;
 			mapsLine.SetLine(cur);
 		
@@ -177,6 +178,7 @@ void CMapsList::ServerResponded()
 				} // if k == Count
 
 			} // CountToken
+		*/
 		} // if not a Dir: or "----------"
 		cur=next;
 	}

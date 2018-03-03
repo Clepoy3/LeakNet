@@ -16,6 +16,7 @@ extern CServerList *g_pServerList;
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
 CServersPage::CServersPage()
+	: PropertyPage(NULL, "ServersPage")
 {
 }
 

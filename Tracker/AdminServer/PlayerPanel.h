@@ -27,9 +27,9 @@ class ToggleButton;
 class RadioButton;
 class Label;
 class TextEntry;
-class KeyValues;
+//class KeyValues;
 class ListPanel;
-class KeyValues;
+//class KeyValues;
 class MessageBox;
 class ComboBox;
 class Panel;
@@ -53,7 +53,7 @@ public:
 	void NewPlayerList(CUtlVector<Players_t> *players);
 
 	// returns the keyvalues for the currently selected row
-	vgui::KeyValues *GetSelected(); 
+	KeyValues *GetSelected(); 
 
 	//property page handlers
 	virtual void OnPageShow();
@@ -70,7 +70,7 @@ private:
 
 	// msg handlers
 	void OnOpenContextMenu(int row);
-	void OnEffectPlayer(vgui::KeyValues *data);
+	void OnEffectPlayer(KeyValues *data);
 
 	// an inner class
 	class PlayerListPanel: public vgui::ListPanel

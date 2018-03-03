@@ -53,11 +53,11 @@ CServerConfigPanel::CServerConfigPanel(vgui::Panel *parent, const char *name, co
 
 	if( filesystem()->FileExists(configName) )
 	{
-		LoadControlSettings(configName);	
+		LoadControlSettings(configName, "PLATFORM");	
 	} 
 	else
 	{
-		LoadControlSettings("Admin\\ServerConfigPanel.res");	
+		LoadControlSettings("Admin\\ServerConfigPanel.res", "PLATFORM");	
 	}
 
 }
@@ -93,12 +93,13 @@ void CServerConfigPanel::OnPageShow()
 			const char *value=(*m_Rules)[i]->GetString("value");
 			Panel *curPanel;
 
-			for(int j=0;j< GetChildCount();j++)
+			int j;
+			for(j=0;j< GetChildCount();j++)
 			{
 				curPanel = GetChild(j);
 				const char *name = curPanel->GetName();
 
-				if(!stricmp(name,rulename)) // this control name matches a rule name
+				if(!_stricmp(name,rulename)) // this control name matches a rule name
 				{ 
 					break;
 				}
@@ -109,12 +110,12 @@ void CServerConfigPanel::OnPageShow()
 			{
 				const char *className= curPanel->GetClassName();
 
-				if(!stricmp(className,"TextEntry"))
+				if(!_stricmp(className,"TextEntry"))
 				{
 					TextEntry *entry = dynamic_cast<TextEntry *>(curPanel);
 					if (entry)
 					{
-						if(!stricmp(rulename,"sv_password") && !stricmp(value,"0"))
+						if(!_stricmp(rulename,"sv_password") && !_stricmp(value,"0"))
 							// sv_password is a special case..
 						{
 							entry->SetText("");
@@ -126,12 +127,12 @@ void CServerConfigPanel::OnPageShow()
 					}
 				} // if TextEntry
 
-				if(!stricmp(className,"CheckButton"))
+				if(!_stricmp(className,"CheckButton"))
 				{
 					CheckButton *entry = dynamic_cast<CheckButton *>(curPanel);
 					if (entry)
 					{
-						if(!stricmp(value,"0"))
+						if(!_stricmp(value,"0"))
 						{
 							entry->SetSelected(false);
 						} 
@@ -200,14 +201,14 @@ void CServerConfigPanel::OnSendConfig()
 
 			tmp_text[0]=0;
 		
-			if(!stricmp(className,"TextEntry"))
+			if(!_stricmp(className,"TextEntry"))
 			{
 				TextEntry *entry = dynamic_cast<TextEntry *>(curPanel);
 				if (entry)
 				{
-					if(!stricmp(name,"sv_password") ) // this is a special case to turn on passwords
+					if(!_stricmp(name,"sv_password") ) // this is a special case to turn on passwords
 					{
-						entry->GetText(0,tmp_text,512);
+						entry->GetText(tmp_text,512);
 						if(strlen(tmp_text) > 0) 
 						{
 							char tmp[512];
@@ -223,12 +224,12 @@ void CServerConfigPanel::OnSendConfig()
 					} 
 					else 
 					{
-						entry->GetText(0,tmp_text,512);
+						entry->GetText(tmp_text,512);
 					}
 				}
 			} // if TextEntry
 
-			if(!stricmp(className,"CheckButton"))
+			if(!_stricmp(className,"CheckButton"))
 			{
 				CheckButton *entry = dynamic_cast<CheckButton *>(curPanel);
 				if (entry)
@@ -257,17 +258,18 @@ void CServerConfigPanel::OnSendConfig()
 			{
 				const char *value=NULL;
 				const char *rulename=NULL;
-					for (int i = 0; i < m_Rules->Count(); i++)
+					int i;
+					for (i = 0; i < m_Rules->Count(); i++)
 					{
 						rulename=(*m_Rules)[i]->GetString("cvar");
 						value=(*m_Rules)[i]->GetString("value");
 						
-						if(rulename && !strnicmp(rulename,name,strlen(rulename))) 
+						if(rulename && !_strnicmp(rulename,name,strlen(rulename))) 
 						{
 							break;
 						}
 					}
-					if(i!=m_Rules->Count() && value && strnicmp(tmp_text,value,strlen(value))) 
+					if(i!=m_Rules->Count() && value && _strnicmp(tmp_text,value,strlen(value))) 
 					// if we found the rule, its value, and it differs
 					{
 						_snprintf(chat_text,512,"%s \"%s\";",name,tmp_text); 
@@ -282,7 +284,7 @@ void CServerConfigPanel::OnSendConfig()
 }
 
 
-void CServerConfigPanel::SetRules(CUtlVector<vgui::KeyValues *> *rules)
+void CServerConfigPanel::SetRules(CUtlVector<KeyValues *> *rules)
 {
 	m_Rules=rules;
 }

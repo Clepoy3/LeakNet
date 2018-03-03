@@ -17,7 +17,9 @@
 #include "IServerRefreshResponse.h"
 #include "server.h"
 
-class KeyValues;
+#include "KeyValues.h"
+
+//class KeyValues;
 
 namespace vgui
 {
@@ -109,9 +111,11 @@ private:
 	int m_iServerRefreshCount;	// number of servers refreshed
 	bool m_bSaveRcon;
 
+public:
 	DECLARE_PANELMAP();
 	typedef CBaseGamesPage BaseClass;
 
+private:
 	// message that favorites are being imported
 	vgui::MessageBox *m_pImportFavoritesdlg;
 

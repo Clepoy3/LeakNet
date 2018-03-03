@@ -109,7 +109,7 @@ void CServerList::RunFrame()
 	}
 
 	// look to see if any servers need to be updated
-	for (i = 0; i < m_Servers.Size(); i++)
+	for (int i = 0; i < m_Servers.Size(); i++)
 	{
 		server_t &server = m_Servers[i];
 		if (time > server.refreshTime)
@@ -190,7 +190,7 @@ void CServerList::ReceivedData(IReceiveMessage *msg)
 
 	if (refreshUI)
 	{
-		m_pNotifyPanel->PostMessage(m_pNotifyPanel, new vgui::KeyValues("RefreshServers"));
+		m_pNotifyPanel->PostMessage(m_pNotifyPanel, new KeyValues("RefreshServers"));
 	}
 }
 
@@ -207,7 +207,8 @@ void CServerList::BroadcastForServers()
 	g_pTrackerNET->SendMessage(msg, NET_BROADCAST);
 
 	msg = g_pTrackerNET->CreateMessage(TSV_REQUESTINFO);
-	addr = g_pTrackerNET->GetNetAddress("205.158.143.202:1201");
+//	addr = g_pTrackerNET->GetNetAddress("205.158.143.202:1201");
+	addr = g_pTrackerNET->GetNetAddress("127.0.0.1:1201");
 	msg->SetNetAddress(addr);
 	msg->SetEncrypted(false);
 	g_pTrackerNET->SendMessage(msg, NET_UNRELIABLE);
@@ -265,7 +266,7 @@ void CServerList::CheckOnServer(server_t &server)
 			};
 
 			// refresh the UI
-			m_pNotifyPanel->PostMessage(m_pNotifyPanel, new vgui::KeyValues("RefreshServers"));
+			m_pNotifyPanel->PostMessage(m_pNotifyPanel, new KeyValues("RefreshServers"));
 		}
 	}
 

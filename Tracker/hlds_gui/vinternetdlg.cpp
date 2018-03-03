@@ -20,28 +20,17 @@
 #include <stdarg.h>
 #include <assert.h>
 
-/*#include "..\common\winlite.h"
+#include "..\common\winlite.h"
+
 // base vgui interfaces
+#include <VGUI/VGui.h>
 #include <vgui_controls/Controls.h>
 #include <VGUI/IInput.h>
 #include <VGUI/ISurface.h>
 #include <VGUI/IScheme.h>
 #include <VGUI/IVGui.h>
 #include <VGUI/MouseCode.h>
-#include "FileSystem.h"*/
-
-#include <VGUI\MouseCode.h>
-#include <VGUI\KeyCode.h>
-
-#include "interface.h"
-#include "..\..\tracker\common\winlite.h"
-#include <vgui_controls\Controls.h>
-#include <vgui_controls\Panel.h>
-#include <VGUI\IScheme.h>
-#include <VGUI\ISurface.h>
-#include <VGUI\ILocalize.h>
-#include <VGUI\IVGui.h>
-#include "filesystem.h"
+#include "FileSystem.h"
 
 // vgui controls
 #include <vgui_controls/Button.h>
@@ -84,7 +73,7 @@ VInternetDlg::VInternetDlg( void ) : Frame(NULL, "VInternetDlg")
 	m_pGameServer = new CGameServer(this, "Server");
 	m_pConfigPage = new CCreateMultiplayerGameServerPage(this,"Config");
 
-	LoadControlSettings("Server/dlg.res");
+	LoadControlSettings("Server/dlg.res", "PLATFORM");
 
 	m_pDetailsSheet->AddPage(m_pConfigPage,"Config");
 	m_pDetailsSheet->AddPage(m_pGameServer,"Server");

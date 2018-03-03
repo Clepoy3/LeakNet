@@ -41,7 +41,7 @@ class Button;
 class ComboBox;
 class QueryBox;
 class TextEntry;
-class RichText; // VXP
+class RichText;
 class CheckButton;
 class PropertySheet;
 }

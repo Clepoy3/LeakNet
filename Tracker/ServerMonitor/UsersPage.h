@@ -15,7 +15,8 @@
 
 namespace vgui
 {
-class TextEntry;
+//class TextEntry;
+class RichText;
 };
 
 //-----------------------------------------------------------------------------
@@ -30,7 +31,8 @@ public:
 	virtual void PerformLayout();
 
 private:
-	vgui::TextEntry *m_pText;
+//	vgui::TextEntry *m_pText;
+	vgui::RichText *m_pText;
 
 	typedef vgui::PropertyPage BaseClass;
 

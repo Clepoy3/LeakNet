@@ -19,7 +19,7 @@
 
 #include "rcon.h"
 
-class KeyValues;
+//class KeyValues;
 
 namespace vgui
 {

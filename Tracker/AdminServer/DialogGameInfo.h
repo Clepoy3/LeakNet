@@ -15,7 +15,7 @@
 #include "ServerList.h"
 #include "IServerRefreshResponse.h"
 
-class KeyValues;
+//class KeyValues;
 
 namespace vgui
 {

@@ -13,7 +13,7 @@
 #include "proto_oob.h"
 #include "DialogGameInfo.h"
 #include "inetapi.h"
-#include "TokenLine.h"
+//#include "TokenLine.h" // VXP: TODO
 #include "dialogkickplayer.h"
 
 extern void v_strncpy(char *dest, const char *src, int bufsize);
@@ -56,7 +56,7 @@ CPlayerList::~CPlayerList() {
 void CPlayerList::SendQuery()
 {
 	CMsgBuffer *buffer = m_pQuery->GetSendBuffer();
-	assert( buffer );
+	Assert( buffer );
 	
 	if ( !buffer ) 
 	{
@@ -132,6 +132,7 @@ void CPlayerList::ServerResponded()
 	{
 		if(cur!=NULL) 
 		{	
+		/* VXP: TODO: TokenLine
 			TokenLine playerLine;
 			playerLine.SetLine(cur);
 		
@@ -150,7 +151,7 @@ void CPlayerList::ServerResponded()
 				//	playerLine.GetToken(9); // adr
 			}
 			cur=strchr(cur,'\n')+1;
-
+		*/
 		}
 	}
 	

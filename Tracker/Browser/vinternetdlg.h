@@ -21,10 +21,10 @@
 #pragma once
 #endif
 
-#include <VGUI_Frame.h>
+#include <vgui_controls/Frame.h>
 #include <UtlVector.h>
 
-#include <VGUI_HTML.h>
+#include <vgui_controls/HTML.h>
 
 namespace vgui
 {
@@ -83,7 +83,8 @@ private:
 		~MyHTML() {};
 
 		// override the callbacks, but DON'T forget to still call the base classes ones
-		virtual bool OnStartURL(const char *url) { HTML::OnStartURL(url); return m_parent->OnStartURL(url); }
+	//	virtual bool OnStartURL(const char *url) { HTML::OnStartURL(url); return m_parent->OnStartURL(url); }
+		virtual bool OnStartURL(const char *url, bool first) { HTML::OnStartURL(url, first); return m_parent->OnStartURL(url); }
 		virtual void OnFinishURL(const char *url) { HTML::OnFinishURL(url); m_parent->OnFinishURL();}
 		virtual void OnProgressURL(long current, long maximum) { HTML::OnProgressURL(current,maximum);}
 		virtual void OnSetStatusText(const char *text) { HTML::OnSetStatusText(text); m_parent->OnStatus(text); }

@@ -15,8 +15,10 @@
 //
 // $NoKeywords: $
 //=============================================================================
-#if !defined( VINTERNETDLG_H )
-#define VINTERNETDLG_H
+//#if !defined( VINTERNETDLG_H )
+//#define VINTERNETDLG_H
+#if !defined( SERVERPAGE_H )
+#define SERVERPAGE_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -39,6 +41,8 @@
 #include "IGameList.h"
 
 //#include "ClickableTabbedPanel.h"
+
+#include "KeyValues.h"
 
 class CServerContextMenu;
 namespace vgui
@@ -65,13 +69,16 @@ class CDialogGameInfo;
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-class VInternetDlg : public vgui::Frame
+//class VInternetDlg : public vgui::Frame
+class CServerPage : public vgui::Frame
 {
 
 public:
 	// Construction/destruction
-						VInternetDlg( unsigned int userid );
-	virtual				~VInternetDlg( void );
+//						VInternetDlg( unsigned int userid );
+						CServerPage( unsigned int userid );
+//	virtual				~VInternetDlg( void );
+	virtual				~CServerPage( void );
 
 	virtual void		Initialize( void );
 
@@ -79,7 +86,8 @@ public:
 	virtual void		Open( void );
 
 	// gets server info
-	serveritem_t &VInternetDlg::GetServer(unsigned int serverID);
+//	serveritem_t &VInternetDlg::GetServer(unsigned int serverID);
+	serveritem_t &CServerPage::GetServer(unsigned int serverID);
 
 	// setup
 	virtual void		PerformLayout();
@@ -92,7 +100,8 @@ public:
 
 	// returns a pointer to a static instance of this dialog
 	// valid for use only in sort functions
-	static VInternetDlg *GetInstance();
+//	static VInternetDlg *GetInstance();
+	static CServerPage *GetInstance();
 
 	// begins the process of joining a server from a game list
 	// the game info dialog it opens will also update the game list
@@ -121,7 +130,8 @@ public:
 	virtual void OnTick();
 
 	void SearchForFriend(unsigned int uid, const char *email, const char *username, const char *firstname, const char *lastname);
-	ISendMessage *VInternetDlg::CreateServerMessage(int msgID);
+//	ISendMessage *VInternetDlg::CreateServerMessage(int msgID);
+	ISendMessage *CServerPage::CreateServerMessage(int msgID);
 	CNetAddress GetServerAddress();
 	void SendInitialLogin();
 	bool CheckMessageValidity(IReceiveMessage *dataBlock);
@@ -194,4 +204,4 @@ private:
 	DECLARE_PANELMAP();
 };
 
-#endif // VINTERNETDLG_H
+#endif // SERVERPAGE_H

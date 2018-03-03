@@ -12,9 +12,10 @@
 #include "proto_oob.h"
 
 // for debugging
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IVGui.h>
+#include <VGUI/VGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IVGui.h>
 
 typedef enum
 {

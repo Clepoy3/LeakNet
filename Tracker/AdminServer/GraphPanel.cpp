@@ -12,6 +12,7 @@
 
 #include <vgui_controls/Controls.h>
 #include <VGUI/ISystem.h>
+#include <VGUI/Point.h>
 #include <VGUI/ISurface.h>
 #include <VGUI/IVGui.h>
 #include <KeyValues.h>
@@ -25,9 +26,9 @@
 #include <vgui_controls/PHandle.h>
 #include <vgui_controls/PropertySheet.h>
 #include <vgui_controls/CheckButton.h>
-#include <vgui/point.h>
 
 #include <VGUI/ILocalize.h>
+//#include <VGUI/Point.h>
 
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 
@@ -336,7 +337,8 @@ void CGraphPanel::CGraphsImage::Paint()
 		_snprintf(numText,20,"0");
 		localize()->ConvertANSIToUnicode(numText, tmp, 12);
 		DrawPrintText(5,y+offsetNET,tmp,1);
-		pIn= new Point[points.Count()];
+	//	pIn= new Point[points.Count()];
+		pIn= new Point();
 		pOut= new Point[points.Count()];
 	}
 
@@ -442,27 +444,41 @@ void CGraphPanel::CGraphsImage::Paint()
 	if(cpu)
 	{
 		SetColor(g); // green
-		DrawPolyLine(pCpu,points.Count());	
+	//	DrawPolyLine(pCpu,points.Count());	
+		int x, y;
+		pCpu->GetPoint( x, y );
+		DrawPolyLine(&x, &y,points.Count());	
 	}
 
 	if(net) 
 	{
 		SetColor(r); // red
-		DrawPolyLine(pIn,points.Count());	
+	//	DrawPolyLine(pIn,points.Count());	
+		int x, y;
+		pCpu->GetPoint( x, y );
+		DrawPolyLine(&x, &y,points.Count());	
 
 		SetColor(yel); //yellow
-		DrawPolyLine(pOut,points.Count());	
+	//	DrawPolyLine(pOut,points.Count());	
+		pCpu->GetPoint( x, y );
+		DrawPolyLine(&x, &y,points.Count());	
 	}
 	if(fps)
 	{
 		SetColor(lb);
-		DrawPolyLine(pFPS,points.Count());	
+	//	DrawPolyLine(pFPS,points.Count());	
+		int x, y;
+		pCpu->GetPoint( x, y );
+		DrawPolyLine(&x, &y,points.Count());	
 	}
 
 	if(ping)
 	{
 		SetColor(purple);
-		DrawPolyLine(pPing,points.Count());	
+	//	DrawPolyLine(pPing,points.Count());	
+		int x, y;
+		pCpu->GetPoint( x, y );
+		DrawPolyLine(&x, &y,points.Count());	
 	}
 	
 	if(cpu && pCpu) free(pCpu);

@@ -27,7 +27,7 @@ CDialogAddServer::CDialogAddServer(IGameList *gameList) : Frame(NULL, "DialogAdd
 
 	SetTitle("Add Server - Servers", true);
 
-	LoadControlSettings("Admin\\DialogAddServer.res");
+	LoadControlSettings("Admin\\DialogAddServer.res", "PLATFORM");
 }
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void CDialogAddServer::Open()
 //-----------------------------------------------------------------------------
 void CDialogAddServer::OnCommand(const char *command)
 {
-	if (!stricmp(command, "OK"))
+	if (!_stricmp(command, "OK"))
 	{
 		OnOK();
 	}

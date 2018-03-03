@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 wsock32.lib ..\..\lib\public\vgui_controls.lib /nologo /dll /machine:I386 /nodefaultlib:"LIBCMTD" /nodefaultlib:"LIBC" /nodefaultlib:"LIBCD"
+# ADD LINK32 wsock32.lib ..\..\vgui2\bin\vgui_controls.lib /nologo /dll /machine:I386 /nodefaultlib:"LIBCMTD" /nodefaultlib:"LIBC" /nodefaultlib:"LIBCD"
 # Begin Custom Build
 TargetPath=.\Release\hlds_gui.dll
 InputPath=.\Release\hlds_gui.dll
@@ -89,7 +89,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 wsock32.lib ..\..\lib\public\vgui_controls.lib /nologo /dll /map /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 wsock32.lib ..\..\vgui2\bin\vgui_controls.lib /nologo /dll /map /debug /machine:I386 /pdbtype:sept
 # Begin Custom Build
 TargetPath=.\Debug\hlds_gui.dll
 InputPath=.\Debug\hlds_gui.dll
@@ -169,99 +169,7 @@ SOURCE=.\vinternetdlg.h
 # End Group
 # Begin Source File
 
-SOURCE=..\..\lib\public\vgui_controls.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\havana_constraints.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\havok_mopp.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\hk_base.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\hk_math.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\ivp_compactbuilder.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\ivp_physics.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\mss32.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\mxtk.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\s3tc.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\Steam.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\common\vtuneapi.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\appframework.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\expdlln.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\game_controls.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\nvtristrip.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\shaderlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\tier0.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\trktooln.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\unitlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vgui_surfacelib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vstdlib.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\public\vtf.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\lib\vmpi\vmpi.lib
+SOURCE=..\..\vgui2\bin\vgui_controls.lib
 # End Source File
 # End Target
 # End Project

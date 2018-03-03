@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================
 
-#ifndef POINT_H
-#define POINT_H
+#ifndef POINTS_H
+#define POINTS_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -26,4 +26,4 @@ typedef struct {
 } Points_t;
 
 
-#endif // POINT_H
+#endif // POINTS_H

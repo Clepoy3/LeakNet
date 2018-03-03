@@ -17,19 +17,20 @@
 //=============================================================================
 
 // base vgui interfaces
-#include <VGUI_Controls.h>
-#include <VGUI_ISurface.h>
+#include <VGUI/VGui.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISurface.h>
 
 // vgui controls
-#include <VGUI_Button.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_Frame.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_HTML.h>
-#include <VGUI_ImagePanel.h>
-#include <VGUI_AnimatingImagePanel.h>
-#include <VGUI_IImage.h>
-#include <VGUI_MessageBox.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/Frame.h>
+#include <KeyValues.h>
+#include <vgui_controls/HTML.h>
+#include <vgui_controls/ImagePanel.h>
+#include <vgui_controls/AnimatingImagePanel.h>
+#include <VGUI/IImage.h>
+#include <vgui_controls/MessageBox.h>
 
 
 #include "vinternetdlg.h"
@@ -59,7 +60,8 @@ VInternetDlg::VInternetDlg( void ) : Frame(NULL, "VInternetDlg")
 	m_pHTML = new MyHTML(this, "WebPage");
 
 	// create the address bar
-	m_pAddressBar = new ComboBox(GetPanel(), "AddressCombo", MAX_ADDRESSES,true);
+//	m_pAddressBar = new ComboBox(GetPanel(), "AddressCombo", MAX_ADDRESSES,true);
+	m_pAddressBar = new ComboBox(this, "AddressCombo", MAX_ADDRESSES,true);
 	// tell the address bar to send us a message when the ENTER key is hit
 	m_pAddressBar->SendNewLine(true);
 
@@ -72,7 +74,7 @@ VInternetDlg::VInternetDlg( void ) : Frame(NULL, "VInternetDlg")
 	//m_pAnimImagePanel->SetVisible(true);
 
 	// load our control file to setup our window
-	LoadControlSettings("Browser/browser.res");
+	LoadControlSettings("Browser/browser.res", "PLATFORM");
 
 	// put the loading animation on top
 	m_pAnimImagePanel->MoveToFront();
@@ -211,7 +213,7 @@ bool VInternetDlg::OnStartURL(const char *text)
 	{
 		for( i=0;i<m_AddressHistory.Count();i++ )
 		{
-			if( !stricmp(text,m_AddressHistory[i]) )
+			if( !_stricmp(text,m_AddressHistory[i]) )
 			{
 				break;
 			} 
@@ -230,20 +232,23 @@ bool VInternetDlg::OnStartURL(const char *text)
 			m_AddressHistory.Remove(curAddress);
 			m_AddressHistory.InsertBefore(curAddress,newUrl);
 			// update this entry
-			m_pAddressBar->AddItem(m_AddressHistory[curAddress],curAddress);
+		//	m_pAddressBar->AddItem(m_AddressHistory[curAddress],curAddress);
+			m_pAddressBar->AddItem(m_AddressHistory[curAddress], new KeyValues("temp", "curAddress", curAddress)); // VXP: Is that right?
 		}
 		else
 		{
 			curAddress++;
 			m_AddressHistory.AddToTail(newUrl);
-			m_pAddressBar->AddItem(m_AddressHistory[curAddress]);
+		//	m_pAddressBar->AddItem(m_AddressHistory[curAddress]);
+			m_pAddressBar->AddItem(m_AddressHistory[curAddress], NULL);
 		}
 	}
 	else
 	{ // existing entry
 		curAddress=i;
 		// update this item
-		m_pAddressBar->AddItem(m_AddressHistory[curAddress],curAddress);
+	//	m_pAddressBar->AddItem(m_AddressHistory[curAddress],curAddress);
+		m_pAddressBar->AddItem(m_AddressHistory[curAddress], new KeyValues("temp", "curAddress", curAddress));
 	}
 
 	// now activate the current URL
@@ -263,7 +268,7 @@ void VInternetDlg::OnFinishURL()
 
 	// get the window to redraw every 1 second, so animiated gifs move
 	//m_pHTML->StartAnimate(1000);
-
+	m_pHTML->StartAnimate(1000); // VXP
 }
 
 //-----------------------------------------------------------------------------
@@ -274,7 +279,7 @@ void VInternetDlg::OnFinishURL()
 //-----------------------------------------------------------------------------
 void VInternetDlg::OnCommand(const char *command)
 {
-	if(!stricmp(command,"back")) // the back button
+	if(!_stricmp(command,"back")) // the back button
 	{	
 		// backup one 
 		curAddress--;
@@ -288,7 +293,7 @@ void VInternetDlg::OnCommand(const char *command)
 			m_pHTML->OpenURL(m_AddressHistory[curAddress]);
 		}
 	}
-	else if(!stricmp(command,"forward")) // the forward button
+	else if(!_stricmp(command,"forward")) // the forward button
 	{
 		// go forward one
 		curAddress++;
@@ -302,18 +307,18 @@ void VInternetDlg::OnCommand(const char *command)
 			m_pHTML->OpenURL(m_AddressHistory[curAddress]);
 		}
 	}
-	else if(!stricmp(command,"go")) // the go button
+	else if(!_stricmp(command,"go")) // the go button
 	{
 		char newUrl[512];
-		m_pAddressBar->GetText(0,newUrl,512);
+		m_pAddressBar->GetText(newUrl,512);
 		// open url calls OnStartURL where we handle the history list
 		m_pHTML->OpenURL(newUrl);
 	}
-	else if(!stricmp(command,"stop")) // the stop button
+	else if(!_stricmp(command,"stop")) // the stop button
 	{
 		m_pHTML->StopLoading();
 	}
-	else if(!stricmp(command,"refresh")) // the refresh button
+	else if(!_stricmp(command,"refresh")) // the refresh button
 	{
 		m_pHTML->Refresh();
 	}

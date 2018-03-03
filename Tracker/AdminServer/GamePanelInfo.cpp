@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include "winsock.h" // this BUGGER defines PropertySheet to PropertySheetA ....
-#include "tokenline.h"
+//#include "tokenline.h" // VXP: TODO
 
 #include "GamePanelInfo.h"
 #include "Info.h"
@@ -28,27 +28,27 @@
 #include "DialogAddBan.h"
 
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_ISurface.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
-#include <VGUI_Label.h>
-#include <VGUI_TextEntry.h>
-#include <VGUI_Button.h>
-#include <VGUI_ToggleButton.h>
-#include <VGUI_RadioButton.h>
-#include <VGUI_ListPanel.h>
-#include <VGUI_ComboBox.h>
-#include <VGUI_PHandle.h>
-#include <VGUI_PropertySheet.h>
-#include <VGUI_MouseCode.h>
-#include <VGUI_MessageBox.h>
-#include <VGUI_Image.h>
-#include <VGUI_ImagePanel.h>
-#include <VGUI_Point.h> // for the graphs
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/ISurface.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
+#include <vgui_controls/Label.h>
+#include <vgui_controls/TextEntry.h>
+#include <vgui_controls/Button.h>
+#include <vgui_controls/ToggleButton.h>
+#include <vgui_controls/RadioButton.h>
+#include <vgui_controls/ListPanel.h>
+#include <vgui_controls/ComboBox.h>
+#include <vgui_controls/PHandle.h>
+#include <vgui_controls/PropertySheet.h>
+#include <VGUI/MouseCode.h>
+#include <vgui_controls/MessageBox.h>
+#include <vgui_controls/Image.h>
+#include <vgui_controls/ImagePanel.h>
+#include <VGUI/Point.h> // for the graphs
 
-#include <VGUI_ILocalize.h>
+#include <VGUI/ILocalize.h>
 
 #include <proto_oob.h>
 #include <netadr.h>
@@ -191,7 +191,7 @@ CGamePanelInfo::CGamePanelInfo(vgui::Panel *parent, const char *name,const char 
 	ivgui()->AddTickSignal(this->GetVPanel());
 
 
-	LoadControlSettings("Admin\\GamePanelInfo.res");	
+	LoadControlSettings("Admin\\GamePanelInfo.res", "PLATFORM");	
 
 //	LoadDialogState(this, name);
 
@@ -842,7 +842,7 @@ void CGamePanelInfo::ServerResponded()
 
 				}
 					
-				index =	m_pRulesListPanel->AddItem( (*rules)[i],i);
+				index =	m_pRulesListPanel->AddItem( (*rules)[i],i, false, false);
 			}		
 			m_pRulesListPanel->SortList();
 			m_pRulesListPanel->Repaint();	
@@ -879,7 +879,8 @@ void CGamePanelInfo::ServerResponded()
 	{
 							
 		// clear the existing panel
-		m_pMapsCombo->RemoveAllItems();
+	//	m_pMapsCombo->RemoveAllItems();
+		m_pMapsCombo->DeleteAllItems();
 
 	
 		CUtlVector<Maps_t> *maps= m_pMapsList->GetMapsList();
@@ -890,7 +891,7 @@ void CGamePanelInfo::ServerResponded()
 
 		for (int i = 0; i < maps->Count(); i++)
 		{
-		    m_pMapsCombo->AddItem((*maps)[i].name);
+		    m_pMapsCombo->AddItem((*maps)[i].name, NULL);
 		}
 
 		if(maps->Count()==0)
@@ -915,6 +916,7 @@ void CGamePanelInfo::ServerResponded()
 
 		if(strstr(newline,"say \""))  // if this is a say message
 		{
+		/* VXP: TODO: TokenLine
 			TokenLine chatLine( const_cast<char *>(newline));
 
 			if(chatLine.CountToken() >= 8)  // if its a valid line
@@ -936,6 +938,7 @@ void CGamePanelInfo::ServerResponded()
 				m_pServerChatPanel->DoInsertString(chat_text);
 	
 			} // if enough tokens
+		*/
 		} // if a say line
 		else if(strstr(newline,"say \"!page")) 
 		{
@@ -977,6 +980,8 @@ void CGamePanelInfo::ServerResponded()
 			//CPU     In      Out     Uptime  Users	FPS
 			//0.00    0.00    0.00    0       1		30.54
 			stats=stats+strlen(" CPU   In    Out   Uptime  Users FPS")+1;
+
+		/* VXP: TODO: TokenLine
 			TokenLine tok;
 			tok.SetLine(stats);
 			Points_t p;
@@ -1002,6 +1007,7 @@ void CGamePanelInfo::ServerResponded()
 				SetControlText("UpTime", timeText);
 
 			}
+		*/
 			
 
 		}
@@ -1166,12 +1172,14 @@ void CGamePanelInfo::OnOpenContextMenu(int row)
 {
 
 	if (m_pRulesListPanel->IsVisible() && m_pRulesListPanel->IsCursorOver() && 
-		m_pRulesListPanel->GetNumSelectedRows() && !m_pRcon->Disabled())
+	//	m_pRulesListPanel->GetNumSelectedRows() && !m_pRcon->Disabled())
+		m_pRulesListPanel->GetSelectedItemsCount() && !m_pRcon->Disabled())
 		// show the rules changing menu IF its the visible panel and the cursor is
 		// over it AND rcon isn't disabled
 	{
 		// get the cvar 
-		unsigned int cvarID =m_pRulesListPanel->GetSelectedRow(0);
+	//	unsigned int cvarID =m_pRulesListPanel->GetSelectedRow(0);
+		unsigned int cvarID =m_pRulesListPanel->GetSelectedItem(0);
 		
 		// activate context menu
 		m_pRulesContextMenu->ShowMenu(this, cvarID);
@@ -1185,13 +1193,13 @@ void CGamePanelInfo::OnOpenContextMenu(int row)
 //-----------------------------------------------------------------------------
 // Purpose: handles responses from MULTIPLE dialogs, logic to use is keyed off "type"
 //-----------------------------------------------------------------------------
-void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
+void CGamePanelInfo::OnPlayerDialog(KeyValues *data)
 {
 	const char *type=data->GetString("type");
 	const char *playerName=data->GetString("player");
 
 
-	if(!stricmp(type,"kick")) 
+	if(!_stricmp(type,"kick")) 
 	{
 		char kickText[255];
 		_snprintf(kickText,255,"kick \"%s\"",playerName);
@@ -1199,7 +1207,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		OnRefresh();
 
 	} 
-	else if(!stricmp(type,"slap")) 
+	else if(!_stricmp(type,"slap")) 
 	{
 		char slapText[255];
 		_snprintf(slapText,255,"admin_command admin_slap %s",playerName);
@@ -1207,7 +1215,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		OnRefresh();
 
 	} 	
-	else if(!stricmp(type,"chat")) 
+	else if(!_stricmp(type,"chat")) 
 	{
 		char slapText[255];
 		const char *message=data->GetString("value");
@@ -1217,7 +1225,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		OnRefresh();
 
 	} 
-	else if(!stricmp(type,"ban")) 
+	else if(!_stricmp(type,"ban")) 
 	{
 		const char *valueBan=data->GetString("value");
 		float timeBan = (float)atof(valueBan);
@@ -1247,13 +1255,13 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		}
 
 	}
-	else if(!stricmp(type,"status")) 
+	else if(!_stricmp(type,"status")) 
 	{
 		//m_bPlayerStatus=true;
 		//	m_pRcon->SendRcon("status",m_szPassword);
 
 	}
-	else if(!stricmp(type,"cvar")) 
+	else if(!_stricmp(type,"cvar")) 
 	{
 
 		char cvar_text[512];
@@ -1265,7 +1273,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		OnRefresh();	
 
 	}
-	else if(!stricmp(type,"rconpassword")) 
+	else if(!_stricmp(type,"rconpassword")) 
 	{
 		const char *value=data->GetString("value");
 		m_pRcon->SetPassword(value);
@@ -1287,7 +1295,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		RequestInfo();
 
 	}
-	else if(!stricmp(type,"changemap")) 
+	else if(!_stricmp(type,"changemap")) 
 	{
 		char map_text[512];
 		
@@ -1297,7 +1305,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		// queue a refresh, but give it long enough for the map to actually change
 		m_iRequestRetry = system()->GetTimeMillis() + MAP_CHANGE_TIME;
 	}
-	else if(!stricmp(type,"changeban")) 
+	else if(!_stricmp(type,"changeban")) 
 	{
 		char kickText[255];
 		const char *value=data->GetString("value");
@@ -1330,7 +1338,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		}		
 	
 	}
-	else if(!stricmp(type,"removeban")) 
+	else if(!_stricmp(type,"removeban")) 
 	{
 		char kickText[255];
 		int i;
@@ -1365,7 +1373,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 
 
 	} 
-	else if(!stricmp(type,"addban")) 
+	else if(!_stricmp(type,"addban")) 
 	{
 		char kickText[255];
 		const char *id=data->GetString("id");
@@ -1384,7 +1392,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		m_pRcon->SendRcon(kickText);
 		OnRefresh();
 	} 
-	else if(!stricmp(type,"stop")) 
+	else if(!_stricmp(type,"stop")) 
 	{
 		char banText[255];
 
@@ -1394,7 +1402,7 @@ void CGamePanelInfo::OnPlayerDialog(vgui::KeyValues *data)
 		box->SetTitle("Stop the server",true);
 		box->Activate("", banText,"stop2");
 	}
-	else if(!stricmp(type,"stop2")) 
+	else if(!_stricmp(type,"stop2")) 
 	{
 		if(m_pCMDList->QueryCommand("_restart"))
 		{ //  if the server has the new restart functionality
@@ -1540,7 +1548,8 @@ void CGamePanelInfo::OnStatusPlayer(int playerID)
 //-----------------------------------------------------------------------------
 void CGamePanelInfo::OnCvarChange(int cvarID)
 {
-	KeyValues *kv = m_pRulesListPanel->GetItem(m_pRulesListPanel->GetSelectedRow(0));
+//	KeyValues *kv = m_pRulesListPanel->GetItem(m_pRulesListPanel->GetSelectedRow(0));
+	KeyValues *kv = m_pRulesListPanel->GetItem(m_pRulesListPanel->GetSelectedItem(0));
 	if(kv!=NULL) 
 	{
 			CDialogCvarChange*box = new CDialogCvarChange();
@@ -1739,9 +1748,11 @@ void CGamePanelInfo::RulesListPanel::OnMousePressed(vgui::MouseCode code)
 	// let the base class do its stuff first 
 	ListPanel::OnMousePressed(code);
 
-	if (m_pHelpText && GetNumSelectedRows())
+//	if (m_pHelpText && GetNumSelectedRows())
+	if (m_pHelpText && GetSelectedItemsCount())
 	{
-		KeyValues *kv = GetItem(GetSelectedRow(0));
+	//	KeyValues *kv = GetItem(GetSelectedRow(0));
+		KeyValues *kv = GetItem(GetSelectedItem(0));
 		const char *helpText =m_pHelpText->GetHelp(kv->GetString("cvar"));
 		if (strlen(helpText)<=0) 
 		{
@@ -1759,9 +1770,11 @@ void CGamePanelInfo::RulesListPanel::OnMousePressed(vgui::MouseCode code)
 //----------------------------------------------------------------------------
 void CGamePanelInfo::RulesListPanel::OnMouseDoublePressed(vgui::MouseCode code)
 {	
-	if (allowDoubleClick && code==MOUSE_LEFT && GetNumSelectedRows())
+//	if (allowDoubleClick && code==MOUSE_LEFT && GetNumSelectedRows())
+	if (allowDoubleClick && code==MOUSE_LEFT && GetSelectedItemsCount())
 	{
-		unsigned int cvarID =GetSelectedRow(0);
+	//	unsigned int cvarID =GetSelectedRow(0);
+		unsigned int cvarID =GetSelectedItem(0);
 		PostMessage(m_pParent->GetVPanel(),  new KeyValues("cvar", "cvarID", cvarID));
 		//return;
 	}

@@ -23,7 +23,7 @@ CRulesInfoMsgHandlerDetails::CRulesInfoMsgHandlerDetails( CRulesInfo *baseobject
 	: CMsgHandler( type, typeinfo )
 { 
 	m_pRulesInfo = baseobject;
-	m_vRules = new CUtlVector<vgui::KeyValues *>();
+	m_vRules = new CUtlVector<KeyValues *>();
 }
 
 //-----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ bool CRulesInfoMsgHandlerDetails::Process( netadr_t *from, CMsgBuffer *msg )
 	// Read the data
 	for (int i = 0; i < pNumber; i++)
 	{
-		vgui::KeyValues *kv=new vgui::KeyValues("rules");
+		KeyValues *kv=new KeyValues("rules");
 		char *cvar,*value;
 		cvar = new char[50];
 		value = new char[50];

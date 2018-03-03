@@ -20,28 +20,17 @@
 #include <stdarg.h>
 #include <assert.h>
 
-/*#include "..\common\winlite.h"
+#include "..\common\winlite.h"
+
 // base vgui interfaces
+#include <VGUI/VGui.h>
 #include <vgui_controls/Controls.h>
 #include <VGUI/IInput.h>
 #include <VGUI/ISurface.h>
 #include <VGUI/IScheme.h>
 #include <VGUI/IVGui.h>
 #include <VGUI/MouseCode.h>
-#include "FileSystem.h"*/
-
-#include <VGUI\MouseCode.h>
-#include <VGUI\KeyCode.h>
-
-#include "interface.h"
-#include "..\..\tracker\common\winlite.h"
-#include <vgui_controls\Controls.h>
-#include <vgui_controls\Panel.h>
-#include <VGUI\IScheme.h>
-#include <VGUI\ISurface.h>
-#include <VGUI\ILocalize.h>
-#include <VGUI\IVGui.h>
-#include "filesystem.h"
+#include "FileSystem.h"
 
 // vgui controls
 #include <vgui_controls/Button.h>
@@ -54,7 +43,7 @@
 #include <vgui_controls/MessageBox.h>
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/TextEntry.h>
-#include <vgui_controls/RichText.h> // VXP
+#include <vgui_controls/RichText.h>
 #include <vgui_controls/PropertySheet.h>
 #include <vgui_controls/PropertyPage.h>
 #include <vgui_controls/QueryBox.h>
@@ -83,13 +72,12 @@ CGameServer::CGameServer( vgui::Panel *parent, const char *name) : PropertyPage(
 	m_SubmitButton = new Button(this,"submit","&Submit");
 	m_QuitButton = new Button(this,"quit","&Quit");
 
-	LoadControlSettings("Server/hlds.res");
+	LoadControlSettings("Server/hlds.res", "PLATFORM");
 
 //	m_ConsoleTextEntry->SetMultiline(true);
 	m_ConsoleTextEntry->SetEnabled(true);
 	m_ConsoleTextEntry->SetVerticalScrollbar(true);
 //	m_ConsoleTextEntry->SetRichEdit(true);
-//	m_ConsoleTextEntry->setMaximumCharCount(8000);
 	m_ConsoleTextEntry->SetMaximumCharCount(8000);
 //	m_ConsoleTextEntry->SetWrap(true);
 //	m_ConsoleTextEntry->SetEditable(false);
@@ -154,21 +142,18 @@ void CGameServer::PerformLayout()
 void CGameServer::ConsoleText(const char *text)
 {
 	static int i=10;
-//	m_ConsoleTextEntry->DoInsertColorChange(Color(255-i,i,(i+125)%255));
 	m_ConsoleTextEntry->InsertColorChange(Color(255-i,i,(i+125)%255));
 	i+=10;
 	if(i>255) i=0;
 
-//	m_ConsoleTextEntry->DoInsertString(text);
 	m_ConsoleTextEntry->InsertString(text);
 }
 
 void CGameServer::OnCommand(const char *command)
 {
-	if(!stricmp(command,"submit"))
+	if(!_stricmp(command,"submit"))
 	{
 		char command[512];
-	//	m_CommandTextEntry->GetText(0,command,512);
 		m_CommandTextEntry->GetText(command,512);
 		if(strlen(command)>0)
 		{
@@ -181,7 +166,7 @@ void CGameServer::OnCommand(const char *command)
 			m_CommandTextEntry->SetText("");
 		}
 	} 
-	else if (!stricmp(command,"quit"))
+	else if (!_stricmp(command,"quit"))
 	{
 		Stop();
 		VInternetDlg::GetInstance()->StopServer();

@@ -292,15 +292,15 @@ bool CWalkerStrider::GetAttachment( int iAttachment, matrix3x4_t &attachmentToWo
 
 	Vector vLocalPos( 0, 0, 0 );
 	mstudioattachment_t *pAttachment = pStudioHdr->pAttachment( iAttachment-1 );
-	if ( stricmp( pAttachment->pszName(), "build_point_left_gun" ) == 0 )
+	if ( _stricmp( pAttachment->pszName(), "build_point_left_gun" ) == 0 )
 	{
 		vLocalPos.y = sideDist;
 	}
-	else if ( stricmp( pAttachment->pszName(), "build_point_right_gun" ) == 0 )
+	else if ( _stricmp( pAttachment->pszName(), "build_point_right_gun" ) == 0 )
 	{
 		vLocalPos.y = -sideDist;
 	}
-	else if ( stricmp( pAttachment->pszName(), "ThirdPersonCameraOrigin" ) == 0 )
+	else if ( _stricmp( pAttachment->pszName(), "ThirdPersonCameraOrigin" ) == 0 )
 	{
 	}
 	else

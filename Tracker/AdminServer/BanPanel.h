@@ -19,7 +19,7 @@
 
 #include "BanContextMenu.h"
 
-class KeyValues;
+//class KeyValues;
 
 namespace vgui
 {
@@ -60,7 +60,6 @@ public:
 	virtual int AddItem(KeyValues *data, unsigned int userData = 0 ); // Takes a copy of the data for use in the table. Returns the index the item is at.
 	virtual void SortList( void );
 //	virtual vgui::ListPanel::DATAITEM *GetDataItem( int itemIndex );
-//	virtual vgui::ListPanel::ListPanelItem *GetDataItem( int itemIndex );
 	virtual vgui::ListPanelItem *GetDataItem( int itemIndex );
 	virtual KeyValues *GetItem(int itemIndex); // returns pointer to data the row holds
 

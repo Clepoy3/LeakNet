@@ -20,15 +20,13 @@
 class CServerContextMenu : public vgui::Menu
 {
 public:
-//	CServerContextMenu(CServerPage /*vgui::Panel*/ *parent);
-	CServerContextMenu(VInternetDlg /*vgui::Panel*/ *parent);
+	CServerContextMenu(CServerPage /*vgui::Panel*/ *parent);
 	~CServerContextMenu();
 
 	// call this to activate the menu
 	void ShowMenu(vgui::Panel *target, unsigned int serverID, bool showConnect, bool showRefresh, bool showAddToFavorites,bool manage);
 private:
-//	CServerPage /*vgui::Panel*/ *parent; // so we can send it messages
-	VInternetDlg /*vgui::Panel*/ *parent; // so we can send it messages
+	CServerPage /*vgui::Panel*/ *parent; // so we can send it messages
 };
 
 

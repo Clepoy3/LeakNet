@@ -135,7 +135,7 @@ void CRcon::RunFrame()
 void CRcon::GetChallenge() 
 {
 	CMsgBuffer *buffer = m_pQuery->GetSendBuffer();
-	assert( buffer );
+	Assert( buffer );
 	
 	if ( !buffer ) 
 	{
@@ -170,7 +170,7 @@ void CRcon::GetChallenge()
 void CRcon::RconRequest(const char *command, int challenge) 
 {
 	CMsgBuffer *buffer = m_pQuery->GetSendBuffer();
-	assert( buffer );
+	Assert( buffer );
 	
 	if ( !buffer ) 
 	{

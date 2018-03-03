@@ -13,8 +13,7 @@
 #include "proto_oob.h"
 #include "DialogGameInfo.h"
 #include "inetapi.h"
-//#include "TokenLine.h"
-#include "Token.h"
+//#include "TokenLine.h" // VXP: TODO
 #include "dialogkickplayer.h"
 
 extern void v_strncpy(char *dest, const char *src, int bufsize);
@@ -97,7 +96,7 @@ void CBanList::ServerResponded()
 
 		while(cur!=NULL) 
 		{
-
+		/* VXP: TODO: TokenLine
 			TokenLine banLine;
 			cur++; // dodge the newline
 			banLine.SetLine(cur); // need to add one here, to remove the "\n"
@@ -114,7 +113,7 @@ void CBanList::ServerResponded()
 	
 			}
 			cur=strchr(cur,'\n');
-		
+		*/
 		}
 		
 		m_bGotIPs=true;

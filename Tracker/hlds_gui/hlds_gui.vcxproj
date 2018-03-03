@@ -9,26 +9,37 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <ProjectName>hlds_gui</ProjectName>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
     </SccLocalPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -40,13 +51,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\ServerMonitor___Win32_Release\</OutDir>
-    <IntDir>.\ServerMonitor___Win32_Release\</IntDir>
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\Win32_Debug\</OutDir>
-    <IntDir>.\Win32_Debug\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -58,17 +69,18 @@
       <Optimization>MaxSpeed</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\public;..\..\common;..\common;..\..\vgui2\controls;..\..\vgui2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\ServerMonitor___Win32_Release\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\ServerMonitor___Win32_Release\ServerMonitor.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\ServerMonitor___Win32_Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\ServerMonitor___Win32_Release\</ProgramDataBaseFileName>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalIncludeDirectories>..\public;..\..\public;..\common;..\..\common;..\..\vgui2\controls;..\..\vgui2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SERVERBROWSER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\Release\hlds_gui.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <TypeLibraryName>.\ServerMonitor___Win32_Release\ServerMonitor.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release\hlds_gui.tlb</TypeLibraryName>
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
     </Midl>
@@ -78,19 +90,21 @@
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\ServerMonitor___Win32_Release\ServerMonitor.bsc</OutputFile>
+      <OutputFile>.\Release\hlds_gui.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <SubSystem>Windows</SubSystem>
-      <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <OutputFile>Win32_Release/ServerMonitor.exe</OutputFile>
-      <AdditionalDependencies>..\..\vgui2\bin\vgui_controls.lib;odbc32.lib;odbccp32.lib;WS2_32.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <LinkDLL>true</LinkDLL>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD;LIBC;LIBCD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <OutputFile>.\Release\hlds_gui.dll</OutputFile>
+      <ImportLibrary>.\Release\hlds_gui.lib</ImportLibrary>
+      <AdditionalDependencies>wsock32.lib;..\..\vgui2\bin\vgui_controls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>if exist ..\..\..\platform\bin\ServerMonitor.exe attrib -r ..\..\..\platform\bin\ServerMonitor.exe 
-if exist $(TargetPath) copy $(TargetPath) ..\..\..\platform\bin\ServerMonitor.exe </Command>
-      <Outputs>..\..\..\platform\bin\ServerMonitor.exe;%(Outputs)</Outputs>
+      <Command>if exist ..\..\..\Platform\Server\Server.dll attrib -r ..\..\..\Platform\Server\Server.dll 
+if exist $(TargetPath) copy $(TargetPath) ..\..\..\Platform\Server\Server.dll </Command>
+      <Outputs>..\..\..\Platform\Server\Server.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,20 +116,21 @@ if exist $(TargetPath) copy $(TargetPath) ..\..\..\platform\bin\ServerMonitor.ex
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\public;..\..\common;..\common;..\..\vgui2\controls;..\..\vgui2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Win32_Debug\</AssemblerListingLocation>
+      <AdditionalIncludeDirectories>..\public;..\..\public;..\common;..\..\common;..\..\vgui2\controls;..\..\vgui2\include;..\..\GameUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
-      <PrecompiledHeaderOutputFile>.\Win32_Debug\ServerMonitor.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Win32_Debug\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Win32_Debug\</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\Debug\hlds_gui.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <TypeLibraryName>.\Win32_Debug\ServerMonitor.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug\hlds_gui.tlb</TypeLibraryName>
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
     </Midl>
@@ -125,15 +140,16 @@ if exist $(TargetPath) copy $(TargetPath) ..\..\..\platform\bin\ServerMonitor.ex
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Win32_Debug\ServerMonitor.bsc</OutputFile>
+      <OutputFile>.\Debug\hlds_gui.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <IgnoreSpecificDefaultLibraries>libcd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <OutputFile>.\Win32_Debug\ServerMonitor.exe</OutputFile>
-      <AdditionalDependencies>..\..\lib\public\vgui_controls.lib;odbc32.lib;odbccp32.lib;WS2_32.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>.\Debug\hlds_gui.dll</OutputFile>
+      <ImportLibrary>.\Debug\hlds_gui.lib</ImportLibrary>
+      <AdditionalDependencies>wsock32.lib;..\..\lib\public\vgui_controls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>
@@ -142,29 +158,27 @@ if exist $(TargetPath) copy $(TargetPath) ..\..\..\platform\bin\ServerMonitor.ex
       </Outputs>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>if exist ..\..\..\platform\bin\ServerMonitor.exe attrib -r ..\..\..\platform\bin\ServerMonitor.exe 
-if exist $(TargetPath) copy $(TargetPath) ..\..\..\platform\bin\ServerMonitor.exe 
-if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\platform\bin\ </Command>
+      <Command>if exist ..\..\..\Platform\Server\Server.dll attrib -r ..\..\..\Platform\Server\Server.dll 
+if exist $(TargetPath) copy $(TargetPath) ..\..\..\Platform\Server\Server.dll 
+if exist "$(TargetDir)$(TargetName).map" copy "$(TargetDir)$(TargetName).map" ..\..\..\Platform\Server\ </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\public\filesystem_tools.cpp" />
+    <ClCompile Include="CreateMultiplayerGameServerPage.cpp" />
+    <ClCompile Include="gameserver.cpp" />
+    <ClCompile Include="hlds.cpp" />
+    <ClCompile Include="hlds_gui.cpp" />
     <ClCompile Include="..\..\public\interface.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainDialog.cpp" />
-    <ClCompile Include="..\TrackerNET\NetAddress.cpp" />
-    <ClCompile Include="ServerInfoPanel.cpp" />
-    <ClCompile Include="ServerList.cpp" />
-    <ClCompile Include="ServersPage.cpp" />
-    <ClCompile Include="UsersPage.cpp" />
+    <ClCompile Include="vinternetdlg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreateMultiplayerGameServerPage.h" />
+    <ClInclude Include="gameserver.h" />
+    <ClInclude Include="hlds.h" />
+    <ClInclude Include="hlds_gui.h" />
     <ClInclude Include="..\..\public\interface.h" />
-    <ClInclude Include="MainDialog.h" />
-    <ClInclude Include="..\TrackerNET\NetAddress.h" />
-    <ClInclude Include="ServerInfoPanel.h" />
-    <ClInclude Include="ServerList.h" />
-    <ClInclude Include="ServersPage.h" />
-    <ClInclude Include="UsersPage.h" />
+    <ClInclude Include="vinternetdlg.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\tier0.lib" />

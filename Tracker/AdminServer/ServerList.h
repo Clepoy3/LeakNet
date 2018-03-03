@@ -18,6 +18,7 @@
 
 
 #include "UtlRBTree.h"
+#include "UtlVector.h"
 
 class CSocket;
 class IServerRefreshResponse;

@@ -34,7 +34,7 @@ CDialogCvarChange::CDialogCvarChange() : Frame(NULL, "DialogCvarChange")
 	m_pOkayButton = new Button(this, "OkayButton", "&Okay");
 	//m_pCvarEntry->setTextHidden(true);
 
-	LoadControlSettings("Admin\\DialogCvarChange.res");
+	LoadControlSettings("Admin\\DialogCvarChange.res", "PLATFORM");
 
 	SetTitle("Enter new CVAR value", true);
 
@@ -105,7 +105,7 @@ void CDialogCvarChange::OnCommand(const char *command)
 {
 	bool bClose = false;
 
-	if (!stricmp(command, "Okay"))
+	if (!_stricmp(command, "Okay"))
 	{
 		KeyValues *msg = new KeyValues("CvarChangeValue");
 		char buf[64];
@@ -120,7 +120,7 @@ void CDialogCvarChange::OnCommand(const char *command)
 
 		bClose = true;
 	}
-	else if (!stricmp(command, "Close"))
+	else if (!_stricmp(command, "Close"))
 	{
 		bClose = true;
 	}

@@ -24,7 +24,7 @@ using namespace vgui;
 CMainDialog::CMainDialog(vgui::Panel *parent) : Frame(parent, "ServerMonitor")
 {
 	// make us a popup
-	MakePopup();
+//	MakePopup();
 
 	// create the controls
 	SetTitle("Tracker - Server Monitor", true);

@@ -12,15 +12,15 @@
 #endif
 
 #include <vgui_controls/Frame.h>
+#include <vgui_controls/ListPanel.h>
 #include "ServerList.h"
 #include "IServerRefreshResponse.h"
 #include "server.h"
 #include "IGameList.h"
-#include <vgui_controls/ListPanel.h>
 
 namespace vgui
 {
-class ListPanel;
+//class ListPanel;
 class ImagePanel;
 class ComboBox;
 class ToggleButton;
@@ -46,6 +46,8 @@ public:
 	virtual serveritem_t &GetServer(unsigned int serverID);
 
 	virtual void SetRefreshing(bool state);
+
+	virtual int GetInvalidServerListID();
 
 protected:
 	virtual void OnTick();
@@ -84,6 +86,7 @@ private:
 
 //	vgui::Menu *m_pRefreshMenu;
 
+public:
 	typedef vgui::Frame BaseClass;
 
 	DECLARE_PANELMAP();

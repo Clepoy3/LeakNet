@@ -60,6 +60,7 @@ private:
 	PHandle _pageTab;
 	bool _paintRaised;
 
+public:
 	typedef EditablePanel BaseClass;
 };
 

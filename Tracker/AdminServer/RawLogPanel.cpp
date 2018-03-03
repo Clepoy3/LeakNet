@@ -38,8 +38,8 @@ CRawLogPanel::CRawLogPanel(vgui::Panel *parent, const char *name) : PropertyPage
 	m_pServerRawLogPanel->SetEnabled(true);
 	m_pServerRawLogPanel->SetEditable(false);
 	m_pServerRawLogPanel->SetVerticalScrollbar(true);
-	m_pServerRawLogPanel->SetRichEdit(false);
-	m_pServerRawLogPanel->setMaximumCharCount(8000); // 100 x 80 char wide lines...	
+//	m_pServerRawLogPanel->SetRichEdit(false);
+	m_pServerRawLogPanel->SetMaximumCharCount(8000); // 100 x 80 char wide lines...	
 	m_pServerRawLogPanel->SetWrap(true);
 
 
@@ -102,7 +102,7 @@ void CRawLogPanel::PerformLayout()
 //-----------------------------------------------------------------------------
 void CRawLogPanel::DoInsertString(const char *str) 
 {
-	m_pServerRawLogPanel->DoInsertString(str);
+	m_pServerRawLogPanel->InsertString(str);
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ void CRawLogPanel::OnSendRcon()
 	{
 		char chat_text[512];
 
-		m_pEnterRconPanel->GetText(0,chat_text,512);
+		m_pEnterRconPanel->GetText(chat_text,512);
 
 		if(strlen(chat_text)>1) // check there is something in the text panel
 		{

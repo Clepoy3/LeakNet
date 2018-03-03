@@ -90,7 +90,7 @@ CDialogGameInfo::CDialogGameInfo(IGameList *gameList, unsigned int serverID, int
 	// let us be ticked every frame
 	ivgui()->AddTickSignal(this->GetVPanel());
 
-	LoadControlSettings("Admin\\DialogGameInfo.res");
+	LoadControlSettings("Admin\\DialogGameInfo.res", "PLATFORM");
 }
 
 //-----------------------------------------------------------------------------
@@ -251,7 +251,7 @@ void CDialogGameInfo::ApplySchemeSettings(vgui::IScheme *pScheme)
 	// force the label to get it's scheme settings
 	m_pInfoLabel->InvalidateLayout(true);
 	// override them
-	m_pInfoLabel->SetFgColor(GetSchemeColor("BrightControlText"));
+	m_pInfoLabel->SetFgColor(GetSchemeColor("BrightControlText", pScheme));
 }
 
 //-----------------------------------------------------------------------------

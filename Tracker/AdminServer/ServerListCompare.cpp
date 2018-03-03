@@ -9,8 +9,8 @@
 #include "server.h"
 #include "serverpage.h"
 
-#include <VGUI_ListPanel.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/ListPanel.h>
+#include <KeyValues.h>
 
 
 //-----------------------------------------------------------------------------
@@ -18,9 +18,12 @@
 //-----------------------------------------------------------------------------
 int __cdecl PasswordCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{
@@ -43,9 +46,12 @@ int __cdecl PasswordCompare(const void *elem1, const void *elem2 )
 //-----------------------------------------------------------------------------
 int __cdecl PingCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{
@@ -71,9 +77,12 @@ int __cdecl PingCompare(const void *elem1, const void *elem2 )
 //-----------------------------------------------------------------------------
 int __cdecl MapCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{
@@ -83,7 +92,7 @@ int __cdecl MapCompare(const void *elem1, const void *elem2 )
 	serveritem_t &s1 = CServerPage::GetInstance()->GetServer(p1->userData);
 	serveritem_t &s2 = CServerPage::GetInstance()->GetServer(p2->userData);
 
-	return stricmp(s1.map, s2.map);
+	return _stricmp(s1.map, s2.map);
 }
 
 //-----------------------------------------------------------------------------
@@ -91,9 +100,12 @@ int __cdecl MapCompare(const void *elem1, const void *elem2 )
 //-----------------------------------------------------------------------------
 int __cdecl GameCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{
@@ -104,9 +116,9 @@ int __cdecl GameCompare(const void *elem1, const void *elem2 )
 	serveritem_t &s2 = CServerPage::GetInstance()->GetServer(p2->userData);
 
 	// make sure we haven't added the same server to the list twice
-	assert(p1->userData != p2->userData);
+	Assert(p1->userData != p2->userData);
 
-	return stricmp(s1.gameDescription, s2.gameDescription);
+	return _stricmp(s1.gameDescription, s2.gameDescription);
 }
 
 //-----------------------------------------------------------------------------
@@ -114,9 +126,12 @@ int __cdecl GameCompare(const void *elem1, const void *elem2 )
 //-----------------------------------------------------------------------------
 int __cdecl ServerNameCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{
@@ -126,7 +141,7 @@ int __cdecl ServerNameCompare(const void *elem1, const void *elem2 )
 	serveritem_t &s1 = CServerPage::GetInstance()->GetServer(p1->userData);
 	serveritem_t &s2 = CServerPage::GetInstance()->GetServer(p2->userData);
 
-	return stricmp(s1.name, s2.name);
+	return _stricmp(s1.name, s2.name);
 }
 
 //-----------------------------------------------------------------------------
@@ -134,9 +149,12 @@ int __cdecl ServerNameCompare(const void *elem1, const void *elem2 )
 //-----------------------------------------------------------------------------
 int __cdecl PlayersCompare(const void *elem1, const void *elem2 )
 {
-	vgui::ListPanel::DATAITEM *p1, *p2;
-	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
-	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+//	vgui::ListPanel::DATAITEM *p1, *p2;
+//	p1 = *(vgui::ListPanel::DATAITEM **)elem1;
+//	p2 = *(vgui::ListPanel::DATAITEM **)elem2;
+	vgui::ListPanelItem *p1, *p2;
+	p1 = *(vgui::ListPanelItem **)elem1;
+	p2 = *(vgui::ListPanelItem **)elem2;
 
 	if ( !p1 || !p2 )  // No meaningful comparison
 	{

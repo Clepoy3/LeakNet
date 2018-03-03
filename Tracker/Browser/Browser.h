@@ -27,7 +27,8 @@ public:
 	// IVGui module implementation
 	virtual bool Initialize(CreateInterfaceFn *factorylist, int numFactories);
 	virtual bool PostInitialize(CreateInterfaceFn *modules, int factoryCount);
-	virtual vgui::VPanel *GetPanel();
+//	virtual vgui::VPanel *GetPanel();
+	virtual vgui::VPANEL GetPanel();
 	virtual bool Activate();
 	virtual bool IsValid();
 	virtual void Shutdown();
@@ -36,6 +37,8 @@ public:
 
 	virtual void CreateDialog();
 	virtual void Open();
+
+	virtual void SetParent(vgui::VPANEL parent); // VXP
 
 private:
 	vgui::DHANDLE<VInternetDlg> m_hInternetDlg;

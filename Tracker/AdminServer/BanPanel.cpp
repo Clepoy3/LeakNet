@@ -48,7 +48,7 @@ CBanPanel::CBanPanel(vgui::Panel *parent, const char *name) : PropertyPage(paren
 	m_pBanContextMenu->SetVisible(false);
 
 
-	LoadControlSettings("Admin\\BanPanel.res");
+	LoadControlSettings("Admin\\BanPanel.res", "PLATFORM");
 }
 
 //-----------------------------------------------------------------------------
@@ -132,19 +132,21 @@ void CBanPanel::BanListPanel::OnMouseDoublePressed(vgui::MouseCode code)
 //----------------------------------------------------------------------------
 void CBanPanel::OnCommand(const char *command)
 {
-	if (!stricmp(command, "addban"))
+	if (!_stricmp(command, "addban"))
 	{
 			PostMessage(m_pParent->GetVPanel(),new KeyValues("addban", "banID",0));
 	}
 
+//	if( m_pBanListPanel->GetNumSelectedRows())  // if a user is selected
 	if( m_pBanListPanel->GetSelectedItemsCount())  // if a user is selected
 	{
-		int playerID = m_pBanListPanel->GetItemUserData(m_pBanListPanel->GetSelectedItem(0));
-		if (!stricmp(command, "removeban"))
+	//	int playerID = m_pBanListPanel->GetDataItem(m_pBanListPanel->GetSelectedRow(0))->userData;
+		int playerID = m_pBanListPanel->GetItemData(m_pBanListPanel->GetSelectedItem(0))->userData;
+		if (!_stricmp(command, "removeban"))
 		{
 			PostMessage(m_pParent->GetVPanel(),new KeyValues("removeban", "playerID",playerID));
 		}
-		else if (!stricmp(command, "changeban"))
+		else if (!_stricmp(command, "changeban"))
 		{
 			PostMessage(m_pParent->GetVPanel(),new KeyValues("changeban",  "playerID",playerID));
 		}
@@ -167,11 +169,13 @@ void CBanPanel::OnEffectPlayer(KeyValues *data)
 void CBanPanel::OnOpenContextMenu(int row)
 {
 	if (m_pBanListPanel->IsVisible() && m_pBanListPanel->IsCursorOver()
+	//	&& m_pBanListPanel->GetNumSelectedRows())
 		&& m_pBanListPanel->GetSelectedItemsCount())
 	// show the ban changing menu IF its the visible panel and the cursor is
 	// over it 
 	{
 	
+	//	unsigned int banID =m_pBanListPanel->GetSelectedRow(0);
 		unsigned int banID =m_pBanListPanel->GetSelectedItem(0);
 			
 		// activate context menu
@@ -206,11 +210,13 @@ void CBanPanel::SetSortColumn(int column)
 
 int CBanPanel::GetNumSelectedRows()
 {
+//	return m_pBanListPanel->GetNumSelectedRows();
 	return m_pBanListPanel->GetSelectedItemsCount();
 }
 
 int CBanPanel::GetSelectedRow(int selectionIndex)
 {
+//	return m_pBanListPanel->GetSelectedRow(selectionIndex);
 	return m_pBanListPanel->GetSelectedItem(selectionIndex);
 }
 
@@ -219,9 +225,9 @@ void CBanPanel::DeleteAllItems()
 	m_pBanListPanel->DeleteAllItems();
 }
 
-int CBanPanel:: AddItem( KeyValues *data, unsigned int userData )
+int CBanPanel:: AddItem(KeyValues *data, unsigned int userData  )
 {
-	return m_pBanListPanel->AddItem(data, userData, false, false);
+	return m_pBanListPanel->AddItem(data,userData, false, false);
 }
 
 void CBanPanel::SortList( void )
@@ -229,8 +235,10 @@ void CBanPanel::SortList( void )
 	m_pBanListPanel->SortList();
 }
 
+//vgui::ListPanel::DATAITEM *CBanPanel::GetDataItem( int itemIndex )
 vgui::ListPanelItem *CBanPanel::GetDataItem( int itemIndex )
 {
+//	return m_pBanListPanel->GetDataItem(itemIndex);
 	return m_pBanListPanel->GetItemData(itemIndex);
 }
 

@@ -4,19 +4,32 @@
 //
 // $NoKeywords: $
 //=============================================================================
+
+#pragma pointers_to_members(full_generality, multiple_inheritance)
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <memory.h>
 #include <windows.h>
 #include <mmsystem.h>
 #include <mmreg.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "PhonemeExtractor.h"
-#include "TalkBack.h"
+
+// VXP
+//#include "TalkBack.h"
+#include "ims_helper.h"
+
 #include "tier0/dbg.h"
 #include "sentence.h"
 #include "PhonemeConverter.h"
 #include "vstdlib/strtools.h"
 #include "cmdlib.h"
+
+static IImsHelper *talkback = NULL;
 
 //-----------------------------------------------------------------------------
 // Purpose: Expose the interface
@@ -107,13 +120,14 @@ private:
 
 	int		m_nBytesPerSample;
 
-
+	HMODULE m_hHelper;
 
 
 };
 
 CPhonemeExtractorLipSinc::CPhonemeExtractorLipSinc( void )
 {
+	m_hHelper = (HMODULE)0;
 	m_pfnPrint = NULL;
 
 	m_bInitialized = false;
@@ -166,7 +180,7 @@ void CPhonemeExtractorLipSinc::DescribeError( TALKBACK_ERR err )
 	char errorDesc[256] = "";
 	if ( err != TALKBACK_NOERR )
 	{
-		TalkBackGetErrorString( err, sizeof(errorDesc), errorDesc );
+		talkback->TalkBackGetErrorString( err, sizeof(errorDesc), errorDesc );
 	}
 	
 	// Report or log the error...
@@ -198,7 +212,7 @@ bool CPhonemeExtractorLipSinc::CheckSoundFile( char const *filename )
 	memset( &fm, 0, sizeof( fm ) );
 	fm.m_size = sizeof( fm );
 
-	TALKBACK_ERR err = TalkBackGetSoundFileMetrics( filename, &fm );
+	TALKBACK_ERR err = talkback->TalkBackGetSoundFileMetrics( filename, &fm );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -234,6 +248,12 @@ bool CPhonemeExtractorLipSinc::CheckSoundFile( char const *filename )
 	return fm.m_canBeAnalyzed ? true : false;
 }
 
+typedef IImsHelper *(*pfnImsHelper)(void);
+
+//typedef IImsHelper *(_stdcall *pfnImsHelper)(void);
+//typedef IImsHelper *(_cdecl *pfnImsHelper)(void);
+//typedef IImsHelper *(_fastcall *pfnImsHelper)(void);
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
@@ -245,6 +265,7 @@ bool CPhonemeExtractorLipSinc::InitLipSinc( void )
 		return true;
 	}
 
+/*
 	char workingdir[ 256 ];
 	workingdir[0] = 0;
 	Q_getwd( workingdir );
@@ -256,12 +277,76 @@ bool CPhonemeExtractorLipSinc::InitLipSinc( void )
 	Q_snprintf( coreDataDir, sizeof( coreDataDir ), "%sbin\\lipsinc_data\\",
 		basedir );
 	COM_FixSlashes( coreDataDir );
+*/
+
+	char workingdir[ 256 ];
+	workingdir[0] = 0;
+	Q_getwd( workingdir );
+
+	// If they didn't specify -game on the command line, use VPROJECT.
+//	CmdLib_InitFileSystem( workingdir, true );
+
+	m_hHelper = LoadLibrary( "ims_helper.dll" );
+	if ( !m_hHelper )
+	{
+		return false;
+	}
+
+	pfnImsHelper factory = (pfnImsHelper)::GetProcAddress( m_hHelper, "GetImsHelper" );
+	if ( !factory )
+	{
+		FreeLibrary( m_hHelper );
+		return false;
+	}
+
+	talkback = reinterpret_cast< IImsHelper * >( (*factory)() );
+	if ( !talkback )
+	{
+		FreeLibrary( m_hHelper );
+		return false;
+	}
+
+	char szExeName[ MAX_PATH ];
+	szExeName[0] = 0;
+	GetModuleFileName( (HMODULE)0, szExeName, sizeof( szExeName ) );
+
+	char szBaseDir[ MAX_PATH ];
+	Q_strncpy( szBaseDir, szExeName, sizeof( szBaseDir ) );
+
+	Q_StripLastDir( szBaseDir, sizeof( szBaseDir ) );
+	Q_StripTrailingSlash( szBaseDir );
+	Q_strlower( szBaseDir );
+
+	char coreDataDir[ 512 ];
+	Q_snprintf( coreDataDir, sizeof( coreDataDir ), "%s\\lipsinc_data\\",
+		szBaseDir );
+	Q_FixSlashes( coreDataDir );
+
+	char szCheck[ 512 ];
+	Q_snprintf( szCheck, sizeof( szCheck ), "%sDtC6dal.dat", coreDataDir );
+
+	struct __stat64 buf;
+
+	if ( _stat64( szCheck, &buf ) != 0 )
+	{
+		Q_snprintf( coreDataDir, sizeof( coreDataDir ), "%s\\bin\\lipsinc_data\\",
+			szBaseDir );
+		Q_FixSlashes( coreDataDir );
+		Q_snprintf( szCheck, sizeof( szCheck ), "%sDtC6dal.dat", coreDataDir );
+
+		if ( _stat64( szCheck, &buf ) != 0 )
+		{
+			Error( "Unable to find talkback data files in %s.", coreDataDir );
+		}
+	}
+
 	TALKBACK_ERR err;
 	
-	err = TalkBackStartupLibrary( coreDataDir );
+	err = talkback->TalkBackStartupLibrary( coreDataDir );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
+		FreeLibrary( m_hHelper );
 		return false;
 	}
 
@@ -269,13 +354,14 @@ bool CPhonemeExtractorLipSinc::InitLipSinc( void )
 	long verMinor = 0;
 	long verRevision = 0;
 	
-	err = TalkBackGetVersion(
+	err = talkback->TalkBackGetVersion(
 		&verMajor, 
 		&verMinor, 
 		&verRevision);
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
+		FreeLibrary( m_hHelper );
 		return false;
 	}
 
@@ -294,7 +380,9 @@ void CPhonemeExtractorLipSinc::ShutdownLipSinc( void )
 	// HACK HACK:  This seems to crash on exit sometimes
 	__try
 	{
-		TalkBackShutdownLibrary();
+		talkback->TalkBackShutdownLibrary();
+
+		FreeLibrary( m_hHelper );
 	}
 	__except(EXCEPTION_EXECUTE_HANDLER )
 	{
@@ -364,7 +452,7 @@ bool CPhonemeExtractorLipSinc::AttemptAnalysis( TALKBACK_ANALYSIS **ppAnalysis, 
 
 	Printf( "Analyzing: \"%s\"\n", text );
 
-	TALKBACK_ERR err = TalkBackGetAnalysis( 
+	TALKBACK_ERR err = talkback->TalkBackGetAnalysis( 
 		ppAnalysis,
 		wavfile,
 		text,
@@ -455,7 +543,7 @@ int CPhonemeExtractorLipSinc::GetPhonemeIndexAtWord( TALKBACK_ANALYSIS *analysis
 {
 	long count;
 
-	TALKBACK_ERR err = TalkBackGetNumPhonemes( analysis, &count );
+	TALKBACK_ERR err = talkback->TalkBackGetNumPhonemes( analysis, &count );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -472,7 +560,7 @@ int CPhonemeExtractorLipSinc::GetPhonemeIndexAtWord( TALKBACK_ANALYSIS *analysis
 	for ( int i = 0; i < (int)count; i++ )
 	{
 		TALKBACK_PHONEME tbPhoneme = TALKBACK_PHONEME_INVALID;
-		err = TalkBackGetPhonemeEnum( analysis, i, &tbPhoneme );
+		err = talkback->TalkBackGetPhonemeEnum( analysis, i, &tbPhoneme );
 		if ( err != TALKBACK_NOERR )
 		{
 			DescribeError( err );
@@ -483,11 +571,11 @@ int CPhonemeExtractorLipSinc::GetPhonemeIndexAtWord( TALKBACK_ANALYSIS *analysis
 
 		if ( start )
 		{
-			err = TalkBackGetPhonemeStartTime( analysis, i, &t );
+			err = talkback->TalkBackGetPhonemeStartTime( analysis, i, &t );
 		}
 		else
 		{
-			err = TalkBackGetPhonemeEndTime( analysis, i, &t );
+			err = talkback->TalkBackGetPhonemeEndTime( analysis, i, &t );
 		}
 
 		if ( err != TALKBACK_NOERR )
@@ -535,7 +623,7 @@ CPhonemeExtractorLipSinc::CAnalyzedPhoneme *CPhonemeExtractorLipSinc::GetAnalyze
 
 	TALKBACK_PHONEME tb;
 
-	TALKBACK_ERR err = TalkBackGetPhonemeEnum( analysis, index, &tb );
+	TALKBACK_ERR err = talkback->TalkBackGetPhonemeEnum( analysis, index, &tb );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -544,13 +632,13 @@ CPhonemeExtractorLipSinc::CAnalyzedPhoneme *CPhonemeExtractorLipSinc::GetAnalyze
 
 	strcpy( p.phoneme, TBPhonemeToString( tb ) );
 
-	err = TalkBackGetPhonemeStartTime( analysis, index, &p.starttime );
+	err = talkback->TalkBackGetPhonemeStartTime( analysis, index, &p.starttime );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
 		return NULL;
 	}
-	err = TalkBackGetPhonemeEndTime( analysis, index, &p.endtime );
+	err = talkback->TalkBackGetPhonemeEndTime( analysis, index, &p.endtime );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -568,20 +656,20 @@ CPhonemeExtractorLipSinc::CAnalyzedWord *CPhonemeExtractorLipSinc::GetAnalyzedWo
 
 	long chars = sizeof( w.buffer );
 
-	TALKBACK_ERR err = TalkBackGetWord( analysis, index, chars, w.buffer );
+	TALKBACK_ERR err = talkback->TalkBackGetWord( analysis, index, chars, w.buffer );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
 		return NULL;
 	}
 
-	err = TalkBackGetWordStartTime( analysis, index, &w.starttime );
+	err = talkback->TalkBackGetWordStartTime( analysis, index, &w.starttime );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
 		return NULL;
 	}
-	err = TalkBackGetWordEndTime( analysis, index, &w.endtime );
+	err = talkback->TalkBackGetWordEndTime( analysis, index, &w.endtime );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -605,7 +693,7 @@ bool FuzzyWordMatch( char const *w1, char const *w2 )
 	int minlen = min( len1, len2 );
 
 	// Found a match
-	if ( !strnicmp( w1, w2, minlen ) )
+	if ( !_strnicmp( w1, w2, minlen ) )
 		return true;
 
 	int letterdiff = abs( len1 - len2 );
@@ -695,7 +783,7 @@ void CPhonemeExtractorLipSinc::ProcessWords( TALKBACK_ANALYSIS *analysis, CSente
 {
 	long count;
 
-	TALKBACK_ERR err = TalkBackGetNumWords( analysis, &count );
+	TALKBACK_ERR err = talkback->TalkBackGetNumWords( analysis, &count );
 	if ( err != TALKBACK_NOERR )
 	{
 		DescribeError( err );
@@ -739,7 +827,7 @@ void CPhonemeExtractorLipSinc::ProcessWords( TALKBACK_ANALYSIS *analysis, CSente
 			return;
 		}
 
-		if ( !stricmp( w->buffer, "<SIL>" ) )
+		if ( !_stricmp( w->buffer, "<SIL>" ) )
 		{
 			awordpos++;
 			continue;
@@ -908,6 +996,7 @@ SR_RESULT CPhonemeExtractorLipSinc::Extract(
 
 	if ( !CheckSoundFile( wavfile ) )
 	{
+		FreeLibrary( m_hHelper );
 		return SR_RESULT_ERROR;
 	}
 
@@ -915,6 +1004,7 @@ SR_RESULT CPhonemeExtractorLipSinc::Extract(
 
 	if ( !AttemptAnalysis( &analysis, wavfile, inwords ) )
 	{
+		FreeLibrary( m_hHelper );
 		return SR_RESULT_FAILED;
 	}
 	
@@ -930,7 +1020,7 @@ SR_RESULT CPhonemeExtractorLipSinc::Extract(
 
 	if ( analysis )
 	{
-		TalkBackFreeAnalysis( &analysis );
+		talkback->TalkBackFreeAnalysis( &analysis );
 	}
 
 	return SR_RESULT_SUCCESS;

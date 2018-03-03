@@ -4,13 +4,16 @@
 //
 // $NoKeywords: $
 //=============================================================================
+
+#include <windows.h> // VXP
 #include <stdio.h>
 
 #include "CreateMultiplayerGameServerPage.h"
 
 using namespace vgui;
 
-#include <vgui_controls/Controls.h>#include <KeyValues.h>
+#include <vgui_controls/Controls.h>
+#include <KeyValues.h>
 #include <vgui_controls/ListPanel.h>
 #include <vgui_controls/ComboBox.h>
 #include <vgui_controls/MessageBox.h>
@@ -30,7 +33,7 @@ CCreateMultiplayerGameServerPage::CCreateMultiplayerGameServerPage(vgui::Panel *
 	m_pExtraCmdLine = new TextEntry(this,"ExtraEdit");
 	m_pGoButton = new Button(this,"GoButton","&Go");
 
-	LoadControlSettings("Server/CreateMultiplayerGameServerPage.res");
+	LoadControlSettings("Server/CreateMultiplayerGameServerPage.res", "PLATFORM");
 	m_pMapList->SetEnabled(false);
 	m_pGoButton->SetEnabled(false);
 
@@ -75,6 +78,7 @@ void CCreateMultiplayerGameServerPage::OnApplyChanges()
 //-----------------------------------------------------------------------------
 // Purpose: loads the list of available maps into the map list
 //-----------------------------------------------------------------------------
+/*
 void CCreateMultiplayerGameServerPage::LoadMODList()
 {
 
@@ -85,14 +89,15 @@ void CCreateMultiplayerGameServerPage::LoadMODList()
 	const char *filename = filesystem()->FindFirst("*", &findHandle);
 	while (filename)
 	{
+		Msg( "LoadMODList: %s\n", filename );
 		// add to the map list
 		if( filesystem()->FindIsDirectory(findHandle)) 
 		{
 			char libname[1024];
-			_snprintf(libname,1024,"%s\\scripts\\liblist.gam",filename);
+			_snprintf(libname,1024,"%s\\liblist.gam",filename);
+		//	_snprintf(libname,1024,"%s\\scripts\\liblist.gam", filename);
 			if(filesystem()->FileExists(libname))
 			{
-			//	m_pMODList->AddItem( filename);
 				m_pMODList->AddItem( filename, NULL);
 			}
 		}
@@ -101,6 +106,48 @@ void CCreateMultiplayerGameServerPage::LoadMODList()
 	}
 	filesystem()->FindClose(findHandle);
 
+}
+*/
+void CCreateMultiplayerGameServerPage::LoadMODList()
+{
+	m_pMODList->DeleteAllItems();
+
+	// look for third party games
+	char szSearchPath[_MAX_PATH + 5];
+	strcpy(szSearchPath, "*.*");
+
+	// use local filesystem since it has to look outside path system, and will never be used under steam
+	WIN32_FIND_DATA wfd;
+	HANDLE hResult;
+	memset(&wfd, 0, sizeof(WIN32_FIND_DATA));
+	
+	hResult = FindFirstFile( szSearchPath, &wfd);
+	if (hResult != INVALID_HANDLE_VALUE)
+	{
+		BOOL bMoreFiles;
+		while (1)
+		{
+			if ((wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && (_strnicmp(wfd.cFileName, ".", 1)))
+			{
+				// Check for dlls\*.dll
+				char szDllDirectory[MAX_PATH + 16];
+			//	sprintf(szDllDirectory, "%s\\liblist.gam", wfd.cFileName);
+				sprintf(szDllDirectory, "%s\\scripts\\liblist.gam", wfd.cFileName);
+
+				FILE *f = fopen(szDllDirectory, "rb");
+				if (f)
+				{
+					m_pMODList->AddItem( wfd.cFileName, NULL);
+					fclose(f);
+				}
+			}
+			bMoreFiles = FindNextFile(hResult, &wfd);
+			if (!bMoreFiles)
+				break;
+		}
+		
+		FindClose(hResult);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -113,7 +160,6 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	m_pMapList->SetEnabled(true);
 	m_pGoButton->SetEnabled(true);
 
-//	m_pMODList->GetText(0,m_szMod,DATA_STR_LENGTH);
 	m_pMODList->GetText(m_szMod,DATA_STR_LENGTH);
 	char basedir[1024];
 	//_snprintf(basedir,1024,"%s",m_szMod);
@@ -127,7 +173,7 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	{
 		// remove the text 'maps/' and '.bsp' from the file name to get the map name
 		char mapname[256];
-		char *str = strstr(filename, "maps");
+		char *str = (char *)strstr(filename, "maps");
 		if (str)
 		{
 
@@ -151,8 +197,7 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 		}
 
 		// add to the map list
-	//	m_pMapList->AddItem(new KeyValues("data", "mapname", mapname));
-		m_pMapList->AddItem(new KeyValues("data", "mapname", mapname), NULL, false, false);
+		m_pMapList->AddItem(new KeyValues("data", "mapname", mapname), 0, false, false);
 
 		// get the next file
 	nextFile:
@@ -165,7 +210,6 @@ void CCreateMultiplayerGameServerPage::LoadMapList()
 	{
 	//	m_pMapList->SetSelectedRows(0, 0);
 		m_pMapList->SetSelectedCell(0, 0);
-
 	}
 
 	vgui::filesystem()->RemoveSearchPath(basedir);
@@ -188,7 +232,7 @@ const char *CCreateMultiplayerGameServerPage::GetMapName()
 
 void CCreateMultiplayerGameServerPage::OnCommand(const char *text)
 {
-	if(!stricmp(text,"go"))
+	if(!_stricmp(text,"go"))
 	{
 
 		// create the command to execute
@@ -200,7 +244,6 @@ void CCreateMultiplayerGameServerPage::OnCommand(const char *text)
 		_snprintf(cmdline,1024,"-game %s -maxplayers %i +map %s ",
 						m_szMod,m_iMaxPlayers,GetMapName());
 
-	//	m_pExtraCmdLine->GetText(0,cvars,1024);
 		m_pExtraCmdLine->GetText(cvars,1024);
 		strncat(cmdline,cvars,1024);		
 

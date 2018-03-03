@@ -5,9 +5,12 @@
 // $NoKeywords: $
 //=============================================================================
 
+#include <VGUI/VGUI.h>
+
 #include <vgui_controls/Controls.h>
 #include <VGUI/IScheme.h>
 #include <VGUI/ISurface.h>
+#include <VGUI/ILocalize.h> // VXP
 #include <VGUI/IVGui.h>
 
 #include <vgui_controls/Panel.h>
@@ -54,24 +57,50 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		printf("Fatal error: Could not load trackerNET.dll\n");
 		return 3;
 	}
+	if (!fileSystemFactory)
+	{
+		printf("Fatal error: Could not load filesystem_stdio.dll\n");
+		return 4;
+	}
 
 	// initialize interfaces
 	CreateInterfaceFn factories[2] = { fileSystemFactory, vguiFactory };
-	assert(vgui::VGui_InitInterfacesList(factories, 2));
+//	assert(vgui::VGui_InitInterfacesList("ServerMonitor", factories, 2));
+	if ( !vgui::VGui_InitInterfacesList("ServerMonitor", factories, 2) )
+	{
+		printf("Fatal error: Could not initalize vgui2.dll\n");
+		return 5;
+	}
 	g_pTrackerNET = (ITrackerNET *)netFactory(TRACKERNET_INTERFACE_VERSION, NULL);
 	g_pTrackerNET->Initialize(1300, 1400);
 
-	vgui::filesystem()->AddSearchPath("../", "");
+//	vgui::filesystem()->AddSearchPath("../", "");
+	vgui::filesystem()->AddSearchPath("../", "resources");
 
 	// Init the surface
+	// VXP: Later
+/*
 	vgui::Panel *panel = new vgui::Panel(NULL, "TopPanel");
 	vgui::surface()->Init(panel->GetVPanel());
+*/
+
+	vgui::surface()->Init();
 
 	// load the scheme
-	if (!vgui::scheme()->LoadSchemeFromFile("resource/TrackerScheme.res"))
+//	if (!vgui::scheme()->LoadSchemeFromFile("resource/TrackerScheme.res"))
+	if (!vgui::scheme()->LoadSchemeFromFile("resource/TrackerScheme.res", "ServerMonitor"))
 	{
-		return false;
+	//	return false;
+		return 1;
 	}
+
+	// VXP: localization
+	vgui::localize()->AddFile(vgui::filesystem(), "Resource/platform_english.txt");
+	vgui::localize()->AddFile(vgui::filesystem(), "Resource/vgui_english.txt");
+
+	// VXP: Make a panel
+	vgui::Panel *panel = new vgui::Panel(NULL, "TopPanel");
+	vgui::surface()->SetEmbeddedPanel( panel->GetVPanel() );
 
 	// Start vgui
 	vgui::ivgui()->Start();

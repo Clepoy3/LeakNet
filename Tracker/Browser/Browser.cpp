@@ -8,12 +8,11 @@
 #include "vinternetdlg.h"
 #include "Browser.h"
 
-
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IPanel.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <VGUI/IPanel.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
 
 
 CBrowser g_ServerSingleton;
@@ -52,7 +51,7 @@ void CBrowser::CreateDialog()
 bool CBrowser::Initialize(CreateInterfaceFn *factorylist, int factoryCount)
 {
 	// load the vgui interfaces
-	return vgui::VGui_InitInterfacesList(factorylist, factoryCount);
+	return vgui::VGui_InitInterfacesList("Browser", factorylist, factoryCount);
 }
 
 //-----------------------------------------------------------------------------
@@ -90,7 +89,7 @@ void CBrowser::Deactivate()
 {
 	if (m_hInternetDlg.Get())
 	{
-		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new vgui::KeyValues("Close"), NULL);
+		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new KeyValues("Close"), NULL);
 	}
 }
 
@@ -112,7 +111,8 @@ void CBrowser::Open()
 //-----------------------------------------------------------------------------
 // Purpose: returns direct handle to main server browser dialog
 //-----------------------------------------------------------------------------
-vgui::VPanel *CBrowser::GetPanel()
+//vgui::VPanel *CBrowser::GetPanel()
+vgui::VPANEL CBrowser::GetPanel()
 {
 	return m_hInternetDlg.Get() ? m_hInternetDlg->GetVPanel() : NULL;
 }
@@ -125,8 +125,19 @@ void CBrowser::Shutdown()
 {
 	if (m_hInternetDlg.Get())
 	{
-		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new vgui::KeyValues("Close"), NULL);
+		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new KeyValues("Close"), NULL);
 		m_hInternetDlg->MarkForDeletion();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: sets the parent panel of the main module panel
+//-----------------------------------------------------------------------------
+void CBrowser::SetParent(vgui::VPANEL parent)
+{
+	if(m_hInternetDlg.Get())
+	{
+		m_hInternetDlg->SetParent(parent);
 	}
 }
 

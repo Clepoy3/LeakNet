@@ -16,7 +16,8 @@
 #include <KeyValues.h>
 
 
-CHLDS g_ServerSingleton;
+//CHLDS g_ServerSingleton;
+static CHLDS g_ServerSingleton;
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CHLDS, IVGuiModule, "VGuiModuleHLDS001", g_ServerSingleton);
 
 //-----------------------------------------------------------------------------
@@ -51,8 +52,7 @@ void CHLDS::CreateDialog()
 bool CHLDS::Initialize(CreateInterfaceFn *factorylist, int factoryCount)
 {
 	// load the vgui interfaces
-//	return vgui::VGui_InitInterfacesList(factorylist, factoryCount);
-	return vgui::VGui_InitInterfacesList("HLDS", factorylist, factoryCount);
+	return vgui::VGui_InitInterfacesList("hlds_gui", factorylist, factoryCount);
 }
 
 //-----------------------------------------------------------------------------
@@ -108,9 +108,32 @@ void CHLDS::Shutdown()
 {
 	if (m_hInternetDlg.Get())
 	{
-	//	vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new vgui::KeyValues("Close"), NULL);
-		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new ::KeyValues("Close"), NULL);
+		vgui::ivgui()->PostMessage(m_hInternetDlg->GetVPanel(), new KeyValues("Close"), NULL);
 		m_hInternetDlg->MarkForDeletion();
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHLDS::Deactivate()
+{
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHLDS::Reactivate()
+{
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHLDS::SetParent(vgui::VPANEL parent)
+{
+	if(m_hInternetDlg.Get())
+	{
+		m_hInternetDlg->SetParent(parent);
+	}
+}

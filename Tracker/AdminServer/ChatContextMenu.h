@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include <VGUI_Menu.h>
+#include <vgui_controls/Menu.h>
 
 //-----------------------------------------------------------------------------
 // Purpose: Basic right-click context menu for servers

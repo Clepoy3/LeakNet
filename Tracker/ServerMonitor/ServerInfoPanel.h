@@ -15,7 +15,8 @@
 
 namespace vgui
 {
-class TextEntry;
+//class TextEntry;
+class RichText;
 };
 
 //-----------------------------------------------------------------------------
@@ -35,7 +36,8 @@ private:
 	typedef vgui::EditablePanel BaseClass;
 
 	int m_iServerID;
-	vgui::TextEntry *m_pText;
+//	vgui::TextEntry *m_pText;
+	vgui::RichText *m_pText;
 };
 
 

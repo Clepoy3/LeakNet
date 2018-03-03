@@ -21,7 +21,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CServerContextMenu::CServerContextMenu(VInternetDlg *parent) : Menu(parent, "ServerContextMenu")
+CServerContextMenu::CServerContextMenu(CServerPage *parent) : Menu(parent, "ServerContextMenu")
 {
 	CServerContextMenu::parent=parent;
 }
@@ -38,6 +38,7 @@ CServerContextMenu::~CServerContextMenu()
 //-----------------------------------------------------------------------------
 void CServerContextMenu::ShowMenu(Panel *target, unsigned int serverID, bool showConnect, bool showRefresh, bool showAddToFavorites,bool manage)
 {
+//	ClearMenu();
 	DeleteAllItems();
 
 

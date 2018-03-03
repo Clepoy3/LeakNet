@@ -13,6 +13,7 @@
 
 #include "server.h"
 #include "netadr.h"
+#include "UtlVector.h"
 
 class CSocket;
 class IResponse;

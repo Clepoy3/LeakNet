@@ -40,6 +40,7 @@ CBaseGamesPage::CBaseGamesPage(vgui::Panel *parent, const char *name) : Frame(pa
 
 	// load the password icon
 	m_pPasswordIcon = new ImagePanel(NULL, NULL);
+//	m_pPasswordIcon->SetImage(scheme()->GetImage(scheme()->GetDefaultScheme(), "server/icon_password"));
 	m_pPasswordIcon->SetImage(scheme()->GetImage("server/icon_password", false));
 
 	// Init UI
@@ -72,6 +73,8 @@ CBaseGamesPage::CBaseGamesPage(vgui::Panel *parent, const char *name) : Frame(pa
 	m_pGameList->AddColumnHeader(4, "Map", util->GetString(" Map" ), 90, true, RESIZABLE, NOT_RESIZABLE);
 	m_pGameList->AddColumnHeader(5, "Ping", util->GetString(" Latency" ), 55, true, RESIZABLE, NOT_RESIZABLE);
 
+	m_pGameList->SetEmptyListText("Nope.");
+
 	// setup fast sort functions
 	m_pGameList->SetSortFunc(0, PasswordCompare);
 	m_pGameList->SetSortFunc(1, ServerNameCompare);
@@ -85,7 +88,7 @@ CBaseGamesPage::CBaseGamesPage(vgui::Panel *parent, const char *name) : Frame(pa
 	
 	m_pGameList->AddActionSignalTarget(this);
 
-//	LoadControlSettings("Admin\\DialogAdminServerPage.res");
+//	LoadControlSettings("Admin\\DialogAdminServerPage.res", "PLATFORM");
 }
 
 //-----------------------------------------------------------------------------
@@ -109,6 +112,13 @@ void CBaseGamesPage::PerformLayout()
 
 	Repaint();
 	*/
+
+	// game list in middle
+	int x = 0, y = 0, wide, tall;
+	GetSize(wide, tall);
+	m_pGameList->SetBounds(10, 30, wide - 20, tall - 200);
+
+	Repaint();
 }
 
 //-----------------------------------------------------------------------------
@@ -125,7 +135,10 @@ void CBaseGamesPage::OnTick()
 void CBaseGamesPage::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
 	BaseClass::ApplySchemeSettings(pScheme);
-	m_pGameList->SetFont(pScheme->GetFont("DefaultSmall", false));
+//	m_pGameList->SetFont(scheme()->GetFont(scheme()->GetDefaultScheme(), "DefaultSmall"));
+	m_pGameList->SetFont(pScheme->GetFont("DefaultSmall"));
+
+	m_pGameList->SetVisible( true );
 }
 
 //-----------------------------------------------------------------------------
@@ -136,27 +149,31 @@ serveritem_t &CBaseGamesPage::GetServer(unsigned int serverID)
 	return m_Servers.GetServer(serverID);
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+int CBaseGamesPage::GetInvalidServerListID()
+{
+	return m_pGameList->InvalidItemID();
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: call to let the UI now whether the game list is currently refreshing
 //-----------------------------------------------------------------------------
 void CBaseGamesPage::SetRefreshing(bool state)
 {
-//	if(!CServerPage::GetInstance())
-	if(!VInternetDlg::GetInstance())
+	if(!CServerPage::GetInstance())
 	{
 		return;
 	}
 
 	if (state)
 	{
-	//	CServerPage::GetInstance()->UpdateStatusText("Refreshing server list...");
-		VInternetDlg::GetInstance()->UpdateStatusText("Refreshing server list...");
+		CServerPage::GetInstance()->UpdateStatusText("Refreshing server list...");
 	}
 	else
 	{
-	//	CServerPage::GetInstance()->UpdateStatusText("");
-		VInternetDlg::GetInstance()->UpdateStatusText("");
+		CServerPage::GetInstance()->UpdateStatusText("");
 	}
 
 //	m_pRefreshMenu->FindChildByName("Refresh")->SetVisible(!state);
@@ -169,32 +186,31 @@ void CBaseGamesPage::SetRefreshing(bool state)
 //-----------------------------------------------------------------------------
 void CBaseGamesPage::OnCommand(const char *command)
 {
-	if (!stricmp(command, "Connect"))
+	if (!_stricmp(command, "Connect"))
 	{
 		OnBeginConnect();
 	}
-	else if (!stricmp(command, "stoprefresh"))
+	else if (!_stricmp(command, "stoprefresh"))
 	{
 		// cancel the existing refresh
 		StopRefresh();
 	}
-	else if (!stricmp(command, "refresh"))
+	else if (!_stricmp(command, "refresh"))
 	{
 		// start a new refresh
 		StartRefresh();
 	}
-	else if (!stricmp(command, "GetNewList"))
+	else if (!_stricmp(command, "GetNewList"))
 	{
 		GetNewServerList();
 	}
-	else if (!stricmp(command, "addip"))
+	else if (!_stricmp(command, "addip"))
 	{
 		PostMessage(this,new KeyValues("AddServerByName")); // CFavorites handles this message
 	}
-	else if (!stricmp(command, "config"))
+	else if (!_stricmp(command, "config"))
 	{
-	//	CServerPage::GetInstance()->ConfigPanel();
-		VInternetDlg::GetInstance()->ConfigPanel();
+		CServerPage::GetInstance()->ConfigPanel();
 	}
 	else
 	{
@@ -228,7 +244,7 @@ void CBaseGamesPage::OnManage()
 	{
 		// get the server
 	//	unsigned int serverID = m_pGameList->GetDataItem(m_pGameList->GetSelectedRow(0))->userData;
-		unsigned int serverID = m_pGameList->GetItemUserData(m_pGameList->GetSelectedItem(0));
+		unsigned int serverID = m_pGameList->GetItemData(m_pGameList->GetSelectedItem(0))->userData;
 
 
 		PostMessage(m_pParent->GetVPanel(),  new KeyValues("Manage", "serverID", serverID));

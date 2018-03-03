@@ -12,11 +12,12 @@
 #include "../TrackerNET/TrackerNET_Interface.h"
 #include "DialogGameInfo.h"
 
-#include <VGUI_Controls.h>
-#include <VGUI_ISystem.h>
-#include <VGUI_IPanel.h>
-#include <VGUI_IVGui.h>
-#include <VGUI_KeyValues.h>
+#include <vgui_controls/Controls.h>
+#include <VGUI/ISystem.h>
+#include <vgui/ILocalize.h> // VXP
+#include <VGUI/IPanel.h>
+#include <VGUI/IVGui.h>
+#include <KeyValues.h>
 #include "FileSystem.h"
 
 
@@ -71,7 +72,16 @@ bool CAdminServer::Initialize(CreateInterfaceFn *factorylist, int factoryCount)
 	}
 
 	// load the vgui interfaces
-	return vgui::VGui_InitInterfacesList(factorylist, factoryCount);
+//	return vgui::VGui_InitInterfacesList(factorylist, factoryCount);
+//	return vgui::VGui_InitInterfacesList("AdminServer", factorylist, factoryCount);
+
+	// load the vgui interfaces
+	if ( vgui::VGui_InitInterfacesList("AdminServer", factorylist, factoryCount) )
+	{
+		// load localization file
+		vgui::localize()->AddFile(vgui::filesystem(), "Admin/admin_%language%.txt");
+		return true;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -129,7 +139,8 @@ void CAdminServer::Open()
 //-----------------------------------------------------------------------------
 // Purpose: returns direct handle to main server browser dialog
 //-----------------------------------------------------------------------------
-vgui::VPanel *CAdminServer::GetPanel()
+//vgui::VPanel *CAdminServer::GetPanel()
+vgui::VPANEL CAdminServer::GetPanel()
 {
 	return m_hServerPage.Get() ? m_hServerPage->GetVPanel() : NULL;
 }
@@ -204,10 +215,12 @@ GameHandle_t CAdminServer::JoinGame(unsigned int gameIP, unsigned int gamePort, 
 void CAdminServer::UpdateGameInfoDialog(GameHandle_t gameDialog, unsigned int gameIP, unsigned int gamePort)
 {
 	// updates an existing dialog with a new game (for if a friend changes games)
-	vgui::VPanel *vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
+//	vgui::VPanel *vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
+	vgui::VPANEL vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
 	if (vpanel)
 	{
-		CDialogGameInfo *gameDialog = dynamic_cast<CDialogGameInfo *>(vgui::ipanel()->Client(vpanel)->GetPanel());
+	//	CDialogGameInfo *gameDialog = dynamic_cast<CDialogGameInfo *>(vgui::ipanel()->Client(vpanel)->GetPanel());
+		CDialogGameInfo *gameDialog = dynamic_cast<CDialogGameInfo *>(vgui::ipanel()->GetPanel(vpanel, "AdminServer"));// VXP: TODO: GetModuleName() or GetControlsModuleName()
 		if (gameDialog)
 		{
 			gameDialog->ChangeGame(gameIP, gamePort);
@@ -221,9 +234,21 @@ void CAdminServer::UpdateGameInfoDialog(GameHandle_t gameDialog, unsigned int ga
 void CAdminServer::CloseGameInfoDialog(GameHandle_t gameDialog)
 {
 	// forces the dialog closed
-	vgui::VPanel *vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
+//	vgui::VPanel *vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
+	vgui::VPANEL vpanel = vgui::ivgui()->HandleToPanel(gameDialog);
 	if (vpanel)
 	{
 		vgui::ivgui()->PostMessage(vpanel, new KeyValues("Close"), NULL);
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: sets the parent panel of the main module panel
+//-----------------------------------------------------------------------------
+void CAdminServer::SetParent(vgui::VPANEL parent)
+{
+	if(m_hServerPage.Get())
+	{
+		m_hServerPage->SetParent(parent);
 	}
 }

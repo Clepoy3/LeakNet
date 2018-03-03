@@ -40,10 +40,10 @@ public:
 	virtual void CreateDialog();
 	virtual void Open();
 
-	// VXP: Need to implement
-	virtual void Deactivate() {};
-	virtual void Reactivate() {};
-	virtual void SetParent(vgui::VPANEL parent) {};
+	// VXP
+	virtual void Deactivate();
+	virtual void Reactivate();
+	virtual void SetParent(vgui::VPANEL parent);
 
 private:
 	vgui::DHANDLE<VInternetDlg> m_hInternetDlg;
