@@ -136,11 +136,17 @@ void CHudAR2Mode::Paint()
 	if ( !m_pZoomIcon )
 	{
 		m_pZoomIcon = gHUD.GetIcon( "ar2_zoommode" );
+
+		if ( !m_pZoomIcon )
+			return;
 	}
 
 	if ( !m_pGrenadeIcon )
 	{
 		m_pGrenadeIcon = gHUD.GetIcon( "ar2_grenademode" );
+
+		if ( !m_pGrenadeIcon )
+			return;
 	}
 
 	int scalar;
