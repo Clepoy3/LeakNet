@@ -53,7 +53,8 @@ float GlowSightDistance( const Vector &glowOrigin, bool bShouldTrace )
 
 #else // VXP: From Source 2007
 
-	float dist = (glowOrigin - CurrentViewOrigin()).Length();
+	Vector viewOrigin = CurrentViewOrigin();
+	float dist = (glowOrigin - viewOrigin).Length();
 //	bool bShouldTrace = r_traceglow.GetBool();
 	if ( bShouldTrace )
 	{
@@ -68,7 +69,7 @@ float GlowSightDistance( const Vector &glowOrigin, bool bShouldTrace )
 
 		CTraceFilterGlow filter(NULL, COLLISION_GROUP_NONE);
 		trace_t tr;
-		UTIL_TraceLine( CurrentViewOrigin(), end, traceFlags, &filter, &tr );
+		UTIL_TraceLine( viewOrigin, end, traceFlags, &filter, &tr );
 		if ( tr.fraction != 1.0f )
 			return -1;
 	}

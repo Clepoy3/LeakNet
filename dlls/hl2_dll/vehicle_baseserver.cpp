@@ -608,7 +608,9 @@ void CBaseServerVehicle::HandleEntryExitFinish( bool bExitAnimOn, bool bResetAni
 		//	vecEyes -= VEC_VIEW;
 		//	vecEyes.z += 10.0f;
 			trace_t tr;
-			UTIL_TraceLine( vecEyes, vecEyes + Vector( 0, 0, -1 ) * 512, MASK_ALL, (CBaseEntity *)this, COLLISION_GROUP_NONE, &tr );
+		//	UTIL_TraceLine( vecEyes, vecEyes + Vector( 0, 0, -1 ) * 512, MASK_ALL, (CBaseEntity *)this, COLLISION_GROUP_NONE, &tr );
+		//	UTIL_TraceLine( pPlayer->GetAbsOrigin(), pPlayer->GetAbsOrigin() + Vector( 0, 0, -1 ) * 512, MASK_ALL, (CBaseEntity *)this, COLLISION_GROUP_NONE, &tr );
+			UTIL_TraceHull( vecEyes, vecEyes + Vector( 0, 0, -1 ) * 512, VEC_HULL_MIN, VEC_HULL_MAX, MASK_SOLID, (CBaseEntity *)m_pVehicle, COLLISION_GROUP_PLAYER, &tr );
 			vecEyes = tr.endpos;
 
 

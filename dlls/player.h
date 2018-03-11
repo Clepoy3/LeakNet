@@ -283,6 +283,7 @@ public:
 
 	// custom player functions
 	virtual void			ImpulseCommands( void );
+	void					WeaponImpulseHelper( void );
 	virtual void			CheatImpulseCommands( int iImpulse );
 	virtual bool			ClientCommand(const char *cmd);
 	

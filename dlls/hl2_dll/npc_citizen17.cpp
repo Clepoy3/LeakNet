@@ -920,6 +920,10 @@ Activity CNPC_Citizen::NPC_TranslateActivity( Activity activity )
 //	{
 //		activity = ACT_IDLE_ANGRY_SMG1;
 //	}
+	else if ( activity == ACT_RELOAD )
+	{
+		activity = ACT_RELOAD_SMG1;
+	}
 	else if ( activity == ACT_RANGE_ATTACK_AR2 )
 	{
 		activity = ACT_RANGE_ATTACK_SMG1;

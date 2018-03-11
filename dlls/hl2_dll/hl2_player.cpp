@@ -1330,7 +1330,7 @@ bool CHL2_Player::ClientCommand(const char *cmd)
 		if( weapon )
 		{
 		//	Weapon_DropSlot( GetActiveWeapon()->GetSlot() );
-			if ( !(Q_strcmp( weapon->GetName(), "weapon_brickbat" ) == 0) )
+		//	if ( !(Q_strcmp( weapon->GetName(), "weapon_brickbat" ) == 0) )
 			{
 				Weapon_Drop( GetActiveWeapon(), NULL, NULL );
 			}
