@@ -94,6 +94,84 @@ void CreateMaterialPatch( const char *pOriginalMaterialName, const char *pNewMat
 	kv->deleteThis();
 }
 
+//-----------------------------------------------------------------------------
+// Scan material + all subsections for key
+//-----------------------------------------------------------------------------
+static bool DoesMaterialHaveKey( KeyValues *pKeyValues, const char *pKeyName )
+{
+	const char *pVal;
+	pVal = pKeyValues->GetString( pKeyName, NULL );
+	if ( pVal != NULL  )
+		return true;
+
+	for( KeyValues *pSubKey = pKeyValues->GetFirstTrueSubKey(); pSubKey; pSubKey = pSubKey->GetNextTrueSubKey() )
+	{
+		if ( DoesMaterialHaveKey( pSubKey, pKeyName) )
+			return true;
+	}
+	
+	return false;
+}
+
+bool DoesMaterialHaveKey( const char *pMaterialName, const char *pKeyName )
+{
+	char name[512];
+	Q_snprintf( name, 512, "materials/%s.vmt", GetOriginalMaterialNameForPatchedMaterial( pMaterialName ) );
+	KeyValues *kv = new KeyValues( "blah" );
+
+	if ( !kv->LoadFromFile( g_pFileSystem, name ) )
+	{
+		kv->deleteThis();
+		return NULL;
+	}
+
+	bool retVal = DoesMaterialHaveKey( kv, pKeyName );
+
+	kv->deleteThis();
+	return retVal;
+}
+
+//-----------------------------------------------------------------------------
+// Scan material + all subsections for key/value pair
+//-----------------------------------------------------------------------------
+// VXP: Used in PatchEnvmapForMaterialAndDependents (patching non env_cubemap sides - already done in leak code now by me)
+static bool DoesMaterialHaveKeyValuePair( KeyValues *pKeyValues, const char *pKeyName, const char *pSearchValue )
+{
+	const char *pVal;
+	pVal = pKeyValues->GetString( pKeyName, NULL );
+	if ( pVal != NULL && ( Q_stricmp( pSearchValue, pVal ) == 0 ) )
+		return true;
+
+	for( KeyValues *pSubKey = pKeyValues->GetFirstTrueSubKey(); pSubKey; pSubKey = pSubKey->GetNextTrueSubKey() )
+	{
+		if ( DoesMaterialHaveKeyValuePair( pSubKey, pKeyName, pSearchValue ) )
+			return true;
+	}
+	
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Scan material + all subsections for key/value pair
+//-----------------------------------------------------------------------------
+bool DoesMaterialHaveKeyValuePair( const char *pMaterialName, const char *pKeyName, const char *pSearchValue )
+{
+	char name[512];
+	Q_snprintf( name, 512, "materials/%s.vmt", GetOriginalMaterialNameForPatchedMaterial( pMaterialName ) );
+	KeyValues *kv = new KeyValues( "blah" );
+
+	if ( !kv->LoadFromFile( g_pFileSystem, name ) )
+	{
+		kv->deleteThis();
+		return NULL;
+	}
+
+	bool retVal = DoesMaterialHaveKeyValuePair( kv, pKeyName, pSearchValue );
+
+	kv->deleteThis();
+	return retVal;
+}
+
 bool GetValueFromMaterial( const char *pMaterialName, const char *pKey, char *pValue, int len )
 {
 	char name[512];

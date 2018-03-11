@@ -16,6 +16,17 @@
 #include "vtf/vtf.h"
 #include "materialpatch.h"
 
+struct CubemapInfo_t
+{
+	int m_nTableId;
+	bool m_bSpecular;
+};
+
+static bool CubemapLessFunc( const CubemapInfo_t &lhs, const CubemapInfo_t &rhs )
+{ 
+	return ( lhs.m_nTableId < rhs.m_nTableId );	
+}
+
 static CUtlVector<char *> s_DefaultCubemapNames;
 
 void Cubemap_InsertSample( const Vector& origin, int size )
@@ -57,6 +68,67 @@ static void ForwardSlashToBackSlash( char *pname )
 			*pname = '\\';
 		pname++;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Finds materials that are used by a particular material
+//-----------------------------------------------------------------------------
+#define MAX_MATERIAL_NAME 512
+
+// This is the list of materialvars which are used in our codebase to look up dependent materials
+static const char *s_pDependentMaterialVar[] = 
+{
+	"$bottommaterial",	// Used by water materials
+	"$crackmaterial",	// Used by shattered glass materials
+	"$fallbackmaterial",	// Used by all materials
+
+	"",					// Always must be last
+};
+
+
+// VXP: Used in DoesMaterialOrDependentsUseEnvmap (as for fixing cubemaps in vbsp),
+// and also in PatchEnvmapForMaterialAndDependents (patching non env_cubemap sides - already done in leak code now by me)
+static const char *FindDependentMaterial( const char *pMaterialName, const char **ppMaterialVar = NULL )
+{
+	// FIXME: This is a terrible way of doing this! It creates a dependency
+	// between vbsp and *all* code which reads dependent materials from materialvars
+	// At the time of writing this function, that means the engine + studiorender.
+	// We need a better way of figuring out how to do this, but for now I'm trying to do
+	// the fastest solution possible since it's close to ship
+
+	static char pDependentMaterialName[MAX_MATERIAL_NAME];
+	for( int i = 0; s_pDependentMaterialVar[i][0]; ++i )
+	{
+		if ( !GetValueFromMaterial( pMaterialName, s_pDependentMaterialVar[i], pDependentMaterialName, MAX_MATERIAL_NAME - 1 ) )
+			continue;
+
+		if ( !Q_stricmp( pDependentMaterialName, pMaterialName ) )
+		{
+			Warning( "Material %s is depending on itself through materialvar %s! Ignoring...\n", pMaterialName, s_pDependentMaterialVar[i] );
+				continue;
+		}
+
+		// Return the material var that caused the dependency
+		if ( ppMaterialVar )
+		{
+			*ppMaterialVar = s_pDependentMaterialVar[i];
+		}
+
+#ifdef _DEBUG
+		// FIXME: Note that this code breaks if a material has more than 1 dependent material
+		++i;
+		static char pDependentMaterialName2[MAX_MATERIAL_NAME];
+		while( s_pDependentMaterialVar[i][0] )
+		{
+			Assert( !GetValueFromMaterial( pMaterialName, s_pDependentMaterialVar[i], pDependentMaterialName2, MAX_MATERIAL_NAME - 1 ) );
+			++i;
+		}
+#endif
+
+		return pDependentMaterialName;
+	}
+
+	return NULL;
 }
 
 static bool LoadSrcVTFFiles( IVTFTexture *pSrcVTFTextures[6], const char *pSkyboxBaseName )
@@ -213,16 +285,31 @@ void Cubemap_CreateDefaultCubemaps( void )
 typedef CUtlVector<int> IntVector_t;
 static CUtlVector<IntVector_t> s_EnvCubemapToBrushSides;
 
+
+struct CubemapSideData_t
+{
+	bool bHasEnvMapInMaterial;
+	bool bManuallyPickedByAnEnvCubemap;
+};
+static CubemapSideData_t s_aCubemapSideData[MAX_MAP_BRUSHSIDES];
+
+inline bool SideHasCubemapAndWasntManuallyReferenced( int iSide )
+{
+	return s_aCubemapSideData[iSide].bHasEnvMapInMaterial && !s_aCubemapSideData[iSide].bManuallyPickedByAnEnvCubemap;
+}
+
+
 void Cubemap_SaveBrushSides( const char *pSideListStr )
 {
 	int iCubemapID = s_EnvCubemapToBrushSides.AddToTail();
-//	Warning( "Saving %i cubemap with %s name\n", iCubemapID, pSideListStr );
+//	Warning( "Saving %i cubemap for these sides: \"%s\"\n", iCubemapID, pSideListStr );
 	IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[iCubemapID];
 	char *pTmp = ( char * )_alloca( strlen( pSideListStr ) + 1 );
 	strcpy( pTmp, pSideListStr );
 	const char *pScan = strtok( pTmp, " " );
 	if( !pScan )
 	{
+	//	Warning( "\tThis cubemap doesn't have assigned brushes!\n" );
 		return;
 	}
 	do
@@ -404,12 +491,14 @@ static int SideIDToIndex( int brushSideID )
 void Cubemap_FixupBrushSidesMaterials( void )
 {
 	Msg( "fixing up env_cubemap materials on brush sides...\n" );
+	Msg( "There are %i cubemap samples on the map\n", g_nCubemapSamples );
 	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 
 	int cubemapID;
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
 	{
 		IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[cubemapID];
+		Msg( "vector count %i\n", brushSidesVector.Count() );
 	//	Warning( "Cubemap_FixupBrushSidesMaterials loop\nbrushSidesVector = %i\ns_EnvCubemapToBrushSides = %i\n", brushSidesVector.Count(), s_EnvCubemapToBrushSides.Count() );
 		int i;
 		for( i = 0; i < brushSidesVector.Count(); i++ )
@@ -428,19 +517,22 @@ void Cubemap_FixupBrushSidesMaterials( void )
 			side_t *pSide = &brushsides[sideIndex];
 			texinfo_t *pTexInfo = &texinfo[pSide->texinfo];
 			dtexdata_t *pTexData = GetTexData( pTexInfo->texdata );
+
+		//	pSide->texinfo = Cubemap_CreateTexInfo( pSide->texinfo, g_CubemapSamples[cubemapID].origin ); // VXP: From Source 2007, but not needed as I can see
 		}
 	}
 }
 
 void Cubemap_FixupDispMaterials( void )
 {
-//	printf( "fixing up env_cubemap materials on displacements...\n" );
+//	Warning( "fixing up env_cubemap materials on displacements...\n" );
 	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 
 	// FIXME: this is order N to the gazillion!
 	int cubemapID;
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
 	{
+		Warning( "Creating TexInfo for cubemapID %i\n", cubemapID );
 		IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[cubemapID];
 		int i;
 		for( i = 0; i < brushSidesVector.Count(); i++ )
@@ -511,5 +603,227 @@ void Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials( void )
 		sprintf( newTexDataName, "maps/%s/%s", mapbase, 
 			TexDataStringTable_GetString( pTexData->nameStringTableID ) );
 		pTexData->nameStringTableID = TexDataStringTable_AddOrFindString( newTexDataName );
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void Cubemap_ResetCubemapSideData( void )
+{
+	for ( int iSide = 0; iSide < MAX_MAP_BRUSHSIDES; ++iSide )
+	{
+		s_aCubemapSideData[iSide].bHasEnvMapInMaterial = false;
+		s_aCubemapSideData[iSide].bManuallyPickedByAnEnvCubemap = false;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Returns true if the material or any of its dependents use an $envmap
+//-----------------------------------------------------------------------------
+bool DoesMaterialOrDependentsUseEnvmap( const char *pPatchedMaterialName )
+{
+	const char *pOriginalMaterialName = GetOriginalMaterialNameForPatchedMaterial( pPatchedMaterialName );
+	if( DoesMaterialHaveKey( pOriginalMaterialName, "$envmap" ) )
+		return true;
+
+	const char *pDependentMaterial = FindDependentMaterial( pOriginalMaterialName );
+	if ( !pDependentMaterial )
+		return false;
+
+	return DoesMaterialOrDependentsUseEnvmap( pDependentMaterial );
+}
+
+//-----------------------------------------------------------------------------
+// Builds a list of all texdatas which need fixing up
+//-----------------------------------------------------------------------------
+void Cubemap_InitCubemapSideData( void )
+{
+	// This tree is used to prevent re-parsing material vars multiple times
+	CUtlRBTree<CubemapInfo_t> lookup( 0, nummapbrushsides, CubemapLessFunc );
+
+	// Fill in specular data.
+	for ( int iSide = 0; iSide < nummapbrushsides; ++iSide )
+	{
+		side_t *pSide = &brushsides[iSide];
+		if ( !pSide )
+			continue;
+
+		if ( pSide->texinfo == TEXINFO_NODE )
+			continue;
+
+		texinfo_t *pTex = &texinfo[pSide->texinfo];
+		if ( !pTex )
+			continue;
+
+		dtexdata_t *pTexData = GetTexData( pTex->texdata );
+		if ( !pTexData )
+			continue;
+
+		CubemapInfo_t info;
+		info.m_nTableId = pTexData->nameStringTableID;
+
+		// Have we encountered this materal? If so, then copy the data we cached off before
+		int i = lookup.Find( info );
+		if ( i != lookup.InvalidIndex() )
+		{
+			s_aCubemapSideData[iSide].bHasEnvMapInMaterial = lookup[i].m_bSpecular;
+			continue;
+		}
+
+		// First time we've seen this material. Figure out if it uses env_cubemap
+		const char *pPatchedMaterialName = TexDataStringTable_GetString( pTexData->nameStringTableID );
+		info.m_bSpecular = DoesMaterialOrDependentsUseEnvmap( pPatchedMaterialName );
+		s_aCubemapSideData[ iSide ].bHasEnvMapInMaterial = info.m_bSpecular;
+		lookup.Insert( info );
+	}
+
+	// Fill in cube map data.
+	for ( int iCubemap = 0; iCubemap < g_nCubemapSamples; ++iCubemap )
+	{
+		IntVector_t &sideList = s_EnvCubemapToBrushSides[iCubemap];
+		int nSideCount = sideList.Count();
+		for ( int iSide = 0; iSide < nSideCount; ++iSide )
+		{
+			int nSideID = sideList[iSide];
+			int nIndex = SideIDToIndex( nSideID );
+			if ( nIndex < 0 )
+				continue;
+
+			s_aCubemapSideData[nIndex].bManuallyPickedByAnEnvCubemap = true;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+int Cubemap_FindClosestCubemap( const Vector &entityOrigin, side_t *pSide )
+{
+	if ( !pSide )
+		return -1;
+
+	// Return a valid (if random) cubemap if there's no winding
+	if ( !pSide->winding )
+		return 0;
+
+	// Calculate the center point.
+	Vector vecCenter;
+	vecCenter.Init();
+
+	for ( int iPoint = 0; iPoint < pSide->winding->numpoints; ++iPoint )
+	{
+		VectorAdd( vecCenter, pSide->winding->p[iPoint], vecCenter );
+	}
+	VectorScale( vecCenter, 1.0f / pSide->winding->numpoints, vecCenter );
+	vecCenter += entityOrigin;
+	plane_t *pPlane = &mapplanes[pSide->planenum];
+
+	// Find the closest cubemap.
+	int iMinCubemap = -1;
+	float flMinDist = FLT_MAX;
+
+	// Look for cubemaps in front of the surface first.
+	for ( int iCubemap = 0; iCubemap < g_nCubemapSamples; ++iCubemap )
+	{	
+		dcubemapsample_t *pSample = &g_CubemapSamples[iCubemap];
+		Vector vecSampleOrigin( static_cast<float>( pSample->origin[0] ),
+								static_cast<float>( pSample->origin[1] ),
+								static_cast<float>( pSample->origin[2] ) );
+		Vector vecDelta;
+		VectorSubtract( vecSampleOrigin, vecCenter, vecDelta );
+	//	float flDist = vecDelta.NormalizeInPlace();
+		float flDist = VectorNormalize( vecDelta );
+		float flDot = DotProduct( vecDelta, pPlane->normal );
+		if ( ( flDot >= 0.0f ) && ( flDist < flMinDist ) )
+		{
+			flMinDist = flDist;
+			iMinCubemap = iCubemap;
+		}
+	}
+
+	// Didn't find anything in front search for closest.
+	if( iMinCubemap == -1 )
+	{
+		for ( int iCubemap = 0; iCubemap < g_nCubemapSamples; ++iCubemap )
+		{	
+			dcubemapsample_t *pSample = &g_CubemapSamples[iCubemap];
+			Vector vecSampleOrigin( static_cast<float>( pSample->origin[0] ),
+				static_cast<float>( pSample->origin[1] ),
+				static_cast<float>( pSample->origin[2] ) );
+			Vector vecDelta;
+			VectorSubtract( vecSampleOrigin, vecCenter, vecDelta );
+			float flDist = vecDelta.Length();
+			if ( flDist < flMinDist )
+			{
+				flMinDist = flDist;
+				iMinCubemap = iCubemap;
+			}
+		}
+	}
+
+	return iMinCubemap;
+}
+
+struct entitySideList_t
+{
+	int firstBrushSide;
+	int brushSideCount;
+};
+//-----------------------------------------------------------------------------
+// For every specular surface that wasn't referenced by some env_cubemap, call Cubemap_CreateTexInfo.
+//-----------------------------------------------------------------------------
+void Cubemap_AttachDefaultCubemapToSpecularSides( void )
+{
+	Cubemap_ResetCubemapSideData();
+	Cubemap_InitCubemapSideData();
+
+	CUtlVector<entitySideList_t> sideList;
+	sideList.SetCount( num_entities );
+	int i;
+	for ( i = 0; i < num_entities; i++ )
+	{
+		sideList[i].firstBrushSide = 0;
+		sideList[i].brushSideCount = 0;
+	}
+
+	for ( i = 0; i < nummapbrushes; i++ )
+	{
+		sideList[mapbrushes[i].entitynum].brushSideCount += mapbrushes[i].numsides;
+	}
+	int curSide = 0;
+	for ( i = 0; i < num_entities; i++ )
+	{
+		sideList[i].firstBrushSide = curSide;
+		curSide += sideList[i].brushSideCount;
+	}
+
+	int currentEntity = 0;
+	for ( int iSide = 0; iSide < nummapbrushsides; ++iSide )
+	{
+		side_t *pSide = &brushsides[iSide];
+		if ( !SideHasCubemapAndWasntManuallyReferenced( iSide ) )
+			continue;
+
+		while ( currentEntity < num_entities-1 && 
+			iSide > sideList[currentEntity].firstBrushSide + sideList[currentEntity].brushSideCount )
+		{
+			currentEntity++;
+		}
+
+		int iCubemap = Cubemap_FindClosestCubemap( entities[currentEntity].origin, pSide );
+		if ( iCubemap == -1 )
+			continue;
+
+#ifdef DEBUG
+		if ( pSide->pMapDisp )
+		{
+			Assert( pSide->texinfo == pSide->pMapDisp->face.texinfo );
+		}
+#endif				
+		pSide->texinfo = Cubemap_CreateTexInfo( pSide->texinfo, g_CubemapSamples[iCubemap].origin );
+		if ( pSide->pMapDisp )
+		{
+			pSide->pMapDisp->face.texinfo = pSide->texinfo;
+		}
 	}
 }

@@ -501,6 +501,7 @@ void Cubemap_CreateDefaultCubemaps( void );
 void Cubemap_SaveBrushSides( const char *pSideListStr );
 void Cubemap_FixupBrushSidesMaterials( void );
 void Cubemap_FixupDispMaterials( void );
+void Cubemap_AttachDefaultCubemapToSpecularSides( void ); // VXP
 void Cubemap_MakeDefaultVersionsOfEnvCubemapMaterials( void );
 
 //=============================================================================
