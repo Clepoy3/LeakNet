@@ -106,7 +106,7 @@ void CHudEMP::Init( void )
 	if ( !m_pEMPIcon )
 	{
 		m_pEMPIcon = materials->FindMaterial( "Hud/emp/emp_damage", NULL );
-		Assert( m_pEMPIcon );
+		assert( m_pEMPIcon );
 		m_pEMPIcon->IncrementReferenceCount();
 
 		m_pFrameVar = m_pEMPIcon->FindVar( "$frame", NULL, false );

@@ -207,8 +207,8 @@ bool C_BaseObject::OffsetObjectOrigin( Vector& origin )
 	if ( !m_bBuilding )
 		return false;
 	
-	if ( inv_demo.GetBool() )
-		return false;
+//	if ( inv_demo.GetBool() )
+//		return false;
 
 	Vector vecWorldMins, vecWorldMaxs;
 	WorldSpaceAABB( &vecWorldMins, &vecWorldMaxs );

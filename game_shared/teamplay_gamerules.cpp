@@ -41,7 +41,7 @@ CTeamplayRules :: CTeamplayRules()
 void CTeamplayRules::Precache( void )
 {
 	// Call the Team Manager's precaches
-	for ( int i = 0; i < GetNumberOfTeams(); i++ )
+	for ( int i = 1; i <= GetNumberOfTeams(); i++ )
 	{
 		CTeam *pTeam = GetGlobalTeam( i );
 		pTeam->Precache();

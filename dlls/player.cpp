@@ -1555,7 +1555,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
 
-	/// VXP: Need to mess up with layer_<walk|run>_<aiming|hold>_<weapon> anims
+	// VXP: TODO: Need to mess up with layer_<walk|run>_<aiming|hold>_<weapon> anims
 
 	Activity idealActivity = GetActivity();
 	int animDesired = GetSequence();
@@ -4029,10 +4029,10 @@ void CBasePlayer::Spawn( void )
 	{
 		StopObserverMode();
 	}
-	else // VXP: From Source 2007
-	{
-		StartObserverMode( GetAbsOrigin(), GetAbsAngles() );
-	}
+//	else // VXP: From Source 2007
+//	{
+//		StartObserverMode( GetAbsOrigin(), GetAbsAngles() );
+//	}
 
 	Relink();
 	// Clear any screenfade

@@ -1283,7 +1283,7 @@ ICollideable *CStaticPropMgr::GetStaticProp( IHandleEntity *pHandleEntity )
 
 	int nIndex = pHandleEntity ? pHandleEntity->GetRefEHandle().ToInt() : 0;
 
-	// VXP: Copied from Source 2007 and then commented - sadly, I don't think this is working properly
+	// VXP: FIXME: Copied from Source 2007 and then commented - sadly, I don't think this is working properly
 //	if ( nIndex < 0 || nIndex > m_StaticProps.Count() )
 //	{
 //		return NULL;

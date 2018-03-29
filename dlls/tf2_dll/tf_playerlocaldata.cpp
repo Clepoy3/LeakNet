@@ -86,14 +86,14 @@ CTFPlayerLocalData::CTFPlayerLocalData()
 		m_iResourceAmmo.Set( i, 0 );
 	}
 
-	if( inv_demo.GetInt() )
-	{
+//	if( inv_demo.GetInt() )
+//	{
 		m_iBankResources = 5000;
-	}
-	else
-	{
-		m_iBankResources = 0;
-	}
+//	}
+//	else
+//	{
+//		m_iBankResources = 0;
+//	}
 	m_aObjects.Purge();
 
 	m_bAttachingSapper = false;
