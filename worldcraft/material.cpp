@@ -1270,10 +1270,10 @@ bool CMaterial::Initialize( char *pszMaterialsDir, HWND hwnd )
 	if ( !g_pMaterialSystemHardwareConfig )
 		return false;
 
-	// VXP
-	g_materialSystemConfig.m_bForceTrilinear = false;
-	g_materialSystemConfig.m_nForceAnisotropicLevel = g_pMaterialSystemHardwareConfig->MaximumAnisotropicLevel();
-	g_materialSystemConfig.m_bForceBilinear = false;
+	// VXP: FIXME: Make a control in Settings for this!
+//	g_materialSystemConfig.m_bForceTrilinear = false;
+//	g_materialSystemConfig.m_nForceAnisotropicLevel = g_pMaterialSystemHardwareConfig->MaximumAnisotropicLevel();
+//	g_materialSystemConfig.m_bForceBilinear = false;
 
 	g_pMaterialSystemInterface->UpdateConfig( &g_materialSystemConfig, false );
 	g_pMaterialSystemInterface->AddReleaseFunc( ReleaseMaterialSystemObjects );

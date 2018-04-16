@@ -707,8 +707,9 @@ BOOL CWorldcraft::InitInstance(void)
 		// g_Textures.Initialize kickstarts the material system and sets up g_MaterialSystemClientFactory)
 		//
 		StudioModel::Initialize();
-		g_Textures.LoadAllGraphicsFiles(); // VXP: It would load some time later
 	}
+
+	g_Textures.LoadAllGraphicsFiles();
 
 	return TRUE;
 }

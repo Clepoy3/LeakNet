@@ -14,7 +14,6 @@
 #include "DummyTexture.h"		// Specific IEditorTexture implementation
 #include "FaceEditSheet.h"
 #include "MainFrm.h"
-#include "GlobalFunctions.h" // VXP
 #include "MapDoc.h"
 #include "Material.h"			// Specific IEditorTexture implementation
 #include "Options.h"
@@ -23,9 +22,6 @@
 #include "WADTypes.h"
 #include "Worldcraft.h"
 
-// VXP
-#include "FileSystem.h"
-#include "FileSystem_WC.h"
 
 #pragma warning(disable:4244)
 
@@ -63,7 +59,7 @@ CTextureSystem::CTextureSystem(void)
 	m_pAllGroup = m_pActiveGroup = new CTextureGroup("All Textures");
 	m_Groups.AddTail(m_pAllGroup);
 
-//	m_nTextures = 0;
+	m_nTextures = 0;
 }
 
 
@@ -72,29 +68,14 @@ CTextureSystem::CTextureSystem(void)
 //-----------------------------------------------------------------------------
 CTextureSystem::~CTextureSystem(void)
 {
-}
-
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-void CTextureSystem::FreeAllTextures()
-{
 	//
 	// Delete all the texture groups.
 	//
-//	POSITION p = m_Groups.GetHeadPosition();
-//	while(p)
-//	{
-//		delete m_Groups.GetNext(p);
-//	}
 	POSITION p = m_Groups.GetHeadPosition();
-	while (p != NULL)
+	while(p)
 	{
-		CTextureGroup *pTextureGroup = m_Groups.GetNext(p);
-		delete pTextureGroup;
+		delete m_Groups.GetNext(p);
 	}
-	m_Groups.RemoveAll();
 
 	//
 	// Delete dummy textures.
@@ -110,24 +91,21 @@ void CTextureSystem::FreeAllTextures()
 	//
 	// Delete all the textures from the master list.
 	//
-//	for (int i = 0; i < m_nTextures; i++)
-	for (int i = 0; i < m_Textures.Count(); i++)
+	for (int i = 0; i < m_nTextures; i++)
 	{
 		IEditorTexture *pTex = m_Textures[i];
 		delete pTex;
 	}
-	m_Textures.RemoveAll();
 
 	//
 	// Delete the keywords.
 	//
-	POSITION posK = m_Keywords.GetHeadPosition();
-	while (posK != NULL)
+	pos = m_Keywords.GetHeadPosition();
+	while (pos != NULL)
 	{
-		char *pszKeyword = m_Keywords.GetNext(posK);
+		char *pszKeyword = m_Keywords.GetNext(pos);
 		delete pszKeyword;
 	}
-	m_Keywords.RemoveAll();
 }
 
 
@@ -138,15 +116,12 @@ void CTextureSystem::FreeAllTextures()
 //-----------------------------------------------------------------------------
 int CTextureSystem::AddTexture(IEditorTexture *pTexture)
 {
-/*
 	int nIndex = m_nTextures;
 
 	m_Textures[nIndex] = pTexture;
 	m_nTextures++;
 
 	return(nIndex);
-*/
-	return m_Textures.AddToTail(pTexture);
 }
 
 
@@ -238,8 +213,6 @@ void CTextureSystem::ShutDown(void)
 	#ifndef SDK_BUILD
 	CMaterial::ShutDown();
 	#endif // SDK_BUILD
-
-	FreeAllTextures(); // VXP
 }
 
 
@@ -432,58 +405,13 @@ void CTextureSystem::SetActiveGroup(const char *pcszName)
 }
 
 
-void HammerFileSystem_ReportSearchPath( const char *szPathID )
-{
-	char szSearchPath[ 4096 ];
-	g_pFileSystem->GetSearchPath( szPathID, true, szSearchPath, sizeof( szSearchPath ) );
-
-	Msg( mwStatus, "------------------------------------------------------------------" );
-
-	char *pszOnePath = strtok( szSearchPath, ";" );
-	while ( pszOnePath )
-	{
-		Msg( mwStatus, "Search Path (%s): %s", szPathID, pszOnePath );
-		pszOnePath = strtok( NULL, ";" );
-	}
-
-//	g_pFileSystem->PrintSearchPaths();
-}
-
-
-//-----------------------------------------------------------------------------
-// FIXME: Make this work correctly, using the version in filesystem_tools.cpp
-// (it doesn't work currently owing to filesystem setup issues)
-//-----------------------------------------------------------------------------
-void HammerFileSystem_SetGame( const char *pExeDir, const char *pModDir )
-{
-//	static bool s_bOnce = false;
-//	Assert( !s_bOnce );
-//	s_bOnce = true;
-
-	char buf[MAX_PATH];
-
-	Q_snprintf( buf, MAX_PATH, "%s\\hl2", pExeDir );
-	g_pFileSystem->AddSearchPath( buf, "GAME", PATH_ADD_TO_HEAD );
-
-	if ( pModDir && *pModDir != '\0' )
-	{
-		g_pFileSystem->AddSearchPath( pModDir, "GAME", PATH_ADD_TO_HEAD );
-	}
-
-	HammerFileSystem_ReportSearchPath( "GAME" );
-}
-
-
 //-----------------------------------------------------------------------------
 // Purpose: Loads textures from all texture files.
 //-----------------------------------------------------------------------------
 void CTextureSystem::LoadAllGraphicsFiles(void)
-{
-//	FreeAllTextures(); // VXP: TODO: Causes crash at some PCs
+{ 
+	// VXP: Place to AddSearchPath
 
-	CGameConfig *pConfig = g_pGameConfig;
-
-	HammerFileSystem_SetGame(pConfig->m_szGameExeDir, pConfig->m_szModDir);
 	for (int i = 0; i < Options.textures.nTextureFiles; i++)
 	{
 		LoadGraphicsFile(Options.textures.TextureFiles[i]);
@@ -971,7 +899,7 @@ CTextureGroup::CTextureGroup(const char *pszName)
 {
 	strcpy(m_szName, pszName);
 	m_eTextureFormat = tfNone;
-//	m_nTextures = 0;
+	m_nTextures = 0;
 	m_nTextureToLoad = 0;
 }
 
@@ -982,9 +910,8 @@ CTextureGroup::CTextureGroup(const char *pszName)
 //-----------------------------------------------------------------------------
 void CTextureGroup::AddTexture(IEditorTexture *pTexture)
 {
-//	m_Textures.SetAtGrow(m_nTextures, pTexture);
-//	m_nTextures++;
-	m_Textures.AddToTail(pTexture);
+	m_Textures.SetAtGrow(m_nTextures, pTexture);
+	m_nTextures++;
 }
 
 
@@ -993,9 +920,7 @@ void CTextureGroup::AddTexture(IEditorTexture *pTexture)
 //-----------------------------------------------------------------------------
 void CTextureGroup::Sort(void)
 {
-//	qsort(m_Textures.GetData(), m_nTextures, sizeof(IEditorTexture *), SortGraphicsProc);
-//	m_Textures.Sort(SortGraphicsProc);
-	qsort( m_Textures.Base(), m_Textures.Count(), sizeof(IEditorTexture *), SortGraphicsProc );
+	qsort(m_Textures.GetData(), m_nTextures, sizeof(IEditorTexture *), SortGraphicsProc);
 
 	// Changing the order means we don't know where we should be loading from
 	m_nTextureToLoad = 0;
@@ -1008,8 +933,7 @@ void CTextureGroup::Sort(void)
 //-----------------------------------------------------------------------------
 IEditorTexture *CTextureGroup::GetTexture(int nIndex)
 {
-//	if ((nIndex >= m_nTextures) || (nIndex < 0))
-	if ((nIndex >= m_Textures.Count()) || (nIndex < 0))
+	if ((nIndex >= m_nTextures) || (nIndex < 0))
 	{
 		return(NULL);
 	}
@@ -1023,8 +947,7 @@ IEditorTexture *CTextureGroup::GetTexture(int nIndex)
 //-----------------------------------------------------------------------------
 IEditorTexture* CTextureGroup::GetTexture( char const* pName )
 {
-//	for (int i = 0; i < m_nTextures; ++i)
-	for (int i = 0; i < m_Textures.Count(); ++i)
+	for (int i = 0; i < m_nTextures; ++i)
 	{
 		if (!strcmp(pName, m_Textures[i]->GetName()))
 			return m_Textures[i];
@@ -1039,8 +962,7 @@ IEditorTexture* CTextureGroup::GetTexture( char const* pName )
 void CTextureGroup::LazyLoadTextures()
 {
 	// Load at most once per call
-//	while (m_nTextureToLoad < m_nTextures)
-	while (m_nTextureToLoad < m_Textures.Count())
+	while (m_nTextureToLoad < m_nTextures)
 	{
 		if (!m_Textures[m_nTextureToLoad]->IsLoaded())
 		{
