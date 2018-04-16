@@ -324,7 +324,7 @@ void Cubemap_SaveBrushSides( const char *pSideListStr )
 
 static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 {
-	Warning( "Cubemap_CreateTexInfo\n" );
+//	Warning( "Cubemap_CreateTexInfo\n" );
 	texinfo_t *pTexInfo = &texinfo[originalTexInfo];
 	dtexdata_t *pTexData = GetTexData( pTexInfo->texdata );
 
@@ -468,7 +468,7 @@ static int Cubemap_CreateTexInfo( int originalTexInfo, int origin[3] )
 
 static void Cubemap_CreateMaterialForBrushSide( int sideIndex, int origin[3] )
 {
-	Warning( "Cubemap_CreateMaterialForBrushSide\n" );
+//	Warning( "Cubemap_CreateMaterialForBrushSide\n" );
 	side_t *pSide = &brushsides[sideIndex];
 	int originalTexInfoID = pSide->texinfo;
 	pSide->texinfo = Cubemap_CreateTexInfo( originalTexInfoID, origin );
@@ -490,15 +490,15 @@ static int SideIDToIndex( int brushSideID )
 
 void Cubemap_FixupBrushSidesMaterials( void )
 {
-	Msg( "fixing up env_cubemap materials on brush sides...\n" );
-	Msg( "There are %i cubemap samples on the map\n", g_nCubemapSamples );
+//	Msg( "fixing up env_cubemap materials on brush sides...\n" );
+//	Msg( "There are %i cubemap samples on the map\n", g_nCubemapSamples );
 	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 
 	int cubemapID;
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
 	{
 		IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[cubemapID];
-		Msg( "vector count %i\n", brushSidesVector.Count() );
+	//	Msg( "vector count %i\n", brushSidesVector.Count() );
 	//	Warning( "Cubemap_FixupBrushSidesMaterials loop\nbrushSidesVector = %i\ns_EnvCubemapToBrushSides = %i\n", brushSidesVector.Count(), s_EnvCubemapToBrushSides.Count() );
 		int i;
 		for( i = 0; i < brushSidesVector.Count(); i++ )
@@ -532,7 +532,7 @@ void Cubemap_FixupDispMaterials( void )
 	int cubemapID;
 	for( cubemapID = 0; cubemapID < g_nCubemapSamples; cubemapID++ )
 	{
-		Warning( "Creating TexInfo for cubemapID %i\n", cubemapID );
+	//	Warning( "Creating TexInfo for cubemapID %i\n", cubemapID );
 		IntVector_t &brushSidesVector = s_EnvCubemapToBrushSides[cubemapID];
 		int i;
 		for( i = 0; i < brushSidesVector.Count(); i++ )
