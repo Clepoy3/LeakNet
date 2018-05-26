@@ -3005,6 +3005,9 @@ void CBaseEntity::SetObjectCollisionBox( void )
 //------------------------------------------------------------------------------
 const char *CBaseEntity::GetDebugName(void)
 {
+	if ( this == NULL )
+		return "<<null>>";
+
 	if ( m_iName != NULL_STRING ) 
 	{
 		return STRING(m_iName);

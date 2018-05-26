@@ -576,7 +576,7 @@ ConVar sk_npc_dmg_12mm_bullet		( "sk_npc_dmg_12mm_bullet",		"0", FCVAR_REPLICATE
 		{
 			if ( pEntity->m_takedamage != DAMAGE_NO )
 			{
-				if ( pEntity == pEntityIgnore )
+				if ( pEntityIgnore != NULL && pEntity == pEntityIgnore )
 					continue;
 
 				// UNDONE: this should check a damage mask, not an ignore

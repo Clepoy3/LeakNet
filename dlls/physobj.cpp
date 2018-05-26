@@ -244,7 +244,10 @@ IPhysicsObject *FindPhysicsObject( const char *pName )
 	{
 		pEntity = gEntList.FindEntityByName( pEntity, pName, NULL );
 		if ( !pEntity )
+		{
+		//	DevMsg( "FindPhysicsObject: Entity %s not found! (%s)\n", pName, pEntity->GetDebugName() );
 			break;
+		}
 	//	IPhysicsObject *pObject = pEntity->VPhysicsGetObject();
 	//	if ( pObject )
 	//		return pObject;
@@ -260,8 +263,12 @@ IPhysicsObject *FindPhysicsObject( const char *pName )
 				break;
 			}
 			pBestObject = pEntity->VPhysicsGetObject();
+#ifdef _DEBUG
+		//	DevMsg( "FindPhysicsObject: Physics object for %s is %s\n", pEntity->GetDebugName(), pBestObject->GetName() );
+#endif
 		}
 	}
+
 	return pBestObject;
 }
 

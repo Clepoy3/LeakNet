@@ -1054,7 +1054,7 @@ END_NETWORK_TABLE()
 		{
 			if ( pEntity->m_takedamage != DAMAGE_NO )
 			{
-				if ( pEntity == pEntityIgnore )
+				if ( pEntityIgnore != NULL && pEntity == pEntityIgnore )
 					continue;
 
 				// UNDONE: this should check a damage mask, not an ignore
