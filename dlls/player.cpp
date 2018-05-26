@@ -4904,24 +4904,6 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 		break;
 
-	case 300:
-		gEvilImpulse101 = true;
-
-
-		WeaponImpulseHelper();
-
-		GiveAmmo( 255,    "Thumper");
-
-		GiveNamedItem( "weapon_alyxgun" );
-		GiveNamedItem( "weapon_manhack" );
-		GiveNamedItem( "weapon_rollerwand" );
-		GiveNamedItem( "weapon_stickylauncher" );
-
-		
-		gEvilImpulse101		= false;
-
-		break;
-
 	case 102:
 		// Gibbage!!!
 		CGib::SpawnRandomGibs( this, 1, GIB_HUMAN );
@@ -5016,6 +4998,21 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		}
 		break;
 	}
+
+	case	111:
+		gEvilImpulse101 = true;
+
+		WeaponImpulseHelper();
+
+		GiveAmmo( 255,    "Thumper");
+
+		GiveNamedItem( "weapon_alyxgun" );
+		GiveNamedItem( "weapon_manhack" );
+		GiveNamedItem( "weapon_rollerwand" );
+		GiveNamedItem( "weapon_stickylauncher" );
+
+		gEvilImpulse101		= false;
+		break;
 
 	case	195:// show shortest paths for entire level to nearest node
 		{
