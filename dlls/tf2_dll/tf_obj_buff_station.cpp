@@ -820,7 +820,7 @@ void CObjectBuffStation::BuffNearbyObjects( CBaseObject *pObjectToTarget, bool b
 		for ( int iObject = 0; iObject < GetTFTeam()->GetNumObjects(); iObject++ )
 		{
 			CBaseObject *pObject = GetTFTeam()->GetObject( iObject );
-			Assert(pObject);
+			assert(pObject);
 
 			if ( pObject == this || !pObject->CanBeHookedToBuffStation() || pObject->GetBuffStation() )
 				continue;

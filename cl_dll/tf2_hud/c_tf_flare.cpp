@@ -111,7 +111,7 @@ void C_SignalFlare::RestoreResources( void )
 		}
 		else
 		{
-			Assert(0);
+			assert(0);
 		}
 	}
 
@@ -129,7 +129,7 @@ void C_SignalFlare::RestoreResources( void )
 		}
 		else
 		{
-			Assert(0);
+			assert(0);
 		}
 	}
 }

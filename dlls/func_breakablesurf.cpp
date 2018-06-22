@@ -1103,11 +1103,13 @@ void CBreakableSurface::Spawn(void)
 	{
 		Warning("Rejecting func_breakablesurf.  Has multiple faces that aren't NODRAW.\n");
 		UTIL_Remove(this);
+		return; // VXP
 	}
 	else if (m_nQuadError == QUAD_ERR_NOT_QUAD)
 	{
 		Warning("Rejecting func_breakablesurf.  Drawn face isn't a quad.\n");
 		UTIL_Remove(this);
+		return; // VXP
 	}
 
 	int materialCount = modelinfo->GetModelMaterialCount( const_cast<model_t*>(GetModel()) );
@@ -1115,6 +1117,7 @@ void CBreakableSurface::Spawn(void)
 	{
 		Warning( "Encountered func_breakablesurf that has a material applied to more than one surface!\n" );
 		UTIL_Remove(this);
+		return; // VXP
 	}
 
 	// Get at the first material; even if there are more than one.
@@ -1123,7 +1126,7 @@ void CBreakableSurface::Spawn(void)
 
 	// The material should point to a cracked version of itself
 	bool foundVar;
-	IMaterialVar* pCrackName = pMaterial->FindVar( "$crackmaterial", &foundVar, false );
+	IMaterialVar* pCrackName = pMaterial->FindVar( "$crackmaterial", &foundVar, false ); // VXP: Crash if all the sides have nodraw (or other material that doesn't have that key in it) material
 	if (foundVar)
 	{
 		PrecacheMaterial( pCrackName->GetStringValue() );

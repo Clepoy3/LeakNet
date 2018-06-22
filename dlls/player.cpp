@@ -1555,7 +1555,7 @@ void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 void CBasePlayer::SetAnimation( PLAYER_ANIM playerAnim )
 {
 
-	/// VXP: Need to mess up with layer_<walk|run>_<aiming|hold>_<weapon> anims
+	// VXP: TODO: Need to mess up with layer_<walk|run>_<aiming|hold>_<weapon> anims
 
 	Activity idealActivity = GetActivity();
 	int animDesired = GetSequence();
@@ -4029,10 +4029,10 @@ void CBasePlayer::Spawn( void )
 	{
 		StopObserverMode();
 	}
-	else // VXP: From Source 2007
-	{
-		StartObserverMode( GetAbsOrigin(), GetAbsAngles() );
-	}
+//	else // VXP: From Source 2007
+//	{
+//		StartObserverMode( GetAbsOrigin(), GetAbsAngles() );
+//	}
 
 	Relink();
 	// Clear any screenfade
@@ -4744,6 +4744,96 @@ void CBasePlayer::ImpulseCommands( )
 	m_nImpulse = 0;
 }
 
+void CBasePlayer::WeaponImpulseHelper()
+{
+	EquipSuit();
+
+	// Give the player everything!
+	/*
+	GiveAmmo( 255,	"SmallRound");
+	GiveAmmo( 255,	"MediumRound");
+	GiveAmmo( 255,	"LargeRound");
+	GiveAmmo( 255,	"Buckshot");
+	GiveAmmo( 3,	"ar2_grenade");
+	GiveAmmo( 3,	"ml_grenade");
+	GiveAmmo( 5,	"grenade");
+	GiveAmmo( 150,	"GaussEnergy");
+	
+	GiveNamedItem( "weapon_frag" );
+	GiveNamedItem( "weapon_crowbar" );
+	GiveNamedItem( "weapon_pistol" );
+	GiveNamedItem( "weapon_ar2" );
+	GiveNamedItem( "weapon_shotgun" );
+	GiveNamedItem( "weapon_smg1" );
+	GiveNamedItem( "weapon_gauss" );
+	GiveNamedItem( "weapon_physcannon" );
+	GiveNamedItem( "weapon_rpg" );
+	*/
+
+	GiveAmmo( 255,    "FlareRound");
+    GiveAmmo( 255,    "SniperRound");
+    GiveAmmo( 255,    "SniperPenetratedRound");
+    GiveAmmo( 255,    "Slam");
+    GiveAmmo( 255,    "Tripwire");
+    GiveAmmo( 255,    "Molotov");
+    GiveAmmo( 255,    "Brickbat");
+    GiveAmmo( 255,    "Rock");
+//	GiveAmmo( 255,    "Thumper");
+    GiveAmmo( 255,    "Gravity");
+    GiveAmmo( 255,    "Extinguisher");
+    GiveAmmo( 255,    "Battery");
+    GiveAmmo( 255,    "Hopwire");
+    GiveAmmo( 255,    "CombineCannon");
+    GiveAmmo( 255,    "SmallRound");
+    GiveAmmo( 255,    "MediumRound");
+    GiveAmmo( 255,    "LargeRound");
+    GiveAmmo( 255,    "Buckshot");
+    GiveAmmo( 255,    "AR2_Grenade");
+    GiveAmmo( 255,    "ML_Grenade");
+    GiveAmmo( 255,    "Grenade");
+    GiveAmmo( 255,    "GaussEnergy");
+	GiveAmmo( 99,    "Gasoline");
+
+//	GiveNamedItem( "weapon_alyxgun" );
+    GiveNamedItem( "weapon_ar1" );
+    GiveNamedItem( "weapon_binoculars" );
+	GiveNamedItem( "weapon_brickbat" );
+    GiveNamedItem( "weapon_bugbait" );
+    GiveNamedItem( "weapon_cguard" );
+//    GiveNamedItem( "weapon_cubemap" );
+    GiveNamedItem( "weapon_extinguisher" );
+    GiveNamedItem( "weapon_flaregun" );
+    GiveNamedItem( "weapon_hmg1" );
+    GiveNamedItem( "weapon_hopwire" );
+    GiveNamedItem( "weapon_iceaxe" );
+    GiveNamedItem( "weapon_immolator" );
+    GiveNamedItem( "weapon_irifle" );
+//	GiveNamedItem( "weapon_manhack" );
+//	GiveNamedItem( "weapon_ml" );
+    GiveNamedItem( "weapon_molotov" );
+    GiveNamedItem( "weapon_physgun" );
+//	GiveNamedItem( "weapon_rollerwand" );
+    GiveNamedItem( "weapon_slam" );
+    GiveNamedItem( "weapon_smg2" );
+    GiveNamedItem( "weapon_sniperrifle" );
+//	GiveNamedItem( "weapon_stickylauncher" );
+    GiveNamedItem( "weapon_stunstick" );
+//	GiveNamedItem( "weapon_thumper" );
+    GiveNamedItem( "weapon_frag" );
+    GiveNamedItem( "weapon_crowbar" );
+    GiveNamedItem( "weapon_pistol" );
+    GiveNamedItem( "weapon_ar2" );
+    GiveNamedItem( "weapon_shotgun" );
+    GiveNamedItem( "weapon_smg1" );
+    GiveNamedItem( "weapon_gauss" );
+    GiveNamedItem( "weapon_physcannon" );
+    GiveNamedItem( "weapon_rpg" );
+
+	if ( GetHealth() < 100 )
+	{
+		TakeHealth( 25, DMG_GENERIC );
+	}
+}
 
 //=========================================================
 //=========================================================
@@ -4808,93 +4898,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 	case 101:
 		gEvilImpulse101 = true;
 
-		EquipSuit();
-
-		// Give the player everything!
-		/*
-		GiveAmmo( 255,	"SmallRound");
-		GiveAmmo( 255,	"MediumRound");
-		GiveAmmo( 255,	"LargeRound");
-		GiveAmmo( 255,	"Buckshot");
-		GiveAmmo( 3,	"ar2_grenade");
-		GiveAmmo( 3,	"ml_grenade");
-		GiveAmmo( 5,	"grenade");
-		GiveAmmo( 150,	"GaussEnergy");
-		
-		GiveNamedItem( "weapon_frag" );
-		GiveNamedItem( "weapon_crowbar" );
-		GiveNamedItem( "weapon_pistol" );
-		GiveNamedItem( "weapon_ar2" );
-		GiveNamedItem( "weapon_shotgun" );
-		GiveNamedItem( "weapon_smg1" );
-		GiveNamedItem( "weapon_gauss" );
-		GiveNamedItem( "weapon_physcannon" );
-		GiveNamedItem( "weapon_rpg" );
-		*/
-
-		GiveAmmo( 255,    "FlareRound");
-        GiveAmmo( 255,    "SniperRound");
-        GiveAmmo( 255,    "SniperPenetratedRound");
-        GiveAmmo( 255,    "Slam");
-        GiveAmmo( 255,    "Tripwire");
-        GiveAmmo( 255,    "Molotov");
-        GiveAmmo( 255,    "Brickbat");
-        GiveAmmo( 255,    "Rock");
-        GiveAmmo( 255,    "Thumper");
-        GiveAmmo( 255,    "Gravity");
-        GiveAmmo( 255,    "Extinguisher");
-        GiveAmmo( 255,    "Battery");
-        GiveAmmo( 255,    "Hopwire");
-        GiveAmmo( 255,    "CombineCannon");
-        GiveAmmo( 255,    "SmallRound");
-        GiveAmmo( 255,    "MediumRound");
-        GiveAmmo( 255,    "LargeRound");
-        GiveAmmo( 255,    "Buckshot");
-        GiveAmmo( 255,    "AR2_Grenade");
-        GiveAmmo( 255,    "ML_Grenade");
-        GiveAmmo( 255,    "Grenade");
-        GiveAmmo( 255,    "GaussEnergy");
-		GiveAmmo( 99,    "Gasoline");
-
-		GiveNamedItem( "weapon_alyxgun" );
-        GiveNamedItem( "weapon_ar1" );
-        GiveNamedItem( "weapon_binoculars" );
-		GiveNamedItem( "weapon_brickbat" );
-        GiveNamedItem( "weapon_bugbait" );
-        GiveNamedItem( "weapon_cguard" );
-    //    GiveNamedItem( "weapon_cubemap" );
-        GiveNamedItem( "weapon_extinguisher" );
-        GiveNamedItem( "weapon_flaregun" );
-        GiveNamedItem( "weapon_hmg1" );
-        GiveNamedItem( "weapon_hopwire" );
-        GiveNamedItem( "weapon_iceaxe" );
-        GiveNamedItem( "weapon_immolator" );
-        GiveNamedItem( "weapon_irifle" );
-        GiveNamedItem( "weapon_manhack" );
-    //	GiveNamedItem( "weapon_ml" );
-        GiveNamedItem( "weapon_molotov" );
-        GiveNamedItem( "weapon_physgun" );
-        GiveNamedItem( "weapon_rollerwand" );
-        GiveNamedItem( "weapon_slam" );
-        GiveNamedItem( "weapon_smg2" );
-        GiveNamedItem( "weapon_sniperrifle" );
-        GiveNamedItem( "weapon_stickylauncher" );
-        GiveNamedItem( "weapon_stunstick" );
-        GiveNamedItem( "weapon_thumper" );
-        GiveNamedItem( "weapon_frag" );
-        GiveNamedItem( "weapon_crowbar" );
-        GiveNamedItem( "weapon_pistol" );
-        GiveNamedItem( "weapon_ar2" );
-        GiveNamedItem( "weapon_shotgun" );
-        GiveNamedItem( "weapon_smg1" );
-        GiveNamedItem( "weapon_gauss" );
-        GiveNamedItem( "weapon_physcannon" );
-        GiveNamedItem( "weapon_rpg" );
-
-		if ( GetHealth() < 100 )
-		{
-			TakeHealth( 25, DMG_GENERIC );
-		}
+		WeaponImpulseHelper();
 		
 		gEvilImpulse101		= false;
 
@@ -4994,6 +4998,21 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		}
 		break;
 	}
+
+	case	111:
+		gEvilImpulse101 = true;
+
+		WeaponImpulseHelper();
+
+		GiveAmmo( 255,    "Thumper");
+
+		GiveNamedItem( "weapon_alyxgun" );
+		GiveNamedItem( "weapon_manhack" );
+		GiveNamedItem( "weapon_rollerwand" );
+		GiveNamedItem( "weapon_stickylauncher" );
+
+		gEvilImpulse101		= false;
+		break;
 
 	case	195:// show shortest paths for entire level to nearest node
 		{

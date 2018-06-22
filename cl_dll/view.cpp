@@ -879,3 +879,22 @@ void CViewRender::Render( vrect_t *rect )
 	AllowCurrentViewAccess( false );
 }
 
+CON_COMMAND( getpos, "dump position and angles to the console" ) // VXP
+{
+	Vector vecOrigin;
+	QAngle angles;
+
+	vecOrigin = MainViewOrigin();
+	angles = MainViewAngles();
+
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( pPlayer )
+	{
+		vecOrigin = pPlayer->GetAbsOrigin();
+	//	angles = pPlayer->GetAbsAngles();
+	}
+
+	Warning( "setpos %f %f %f;", vecOrigin.x, vecOrigin.y, vecOrigin.z );
+	Warning( "setang %f %f %f\n", angles.x, angles.y, angles.z );
+}
+

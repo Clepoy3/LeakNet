@@ -470,7 +470,7 @@ void CShieldEffect::SimulateTranslation( float dt )
 	float dampfactor = m_DampConstant * DotProduct( m_Velocity, dx );
 	force = dx * -( springfactor + dampfactor );
 
-	Assert( force.IsValid( ) );
+	assert( force.IsValid( ) );
 	Vector drag = m_Velocity * m_ViscousDrag;
 	force -= drag;
 
@@ -478,7 +478,7 @@ void CShieldEffect::SimulateTranslation( float dt )
 	m_Position += m_Velocity * dt; 
 	m_Velocity += force * dt / m_Mass;
 
-	Assert( m_Velocity.IsValid( ) );
+	assert( m_Velocity.IsValid( ) );
 
 	// clamp for stability
 	if (speedSq > 1e6)

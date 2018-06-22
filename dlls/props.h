@@ -25,6 +25,7 @@
 enum
 {
 	PARSE_SUCCEEDED,
+	PARSE_SUCCEEDED_ALLOWED_STATIC,		// VXP: Parsed propdata. Prop allowed to be prop_physics or prop_dynamic/prop_static.
 	PARSE_FAILED_NO_DATA,
 	PARSE_FAILED_BAD_DATA,
 };

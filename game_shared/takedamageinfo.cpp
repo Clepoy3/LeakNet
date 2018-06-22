@@ -190,16 +190,16 @@ void CalculateExplosiveDamageForce( CTakeDamageInfo *info, const Vector &vecDir,
 {
 	info->SetDamagePosition( vecForceOrigin );
 
-	float flClampForce = ImpulseScale( 75, 400 ); // VXP
-
 	// Calculate an impulse large enough to push a 75kg man 4 in/sec per point of damage
 	float flForceScale = info->GetDamage() * ImpulseScale( 75, 4 );
 
 	// Exaggerate the force from explosions a little (50%)
-//	flForceScale *= 1.5; // VXP: Commented
+	flForceScale *= 1.5;
 
-	if( flForceScale > flClampForce )
-		flForceScale = flClampForce;
+	// VXP: Causing #0000165
+//	float flClampForce = ImpulseScale( 75, 400 ); // VXP: That was the new way to calculate force, but it's so static right now
+//	if( flForceScale > flClampForce )
+//		flForceScale = flClampForce;
 
 	// Fudge blast forces a little bit, so that each
 	// victim gets a slightly different trajectory. 

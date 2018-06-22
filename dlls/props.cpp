@@ -110,13 +110,17 @@ void CPropData::ParsePropDataFile( void )
 //-----------------------------------------------------------------------------
 int CPropData::ParsePropFromKV( CBaseProp *pProp, KeyValues *pSection )
 {
+	int iBaseResult = PARSE_SUCCEEDED;
+
 	// Do we have a base?
 	char const *pszBase = pSection->GetString( "base" );
 	if ( pszBase && pszBase[0] )
 	{
-		int iResult = ParsePropFromBase( pProp, pszBase );
-		if ( iResult != PARSE_SUCCEEDED )
-			return iResult;
+	//	int iResult = ParsePropFromBase( pProp, pszBase );
+	//	if ( iResult != PARSE_SUCCEEDED )
+		iBaseResult = ParsePropFromBase( pProp, pszBase );
+		if ( (iBaseResult != PARSE_SUCCEEDED) && (iBaseResult != PARSE_SUCCEEDED_ALLOWED_STATIC) )
+			return iBaseResult;
 	}
 
 	// Only breakable props need to get health data
@@ -134,6 +138,14 @@ int CPropData::ParsePropFromKV( CBaseProp *pProp, KeyValues *pSection )
 			pBreakable->SetHealth( pSection->GetInt( "health", pBreakable->GetHealth() ) );
 		}
 	}
+
+	// If the base said we're allowed to be static, return that
+	if ( iBaseResult == PARSE_SUCCEEDED_ALLOWED_STATIC )
+		return PARSE_SUCCEEDED_ALLOWED_STATIC;
+
+	// VXP: Otherwise, see if our propdata says we are allowed to be static
+	if ( pSection->GetInt( "allowstatic", 0 ) )
+		return PARSE_SUCCEEDED_ALLOWED_STATIC;
 
 	return PARSE_SUCCEEDED;
 }
@@ -1578,6 +1590,12 @@ void PropBreakablePrecacheAll( string_t modelName )
 	int iBreakables = 0;
 	if ( g_BreakModelsPrecached.IsInList( modelName ) )
 		return;
+
+	if ( modelName == NULL_STRING )
+	{
+		Msg("Trying to precache breakable prop, but has no model name\n");
+		return;
+	}
 
 	g_BreakModelsPrecached.AddToList( modelName );
 	int modelIndex = engine->PrecacheModel( STRING(modelName) );

@@ -1099,7 +1099,7 @@ public:
 		{
 			if ( m_aggressiveness != AGGR_CUSTOM )
 			{
-				Msg( "Invalid aggressiveness value %d\n", m_aggressiveness );
+				DevMsg( "Invalid aggressiveness value %d\n", m_aggressiveness );
 				
 				if ( m_aggressiveness < AGGR_VERY_LOW )
 					m_aggressiveness = AGGR_VERY_LOW;

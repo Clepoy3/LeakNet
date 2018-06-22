@@ -2748,10 +2748,10 @@ void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup
 			g_bWaterCullHeight = r_watercullheight.GetFloat();
 		}
 
-	//	int flags = DF_RENDER_REFLECTION | DF_CLIP_Z | DF_CLIP_BELOW | 
+		int flags = DF_RENDER_REFLECTION | DF_CLIP_Z | DF_CLIP_BELOW | 
 
 		// VXP: Fix for buggy water at e3_techdemo_5
-		int flags = DF_RENDER_REFLECTION | DF_CLIP_BELOW | 
+	//	int flags = DF_RENDER_REFLECTION | DF_CLIP_BELOW | 
 			DF_RENDER_ABOVEWATER | DF_CLEARDEPTH | DF_CLEARCOLOR | DF_BUILDWORLDLISTS;
 		flags |= DF_DRAWSKYBOX;
 		if( bReflectEntities )
@@ -2769,14 +2769,14 @@ void CViewRender::ViewDrawScene_EyeAboveWater( bool drawSkybox, const CViewSetup
 	// render refraction
 	if ( bRefract )
 	{
-	//	int flags = DF_RENDER_REFRACTION | DF_CLIP_Z | DF_RENDER_UNDERWATER | 
+		int flags = DF_RENDER_REFRACTION | DF_CLIP_Z | DF_RENDER_UNDERWATER | 
 
 		// VXP: Fix for buggy water at e3_techdemo_6
 		// VXP: TODO: Need to fix clip planes properly!
 		// Changing normal planes to clip planes
 		// (EnableFastClip( true ); SetFastClipPlane(plane); in CMaterialSystem::UpdateHeightClipUserClipPlane)
 		// can help, but then clip plane is showing underwater.
-		int flags = DF_RENDER_REFRACTION | DF_RENDER_UNDERWATER | 
+	//	int flags = DF_RENDER_REFRACTION | DF_RENDER_UNDERWATER | 
 			DF_CLEARDEPTH | DF_CLEARCOLOR | DF_FUDGE_UP | DF_BUILDWORLDLISTS | DF_DRAW_ENTITITES;
 		WaterDrawHelper( view, info, renderList, waterHeight, flags );
 	}

@@ -1826,7 +1826,57 @@ ControlPanel::dumpModelInfo ()
 			int i;
 
 			fprintf (file, "id: %c%c%c%c\n", phdr[0], phdr[1], phdr[2], phdr[3]);
-			fprintf (file, "version: %d\n", hdr->version);
+
+		//	fprintf (file, "version: %d\n", hdr->version); // VXP: This is wrong since our convertation code
+			bool done = false;
+			studiohdr_t *temp_phdr;
+
+			char const *filename = g_pStudioModel->GetFileName();
+			FILE *fp = fopen( filename, "rb" );
+			if( fp != NULL ) // VXP: Cannot open file for some reason - let's just use new version value then
+			{
+			/*
+				fseek( fp, 0, SEEK_END );
+				long size = ftell( fp );
+				fseek( fp, 0, SEEK_SET );
+
+				void *buffer = malloc( size );
+				if (!buffer)
+				{
+					fclose (fp);
+					done = false;
+				}
+
+				fread( buffer, size, 1, fp );
+				fclose( fp );
+
+				byte *temp_pin;
+
+				temp_pin = (byte *)buffer;
+				temp_phdr = (studiohdr_t *)temp_pin;
+
+				free (buffer);
+
+				if ( temp_phdr != NULL )
+					done = true;
+			*/
+				fseek( fp, 0, SEEK_END );
+				int len = ftell( fp );
+				rewind( fp );
+				temp_phdr = ( studiohdr_t * )malloc( len );
+				fread( temp_phdr, 1, len, fp );
+				if ( temp_phdr != NULL && (int)temp_phdr->version != hdr->version )
+					done = true;
+			}
+			if ( done )
+			{
+				fprintf (file, "version: %d\n", ( int )temp_phdr->version); // VXP: Getting the right version
+			}
+			else
+			{
+				fprintf (file, "version: %d\n", hdr->version);
+			}
+
 			fprintf (file, "name: \"%s\"\n", hdr->name);
 			fprintf (file, "length: %d\n\n", hdr->length);
 
@@ -1902,6 +1952,7 @@ ControlPanel::dumpModelInfo ()
 			//	fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].label);
 				fprintf (file, "\nseqdesc %d.label: \"%s\"\n", i + 1, pseqdescs[i].pszLabel());
 			//	fprintf (file, "seqdesc %d.fps: %f\n", i + 1, pseqdescs[i].fps); // VXP: Fix later
+				fprintf (file, "\nseqdesc %d.activity: \"%s\"\n", i + 1, pseqdescs[i].pszActivityName());
 				fprintf (file, "seqdesc %d.flags: %d\n", i + 1, pseqdescs[i].flags);
 				fprintf (file, "seqdesc %d.numevents: %d\n", i + 1, pseqdescs[i].numevents);
 			/*
@@ -2256,7 +2307,17 @@ ControlPanel::initSequences ()
 				// VXP: TODO: Implement proper Source 2007 "Show Hidden" HLMV option
 				if ( !(hdr->pSeqdesc(j)->flags & STUDIO_HIDDEN) )
 				{
-					cSequence[i]->add( hdr->pSeqdesc(j)->pszLabel() );
+				//	cSequence[i]->add( hdr->pSeqdesc(j)->pszLabel() );
+					if ( Q_strcmp( hdr->pSeqdesc(j)->pszActivityName(), "" ) == 0 )
+					{
+						cSequence[i]->add( hdr->pSeqdesc(j)->pszLabel() );
+					}
+					else
+					{
+						char buf[256];
+						Q_snprintf( buf, sizeof( buf ), "%s - %s", hdr->pSeqdesc(j)->pszLabel(), hdr->pSeqdesc(j)->pszActivityName() );
+						cSequence[i]->add( buf );
+					}
 				}
 			}
 			cSequence[i]->select( 0 );

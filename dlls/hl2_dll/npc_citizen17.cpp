@@ -910,6 +910,25 @@ Activity CNPC_Citizen::NPC_TranslateActivity( Activity activity )
 		}
 	}
 
+	// VXP: Sergeant Stacker commission
+	if ( activity == ACT_RANGE_ATTACK_SHOTGUN )
+	{
+		activity = ACT_RANGE_ATTACK_SMG1;
+		m_flPlaybackRate = 0.01f;
+	}
+//	else if ( activity == ACT_IDLE_ANGRY_SHOTGUN )
+//	{
+//		activity = ACT_IDLE_ANGRY_SMG1;
+//	}
+	else if ( activity == ACT_RELOAD )
+	{
+		activity = ACT_RELOAD_SMG1;
+	}
+	else if ( activity == ACT_RANGE_ATTACK_AR2 )
+	{
+		activity = ACT_RANGE_ATTACK_SMG1;
+	}
+
 	return activity;
 }
 

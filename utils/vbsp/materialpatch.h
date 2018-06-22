@@ -21,4 +21,7 @@ const char *GetOriginalMaterialNameForPatchedMaterial( const char *pPatchMateria
 
 MaterialSystemMaterial_t FindOriginalMaterial( const char *materialName, bool *pFound, bool bComplain = true );
 
+bool DoesMaterialHaveKeyValuePair( const char *pMaterialName, const char *pKeyName, const char *pSearchValue );
+bool DoesMaterialHaveKey( const char *pMaterialName, const char *pKeyName );
+
 #endif // MATERIALPATCH_H

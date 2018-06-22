@@ -445,7 +445,7 @@ void CPlayerClassCommando::StartAdrenalinRush( void )
 		for ( int i = 0; i < m_pPlayer->GetTFTeam()->GetNumPlayers(); i++ )
 		{
 			CBaseTFPlayer *pPlayer = (CBaseTFPlayer *)m_pPlayer->GetTFTeam()->GetPlayer(i);
-			Assert(pPlayer);
+			assert(pPlayer);
 
 			// Is it within range?
 			if ( pPlayer != m_pPlayer && (pPlayer->GetAbsOrigin() - m_pPlayer->GetAbsOrigin()).Length() < class_commando_battlecry_radius.GetFloat() )
@@ -560,6 +560,9 @@ void CPlayerClassCommando::ResetViewOffset( void )
 //-----------------------------------------------------------------------------
 void CPlayerClassCommando::InitVCollision( void )
 {
+	// Cleanup any old vphysics stuff.
+	GetPlayer()->VPhysicsDestroyObject();
+
 	CPhysCollide *pStandModel = PhysCreateBbox( COMMANDOCLASS_HULL_STAND_MIN, COMMANDOCLASS_HULL_STAND_MAX );
 	CPhysCollide *pCrouchModel = PhysCreateBbox( COMMANDOCLASS_HULL_DUCK_MIN, COMMANDOCLASS_HULL_DUCK_MAX );
 	m_pPlayer->SetupVPhysicsShadow( pStandModel, "tfplayer_commando_stand", pCrouchModel, "tfplayer_commando_crouch" );

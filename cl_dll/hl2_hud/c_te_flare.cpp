@@ -11,7 +11,6 @@
 #include "dlight.h"
 #include "view.h"
 #include "clientsideeffects.h"
-#include "c_sprite.h" // VXP: For GlowSightDistance()
 
 //Precahce the effects
 CLIENTEFFECT_REGISTER_BEGIN( PrecacheEffectFlares )
@@ -155,9 +154,6 @@ void C_Flare::NotifyDestroyParticle( Particle* pParticle )
 //-----------------------------------------------------------------------------
 void C_Flare::Update( float timeDelta )
 {
-	if ( !IsVisible() )
-		return;
-
 	CSimpleEmitter::Update( timeDelta );
 
 	//Make sure our stored resources are up to date
@@ -166,8 +162,6 @@ void C_Flare::Update( float timeDelta )
 	//Don't do this if the console is down
 	if ( timeDelta <= 0.0f )
 		return;
-
-	float visible = GlowSightDistance( GetAbsOrigin(), true ) > 0.0f ? 1.0f : 0.0f;
 
 	float	fColor;
 	float	baseScale = m_flScale;
@@ -179,7 +173,7 @@ void C_Flare::Update( float timeDelta )
 	}
 
 	//Clamp the scale if vanished
-	if ( baseScale < 0.01f || visible == 0.0f ) // VXP: Simplified version of Source 2007 code
+	if ( baseScale < 0.01f )
 	{
 		baseScale = 0.0f;
 

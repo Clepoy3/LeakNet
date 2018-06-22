@@ -38,11 +38,18 @@
 #include "physics_prop_ragdoll.h"
 #include "vehicle_base.h"
 
+#include "game.h" // VXP: For skill levels
+
 ConVar sk_strider_health( "sk_strider_health", "0" );
 ConVar npc_strider_height_adj("npc_strider_height_adj", "0" );
 
 ConVar npc_strider_shake_ropes_radius( "npc_strider_shake_ropes_radius", "1200" );
 ConVar npc_strider_shake_ropes_magnitude( "npc_strider_shake_ropes_magnitude", "150" );
+
+// VXP: Number of RPG hits it takes to kill a strider on each skill level.
+ConVar sk_strider_num_missiles1("sk_strider_num_missiles1", "5");
+ConVar sk_strider_num_missiles2("sk_strider_num_missiles2", "7");
+ConVar sk_strider_num_missiles3("sk_strider_num_missiles3", "7");
 
 static const Vector g_zAxis(0,0,1);
 
@@ -2149,19 +2156,73 @@ int CNPC_Strider::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	if ( info.GetInflictor() && info.GetInflictor()->GetOwnerEntity() == this )
 		return 0;
 
-	if ( m_isHatchOpen && m_hPlayer.Get() && info.GetAttacker() == m_hPlayer.Get() )
+//	if ( m_isHatchOpen && m_hPlayer.Get() && info.GetAttacker() == m_hPlayer.Get() )
+	if ( info.GetDamageType() == DMG_GENERIC )
 	{
 		return BaseClass::OnTakeDamage_Alive( info );
 	}
 
-	if ( !(info.GetDamageType() & DMG_BLAST) )
-		return 0;
+//	if ( !(info.GetDamageType() & DMG_BLAST) )
+//		return 0;
 
-	if ( !info.GetInflictor() )
-		return 0;
 
-	if ( info.GetMaxDamage() < 50 )
-		return 0;
+//	if ( info.GetMaxDamage() < 50 )
+//		return 0;
+
+	if ( (info.GetDamageType() & DMG_BLAST) && info.GetMaxDamage() > 50 )
+	{
+		Vector headPos = BodyTarget( info.GetDamagePosition(), false );
+		
+		float dist = CalcDistanceToAABB( WorldAlignMins(), WorldAlignMaxs(), info.GetDamagePosition() - headPos );
+		// close enough to do damage?
+		if ( dist < 200 )
+		{
+			bool bPlayer = info.GetAttacker()->IsPlayer();
+			if ( bPlayer )
+			{
+				AddFacingTarget( info.GetAttacker(), info.GetAttacker()->GetAbsOrigin(), 1.0, 2.0 );
+
+				UpdateEnemyMemory( info.GetAttacker(), info.GetAttacker()->GetAbsOrigin() );
+			}
+			else
+				AddFacingTarget( info.GetAttacker(), info.GetAttacker()->GetAbsOrigin(), 0.5, 2.0 );
+
+			// Default to NPC damage value
+			int damage = 20;
+
+			CTakeDamageInfo outputInfo = info;
+
+			if( bPlayer )
+			{
+				if( g_iSkillLevel == SKILL_EASY )
+				{
+					damage = (float)(GetMaxHealth() / sk_strider_num_missiles1.GetFloat());
+				}
+				else if( g_iSkillLevel == SKILL_HARD )
+				{
+					damage = (float)(GetMaxHealth() / sk_strider_num_missiles3.GetFloat());
+				}
+				else // Medium, or unspecified
+				{
+					damage = (float)(GetMaxHealth() / sk_strider_num_missiles2.GetFloat());
+				}
+			}
+
+		//	m_iHealth -= damage;
+			outputInfo.SetDamage( damage );
+
+			RestartGesture( ACT_GESTURE_SMALL_FLINCH );
+			PainSound();
+
+			// Interrupt our gun during the flinch
+		//	m_pMinigun->StopShootingForSeconds( this, m_pMinigun->GetTarget(), 1.1f );
+			m_miniGun.StopShootingForSeconds( this, 1.1f );
+
+		//	GetEnemies()->OnTookDamageFrom( info.GetAttacker() );
+		//	return damage;
+			return BaseClass::OnTakeDamage_Alive( outputInfo );
+		}
+	}
 
 	// UNDONE: Take this kind of damage (large explosion?)
 	return 0;

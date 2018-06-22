@@ -997,9 +997,10 @@ int main (int argc, char **argv)
 		// start from scratch
 		//
 		LoadMapFile (name);
-		if( ( g_nDXLevel == 0 ) || ( g_nDXLevel >= 70 ) )
+		if( g_nDXLevel >= 70 )
 		{
 			Cubemap_FixupBrushSidesMaterials();
+			Cubemap_AttachDefaultCubemapToSpecularSides(); // VXP
 		}
 		SetModelNumbers ();
 		SetLightStyles ();

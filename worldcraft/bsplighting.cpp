@@ -285,7 +285,7 @@ bool CBSPLighting::Load( char const *pFilename )
 				flVal += pFace->m_pStoredFace->m_OffsetIntoLightmapPage[iCoord];
 				flVal += 0.5f; // bilinear...
 				flVal /= lightmapPageSize[iCoord];
-				Assert( _finite(flVal) );
+				assert( _finite(flVal) );
 				pVert->m_vLightCoords[iCoord] = flVal;
 
 				pVert->m_vTexCoords[iCoord] = 
@@ -658,7 +658,7 @@ void CBSPLighting::BuildLMGroups(
 						unsigned short indices[ (1<<MAX_MAP_DISP_POWER) * (1<<MAX_MAP_DISP_POWER) * 6 ];
 						
 						int nRequired = DispCommon_GetNumTriIndices( pDisp->m_Power );
-						Assert( nRequired <= sizeof(indices)/sizeof(indices[0]) );
+						assert( nRequired <= sizeof(indices)/sizeof(indices[0]) );
 
 						DispCommon_GenerateTriIndices( pDisp->m_Power, indices );
 
@@ -881,7 +881,7 @@ void CBSPLighting::CreateDisplacements( CBSPInfo &file, CUtlVector<CFace> &faces
 				flVal += pFace->m_pStoredFace->m_OffsetIntoLightmapPage[iCoord];
 				flVal += 0.5f;
 				flVal /= lightmapPageSize[iCoord];
-				Assert( _finite(flVal) );
+				assert( _finite(flVal) );
 				pOutVert->m_vLightCoords[iCoord] = flVal;
 
 				pOutVert->m_vTexCoords[iCoord] = pInVert->m_TexCoords[iCoord];
@@ -909,7 +909,7 @@ CBSPLighting::CFaceMaterial* CBSPLighting::FindOrAddMaterial( CBSPInfo &file, in
 {
 	if( stringTableID >= m_StringTableIDToMaterial.Count() )
 	{
-		Assert( false );
+		assert( false );
 		return 0;
 	}
 

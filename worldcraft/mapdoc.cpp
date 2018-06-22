@@ -75,8 +75,8 @@
 #include "camera.h"
 
 // VXP
-#include "filesystem.h"
-#include "filesystem_WC.h"
+//#include "filesystem.h"
+//#include "filesystem_WC.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

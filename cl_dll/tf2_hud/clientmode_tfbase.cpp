@@ -154,7 +154,7 @@ void ClientModeTFBase::PreRender( CViewSetup *pSetup )
 
 	if ( !m_pCVDrawFullSkybox )
 	{
-		Assert( 0 );
+		assert( 0 );
 		return;
 	}
 
@@ -176,7 +176,7 @@ void ClientModeTFBase::PostRender( void )
 
 	if ( !m_pCVDrawFullSkybox )
 	{
-		Assert( 0 );
+		assert( 0 );
 		return;
 	}
 

@@ -376,15 +376,23 @@ CBaseEntity *CGlobalEntityList::FindEntityByName( CBaseEntity *pStartEntity, con
 		if ( !e->m_iName )
 			continue;
 
+	//	DevMsg( "call\n" );
+
 		if ( !wildcard )
 		{
 			if ( _stricmp( STRING(e->m_iName), szName ) == 0 )
+			{
+			//	DevMsg( "FindEntityByName: Searching for %s, found %s (ent %s)\n", szName, e->m_iName, e->GetDebugName() );
 				return e;
+			}
 		}
 		else
 		{
 			if ( _strnicmp( STRING(e->m_iName), szName, len ) == 0 )
+			{
+			//	DevMsg( "FindEntityByName: Searching for %s, found %s (wildcard)\n", szName, e->m_iName );
 				return e;
+			}
 		}
 
 	}

@@ -348,6 +348,7 @@ void FindPhysicsAnchor( string_t name, hl_constraint_info_t &info, int index )
 		CBaseEntity *pEntity = pAnchor->hEntity;
 		if ( pEntity )
 		{
+			// VXP: TODO: Should I make attachment support here?
 			info.anchorPosition[index] = pAnchor->localOrigin;
 			info.pObjects[index] = pAnchor->hEntity->VPhysicsGetObject();
 		}
@@ -360,6 +361,10 @@ void FindPhysicsAnchor( string_t name, hl_constraint_info_t &info, int index )
 	{
 		info.anchorPosition[index] = vec3_origin;
 		info.pObjects[index] = FindPhysicsObject( STRING(name) );
+	//	if ( info.pObjects[index] == NULL )
+	//	{
+	//		DevMsg( "FindPhysicsAnchor: %i object wasn't found\n", index );
+	//	}
 	}
 }
 
@@ -383,14 +388,27 @@ void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 	FindPhysicsAnchor( m_nameAttach1, info, 0 );
 	FindPhysicsAnchor( m_nameAttach2, info, 1 );
 
+#if 0
+	if ( Q_strlen(STRING(m_nameAttach1)) && info.pObjects[0] == NULL )
+	{
+		DevMsg( "GetConstraintObjects: Attach1 is defined, but no entity found\n" );
+	}
+	if ( Q_strlen(STRING(m_nameAttach2)) && info.pObjects[1] == NULL )
+	{
+		DevMsg( "GetConstraintObjects: Attach2 is defined, but no entity found\n" );
+	}
+#endif
+
 	// Missing one object, assume the world instead
 	if ( info.pObjects[0] == NULL && info.pObjects[1] )
 	{
 		if ( Q_strlen(STRING(m_nameAttach1)) )
 		{
-			Warning("Bogus constraint %s (attaches %s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+			Warning("Bogus constraint %s (attaches ENTITY NOT FOUND:%s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+#if 0 // VXP: Breaks phys_pulleyconstraint since constraints with one object not having a physobj is causing next to happen (a keyframe_rope, for example)
 			info.pObjects[0] = info.pObjects[1] = NULL;
 			return;
+#endif
 		}
 		info.pObjects[0] = g_PhysWorldObject;
 	}
@@ -398,9 +416,11 @@ void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 	{
 		if ( Q_strlen(STRING(m_nameAttach2)) )
 		{
-			Warning("Bogus constraint %s (attaches %s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+			Warning("Bogus constraint %s (attaches %s to ENTITY NOT FOUND:%s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
+#if 0 // VXP: Breaks phys_pulleyconstraint since constraints with one object not having a physobj is causing next to happen (a keyframe_rope, for example)
 			info.pObjects[0] = info.pObjects[1] = NULL;
 			return;
+#endif
 		}
 		info.pObjects[1] = info.pObjects[0];
 		info.pObjects[0] = g_PhysWorldObject;		// Try to make the world object consistently object0 for ease of implementation

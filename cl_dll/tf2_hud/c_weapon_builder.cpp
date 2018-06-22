@@ -189,7 +189,7 @@ void C_WeaponBuilder::Redraw()
 
 	default:
 		{
-			if( !inv_demo.GetInt() )
+		//	if( !inv_demo.GetInt() )
 			{
 				DrawTextIcon( m_pIconFireToSelect, parentWidth, parentHeight );
 			}

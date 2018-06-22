@@ -999,7 +999,9 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 			else 
 			{
 				// VXP: Ugly repeated second condition
-				iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger02" );
+			//	iBIndex = LookupBone( "ValveBiped.Bip01_R_Finger0" );
+				iBIndex = LookupBone( "ValveBiped.Bip01_R_Hand" );
+			//	iBIndex = LookupBone( "ValveBiped.Bip01_Head1" );
 				if ( iBIndex != -1) 
 				{
 					Vector origin;
@@ -1017,6 +1019,11 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 					pWeapon->SetAbsOrigin( Weapon_ShootPosition() + vFacingDir );
 				}
 			}
+		/*
+			Vector vFacingDir = BodyDirection2D();
+			vFacingDir = vFacingDir * 10.0; 
+			pWeapon->SetAbsOrigin( Weapon_ShootPosition() + vFacingDir );
+		*/
 		}
 
 		Vector vecThrow;
