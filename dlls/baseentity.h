@@ -470,6 +470,9 @@ public:
 	void		ClearSpawnFlags( void );
 	bool		HasSpawnFlags( int nFlags ) const;
 
+	// VXP: TODO: Need to add more effect functions?
+	bool		IsEffectActive( int nEffectMask ) const;
+
 	// makes the entity inactive
 	void		MakeDormant( void );
 	int			IsDormant( void );

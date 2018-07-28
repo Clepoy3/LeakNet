@@ -90,7 +90,8 @@ static unsigned char g_SrcGammaTable[256];
 static unsigned char g_DstGammaTable[256];
 
 #ifndef TGALOADER_USE_FOPEN
-static IBaseFileSystem *s_pFileSystem = NULL;
+//static IBaseFileSystem *s_pFileSystem = NULL;
+IFileSystem *s_pFileSystem = NULL;
 #endif
 
 typedef CUtlMemory<unsigned char> CTempImage;
@@ -214,11 +215,13 @@ bool GetInfo( CUtlBuffer& buf, int *width, int *height,
 		}
 		else
 		{
+			Warning( "TGAReader: case 10, unknown pixel_size\n" );
 			return false;
 		}
 		break;
 
 	default:
+		Warning( "TGAReader: default\n" );
 		return false;
 		break;
 	}
@@ -236,7 +239,8 @@ bool GetInfo( CUtlBuffer& buf, int *width, int *height,
 #ifndef TGALOADER_USE_FOPEN
 bool SetFileSystem( CreateInterfaceFn fileSystemFactory )
 {
-	s_pFileSystem = ( IFileSystem * )fileSystemFactory( BASEFILESYSTEM_INTERFACE_VERSION, NULL );
+//	s_pFileSystem = ( IFileSystem * )fileSystemFactory( BASEFILESYSTEM_INTERFACE_VERSION, NULL );
+	s_pFileSystem = ( IFileSystem * )fileSystemFactory( FILESYSTEM_INTERFACE_VERSION, NULL );
 	if( s_pFileSystem )
 	{
 		return true;
@@ -259,7 +263,10 @@ bool GetInfo( char const* pFileName, int *width, int *height,
 
 	// try to read in the file
 	if (!ReadFile( pFileName, image, sizeof(TGAHeader_t) ))
+	{
+		Warning( "TGAReader: GetInfo: can't read a file!\n" );
 		return false;
+	}
 
 	// Serialization buffer
 	CUtlBuffer buf( image.Base(), image.NumAllocated() );

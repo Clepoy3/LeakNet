@@ -1898,6 +1898,14 @@ SOURCE=.\res\connectbad_grey.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\crosshair.cur
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\crosshair.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\cube.bmp
 # End Source File
 # Begin Source File

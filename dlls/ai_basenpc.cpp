@@ -2815,6 +2815,12 @@ void CAI_BaseNPC::GatherConditions( void )
 
 			GetEnemies()->RefreshMemories();
 			ChooseEnemy();
+
+			// VXP: Check to see if there is a better weapon available
+			if (Weapon_IsBetterAvailable())
+			{
+				SetCondition(COND_BETTER_WEAPON_AVAILABLE);
+			}
 		}
 		else
 			ClearSenseConditions(); // if not done, can have problems if leave PVS in same frame heard/saw things, since only PerformSensing clears conditions

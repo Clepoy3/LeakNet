@@ -55,6 +55,7 @@ public:
 	// Get angles and origin.
 	virtual const Vector&	GetCollisionOrigin() = 0;
 	virtual const QAngle&	GetCollisionAngles() = 0;
+	virtual const matrix3x4_t&	CollisionToWorldTransform() = 0; // VXP
 
 	// Return a SOLID_ define.
 	virtual SolidType_t		GetSolid() const = 0;

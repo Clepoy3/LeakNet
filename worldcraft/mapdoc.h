@@ -595,6 +595,7 @@ class CMapDoc : public CDocument
 		afx_msg void OnEditClearselection();
 		afx_msg void OnUpdateToggle3DGrid(CCmdUI* pCmdUI);
 		afx_msg void OnMapGotoBrush(void);
+		afx_msg void OnMapGotoCoords(void);
 		afx_msg void OnEditFindEntities(void);
 		afx_msg void OnToolsHideEntityNames(void);
 		afx_msg void OnUpdateToolsHideEntityNames(CCmdUI *pCmdUI);

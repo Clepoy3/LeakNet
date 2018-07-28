@@ -176,6 +176,13 @@ CSysModule	*Sys_LoadModule( const char *pModuleName )
 #endif
 	}
 
+#ifdef _DEBUG
+	if ( hDLL )
+	{
+		printf( "Loaded module %s\n", pModuleName );
+	}
+#endif
+
 	return reinterpret_cast<CSysModule *>(hDLL);
 }
 
@@ -192,7 +199,25 @@ void Sys_UnloadModule( CSysModule *pModule )
 	HMODULE	hDLL = reinterpret_cast<HMODULE>(pModule);
 
 #ifdef _WIN32
+
+#ifdef _DEBUG
+	char buffer[MAX_PATH];
+	unsigned long bFilename = GetModuleFileName( hDLL, buffer, MAX_PATH );
+
+	BOOL success = FreeLibrary( hDLL );
+	if ( success )
+	{
+		nLoadedModules--;
+
+		if ( bFilename )
+		{
+			printf( "Unloaded module %s\n", buffer );
+		}
+	}
+#else
 	FreeLibrary( hDLL );
+#endif //_DEBUG
+
 #elif _LINUX
 	dlclose((void *)hDLL);
 #endif

@@ -330,6 +330,7 @@ BEGIN
         END
         MENUITEM SEPARATOR
         MENUITEM "G&o to Brush Number...\tCtrl+Shift+G", ID_GOTO_BRUSH
+        MENUITEM "Go to coordinates...",        ID_GOTO_COORDS
         MENUITEM "&Entity Report...",           ID_MAP_ENTITYREPORT
         MENUITEM "Entity G&allery",             ID_MAP_ENTITY_GALLERY
         MENUITEM "&Check for Problems\tAlt+P",  ID_MAP_CHECK
@@ -2202,8 +2203,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,2,1,0
- PRODUCTVERSION 0,2,1,0
+ FILEVERSION 0,2,1,1
+ PRODUCTVERSION 0,2,1,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -2219,16 +2220,16 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "\0"
-            VALUE "CompanyName", "Valve, L.L.C.\0"
+            VALUE "CompanyName", "Valve, L.L.C., VXP\0"
             VALUE "FileDescription", "Worldcraft\0"
-            VALUE "FileVersion", "3.4.0\0"
+            VALUE "FileVersion", "3.4.1\0"
             VALUE "InternalName", "Worldcraft\0"
-            VALUE "LegalCopyright", "Copyright © 1996-99 Valve, L.L.C.\0"
+            VALUE "LegalCopyright", "Copyright © 1996-99 Valve, L.L.C., VXP\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "WC.EXE\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Worldcraft (tm)\0"
-            VALUE "ProductVersion", "3.4.0\0"
+            VALUE "ProductVersion", "3.4.1\0"
             VALUE "SpecialBuild", "\0"
         END
     END

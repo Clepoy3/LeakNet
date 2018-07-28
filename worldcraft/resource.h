@@ -1047,6 +1047,7 @@
 #define ID_VIEW_3DSMOOTH                33119
 #define ID_MAP_ENTITY_GALLERY           33171
 #define ID_VIEW_CENTER3DVIEWSONSELECTION 33172
+#define ID_GOTO_COORDS                  33173
 #define IDS_NOPLAYERSTART               40000
 #define IDS_MIXEDFACES                  40001
 #define IDS_DUPLICATEPLANES             40002
@@ -1096,7 +1097,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        322
-#define _APS_NEXT_COMMAND_VALUE         33173
+#define _APS_NEXT_COMMAND_VALUE         33174
 #define _APS_NEXT_CONTROL_VALUE         1586
 #define _APS_NEXT_SYMED_VALUE           116
 #endif

@@ -287,6 +287,7 @@ int CWeaponMolotov::WeaponRangeAttack1Condition( float flDot, float flDist )
 									pEnemy->GetAbsMins().z );
 
 		// Get Toss Vector
+	/*
 		Vector			throwStart  = pNPC->Weapon_ShootPosition();
 		Vector			vecToss;
 		CBaseEntity*	pBlocker	= NULL;
@@ -300,6 +301,21 @@ int CWeaponMolotov::WeaponRangeAttack1Condition( float flDot, float flDist )
 			m_vecTossVelocity = vecToss;
 			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 
+		}
+		else
+		{
+			m_iThrowBits = COND_NONE;
+		}
+	*/
+		Vector			throwStart  = pNPC->Weapon_ShootPosition();
+		Vector			vecToss;
+		float			heightLimit = 20.0f; // -1
+
+		vecToss = VecCheckToss( pNPC, throwStart, vecTarget, heightLimit, 1.0, false );
+		if ( vecToss != vec3_origin )
+		{
+			m_vecTossVelocity = vecToss;
+			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 		}
 		else
 		{

@@ -59,6 +59,7 @@ public:
 	virtual const model_t*	GetCollisionModel();
 	virtual const Vector&	GetCollisionOrigin();
 	virtual const QAngle&	GetCollisionAngles();
+	virtual const matrix3x4_t&	CollisionToWorldTransform(); // VXP
 	virtual SolidType_t		GetSolid() const;
 	virtual int				GetSolidFlags() const;
 	virtual IClientUnknown*	GetIClientUnknown();

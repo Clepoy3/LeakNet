@@ -18,6 +18,10 @@ enum Touch_t
 	touch_player_or_npc,
 };
 
+#ifdef _DEBUG
+ConVar  beamenv_debug( "beamenv_debug", "0", FCVAR_CHEAT, "Enable/disable env_beam debug line." );
+#endif
+
 class CEnvBeam : public CBeam
 {
 public:
@@ -456,7 +460,12 @@ void CEnvBeam::UpdateThink( void )
 		CTraceFilterPlayersNPCs traceFilter;
 		enginetrace->TraceRay( ray, MASK_SHOT, &traceFilter, &tr );
 
-		NDebugOverlay::Line( tr.startpos, tr.endpos, 255,0,0, false, 1.0 );
+#ifdef _DEBUG // VXP
+		if ( beamenv_debug.GetBool() )
+		{
+			NDebugOverlay::Line( tr.startpos, tr.endpos, 255,0,0, false, 1.0 );
+		}
+#endif
 
 		if( tr.fraction != 1.0 )
 		{

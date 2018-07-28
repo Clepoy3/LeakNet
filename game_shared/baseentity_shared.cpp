@@ -933,3 +933,8 @@ void CBaseEntity::SetSimulationTime( float st )
 {
 	m_flSimulationTime = st;
 }
+
+bool CBaseEntity::IsEffectActive( int nEffectMask ) const // VXP
+{
+	return (m_fEffects & nEffectMask) != 0;
+}

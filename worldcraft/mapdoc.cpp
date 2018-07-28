@@ -103,6 +103,8 @@ static char THIS_FILE[] = __FILE__;
 
 #define MAX_REPLACE_LINE_LENGTH 256
 
+#define HALF_LIFE_2_EYE_HEIGHT 64
+
 
 extern BOOL bSaveVisiblesOnly;
 extern CShell g_Shell;
@@ -221,6 +223,7 @@ BEGIN_MESSAGE_MAP(CMapDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_REDO, OnUpdateUndoRedo)
 	ON_COMMAND(ID_VSCALE_CHANGED, OnChangeVertexscale)
 	ON_COMMAND(ID_GOTO_BRUSH, OnMapGotoBrush)
+	ON_COMMAND(ID_GOTO_COORDS, OnMapGotoCoords)
 	ON_COMMAND(ID_EDIT_FINDENTITIES, OnEditFindEntities)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_FINDENTITIES, OnUpdateEditFunction)
 	ON_COMMAND( ID_TOOLS_DISP_SOLIDDRAW, OnToggleDispSolidMask )
@@ -1093,6 +1096,65 @@ POSITION CMapDoc::GetFirstDocPosition(void)
 CMapDoc *CMapDoc::GetNextDoc(POSITION &p)
 {
 	return(s_ActiveDocs.GetNext(p));
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CMapDoc::OnMapGotoCoords()
+{
+//	CStrDlg dlg(0, "", "Coordinates to go to (x y z), ex: 200 -4096 1154\nex: setpos -1 2 3; setang 4 5 6", "Go to coordinates");
+	CStrDlg dlg(0, "", "Coordinates to go to (x y z), ex: 200 -4096 1154\nex: setpos -1 2 3", "Go to coordinates");
+	while (dlg.DoModal() == IDOK)
+	{
+		Vector posVec;
+	//	Vector angVec;
+		char setposString[255];
+	//	char setangString[255];
+	//	char semicolonString[2];
+		
+		if (sscanf(dlg.m_string, "%f %f %f", &posVec.x, &posVec.y, &posVec.z) == 3)
+		{
+			// SILLY:
+			if ((posVec.x == 200) && (posVec.y == -4096) && (posVec.z == 1154))
+			{
+				if (AfxMessageBox("Seriously?\n\n(I mean, that was just an example, you were supposed to type in your own numbers)", MB_YESNO | MB_ICONQUESTION) != IDYES)
+					continue;
+			}
+		//	CenterViewsOn(posVec);
+
+			VIEW2DINFO vi;
+			vi.wFlags = VI_CENTER;
+			vi.ptCenter = posVec;
+			SetView2dInfo(vi);
+
+			Center3DViewsOn( posVec );
+
+		//	Set3DViewsPosAng( posVec, angVec );
+			return;
+		}
+	//	if ( sscanf( dlg.m_string, "%s %f %f %f%s %s %f %f %f", setposString, &posVec.x, &posVec.y, &posVec.z, semicolonString, setangString, &angVec.x, &angVec.y, &angVec.z ) == 9 )
+		if ( sscanf( dlg.m_string, "%s %f %f %f", setposString, &posVec.x, &posVec.y, &posVec.z ) == 4 )
+		{
+			posVec.z += HALF_LIFE_2_EYE_HEIGHT;	
+
+		//	CenterViewsOn( posVec );
+
+			VIEW2DINFO vi;
+			vi.wFlags = VI_CENTER;
+			vi.ptCenter = posVec;
+			SetView2dInfo(vi);
+
+			Center3DViewsOn( posVec );
+
+		//	Set3DViewsPosAng( posVec, angVec );
+			return;
+		}
+		
+
+		AfxMessageBox("Please enter 3 coordinates, space-delimited or use\nsetpos x y z; setang u v w format.", MB_OK | MB_ICONEXCLAMATION);
+	}
 }
 
 

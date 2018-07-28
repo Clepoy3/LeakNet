@@ -59,6 +59,10 @@
 #include "physics_saverestore.h"
 #include "igameevents.h"
 
+// VXP
+//#include "tgawriter.h"
+#include "tgaloader.h"
+
 #include "engine/ISharedModelCache.h"
 //#include "ITrackerUser.h"
 
@@ -402,7 +406,13 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetEntitiySaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetPhysSaveRestoreBlockHandler() );
 
+	// VXP
 	g_pSharedModelCache->InitFileSystem( filesystem );
+	if ( !TGALoader::SetFileSystem( appSystemFactory ) )
+	{
+		return false;
+	}
+//	TGAWriter::SetFileSystem( appSystemFactory );
 
 	return true;
 }

@@ -249,6 +249,24 @@ const QAngle& CCollisionProperty::GetCollisionAngles()
 	return m_pOuter->GetAbsAngles();
 }
 
+const matrix3x4_t& CCollisionProperty::CollisionToWorldTransform()
+{
+	static matrix3x4_t s_matTemp[4];
+	static int s_nIndex = 0;
+
+	matrix3x4_t &matResult = s_matTemp[s_nIndex];
+	s_nIndex = (s_nIndex+1) & 0x3;
+
+	if ( IsBoundsDefinedInEntitySpace() )
+	{
+		return m_pOuter->EntityToWorldTransform();
+	}
+
+	SetIdentityMatrix( matResult );
+	MatrixSetColumn( GetCollisionOrigin(), 3, matResult );
+	return matResult;
+}
+
 
 //-----------------------------------------------------------------------------
 // Sets the collision bounds + the size

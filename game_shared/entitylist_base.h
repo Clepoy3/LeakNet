@@ -12,10 +12,22 @@
 
 
 #include "const.h"
-#include "serial_entity.h"
+//#include "serial_entity.h"
 #include "basehandle.h"
 #include "utllinkedlist.h"
 #include "ihandleentity.h"
+
+
+class CEntInfo
+{
+public:
+	IHandleEntity	*m_pEntity;
+	int				m_SerialNumber;
+	CEntInfo		*m_pPrev;
+	CEntInfo		*m_pNext;
+
+	void			ClearLinks();
+};
 
 
 class CBaseEntityList
@@ -44,6 +56,10 @@ public:
 	CBaseHandle NextHandle( CBaseHandle hEnt ) const;
 	static CBaseHandle InvalidHandle();
 
+	const CEntInfo *FirstEntInfo() const;
+	const CEntInfo *NextEntInfo( const CEntInfo *pInfo ) const;
+	const CEntInfo *GetEntInfoPtr( const CBaseHandle &hEnt ) const;
+	const CEntInfo *GetEntInfoPtrByIndex( int index ) const;
 
 // Overridables.
 protected:
@@ -64,6 +80,7 @@ private:
 	
 private:
 	
+/*
 	class CEntInfo : public CSerialEntity
 	{
 	public:
@@ -78,12 +95,50 @@ private:
 
 	// Slots in m_EntPtrArray above MAX_EDICTS that are free.
 	CUtlLinkedList<unsigned short, unsigned short> m_FreeNonNetworkableSlots;
+*/
+	class CEntInfoList
+	{
+	public:
+		CEntInfoList();
+
+		const CEntInfo	*Head() const { return m_pHead; }
+		const CEntInfo	*Tail() const { return m_pTail; }
+		CEntInfo		*Head() { return m_pHead; }
+		CEntInfo		*Tail() { return m_pTail; }
+		void			AddToHead( CEntInfo *pElement ) { LinkAfter( NULL, pElement ); }
+		void			AddToTail( CEntInfo *pElement ) { LinkBefore( NULL, pElement ); }
+
+		void LinkBefore( CEntInfo *pBefore, CEntInfo *pElement );
+		void LinkAfter( CEntInfo *pBefore, CEntInfo *pElement );
+		void Unlink( CEntInfo *pElement );
+		bool IsInList( CEntInfo *pElement );
+	
+	private:
+		CEntInfo		*m_pHead;
+		CEntInfo		*m_pTail;
+	};
+
+	int GetEntInfoIndex( const CEntInfo *pEntInfo ) const;
+
+
+	// The first MAX_EDICTS entities are networkable. The rest are client-only or server-only.
+	CEntInfo m_EntPtrArray[NUM_ENT_ENTRIES];
+	CEntInfoList	m_activeList;
+	CEntInfoList	m_freeNonNetworkableList;
 };
 
 
 // ------------------------------------------------------------------------------------ //
 // Inlines.
 // ------------------------------------------------------------------------------------ //
+
+inline int CBaseEntityList::GetEntInfoIndex( const CEntInfo *pEntInfo ) const
+{
+	Assert( pEntInfo );
+	int index = (int)(pEntInfo - m_EntPtrArray);
+	Assert( index >= 0 && index < NUM_ENT_ENTRIES );
+	return index;
+}
 
 inline CBaseHandle CBaseEntityList::GetNetworkableHandle( int iEntity ) const
 {
@@ -121,21 +176,26 @@ inline IHandleEntity* CBaseEntityList::LookupEntityByNetworkIndex( int edictInde
 
 inline CBaseHandle CBaseEntityList::FirstHandle() const
 {
-	if ( m_Entities.Head() == m_Entities.InvalidIndex() )
+//	if ( m_Entities.Head() == m_Entities.InvalidIndex() )
+	if ( !m_activeList.Head() )
 		return INVALID_EHANDLE_INDEX;
 
-	int index = m_Entities[ m_Entities.Head() ];
+//	int index = m_Entities[ m_Entities.Head() ];
+	int index = GetEntInfoIndex( m_activeList.Head() );
 	return CBaseHandle( index, m_EntPtrArray[index].m_SerialNumber );
 }
 
 inline CBaseHandle CBaseEntityList::NextHandle( CBaseHandle hEnt ) const
 {
 	int iSlot = hEnt.GetEntryIndex();
-	int iNext = m_Entities.Next( m_EntPtrArray[iSlot].m_Index );
-	if ( iNext == m_Entities.InvalidIndex() )
+//	int iNext = m_Entities.Next( m_EntPtrArray[iSlot].m_Index );
+//	if ( iNext == m_Entities.InvalidIndex() )
+	CEntInfo *pNext = m_EntPtrArray[iSlot].m_pNext;
+	if ( !pNext )
 		return INVALID_EHANDLE_INDEX;
 
-	int index = m_Entities[iNext];
+//	int index = m_Entities[iNext];
+	int index = GetEntInfoIndex( pNext );
 	return CBaseHandle( index, m_EntPtrArray[index].m_SerialNumber );
 }
 	
@@ -144,6 +204,26 @@ inline CBaseHandle CBaseEntityList::InvalidHandle()
 	return INVALID_EHANDLE_INDEX;
 }
 
+inline const CEntInfo *CBaseEntityList::FirstEntInfo() const
+{
+	return m_activeList.Head();
+}
+
+inline const CEntInfo *CBaseEntityList::NextEntInfo( const CEntInfo *pInfo ) const
+{
+	return pInfo->m_pNext;
+}
+
+inline const CEntInfo *CBaseEntityList::GetEntInfoPtr( const CBaseHandle &hEnt ) const
+{
+	int iSlot = hEnt.GetEntryIndex();
+	return &m_EntPtrArray[iSlot];
+}
+
+inline const CEntInfo *CBaseEntityList::GetEntInfoPtrByIndex( int index ) const
+{
+	return &m_EntPtrArray[index];
+}
 
 extern CBaseEntityList *g_pEntityList;
 

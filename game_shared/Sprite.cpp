@@ -429,7 +429,9 @@ void CSprite::TurnOn( void )
 // DVS TODO: Obsolete Use handler
 void CSprite::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
-	int on = m_fEffects != EF_NODRAW;
+//	int on = m_fEffects != EF_NODRAW;
+//	int on = (m_fEffects & EF_NODRAW) == 0; // VXP
+	int on = !IsEffectActive( EF_NODRAW ); // VXP: Or just like this
 	if ( ShouldToggle( useType, on ) )
 	{
 		if ( on )
@@ -466,7 +468,9 @@ void CSprite::InputShowSprite( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CSprite::InputToggleSprite( inputdata_t &inputdata )
 {
-	if ( m_fEffects != EF_NODRAW )
+//	if ( m_fEffects != EF_NODRAW )
+//	if (( m_fEffects & EF_NODRAW ) == 0) // VXP
+	if ( !IsEffectActive( EF_NODRAW ) ) // VXP: Or like this
 	{
 		TurnOff();
 	}

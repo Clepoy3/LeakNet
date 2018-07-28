@@ -49,7 +49,8 @@ extern  bool		scr_drawloading;
 ConVar		con_trace( "con_trace", "0" );
 ConVar		con_notifytime( "con_notifytime","8", 0, "How long to display recent console text to the upper part of the game window" );
 
-static ConVar con_times("contimes", "6", 0, "Number of console lines to overlay for debugging." );
+//static ConVar con_times("contimes", "6", 0, "Number of console lines to overlay for debugging." );
+static ConVar con_times("contimes", "6", FCVAR_ARCHIVE, "Number of console lines to overlay for debugging." ); // VXP: For saving into config.cfg
 
 bool con_refreshonprint = true;
 

@@ -131,6 +131,7 @@ public:
 	// Get angles and origin.
 	virtual const Vector&	GetCollisionOrigin();
 	virtual const QAngle&	GetCollisionAngles();
+	virtual const matrix3x4_t&	CollisionToWorldTransform(); // VXP
 
 	// Return a SOLID_ define.
 	virtual SolidType_t		GetSolid() const;
@@ -658,6 +659,11 @@ const QAngle& CStaticProp::GetCollisionAngles()
 	}
 
 	return vec3_angle;
+}
+
+const matrix3x4_t& CStaticProp::CollisionToWorldTransform()
+{
+	return m_ModelToWorld;
 }
 
 

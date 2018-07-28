@@ -120,7 +120,8 @@ void CCrabSynth::Spawn( void )
 {
 	Precache();
 	SetModel( "models/synth.mdl" );
-	SetHullType(HULL_HUMAN);
+//	SetHullType(HULL_HUMAN);
+	SetHullType(HULL_LARGE);
 	SetHullSizeNormal();
 	SetDefaultEyeOffset();
 

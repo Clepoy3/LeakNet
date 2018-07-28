@@ -377,11 +377,12 @@ CAI_Schedule *CAI_BaseNPC::GetNewSchedule( void )
 	{
 		// I dunno how this trend got started, but we need to find the problem.
 		// You may not be in combat state with no enemy!!! (sjb) 11/4/03
-		if( m_NPCState == NPC_STATE_COMBAT && !GetEnemy() )
-		{
-			DevMsg("**ERROR: Combat State with no enemy! slamming to ALERT\n");
-			SetState( NPC_STATE_ALERT );
-		}
+		// VXP: Added from Source 2007 and then commented
+	//	if( m_NPCState == NPC_STATE_COMBAT && !GetEnemy() )
+	//	{
+	//		DevMsg("**ERROR: Combat State with no enemy! slamming to ALERT\n");
+	//		SetState( NPC_STATE_ALERT );
+	//	}
 
 
 	// VXP: UNDONE: moved to CAI_BaseNPC::MaintainSchedule

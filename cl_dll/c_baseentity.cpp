@@ -775,10 +775,12 @@ void C_BaseEntity::SetRemovalFlag( bool bRemove )
 //-----------------------------------------------------------------------------
 // Effects...
 //-----------------------------------------------------------------------------
+/* VXP: Moved to baseentity_shared.cpp
 bool C_BaseEntity::IsEffectActive( int nEffectMask ) const
 {
 	return (m_fEffects & nEffectMask) != 0;
 }
+*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 
