@@ -180,10 +180,9 @@ public:
 	{
 		if ( !pObj )
 			return;
-	//	unsigned short gameFlags = pObj->GetGameFlags();
-	//	gameFlags &= ~FVPHYSICS_CONSTRAINT_STATIC;
-	//	pObj->SetGameFlags( gameFlags );
-		PhysClearGameFlags( pObj, FVPHYSICS_CONSTRAINT_STATIC );
+		unsigned short gameFlags = pObj->GetGameFlags();
+		gameFlags &= ~FVPHYSICS_CONSTRAINT_STATIC;
+		pObj->SetGameFlags( gameFlags );
 
 	}
 
@@ -228,7 +227,7 @@ public:
 
 	void InputBreak( inputdata_t &inputdata )
 	{
-		if ( m_pConstraint ) 
+		if ( m_pConstraint )
 			m_pConstraint->Deactivate();
 
 		OnBreak();
@@ -241,13 +240,7 @@ public:
 
 	void InputTurnOn( inputdata_t &inputdata )
 	{
-		if ( m_pConstraint )
-		{
-		//	ActivateConstraint();
-			m_pConstraint->Activate();
-			m_pConstraint->GetReferenceObject()->Wake();
-			m_pConstraint->GetAttachedObject()->Wake();
-		}
+		ActivateConstraint();
 	}
 	void InputTurnOff( inputdata_t &inputdata )
 	{
@@ -435,13 +428,13 @@ void CPhysConstraint::Activate( void )
 {
 	BaseClass::Activate();
 
-//	if ( !m_pConstraint )
-//	{
+	if ( !m_pConstraint )
+	{
 		if ( !ActivateConstraint() )
 		{
 			UTIL_Remove(this);
 		}
-//	}
+	}
 }
 
 IPhysicsConstraintGroup *GetConstraintGroup( string_t systemName )
@@ -470,50 +463,55 @@ bool CPhysConstraint::ActivateConstraint( void )
 		// already have a constraint, don't make a new one
 		info.pObjects[0] = m_pConstraint->GetReferenceObject();
 		info.pObjects[1] = m_pConstraint->GetAttachedObject();
-		if ( info.pObjects[0] && info.pObjects[1] )
-		{
-			SetupTeleportationHandling( info );
-		}
-
 		if ( m_spawnflags & SF_CONSTRAINT_DISABLE_COLLISION )
 		{
+			// VXP: Fix for restoring a save with a physconstraint in it
+			if ( !info.pObjects[0] || !info.pObjects[1] )
+				return false;
+
 			physenv->DisableCollisions( info.pObjects[0], info.pObjects[1] );
 		}
-		return true;
+		m_pConstraint->Activate();
 	}
-	GetConstraintObjects( info );
+	else
+	{
+		GetConstraintObjects( info );
 
-	if ( !info.pObjects[0] && !info.pObjects[1] )
-	{
-		return false;
-	}
+		if ( !info.pObjects[0] && !info.pObjects[1] )
+		{
+			return false;
+		}
 
-	if ( info.pObjects[0]->IsStatic() && info.pObjects[1]->IsStatic() )
-	{
-		Warning("Constraint (%s) attached to two static objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
-		return false;
-	}
+		if ( info.pObjects[0]->IsStatic() && info.pObjects[1]->IsStatic() )
+		{
+			Warning("Constraint (%s) attached to two static objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
+			return false;
+		}
 
-	if ( info.pObjects[0]->GetShadowController() && info.pObjects[1]->GetShadowController() )
-	{
-		Warning("Constraint (%s) attached to two shadow objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
-		return false;
-	}
-	IPhysicsConstraintGroup *pGroup = GetConstraintGroup( m_nameSystem );
-	m_pConstraint = CreateConstraint( pGroup, info );
-	if ( !m_pConstraint )
-	{
-		return false;
-	}
-	m_pConstraint->SetGameData( (void *)this );
+		if ( info.pObjects[0]->GetShadowController() && info.pObjects[1]->GetShadowController() )
+		{
+			Warning("Constraint (%s) attached to two shadow objects (%s and %s)!!!\n", STRING(GetEntityName()), STRING(m_nameAttach1), m_nameAttach2 == NULL_STRING ? "world" : STRING(m_nameAttach2) );
+			return false;
+		}
+		IPhysicsConstraintGroup *pGroup = GetConstraintGroup( m_nameSystem );
+		m_pConstraint = CreateConstraint( pGroup, info );
+		if ( !m_pConstraint )
+		{
+			return false;
+		}
+		m_pConstraint->SetGameData( (void *)this );
 
-	if ( pGroup )
-	{
-		pGroup->Activate();
+		if ( pGroup )
+		{
+			pGroup->Activate();
+		}
 	}
 
 	if ( m_spawnflags & SF_CONSTRAINT_DISABLE_COLLISION )
 	{
+		// VXP: Fix for restoring a save with a physconstraint in it
+		if ( !info.pObjects[0] || !info.pObjects[1] )
+			return false;
 		physenv->DisableCollisions( info.pObjects[0], info.pObjects[1] );
 	}
 
@@ -715,7 +713,9 @@ IPhysicsConstraint *CPhysFixed::CreateConstraint( IPhysicsConstraintGroup *pGrou
 	// constraining to the world means object 1 is fixed
 	if ( info.pObjects[0] == g_PhysWorldObject )
 	{
-		PhysSetGameFlags( info.pObjects[1], FVPHYSICS_CONSTRAINT_STATIC );
+		unsigned short gameFlags = info.pObjects[1]->GetGameFlags();
+		gameFlags |= FVPHYSICS_CONSTRAINT_STATIC;
+		info.pObjects[1]->SetGameFlags( gameFlags );
 	}
 
 	return physenv->CreateFixedConstraint( info.pObjects[0], info.pObjects[1], pGroup, fixed );

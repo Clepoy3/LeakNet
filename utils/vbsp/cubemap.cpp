@@ -490,7 +490,7 @@ static int SideIDToIndex( int brushSideID )
 
 void Cubemap_FixupBrushSidesMaterials( void )
 {
-//	Msg( "fixing up env_cubemap materials on brush sides...\n" );
+	Msg( "fixing up env_cubemap materials on brush sides...\n" );
 //	Msg( "There are %i cubemap samples on the map\n", g_nCubemapSamples );
 	Assert( s_EnvCubemapToBrushSides.Count() == g_nCubemapSamples );
 

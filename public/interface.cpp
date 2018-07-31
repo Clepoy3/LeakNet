@@ -205,14 +205,9 @@ void Sys_UnloadModule( CSysModule *pModule )
 	unsigned long bFilename = GetModuleFileName( hDLL, buffer, MAX_PATH );
 
 	BOOL success = FreeLibrary( hDLL );
-	if ( success )
+	if ( success && bFilename )
 	{
-		nLoadedModules--;
-
-		if ( bFilename )
-		{
-			printf( "Unloaded module %s\n", buffer );
-		}
+		printf( "Unloaded module %s\n", buffer );
 	}
 #else
 	FreeLibrary( hDLL );
