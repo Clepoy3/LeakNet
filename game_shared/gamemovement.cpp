@@ -912,10 +912,10 @@ void CGameMovement::CheckWaterJump( void )
 		UTIL_TraceLine( vecStart, vecEnd, MASK_PLAYERSOLID_BRUSHONLY, mv->m_nPlayerHandle.Get(), COLLISION_GROUP_NONE, &tr );
 		if ( tr.fraction == 1.0 )		// open at eye level
 		{
-			mv->m_vecVelocity[2] = 260.0f;			// Push up
+			mv->m_vecVelocity[2] = 260;			// Push up
 			mv->m_nOldButtons |= IN_JUMP;		// Don't jump again until released
 			player->AddFlag( FL_WATERJUMP );
-			player->m_flWaterJumpTime = 2000.0f;	// Do this for 2 seconds
+			player->m_flWaterJumpTime = 2000;	// Do this for 2 seconds
 		}
 	}
 }
@@ -1003,7 +1003,7 @@ void CGameMovement::WaterMove( void )
 	{
 		newspeed = speed - gpGlobals->frametime * speed * sv_friction.GetFloat() * m_surfaceFriction;
 
-		if (newspeed < 0.0f)
+		if (newspeed < 0)
 			newspeed = 0;
 		VectorScale (mv->m_vecVelocity, newspeed/speed, mv->m_vecVelocity);
 	}
@@ -1263,10 +1263,6 @@ void CGameMovement::AirMove( void )
 	VectorAdd(mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
 
 	TryPlayerMove();
-
-	// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like
-	//  a conveyor (or maybe another monster?)
-	VectorSubtract (mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
 }
 
 
@@ -1597,6 +1593,10 @@ void CGameMovement::FullWalkMove( const bool bOnLadder )
 		// Set final flags.
 		CategorizePosition();
 
+		// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like
+		//  a conveyor (or maybe another monster?)
+		VectorSubtract (mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
+
 		// Make sure velocity is valid.
 		CheckVelocity();
 
@@ -1725,7 +1725,7 @@ void CGameMovement::FullNoClipMove( void )
 	VectorMA( mv->m_vecOrigin, gpGlobals->frametime, mv->m_vecVelocity, mv->m_vecOrigin );
 
 	// Zero out velocity if in noaccel mode
-	if ( sv_noclipaccelerate.GetFloat() < 0.0f )
+	if ( sv_noclipaccelerate.GetFloat() < 0.0 )
 	{
 		mv->m_vecVelocity.Init();
 	}
@@ -3277,8 +3277,7 @@ void CGameMovement::PlayerMove( void )
 	CheckParameters();
 	
 	// clear output applied velocity
-//	mv->m_outWishVel = vec3_origin;
-	mv->m_outWishVel.Init();
+	mv->m_outWishVel = vec3_origin;
 
 	MoveHelper( )->ResetTouchList();                    // Assume we don't touch anything
 

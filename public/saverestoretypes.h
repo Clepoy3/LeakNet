@@ -145,6 +145,8 @@ struct entitytable_t
 									// NOTE: Brush models can be built in different coordiante systems
 									//		in different levels, so this fixes up local quantities to match
 									//		those differences.
+
+	DECLARE_SIMPLE_DATADESC(); // VXP: For beautier usage in game_shared\saverestore.cpp
 };
 
 #define FENTTABLE_PLAYER		0x80000000

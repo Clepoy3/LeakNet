@@ -117,10 +117,14 @@ LINK_ENTITY_TO_CLASS( npc_zombie_torso, CZombie );
 //---------------------------------------------------------
 const char *CZombie::pMoanSounds[] =
 {
-	"npc/zombie/moan_loop1.wav",
-	"npc/zombie/moan_loop2.wav",
-	"npc/zombie/moan_loop3.wav",
-	"npc/zombie/moan_loop4.wav",
+//	"npc/zombie/moan_loop1.wav",
+//	"npc/zombie/moan_loop2.wav",
+//	"npc/zombie/moan_loop3.wav",
+//	"npc/zombie/moan_loop4.wav",
+	"NPC_BaseZombie.Moan1",
+	"NPC_BaseZombie.Moan2",
+	"NPC_BaseZombie.Moan3",
+	"NPC_BaseZombie.Moan4",
 };
 
 //=========================================================
@@ -182,7 +186,11 @@ void CZombie::Precache( void )
 	engine->PrecacheModel( "models/zombie/classic_torso.mdl" );
 	engine->PrecacheModel( "models/zombie/classic_legs.mdl" );
 
-	PRECACHE_SOUND_ARRAY( pMoanSounds );
+//	PRECACHE_SOUND_ARRAY( pMoanSounds );
+	PrecacheScriptSound( "NPC_BaseZombie.Moan1" );
+	PrecacheScriptSound( "NPC_BaseZombie.Moan2" );
+	PrecacheScriptSound( "NPC_BaseZombie.Moan3" );
+	PrecacheScriptSound( "NPC_BaseZombie.Moan4" );
 }
 
 

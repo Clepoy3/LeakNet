@@ -300,12 +300,14 @@ void CSave::Log( const char *pName, fieldtype_t fieldType, void *value, int coun
 		// Add space data.
 		if ( ( iCount + 1 ) != count )
 		{
-			Q_snprintf( szTempBuf, sizeof( szTempBuf ), " " );
+		//	Q_snprintf( szTempBuf, sizeof( szTempBuf ), " " );
+			Q_strncpy( szTempBuf, " ", sizeof( szTempBuf ) );
 			Q_strncat( szBuf, szTempBuf, sizeof( szTempBuf ) );
 		}
 		else
 		{
-			Q_snprintf( szTempBuf, sizeof( szTempBuf ), "\n" );
+		//	Q_snprintf( szTempBuf, sizeof( szTempBuf ), "\n" );
+			Q_strncpy( szTempBuf, "\n", sizeof( szTempBuf ) );
 			Q_strncat( szBuf, szTempBuf, sizeof( szTempBuf ) );
 		}
 	}
@@ -1084,7 +1086,7 @@ void CSave::WriteFunction( datamap_t *pRootMap, const char *pname, const int *da
 	}
 	else
 	{
-		Warning( "Invalid function pointer in entity!" );
+		Warning( "Invalid function pointer in entity!\n" );
 		Assert(0);
 	}
 }
@@ -2047,7 +2049,8 @@ int CRestore::ReadPositionVector( Vector *pValue, int count, int nBytesAvailable
 	
 	for ( int i = nRead - 1; i >= 0; i-- )
 	{
-		pValue[i] += basePosition;
+		if ( pValue[i] != vec3_invalid ) // VXP
+			pValue[i] += basePosition;
 	}
 	
 	return nRead;
@@ -2078,8 +2081,9 @@ int CRestore::ReadFunction( datamap_t *pMap, void **pValue, int count, int nByte
 //
 //-----------------------------------------------------------------------------
 
-static typedescription_t gEntityTableDescription[] = 
-{
+//static typedescription_t gEntityTableDescription[] = 
+//{
+BEGIN_SIMPLE_DATADESC(entitytable_t) // VXP
 	DEFINE_FIELD( entitytable_t, id, FIELD_INTEGER ),
 	DEFINE_FIELD( entitytable_t, edictindex, FIELD_INTEGER ),
 	DEFINE_FIELD( entitytable_t, saveentityindex, FIELD_INTEGER ),
@@ -2090,7 +2094,8 @@ static typedescription_t gEntityTableDescription[] =
 	DEFINE_FIELD( entitytable_t, classname, FIELD_STRING ),
 	DEFINE_FIELD( entitytable_t, globalname, FIELD_STRING ),
 	DEFINE_FIELD( entitytable_t, landmarkModelSpace, FIELD_VECTOR ),
-};
+//};
+END_DATADESC()
 
 class CEntitiySaveRestoreBlockHandler : public ISaveRestoreBlockHandler
 {
@@ -2202,7 +2207,10 @@ void CEntitiySaveRestoreBlockHandler::WriteSaveHeaders( ISave *pSave )
 	pSave->WriteInt( &nEntities );
 	
 	for ( int i = 0; i < pSaveData->NumEntities(); i++ )
-		pSave->WriteFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, gEntityTableDescription, ARRAYSIZE(gEntityTableDescription) );
+	{
+	//	pSave->WriteFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, gEntityTableDescription, ARRAYSIZE(gEntityTableDescription) );
+		pSave->WriteFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, entitytable_t::m_DataMap.dataDesc, entitytable_t::m_DataMap.dataNumFields );
+	}
 }
 
 //---------------------------------
@@ -2231,7 +2239,10 @@ void CEntitiySaveRestoreBlockHandler::ReadRestoreHeaders( IRestore *pRestore )
 	pSaveData->InitEntityTable( pEntityTable, nEntities );
 	
 	for ( int i = 0; i < pSaveData->NumEntities(); i++ )
-		pRestore->ReadFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, gEntityTableDescription, ARRAYSIZE(gEntityTableDescription) );
+	{
+	//	pRestore->ReadFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, gEntityTableDescription, ARRAYSIZE(gEntityTableDescription) );
+		pRestore->ReadFields( "ETABLE", pSaveData->GetEntityInfo( i ), NULL, entitytable_t::m_DataMap.dataDesc, entitytable_t::m_DataMap.dataNumFields );
+	}
 
 }
 
@@ -2642,7 +2653,16 @@ CSaveRestoreData *SaveInit( int size )
 	CSaveRestoreData	*pSaveData;
 
 	if ( size <= 0 )
-		size = 0x80000;		// Reserve 512K for now, UNDONE: Shrink this after compressing strings
+	{
+		// VXP: It's just a lack of buffer size while trying to save on d1_town_01 map with all the env_fire enables
+	//	size = 0x80000;		// Reserve 512K for now, UNDONE: Shrink this after compressing strings
+
+#if 1 //def DISABLE_DEBUG_HISTORY // VXP: I don't know what the fuck DISABLE_DEBUG_HISTORY is
+		size = 2*1024*1024; // Reserve 2048K for now, UNDONE: Shrink this after compressing strings
+#else
+		size = 3*1024*1024; // Reserve 3096K for now, UNDONE: Shrink this after compressing strings
+#endif
+	}
 
 	int numentities;
 

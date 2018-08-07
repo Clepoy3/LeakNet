@@ -1143,11 +1143,11 @@ static void FindPelvisAndSpine( int numbones, mstudiobone_t *bones, int *pelvis,
 	mstudiobone_t *bone = bones;
 	for ( int i = 0; i < numbones; i++, bone++ )
 	{
-		if ( !stricmp( bone->pszName(), "Bip01 Pelvis" ) )
+		if ( !stricmp( bone->pszName(), "Bip01 Pelvis" ) ) // VXP: FIXME: No one of TF2 player models hasn't this bone
 		{
 			*pelvis = i;
 		}
-		else if ( !stricmp( bone->pszName(), "Bip01 Spine" ) )
+		else if ( !stricmp( bone->pszName(), "Bip01 Spine" ) ) // VXP: FIXME: No one of TF2 player models hasn't this bone
 		{
 			*spine = i;
 		}
