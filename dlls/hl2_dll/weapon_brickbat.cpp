@@ -119,7 +119,7 @@ void CWeaponBrickbat::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ )
+const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ ) const
 {
 	return BrickBatAmmoArray[m_iCurrentAmmoType].m_sViewModel;
 }
@@ -127,7 +127,7 @@ const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CWeaponBrickbat::GetWorldModel( void )
+const char *CWeaponBrickbat::GetWorldModel( void ) const
 {
 	return BrickBatAmmoArray[m_iCurrentAmmoType].m_sWorldModel;
 }

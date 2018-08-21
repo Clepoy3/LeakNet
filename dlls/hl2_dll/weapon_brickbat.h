@@ -55,8 +55,8 @@ public:
 	void				Spawn( void );
 	bool				Deploy( void );
 
-	virtual const char *GetViewModel( int viewmodelindex =0 );
-	virtual const char *GetWorldModel( void );
+	virtual const char *GetViewModel( int viewmodelindex =0 ) const;
+	virtual const char *GetWorldModel( void ) const;
 
 	void				DrawAmmo( void );
 

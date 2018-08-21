@@ -201,7 +201,6 @@ void Grab_Triangles( s_source_t *psource )
 {
 	int		i;
 	int		tcount = 0;	
-	int		ncount = 0;
 	Vector	vmin, vmax;
 
 	vmin[0] = vmin[1] = vmin[2] = 99999;
@@ -314,8 +313,6 @@ void Grab_Triangles( s_source_t *psource )
 	psource->minfacecount = psource->numfaces;
 	psource->maxfacecount = psource->numfaces;
 	*/
-	
-	if (ncount) printf("%d triangles with misdirected normals\n", ncount );
 }
 
 
@@ -339,7 +336,8 @@ int Load_SMD ( s_source_t *psource )
 	while (fgets( g_szLine, sizeof( g_szLine ), g_fpInput ) != NULL) 
 	{
 		g_iLinecount++;
-		int numRead = sscanf( g_szLine, "%s %d", cmd, &option );
+	//	int numRead = sscanf( g_szLine, "%s %d", cmd, &option );
+		int numRead = sscanf( g_szLine, "%1024s %d", cmd, &option );
 
 		// Blank line
 		if ((numRead == EOF) || (numRead == 0))

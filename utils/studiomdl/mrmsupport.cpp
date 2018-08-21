@@ -196,7 +196,8 @@ void Grab_Facelist( s_source_t *psource )
 			if (IsEnd(g_szLine)) 
 				return;
 
-			if (sscanf( g_szLine, "%d %d %d %d",
+		//	if (sscanf( g_szLine, "%d %d %d %d",
+			if (sscanf( g_szLine, "%d %lu %lu %lu",
 				&j, 
 				&f.a, &f.b, &f.c) == 4)
 			{
@@ -230,7 +231,7 @@ void Grab_Materiallist( s_source_t *psource )
 			if (IsEnd(g_szLine)) 
 				return;
 
-			if (sscanf( g_szLine, "%d  %f %f %f %f   %f %f %f %f  %f %f %f %f  %f \"%[^\"]s", 
+			if (sscanf( g_szLine, "%d  %f %f %f %f   %f %f %f %f  %f %f %f %f  %f \"%[^\"]s",  // VXP: Should be %[^\"]256s ?
 				&j, 
 				&a.r, &a.g, &a.b, &a.a,
 				&d.r, &d.g, &d.b, &d.a,
@@ -344,7 +345,8 @@ void Grab_Faceattriblist( s_source_t *psource )
 			if (IsEnd(g_szLine)) 
 				return;
 
-			if (sscanf( g_szLine, "%d %d %d %d %d %d %d %d %d",
+		//	if (sscanf( g_szLine, "%d %d %d %d %d %d %d %d %d",
+			if (sscanf( g_szLine, "%d %d %d %ul %ul %ul %ul %ul %ul",
 				&j, 
 				&material,
 				&smooth,
@@ -697,7 +699,8 @@ int Load_VRM ( s_source_t *psource )
 
 	while (fgets( g_szLine, sizeof( g_szLine ), g_fpInput ) != NULL) {
 		g_iLinecount++;
-		sscanf( g_szLine, "%s %d", cmd, &option );
+	//	sscanf( g_szLine, "%s %d", cmd, &option );
+		sscanf( g_szLine, "%1024s %d", cmd, &option );
 		if (strcmp( cmd, "version" ) == 0) {
 			if (option != 2) {
 				Error("bad version\n");

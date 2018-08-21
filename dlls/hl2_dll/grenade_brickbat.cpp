@@ -198,7 +198,7 @@ void CGrenade_Brickbat::BrickbatThink( void )
 
 	if (vVelocity.Length() < 0.01)
 	{
-	//	SpawnBrickbatWeapon(); // VXP: Commented - we don't need this to be here
+		SpawnBrickbatWeapon(); // VXP: Commented and uncommented, since models and scripts are fixed in Megapatch 4
 	}
 	SetNextThink( gpGlobals->curtime + 0.1f );
 }

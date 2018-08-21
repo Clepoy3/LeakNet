@@ -193,10 +193,13 @@ void CHardwareMatrixState::DumpState( void )
 	int i;
 	static char buf[256];
 
+/*
 //#ifndef _DEBUG
 	return;
 //#endif
+*/
 	
+#ifdef 0 // _DEBUG
 	OutputDebugString( "DumpState\n:" );
 	for( i = 0; i < m_NumMatrices; i++ )
 	{
@@ -210,6 +213,7 @@ void CHardwareMatrixState::DumpState( void )
 			OutputDebugString( buf );
 		}
 	}
+#endif
 }
 
 int CHardwareMatrixState::FindHardwareMatrix( int globalMatrixID )

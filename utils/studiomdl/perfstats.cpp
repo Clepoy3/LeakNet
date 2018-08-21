@@ -119,7 +119,7 @@ void SpewPerfStats( studiohdr_t *pStudioHdr, OptimizedModel::FileHeader_t *vtxFi
 		g_pStudioRender->GetPerfStats( drawModelInfo, &statsOutput );
 		printf( "\tactual tris: %d\n", ( int )drawModelInfo.m_ActualTriCount );
 		printf( "\ttexture memory bytes: %d\n", ( int )drawModelInfo.m_TextureMemoryBytes );
-		printf( ( char * )statsOutput.Base() );
+		printf( "%s", ( char * )statsOutput.Base() );
 	}
 	g_pStudioRender->UnloadModel( &studioHWData );
 }

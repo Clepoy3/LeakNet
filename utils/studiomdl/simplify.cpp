@@ -1776,7 +1776,7 @@ void fixupIKErrors( s_animation_t *panim, s_ikrule_t *pRule )
 			{
 				CalcBoneTransforms( panim, k + pRule->start, boneToWorld );
 
-				float cycle = (panim->numframes <= 1) ? 0 : (k + pRule->start) / (panim->numframes - 1);
+				float cycle = (panim->numframes <= 1) ? 0.0f : (float)(k + pRule->start) / (float)(panim->numframes - 1);
 				float s = IKRuleWeight( pRule, cycle );
 
 				Vector orig;
@@ -3524,7 +3524,8 @@ int MapSourcesToGlobalBonetable( )
 		for (k = 0; k < MAXSTUDIOSRCBONES; k++)
 		{
 			g_source[i]->boneGlobalToLocal[k] = -1;
-			g_source[i]->boneLocalToGlobal[j] = -1;
+		//	g_source[i]->boneLocalToGlobal[j] = -1; // VXP: NOTE: Huge error was here!
+			g_source[i]->boneLocalToGlobal[k] = -1;
 		}
 		for (j = 0; j < g_source[i]->numbones; j++)
 		{
