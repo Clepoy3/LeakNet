@@ -46,7 +46,7 @@ public:
 	virtual CBaseCombatWeapon *GetLastWeapon( void );
 	virtual int		GetWeight( void );
 
-	virtual const char *GetViewModel( int viewmodelindex = 0 );
+	virtual const char *GetViewModel( int viewmodelindex = 0 ) const;
 	virtual char	   *GetDeathNoticeName( void );
 	virtual float	GetDefaultAnimSpeed( void );
 

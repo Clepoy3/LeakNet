@@ -89,7 +89,9 @@ private:
 	int m_CamoPatternNumColors;
 	int m_CamoPatternWidth;
 	int m_CamoPatternHeight;
+#if 0
 	cache_user_t m_camoImageDataCache;
+#endif
 	unsigned char m_CamoPalette[256][3];
 	// these represent that part of the entitiy's bounding box that we 
 	// want to cast rays through to get colors for the camo
@@ -98,11 +100,15 @@ private:
 
 	CCamoTextureRegen m_TextureRegen;
 	C_BaseEntity *m_pEnt;
+
+	// VXP
+	ITexture *pCamoTexture; // VXP: Made this because of GetTextureValue cannot do shit at destructor
 };
 
 
 void CCamoTextureRegen::RegenerateTextureBits( ITexture *pTexture, IVTFTexture *pVTFTexture, Rect_t *pSubRect )
 {
+	pVTFTexture->ConvertImageFormat( IMAGE_FORMAT_RGB888, false ); // VXP: FIXME: May this decrease performance?
 	m_pProxy->GenerateCamoTexture( pTexture, pVTFTexture );
 }
 
@@ -114,7 +120,9 @@ CCamoMaterialProxy::CCamoMaterialProxy() : m_TextureRegen(this)
 #if 0
 	m_InstanceDataSize = 0;
 #endif
+#if 0
 	memset( &m_camoImageDataCache, 0,sizeof( m_camoImageDataCache ) );
+#endif
 	m_pointsInNormalizedBox = NULL;
 #if 0
 	m_InstanceDataListHead = NULL;
@@ -146,13 +154,30 @@ CCamoMaterialProxy::~CCamoMaterialProxy()
 	// Disconnect the texture regenerator...
 	if (m_pCamoTextureVar)
 	{
-		ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
+	//	ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
 		if (pCamoTexture)
+		{
 			pCamoTexture->SetTextureRegenerator( NULL );
+
+			// VXP
+			pCamoTexture->DecrementReferenceCount();
+			pCamoTexture = NULL;
+		}
+
+		m_pCamoTextureVar = NULL; // VXP
 	}
 
-	delete m_pCamoPatternImage;
-	delete m_pointsInNormalizedBox;
+	if ( m_pCamoPatternImage != NULL )
+	{
+		delete [] m_pCamoPatternImage; // VXP: Was w/o []
+		m_pCamoPatternImage = NULL;
+	}
+
+	if ( m_pointsInNormalizedBox != NULL )
+	{
+		delete [] m_pointsInNormalizedBox; // VXP: Was w/o []
+		m_pointsInNormalizedBox = NULL;
+	}
 }
 
 
@@ -193,7 +218,7 @@ void *CCamoMaterialProxy::AllocateInstanceData( C_BaseEntity *pEntity )
 
 bool CCamoMaterialProxy::Init( IMaterial *pMaterial, KeyValues *pKeyValues )
 {
-	return false; // hack!  Need to make sure that the TGA loader has a valid filesystem before trying
+//	return false; // hack!  Need to make sure that the TGA loader has a valid filesystem before trying
 			// to load the camo pattern.
 
 #if 0
@@ -208,9 +233,11 @@ bool CCamoMaterialProxy::Init( IMaterial *pMaterial, KeyValues *pKeyValues )
 	if( !found )
 	{
 		m_pCamoTextureVar = NULL;
+		Warning( "Cannot initialize Camo because of $baseTexture\n" );
 		return false;
 	}
-	ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
+//	ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
+	pCamoTexture = m_pCamoTextureVar->GetTextureValue();
 	if (pCamoTexture)
 		pCamoTexture->SetTextureRegenerator( &m_TextureRegen );
 	
@@ -220,6 +247,7 @@ bool CCamoMaterialProxy::Init( IMaterial *pMaterial, KeyValues *pKeyValues )
 	if( !found )
 	{
 		m_pCamoTextureVar = NULL;
+		Warning( "Cannot initialize Camo because of $camoPatternTexture\n" );
 		return false;
 	}
 	
@@ -400,6 +428,7 @@ void CCamoMaterialProxy::GenerateCamoTexture( ITexture* pTexture, IVTFTexture *p
 	int height = pVTFTexture->Height();
 	if( width != m_CamoPatternWidth || height != m_CamoPatternHeight )
 	{
+		Warning( "Can't generate camo texture, wrong sizes\n" );
 		return;
 	}
 	
@@ -407,6 +436,7 @@ void CCamoMaterialProxy::GenerateCamoTexture( ITexture* pTexture, IVTFTexture *p
 	enum ImageFormat imageFormat = pVTFTexture->Format();
 	if( imageFormat != IMAGE_FORMAT_RGB888 )
 	{
+		Warning( "Can't generate camo texture, need to be RGB888\n" );
 		return;
 	}
 	// optimize
@@ -417,9 +447,9 @@ void CCamoMaterialProxy::GenerateCamoTexture( ITexture* pTexture, IVTFTexture *p
 		for( x = 0; x < width; x++ )
 		{
 			int offset = 3 * ( x + y * width );
-			Assert( offset < width * height * 3 );
+			assert( offset < width * height * 3 );
 			int paletteID = m_pCamoPatternImage[x + y * width];
-			Assert( paletteID < 256 );
+			assert( paletteID < 256 );
 #if 1
 			imageData[offset + 0] = camoPalette[paletteID][0];
 			imageData[offset + 1] = camoPalette[paletteID][1];
@@ -446,8 +476,9 @@ void CCamoMaterialProxy::OnBind( C_BaseEntity *pEntity )
 	}
 	
 	m_pEnt = pEntity;	
-	ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
-	pCamoTexture->Download();
+//	ITexture *pCamoTexture = m_pCamoTextureVar->GetTextureValue();
+	if ( pCamoTexture )
+		pCamoTexture->Download();
 
 	// Mark it so it doesn't get regenerated on task switch
 	m_pEnt = NULL;
@@ -474,6 +505,7 @@ void CCamoMaterialProxy::LoadCamoPattern( void )
 		&m_CamoPatternWidth, &m_CamoPatternHeight, &indexImageFormat, &dummyGamma ) )
 	{
 		//Warning( "Can't get tga info for hl2/materials/models/combine_elite/camo7paletted.tga for camo material\n" );
+		Warning( "Can't get tga info for %s for camo material\n", m_pCamoPatternTextureVar->GetStringValue() );
 		m_pCamoTextureVar = NULL;
 		return;
 	}
@@ -481,11 +513,13 @@ void CCamoMaterialProxy::LoadCamoPattern( void )
 	if( indexImageFormat != IMAGE_FORMAT_I8 )
 	{
 		//	Warning( "Camo material texture hl2/materials/models/combine_elite/camo7paletted.tga must be 8-bit greyscale\n" );
+		Warning( "Camo material texture %s must be 8-bit greyscale\n", m_pCamoPatternTextureVar->GetStringValue() );
 		m_pCamoTextureVar = NULL;
 		return;
 	}
 	
 	indexImageSize = ImageLoader::GetMemRequired( m_CamoPatternWidth, m_CamoPatternHeight, indexImageFormat, false );
+	DevMsg( "indexImageSize = %i\n", indexImageSize );
 #if 0
 	m_pCamoPatternImage = ( unsigned char * )
 		engineCache->Alloc( &m_camoImageDataCache, indexImageSize, "camopattern" );
@@ -494,6 +528,7 @@ void CCamoMaterialProxy::LoadCamoPattern( void )
 	if( !m_pCamoPatternImage )
 	{
 		m_pCamoTextureVar = NULL;
+		Warning( "Cannot read pattern from tga for Camo proxy\n" );
 		return;
 	}
 	
@@ -501,6 +536,7 @@ void CCamoMaterialProxy::LoadCamoPattern( void )
 		m_CamoPatternWidth, m_CamoPatternHeight, IMAGE_FORMAT_I8, dummyGamma, false ) )
 	{
 		//			Warning( "camo texture hl2/materials/models/combine_elite/camo7paletted.tga must be grey-scale" );
+		Warning( "camo texture %s must be grey-scale\n", m_pCamoPatternTextureVar->GetStringValue() );
 		m_pCamoTextureVar = NULL;
 		return;
 	}
@@ -537,6 +573,12 @@ void CCamoMaterialProxy::LoadCamoPattern( void )
 
 void CCamoMaterialProxy::GenerateRandomPointsInNormalizedCube( void )
 {
+	if ( m_CamoPatternNumColors <= 0 )
+	{
+		Warning( "Cannot generate random point for Camo proxy\n" );
+		return;
+	}
+
 	m_pointsInNormalizedBox = new Vector[m_CamoPatternNumColors];
 	if( !m_pointsInNormalizedBox )
 	{

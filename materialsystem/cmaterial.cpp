@@ -486,6 +486,9 @@ void CMaterial::InitializeMaterialProxy( KeyValues* pFallbackKeyValues )
 //-----------------------------------------------------------------------------
 void CMaterial::CleanUpMaterialProxy()
 {
+	if ( !m_ProxyCount )
+		return;
+
 	IMaterialProxyFactory *pMaterialProxyFactory;
 	pMaterialProxyFactory = MaterialSystem()->GetMaterialProxyFactory();	
 	if( !pMaterialProxyFactory )

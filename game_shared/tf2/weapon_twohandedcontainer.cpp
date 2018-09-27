@@ -83,7 +83,7 @@ void CWeaponTwoHandedContainer::SetTransmit( CCheckTransmitInfo *pInfo )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CWeaponTwoHandedContainer::GetViewModel( int viewmodelindex /*=0*/ )
+const char *CWeaponTwoHandedContainer::GetViewModel( int viewmodelindex /*=0*/ ) const
 {
 	if ( m_hLeftWeapon != NULL && m_hRightWeapon != NULL )
 	{
