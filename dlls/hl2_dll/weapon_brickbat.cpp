@@ -424,7 +424,6 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 	*/
 
 		// Get Toss Vector
-	/*
 		Vector			throwStart  = pNPC->Weapon_ShootPosition();
 		Vector			vecToss;
 		CBaseEntity*	pBlocker	= NULL;
@@ -445,7 +444,8 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 		{
 			m_iThrowBits = COND_NONE;
 		}
-	*/
+
+	/*
 		Vector			throwStart  = pNPC->Weapon_ShootPosition();
 		Vector			vecToss;
 		float			heightLimit = 35.0f; // -1
@@ -461,7 +461,7 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 		{
 			m_iThrowBits = COND_NONE;
 		}
-
+	*/
 	}
 	// don't check again for a while.
 	m_fNextThrowCheck = gpGlobals->curtime + 0.33; // 1/3 second.
