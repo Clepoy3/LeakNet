@@ -264,8 +264,9 @@ void CWeaponBrickbat::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombat
 			Vector launchPos;
 			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
 			// VXP: Added and commented, in case error like at weapon_molotov's code
-		//	if ( iBIndex == -1 )
-		//		iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+			// Uncommented because of brickbat spawn position is too low
+			if ( iBIndex == -1 )
+				iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
 
 			if (iBIndex != -1) {
 				Vector origin;
