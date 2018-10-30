@@ -908,7 +908,7 @@ bool UpdateLightmapColorScale( void )
 		}
 		else
 		{
-			Assert(false);
+			assert(false);
 			lightmapScale = 1;
 		}
 

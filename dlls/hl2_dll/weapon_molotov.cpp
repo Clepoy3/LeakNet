@@ -12,6 +12,11 @@
 // $NoKeywords: $
 //=============================================================================
 
+// VXP: TODO???: Make player hold a molotov while holding primaryattack
+// (look at HL1 frag grenade code, or 2007 frag grenade code)
+
+// VXP: TODO: Maybe remake a throwing (VecCheckThrow instead of ThrowLimit)
+
 #include "cbase.h"
 #include	"NPCEvent.h"
 #include	"basehlcombatweapon.h"
@@ -37,7 +42,6 @@ BEGIN_DATADESC( CWeaponMolotov )
 
 	// Function Pointers
 	DEFINE_FUNCTION( CWeaponMolotov, MolotovTouch ),
-	DEFINE_FUNCTION( CWeaponMolotov, ThrowingThink ),
 
 END_DATADESC()
 
@@ -158,19 +162,19 @@ void CWeaponMolotov::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatC
 			else 
 			{
 				// VXP: Ugly repeated second condition
-				iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
-				if (iBIndex != -1) 
-				{
-					Vector origin;
-					QAngle angles;
-					pNPC->GetBonePosition( iBIndex, launchPos, angles);
-				}
-				else
-				{
+				// Causes npc_citizen to throw molotov under him, when the target is below than the NPC
+			//	iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+			//	if (iBIndex != -1) 
+			//	{
+			//		QAngle angles;
+			//		pNPC->GetBonePosition( iBIndex, launchPos, angles);
+			//	}
+			//	else
+			//	{
 					Vector vFacingDir = pNPC->BodyDirection2D( );
 					vFacingDir = vFacingDir * 60.0; 
 					launchPos = pNPC->GetAbsOrigin()+vFacingDir;
-				}
+			//	}
 			}
 
 
@@ -287,7 +291,6 @@ int CWeaponMolotov::WeaponRangeAttack1Condition( float flDot, float flDist )
 									pEnemy->GetAbsMins().z );
 
 		// Get Toss Vector
-	/*
 		Vector			throwStart  = pNPC->Weapon_ShootPosition();
 		Vector			vecToss;
 		CBaseEntity*	pBlocker	= NULL;
@@ -301,21 +304,6 @@ int CWeaponMolotov::WeaponRangeAttack1Condition( float flDot, float flDist )
 			m_vecTossVelocity = vecToss;
 			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 
-		}
-		else
-		{
-			m_iThrowBits = COND_NONE;
-		}
-	*/
-		Vector			throwStart  = pNPC->Weapon_ShootPosition();
-		Vector			vecToss;
-		float			heightLimit = 20.0f; // -1
-
-		vecToss = VecCheckToss( pNPC, throwStart, vecTarget, heightLimit, 1.0, false );
-		if ( vecToss != vec3_origin )
-		{
-			m_vecTossVelocity = vecToss;
-			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 		}
 		else
 		{
@@ -367,7 +355,7 @@ void CWeaponMolotov::PrimaryAttack( void )
 	{
 		return;
 	}
-/*
+
 	Vector vecSrc		= pPlayer->WorldSpaceCenter();
 	Vector vecFacing	= pPlayer->BodyDirection3D( );
 	vecSrc				= vecSrc + vecFacing * 18.0;
@@ -386,22 +374,19 @@ void CWeaponMolotov::PrimaryAttack( void )
 
 	ThrowMolotov(vecSrc, vecAiming*800);
 	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
-*/
 
+	
 	// Don't fire again until fire animation has completed
-//	m_flNextPrimaryAttack = gpGlobals->curtime + CurSequenceDuration();
+	//m_flNextPrimaryAttack = gpGlobals->curtime + CurSequenceDuration();
+
 	//<<TEMP>> - till real animation is avaible
 //	m_flNextPrimaryAttack = gpGlobals->curtime + 1.0;
 //	m_flNextSecondaryAttack = gpGlobals->curtime + 1.0;
 
-//	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
+	// VXP: New animations are available
 	SendWeaponAnim( ACT_VM_THROW );
-
-//	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
-//	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
-
-	SetThink( ThrowingThink );
-	SetNextThink( gpGlobals->curtime + 0.5f );
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 
 	m_bNeedDraw = true;
 }
@@ -419,54 +404,6 @@ void CWeaponMolotov::SecondaryAttack( void )
 
 //-----------------------------------------------------------------------------
 // Purpose: 
-//-----------------------------------------------------------------------------
-void CWeaponMolotov::ThrowingThink( void )
-{
-	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
-
-	if (!pPlayer)
-	{
-		return;
-	}
-
-	Vector vecSrc		= pPlayer->WorldSpaceCenter();
-	Vector vecFacing	= pPlayer->BodyDirection3D( );
-	vecSrc				= vecSrc + vecFacing * 18.0;
-	// BUGBUG: is this some hack because it's not at the eye position????
-	vecSrc.z		   += 24.0f;
-
-	// Player may have turned to face a wall during the throw anim in which case
-	// we don't want to throw the SLAM into the wall
-	if (ObjectInWay())
-	{
-		vecSrc   = pPlayer->WorldSpaceCenter() + vecFacing * 5.0;
-	}
-
-	Vector vecAiming = pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );
-	vecAiming.z += 0.20; // Raise up so passes through reticle
-
-	ThrowMolotov(vecSrc, vecAiming*800);
-	pPlayer->RemoveAmmo( 1, m_iSecondaryAmmoType );
-
-	CBaseCombatCharacter *pOwner = GetOwner();
-	if (pOwner->GetAmmoCount(m_iSecondaryAmmoType) <=0)
-	{
-		pOwner->Weapon_Drop( this );
-		UTIL_Remove(this);
-		return;
-	}
-
-	SendWeaponAnim( ACT_VM_DRAW );
-
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
-	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
-
-	SetThink( NULL );
-	SetNextThink( gpGlobals->curtime );
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
 //
 //
 //-----------------------------------------------------------------------------
@@ -475,19 +412,13 @@ void CWeaponMolotov::DrawAmmo( void )
 	// -------------------------------------------
 	// Make sure I have ammo of the current type
 	// -------------------------------------------
-/* VXP: Moved to ThrowingThink
 	CBaseCombatCharacter *pOwner = GetOwner();
-	Msg( "m_iSecondaryAmmoCount = %i\n", pOwner->GetAmmoCount(m_iSecondaryAmmoType) );
 	if (pOwner->GetAmmoCount(m_iSecondaryAmmoType) <=0)
 	{
 		pOwner->Weapon_Drop( this );
 		UTIL_Remove(this);
 		return;
 	}
-*/
-
-//	SendWeaponAnim( ACT_VM_DRAW );
-
 	Msg("Drawing Molotov...\n");
 	m_bNeedDraw = false;
 
@@ -495,8 +426,10 @@ void CWeaponMolotov::DrawAmmo( void )
 //	m_flNextPrimaryAttack	= gpGlobals->curtime + 2.0;
 //	m_flNextSecondaryAttack = gpGlobals->curtime + 2.0;
 
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
-	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
+	// VXP: New animations are available
+	SendWeaponAnim( ACT_VM_DRAW ); // Redraw the weapon
+	m_flNextPrimaryAttack	= gpGlobals->curtime + SequenceDuration() /*+ 1.0*/;
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() /*+ 1.0*/;
 
 }
 
@@ -527,7 +460,6 @@ void CWeaponMolotov::ItemPostFrame( void )
 		}
 	}
 	else if (m_bNeedDraw)
-//	if (m_bNeedDraw) // VXP: Enable repeated throwing 0_o Funny
 	{
 		DrawAmmo();
 	}

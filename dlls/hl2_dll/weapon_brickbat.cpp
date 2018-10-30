@@ -35,6 +35,8 @@
 extern ConVar sk_npc_dmg_brickbat;
 extern ConVar sk_plr_dmg_brickbat;
 
+ConVar brickbat_debug( "brickbat_debug", "0" );
+
 struct BrickbatAmmo_s
 {
 	const char	*m_sClassName;
@@ -119,7 +121,7 @@ void CWeaponBrickbat::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ )
+const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ ) const
 {
 	return BrickBatAmmoArray[m_iCurrentAmmoType].m_sViewModel;
 }
@@ -127,7 +129,7 @@ const char *CWeaponBrickbat::GetViewModel( int viewmodelindex /*=0*/ )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CWeaponBrickbat::GetWorldModel( void )
+const char *CWeaponBrickbat::GetWorldModel( void ) const
 {
 	return BrickBatAmmoArray[m_iCurrentAmmoType].m_sWorldModel;
 }
@@ -261,8 +263,9 @@ void CWeaponBrickbat::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombat
 			// If owner has a hand, set position to the hand bone position
 			Vector launchPos;
 			int iBIndex = pNPC->LookupBone("Bip01 R Hand");
-			if ( iBIndex == -1 )
-				iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
+			// VXP: Added and commented, in case error like at weapon_molotov's code
+		//	if ( iBIndex == -1 )
+		//		iBIndex = pNPC->LookupBone("ValveBiped.Bip01_R_Hand");
 
 			if (iBIndex != -1) {
 				Vector origin;
@@ -399,14 +402,36 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 									pEnemy->GetAbsOrigin().y, 
 									pEnemy->GetAbsMins().z );
 
+	/* VXP: Source 2007 version
+		Vector vecCollisionSpace;
+		Vector in = Vector( 0.5f, 0.5f, 0.0f );
+		vecCollisionSpace.x = Lerp( in.x, pEnemy->WorldAlignMins().x, pEnemy->WorldAlignMins().x );
+		vecCollisionSpace.y = Lerp( in.y, pEnemy->WorldAlignMins().y, pEnemy->WorldAlignMins().y );
+		vecCollisionSpace.z = Lerp( in.z, pEnemy->WorldAlignMins().z, pEnemy->WorldAlignMins().z );
+
+		Vector pResult;
+		ICollideable *pCollide = pEnemy->GetCollideable();
+		if ( !pEnemy->IsBoundsDefinedInEntitySpace() || ( pCollide->GetCollisionAngles() == vec3_angle ) )
+		{
+			VectorAdd( vecCollisionSpace, pCollide->GetCollisionOrigin(), pResult );
+		}
+		else
+		{
+			VectorTransform( vecCollisionSpace, pCollide->CollisionToWorldTransform(), pResult );
+		}
+
+		Vector vecTarget = pResult;
+	*/
+
 		// Get Toss Vector
+	/*
 		Vector			throwStart  = pNPC->Weapon_ShootPosition();
 		Vector			vecToss;
 		CBaseEntity*	pBlocker	= NULL;
 		float			throwDist	= (throwStart - vecTarget).Length();
 		float			fGravity	= sv_gravity.GetFloat(); 
-		if ( m_iCurrentAmmoType == 1 ) // VXP: Little hack for beer bottle thrown by NPC
-			fGravity	= 2000;
+	//	if ( m_iCurrentAmmoType == 1 ) // VXP: Little hack for beer bottle thrown by NPC
+	//		fGravity	= 2000;
 		float			throwLimit	= pNPC->ThrowLimit(throwStart, vecTarget, fGravity, 35, WorldAlignMins(), WorldAlignMaxs(), pEnemy, &vecToss, &pBlocker);
 
 		// If I can make the throw (or most of the throw)
@@ -415,6 +440,22 @@ int CWeaponBrickbat::WeaponRangeAttack1Condition( float flDot, float flDist )
 			m_vecTossVelocity = vecToss;
 			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 
+		}
+		else
+		{
+			m_iThrowBits = COND_NONE;
+		}
+	*/
+		Vector			throwStart  = pNPC->Weapon_ShootPosition();
+		Vector			vecToss;
+		float			heightLimit = 35.0f; // -1
+
+	//	vecToss = VecCheckToss( pNPC, throwStart, vecTarget, heightLimit, 1.0, false );
+		vecToss = VecCheckThrow( pNPC, throwStart, vecTarget, 500.0, 1.0 );
+		if ( vecToss != vec3_origin )
+		{
+			m_vecTossVelocity = vecToss;
+			m_iThrowBits = COND_CAN_RANGE_ATTACK1;
 		}
 		else
 		{
@@ -626,17 +667,20 @@ void CWeaponBrickbat::DrawAmmo( void )
 //-----------------------------------------------------------------------------
 void CWeaponBrickbat::ItemPostFrame( void )
 {
-	/*  HANDY FOR DEBUG
-	for (int i=0;i<NUM_BRICKBAT_AMMO_TYPES;i++)
+	/**///  HANDY FOR DEBUG
+	if ( brickbat_debug.GetBool() )
 	{
-		Msg("%i %s",m_nAmmoCount[i],BrickBatAmmoArray[i].m_sClassName);
-		if (i==m_iCurrentAmmoType)
+		for (int i=0;i<NUM_BRICKBAT_AMMO_TYPES;i++)
 		{
-			Msg("**");
+			Msg("%i %s",m_nAmmoCount[i],BrickBatAmmoArray[i].m_sClassName);
+			if (i==m_iCurrentAmmoType)
+			{
+				Msg("**");
+			}
+			Msg("\n");
 		}
-		Msg("\n");
 	}
-	*/
+	/**/
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 

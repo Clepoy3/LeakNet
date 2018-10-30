@@ -737,9 +737,22 @@ int CNPC_Citizen::SelectSchedule ( void )
 			}
 */
 
+			// VXP: TODO: SelectFailSchedule
+			if ( !GetActiveWeapon() && !HasCondition( COND_TASK_FAILED ) && HasCondition(COND_BETTER_WEAPON_AVAILABLE) )
+		//	if ( !GetActiveWeapon() && !HasCondition( COND_TASK_FAILED ) && Weapon_FindUsable(Vector(500,500,500)) )
+			{
+				CBaseCombatWeapon *pWeapon = dynamic_cast<CBaseCombatWeapon *>(Weapon_FindUsable( Vector(500, 500, 500) ));
+				if ( pWeapon )
+				{
+				//	pWeapon->Lock( 10.0, this ); // VXP: TODO
+					SetTarget( pWeapon );
+					return SCHED_NEW_WEAPON;
+				}
+			}
+
 			if ( HasCondition ( COND_NO_PRIMARY_AMMO ) )
 			{
-#if 0
+#if 1 // VXP
 				return SCHED_HIDE_AND_RELOAD;
 #else
 				// @TODO (toml 05-07-03): e3-03 hack. prevent SW citizens from running inside during closing scene. remove afterwards
