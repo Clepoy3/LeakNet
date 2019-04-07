@@ -1,0 +1,48 @@
+# From old SVN
+*копия*
+*Copy*
+DEL.bat
+materialsystem_dx9_w_hdr
+build_log.txt
+materialsystem_fixed_green_shader
+
+# VC++ 6.0 stuff
+*.dsw
+*.plg
+*.ncb
+*[Dd]ebug*/
+*[Rr]elease*/
+
+# Some stuff from VS2008 (for MySQL++ project of Tracker)
+*.user
+
+*.bak
+*.exp
+*.ilk
+
+## Beta related stuff
+# libs better stay in it's original state, because they're rebuildable
+lib/
+materialsystem/stdshaders/fxctmp9/
+materialsystem/stdshaders/fxctmp9_nv3x/
+materialsystem/stdshaders/fxctmp9_nv3x_ps20/
+materialsystem/stdshaders/pshtmp9/
+materialsystem/stdshaders/vshtmp9/
+materialsystem/stdshaders/shit.txt
+utils/hlmviewer/src/hlmv.exe
+
+
+utils/hlmviewer/src/hlmv.lib
+lib/vmpi/vmpi.lib
+lib/public/vtf.lib
+lib/public/vstdlib.lib
+lib/public/vgui_surfacelib.lib
+lib/public/vgui_controls.lib
+lib/public/unitlib.lib
+lib/public/tier0.lib
+lib/public/shaderlib.lib
+lib/public/nvtristrip.lib
+lib/public/appframework.lib
+lib/common/mxtk.lib
+lib/common/ivp_physics.lib
+lib/common/ivp_compactbuilder.lib
