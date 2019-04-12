@@ -546,15 +546,15 @@ void CViewRender::SetUpView()
 	// Remember the origin, not reflected on a water plane.
 	m_View.m_vUnreflectedOrigin = m_View.origin;
 	
+	g_vecRenderOrigin = m_View.origin;
+	g_vecRenderAngles = m_View.angles;
+
 	// Compute the world->main camera transform
 	ComputeCameraVariables( m_View.origin, m_View.angles, 
 		&g_vecVForward, &g_vecVRight, &g_vecVUp, &g_matCamInverse );
 
 	// set up the hearing origin...
 	engine->SetHearingOrigin( m_View.origin, m_View.angles );
-
-	g_vecRenderOrigin = m_View.origin;
-	g_vecRenderAngles = m_View.angles;
 
 	s_TestOrigin = m_View.origin;
 	s_TestAngles = m_View.angles;

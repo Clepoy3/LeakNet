@@ -12,6 +12,8 @@ materialsystem_fixed_green_shader
 *.ncb
 *[Dd]ebug*/
 *[Rr]elease*/
+*.opt
+*.aps
 
 # Some stuff from VS2008 (for MySQL++ project of Tracker)
 *.user
@@ -19,6 +21,7 @@ materialsystem_fixed_green_shader
 *.bak
 *.exp
 *.ilk
+*_old*
 
 ## Beta related stuff
 # libs better stay in it's original state, because they're rebuildable

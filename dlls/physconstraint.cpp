@@ -143,6 +143,9 @@ void PhysTeleportConstrainedEntity( CBaseEntity *pTeleportSource, IPhysicsObject
 	if ( pFixup->GetMoveType() != MOVETYPE_VPHYSICS )
 		return;
 
+	if ( !pFixup->VPhysicsGetObject() || !pFixup->VPhysicsGetObject()->IsMoveable() ) // VXP: Source 2007
+		return;
+
 	QAngle oldAngles = prevAngles;
 
 	if ( !physicsRotate )

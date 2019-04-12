@@ -296,7 +296,7 @@ void CBaseProp::Spawn( void )
 	}
 
 //	SetMoveType( MOVETYPE_NONE );
-	SetMoveType( MOVETYPE_PUSH );
+	SetMoveType( MOVETYPE_PUSH ); // VXP: Why PUSH? I don't remember
 	m_takedamage = DAMAGE_NO;
 	SetNextThink( TICK_NEVER_THINK );
 

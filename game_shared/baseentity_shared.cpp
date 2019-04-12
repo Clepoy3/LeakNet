@@ -657,11 +657,11 @@ void CBaseEntity::VPhysicsUpdate( IPhysicsObject *pPhysics )
 	{
 	case MOVETYPE_VPHYSICS:
 		{
-			if ( GetMoveParent() ) // VXP
-			{
-				DevWarning("Updating physics on object in hierarchy %s!\n", GetClassname());
-				return;
-			}
+		//	if ( GetMoveParent() ) // VXP: Added and commented
+		//	{
+		//		DevWarning("Updating physics on object in hierarchy %s!\n", GetClassname());
+		//		return;
+		//	}
 			Vector origin;
 			QAngle angles;
 

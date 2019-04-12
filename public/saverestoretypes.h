@@ -336,6 +336,7 @@ inline void CSaveRestoreSegment::InitSymbolTable( char **pNewTokens, int sizeTab
 	Assert( !pTokens );
 	tokenCount = sizeTable;
 	pTokens = pNewTokens;
+	memset( pTokens, 0, sizeTable * sizeof( pTokens[0]) ); // VXP: Source 2007
 }
 
 inline char **CSaveRestoreSegment::DetachSymbolTable()

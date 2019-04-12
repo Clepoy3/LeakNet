@@ -59,6 +59,10 @@ public:
 	void GetSpringObjectConnections( string_t nameStart, string_t nameEnd, IPhysicsObject **pStart, IPhysicsObject **pEnd );
 	void NotifySystemEvent( CBaseEntity *pNotify, notify_system_event_t eventType, const notify_system_event_params_t &params );
 
+	// VXP
+	IPhysicsObject *GetStartObject() { return m_pSpring ? m_pSpring->GetStartObject() : NULL; }
+	IPhysicsObject *GetEndObject() { return m_pSpring ? m_pSpring->GetEndObject() : NULL; }
+
 	DECLARE_DATADESC();
 
 private:	

@@ -2235,6 +2235,10 @@ void CEntitiySaveRestoreBlockHandler::ReadRestoreHeaders( IRestore *pRestore )
 	pRestore->ReadInt( &nEntities );
 
 	entitytable_t *pEntityTable = ( entitytable_t *)engine->SaveAllocMemory( (sizeof(entitytable_t) * nEntities), sizeof(char) );
+	if ( !pEntityTable ) // VXP: Source 2007
+	{
+		return;
+	}
 
 	pSaveData->InitEntityTable( pEntityTable, nEntities );
 	
@@ -2427,6 +2431,9 @@ bool CEntitiySaveRestoreBlockHandler::SaveInitEntities( CSaveRestoreData *pSaveD
 	number_of_entities = ClientEntityList().NumberOfEntities();
 #endif
 	entitytable_t *pEntityTable = ( entitytable_t *)engine->SaveAllocMemory( (sizeof(entitytable_t) * number_of_entities), sizeof(char) );
+	if ( !pEntityTable ) // VXP: Source 2007
+		return false;
+
 	pSaveData->InitEntityTable( pEntityTable, number_of_entities );
 
 	// build the table of entities
